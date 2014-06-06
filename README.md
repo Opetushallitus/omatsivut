@@ -1,17 +1,12 @@
 # omatsivut #
 
+## Build & Run ##
 
-Oppijan henkilökohtainen palvelu
+```sh
+$ cd omatsivut
+$ ./sbt
+> container:start
+> browse
+```
 
-## Testien ajo ja war paketointi ##
-
-
-`sbt clean package`
-
-## Paikallisen palvelun käynnistys ##
-
-    sbt
-    > container:start
-
-[http://localhost:8080/]
-
+If `browse` doesn't launch your browser, manually open [http://localhost:8080/](http://localhost:8080/) in your browser.
