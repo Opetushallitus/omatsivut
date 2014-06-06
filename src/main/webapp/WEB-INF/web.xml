@@ -12,4 +12,14 @@
   <listener>
     <listener-class>org.scalatra.servlet.ScalatraListener</listener-class>
   </listener>
+
+	<mime-mapping>
+	    <extension>html</extension>
+	    <mime-type>text/html;charset=UTF-8</mime-type>
+	</mime-mapping>
+
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+  </welcome-file-list>
+
 </web-app>

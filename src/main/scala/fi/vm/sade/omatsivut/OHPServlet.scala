@@ -13,5 +13,10 @@ class OHPServlet extends OmatsivutStack {
       </body>
     </html>
   }
+
+  get("/applications") {
+    contentType = "application/json"
+	"""[{"name": "app1"},{"name": "app2"}]"""
+  }
   
 }
