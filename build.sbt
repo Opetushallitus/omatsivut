@@ -1,5 +1,7 @@
 name := "omatsivut"
 
+organization := "fi.vm.sade.omatsivut"
+
 version := "0.1.0-SNAPSHOT"
 
 scalaVersion := "2.11.1"
