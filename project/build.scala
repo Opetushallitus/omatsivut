@@ -26,12 +26,14 @@ object OmatsivutBuild extends Build {
         "org.scalatra" %% "scalatra" % ScalatraVersion,
         "org.scalatra" %% "scalatra-scalate" % ScalatraVersion,
         "org.scalatra" %% "scalatra-specs2" % ScalatraVersion % "test",
+        "junit" % "junit" % "4.11" % "test",
         "ch.qos.logback" % "logback-classic" % "1.0.6" % "runtime",
         "javax.servlet" % "javax.servlet-api" % "3.0.1" % "provided",
         "org.apache.tomcat.embed" % "tomcat-embed-core"         % "7.0.22" % "container",
         "org.apache.tomcat.embed" % "tomcat-embed-logging-juli" % "7.0.22" % "container",
         "org.apache.tomcat.embed" % "tomcat-embed-jasper"       % "7.0.22" % "container"
       ),
+      testOptions in Test += Tests.Argument("junitxml"),
       scalateTemplateConfig in Compile <<= (sourceDirectory in Compile){ base =>
         Seq(
           TemplateConfig(
