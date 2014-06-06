@@ -12,7 +12,9 @@ scalacOptions += "-target:jvm-1.7"
 
 libraryDependencies ++= Seq(
   "javax.servlet"           % "javax.servlet-api"         % "3.0.1"  % "provided",
-  "org.apache.tomcat.embed" % "tomcat-embed-core"         % "7.0.22" % "container"
+  "org.apache.tomcat.embed" % "tomcat-embed-core"         % "7.0.22" % "container",
+  "org.apache.tomcat.embed" % "tomcat-embed-logging-juli" % "7.0.22" % "container",
+  "org.apache.tomcat.embed" % "tomcat-embed-jasper"       % "7.0.22" % "container"
 )
 
 seq(webSettings :_*)
