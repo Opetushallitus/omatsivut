@@ -1,6 +1,8 @@
 # omatsivut #
 
-## Build & Run ##
+Oppijan henkilökohtainen palvelu
+
+## Käännä ja käynnistä ##
 
 ```sh
 $ cd omatsivut
@@ -9,4 +11,4 @@ $ ./sbt
 > browse
 ```
 
-If `browse` doesn't launch your browser, manually open [http://localhost:8080/](http://localhost:8080/) in your browser.
+Jos `browse` ei avaa selainta, niin avaa käsin [http://localhost:8080/](http://localhost:8080/).
