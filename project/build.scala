@@ -3,6 +3,7 @@ import Keys._
 import org.scalatra.sbt._
 import org.scalatra.sbt.PluginKeys._
 import com.mojolly.scalate.ScalatePlugin._
+import com.earldouglas.xsbtwebplugin.WebPlugin
 import ScalateKeys._
 
 object OmatsivutBuild extends Build {
@@ -15,7 +16,7 @@ object OmatsivutBuild extends Build {
   lazy val project = Project (
     "omatsivut",
     file("."),
-    settings = Defaults.defaultSettings ++ ScalatraPlugin.scalatraWithJRebel ++ scalateSettings ++ Seq(
+    settings = Defaults.defaultSettings ++ WebPlugin.webSettings ++ ScalatraPlugin.scalatraWithJRebel ++ scalateSettings ++ Seq(
       organization := Organization,
       name := Name,
       version := Version,
@@ -26,8 +27,10 @@ object OmatsivutBuild extends Build {
         "org.scalatra" %% "scalatra-scalate" % ScalatraVersion,
         "org.scalatra" %% "scalatra-specs2" % ScalatraVersion % "test",
         "ch.qos.logback" % "logback-classic" % "1.0.6" % "runtime",
-        "org.eclipse.jetty" % "jetty-webapp" % "8.1.8.v20121106" % "container",
-        "org.eclipse.jetty.orbit" % "javax.servlet" % "3.0.0.v201112011016" % "container;provided;test" artifacts (Artifact("javax.servlet", "jar", "jar"))
+        "javax.servlet" % "javax.servlet-api" % "3.0.1" % "provided",
+        "org.apache.tomcat.embed" % "tomcat-embed-core"         % "7.0.22" % "container",
+        "org.apache.tomcat.embed" % "tomcat-embed-logging-juli" % "7.0.22" % "container",
+        "org.apache.tomcat.embed" % "tomcat-embed-jasper"       % "7.0.22" % "container"
       ),
       scalateTemplateConfig in Compile <<= (sourceDirectory in Compile){ base =>
         Seq(
