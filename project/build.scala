@@ -22,6 +22,7 @@ object OmatsivutBuild extends Build {
       version := Version,
       scalaVersion := ScalaVersion,
       resolvers += Classpaths.typesafeReleases,
+      unmanagedClasspath in Runtime += file(System.getProperty("user.home") + "/oph-configuration"),
       libraryDependencies ++= Seq(
         "org.scalatra" %% "scalatra" % ScalatraVersion,
         "org.scalatra" %% "scalatra-scalate" % ScalatraVersion,
@@ -29,6 +30,7 @@ object OmatsivutBuild extends Build {
         "junit" % "junit" % "4.11" % "test",
         "ch.qos.logback" % "logback-classic" % "1.0.6" % "runtime",
         "javax.servlet" % "javax.servlet-api" % "3.0.1" % "provided",
+        "org.scalaj" %% "scalaj-http" % "0.3.15",
         "org.apache.tomcat.embed" % "tomcat-embed-core"         % "7.0.22" % "container",
         "org.apache.tomcat.embed" % "tomcat-embed-logging-juli" % "7.0.22" % "container",
         "org.apache.tomcat.embed" % "tomcat-embed-jasper"       % "7.0.22" % "container"
