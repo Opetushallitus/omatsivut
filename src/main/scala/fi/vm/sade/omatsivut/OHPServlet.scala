@@ -1,16 +1,20 @@
 package fi.vm.sade.omatsivut
 
-import org.scalatra._
 import java.util.logging.Logger
 import java.util.logging.Level
 import fi.vm.sade.omatsivut.http.HttpClient
+import org.scalatra.json._
+import org.json4s.{DefaultFormats, Formats}
 
-class OHPServlet extends OmatsivutStack with HttpClient {
+
+class OHPServlet extends OmatsivutStack with HttpClient with JacksonJsonSupport {
 
   val settings = AppConfig.loadSettings
   val log = Logger.getLogger(getClass().getSimpleName())
+  val repository = new HakemusRepository
+  protected implicit val jsonFormats: Formats = DefaultFormats
 
-  get("/applications") {
+  get("/applications2") {
     contentType = "application/json;charset=UTF-8"
     try {
 
@@ -28,6 +32,14 @@ class OHPServlet extends OmatsivutStack with HttpClient {
         """{status: "error"}"""
       }
     }
+  }
+
+  before() {
+    contentType = formats("json")
+  }
+
+  get("/applications/:hetu") {
+    repository.fetchHakemukset(params("hetu"))
   }
 
 }

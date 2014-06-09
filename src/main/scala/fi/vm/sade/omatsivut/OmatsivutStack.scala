@@ -1,9 +1,11 @@
 package fi.vm.sade.omatsivut
 
 import org.scalatra._
-import javax.servlet.http.HttpServletRequest
+import org.slf4j.LoggerFactory
 
 trait OmatsivutStack extends ScalatraServlet {
+
+  val logger = LoggerFactory.getLogger(getClass)
 
   notFound {
     // remove content type in case it was set through an action

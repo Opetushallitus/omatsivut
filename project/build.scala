@@ -25,6 +25,7 @@ object OmatsivutBuild extends Build {
       unmanagedClasspath in Runtime += file(System.getProperty("user.home") + "/oph-configuration"),
       libraryDependencies ++= Seq(
         "org.scalatra" %% "scalatra" % ScalatraVersion,
+        "org.scalatra" %% "scalatra-json" % ScalatraVersion,
         "org.scalatra" %% "scalatra-specs2" % ScalatraVersion % "test",
         "junit" % "junit" % "4.11" % "test",
         "ch.qos.logback" % "logback-classic" % "1.0.6" % "runtime",
@@ -32,7 +33,9 @@ object OmatsivutBuild extends Build {
         "org.scalaj" %% "scalaj-http" % "0.3.15",
         "org.apache.tomcat.embed" % "tomcat-embed-core"         % "7.0.22" % "container",
         "org.apache.tomcat.embed" % "tomcat-embed-logging-juli" % "7.0.22" % "container",
-        "org.apache.tomcat.embed" % "tomcat-embed-jasper"       % "7.0.22" % "container"
+        "org.apache.tomcat.embed" % "tomcat-embed-jasper"       % "7.0.22" % "container",
+        "org.mongodb" %% "casbah" % "2.7.2",
+        "org.json4s" %% "json4s-jackson" % "3.2.9"
       ),
       testOptions in Test += Tests.Argument("junitxml"),
       scalateTemplateConfig in Compile <<= (sourceDirectory in Compile){ base =>
