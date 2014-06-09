@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html ng-app="listApp">
 <head>
-<script src="common/jslib/angular.min.js"></script>
-<script src="common/jslib/angular-resource.min.js"></script>
-<script src="listApp.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular-resource.min.js"></script>
+    <script src="listApp.js"></script>
 </head>
 
 <body>
 <div ng-controller="listCtrl">
-<div ng-repeat="application in applications">
-name is: {{application.name}}.
-</div>
+    <div ng-repeat="application in applications">
+        name is: {{application.name}}.
+    </div>
 </div>
 </body>
 </html>
