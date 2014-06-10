@@ -8,9 +8,12 @@
 
 <body>
 <div ng-controller="listCtrl">
-    <div ng-repeat="application in applications">
-        applicationSystemId: {{application.applicationSystemId}}
-    </div>
+    <p>Omat hakemukset</p>
+    <ul>
+        <li ng-repeat="application in applications">
+            <a href="#">{{application.haunNimi.fi}} ({{application.hakemusOid}})</a>
+        </li>
+    </ul>
 </div>
 </body>
 </html>

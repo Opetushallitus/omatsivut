@@ -5,7 +5,9 @@ import org.slf4j.LoggerFactory
 
 class HakemusRepository {
 
-  case class Haku(name: String) {}
+  case class Hakemus(hakemusOid: String, haunNimi: Map[String, String]) {
+
+  }
 
   val logger = LoggerFactory.getLogger(getClass())
 
@@ -14,16 +16,16 @@ class HakemusRepository {
   val hakemukset = hakulomake("application")
   val lomakkeet = hakulomake("applicationSystem")
 
-  def fetchHakemukset(hetu: String): List[Haku] = {
+  def fetchHakemukset(hetu: String): List[Hakemus] = {
     val query = MongoDBObject("answers.henkilotiedot.Henkilotunnus_plain" -> hetu)
-    hakemukset.find(query).toList.map((res: DBObject) => getHaku(res.getAs[String]("applicationSystemId").get))
+    hakemukset.find(query).map((res: DBObject) => getHaku(res.getAs[String]("applicationSystemId").get)).toList
   }
 
-  private def getHaku(oid: String): Haku = {
+  private def getHaku(oid: String): Hakemus = {
     val res = lomakkeet.findOne(MongoDBObject("_id" -> oid), MongoDBObject("form.i18nText" -> 1))
     res match {
-      case Some(res) => Haku(res.asDBObject.getAs[DBObject]("form").get.asDBObject.getAs[DBObject]("i18nText").get.asDBObject.getAs[DBObject]("translations").get.asDBObject.getAs[String]("fi").getOrElse(""))
-      case None => Haku("")
+      case Some(res) => Hakemus(oid, res.asDBObject.getAs[DBObject]("form").get.asDBObject.getAs[DBObject]("i18nText").get.asDBObject.getAs[Map[String, String]]("translations").get)
+      case None => Hakemus(oid, Map.empty)
     }
   }
 }
