@@ -8,10 +8,14 @@
 
 <body>
 <div ng-controller="listCtrl">
-    <p>Omat hakemukseni</p>
+    <h1>Omat hakemukseni</h1>
     <ul>
         <li ng-repeat="application in applications">
-            <a href="#">Hakemus - {{application.haunNimi.fi}}</a>
+            <h2>{{application.haku.name.translations.fi}}</h2>
+            <p ng-repeat="period in application.haku.applicationPeriods">
+              Hakukausi: {{period.start | date:'dd.MM.yyyy HH:mm'}} - {{period.end | date:'dd.MM.yyyy HH:mm'}}</p>
+            </p>
+            <p>Hakemus jätetty: {{application.received | date:'dd.MM.yyyy HH:mm:ss'}}</p>
         </li>
     </ul>
 </div>
