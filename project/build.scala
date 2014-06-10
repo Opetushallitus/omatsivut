@@ -1,10 +1,8 @@
 import sbt._
 import Keys._
 import org.scalatra.sbt._
-import org.scalatra.sbt.PluginKeys._
 import com.mojolly.scalate.ScalatePlugin._
 import com.earldouglas.xsbtwebplugin.WebPlugin
-import ScalateKeys._
 
 object OmatsivutBuild extends Build {
   val Organization = "fi.vm.sade"
@@ -36,7 +34,9 @@ object OmatsivutBuild extends Build {
         "org.apache.tomcat.embed" % "tomcat-embed-jasper"       % "7.0.22" % "container",
         "org.mongodb" %% "casbah" % "2.7.2",
         "org.json4s" %% "json4s-jackson" % "3.2.9",
-        "com.typesafe" % "config" % "1.2.1"
+        "org.json4s" %% "json4s-ext" % "3.2.9",
+        "com.typesafe" % "config" % "1.2.1",
+        "com.novus" %% "salat-core" % "1.9.8"
       ),
       testOptions in Test += Tests.Argument("junitxml")
     )

@@ -8,10 +8,10 @@
 
 <body>
 <div ng-controller="listCtrl">
-    <p>Omat hakemukset</p>
+    <p>Omat hakemukseni</p>
     <ul>
         <li ng-repeat="application in applications">
-            <a href="#">{{application.haunNimi.fi}} ({{application.hakemusOid}})</a>
+            <a href="#">Hakemus - {{application.haunNimi.fi}}</a>
         </li>
     </ul>
 </div>

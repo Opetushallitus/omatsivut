@@ -12,7 +12,7 @@ class OHPServlet extends OmatsivutStack with HttpClient with JacksonJsonSupport 
   val settings = AppConfig.loadSettings
   val log = Logger.getLogger(getClass().getSimpleName())
   val repository = new HakemusRepository
-  protected implicit val jsonFormats: Formats = DefaultFormats
+  protected implicit val jsonFormats: Formats = DefaultFormats ++ org.json4s.ext.JodaTimeSerializers.all
 
   get("/applications2") {
     contentType = "application/json;charset=UTF-8"
