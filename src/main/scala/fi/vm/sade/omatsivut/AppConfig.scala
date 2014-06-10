@@ -21,5 +21,10 @@ object AppConfig {
     val hakuAppUrl = config getString "omatsivut.haku-app.url"
     val hakuAppHakuQuery = config getString "omatsivut.haku-app.haku.query"
     val hakuAppTicketConsumer = config getString "omatsivut.haku-app.ticket.consumer.query"
+    val hakuAppMongoHost  = config getString "omatsivut.haku-app.mongo.host"
+    val hakuAppMongoPort  = config getInt "omatsivut.haku-app.mongo.port"
+    val hakuAppMongoDb  = config getString "omatsivut.haku-app.mongo.db.name"
+    val hakuAppMongoDbUsername  = config getString "omatsivut.haku-app.mongo.db.username"
+    val hakuAppMongoDbPassword  = config getString "omatsivut.haku-app.mongo.db.password" toCharArray()
   }   
 }

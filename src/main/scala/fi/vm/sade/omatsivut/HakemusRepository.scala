@@ -2,6 +2,7 @@ package fi.vm.sade.omatsivut
 
 import com.mongodb.casbah.Imports._
 import org.slf4j.LoggerFactory
+import com.mongodb.casbah.MongoCredential
 
 class HakemusRepository {
 
@@ -11,7 +12,11 @@ class HakemusRepository {
 
   val logger = LoggerFactory.getLogger(getClass())
 
-  val mongoClient = MongoClient("localhost", 27017)
+  val settings = AppConfig.loadSettings
+  val mongoClient = MongoClient(
+		  				List(new ServerAddress(settings.hakuAppMongoHost , settings.hakuAppMongoPort)),
+		  				List(MongoCredential.createMongoCRCredential(settings.hakuAppMongoDbUsername, settings.hakuAppMongoDb, settings.hakuAppMongoDbPassword))
+		  			)
   val hakulomake = mongoClient.getDB("hakulomake")
   val hakemukset = hakulomake("application")
   val lomakkeet = hakulomake("applicationSystem")
