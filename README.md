@@ -2,6 +2,12 @@
 
 Oppijan henkilökohtainen palvelu
 
+## Asetukset
+
+Oletusasetukset `reference.conf` tiedostossa versionhallinnassa.
+Ympäristökohtaiset asetukset `~/oph-configuration/omatsivut.properties` tiedostossa.
+Kehitysympäristön konffit löytyy OPH wikistä projektin sivuston kehittäjän ohjeet sivulta.
+
 ## Käännä ja käynnistä ##
 
 ```sh
