@@ -24,11 +24,8 @@ class HakemusRepository {
   val logger = LoggerFactory.getLogger(getClass())
 
   val settings = AppConfig.loadSettings
-  val mongoClient = MongoClient(
-    List(new ServerAddress(settings.hakuAppMongoHost, settings.hakuAppMongoPort)),
-    List(MongoCredential.createMongoCRCredential(settings.hakuAppMongoDbUsername, settings.hakuAppMongoDb, settings.hakuAppMongoDbPassword))
-  )
-  val hakulomake = mongoClient.getDB("hakulomake")
+  val mongoClient = settings.hakuAppMongoClient
+  val hakulomake = mongoClient.getDB(settings.hakuAppMongoDb)
   val hakemukset = hakulomake("application")
   val lomakkeet = hakulomake("applicationSystem")
 
@@ -50,7 +47,7 @@ class HakemusRepository {
   private def getHaku(hakemus: DBObject): DBObject = {
     val hakuOid = hakemus.getAs[String]("applicationSystemId")
     val res = lomakkeet.findOne(MongoDBObject("_id" -> hakuOid), MongoDBObject("name" -> 1, "applicationPeriods" -> 1))
-    logger.info(res.toString)
+    logger.info("Got applications:" + res.toString)
     res match {
       case Some(x) => x.asDBObject
       case None => DBObject.empty

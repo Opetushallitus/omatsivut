@@ -1,6 +1,9 @@
 package fi.vm.sade.omatsivut
 
-import com.typesafe.config._ 
+import com.typesafe.config._
+import com.mongodb.MongoCredential
+import com.mongodb.ServerAddress
+import com.mongodb.casbah.MongoClient
 
 object AppConfig {
  
@@ -21,10 +24,24 @@ object AppConfig {
     val hakuAppUrl = config getString "omatsivut.haku-app.url"
     val hakuAppHakuQuery = config getString "omatsivut.haku-app.haku.query"
     val hakuAppTicketConsumer = config getString "omatsivut.haku-app.ticket.consumer.query"
-    val hakuAppMongoHost  = config getString "omatsivut.haku-app.mongo.host"
-    val hakuAppMongoPort  = config getInt "omatsivut.haku-app.mongo.port"
+    
+    private val hakuAppMongoHost  = config getString "omatsivut.haku-app.mongo.host"
+    private val hakuAppMongoPort  = config getInt "omatsivut.haku-app.mongo.port"
     val hakuAppMongoDb  = config getString "omatsivut.haku-app.mongo.db.name"
-    val hakuAppMongoDbUsername  = config getString "omatsivut.haku-app.mongo.db.username"
-    val hakuAppMongoDbPassword  = config getString "omatsivut.haku-app.mongo.db.password" toCharArray()
+    private val hakuAppMongoDbUsername  = config getString "omatsivut.haku-app.mongo.db.username"
+    private val hakuAppMongoDbPassword  = config getString "omatsivut.haku-app.mongo.db.password" toCharArray()
+    
+    def hakuAppMongoClient: MongoClient = {
+      val mongoAddress = new ServerAddress(hakuAppMongoHost, hakuAppMongoPort)
+      if(hakuAppMongoDbUsername.isEmpty()) {
+        MongoClient(mongoAddress)
+      }
+      else {
+        MongoClient(
+          List(mongoAddress),
+          List(MongoCredential.createMongoCRCredential(hakuAppMongoDbUsername, hakuAppMongoDb, hakuAppMongoDbPassword))
+        )
+      }
+    }
   }   
 }
