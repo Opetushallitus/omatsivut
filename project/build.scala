@@ -25,7 +25,6 @@ object OmatsivutBuild extends Build {
       unmanagedClasspath in Runtime += file(System.getProperty("user.home") + "/oph-configuration"),
       libraryDependencies ++= Seq(
         "org.scalatra" %% "scalatra" % ScalatraVersion,
-        "org.scalatra" %% "scalatra-scalate" % ScalatraVersion,
         "org.scalatra" %% "scalatra-specs2" % ScalatraVersion % "test",
         "junit" % "junit" % "4.11" % "test",
         "ch.qos.logback" % "logback-classic" % "1.0.6" % "runtime",

@@ -1,7 +1,6 @@
 package fi.vm.sade.omatsivut
 
 import org.scalatra._
-import scalate.ScalateSupport
 import java.util.logging.Logger
 import java.util.logging.Level
 import fi.vm.sade.omatsivut.http.HttpClient
