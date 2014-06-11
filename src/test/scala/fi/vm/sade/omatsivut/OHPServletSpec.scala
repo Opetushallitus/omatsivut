@@ -8,7 +8,9 @@ class OHPServletSpec extends ScalatraSpec { def is =
     "should return status 200"                  ! root200^
                                                 end
 
-  addServlet(classOf[OHPServlet], "/*")
+  implicit val swagger = new OHPSwagger
+  
+  addServlet(new OHPServlet, "/*")
 
   def root200 = get("/") {
     status must_== 200
