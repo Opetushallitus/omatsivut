@@ -9,12 +9,11 @@ This script deploys the war to environment.
 
 OPTIONS:
    -h      Show this message
-   -s      Server address
-   -u      Server username
-   -k      SSH private key file
-   -d      Remote deploy dir
+   -s      Server address (required)
+   -u      Server username (required)
+   -k      SSH private key file (required)
+   -d      Remote deploy dir (required)
    -c      Remote command to execute on server
-   -v      Verbose
 EOF
 }
 
@@ -23,7 +22,6 @@ USER=
 KEYFILE=
 DEPLOYDIR=
 COMMAND=
-VERBOSE=
 while getopts “hs:u:k:d:c:” OPTION
 do
      case $OPTION in
@@ -46,9 +44,6 @@ do
          c)
              COMMAND=$OPTARG
              ;;
-         v)
-             VERBOSE=1
-             ;;
          ?)
              usage
              exit
@@ -61,5 +56,6 @@ then
      usage
      exit 1
 fi
-ls -al
+find target -name *.war -exec cp -v {} omatsivut.war \;
 echo scp -i $KEYFILE omatsivut.war $USER@$SERVER:$DEPLOYDIR
+echo $COMMAND
