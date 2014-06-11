@@ -56,6 +56,19 @@ then
      usage
      exit 1
 fi
+if [[ ! -r $KEYFILE ]]
+then
+     echo $KEYFILE not readable
+     ls -al $KEYFILE
+     exit 1
+fi
 find target -name *.war -exec cp -v {} omatsivut.war \;
-echo scp -i $KEYFILE omatsivut.war $USER@$SERVER:$DEPLOYDIR
-echo $COMMAND
+SCP="scp -i $KEYFILE omatsivut.war $USER@$SERVER:$DEPLOYDIR"
+echo Executing $SCP
+$SCP
+if [[ -n $COMMAND ]]
+then
+     SSH="ssh -i $KEYFILE $USER@$SERVER \"$COMMAND\""
+     echo Executing $SSH
+     $SSH
+fi
