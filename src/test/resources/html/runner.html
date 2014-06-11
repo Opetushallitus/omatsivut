@@ -2,9 +2,22 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title>Hello Mocha!</title>
+    <title>Mocha tests</title>
+    <link rel="stylesheet" href="lib/mocha.css" media="all" />
 </head>
 <body>
+    <div id="mocha"></div>
+    <!-- TODO use iframe to load content -->
 
+    <script src="lib/mocha.js"></script>
+    <script>mocha.setup('bdd')</script>
+    <!-- TODO own tests here -->
+    <script>
+        if(mochaPhantomJS){
+            mochaPhantomJS.run()
+        } else {
+            mocha.run()
+        }
+    </script>
 </body>
 </html>
