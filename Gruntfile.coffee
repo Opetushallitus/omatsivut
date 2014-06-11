@@ -17,6 +17,10 @@ module.exports = (grunt) ->
       }
     },
     mocha_phantomjs: {
+      options: {
+        'reporter': 'xunit',
+        'output': 'target/mocha-phantomjs/test-reports/result.xml'
+      },
       all: {
         options: {
           urls: [
