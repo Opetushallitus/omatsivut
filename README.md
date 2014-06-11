@@ -8,13 +8,39 @@ Oletusasetukset `reference.conf` tiedostossa versionhallinnassa.
 Ympäristökohtaiset asetukset `~/oph-configuration/omatsivut.properties` tiedostossa.
 Kehitysympäristön konffit löytyy OPH wikistä projektin sivuston kehittäjän ohjeet sivulta.
 
-## Käännä ja käynnistä ##
+## SBT buildi
+
+### Generoi eclipse projekti
+
+`./sbt eclipse`
+
+### Yksikkötestit
+
+`./sbt test`
+
+### War paketointi
+
+`./sbt package`
+
+### Käännä ja käynnistä (aina muutosten yhteydessä automaattisesti) ##
 
 ```sh
-$ cd omatsivut
 $ ./sbt
-> container:start
-> browse
+> ~container:start
 ```
 
-Jos `browse` ei avaa selainta, niin avaa käsin [http://localhost:8080/](http://localhost:8080/).
+Avaa selaimessa [http://localhost:8080/](http://localhost:8080/).
+
+## mocha-phantomjs testit
+
+### Asenna node package manager ja grunt
+
+```sh
+brew install npm
+npm install -g grunt-cli
+npm install
+```
+
+## Aja testit
+
+`grunt test`
