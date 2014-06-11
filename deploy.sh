@@ -61,5 +61,5 @@ then
      usage
      exit 1
 fi
-ls -al target
-echo scp -i $KEYFILE war $USER@$SERVER:$DEPLOYDIR
+ls -al
+echo scp -i $KEYFILE omatsivut.war $USER@$SERVER:$DEPLOYDIR
