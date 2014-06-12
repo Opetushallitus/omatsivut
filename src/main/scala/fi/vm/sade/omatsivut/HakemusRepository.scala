@@ -17,7 +17,7 @@ case class Haku(name: Translations, applicationPeriods: List[HakuAika])
 
 case class Hakemus(oid: String, received: Long, var haku: Option[Haku] = None)
 
-class HakemusRepository extends Logging {
+object HakemusRepository extends Logging {
 
   RegisterJodaTimeConversionHelpers()
 

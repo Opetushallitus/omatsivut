@@ -8,7 +8,6 @@ import org.json4s.{DefaultFormats, Formats}
 class OHPServlet(implicit val swagger: Swagger) extends OmatsivutStack with HttpClient with JacksonJsonSupport with SwaggerSupport {
 
   val settings = AppConfig.loadSettings
-  val repository = new HakemusRepository
   protected implicit val jsonFormats: Formats = DefaultFormats ++ org.json4s.ext.JodaTimeSerializers.all
  
   override def applicationName = Some("api")
@@ -44,7 +43,7 @@ class OHPServlet(implicit val swagger: Swagger) extends OmatsivutStack with Http
       )
   )
   get("/applications/:hetu", operation(getApplicationsSwagger)) {
-    repository.fetchHakemukset(params("hetu"))
+    HakemusRepository.fetchHakemukset(params("hetu"))
   }
 
 }
