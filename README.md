@@ -4,17 +4,20 @@ Oppijan henkilökohtainen palvelu
 
 ## Asetukset
 
-Oletusasetukset `reference.conf` tiedostossa versionhallinnassa.
+Oletusasetukset `reference.conf` tiedostossa versionhallinnassa. Oletusasetuksilla käytetään paikallista mongo-kantaa.
+
 Ympäristökohtaiset asetukset `~/oph-configuration/omatsivut.properties` -tiedostossa.
 Kehitysympäristön konffit löytyvät OPH:n wikistä projektin sivuston Kehittäjän Ohjeet -sivulta.
 
 ## SBT-buildi
 
-### Generoi Eclipse-projekti
+### Generoi projekti
+
+Eclipseen:
 
 `./sbt eclipse`
 
-### Generoi IDEA-projekti
+... tai IDEAan:
 
 `./sbt 'gen-idea no-sbt-build-module'`
 
@@ -45,6 +48,12 @@ npm install -g grunt-cli
 npm install
 ```
 
-## Aja testit
+### Aja testit
 
 `grunt test`
+
+## Paikallinen mongo
+
+Käynnistys
+
+    mongod --fork --config /usr/local/etc/mongod.conf
