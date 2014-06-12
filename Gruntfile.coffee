@@ -24,25 +24,17 @@ module.exports = (grunt) ->
       all: {
         options: {
           urls: [
-            'http://localhost:8888/runner.html'
+            'http://localhost:8080/test/runner.html'
           ]
         }
       }
     },
-    connect: {
-      server: {
-        options: {
-          port: 8888,
-          base: 'src/test/resources/html'
-        }
-      }
-    }
     run: {
       omatsivut_backend: {
         cmd: './start.sh'
       }
     }
   })
-  grunt.registerTask('test', ['run', 'connect', 'mocha_phantomjs'])
+  grunt.registerTask('test', ['run', 'mocha_phantomjs'])
 
   grunt.registerTask('default', ['test']);

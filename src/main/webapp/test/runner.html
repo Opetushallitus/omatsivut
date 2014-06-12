@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Mocha tests</title>
+    <link rel="stylesheet" href="lib/mocha.css" media="all"/>
+</head>
+<body>
+<div id="mocha"></div>
+<iframe src="/?hetu=170673-927J" width="1024" height="800"></iframe>
+<script src="lib/mocha.js"></script>
+<script src="lib/chai.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<script>
+    mocha.ui('bdd')
+    mocha.reporter('html')
+</script>
+<script src="spec/applicationListSpec.js"></script>
+<script>
+    var parent$ = window.jQuery
+    var started = false;
+    parent$('iframe').on('load', function () {
+        if (!started) {
+            started = true
+            if (window.mochaPhantomJS) {
+                mochaPhantomJS.run()
+            } else {
+                mocha.run()
+            }
+        }
+    })
+</script>
+</body>
+</html>
