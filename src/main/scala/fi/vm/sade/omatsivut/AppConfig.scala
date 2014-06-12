@@ -4,20 +4,24 @@ import com.typesafe.config._
 import com.mongodb.MongoCredential
 import com.mongodb.ServerAddress
 import com.mongodb.casbah.MongoClient
+import java.io.File
 
 object AppConfig {
- 
-  def loadSettings(): Settings = { 
- 
+  lazy val loadSettings: Settings = {
+    val configFile: File = new File(System.getProperty("user.home") + "/oph-configuration/omatsivut.properties")
+    assert(configFile.exists, "Configuration file " + configFile + " missing")
+    val config = ConfigFactory.parseFile(configFile)
     /** ConfigFactory.load() defaults to the following in order: 
       * system properties 
       * omatsivut.properties 
       * reference.conf 
       */ 
-    new Settings(ConfigFactory.load("omatsivut"))
+    val settings = new Settings(ConfigFactory.load(config))
+    println("Settings: " + settings)
+    settings
   }
   
-  class Settings(config: Config) { 
+  case class Settings(config: Config) {
     val casTicketUrl = config getString "omatsivut.cas.ticket.url" 
     val hakuAppUsername = config getString "omatsivut.haku-app.username" 
     val hakuAppPassword = config getString "omatsivut.haku-app.password" 
@@ -45,5 +49,9 @@ object AppConfig {
     }
 
     def hakuAppMongoDb = hakuAppMongoClient.getDB(hakuAppMongoDbName)
-  }   
+
+    override def toString = {
+      "Mongo: " + hakuAppMongoHost + ":" + hakuAppMongoPort + "/" + hakuAppMongoDbName
+    }
+  }
 }
