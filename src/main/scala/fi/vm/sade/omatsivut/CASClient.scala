@@ -1,12 +1,10 @@
 package fi.vm.sade.omatsivut;
 
-import java.util.logging.Logger
 import fi.vm.sade.omatsivut.http.HttpClient
 
-object CASClient extends HttpClient {
+object CASClient extends HttpClient with Logging {
   
   val settings = AppConfig.loadSettings
-  val log = Logger.getLogger(getClass().getSimpleName())
 
   private def getTicketGrantingTicket(username: String, password: String): Option[String] = {
     val (responseCode, headersMap, resultString) = httpPost(settings.casTicketUrl)
@@ -22,13 +20,13 @@ object CASClient extends HttpClient {
             Some(value)
           }
           case location => {
-	        log.warning("Successful ticket granting request, but no ticket found! Location header: " + location)
+	        logger.warn("Successful ticket granting request, but no ticket found! Location header: " + location)
 	        None
           }
         }
       }
       case _ => {
-        log.warning("Invalid response code (" + responseCode + ") from CAS server!")
+        logger.warn("Invalid response code (" + responseCode + ") from CAS server!")
         None
       }
     }

@@ -17,11 +17,9 @@ case class Haku(name: Translations, applicationPeriods: List[HakuAika])
 
 case class Hakemus(oid: String, received: Long, var haku: Option[Haku] = None)
 
-class HakemusRepository {
+class HakemusRepository extends Logging {
 
   RegisterJodaTimeConversionHelpers()
-
-  private val logger = LoggerFactory.getLogger(getClass())
 
   private val settings = AppConfig.loadSettings
   private val hakemukset = settings.hakuAppMongoDb("application")

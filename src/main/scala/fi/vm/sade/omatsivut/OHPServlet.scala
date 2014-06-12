@@ -1,7 +1,5 @@
 package fi.vm.sade.omatsivut
 
-import java.util.logging.Logger
-import java.util.logging.Level
 import fi.vm.sade.omatsivut.http.HttpClient
 import org.scalatra.json._
 import org.scalatra.swagger._
@@ -10,7 +8,6 @@ import org.json4s.{DefaultFormats, Formats}
 class OHPServlet(implicit val swagger: Swagger) extends OmatsivutStack with HttpClient with JacksonJsonSupport with SwaggerSupport {
 
   val settings = AppConfig.loadSettings
-  val log = Logger.getLogger(getClass().getSimpleName())
   val repository = new HakemusRepository
   protected implicit val jsonFormats: Formats = DefaultFormats ++ org.json4s.ext.JodaTimeSerializers.all
  
@@ -30,11 +27,11 @@ class OHPServlet(implicit val swagger: Swagger) extends OmatsivutStack with Http
         .param("ticket", ticket.getOrElse("no_ticket"))
         .response
 
-      log.log(Level.INFO, "Got applications: " + response)
+      logger.info("Got applications: " + response)
       response
     } catch {
       case t: Throwable => {
-        log.log(Level.SEVERE, "Error retrieving applications", t)
+        logger.error("Error retrieving applications", t)
         """{status: "error"}"""
       }
     }
