@@ -1,9 +1,9 @@
 var expect = chai.expect
-var iframe = window.parent.frames[0]
+var testFrame = window.parent.frames[0]
 $ = function (selector) {
-    return iframe.jQuery(selector, iframe.document)
+    return testFrame.jQuery(selector, testFrame.document)
 }
-iframe.localStorage.clear()
+testFrame.localStorage.clear()
 
 describe('hakemuslistaus', function () {
 

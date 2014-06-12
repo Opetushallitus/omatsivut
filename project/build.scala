@@ -2,8 +2,9 @@ import sbt._
 import Keys._
 import org.scalatra.sbt._
 import com.typesafe.sbteclipse.plugin.EclipsePlugin._
-import com.earldouglas.xsbtwebplugin.WebPlugin
+import com.earldouglas.xsbtwebplugin.{WebPlugin, PluginKeys}
 import sbtbuildinfo.Plugin._
+import com.earldouglas.xsbtwebplugin.WebPlugin.container
 
 object OmatsivutBuild extends Build {
   val Organization = "fi.vm.sade"
@@ -12,10 +13,24 @@ object OmatsivutBuild extends Build {
   val ScalaVersion = "2.11.1"
   val ScalatraVersion = "2.3.0.RC3"
 
+  // task for running mocha tests
+  lazy val mocha = taskKey[Int]("run phantomJS tests")
+
+  val mochaTask = mocha <<= (PluginKeys.start in container.Configuration) map {
+    Unit => {
+      val pb = Seq("grunt","test")
+      val res = pb.!
+      if(res != 0){
+        sys.error("mocha tests failed")
+      }
+      res
+    }
+  }
+
   lazy val project = Project (
     "omatsivut",
     file("."),
-    settings = Defaults.defaultSettings ++ WebPlugin.webSettings ++ ScalatraPlugin.scalatraWithJRebel ++ buildInfoSettings
+    settings = Defaults.defaultSettings ++ WebPlugin.webSettings ++ ScalatraPlugin.scalatraWithJRebel ++ buildInfoSettings ++ mochaTask
       ++ Seq(
       organization := Organization,
       name := Name,

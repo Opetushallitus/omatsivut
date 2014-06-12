@@ -28,13 +28,8 @@ module.exports = (grunt) ->
           ]
         }
       }
-    },
-    run: {
-      omatsivut_backend: {
-        cmd: './start.sh'
-      }
     }
   })
-  grunt.registerTask('test', ['run', 'mocha_phantomjs'])
+  grunt.registerTask('test', ['mocha_phantomjs'])
 
   grunt.registerTask('default', ['test']);

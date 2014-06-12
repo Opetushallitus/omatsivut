@@ -7,7 +7,6 @@
 </head>
 <body>
 <div id="mocha"></div>
-<iframe src="/?hetu=170673-927J" width="1024" height="800"></iframe>
 <script src="lib/mocha.js"></script>
 <script src="lib/chai.js"></script>
 <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
@@ -15,12 +14,12 @@
     mocha.ui('bdd')
     mocha.reporter('html')
 </script>
-<script src="spec/applicationListSpec.js"></script>
 <script>
     var parent$ = window.jQuery
-    var started = false;
-    parent$('iframe').on('load', function () {
-        if (!started) {
+    var started = false
+    var iframe = parent$('<iframe>').attr({src: '/?hetu=170673-927J', width: 1024, height: 800})
+    iframe.load(function () {
+        if(!started) {
             started = true
             if (window.mochaPhantomJS) {
                 mochaPhantomJS.run()
@@ -29,6 +28,9 @@
             }
         }
     })
+    parent$('body').append(iframe)
+
 </script>
+<script src="spec/applicationListSpec.js"></script>
 </body>
 </html>
