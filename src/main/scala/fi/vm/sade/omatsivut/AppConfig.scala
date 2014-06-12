@@ -6,11 +6,11 @@ import com.mongodb.ServerAddress
 import com.mongodb.casbah.MongoClient
 import java.io.File
 
-object AppConfig {
+object AppConfig extends Logging {
   lazy val loadSettings: Settings = {
     val configFileName = System.getProperty("configFileName", "omatsivut.properties")
     val configFile: File = new File(System.getProperty("user.home") + "/oph-configuration/" + configFileName)
-    assert(configFile.exists, "Configuration file " + configFile + " missing")
+    if (!configFile.exists) logger.warn("Configuration file " + configFile + " missing")
     val config = ConfigFactory.parseFile(configFile)
     /** ConfigFactory.load() defaults to the following in order:
       * system properties
