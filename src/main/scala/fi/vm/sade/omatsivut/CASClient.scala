@@ -35,9 +35,9 @@ object CASClient extends HttpClient with Logging {
   def getServiceTicket(appTicketConsumerUrl: String, username: String, password: String): Option[String] = {
     getTicketGrantingTicket(username, password) match {
       case Some(ticket) => {
-    	  Some(httpPost(settings.casTicketUrl + "/" + ticket)
+    	  httpPost(settings.casTicketUrl + "/" + ticket)
     		.param("service", appTicketConsumerUrl)
-    		.response)        
+    		.response        
       } 
       case None => None
     }
