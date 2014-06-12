@@ -21,13 +21,11 @@ class HakemusRepository {
 
   RegisterJodaTimeConversionHelpers()
 
-  val logger = LoggerFactory.getLogger(getClass())
+  private val logger = LoggerFactory.getLogger(getClass())
 
-  val settings = AppConfig.loadSettings
-  val mongoClient = settings.hakuAppMongoClient
-  val hakulomake = mongoClient.getDB(settings.hakuAppMongoDb)
-  val hakemukset = hakulomake("application")
-  val lomakkeet = hakulomake("applicationSystem")
+  private val settings = AppConfig.loadSettings
+  private val hakemukset = settings.hakuAppMongoDb("application")
+  private val lomakkeet = settings.hakuAppMongoDb("applicationSystem")
 
   def fetchHakemukset(hetu: String) = {
     val query = MongoDBObject("answers.henkilotiedot.Henkilotunnus_plain" -> hetu)

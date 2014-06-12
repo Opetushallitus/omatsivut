@@ -27,11 +27,11 @@ object AppConfig {
     
     private val hakuAppMongoHost  = config getString "omatsivut.haku-app.mongo.host"
     private val hakuAppMongoPort  = config getInt "omatsivut.haku-app.mongo.port"
-    val hakuAppMongoDb  = config getString "omatsivut.haku-app.mongo.db.name"
+    private val hakuAppMongoDbName  = config getString "omatsivut.haku-app.mongo.db.name"
     private val hakuAppMongoDbUsername  = config getString "omatsivut.haku-app.mongo.db.username"
     private val hakuAppMongoDbPassword  = config getString "omatsivut.haku-app.mongo.db.password" toCharArray()
     
-    def hakuAppMongoClient: MongoClient = {
+    private def hakuAppMongoClient: MongoClient = {
       val mongoAddress = new ServerAddress(hakuAppMongoHost, hakuAppMongoPort)
       if(hakuAppMongoDbUsername.isEmpty()) {
         MongoClient(mongoAddress)
@@ -39,9 +39,11 @@ object AppConfig {
       else {
         MongoClient(
           List(mongoAddress),
-          List(MongoCredential.createMongoCRCredential(hakuAppMongoDbUsername, hakuAppMongoDb, hakuAppMongoDbPassword))
+          List(MongoCredential.createMongoCRCredential(hakuAppMongoDbUsername, hakuAppMongoDbName, hakuAppMongoDbPassword))
         )
       }
     }
+
+    def hakuAppMongoDb = hakuAppMongoClient.getDB(hakuAppMongoDbName)
   }   
 }
