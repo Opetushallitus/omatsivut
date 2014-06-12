@@ -43,7 +43,10 @@ class OHPServlet(implicit val swagger: Swagger) extends OmatsivutStack with Http
       )
   )
   get("/applications/:hetu", operation(getApplicationsSwagger)) {
-    HakemusRepository.fetchHakemukset(params("hetu"))
+    AuthenticationInfoService.getHenkiloOID(params("hetu")) match {
+      case Some(oid) => HakemusRepository.fetchHakemukset(oid)
+      case _ => response.setStatus(404)
+    }
   }
 
 }

@@ -25,8 +25,8 @@ object HakemusRepository extends Logging {
   private val hakemukset = settings.hakuAppMongoDb("application")
   private val lomakkeet = settings.hakuAppMongoDb("applicationSystem")
 
-  def fetchHakemukset(hetu: String) = {
-    val query = MongoDBObject("answers.henkilotiedot.Henkilotunnus_plain" -> hetu)
+  def fetchHakemukset(oid: String) = {
+    val query = MongoDBObject("personOid" -> oid)
     hakemukset.find(query).toList.map((hakemus: DBObject) => {
       val haku = getHaku(hakemus)
       (hakemus, haku)

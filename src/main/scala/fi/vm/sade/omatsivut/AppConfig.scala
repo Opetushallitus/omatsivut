@@ -30,6 +30,8 @@ object AppConfig extends Logging {
 
     val hakuApp = getRemoteApplicationConfig(config.getConfig("omatsivut.haku-app"))
 
+    val authenticationService = getRemoteApplicationConfig(config.getConfig("omatsivut.authentication-service"))
+
     private val hakuAppMongoHost = config getString "omatsivut.haku-app.mongo.host"
     private val hakuAppMongoPort = config getInt "omatsivut.haku-app.mongo.port"
     private val hakuAppMongoDbName = config getString "omatsivut.haku-app.mongo.db.name"
