@@ -22,7 +22,6 @@ object OmatsivutBuild extends Build {
       version := Version,
       scalaVersion := ScalaVersion,
       resolvers += Classpaths.typesafeReleases,
-      unmanagedClasspath in Runtime += file(System.getProperty("user.home") + "/oph-configuration"),
       sourceGenerators in Compile <+= buildInfo,
       buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
       EclipseKeys.createSrc := EclipseCreateSrc.Default + EclipseCreateSrc.Managed,
