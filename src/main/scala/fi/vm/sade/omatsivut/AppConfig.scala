@@ -12,30 +12,34 @@ object AppConfig extends Logging {
     val configFile: File = new File(System.getProperty("user.home") + "/oph-configuration/" + configFileName)
     if (!configFile.exists) logger.warn("Configuration file " + configFile + " missing")
     val config = ConfigFactory.parseFile(configFile)
-    /** ConfigFactory.load() defaults to the following in order:
-      * system properties
-      * omatsivut.properties
-      * reference.conf
-      */
+    /**
+     * ConfigFactory.load() defaults to the following in order:
+     * system properties
+     * omatsivut.properties
+     * reference.conf
+     */
     val settings = new Settings(ConfigFactory.load(config))
     println("Settings: " + settings)
     settings
   }
-  
+
+  case class RemoteApplicationConfig(url: String, username: String, password: String, path: String, ticketConsumerPath: String)
+
   case class Settings(config: Config) {
-    val casTicketUrl = config getString "omatsivut.cas.ticket.url" 
-    val hakuAppUsername = config getString "omatsivut.haku-app.username" 
-    val hakuAppPassword = config getString "omatsivut.haku-app.password" 
-    val hakuAppUrl = config getString "omatsivut.haku-app.url"
-    val hakuAppHakuQuery = config getString "omatsivut.haku-app.haku.query"
-    val hakuAppTicketConsumer = config getString "omatsivut.haku-app.ticket.consumer.query"
-    
-    private val hakuAppMongoHost  = config getString "omatsivut.haku-app.mongo.host"
-    private val hakuAppMongoPort  = config getInt "omatsivut.haku-app.mongo.port"
-    private val hakuAppMongoDbName  = config getString "omatsivut.haku-app.mongo.db.name"
-    private val hakuAppMongoDbUsername  = config getString "omatsivut.haku-app.mongo.db.username"
-    private val hakuAppMongoDbPassword  = config getString "omatsivut.haku-app.mongo.db.password" toCharArray()
-    
+    val casTicketUrl = config getString "omatsivut.cas.ticket.url"
+
+    val hakuApp = getRemoteApplicationConfig(config.getConfig("omatsivut.haku-app"))
+
+    private val hakuAppMongoHost = config getString "omatsivut.haku-app.mongo.host"
+    private val hakuAppMongoPort = config getInt "omatsivut.haku-app.mongo.port"
+    private val hakuAppMongoDbName = config getString "omatsivut.haku-app.mongo.db.name"
+    private val hakuAppMongoDbUsername = config getString "omatsivut.haku-app.mongo.db.username"
+    private val hakuAppMongoDbPassword = config getString "omatsivut.haku-app.mongo.db.password" toCharArray ()
+
+    private def getRemoteApplicationConfig(config: Config) = {
+      RemoteApplicationConfig(config getString "url", config getString "username", config getString "password", config getString "path", config getString "ticket_consumer_path")
+    }
+
     private def hakuAppMongoClient: MongoClient = {
       val mongoAddress = new ServerAddress(hakuAppMongoHost, hakuAppMongoPort)
       if(hakuAppMongoDbUsername.isEmpty()) {

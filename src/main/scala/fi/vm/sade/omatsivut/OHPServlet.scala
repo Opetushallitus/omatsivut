@@ -20,9 +20,9 @@ class OHPServlet(implicit val swagger: Swagger) extends OmatsivutStack with Http
   get("/applications2") {
     try {
 
-      val ticket = CASClient.getServiceTicket(settings.hakuAppUrl + "/" + settings.hakuAppTicketConsumer, settings.hakuAppUsername, settings.hakuAppPassword)
+      val ticket = CASClient.getServiceTicket(settings.hakuApp.url + "/" + settings.hakuApp.ticketConsumerPath , settings.hakuApp.username, settings.hakuApp.password)
 
-      val response = httpGet(settings.hakuAppUrl + "/" + settings.hakuAppHakuQuery)
+      val response = httpGet(settings.hakuApp.url + "/" + settings.hakuApp.path)
         .param("ticket", ticket.getOrElse("no_ticket"))
         .response
 
