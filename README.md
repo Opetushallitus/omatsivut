@@ -10,9 +10,13 @@ Kehitysympäristön konffit löytyvät OPH:n wikistä projektin sivuston Kehitt�
 
 ## SBT-buildi
 
-### Generoi eclipse-projekti
+### Generoi Eclipse-projekti
 
 `./sbt eclipse`
+
+### Generoi IDEA-projekti
+
+`./sbt 'gen-idea no-sbt-build-module'`
 
 ### Yksikkötestit
 
