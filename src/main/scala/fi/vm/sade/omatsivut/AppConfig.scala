@@ -8,14 +8,15 @@ import java.io.File
 
 object AppConfig {
   lazy val loadSettings: Settings = {
-    val configFile: File = new File(System.getProperty("user.home") + "/oph-configuration/omatsivut.properties")
+    val configFileName = System.getProperty("configFileName", "omatsivut.properties")
+    val configFile: File = new File(System.getProperty("user.home") + "/oph-configuration/" + configFileName)
     assert(configFile.exists, "Configuration file " + configFile + " missing")
     val config = ConfigFactory.parseFile(configFile)
-    /** ConfigFactory.load() defaults to the following in order: 
-      * system properties 
-      * omatsivut.properties 
-      * reference.conf 
-      */ 
+    /** ConfigFactory.load() defaults to the following in order:
+      * system properties
+      * omatsivut.properties
+      * reference.conf
+      */
     val settings = new Settings(ConfigFactory.load(config))
     println("Settings: " + settings)
     settings
