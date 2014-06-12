@@ -5,12 +5,12 @@ Oppijan henkilökohtainen palvelu
 ## Asetukset
 
 Oletusasetukset `reference.conf` tiedostossa versionhallinnassa.
-Ympäristökohtaiset asetukset `~/oph-configuration/omatsivut.properties` tiedostossa.
-Kehitysympäristön konffit löytyy OPH wikistä projektin sivuston kehittäjän ohjeet sivulta.
+Ympäristökohtaiset asetukset `~/oph-configuration/omatsivut.properties` -tiedostossa.
+Kehitysympäristön konffit löytyvät OPH:n wikistä projektin sivuston Kehittäjän Ohjeet -sivulta.
 
-## SBT buildi
+## SBT-buildi
 
-### Generoi eclipse projekti
+### Generoi eclipse-projekti
 
 `./sbt eclipse`
 
@@ -18,7 +18,7 @@ Kehitysympäristön konffit löytyy OPH wikistä projektin sivuston kehittäjän
 
 `./sbt test`
 
-### War paketointi
+### War-paketointi
 
 `./sbt package`
 
@@ -31,7 +31,7 @@ $ ./sbt
 
 Avaa selaimessa [http://localhost:8080/](http://localhost:8080/).
 
-## mocha-phantomjs testit
+## mocha-phantomjs -testit
 
 ### Asenna node package manager ja grunt
 
