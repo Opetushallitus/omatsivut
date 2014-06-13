@@ -7,9 +7,10 @@ Oppijan henkilökohtainen palvelu
 Oletusasetukset ovat `reference.conf` tiedostossa versionhallinnassa. Oletusasetuksilla käytetään paikallista mongo-kantaa.
 Ympäristökohtaisesti arvoja voidaan ylimäärittää `omatsivut.properties` tiedostolla.
 `omatsivut.properties` tiedoston etsintäjärjestys:
-`omatsivut.confiFile` system property  - CI palvelimella käytettävä tapa)
+`omatsivut.confiFile` system property  - kehityksessä IDE:stä käytettävä tapa, jos haluaa ajaa eri asetuksilla serveriä
 `~/oph-configuration/omatsivut.properties` - sovelluspalvelimilla  käytettävä tapa
-`../module-install-parent/config/common/omatsivut/omatsivut.properties` - kehityksessä käytettävä tapa, joten sinun tulee hakea `module-install-parent` tämän projektin rinnalle.
+`../module-install-parent/config/common/omatsivut/omatsivut.properties` - kehityksessä käytettävä oletustapa, joten sinun tulee hakea `module-install-parent` tämän projektin rinnalle.
+`./module-install-parent/config/common/omatsivut/omatsivut.properties` - CI palvelimella käytettävä tapa
 
 ## SBT-buildi
 
