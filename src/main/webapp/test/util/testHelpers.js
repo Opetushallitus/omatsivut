@@ -15,15 +15,17 @@ function S(selector) {
 }
 
 wait = {
+    maxWaitMs: 10000,
+    waitIntervalMs: 10,
     until: function(condition, count) {
         return function(callback) {
-            if (count == undefined) count = 100
+            if (count == undefined) count = wait.maxWaitMs / wait.waitIntervalMs
             if (condition()) {
                 callback()
             } else {
                 setTimeout(function() {
                     wait.until(condition, callback, count - 1)(callback)
-                }, 10)
+                }, wait.waitIntervalMs)
             }
         }
     }
