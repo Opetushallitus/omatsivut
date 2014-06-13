@@ -40,17 +40,16 @@ Avaa selaimessa [http://localhost:8080/](http://localhost:8080/).
 
 ## mocha-phantomjs -testit
 
-### Asenna node package manager ja grunt
+### Asenna node package manager
 
 ```sh
 brew install npm
-npm install -g grunt-cli
 npm install
 ```
 
 ### Aja testit
 
-`grunt test`
+`./runtests.sh`
 
 ## Paikallinen mongo
 
