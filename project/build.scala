@@ -5,6 +5,7 @@ import com.typesafe.sbteclipse.plugin.EclipsePlugin._
 import com.earldouglas.xsbtwebplugin.{WebPlugin, PluginKeys}
 import sbtbuildinfo.Plugin._
 import com.earldouglas.xsbtwebplugin.WebPlugin.container
+import java.io.File
 
 object OmatsivutBuild extends Build {
   val Organization = "fi.vm.sade"
@@ -18,7 +19,11 @@ object OmatsivutBuild extends Build {
 
   val mochaTask = mocha <<= (PluginKeys.start in container.Configuration) map {
     Unit => {
-      val pb = Seq("node_modules/mocha-phantomjs/bin/mocha-phantomjs" ,"-R", "spec", "http://localhost:8080/test/runner.html")
+      val dirs = new File("target/mocha-tests/test-results")
+      dirs.mkdirs();
+      val file = new File(dirs, "result.xml")
+
+      val pb = Seq("node_modules/mocha-phantomjs/bin/mocha-phantomjs" ,"-R", "xunit", "http://localhost:8080/test/runner.html") #| Seq("grep", "<") #> file
       val res = pb.!
       if(res != 0){
         sys.error("mocha tests failed")
