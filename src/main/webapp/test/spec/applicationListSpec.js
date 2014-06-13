@@ -5,7 +5,12 @@ $ = function (selector) {
 }
 testFrame.localStorage.clear()
 
+goToUrl = function(url) {
+    testFrame.location.replace(url)
+}
+
 describe('hakemuslistaus', function () {
+    goToUrl('/?hetu=010101-123N')
 
     it('hakemuslistassa on hakemus', function () {
         expect($('#hakemus-list')).to.be.visible
