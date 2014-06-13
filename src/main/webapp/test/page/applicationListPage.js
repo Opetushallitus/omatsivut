@@ -1,5 +1,10 @@
 function ApplicationListPage() {
+    function visible() {
+        return api.applications().length > 0
+    }
     var api = {
+        openPage: openPage('/?hetu=010101-123N', visible),
+
         visible: function() {
             return api.applications().length > 0
         },

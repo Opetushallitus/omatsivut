@@ -1,5 +1,5 @@
 describe('hakemuslistaus', function () {
-    before(openPage('/?hetu=010101-123N', ApplicationListPage().visible))
+    before(ApplicationListPage().openPage)
 
     it('hakemuslistassa on hakemus henkilölle 010101-123N', function () {
         expect(ApplicationListPage().applications()).to.deep.equal([{
