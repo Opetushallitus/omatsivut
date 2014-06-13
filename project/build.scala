@@ -19,11 +19,7 @@ object OmatsivutBuild extends Build {
 
   val mochaTask = mocha <<= (PluginKeys.start in container.Configuration) map {
     Unit => {
-      val dirs = new File("target/mocha-tests")
-      dirs.mkdirs();
-      val file = new File(dirs, "result.xml")
-
-      val pb = Seq("node_modules/mocha-phantomjs/bin/mocha-phantomjs" ,"-R", "xunit", "http://localhost:8080/test/runner.html") #| Seq("grep", "<") #> file
+      val pb = Seq("node_modules/mocha-phantomjs/bin/mocha-phantomjs" ,"-R", "spec", "http://localhost:8080/test/runner.html")
       val res = pb.!
       if(res != 0){
         sys.error("mocha tests failed")
