@@ -18,7 +18,7 @@ object OmatsivutBuild extends Build {
 
   val mochaTask = mocha <<= (PluginKeys.start in container.Configuration) map {
     Unit => {
-      val pb = Seq("grunt","test")
+      val pb = Seq("mocha-phantomjs" ,"-R", "spec", "http://localhost:8080/test/runner.html")
       val res = pb.!
       if(res != 0){
         sys.error("mocha tests failed")
