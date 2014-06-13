@@ -31,8 +31,12 @@ object CASClient extends HttpClient with Logging {
       }
     }
   }
+
+  def getServiceTicket(service: RemoteApplicationConfig): Option[String] = {
+    getServiceTicket(service.url + "/" + service.ticketConsumerPath , service.username, service.password)
+  }
   
-  def getServiceTicket(appTicketConsumerUrl: String, username: String, password: String): Option[String] = {
+  private def getServiceTicket(appTicketConsumerUrl: String, username: String, password: String): Option[String] = {
     getTicketGrantingTicket(username, password) match {
       case Some(ticket) => {
     	  httpPost(settings.casTicketUrl + "/" + ticket)

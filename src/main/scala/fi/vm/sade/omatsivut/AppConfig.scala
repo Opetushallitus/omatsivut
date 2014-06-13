@@ -22,43 +22,43 @@ object AppConfig extends Logging {
     println("Settings: " + settings)
     settings
   }
+}
 
-  case class RemoteApplicationConfig(url: String, username: String, password: String, path: String, ticketConsumerPath: String)
+case class RemoteApplicationConfig(url: String, username: String, password: String, path: String, ticketConsumerPath: String)
 
-  case class Settings(config: Config) {
-    val casTicketUrl = config getString "omatsivut.cas.ticket.url"
+case class Settings(config: Config) {
+  val casTicketUrl = config getString "omatsivut.cas.ticket.url"
 
-    val hakuApp = getRemoteApplicationConfig(config.getConfig("omatsivut.haku-app"))
+  val hakuApp = getRemoteApplicationConfig(config.getConfig("omatsivut.haku-app"))
 
-    val authenticationService = getRemoteApplicationConfig(config.getConfig("omatsivut.authentication-service"))
+  val authenticationService = getRemoteApplicationConfig(config.getConfig("omatsivut.authentication-service"))
 
-    private val hakuAppMongoHost = config getString "omatsivut.haku-app.mongo.host"
-    private val hakuAppMongoPort = config getInt "omatsivut.haku-app.mongo.port"
-    private val hakuAppMongoDbName = config getString "omatsivut.haku-app.mongo.db.name"
-    private val hakuAppMongoDbUsername = config getString "omatsivut.haku-app.mongo.db.username"
-    private val hakuAppMongoDbPassword = config getString "omatsivut.haku-app.mongo.db.password" toCharArray ()
+  private val hakuAppMongoHost = config getString "omatsivut.haku-app.mongo.host"
+  private val hakuAppMongoPort = config getInt "omatsivut.haku-app.mongo.port"
+  private val hakuAppMongoDbName = config getString "omatsivut.haku-app.mongo.db.name"
+  private val hakuAppMongoDbUsername = config getString "omatsivut.haku-app.mongo.db.username"
+  private val hakuAppMongoDbPassword = config getString "omatsivut.haku-app.mongo.db.password" toCharArray ()
 
-    private def getRemoteApplicationConfig(config: Config) = {
-      RemoteApplicationConfig(config getString "url", config getString "username", config getString "password", config getString "path", config getString "ticket_consumer_path")
+  private def getRemoteApplicationConfig(config: Config) = {
+    RemoteApplicationConfig(config getString "url", config getString "username", config getString "password", config getString "path", config getString "ticket_consumer_path")
+  }
+
+  private def hakuAppMongoClient: MongoClient = {
+    val mongoAddress = new ServerAddress(hakuAppMongoHost, hakuAppMongoPort)
+    if(hakuAppMongoDbUsername.isEmpty()) {
+      MongoClient(mongoAddress)
     }
-
-    private def hakuAppMongoClient: MongoClient = {
-      val mongoAddress = new ServerAddress(hakuAppMongoHost, hakuAppMongoPort)
-      if(hakuAppMongoDbUsername.isEmpty()) {
-        MongoClient(mongoAddress)
-      }
-      else {
-        MongoClient(
-          List(mongoAddress),
-          List(MongoCredential.createMongoCRCredential(hakuAppMongoDbUsername, hakuAppMongoDbName, hakuAppMongoDbPassword))
-        )
-      }
+    else {
+      MongoClient(
+        List(mongoAddress),
+        List(MongoCredential.createMongoCRCredential(hakuAppMongoDbUsername, hakuAppMongoDbName, hakuAppMongoDbPassword))
+      )
     }
+  }
 
-    def hakuAppMongoDb = hakuAppMongoClient.getDB(hakuAppMongoDbName)
+  def hakuAppMongoDb = hakuAppMongoClient.getDB(hakuAppMongoDbName)
 
-    override def toString = {
-      "Mongo: " + hakuAppMongoHost + ":" + hakuAppMongoPort + "/" + hakuAppMongoDbName
-    }
+  override def toString = {
+    "Mongo: " + hakuAppMongoHost + ":" + hakuAppMongoPort + "/" + hakuAppMongoDbName
   }
 }
