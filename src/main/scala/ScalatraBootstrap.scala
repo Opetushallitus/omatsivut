@@ -7,6 +7,7 @@ class ScalatraBootstrap extends LifeCycle {
   implicit val swagger = new OHPSwagger
 
   override def init(context: ServletContext) {
+    AppConfig.loadSettings // <- to fail-fast
     context.mount(new OHPServlet, "/api")
     context.mount(new ResourcesApp, "/swagger/*")
   }

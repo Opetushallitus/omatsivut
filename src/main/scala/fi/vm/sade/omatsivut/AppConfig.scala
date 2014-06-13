@@ -23,7 +23,7 @@ object AppConfig extends Logging {
      * reference.conf
      */
     val settings = new Settings(ConfigFactory.load(config))
-    println("Settings: " + settings)
+    logger.info("Settings: " + settings)
     settings
   }
 }
