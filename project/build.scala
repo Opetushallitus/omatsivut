@@ -19,7 +19,7 @@ object OmatsivutBuild extends Build {
 
   val mochaTask = mocha <<= (PluginKeys.start in container.Configuration) map {
     Unit => {
-      val dirs = new File("target/mocha-tests/test-results")
+      val dirs = new File("target/mocha-tests")
       dirs.mkdirs();
       val file = new File(dirs, "result.xml")
 
