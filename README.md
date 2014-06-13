@@ -4,10 +4,12 @@ Oppijan henkilökohtainen palvelu
 
 ## Asetukset
 
-Oletusasetukset `reference.conf` tiedostossa versionhallinnassa. Oletusasetuksilla käytetään paikallista mongo-kantaa.
-
-Ympäristökohtaiset asetukset `~/oph-configuration/omatsivut.properties` -tiedostossa.
-Kehitysympäristön konffit löytyvät OPH:n wikistä projektin sivuston Kehittäjän Ohjeet -sivulta.
+Oletusasetukset ovat `reference.conf` tiedostossa versionhallinnassa. Oletusasetuksilla käytetään paikallista mongo-kantaa.
+Ympäristökohtaisesti arvoja voidaan ylimäärittää `omatsivut.properties` tiedostolla.
+`omatsivut.properties` tiedoston etsintäjärjestys:
+`omatsivut.confiFile` system property  - CI palvelimella käytettävä tapa)
+`~/oph-configuration/omatsivut.properties` - sovelluspalvelimilla  käytettävä tapa
+`../module-install-parent/config/common/omatsivut/omatsivut.properties` - kehityksessä käytettävä tapa, joten sinun tulee hakea `module-install-parent` tämän projektin rinnalle.
 
 ## SBT-buildi
 
