@@ -1,5 +1,5 @@
 #!/bin/sh
-./sbt mocha
+./sbt mocha -java-home $JAVA_HOME
 result=$?
-./sbt container:stop
+./sbt container:stop -java-home $JAVA_HOME
 exit ${result}
