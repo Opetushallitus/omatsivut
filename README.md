@@ -56,4 +56,8 @@ npm install
 
 Käynnistys
 
-    mongod --fork --config /usr/local/etc/mongod.conf
+`mongod --fork --config /usr/local/etc/mongod.conf`
+
+## API-dokumentaatio
+
+[http://localhost:8080/api-docs](http://localhost:8080/api-docs)
