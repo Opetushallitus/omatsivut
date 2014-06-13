@@ -8,23 +8,25 @@ import java.io.File
 
 object AppConfig extends Logging {
   val loadSettings: Settings = {
-    val configFileName = System.getProperty("omatsivut.configFile", System.getProperty("user.home") + "/oph-configuration/omatsivut.properties")
-    val configFile: File = new File(configFileName)
-    if (configFile.exists) {
-      logger.info("Using configuration file " + configFile)
-    } else {
-      throw new RuntimeException("Configuration file " + configFile + " missing. Please set the omatsivut.configFile property correctly")
+    val fileLocations = List(System.getProperty("omatsivut.configFile"), System.getProperty("user.home") + "/oph-configuration/omatsivut.properties", "../module-install-parent/config/common/omatsivut/omatsivut.properties")
+    fileLocations.flatMap(getFile).headOption match {
+      case Some(configFile) =>
+        logger.info("Using configuration file " + configFile)
+        val config = ConfigFactory.parseFile(configFile)
+        val settings = new Settings(ConfigFactory.load(config))
+        logger.info("Settings: " + settings)
+        settings
+      case None =>
+        throw new RuntimeException("Configuration file missing. Please set the omatsivut.configFile property correctly, or make sure you have ../module-install-parent or ~/oph-configuration/omatsivut.properties")
     }
-    val config = ConfigFactory.parseFile(configFile)
-    /**
-     * ConfigFactory.load() defaults to the following in order:
-     * system properties
-     * omatsivut.properties
-     * reference.conf
-     */
-    val settings = new Settings(ConfigFactory.load(config))
-    logger.info("Settings: " + settings)
-    settings
+  }
+
+  def getFile(name: String): List[File] = {
+    if (name != null && new File(name).exists) {
+      List(new File(name))
+    } else {
+      Nil
+    }
   }
 }
 
