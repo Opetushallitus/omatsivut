@@ -7,10 +7,14 @@ import com.mongodb.casbah.MongoClient
 import java.io.File
 
 object AppConfig extends Logging {
-  lazy val loadSettings: Settings = {
-    val configFileName = System.getProperty("configFileName", "omatsivut.properties")
-    val configFile: File = new File(System.getProperty("user.home") + "/oph-configuration/" + configFileName)
-    if (!configFile.exists) logger.warn("Configuration file " + configFile + " missing")
+  val loadSettings: Settings = {
+    val configFileName = System.getProperty("omatsivut.configFile", System.getProperty("user.home") + "/oph-configuration/omatsivut.properties")
+    val configFile: File = new File(configFileName)
+    if (configFile.exists) {
+      logger.info("Using configuration file " + configFile)
+    } else {
+      throw new RuntimeException("Configuration file " + configFile + " missing. Please set the omatsivut.configFile property correctly")
+    }
     val config = ConfigFactory.parseFile(configFile)
     /**
      * ConfigFactory.load() defaults to the following in order:
