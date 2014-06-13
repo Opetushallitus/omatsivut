@@ -8,7 +8,11 @@ import java.io.File
 
 object AppConfig extends Logging {
   val loadSettings: Settings = {
-    val fileLocations = List(System.getProperty("omatsivut.configFile"), System.getProperty("user.home") + "/oph-configuration/omatsivut.properties", "../module-install-parent/config/common/omatsivut/omatsivut.properties")
+    val fileLocations = List(
+      System.getProperty("omatsivut.configFile"),
+      System.getProperty("user.home") + "/oph-configuration/omatsivut.properties",
+      "../module-install-parent/config/common/omatsivut/omatsivut.properties",
+      "./module-install-parent/config/common/omatsivut/omatsivut.properties")
     fileLocations.flatMap(getFile).headOption match {
       case Some(configFile) =>
         logger.info("Using configuration file " + configFile)
