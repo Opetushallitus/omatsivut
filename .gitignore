@@ -77,4 +77,4 @@ jrebel.lic
 node_modules
 
 # OPH configuration
-oph-configuration
+#oph-configuration
