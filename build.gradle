@@ -26,8 +26,7 @@ task(zipIt, type: Zip) {
     destinationDir new File(buildDir, "distributions")
     archiveName zipFileName
     from 'src/main/resources'
-    from 'eperusteet-app/target'
-    from 'eperusteet-service/target'
+    from 'omatsivut/target'
 }
 
 // Task for copying the .zip file to
