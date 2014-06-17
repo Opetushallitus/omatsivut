@@ -28,8 +28,8 @@ omatsivut.authentication-service.path="polku"
 omatsivut.haku-app.mongo.host={{mongodb_oppija_host}}
 omatsivut.haku-app.mongo.port={{mongodb_oppija_port}}
 omatsivut.haku-app.mongo.db.name="hakulomake"
-omatsivut.haku-app.mongo.db.username={{mongodb_username}}
-omatsivut.haku-app.mongo.db.password={{mongodb_password}}
+omatsivut.haku-app.mongo.db.username={{mongodb_oppija_username}}
+omatsivut.haku-app.mongo.db.password={{mongodb_oppija_password}}
 
 server.name={{ansible_hostname}}
 
