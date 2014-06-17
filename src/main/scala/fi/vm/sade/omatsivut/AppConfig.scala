@@ -10,6 +10,7 @@ object AppConfig extends Logging {
   val loadSettings: Settings = {
     val fileLocations = List(
       System.getProperty("omatsivut.configFile"),
+      System.getProperty("user.home") + "/oph-configuration/common.properties", // for server environments
       System.getProperty("user.home") + "/oph-configuration/omatsivut.properties",
       "../module-install-parent/config/common/omatsivut/omatsivut.properties",
       "./module-install-parent/config/common/omatsivut/omatsivut.properties")
