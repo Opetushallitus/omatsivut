@@ -26,7 +26,7 @@ task(zipIt, type: Zip) {
     destinationDir new File(buildDir, "distributions")
     archiveName zipFileName
     from 'src/main/resources'
-    from 'omatsivut/target'
+    from 'target'
 }
 
 // Task for copying the .zip file to
