@@ -2,10 +2,10 @@ import sbt._
 import Keys._
 import org.scalatra.sbt._
 import com.typesafe.sbteclipse.plugin.EclipsePlugin._
-import com.earldouglas.xsbtwebplugin.{WebPlugin, PluginKeys}
+import com.earldouglas.xsbtwebplugin.WebPlugin
+import com.earldouglas.xsbtwebplugin.PluginKeys._
 import sbtbuildinfo.Plugin._
 import com.earldouglas.xsbtwebplugin.WebPlugin.container
-import java.io.File
 
 object OmatsivutBuild extends Build {
   val Organization = "fi.vm.sade"
@@ -17,7 +17,7 @@ object OmatsivutBuild extends Build {
   // task for running mocha tests
   lazy val mocha = taskKey[Int]("run phantomJS tests")
 
-  val mochaTask = mocha <<= (PluginKeys.start in container.Configuration) map {
+  val mochaTask = mocha <<= (start in container.Configuration) map {
     Unit => {
       val pb = Seq("node_modules/mocha-phantomjs/bin/mocha-phantomjs" ,"-R", "spec", "http://localhost:8080/test/runner.html")
       val res = pb.!
@@ -27,6 +27,8 @@ object OmatsivutBuild extends Build {
       res
     }
   }
+
+
 
   lazy val project = Project (
     "omatsivut",
@@ -62,6 +64,17 @@ object OmatsivutBuild extends Build {
         "com.typesafe" % "config" % "1.2.1",
         "com.novus" %% "salat-core" % "1.9.8"
       ),
+      artifactName <<= (name in (Compile, packageWar)) { projectName =>
+        (config: ScalaVersion, module: ModuleID, artifact: Artifact) =>
+          var newName = projectName
+          if (module.revision.nonEmpty) {
+            newName += "-" + module.revision
+          }
+          newName + "." + artifact.extension
+      },
+      artifactPath in (Compile, packageWar) ~= { defaultPath =>
+        file("target") / defaultPath.getName
+      },
       testOptions in Test += Tests.Argument("junitxml")
     )
   )
