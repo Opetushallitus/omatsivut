@@ -45,7 +45,7 @@ gulp.task('watch', function() {
     gulp.watch(['src/main/webapp/**/*.js', 'src/main/webapp/**/*.css', 'src/main/webapp/**/*.html'], livereload.changed);
     gulp.watch([jsFiles],['lint', 'browserify']);
     gulp.watch([lessFiles],['less']);
-
 });
 
-gulp.task('dev', ['lint', 'browserify', 'less', 'watch']);
+gulp.task('compile', ['browserify', 'less']);
+gulp.task('dev', ['lint', 'compile', 'watch']);
