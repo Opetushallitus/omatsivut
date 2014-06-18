@@ -78,3 +78,7 @@ node_modules
 
 # OPH configuration
 #oph-configuration
+
+# generated js and css files
+src/main/webapp/bundle.js
+src/main/webapp/css/

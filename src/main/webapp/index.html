@@ -1,17 +1,14 @@
 <!DOCTYPE html>
 <html ng-app="listApp">
 <head>
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.min.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular-resource.min.js"></script>
-    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-    <script src="listApp.js"></script>
+    <link href="css/main.css" media="all" rel="stylesheet" type="text/css"/>
 </head>
 
 <body>
 <div ng-controller="listCtrl">
     <h1>Omat hakemukseni</h1>
     <ul id="hakemus-list">
-        <li ng-repeat="application in applications">
+        <li ng-repeat="application in applications" ng-cloak>
             <h2>{{application.haku.name.translations.fi}}</h2>
             <p ng-repeat="period in application.haku.applicationPeriods">
               Hakukausi: {{period.start | date:'dd.MM.yyyy HH:mm'}} - {{period.end | date:'dd.MM.yyyy HH:mm'}}</p>
@@ -20,5 +17,7 @@
         </li>
     </ul>
 </div>
+
+<script src="bundle.js"></script>
 </body>
 </html>
