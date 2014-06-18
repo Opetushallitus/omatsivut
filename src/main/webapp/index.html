@@ -1,22 +1,68 @@
 <!DOCTYPE html>
 <html ng-app="listApp">
 <head>
+    <link href='http://fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700' rel='stylesheet' type='text/css'>
     <link href="css/main.css" media="all" rel="stylesheet" type="text/css"/>
 </head>
 
 <body>
-<div ng-controller="listCtrl">
-    <h1>Omat hakemukseni</h1>
-    <ul id="hakemus-list" ng-cloak>
-        <li ng-repeat="application in applications">
-            <h2>{{application.haku.name.translations.fi}}</h2>
-            <p ng-repeat="period in application.haku.applicationPeriods">
-              Hakukausi: {{period.start | date:'dd.MM.yyyy HH:mm'}} - {{period.end | date:'dd.MM.yyyy HH:mm'}}</p>
-            </p>
-            <p>Hakemus jätetty: {{application.received | date:'dd.MM.yyyy HH:mm:ss'}}</p>
-        </li>
-    </ul>
-</div>
+    <div class="container">
+        <div ng-controller="listCtrl">
+            <h1>Omat hakemukseni</h1>
+            <ul id="hakemus-list" ng-cloak>
+                <li ng-repeat="application in applications" class="application-list-item">
+                    <h2>{{application.haku.name.translations.fi}}</h2>
+                    <p ng-repeat="period in application.haku.applicationPeriods">
+                      Hakukausi: {{period.start | date:'dd.MM.yyyy HH:mm'}} - {{period.end | date:'dd.MM.yyyy HH:mm'}}</p>
+                    </p>
+                    <p>Hakemus jätetty: {{application.received | date:'dd.MM.yyyy HH:mm:ss'}}</p>
+
+                    <section class="application-section">
+                        <header class="application-section-heading">
+                            Hakutoiveet
+                            <button class="float-right">Tallenna</button>
+                        </header>
+
+                        <ul class="preference-list">
+                            <li class="preference-list-item">
+                                <div>
+                                    <span class="sort-arrow-down"></span>
+                                    <span class="sort-arrow-up disabled"></span>
+                                    1.
+                                </div>
+
+                                <div>
+                                    <div class="row">
+                                        <label><span>Opetuspiste:</span><input type="text" /></label>
+                                    </div>
+                                    <div class="row">
+                                        <label><span>Koulutus:</span><input type="text" /></label>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="preference-list-item">
+                                <div>
+                                    <span class="sort-arrow-down"></span>
+                                    <span class="sort-arrow-up"></span>
+                                    1.
+                                </div>
+
+                                <div>
+                                    <div class="row">
+                                        <label><span>Opetuspiste:</span><input type="text" /></label>
+                                    </div>
+                                    <div class="row">
+                                        <label><span>Koulutus:</span><input type="text" /></label>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </section>
+                </li>
+            </ul>
+        </div>
+    </div>
 
 <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 <script src="bundle.js"></script>
