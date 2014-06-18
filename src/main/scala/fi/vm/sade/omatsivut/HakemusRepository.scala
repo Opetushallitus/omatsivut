@@ -15,7 +15,9 @@ case class Translations(translations: Map[String, String])
 
 case class Haku(name: Translations, applicationPeriods: List[HakuAika])
 
-case class Hakemus(oid: String, received: Long, var haku: Option[Haku] = None)
+case class Answers(hakutoiveet: Map[String, String])
+
+case class Hakemus(oid: String, received: Long, answers: Answers, var haku: Option[Haku] = None)
 
 object HakemusRepository extends Logging {
 
