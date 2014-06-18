@@ -46,7 +46,10 @@ object HakemusRepository extends Logging {
     }
 
     def flatten(toiveet: Map[String, String]): List[Map[String, String]] = {
-      groupPreferences(toiveet).toList.map((tuple) => tuple._2.map((v) => tupleWithShortKey(v)) ++ Map("priority" -> tuple._1))
+      groupPreferences(toiveet)
+        .toList
+        .map((tuple) => tuple._2.map((v) => tupleWithShortKey(v)) ++ Map("priority" -> tuple._1))
+        .sortBy(map => map.get("priority"))
     }
 
     hakemukset.find(query).toList.map((hakemus: DBObject) => {
