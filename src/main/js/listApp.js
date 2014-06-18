@@ -6,6 +6,6 @@ var listApp = angular.module('listApp', ["ngResource"], function($locationProvid
 });
 
 listApp.controller("listCtrl", ["$resource", "$scope", "$location", function ($resource, $scope, $location) {
-    $scope.applications = $resource("/api/applications/" + $location.search().hetu).query(function () {
+    $scope.applications = $resource("api/applications/" + $location.search().hetu).query(function () {
     });
 }]);
