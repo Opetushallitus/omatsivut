@@ -15,12 +15,12 @@ host.ilb={{host_ilb}}
 host.virkailija={{host_virkailija}}
 
 omatsivut.cas.ticket.url={{omatsivut_cas_ticket_url}}
-omatsivut.haku-app.url=https://{{host.virkailija}}/haku-app
+omatsivut.haku-app.url=https://{{host_virkailija}}/haku-app
 omatsivut.haku-app.username={{omatsivut_haku_app_username}}
 omatsivut.haku-app.password={{omatsivut_haku_app_password}}
 omatsivut.haku-app.ticket_consumer_path="j_spring_cas_security_check"
 omatsivut.haku-app.path="polku"
-omatsivut.authentication-service.url=https://{{host.virkailija}}/authentication-service
+omatsivut.authentication-service.url=https://{{host_virkailija}}/authentication-service
 omatsivut.authentication-service.username={{omatsivut_authentication_service_username}}
 omatsivut.authentication-service.password={{omatsivut_authentication_service_password}}
 omatsivut.authentication-service.ticket_consumer_path="j_spring_cas_security_check"
