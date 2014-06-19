@@ -1,9 +1,6 @@
 package fi.vm.sade.omatsivut
 
 import com.mongodb.casbah.Imports._
-import org.slf4j.LoggerFactory
-
-import com.mongodb.casbah.MongoCredential
 import com.mongodb.casbah.commons.conversions.scala.RegisterJodaTimeConversionHelpers
 import com.novus.salat._
 import com.novus.salat.global._
@@ -25,19 +22,38 @@ object HakemusRepository extends Logging {
   private val hakemukset = settings.hakuAppMongoDb("application")
   private val lomakkeet = settings.hakuAppMongoDb("applicationSystem")
 
+  def getDelimiter(s: String) = if(s.contains("_")) "_" else "-"
+
+  def updateHakemus(hakemus: Hakemus) {
+
+    // TODO validation and identity check
+    val query = MongoDBObject("oid" -> hakemus.oid)
+    val updates = hakemus.hakutoiveet.zipWithIndex.flatMap {
+      (t) => t._1.map {
+        (elem) => ("answers.hakutoiveet.preference" + (t._2 + 1) + getDelimiter(elem._1) + elem._1, elem._2)
+      }
+    }
+    val update = $set(updates:_*)
+    hakemukset.update(query, update)
+  }
+
   def fetchHakemukset(oid: String): List[Hakemus] = {
 
     val query = MongoDBObject("personOid" -> oid)
 
-    def shortenKey(v: (String, String), delimiter: Char = '-'): String = {
+    def shortenKey(v: (String, String), delimiter: Char = '-') = {
       v._1.substring(v._1.indexOf(delimiter) + 1)
     }
 
-    def tupleWithShortKey(v: (String, String)): (String, String) = {
+    def tupleWithShortKey(v: (String, String)) = {
       if (v._1.contains("_")) (shortenKey(v, '_'), v._2) else (shortenKey(v), v._2)
     }
 
-    def groupPreferences(toiveet: Map[String, String]): Map[String, Map[String, String]] = {
+    def shortenNames(tuple: (String, Map[String, String])) = {
+      tuple._2.map(tupleWithShortKey) ++ Map("priority" -> tuple._1)
+    }
+
+    def groupPreferences(toiveet: Map[String, String]) = {
       val pattern = "preference(\\d+).*".r
       toiveet.groupBy((key) => key._1 match {
         case pattern(x) => x
@@ -48,8 +64,9 @@ object HakemusRepository extends Logging {
     def flatten(toiveet: Map[String, String]): List[Map[String, String]] = {
       groupPreferences(toiveet)
         .toList
-        .map((tuple) => tuple._2.map((v) => tupleWithShortKey(v)) ++ Map("priority" -> tuple._1))
+        .map(shortenNames)
         .sortBy(map => map.get("priority"))
+        .map((m) => m.filterKeys { Set("priority").contains(_) == false})
     }
 
     hakemukset.find(query).toList.map((hakemus: DBObject) => {
