@@ -21,8 +21,16 @@ listApp.controller("listCtrl", ["$scope", "applicationsResource", function ($sco
     $scope.applications = applicationsResource;
 }]);
 
-listApp.controller("hakemusCtrl", ["$scope", function ($scope) {
+listApp.controller("hakemusCtrl", ["$scope", "$element", function ($scope, $element) {
     $scope.saved = true;
+
+    $scope.canMoveTo = function(start, end) {
+        var self = this;
+        function indexValid(index) {
+            return index >= 0 && index <= self.application.hakutoiveet.length-1 && self.application.hakutoiveet[index]["Opetuspiste-id"] !== "";
+        }
+        return indexValid(start) && indexValid(end);
+    }
 
     $scope.moveApplication = function(from, to) {
         if (to >= 0 && to < this.application.hakutoiveet.length) {
@@ -44,5 +52,60 @@ listApp.controller("hakemusCtrl", ["$scope", function ($scope) {
             $scope.saveErrorMessage = "Tallentaminen epäonnistui";
             console.log(err);
         }
+    };
+}]);
+
+listApp.directive('sortable', ['$document', function($document) {
+    return function($scope, $element, attr) {
+        var slide = function(el, offset) {
+            el.css("transition", "all 0.5s");
+            el.css("transform", "translate3d(0px, " + offset + "px, 0px)");
+        }
+
+        var moveDown = function(el) {
+            slide(el, el.outerHeight());
+        }
+
+        var moveUp = function(el) {
+            slide(el, -el.outerHeight());
+        }
+
+        var resetSlide = function(el) {
+            el.css({
+                "transition": "none",
+                "transform": "none"
+            });
+        }
+
+        var switchPlaces = function(element1, element2) {
+            moveDown(element1);
+            moveUp(element2)
+
+            setTimeout(function() {
+                $scope.$apply(function() {
+                    $scope.moveApplication(element1.index(), element2.index());
+                    resetSlide(element1);
+                    resetSlide(element2)
+                });
+            }, 500);
+        }
+
+        $element.on("click", ".sort-arrow-down", function(event) {
+            var btn = $(event.target);
+            if (!btn.hasClass("disabled")) {
+                var element1 = btn.closest("li");
+                var element2 = element1.next();
+                switchPlaces(element1, element2);
+            }
+        });
+
+        $element.on("click", ".sort-arrow-up", function(event) {
+            var btn = $(event.target);
+            if (!btn.hasClass("disabled")) {
+                var element1 = btn.closest("li");
+                var element2 = element1.prev();
+                switchPlaces(element2, element1);
+            }
+        });
     };
 }]);

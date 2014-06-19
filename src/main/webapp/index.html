@@ -25,11 +25,11 @@
                             <span class="status-message error float-right" ng-bind="saveErrorMessage"></span>
                         </header>
 
-                        <ul class="preference-list">
+                        <ul class="preference-list" sortable>
                             <li class="preference-list-item" ng-repeat="hakutoive in application.hakutoiveet">
                                 <div>
-                                    <span class="sort-arrow-down" ng-class="{disabled: $last}" ng-click="moveApplication($index, $index+1)"></span>
-                                    <span class="sort-arrow-up" ng-class="{disabled: $first}" ng-click="moveApplication($index, $index-1)"></span>
+                                    <span class="sort-arrow-down" ng-class="{disabled: !canMoveTo($index, $index+1)}"></span>
+                                    <span class="sort-arrow-up" ng-class="{disabled: !canMoveTo($index, $index-1)}"></span>
                                     {{$index+1}}.
                                 </div>
 
