@@ -16,6 +16,7 @@ class OHPServletSpec extends MutableScalatraSpec with OHPJsonFormats {
     "return person's applications" in {
       get("/applications/010101-123N") {
         verifyApplications(1)
+        verifyOneApplication()
       }
     }
 
@@ -30,6 +31,14 @@ class OHPServletSpec extends MutableScalatraSpec with OHPJsonFormats {
     val applications: List[Hakemus] = Serialization.read[List[Hakemus]](body)
     applications.length must_== expectedCount
     status must_== 200
+  }
+
+  def verifyOneApplication() = {
+    val applications: List[Hakemus] = Serialization.read[List[Hakemus]](body)
+    val hakemus = applications(0)
+    hakemus.oid must_== "1.2.246.562.11.00000876904"
+    hakemus.hakutoiveet.length must_== 5
+    hakemus.hakutoiveet(0)("Opetuspiste-id") must_== "1.2.246.562.10.60222091211"
   }
 
   addServlet(new OHPServlet()(new OHPSwagger), "/*")
