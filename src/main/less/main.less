@@ -60,6 +60,7 @@
 @button-hover-color: lighten(@button-color, 10);
 @button-hover-border-color: lighten(@button-border-color, 10);
 @button-disabled-color: #dedede;
+@button-disabled-border-color: darken(@button-disabled-color, 20);
 
 // Layout
 
@@ -139,8 +140,9 @@ button {
     color: #444;
   }
 
-  &.disabled {
+  &[disabled] {
     background: @button-disabled-color;
+    border: 1px solid @button-disabled-border-color;
   }
 
   &:active {
@@ -166,6 +168,10 @@ button {
 .application-list-item {
   border: 1px solid @border-color;
   padding: 20px;
+
+  & + .application-list-item {
+    margin-top: 50px;
+  }
 }
 
 .application-section {
