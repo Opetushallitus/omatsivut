@@ -22,6 +22,7 @@
                         <header class="application-section-heading">
                             Hakutoiveet
                             <button class="float-right" ng-disabled="saved" ng-click="saveApplication()">Tallenna</button>
+                            <span class="status-message error float-right" ng-bind="saveErrorMessage"></span>
                         </header>
 
                         <ul class="preference-list">

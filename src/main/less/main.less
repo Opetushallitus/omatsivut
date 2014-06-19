@@ -20,11 +20,13 @@
   text-transform: uppercase;
 }
 
-.body-font() {
+.body-font(@color: @font-color) {
   font-family: helvetica, arial, sans-serif;
   font-size: @body-font-size;
-  color: @font-color;
+  color: @color;
   line-height: 20px;
+  text-transform: none;
+  letter-spacing: normal;
 }
 
 // Symbols
@@ -50,6 +52,7 @@
 // Colors
 
 @font-color: #333;
+@error-color: red;
 @border-color: #dcdcdc;
 @section-border-color: #feba00;
 @input-background: #ebf3f7;
@@ -111,6 +114,10 @@ h2 {
   }
 }
 
+.status-message {
+  .body-font(@error-color);
+}
+
 input {
   background: @input-background;
   color: @font-color;
@@ -152,6 +159,7 @@ button {
 
 .float-right {
   float: right;
+  margin-left: 10px;
 }
 
 .application-section-heading {

@@ -6,9 +6,19 @@ var listApp = angular.module('listApp', ["ngResource", "ngAnimate"], function($l
     $locationProvider.html5Mode(true);
 });
 
-listApp.controller("listCtrl", ["$resource", "$scope", "$location", function ($resource, $scope, $location) {
-    $scope.applications = $resource("api/applications/" + $location.search().hetu).query(function () {
+
+listApp.factory("applicationsResource", ["$resource", "$location", function($resource, $location) {
+    return $resource("api/applications/" + $location.search().hetu, null, {
+        "update": {
+            method: "PUT",
+            url: "api/applications/:id"
+        }
+    }).query(function () {
     });
+}]);
+
+listApp.controller("listCtrl", ["$scope", "applicationsResource", function ($scope, applicationsResource) {
+    $scope.applications = applicationsResource;
 }]);
 
 listApp.controller("hakemusCtrl", ["$scope", function ($scope) {
@@ -23,6 +33,16 @@ listApp.controller("hakemusCtrl", ["$scope", function ($scope) {
     };
 
     $scope.saveApplication = function() {
-        $scope.saved = true;
+        $scope.application.$update({id: $scope.application.oid }, onSuccess, onError);
+
+        function onSuccess() {
+            $scope.saved = true;
+            $scope.saveErrorMessage = "";
+        }
+
+        function onError(err) {
+            $scope.saveErrorMessage = "Tallentaminen epäonnistui";
+            console.log(err);
+        }
     };
 }]);
