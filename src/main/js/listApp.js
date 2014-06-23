@@ -1,11 +1,9 @@
 require("angular/angular");
 require('angular-resource/angular-resource');
-require('angular-animate/angular-animate');
 
-var listApp = angular.module('listApp', ["ngResource", "ngAnimate"], function($locationProvider) {
+var listApp = angular.module('listApp', ["ngResource"], function($locationProvider) {
     $locationProvider.html5Mode(true);
 });
-
 
 listApp.factory("applicationsResource", ["$resource", "$location", function($resource, $location) {
     return $resource("api/applications/" + $location.search().hetu, null, {

@@ -21,8 +21,7 @@
   },
   "napa": {
     "angular": "angular/bower-angular",
-    "angular-resource": "angular/bower-angular-resource",
-    "angular-animate": "angular/bower-angular-animate"
+    "angular-resource": "angular/bower-angular-resource"
   },
   "name": "ohp",
   "description": "OHP Mocha tests",
