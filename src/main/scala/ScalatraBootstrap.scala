@@ -1,4 +1,5 @@
 import fi.vm.sade.omatsivut._
+import fi.vm.sade.omatsivut.fixtures.FixtureServlet
 import org.scalatra._
 import javax.servlet.ServletContext
 
@@ -10,5 +11,9 @@ class ScalatraBootstrap extends LifeCycle {
     AppConfig.loadSettings // <- to fail-fast
     context.mount(new OHPServlet, "/api")
     context.mount(new ResourcesApp, "/swagger/*")
+
+    if("true" == System.getProperty("omatsivut.testMode")){
+      context.mount(new FixtureServlet, "/fixtures");
+    }
   }
 }
