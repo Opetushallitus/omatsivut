@@ -15,6 +15,13 @@ listApp.factory("applicationsResource", ["$resource", "$location", function($res
     });
 }]);
 
+listApp.factory("settings", [function() {
+    var testMode = window.parent.location.href.indexOf("runner.html") > 0;
+    return {
+        uiTransitionTime: testMode ? 10 : 500
+    };
+}]);
+
 listApp.controller("listCtrl", ["$scope", "applicationsResource", function ($scope, applicationsResource) {
     $scope.applications = applicationsResource;
 }]);
@@ -53,7 +60,7 @@ listApp.controller("hakemusCtrl", ["$scope", "$element", function ($scope, $elem
     };
 }]);
 
-listApp.directive('sortable', ['$document', function($document) {
+listApp.directive('sortable', ["settings", function(settings) {
     return function($scope, $element, attr) {
         var slide = function(el, offset) {
             el.css("transition", "all 0.5s");
@@ -75,7 +82,6 @@ listApp.directive('sortable', ['$document', function($document) {
             });
         };
 
-
         var switchPlaces = function(element1, element2) {
             if (element1.index() < element2.index()) {
                 moveDown(element1);
@@ -91,7 +97,7 @@ listApp.directive('sortable', ['$document', function($document) {
                     resetSlide(element1);
                     resetSlide(element2);
                 });
-            }, 500);
+            }, settings.uiTransitionTime);
         };
 
         var arrowClicked = function(elementF) {

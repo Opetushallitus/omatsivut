@@ -30,6 +30,15 @@ wait = {
         }
     }
 }
+
+uiUtil = {
+    inputValues: function(el) {
+        return _.chain(el.find("[ng-model]"))
+            .map(function(el) { return [$(el).attr("ng-model"), $(el).val() ]})
+            .object().value()
+    }
+}
+
 function openPage(path, predicate) {
     if (!predicate) {
         predicate = function() { return testFrame.jQuery }
