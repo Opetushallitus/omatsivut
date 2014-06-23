@@ -27,13 +27,13 @@
 
                         <ul class="preference-list" sortable>
                             <li class="preference-list-item" ng-repeat="hakutoive in application.hakutoiveet">
-                                <div>
+                                <div class="item-content">
                                     <span class="sort-arrow-down" ng-class="{disabled: !canMoveTo($index, $index+1)}"></span>
                                     <span class="sort-arrow-up" ng-class="{disabled: !canMoveTo($index, $index-1)}"></span>
                                     {{$index+1}}.
                                 </div>
 
-                                <div>
+                                <div class="item-content">
                                     <div class="row">
                                         <label><span>Opetuspiste:</span><input type="text" ng-model="hakutoive.Opetuspiste"/></label>
                                     </div>
