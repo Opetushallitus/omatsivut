@@ -62,7 +62,8 @@ object OmatsivutBuild extends Build {
         "org.json4s" %% "json4s-jackson" % "3.2.10",
         "org.json4s" %% "json4s-ext" % "3.2.10",
         "com.typesafe" % "config" % "1.2.1",
-        "com.novus" %% "salat-core" % "1.9.8"
+        "com.novus" %% "salat-core" % "1.9.8",
+        "commons-codec" % "commons-codec" % "1.9"
       ),
       artifactName <<= (name in (Compile, packageWar)) { projectName =>
         (config: ScalaVersion, module: ModuleID, artifact: Artifact) =>
