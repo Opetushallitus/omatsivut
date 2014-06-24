@@ -12,20 +12,24 @@ function ApplicationListPage() {
         }
     }
 
-    function resetData(callback) {
-        $.ajax("/fixtures/apply", { type: "PUT" }).done(callback)
-    }
-
-    function compose(f1, f2) {
-        return function(done) {
-            f1(function() { f2(done) })
+    function saveButton(el) {
+        return {
+            element: function() { return el },
+            isEnabled: function(isEnabled) { return function() { return el.prop("disabled") != isEnabled } },
+            click: function() { el.click() }
         }
     }
 
-    var openListPage = openPage('/?hetu=010101-123N', visible)
+    var testHetu = "010101-123N"
+
+    var openListPage = openPage("/?hetu=" + testHetu, visible)
+
+    function getApplication(index) { return S("#hakemus-list>li").eq(index) }
 
     var api = {
-        resetDataAndOpen: compose(resetData, openListPage),
+        resetDataAndOpen: function(done) { db.resetData().then(openListPage).done(done) },
+
+        hetu: function() { return testHetu },
 
         openPage: openListPage,
 
@@ -36,10 +40,14 @@ function ApplicationListPage() {
         },
 
         preferencesForApplication: function(index) {
-            var application = S("#hakemus-list>li").eq(index)
+            var application = getApplication(index)
             return application.find(".preference-list-item")
                 .map(function() { return preferenceItem(S(this))}).toArray()
                 .filter(function(item) { return item.data()["hakutoive.Koulutus"].length > 0 })
+        },
+
+        saveButton: function(applicationIndex) {
+            return saveButton(getApplication(applicationIndex).find(".save-btn"))
         }
     }
     return api
