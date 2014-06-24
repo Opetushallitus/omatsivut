@@ -20,7 +20,7 @@ class SessionServlet extends OmatsivutStack {
         response.redirect("/index.html")
       case _ =>
         logger.warn("OID not found for hetu: " + headerOption("hetu"))
-        response.setStatus(503)
+        response.setStatus(401)
     }
   }
 
