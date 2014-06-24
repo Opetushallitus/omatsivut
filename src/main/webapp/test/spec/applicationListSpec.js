@@ -57,7 +57,7 @@
         return wait.until(ApplicationListPage().saveButton(0).isEnabled(true))()
             .then(ApplicationListPage().saveButton(0).click)
             .then(wait.until(ApplicationListPage().saveButton(0).isEnabled(false)))
-            .then(function() { return db.getPreferences(ApplicationListPage().hetu())})
+            .then(function() { return db.getPreferences()})
             .then(function(data) {
                 return {
                     fromDb: data,

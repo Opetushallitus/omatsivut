@@ -5,7 +5,7 @@ import org.scalatra.json._
 import org.scalatra.swagger._
 import org.json4s.jackson.Serialization
 
-class OHPServlet(implicit val swagger: Swagger) extends OmatsivutStack with HttpClient with JacksonJsonSupport with OHPJsonFormats with SwaggerSupport {
+class OHPServlet(implicit val swagger: Swagger) extends OmatsivutStack with HttpClient with JacksonJsonSupport with OHPJsonFormats with SwaggerSupport with Authentication {
   override def applicationName = Some("api")
 
   protected val applicationDescription = "Oppijan henkilökohtaisen palvelun REST API, jolla voi hakea ja muokata hakemuksia ja omia tietoja"
@@ -23,13 +23,8 @@ class OHPServlet(implicit val swagger: Swagger) extends OmatsivutStack with Http
     summary "Tallenna hakemus"
     )
 
-  get("/applications/:hetu", operation(getApplicationsSwagger)) {
-    AuthenticationInfoService.getHenkiloOID(params("hetu")) match {
-      case Some(oid) =>
-        HakemusRepository.fetchHakemukset(oid)
-      case _ =>
-        response.setStatus(404)
-    }
+  get("/applications", operation(getApplicationsSwagger)) {
+    HakemusRepository.fetchHakemukset(oid())
   }
 
   put("/applications/:oid", operation(putApplicationsSwagger)) {

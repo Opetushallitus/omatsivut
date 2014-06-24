@@ -7,7 +7,7 @@ var listApp = angular.module('listApp', ["ngResource"], function($locationProvid
 });
 
 listApp.factory("applicationsResource", ["$resource", "$location", function($resource, $location) {
-    return $resource("api/applications/" + $location.search().hetu, null, {
+    return $resource("api/applications", null, {
         "update": {
             method: "PUT",
             url: "api/applications/:id"

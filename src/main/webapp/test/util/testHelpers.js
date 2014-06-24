@@ -51,12 +51,12 @@ db = {
         return Q($.ajax("/fixtures/apply", { type: "PUT" }))
     },
 
-    getApplications: function(hetu) {
-        return Q($.get("/api/applications/" + hetu))
+    getApplications: function() {
+        return Q($.get("/api/applications"))
     },
 
-    getPreferences: function(hetu) {
-        return db.getApplications(hetu).then(function(data) {
+    getPreferences: function() {
+        return db.getApplications().then(function(data) {
             return _.chain(data[0].hakutoiveet)
                 .map(function(item) {
                     return {

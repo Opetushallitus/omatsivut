@@ -20,7 +20,7 @@
 <script>
     var parent$ = window.jQuery
     var started = false
-    var iframe = parent$('<iframe>').attr({src: '/test/empty.html', width: 1024, height: 800})
+    var iframe = parent$('<iframe>').attr({src: '/secure/fakesession?hetu=010101-123N&redirect=/test/empty.html', width: 1024, height: 800})
     iframe.load(function () {
         if(!started) {
             started = true
