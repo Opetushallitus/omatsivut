@@ -12,8 +12,22 @@ function ApplicationListPage() {
         }
     }
 
+    function resetData(callback) {
+        $.ajax("/fixtures/apply", { type: "PUT" }).done(callback)
+    }
+
+    function compose(f1, f2) {
+        return function(done) {
+            f1(function() { f2(done) })
+        }
+    }
+
+    var openListPage = openPage('/?hetu=010101-123N', visible)
+
     var api = {
-        openPage: openPage('/?hetu=010101-123N', visible),
+        resetDataAndOpen: compose(resetData, openListPage),
+
+        openPage: openListPage,
 
         applications: function() {
             return S("#hakemus-list>li")

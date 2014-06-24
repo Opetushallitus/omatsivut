@@ -1,5 +1,5 @@
 describe('hakemuslistaus', function () {
-    before(ApplicationListPage().openPage)
+    before(ApplicationListPage().resetDataAndOpen)
 
     it('hakemuslistassa on hakemus henkilölle 010101-123N', function () {
         expect(ApplicationListPage().applications()).to.deep.equal([{
