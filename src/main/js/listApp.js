@@ -1,5 +1,6 @@
 require("angular/angular");
 require('angular-resource/angular-resource');
+_ = require("underscore");
 
 var listApp = angular.module('listApp', ["ngResource"], function($locationProvider) {
     $locationProvider.html5Mode(true);
@@ -35,7 +36,7 @@ listApp.controller("listCtrl", ["$scope", "applicationsResource", function ($sco
 }]);
 
 listApp.controller("hakemusCtrl", ["$scope", "$element", function ($scope, $element) {
-    $scope.saved = true;
+    $scope.changed = {};
 
     $scope.canMoveTo = function(start, end) {
         var self = this;
@@ -45,12 +46,14 @@ listApp.controller("hakemusCtrl", ["$scope", "$element", function ($scope, $elem
         return indexValid(start) && indexValid(end);
     };
 
+    $scope.hasChanged = function() { return !_.isEmpty($scope.changed) };
+
     $scope.moveApplication = function(from, to) {
-        debugger
         if (to >= 0 && to < this.application.hakutoiveet.length) {
             var arr = this.application.hakutoiveet;
             arr.splice(to, 0, arr.splice(from, 1)[0]);
-            $scope.saved = false;
+            $scope.changed[from] = true;
+            $scope.changed[to] = true;
         }
     };
 
@@ -58,8 +61,9 @@ listApp.controller("hakemusCtrl", ["$scope", "$element", function ($scope, $elem
         $scope.application.$update({id: $scope.application.oid }, onSuccess, onError);
 
         function onSuccess() {
-            $scope.saved = true;
+            $scope.$emit("application-saved", _($scope.changed).chain().keys().map(Number).value());
             $scope.saveErrorMessage = "";
+            $scope.changed = {};
         }
 
         function onError(err) {
@@ -70,7 +74,7 @@ listApp.controller("hakemusCtrl", ["$scope", "$element", function ($scope, $elem
 }]);
 
 listApp.directive('sortable', ["settings", function(settings) {
-    return function($scope, $element, attr) {
+    return function($scope, $element) {
         var slide = function(el, offset) {
             el.css("transition", "all 0.5s");
             el.css("transform", "translate3d(0px, " + offset + "px, 0px)");
@@ -86,8 +90,8 @@ listApp.directive('sortable', ["settings", function(settings) {
 
         var resetSlide = function(el) {
             el.css({
-                "transition": "none",
-                "transform": "none"
+                "transition": "",
+                "transform": ""
             });
         };
 
@@ -124,3 +128,17 @@ listApp.directive('sortable', ["settings", function(settings) {
         $element.on("click", ".sort-arrow-up", arrowClicked("prev"));
     };
 }]);
+
+listApp.directive("saveEffects", function() {
+    return function($scope, $element) {
+        $scope.$on("application-saved", function(evt, changedItems) {
+            changedItems.forEach(function(index) {
+                $element.children().eq(index).addClass("saved");
+            })
+
+            window.setTimeout(function() {
+                $element.children().removeClass("saved");
+            }, 3000);
+        });
+    };
+});

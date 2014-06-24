@@ -195,10 +195,15 @@ button {
 .preference-list-item {
   height: 120px;
   padding: 20px 20px;
+  transition: background-color 1000ms;
 
   border-bottom: 1px solid @border-color;
   &:last-child {
     border-bottom: 0;
+  }
+
+  &.saved {
+    background: #f0fff2;
   }
 
   & > .item-content:first-child {
