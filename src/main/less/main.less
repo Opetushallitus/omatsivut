@@ -8,13 +8,13 @@
   font-weight: bold;
 }
 
-.sub-heading-font() {
+.sub-heading-font(@color: @font-color) {
   font-family: 'PT Sans Narrow', 'Helvetica Neue', helvetica, arial, sans-serif;
   font-size: 18px;
   font-weight: bold;
 }
 
-.section-heading-font() {
+.section-heading-font(@color: @font-color) {
   font-family: 'Helvetica Neue', helvetica, arial, sans-serif;
   font-size: 12px;
   text-transform: uppercase;
@@ -171,6 +171,12 @@ button {
   button {
     margin-top: -5px;
   }
+}
+
+.application-list-error {
+  border: 1px solid @error-color;
+  padding: 20px;
+  .body-font(@error-color);
 }
 
 .application-list-item {

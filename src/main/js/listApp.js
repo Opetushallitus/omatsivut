@@ -11,7 +11,6 @@ listApp.factory("applicationsResource", ["$resource", "$location", function($res
             method: "PUT",
             url: "api/applications/:id"
         }
-    }).query(function () {
     });
 }]);
 
@@ -23,7 +22,16 @@ listApp.factory("settings", [function() {
 }]);
 
 listApp.controller("listCtrl", ["$scope", "applicationsResource", function ($scope, applicationsResource) {
-    $scope.applications = applicationsResource;
+    applicationsResource.query(success, error)
+
+    function success(data) {
+        $scope.applications = data;
+    }
+
+    function error() {
+        $scope.errorText = "Tietojen lataus epäonnistui. Yritä myöhemmin uudelleen.";
+        $scope.applications = [];
+    }
 }]);
 
 listApp.controller("hakemusCtrl", ["$scope", "$element", function ($scope, $element) {
@@ -38,6 +46,7 @@ listApp.controller("hakemusCtrl", ["$scope", "$element", function ($scope, $elem
     };
 
     $scope.moveApplication = function(from, to) {
+        debugger
         if (to >= 0 && to < this.application.hakutoiveet.length) {
             var arr = this.application.hakutoiveet;
             arr.splice(to, 0, arr.splice(from, 1)[0]);

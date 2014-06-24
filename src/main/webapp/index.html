@@ -9,6 +9,10 @@
     <div class="container">
         <div ng-controller="listCtrl">
             <h1>Omat hakemukseni</h1>
+
+            <div class="application-list-error" ng-bind="errorText" ng-show="errorText.length > 0">
+            </div>
+
             <ul id="hakemus-list" ng-cloak>
 
                 <li ng-repeat="application in applications" class="application-list-item" ng-controller="hakemusCtrl">
