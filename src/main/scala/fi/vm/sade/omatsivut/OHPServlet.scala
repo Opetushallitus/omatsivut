@@ -3,8 +3,6 @@ package fi.vm.sade.omatsivut
 import fi.vm.sade.omatsivut.http.HttpClient
 import org.scalatra.json._
 import org.scalatra.swagger._
-import org.json4s.{DefaultFormats, Formats}
-import org.slf4j.LoggerFactory
 import org.json4s.jackson.Serialization
 
 class OHPServlet(implicit val swagger: Swagger) extends OmatsivutStack with HttpClient with JacksonJsonSupport with OHPJsonFormats with SwaggerSupport {

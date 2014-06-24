@@ -11,6 +11,7 @@ class ScalatraBootstrap extends LifeCycle {
     AppConfig.loadSettings // <- to fail-fast
     context.mount(new OHPServlet, "/api")
     context.mount(new ResourcesApp, "/swagger/*")
+    context.mount(new SessionServlet, "/secure")
 
     if("true" == System.getProperty("omatsivut.testMode")){
       context.mount(new FixtureServlet, "/fixtures");

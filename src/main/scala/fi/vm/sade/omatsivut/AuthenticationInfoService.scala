@@ -5,7 +5,7 @@ import org.json4s.jackson.JsonMethods._
 import org.json4s._
 
 object AuthenticationInfoService extends Logging with HttpClient {
-  def getHenkiloOID(hetu : String)  = {
+  def getHenkiloOID(hetu : String) : Option[String] = {
     val settings = AppConfig.loadSettings.authenticationService
     implicit val formats = DefaultFormats
     val ticket = CASClient.getServiceTicket(settings)
