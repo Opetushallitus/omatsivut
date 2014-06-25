@@ -1,25 +1,36 @@
 package fi.vm.sade.omatsivut
 
 import org.joda.time.DateTime
-import org.scalatra.ScalatraBase
+import org.scalatra.{CookieOptions, Cookie, ScalatraBase}
 import javax.servlet.http.HttpServletRequest
 
+import org.slf4j.LoggerFactory
+
 trait Authentication extends ScalatraBase with Logging {
+  val cookieTimeoutMinutes = 30
 
   def oid() = oidOpt.getOrElse(sys.error("Not authenticated account"))
 
-  def oidOpt: Option[String] = parseOid(request) match {
+  def oidOpt: Option[String] = credentialsOpt match {
     case Some(cookie) => Some(cookie.oid)
     case _ => None
   }
 
-  private def parseOid(req: HttpServletRequest): Option[CookieCredentials] = {
+  def credentialsOpt: Option[CookieCredentials] = {
+    parseCredentials(request)
+  }
+
+  private def parseCredentials(req: HttpServletRequest): Option[CookieCredentials] = {
     authCookie match {
       case Some(c) => {
         try {
-          Some(CookieCredentials(AuthenticationCipher.decrypt(c.getValue)))
+          val decrypt: String = AuthenticationCipher.decrypt(c.getValue)
+          Some(CookieCredentials.fromString(decrypt))
         } catch {
-          case e: Exception => None
+          case e: Exception => {
+            logger.error("parse", e)
+            None
+          }
         }
       }
       case None => None
@@ -27,8 +38,15 @@ trait Authentication extends ScalatraBase with Logging {
   }
 
   before() {
-    oidOpt match {
-      case Some(oid) => true
+    credentialsOpt match {
+      case Some(cookie) if cookie.creationTime.plusMinutes(cookieTimeoutMinutes).isAfterNow => true
+      case Some(cookie) => {
+        logger.info("Cookie timed out: " + cookie)
+        val authCookie = request.getCookies.find(_.getName == "auth").get
+        authCookie.setMaxAge(0)
+        response.addCookie(authCookie)
+        halt(status = 401, headers = Map("WWW-Authenticate" -> "SecureCookie"))
+      }
       case None => {
         halt(status = 401, headers = Map("WWW-Authenticate" -> "SecureCookie"))
       }
@@ -43,10 +61,12 @@ trait Authentication extends ScalatraBase with Logging {
   }
 }
 
-case class CookieCredentials(oid: String, creationTime: DateTime = new DateTime()) {
-  def apply(str: String) = {
-    val split = str.split("|").toList
-    CookieCredentials(split.head, new DateTime(split.tail.head))
+object CookieCredentials {
+  def fromString(str: String) = {
+    val split = str.split("\\|")
+    CookieCredentials(split(0), new DateTime(split(1).toLong))
   }
+}
+case class CookieCredentials(oid: String, creationTime: DateTime = new DateTime()) {
   override def toString = oid + "|" + creationTime.getMillis
 }

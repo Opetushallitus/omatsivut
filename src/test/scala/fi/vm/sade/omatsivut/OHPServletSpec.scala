@@ -11,18 +11,12 @@ class OHPServletSpec extends OHPJsonFormats with TestSupport {
         //verifyOneApplication() TODO FIX
       }
     }
-
-    "return 401 if not authenticated" in {
-      get("/applications") {
-        status must_== 401
-      }
-    }
   }
 
   def verifyApplications(expectedCount: Int) = {
     val applications: List[Hakemus] = Serialization.read[List[Hakemus]](body)
-    applications.length must_== expectedCount
     status must_== 200
+    applications.length must_== expectedCount
   }
 
   def verifyOneApplication() = {
