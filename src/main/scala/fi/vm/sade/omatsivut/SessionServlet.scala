@@ -12,9 +12,9 @@ class SessionServlet extends OmatsivutStack {
 
   def createResponse(hetuOption: () => Option[String], cookieOptions: CookieOptions = CookieOptions(secure = true, path = "/"), redirectUri: String = "/index.html") {
     fetchOid(hetuOption) match {
-      case Some(str) =>
-        val encryptedOid = AuthenticationCipher.encrypt(str)
-        response.addCookie(Cookie("auth", encryptedOid)(cookieOptions))
+      case Some(oid) =>
+        val encryptedCredentials = AuthenticationCipher.encrypt(CookieCredentials(oid).toString)
+        response.addCookie(Cookie("auth", encryptedCredentials)(cookieOptions))
         logger.info("Redirecting to " + redirectUri)
         response.redirect(redirectUri)
       case _ =>
