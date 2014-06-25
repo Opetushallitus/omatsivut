@@ -38,6 +38,21 @@ listApp.controller("listCtrl", ["$scope", "applicationsResource", function ($sco
 listApp.controller("hakemusCtrl", ["$scope", "$element", function ($scope, $element) {
     $scope.changed = {};
 
+    function setChanged(args) {
+        if (args == null) {
+            $scope.changed = {};
+        } else {
+            _(arguments).each(function(index) {
+                $scope.changed[index] = true;
+            })
+        }
+    }
+
+    function setSaveMessage(msg, type) {
+        $scope.saveMessage = msg;
+        $scope.saveMessageType = type;
+    }
+
     $scope.canMoveTo = function(start, end) {
         var self = this;
         function indexValid(index) {
@@ -52,8 +67,8 @@ listApp.controller("hakemusCtrl", ["$scope", "$element", function ($scope, $elem
         if (to >= 0 && to < this.application.hakutoiveet.length) {
             var arr = this.application.hakutoiveet;
             arr.splice(to, 0, arr.splice(from, 1)[0]);
-            $scope.changed[from] = true;
-            $scope.changed[to] = true;
+            setChanged(from, to);
+            setSaveMessage();
         }
     };
 
@@ -62,12 +77,12 @@ listApp.controller("hakemusCtrl", ["$scope", "$element", function ($scope, $elem
 
         function onSuccess() {
             $scope.$emit("application-saved", _($scope.changed).chain().keys().map(Number).value());
-            $scope.saveErrorMessage = "";
-            $scope.changed = {};
+            setSaveMessage("Kaikki muutokset tallennettu", "success");
+            setChanged();
         }
 
         function onError(err) {
-            $scope.saveErrorMessage = "Tallentaminen epäonnistui";
+            setSaveMessage("Tallentaminen epäonnistui", "error");
             console.log(err);
         }
     };

@@ -36,7 +36,7 @@
 
 .arrow-button(@symbol) {
   font-size: 25px;
-  color: @button-color;
+  color: @button-background;
 
   &:before {
     content: @symbol;
@@ -45,25 +45,28 @@
     color: @button-hover-color;
   }
   &.disabled:before {
-    color: @button-disabled-color;
+    color: @button-disabled-background;
   }
 }
 
 // Colors
 
 @font-color: #333;
+@status-text-color: #555;
 @error-color: red;
 @border-color: #dcdcdc;
 @section-border-color: #feba00;
 @input-background: #ebf3f7;
 @input-focus-background: #fff5da;
 
-@button-color: #fecf4c;
-@button-border-color: darken(@button-color, 20);
-@button-hover-color: lighten(@button-color, 10);
+@button-color: #333;
+@button-background: #fecf4c;
+@button-border-color: darken(@button-background, 20);
+@button-hover-color: lighten(@button-background, 10);
 @button-hover-border-color: lighten(@button-border-color, 10);
-@button-disabled-color: #dedede;
-@button-disabled-border-color: darken(@button-disabled-color, 20);
+@button-disabled-color: #757575;
+@button-disabled-background: #dedede;
+@button-disabled-border-color: darken(@button-disabled-background, 20);
 
 // Layout
 
@@ -115,7 +118,15 @@ h2 {
 }
 
 .status-message {
-  .body-font(@error-color);
+  .body-font();
+
+  &.error {
+    color: @error-color;
+  }
+
+  &.success {
+    color: @status-text-color;
+  }
 }
 
 input {
@@ -134,9 +145,9 @@ input {
 }
 
 button {
-  .body-font();
+  .body-font(@button-color);
 
-  background: @button-color;
+  background: @button-background;
   font-size: @body-font-size;
   padding: 5px 10px;
   border: 1px solid @button-border-color;
@@ -148,7 +159,8 @@ button {
   }
 
   &[disabled] {
-    background: @button-disabled-color;
+    color: @button-disabled-color;
+    background: @button-disabled-background;
     border: 1px solid @button-disabled-border-color;
   }
 
@@ -159,7 +171,7 @@ button {
 
 .float-right {
   float: right;
-  margin-left: 10px;
+  margin-left: 20px;
 }
 
 .application-section-heading {
