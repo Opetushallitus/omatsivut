@@ -1,10 +1,14 @@
 package fi.vm.sade.omatsivut
 
 import org.scalatra.{CookieOptions, Cookie}
+import scala.collection.JavaConversions._
 
 class SessionServlet extends OmatsivutStack {
 
   get("/initsession") {
+    for (x <- request.getHeaderNames) {
+      logger.info(x)
+    }
     createResponse(() => headerOption("Hetu"), redirectUri = paramOption("redirect").getOrElse("/index.html"))
   }
 
