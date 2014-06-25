@@ -11,11 +11,7 @@ class SessionServlet extends OmatsivutStack {
   }
 
   def createResponse(hetuOption: () => Option[String], cookieOptions: CookieOptions = CookieOptions(secure = true, path = "/"), redirectUri: String = "/index.html") {
-    val oid = for {
-      hetu <- hetuOption()
-      oid <- AuthenticationInfoService.getHenkiloOID(hetu)
-    } yield oid
-    oid match {
+    fetchOid(hetuOption) match {
       case Some(str) =>
         val encryptedOid = AuthenticationCipher.encrypt(str)
         response.addCookie(Cookie("auth", encryptedOid)(cookieOptions))
@@ -25,6 +21,13 @@ class SessionServlet extends OmatsivutStack {
         logger.warn("OID not found for hetu: " + headerOption("hetu"))
         response.setStatus(401)
     }
+  }
+
+  def fetchOid(hetuOption: () => Option[String]) = {
+    for {
+      hetu <- hetuOption()
+      oid <- AuthenticationInfoService.getHenkiloOID(hetu)
+    } yield oid
   }
 
   get("/fakesession") {
