@@ -22,14 +22,14 @@
                     </p>
                     <p>Hakemus jätetty: {{application.received | date:'dd.MM.yyyy HH:mm:ss'}}</p>
 
-                    <section class="application-section">
+                    <section class="application-section" save-effects>
                         <header class="application-section-heading">
                             Hakutoiveet
                             <button class="float-right save-btn" ng-disabled="!hasChanged()" ng-click="saveApplication()">Tallenna muutokset</button>
                             <span class="status-message float-right" ng-bind="saveMessage" ng-class="saveMessageType"></span>
                         </header>
 
-                        <ul class="preference-list" sortable save-effects>
+                        <ul class="preference-list" sortable>
                             <li class="preference-list-item" ng-repeat="hakutoive in application.hakutoiveet">
                                 <div class="item-content">
                                     <span class="sort-arrow-down" ng-class="{disabled: !canMoveTo($index, $index+1)}"></span>
@@ -44,6 +44,10 @@
                                     <div class="row">
                                         <label><span>Koulutus:</span><input type="text" ng-model="hakutoive.Koulutus" disabled/></label>
                                     </div>
+                                </div>
+
+                                <div class="item-content">
+                                    <button class="save-btn" confirm confirm-text="Vahvista poisto" confirm-action="removePreference($index)">Poista</button>
                                 </div>
                             </li>
                         </ul>

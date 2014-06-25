@@ -72,6 +72,14 @@ listApp.controller("hakemusCtrl", ["$scope", "$element", function ($scope, $elem
         }
     };
 
+    $scope.removePreference = function(index) {
+        /* TODO Fix backend before enabling this
+        var row = this.application.hakutoiveet.splice(index, 1)[0];
+        _.each(row, function(val, key) { row[key] = "" });
+        this.application.hakutoiveet.push(row);
+        */
+    };
+
     $scope.saveApplication = function() {
         $scope.application.$update({id: $scope.application.oid }, onSuccess, onError);
 
@@ -147,13 +155,45 @@ listApp.directive('sortable', ["settings", function(settings) {
 listApp.directive("saveEffects", function() {
     return function($scope, $element) {
         $scope.$on("application-saved", function(evt, changedItems) {
+            var preferenceItems = $element.find(".preference-list-item");
             changedItems.forEach(function(index) {
-                $element.children().eq(index).addClass("saved");
+                preferenceItems.eq(index).addClass("saved");
             })
 
             window.setTimeout(function() {
-                $element.children().removeClass("saved");
+                preferenceItems.removeClass("saved");
             }, 3000);
         });
+    };
+});
+
+listApp.directive("confirm", function () {
+    return {
+        scope: {
+            callback : '&confirmAction'
+        },
+        link: function (scope, element, attrs) {
+            function cancel() {
+                element.removeClass("confirm");
+                element.text(originalText);
+                element.off(".cancelConfirm");
+                $("body").off(".cancelConfirm");
+            };
+
+            var originalText = element.text();
+
+            element.on("click", function() {
+                if (element.hasClass("confirm")) {
+                    scope.$apply(scope.callback);
+                    cancel();
+                } else {
+                    element.addClass("confirm");
+                    element.text(attrs.confirmText);
+                    $("body").one("click.cancelConfirm", cancel);
+                    element.one("mouseout.cancelConfirm", cancel);
+                }
+                return false;
+            });
+        }
     };
 });

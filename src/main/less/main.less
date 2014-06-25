@@ -207,7 +207,7 @@ button {
 
 .preference-list-item {
   height: 120px;
-  padding: 20px 20px;
+  padding: 20px 0px 20px 20px;
   transition: background-color 1000ms;
 
   border-bottom: 1px solid @border-color;
@@ -227,9 +227,16 @@ button {
     position: relative;
   }
 
-  & > .item-content:last-child {
-    width: 90%;
+  & > .item-content:nth-child(2) {
+    width: 70%;
     float: left;
+  }
+
+  & > .item-content:last-child {
+    width: 20%;
+    float: left;
+    line-height: 70px;
+    text-align: right;
   }
 
   label > span {
@@ -238,7 +245,7 @@ button {
   }
 
   input {
-    width: 70%;
+    width: 80%;
   }
 
   .row {
