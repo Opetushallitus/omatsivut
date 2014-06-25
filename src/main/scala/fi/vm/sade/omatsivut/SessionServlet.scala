@@ -11,7 +11,7 @@ class SessionServlet extends OmatsivutStack with AuthCookieParsing {
 
   get("/logout") {
     tellBrowserToDeleteAuthCookie(request, response)
-    response.redirect("https://opintopolku.fi/Shibboleth.sso/Logout")
+    response.redirect("/Shibboleth.sso/Logout")
   }
 
   def createResponse(hetuOption: () => Option[String], cookieOptions: CookieOptions = CookieOptions(secure = true, path = "/", maxAge = 1799), redirectUri: String = "/index.html") {
