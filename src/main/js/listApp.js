@@ -38,11 +38,11 @@ listApp.controller("listCtrl", ["$scope", "applicationsResource", function ($sco
 listApp.controller("hakemusCtrl", ["$scope", "$element", function ($scope, $element) {
     $scope.changed = {};
 
-    function setChanged(args) {
-        if (args == null) {
+    function setChanged(indexes) {
+        if (indexes == null) {
             $scope.changed = {};
         } else {
-            _(arguments).each(function(index) {
+            _(indexes).each(function(index) {
                 $scope.changed[index] = true;
             })
         }
@@ -63,11 +63,11 @@ listApp.controller("hakemusCtrl", ["$scope", "$element", function ($scope, $elem
 
     $scope.hasChanged = function() { return !_.isEmpty($scope.changed) };
 
-    $scope.moveApplication = function(from, to) {
+    $scope.movePreference = function(from, to) {
         if (to >= 0 && to < this.application.hakutoiveet.length) {
             var arr = this.application.hakutoiveet;
             arr.splice(to, 0, arr.splice(from, 1)[0]);
-            setChanged(from, to);
+            setChanged([from, to]);
             setSaveMessage();
         }
     };
@@ -97,7 +97,7 @@ listApp.controller("hakemusCtrl", ["$scope", "$element", function ($scope, $elem
 }]);
 
 listApp.directive('sortable', ["settings", function(settings) {
-    return function($scope, $element) {
+    return function($scope, $element, attrs) {
         var slide = function(el, offset) {
             el.css("transition", "all 0.5s");
             el.css("transform", "translate3d(0px, " + offset + "px, 0px)");
@@ -128,8 +128,8 @@ listApp.directive('sortable', ["settings", function(settings) {
             }
 
             setTimeout(function() {
-                $scope.$apply(function() {
-                    $scope.moveApplication(element1.index(), element2.index());
+                $scope.$apply(function(self) {
+                    self[attrs.sortableMoved](element1.index(), element2.index());
                     resetSlide(element1);
                     resetSlide(element2);
                 });
