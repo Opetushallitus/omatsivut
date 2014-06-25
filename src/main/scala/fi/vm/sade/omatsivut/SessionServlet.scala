@@ -17,7 +17,7 @@ class SessionServlet extends OmatsivutStack {
       case Some(str) =>
         val encryptedOid = AuthenticationCipher.encrypt(str)
         response.addCookie(Cookie("auth", encryptedOid)(cookieOptions))
-        response.redirect(redirectUri)
+        response.redirect(request.getContextPath + redirectUri)
       case _ =>
         logger.warn("OID not found for hetu: " + headerOption("hetu"))
         response.setStatus(401)
