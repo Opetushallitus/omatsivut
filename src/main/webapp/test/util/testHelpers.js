@@ -18,24 +18,68 @@ wait = {
     maxWaitMs: 10000,
     waitIntervalMs: 10,
     until: function(condition, count) {
-        return function(callback) {
-            if (count == undefined) count = wait.maxWaitMs / wait.waitIntervalMs
-            if (condition()) {
-                callback()
-            } else {
-                setTimeout(function() {
-                    wait.until(condition, callback, count - 1)(callback)
-                }, wait.waitIntervalMs)
-            }
+        return function() {
+            var deferred = Q.defer()
+            if (count == undefined) count = wait.maxWaitMs / wait.waitIntervalMs;
+
+            (function waitLoop(remaining) {
+                if (condition()) {
+                    deferred.resolve()
+                } else if (remaining === 0) {
+                    deferred.reject("timeout")
+                } else {
+                    setTimeout(function() {
+                        waitLoop(remaining-1)
+                    }, wait.waitIntervalMs)
+                }
+            })(count)
+            return deferred.promise
         }
     }
 }
+
+session = {
+    init: function(hetu) {
+        return Q($.get("/secure/fakesession?hetu=" + hetu));
+    }
+}
+
+uiUtil = {
+    inputValues: function(el) {
+        return _.chain(el.find("[ng-model]"))
+            .map(function(el) { return [$(el).attr("ng-model"), $(el).val() ]})
+            .object().value()
+    }
+}
+
+db = {
+    resetData: function() {
+        return Q($.ajax("/fixtures/apply", { type: "PUT" }))
+    },
+
+    getApplications: function() {
+        return Q($.get("/api/applications"))
+    },
+
+    getPreferences: function() {
+        return db.getApplications().then(function(data) {
+            return _.chain(data[0].hakutoiveet)
+                .map(function(item) {
+                    return {
+                        "hakutoive.Opetuspiste": item.Opetuspiste,
+                        "hakutoive.Koulutus": item.Koulutus
+                    }
+                 }).filter(function (item) { return item["hakutoive.Opetuspiste"].length > 0 }).value()
+        })
+    }
+}
+
 function openPage(path, predicate) {
     if (!predicate) {
         predicate = function() { return testFrame.jQuery }
     }
-    return function(done) {
+    return function() {
         testFrame.location.replace(path)
-        wait.until(predicate)(done)
+        return wait.until(predicate)()
     }
 }

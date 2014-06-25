@@ -1,3 +1,258 @@
+// Fonts
+
+@body-font-size: 13px;
+
+.heading-font() {
+  font-family: 'PT Sans Narrow', 'Helvetica Neue', helvetica, arial, sans-serif;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.sub-heading-font(@color: @font-color) {
+  font-family: 'PT Sans Narrow', 'Helvetica Neue', helvetica, arial, sans-serif;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.section-heading-font(@color: @font-color) {
+  font-family: 'Helvetica Neue', helvetica, arial, sans-serif;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.body-font(@color: @font-color) {
+  font-family: helvetica, arial, sans-serif;
+  font-size: @body-font-size;
+  color: @color;
+  line-height: 20px;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+// Symbols
+
+@arrow-down: "\25bc";
+@arrow-up: "\25b2";
+
+.arrow-button(@symbol) {
+  font-size: 25px;
+  color: @button-background;
+
+  &:before {
+    content: @symbol;
+  }
+  &:hover:before {
+    color: @button-hover-color;
+  }
+  &.disabled:before {
+    color: @button-disabled-background;
+  }
+}
+
+// Colors
+
+@font-color: #333;
+@status-text-color: #555;
+@error-color: red;
+@border-color: #dcdcdc;
+@section-border-color: #feba00;
+@input-background: #ebf3f7;
+@input-focus-background: #fff5da;
+
+@button-color: #333;
+@button-background: #fecf4c;
+@button-border-color: darken(@button-background, 20);
+@button-hover-color: lighten(@button-background, 10);
+@button-hover-border-color: lighten(@button-border-color, 10);
+@button-disabled-color: #757575;
+@button-disabled-background: #dedede;
+@button-disabled-border-color: darken(@button-disabled-background, 20);
+
+// Layout
+
+.container {
+  width: 947px;
+  margin: 0px auto;
+}
+
+// Angular-specific
+
 [ng\:cloak], [ng-cloak], .ng-cloak {
   display: none !important;
+}
+
+// Reset
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+input:focus, button:focus {
+  outline: 0;
+}
+
+ul {
+  list-style-type: none;
+}
+
+// Styles
+
+body {
+  .body-font;
+}
+
+h1 {
+  .heading-font;
+  margin: 20px 0px;
+}
+
+h2 {
+  .sub-heading-font;
+  margin: 20px 0px;
+
+  &:first-child {
+    margin-top: 0;
+  }
+}
+
+.status-message {
+  .body-font();
+
+  &.error {
+    color: @error-color;
+  }
+
+  &.success {
+    color: @status-text-color;
+  }
+}
+
+input {
+  background: @input-background;
+  color: @font-color;
+  box-shadow: 0 1px 1px #b5b5b5 inset, 0 -1px 4px rgba(0, 0, 0, 0.05) inset;
+  padding: 0px 0px 0px 10px;
+  border-radius: 3px;
+  font-size: @body-font-size;
+  height: 2 * @body-font-size;
+  border: none;
+
+  &:focus {
+    background: @input-focus-background;
+  }
+}
+
+button {
+  .body-font(@button-color);
+
+  background: @button-background;
+  font-size: @body-font-size;
+  padding: 5px 10px;
+  border: 1px solid @button-border-color;
+
+  &:hover {
+    background: @button-hover-color;
+    border: 1px solid @button-hover-border-color;
+    color: #444;
+  }
+
+  &[disabled] {
+    color: @button-disabled-color;
+    background: @button-disabled-background;
+    border: 1px solid @button-disabled-border-color;
+  }
+
+  &:active {
+    box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3) inset
+  }
+}
+
+.float-right {
+  float: right;
+  margin-left: 20px;
+}
+
+.application-section-heading {
+  .section-heading-font();
+  border-bottom: 1px solid @section-border-color;
+  padding-bottom: 20px;
+  letter-spacing: 0.12em;
+
+  button {
+    margin-top: -5px;
+  }
+}
+
+.application-list-error {
+  border: 1px solid @error-color;
+  padding: 20px;
+  .body-font(@error-color);
+}
+
+.application-list-item {
+  border: 1px solid @border-color;
+  padding: 20px;
+
+  & + .application-list-item {
+    margin-top: 50px;
+  }
+}
+
+.application-section {
+  margin-top: 20px;
+}
+
+.preference-list-item {
+  height: 120px;
+  padding: 20px 20px;
+  transition: background-color 1000ms;
+
+  border-bottom: 1px solid @border-color;
+  &:last-child {
+    border-bottom: 0;
+  }
+
+  &.saved {
+    background: #f0fff2;
+  }
+
+  & > .item-content:first-child {
+    font-size: 36px;
+    line-height: 80px;
+    width: 10%;
+    float: left;
+    position: relative;
+  }
+
+  & > .item-content:last-child {
+    width: 90%;
+    float: left;
+  }
+
+  label > span {
+    width: 20%;
+    display: inline-block;
+  }
+
+  input {
+    width: 70%;
+  }
+
+  .row {
+    line-height: 40px;
+  }
+
+  .sort-arrow-down {
+    .arrow-button(@arrow-down);
+    bottom: -35px;
+    position: absolute;
+  }
+
+  .sort-arrow-up {
+    .arrow-button(@arrow-up);
+    top: -35px;
+    position: absolute;
+  }
 }
