@@ -5,7 +5,7 @@ import org.scalatra.{CookieOptions, Cookie}
 class SessionServlet extends OmatsivutStack {
 
   get("/initsession") {
-    createResponse(() => headerOption("Hetu"))
+    createResponse(() => headerOption("Hetu"), redirectUri = paramOption("redirect").getOrElse("/index.html"))
   }
 
   def createResponse(hetuOption: () => Option[String], cookieOptions: CookieOptions = CookieOptions(secure = true, path = "/"), redirectUri: String = "/index.html") {
@@ -17,18 +17,12 @@ class SessionServlet extends OmatsivutStack {
       case Some(str) =>
         val encryptedOid = AuthenticationCipher.encrypt(str)
         response.addCookie(Cookie("auth", encryptedOid)(cookieOptions))
-        val uri: String = redirectContextPath + redirectUri
-        logger.info("Redirecting to " + uri)
-        response.redirect(uri)
+        logger.info("Redirecting to " + redirectUri)
+        response.redirect(redirectUri)
       case _ =>
         logger.warn("OID not found for hetu: " + headerOption("hetu"))
         response.setStatus(401)
     }
-  }
-
-  def redirectContextPath = {
-    val cp = request.getContextPath
-    if(cp.isEmpty) cp else cp.substring(1)
   }
 
   get("/fakesession") {
