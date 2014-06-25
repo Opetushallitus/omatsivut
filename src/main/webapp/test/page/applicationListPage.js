@@ -27,7 +27,7 @@ function ApplicationListPage() {
     function getApplication(index) { return S("#hakemus-list>li").eq(index) }
 
     var api = {
-        resetDataAndOpen: function(done) { db.resetData().then(openListPage).done(done) },
+        resetDataAndOpen: function() { return db.resetData().then(openListPage) },
 
         hetu: function() { return testHetu },
 

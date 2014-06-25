@@ -38,6 +38,12 @@ wait = {
     }
 }
 
+session = {
+    init: function(hetu) {
+        return Q($.get("/secure/fakesession?hetu=" + hetu));
+    }
+}
+
 uiUtil = {
     inputValues: function(el) {
         return _.chain(el.find("[ng-model]"))

@@ -1,6 +1,8 @@
 (function() {
     describe('hakemuslistaus', function () {
-        before(ApplicationListPage().resetDataAndOpen)
+        before(function(done) {
+            session.init("010101-123N").then(ApplicationListPage().resetDataAndOpen).done(done)
+        })
 
         it('hakemuslistassa on hakemus henkilölle 010101-123N', function () {
             expect(ApplicationListPage().applications()).to.deep.equal([{
