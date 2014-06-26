@@ -1,6 +1,7 @@
 package fi.vm.sade.omatsivut
 
 import org.scalatra.{CookieOptions, Cookie}
+import fi.vm.sade.omatsivut.security.{AuthenticationInfoService, CookieCredentials, AuthCookieParsing, AuthenticationCipher}
 import scala.collection.JavaConverters._
 
 class SessionServlet extends OmatsivutStack with AuthCookieParsing {

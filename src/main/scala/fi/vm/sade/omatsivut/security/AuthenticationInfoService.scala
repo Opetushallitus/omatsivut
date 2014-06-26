@@ -1,8 +1,9 @@
-package fi.vm.sade.omatsivut
+package fi.vm.sade.omatsivut.security
 
 import fi.vm.sade.omatsivut.http.HttpClient
-import org.json4s.jackson.JsonMethods._
+import fi.vm.sade.omatsivut.{AppConfig, Logging}
 import org.json4s._
+import org.json4s.jackson.JsonMethods._
 
 object AuthenticationInfoService extends Logging with HttpClient {
   def getHenkiloOID(hetu : String) : Option[String] = {

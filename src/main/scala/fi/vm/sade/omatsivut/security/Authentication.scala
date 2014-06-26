@@ -1,10 +1,10 @@
-package fi.vm.sade.omatsivut
+package fi.vm.sade.omatsivut.security
 
+import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
+
+import fi.vm.sade.omatsivut.Logging
 import org.joda.time.DateTime
-import org.scalatra.{CookieOptions, Cookie, ScalatraBase}
-import javax.servlet.http.{HttpServletResponse, HttpServletRequest}
-
-import org.slf4j.LoggerFactory
+import org.scalatra.ScalatraBase
 
 trait Authentication extends ScalatraBase with AuthCookieParsing with Logging {
   val cookieTimeoutMinutes = 30

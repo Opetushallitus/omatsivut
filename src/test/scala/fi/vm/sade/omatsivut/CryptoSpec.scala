@@ -1,6 +1,7 @@
 package fi.vm.sade.omatsivut
 
 import org.specs2.mutable.Specification
+import fi.vm.sade.omatsivut.security.AuthenticationCipher
 
 class CryptoSpec extends Specification {
 

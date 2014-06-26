@@ -1,8 +1,10 @@
-package fi.vm.sade.omatsivut
+package fi.vm.sade.omatsivut.security
 
-import javax.crypto.{Cipher, Mac}
 import javax.crypto.spec.{IvParameterSpec, SecretKeySpec}
-import org.apache.commons.codec.binary.{Hex, Base64}
+import javax.crypto.{Cipher, Mac}
+
+import fi.vm.sade.omatsivut.AppConfig
+import org.apache.commons.codec.binary.{Base64, Hex}
 
 trait HmacSHA256 {
   def macHash(text: String, key: String): String = Hex.encodeHexString(macHash(text.getBytes("UTF-8"), key.getBytes("UTF-8")))

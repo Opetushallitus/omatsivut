@@ -1,6 +1,7 @@
-package fi.vm.sade.omatsivut;
+package fi.vm.sade.omatsivut.security
 
 import fi.vm.sade.omatsivut.http.HttpClient
+import fi.vm.sade.omatsivut.{AppConfig, Logging, RemoteApplicationConfig}
 
 object CASClient extends HttpClient with Logging {
   
