@@ -14,13 +14,13 @@ class SessionServlet extends OmatsivutStack with AuthCookieParsing {
     response.redirect("/Shibboleth.sso/Logout")
   }
 
-  def createResponse(hetuOption: () => Option[String], cookieOptions: CookieOptions = CookieOptions(secure = true, path = "/", maxAge = 1799), redirectUri: String = "/index.html") {
+  def createResponse(hetuOption: () => Option[String], cookieOptions: CookieOptions = CookieOptions(secure = true, path = "/", maxAge = 1799), redirectUri: String) {
     fetchOid(hetuOption) match {
       case Some(oid) =>
         val encryptedCredentials = AuthenticationCipher.encrypt(CookieCredentials(oid).toString)
         response.addCookie(Cookie("auth", encryptedCredentials)(cookieOptions))
         logger.info("Redirecting to " + redirectUri)
-        response.redirect(redirectUri)
+        response.redirect(request.getContextPath + redirectUri)
       case _ =>
         logger.warn("OID not found for hetu: " + headerOption("hetu"))
         response.setStatus(401)
