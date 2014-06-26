@@ -1,11 +1,10 @@
 import sbt._
 import Keys._
-import org.scalatra.sbt._
+import sbtbuildinfo.Plugin._
 import com.typesafe.sbteclipse.plugin.EclipsePlugin._
 import com.earldouglas.xsbtwebplugin.WebPlugin
-import com.earldouglas.xsbtwebplugin.PluginKeys._
-import sbtbuildinfo.Plugin._
 import com.earldouglas.xsbtwebplugin.WebPlugin.container
+import com.earldouglas.xsbtwebplugin.PluginKeys._
 
 object OmatsivutBuild extends Build {
   val Organization = "fi.vm.sade"
@@ -28,12 +27,10 @@ object OmatsivutBuild extends Build {
     }
   }
 
-
-
   lazy val project = Project (
     "omatsivut",
     file("."),
-    settings = Defaults.coreDefaultSettings ++ ScalatraPlugin.scalatraWithJRebel ++ buildInfoSettings ++ mochaTask
+    settings = Defaults.coreDefaultSettings ++ WebPlugin.webSettings ++ buildInfoSettings ++ mochaTask
       ++ Seq(
       organization := Organization,
       name := Name,
