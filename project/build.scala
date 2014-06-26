@@ -33,7 +33,7 @@ object OmatsivutBuild extends Build {
   lazy val project = Project (
     "omatsivut",
     file("."),
-    settings = Defaults.defaultSettings ++ WebPlugin.webSettings ++ ScalatraPlugin.scalatraWithJRebel ++ buildInfoSettings ++ mochaTask
+    settings = Defaults.coreDefaultSettings ++ ScalatraPlugin.scalatraWithJRebel ++ buildInfoSettings ++ mochaTask
       ++ Seq(
       organization := Organization,
       name := Name,
