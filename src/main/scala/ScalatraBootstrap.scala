@@ -14,7 +14,8 @@ class ScalatraBootstrap extends LifeCycle {
     context.mount(new SessionServlet, "/secure")
 
     if("true" == System.getProperty("omatsivut.testMode")){
-      context.mount(new FixtureServlet, "/fixtures");
+      context.mount(new FixtureServlet, "/fixtures")
+      context.mount(new UtilityServlet, "/util")
     }
   }
 }

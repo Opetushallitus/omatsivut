@@ -40,7 +40,7 @@ wait = {
 
 session = {
     init: function(hetu) {
-        return Q($.get("/omatsivut/secure/fakesession?hetu=" + hetu));
+        return Q($.get("/omatsivut/util/fakesession?hetu=" + hetu));
     }
 }
 
