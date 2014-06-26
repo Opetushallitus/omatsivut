@@ -186,10 +186,15 @@ button {
   }
 }
 
-.application-list-error {
-  border: 1px solid @error-color;
+.application-list-status {
   padding: 20px;
-  .body-font(@error-color);
+  border: 1px solid @border-color;
+  .body-font();
+
+  &.error {
+    color: @error-color;
+    border-color: @error-color;
+  }
 }
 
 .application-list-item {

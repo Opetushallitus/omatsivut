@@ -27,14 +27,20 @@ listApp.factory("settings", ["$animate", function($animate) {
 }]);
 
 listApp.controller("listCtrl", ["$scope", "applicationsResource", function ($scope, applicationsResource) {
+    $scope.applicationStatusMessage = "Hakemuksia ladataan...";
     applicationsResource.query(success, error)
 
     function success(data) {
         $scope.applications = data;
+        $scope.applicationStatusMessage = "";
     }
 
-    function error() {
-        $scope.errorText = "Tietojen lataus epäonnistui. Yritä myöhemmin uudelleen.";
+    function error(err) {
+        switch (err.status) {
+            case 401: $scope.applicationStatusMessage = "Tietojen lataus epäonnistui: ei käyttöoikeuksia."; break;
+            default: $scope.applicationStatusMessage = "Tietojen lataus epäonnistui. Yritä myöhemmin uudelleen.";
+        };
+        $scope.applicationStatusMessageType = "error";
         $scope.applications = [];
     }
 }]);
