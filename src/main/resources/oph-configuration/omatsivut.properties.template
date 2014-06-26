@@ -14,6 +14,9 @@ host.cas={{host_cas}}
 host.ilb={{host_ilb}}
 host.virkailija={{host_virkailija}}
 
+omatsivut.crypto.aes.key={{omatsivut_crypto_aes_key}}
+omatsivut.crypto.hmac.key={{omatsivut_crypto_hmac_key}}
+
 omatsivut.cas.ticket.url={{omatsivut_cas_ticket_url}}
 omatsivut.haku-app.url=https://{{host_virkailija}}/haku-app
 omatsivut.haku-app.username={{omatsivut_haku_app_username}}

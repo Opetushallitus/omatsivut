@@ -45,6 +45,9 @@ case class Settings(config: Config) {
 
   val authenticationService = getRemoteApplicationConfig(config.getConfig("omatsivut.authentication-service"))
 
+  val aesKey = config getString "omatsivut.crypto.aes.key"
+  val hmacKey = config getString "omatsivut.crypto.hmac.key"
+
   private val hakuAppMongoHost = config getString "omatsivut.haku-app.mongo.host"
   private val hakuAppMongoPort = config getInt "omatsivut.haku-app.mongo.port"
   private val hakuAppMongoDbName = config getString "omatsivut.haku-app.mongo.db.name"
