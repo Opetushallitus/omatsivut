@@ -48,7 +48,7 @@
                                 </div>
 
                                 <div class="item-content">
-                                    <button class="save-btn" confirm confirm-text="Vahvista poisto" confirm-action="removePreference($index)">Poista</button>
+                                    <button ng-show="hasPreference($index)" class="delete-btn" confirm confirm-text="Vahvista poisto" confirm-action="removePreference($index)">Poista</button>
                                 </div>
                             </li>
                         </ul>

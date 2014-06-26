@@ -8,7 +8,8 @@ function ApplicationListPage() {
             element: function() { return el },
             data: function() { return uiUtil.inputValues(el) },
             arrowDown: function() { return el.find(".sort-arrow-down") },
-            number: function() { return el.find(".row-number") }
+            number: function() { return el.find(".row-number") },
+            deleteBtn: function() { return el.find(".delete-btn") }
         }
     }
 

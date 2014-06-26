@@ -29,7 +29,19 @@
 
         describe("hakemuslistauksen muokkaus", function() {
             it("järjestys muuttuu nuolta klikkaamalla", function(done) {
-                reorderPreferences().done(done)
+                var pref1 = getPreference(0)
+                var pref2 = getPreference(1)
+                pref1.arrowDown().click()
+                wait.until(function() {
+                    return pref1.element().index() === 1 && pref2.element().index() === 0 && pref1.number().text() === "2."
+                })().done(done)
+            })
+
+            it("hakutoiveen voi poistaa", function(done) {
+                var pref1 = getPreference(0)
+                var pref2 = getPreference(1)
+                pref1.deleteBtn().click().click()
+                wait.until(function() { return pref2.element().index() === 0 && pref1.element().parent().length === 0 })().done(done)
             })
 
             it("muuttuneet tiedot tallentuvat oikein", function(done) {
@@ -45,15 +57,7 @@
         return ApplicationListPage().preferencesForApplication(0).map(function(item) { return item.data()})
     }
 
-    function reorderPreferences(done) {
-        function getPreference(index) { return ApplicationListPage().preferencesForApplication(0)[index]};
-        var pref1 = getPreference(0)
-        var pref2 = getPreference(1)
-        pref1.arrowDown().click()
-        return wait.until(function() {
-            return pref1.element().index() === 1 && pref2.element().index() === 0 && pref1.number().text() === "2."
-        })()
-    }
+    function getPreference(index) { return ApplicationListPage().preferencesForApplication(0)[index]};
 
     function saveAndReloadData() {
         return wait.until(ApplicationListPage().saveButton(0).isEnabled(true))()

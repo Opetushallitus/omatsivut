@@ -69,7 +69,7 @@ db = {
                         "hakutoive.Opetuspiste": item.Opetuspiste,
                         "hakutoive.Koulutus": item.Koulutus
                     }
-                 }).filter(function (item) { return item["hakutoive.Opetuspiste"].length > 0 }).value()
+                 }).filter(function (item) { return !_.isEmpty(item["hakutoive.Opetuspiste"]) || !_.isEmpty(item["hakutoive.Koulutus"]) }).value()
         })
     }
 }

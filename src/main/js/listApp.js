@@ -17,8 +17,10 @@ listApp.factory("applicationsResource", ["$resource", "$location", function($res
     });
 }]);
 
-listApp.factory("settings", [function() {
+listApp.factory("settings", ["$animate", function($animate) {
     var testMode = window.parent.location.href.indexOf("runner.html") > 0;
+    if (testMode) $animate.enabled(false);
+
     return {
         uiTransitionTime: testMode ? 10 : 500
     };
