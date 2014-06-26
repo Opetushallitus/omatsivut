@@ -40,16 +40,11 @@ listApp.controller("listCtrl", ["$scope", "applicationsResource", function ($sco
 }]);
 
 listApp.controller("hakemusCtrl", ["$scope", "$element", function ($scope, $element) {
-    $scope.changed = {};
+    $scope.hasChanged = false;
 
-    function setChanged(indexes) {
-        if (indexes == null) {
-            $scope.changed = {};
-        } else {
-            _(indexes).each(function(index) {
-                $scope.changed[index] = true;
-            })
-        }
+    function setDirty(indexes) {
+        $scope.$emit("application-preferences-changed", indexes);
+        $scope.hasChanged = true;
     }
 
     function setSaveMessage(msg, type) {
@@ -57,21 +52,23 @@ listApp.controller("hakemusCtrl", ["$scope", "$element", function ($scope, $elem
         $scope.saveMessageType = type;
     }
 
-    $scope.canMoveTo = function(start, end) {
-        var self = this;
-        function indexValid(index) {
-            return index >= 0 && index <= self.application.hakutoiveet.length-1 && self.application.hakutoiveet[index]["Opetuspiste-id"] !== "";
-        }
-        return indexValid(start) && indexValid(end);
+    $scope.$watch("hasChanged", function(val) {
+        if (val===true) setSaveMessage("");
+    });
+
+    $scope.canMoveTo = function(from, to) {
+        return $scope.hasPreference(from) && $scope.hasPreference(to);
     };
 
-    $scope.hasChanged = function() { return !_.isEmpty($scope.changed) };
+    $scope.hasPreference = function(index) {
+        return index >= 0 && index <= this.application.hakutoiveet.length-1 && this.application.hakutoiveet[index]["Opetuspiste-id"] !== "";
+    }
 
     $scope.movePreference = function(from, to) {
         if (to >= 0 && to < this.application.hakutoiveet.length) {
             var arr = this.application.hakutoiveet;
             arr.splice(to, 0, arr.splice(from, 1)[0]);
-            setChanged([from, to]);
+            setDirty([from, to]);
             setSaveMessage();
         }
     };
@@ -88,9 +85,9 @@ listApp.controller("hakemusCtrl", ["$scope", "$element", function ($scope, $elem
         $scope.application.$update({id: $scope.application.oid }, onSuccess, onError);
 
         function onSuccess() {
-            $scope.$emit("application-saved", _($scope.changed).chain().keys().map(Number).value());
+            $scope.$emit("application-saved");
+            $scope.hasChanged = false;
             setSaveMessage("Kaikki muutokset tallennettu", "success");
-            setChanged();
         }
 
         function onError(err) {
@@ -158,14 +155,19 @@ listApp.directive('sortable', ["settings", function(settings) {
 
 listApp.directive("saveEffects", function() {
     return function($scope, $element) {
-        $scope.$on("application-saved", function(evt, changedItems) {
-            var preferenceItems = $element.find(".preference-list-item");
-            changedItems.forEach(function(index) {
-                preferenceItems.eq(index).addClass("saved");
-            })
+        $scope.$on("application-preferences-changed", function(evt, changedItems) {
+            _.each(changedItems, function(index) {
+                $element.find(".preference-list-item").eq(index).addClass("preference-changed");
+            });
+        });
+
+        $scope.$on("application-saved", function(evt) {
+            $element.find(".preference-list-item.preference-changed")
+                .removeClass("preference-changed")
+                .addClass("saved")
 
             window.setTimeout(function() {
-                preferenceItems.removeClass("saved");
+                $element.find(".preference-list-item").removeClass("saved");
             }, 3000);
         });
     };
