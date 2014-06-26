@@ -1,8 +1,10 @@
 require("angular/angular");
 require('angular-resource/angular-resource');
+require('angular-animate/angular-animate');
 _ = require("underscore");
 
-var listApp = angular.module('listApp', ["ngResource"], function($locationProvider) {
+
+var listApp = angular.module('listApp', ["ngResource", "ngAnimate"], function($locationProvider) {
     $locationProvider.html5Mode(true);
 });
 
@@ -73,11 +75,11 @@ listApp.controller("hakemusCtrl", ["$scope", "$element", function ($scope, $elem
     };
 
     $scope.removePreference = function(index) {
-        /* TODO Fix backend before enabling this
         var row = this.application.hakutoiveet.splice(index, 1)[0];
-        _.each(row, function(val, key) { row[key] = "" });
-        this.application.hakutoiveet.push(row);
-        */
+        var newRow = {};
+        _.each(row, function(val, key) { if (key[0] != "$") newRow[key] = "" });
+        this.application.hakutoiveet.push(newRow);
+        $scope.hasChanged = true;
     };
 
     $scope.saveApplication = function() {

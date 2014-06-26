@@ -263,4 +263,17 @@ button {
     top: -35px;
     position: absolute;
   }
+
+  &.ng-leave {
+    -webkit-transition:0.5s all;
+    transition:0.5s all;
+    max-height: 120px;
+    overflow: hidden;
+  }
+
+  &.ng-leave-active {
+    max-height: 0px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+  }
 }
