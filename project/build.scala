@@ -74,6 +74,10 @@ object OmatsivutBuild extends Build {
         file("target") / defaultPath.getName
       },
       testOptions in Test += Tests.Argument("junitxml")
+    ) ++ container.deploy(
+      "/omatsivut" -> projectRef
     )
   )
+  lazy val projectRef: ProjectReference = project
+
 }
