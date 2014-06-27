@@ -25,16 +25,33 @@ object HakemusRepository extends Logging {
   def getDelimiter(s: String) = if(s.contains("_")) "_" else "-"
 
   def updateHakemus(hakemus: Hakemus) {
-
-    // TODO validation and identity check
-    val query = MongoDBObject("oid" -> hakemus.oid)
-    val updates = hakemus.hakutoiveet.zipWithIndex.flatMap {
-      (t) => t._1.map {
-        (elem) => ("answers.hakutoiveet.preference" + (t._2 + 1) + getDelimiter(elem._1) + elem._1, elem._2)
-      }
+    def clearPrevValues(hakemus: Hakemus) = {
+      val query = MongoDBObject("oid" -> hakemus.oid)
+      hakemukset.findOne(query).toList.map((hakemus: DBObject) => {
+        val toiveet = hakemus.expand[Map[String, String]]("answers.hakutoiveet").getOrElse(Map()).toList
+        toiveet.map { case (key, value) => ("answers.hakutoiveet." + key, "") }
+      }).head
     }
-    val update = $set(updates:_*)
-    hakemukset.update(query, update)
+
+    def getUpdates(hakemus: Hakemus) = {
+      hakemus.hakutoiveet.zipWithIndex.flatMap {
+        (t) => t._1.map {
+          (elem) => ("answers.hakutoiveet.preference" + (t._2 + 1) + getDelimiter(elem._1) + elem._1, elem._2)
+        }
+      }.toMap[String, String]
+    }
+
+    def updateValues(hakemus: Hakemus, newData: List[(String, String)]) = {
+      // TODO validation and identity check
+      val query = MongoDBObject("oid" -> hakemus.oid)
+      val update = $set(newData:_*)
+      hakemukset.update(query, update)
+    }
+
+    val clearedValues = clearPrevValues(hakemus)
+    val updates = getUpdates(hakemus)
+    val combined = clearedValues ++ updates
+    updateValues(hakemus, combined.toList)
   }
 
   def fetchHakemukset(oid: String): List[Hakemus] = {
@@ -56,15 +73,24 @@ object HakemusRepository extends Logging {
     def groupPreferences(toiveet: Map[String, String]) = {
       val pattern = "preference(\\d+).*".r
       toiveet.groupBy((key) => key._1 match {
-        case pattern(x) => x
+        case pattern(x: String) => x
         case _ => ""
       })
+    }
+
+    def convertEmptyPreferences(toiveet: Map[String, String]) = {
+      if (toiveet.getOrElse("Koulutus-id", "").length() == 0) {
+        Map("priority" -> toiveet.getOrElse("priority", ""))
+      } else {
+        toiveet
+      }
     }
 
     def flatten(toiveet: Map[String, String]): List[Map[String, String]] = {
       groupPreferences(toiveet)
         .toList
         .map(shortenNames)
+        .map(convertEmptyPreferences)
         .sortBy(map => map.get("priority"))
         .map((m) => m.filterKeys { Set("priority").contains(_) == false})
     }

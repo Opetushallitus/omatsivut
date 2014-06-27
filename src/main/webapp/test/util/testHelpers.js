@@ -64,12 +64,13 @@ db = {
     getPreferences: function() {
         return db.getApplications().then(function(data) {
             return _.chain(data[0].hakutoiveet)
+                .filter(function(item) { return !_.isEmpty(item["Koulutus-id"]) })
                 .map(function(item) {
                     return {
                         "hakutoive.Opetuspiste": item.Opetuspiste,
                         "hakutoive.Koulutus": item.Koulutus
                     }
-                 }).filter(function (item) { return !_.isEmpty(item["hakutoive.Opetuspiste"]) || !_.isEmpty(item["hakutoive.Koulutus"]) }).value()
+                 }).value()
         })
     }
 }

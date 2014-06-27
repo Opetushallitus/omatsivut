@@ -67,7 +67,8 @@ listApp.controller("hakemusCtrl", ["$scope", "$element", function ($scope, $elem
     };
 
     $scope.hasPreference = function(index) {
-        return index >= 0 && index <= this.application.hakutoiveet.length-1 && this.application.hakutoiveet[index]["Opetuspiste-id"] !== "";
+        function hasData(item) { return _.any(item, function(val, key) { return key[0] != "$" }) }
+        return index >= 0 && index <= this.application.hakutoiveet.length-1 && hasData(this.application.hakutoiveet[index]);
     }
 
     $scope.movePreference = function(from, to) {
@@ -81,9 +82,7 @@ listApp.controller("hakemusCtrl", ["$scope", "$element", function ($scope, $elem
 
     $scope.removePreference = function(index) {
         var row = this.application.hakutoiveet.splice(index, 1)[0];
-        var newRow = {};
-        _.each(row, function(val, key) { if (key[0] != "$") newRow[key] = "" });
-        this.application.hakutoiveet.push(newRow);
+        this.application.hakutoiveet.push({});
         $scope.hasChanged = true;
     };
 

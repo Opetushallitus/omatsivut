@@ -44,8 +44,7 @@
                 wait.until(function() { return pref2.element().index() === 0 && pref1.element().parent().length === 0 })().done(done)
             })
 
-            // disable until backend works
-            it.skip("muuttuneet tiedot tallentuvat oikein", function(done) {
+            it("muuttuneet tiedot tallentuvat oikein", function(done) {
                 saveAndReloadData().done(function(data) {
                     expect(data.fromDb).to.deep.equal(data.fromUi)
                     done()
