@@ -8,8 +8,10 @@ function ApplicationListPage() {
             element: function() { return el },
             data: function() { return uiUtil.inputValues(el) },
             arrowDown: function() { return el.find(".sort-arrow-down") },
+            arrowUp: function() { return el.find(".sort-arrow-up") },
             number: function() { return el.find(".row-number") },
-            deleteBtn: function() { return el.find(".delete-btn") }
+            deleteBtn: function() { return el.find(".delete-btn") },
+            isDisabled: function() { return this.arrowDown().hasClass("disabled") && this.arrowUp().hasClass("disabled") && this.deleteBtn().is(":hidden")}
         }
     }
 
@@ -27,6 +29,13 @@ function ApplicationListPage() {
 
     function getApplication(index) { return S("#hakemus-list>li").eq(index) }
 
+    function preferencesForApplication(index, filter) {
+        var application = getApplication(index)
+        return application.find(".preference-list-item")
+            .map(function() { return preferenceItem(S(this))}).toArray()
+            .filter(filter)
+    }
+
     var api = {
         resetDataAndOpen: function() { return db.resetData().then(openListPage) },
 
@@ -41,10 +50,11 @@ function ApplicationListPage() {
         },
 
         preferencesForApplication: function(index) {
-            var application = getApplication(index)
-            return application.find(".preference-list-item")
-                .map(function() { return preferenceItem(S(this))}).toArray()
-                .filter(function(item) { return item.data()["hakutoive.Koulutus"].length > 0 })
+            return preferencesForApplication(index,  function(item) { return item.data()["hakutoive.Koulutus"].length > 0 })
+        },
+
+        emptyPreferencesForApplication: function(index) {
+            return preferencesForApplication(index, function(item) { return item.data()["hakutoive.Koulutus"].length == 0 })
         },
 
         saveButton: function(applicationIndex) {

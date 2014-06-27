@@ -27,6 +27,12 @@
             ]);
         })
 
+        it("tyhjiä rivejä ei voi muokata", function() {
+            _.each(ApplicationListPage().emptyPreferencesForApplication(0), function(row) {
+                row.isDisabled().should.be.true
+            })
+        })
+
         describe("hakemuslistauksen muokkaus", function() {
             it("järjestys muuttuu nuolta klikkaamalla", function(done) {
                 var pref1 = getPreference(0)

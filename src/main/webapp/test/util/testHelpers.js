@@ -1,4 +1,5 @@
 var expect = chai.expect
+chai.should()
 var testFrame = window.parent.frames[0]
 
 function S(selector) {
