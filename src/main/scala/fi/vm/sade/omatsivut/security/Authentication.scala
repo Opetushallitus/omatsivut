@@ -61,10 +61,13 @@ trait AuthCookieParsing extends Logging {
   }
   
   def tellBrowserToDeleteAuthCookie(req: HttpServletRequest, res: HttpServletResponse){
-    val authCookie = req.getCookies.find(_.getName == "auth").get
-    authCookie.setPath("/")
-    authCookie.setMaxAge(0)
-    res.addCookie(authCookie)
+    Option(req.getCookies).map(cookies => {
+      cookies.find(_.getName == "auth").map(authCookie => {
+        authCookie.setPath("/")
+        authCookie.setMaxAge(0)
+        res.addCookie(authCookie)
+      })
+    })
   }
 }
 
