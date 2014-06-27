@@ -1,5 +1,4 @@
 import fi.vm.sade.omatsivut._
-import fi.vm.sade.omatsivut.fixtures.FixtureServlet
 import org.scalatra._
 import javax.servlet.ServletContext
 
@@ -14,7 +13,6 @@ class ScalatraBootstrap extends LifeCycle {
     context.mount(new SessionServlet, "/secure")
 
     if("true" == System.getProperty("omatsivut.testMode")){
-      context.mount(new FixtureServlet, "/fixtures")
       context.mount(new UtilityServlet, "/util")
     }
   }

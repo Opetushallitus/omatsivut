@@ -54,7 +54,7 @@ uiUtil = {
 
 db = {
     resetData: function() {
-        return Q($.ajax("/omatsivut/fixtures/apply", { type: "PUT" }))
+        return Q($.ajax("/omatsivut/util/fixtures/apply", { type: "PUT" }))
     },
 
     getApplications: function() {
