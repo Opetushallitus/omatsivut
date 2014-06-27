@@ -40,7 +40,7 @@ wait = {
 
 session = {
     init: function(hetu) {
-        return Q($.get("/secure/fakesession?hetu=" + hetu));
+        return Q($.get("/omatsivut/secure/fakesession?hetu=" + hetu));
     }
 }
 
@@ -54,11 +54,11 @@ uiUtil = {
 
 db = {
     resetData: function() {
-        return Q($.ajax("/fixtures/apply", { type: "PUT" }))
+        return Q($.ajax("/omatsivut/fixtures/apply", { type: "PUT" }))
     },
 
     getApplications: function() {
-        return Q($.get("/api/applications"))
+        return Q($.get("/omatsivut/api/applications"))
     },
 
     getPreferences: function() {

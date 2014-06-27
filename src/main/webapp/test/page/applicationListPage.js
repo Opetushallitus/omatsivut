@@ -23,7 +23,7 @@ function ApplicationListPage() {
 
     var testHetu = "010101-123N"
 
-    var openListPage = openPage("/?hetu=" + testHetu, visible)
+    var openListPage = openPage("/omatsivut/", visible)
 
     function getApplication(index) { return S("#hakemus-list>li").eq(index) }
 
