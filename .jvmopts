@@ -1,1 +1,2 @@
+-XX:MaxPermSize=512m
 -Domatsivut.testMode=true
