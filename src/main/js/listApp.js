@@ -198,10 +198,12 @@ listApp.directive("confirm", function () {
                     scope.$apply(scope.callback);
                     cancel();
                 } else {
+                    element.hide()
                     element.addClass("confirm");
                     element.text(attrs.confirmText);
                     $("body").one("click.cancelConfirm", cancel);
                     element.one("mouseout.cancelConfirm", cancel);
+                    element.fadeIn(100)
                 }
                 return false;
             });

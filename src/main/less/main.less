@@ -54,7 +54,7 @@
 
 @font-color: #333;
 @status-text-color: #555;
-@error-color: red;
+@error-color: #c9302c;
 @border-color: #dcdcdc;
 @section-border-color: #feba00;
 @input-background: #ebf3f7;
@@ -65,6 +65,10 @@
 @button-border-color: darken(@button-background, 20);
 @button-hover-color: lighten(@button-background, 10);
 @button-hover-border-color: lighten(@button-border-color, 10);
+@button-confirm-color: white;
+@button-confirm-background: @error-color;
+@button-confirm-hover-color: lighten(@button-confirm-background, 10);
+@button-confirm-border-color: darken(@button-confirm-background, 20);
 @button-disabled-color: #757575;
 @button-disabled-background: #dedede;
 @button-disabled-border-color: darken(@button-disabled-background, 20);
@@ -170,6 +174,34 @@ button {
   }
 }
 
+button.confirm {
+  background: @button-confirm-background;
+  border-color: @button-confirm-border-color;
+  color: @button-confirm-color;
+  &:hover {
+    background: @button-confirm-hover-color;
+  }
+}
+
+button.delete-btn:not(.confirm) {
+  background: transparent;
+  border: none;
+  font-size: 30px;
+  color: #999;
+
+  &:before {
+    content: '\00D7';
+  }
+
+  &:hover {
+    color: #333;
+  }
+
+  &:active {
+    box-shadow: none;
+  }
+}
+
 .float-right {
   float: right;
   margin-left: 20px;
@@ -240,7 +272,7 @@ button {
   & > .item-content:last-child {
     width: 20%;
     float: left;
-    line-height: 70px;
+    line-height: 80px;
     text-align: right;
   }
 
