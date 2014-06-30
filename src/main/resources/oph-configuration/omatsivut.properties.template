@@ -31,11 +31,11 @@ omatsivut.authentication-service.username={{omatsivut_authentication_service_use
 omatsivut.authentication-service.password={{omatsivut_authentication_service_password}}
 omatsivut.authentication-service.ticket_consumer_path=j_spring_cas_security_check
 omatsivut.authentication-service.path=resources/s2s/byHetu
-omatsivut.haku-app.mongo.host={{mongodb_oppija_host}}
-omatsivut.haku-app.mongo.port={{mongodb_oppija_port}}
+omatsivut.haku-app.mongo.host={{mongodb_hakemus_host}}
+omatsivut.haku-app.mongo.port={{mongodb_hakemus_port}}
 omatsivut.haku-app.mongo.db.name=hakulomake
-omatsivut.haku-app.mongo.db.username={{mongodb_oppija_username}}
-omatsivut.haku-app.mongo.db.password={{mongodb_oppija_password}}
+omatsivut.haku-app.mongo.db.username={{mongodb_hakemus_username}}
+omatsivut.haku-app.mongo.db.password={{mongodb_hakemus_password}}
 
 server.name={{ansible_hostname}}
 
