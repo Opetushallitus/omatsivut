@@ -35,46 +35,56 @@
 
         describe("hakemuslistauksen muokkaus", function() {
             it("järjestys muuttuu nuolta klikkaamalla", function(done) {
-                var pref1 = getPreference(0)
-                var pref2 = getPreference(1)
-                pref1.arrowDown().click()
-                wait.until(function() {
-                    return pref1.element().index() === 1 && pref2.element().index() === 0 && pref1.number().text() === "2."
-                })().done(done)
+                endToEndTest(function() {
+                    var pref2 = getPreference(1)
+                    var pref3 = getPreference(2)
+                    pref2.arrowDown().click()
+                    return wait.until(function() {
+                        return pref2.element().index() === 2 && pref3.element().index() === 1 && pref2.number().text() === "3."
+                    })()
+                }, function(dbStart, dbEnd) {
+                    dbStart.hakutoiveet[1].should.deep.equal(dbEnd.hakutoiveet[2])
+                    dbStart.hakutoiveet[2].should.deep.equal(dbEnd.hakutoiveet[1])
+                    done()
+                })
             })
 
             it("hakutoiveen voi poistaa", function(done) {
-                var pref1 = getPreference(0)
-                var pref2 = getPreference(1)
-                pref1.deleteBtn().click().click()
-                wait.until(function() { return pref2.element().index() === 0 && pref1.element().parent().length === 0 })().done(done)
-            })
-
-            it("muuttuneet tiedot tallentuvat oikein", function(done) {
-                saveAndReloadData().done(function(data) {
-                    expect(data.fromDb).to.deep.equal(data.fromUi)
+                endToEndTest(function() {
+                    var pref1 = getPreference(0)
+                    var pref2 = getPreference(1)
+                    pref1.deleteBtn().click().click()
+                    return wait.until(function() { return pref2.element().index() === 0 && pref1.element().parent().length === 0 })()
+                }, function(dbStart, dbEnd) {
+                    dbEnd.hakutoiveet.should.deep.equal(_.flatten([_.rest(dbStart.hakutoiveet), {}]))
                     done()
                 })
             })
         })
     })
 
+    function endToEndTest(manipulationFunction, dbCheckFunction) {
+        function save() {
+            return wait.until(ApplicationListPage().saveButton(0).isEnabled(true))()
+                .then(ApplicationListPage().saveButton(0).click)
+                .then(wait.until(ApplicationListPage().saveButton(0).isEnabled(false)))
+        }
+
+        var sameArgs = function(f) {
+            return function(val) {
+                return f().then(function() { return val; })
+            }
+        }
+
+        db.getApplications()
+            .then(sameArgs(manipulationFunction))
+            .then(sameArgs(save))
+            .then(function(old) { return db.getApplications().done(function(val) { dbCheckFunction(old[0], val[0]) })})
+    }
+
     function preferencesAsText() {
         return ApplicationListPage().preferencesForApplication(0).map(function(item) { return item.data()})
     }
 
     function getPreference(index) { return ApplicationListPage().preferencesForApplication(0)[index]};
-
-    function saveAndReloadData() {
-        return wait.until(ApplicationListPage().saveButton(0).isEnabled(true))()
-            .then(ApplicationListPage().saveButton(0).click)
-            .then(wait.until(ApplicationListPage().saveButton(0).isEnabled(false)))
-            .then(function() { return db.getPreferences()})
-            .then(function(data) {
-                return {
-                    fromDb: data,
-                    fromUi: preferencesAsText()
-                }
-            })
-    }
 })()
