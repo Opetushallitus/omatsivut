@@ -39,6 +39,8 @@ object OmatsivutBuild extends Build {
       javacOptions ++= Seq("-source", "1.7", "-target", "1.7"),
       scalacOptions ++= Seq("-target:jvm-1.7", "-deprecation"),
       resolvers += Classpaths.typesafeReleases,
+      resolvers += "oph-sade-artifactory-releases" at "http://penaali.hard.ware.fi/artifactory/oph-sade-release-local",
+      resolvers += "oph-sade-artifactory-snapshots" at "http://penaali.hard.ware.fi/artifactory/oph-sade-snapshot-local",
       sourceGenerators in Compile <+= buildInfo,
       buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
       EclipseKeys.createSrc := EclipseCreateSrc.Default + EclipseCreateSrc.Managed,
@@ -60,7 +62,11 @@ object OmatsivutBuild extends Build {
         "org.json4s" %% "json4s-ext" % "3.2.10",
         "com.typesafe" % "config" % "1.2.1",
         "com.novus" %% "salat-core" % "1.9.8",
-        "commons-codec" % "commons-codec" % "1.9"
+        "commons-codec" % "commons-codec" % "1.9",
+        "fi.vm.sade.haku" % "hakemus-api" % "9.5-SNAPSHOT" excludeAll(
+          ExclusionRule(organization = "org.json4s"),
+          ExclusionRule(organization = "com.wordnik")
+        )
       ),
       artifactName <<= (name in (Compile, packageWar)) { projectName =>
         (config: ScalaVersion, module: ModuleID, artifact: Artifact) =>
