@@ -39,7 +39,7 @@ $ ./sbt
 > ~container:start
 ```
 
-Avaa selaimessa [http://localhost:8080/](http://localhost:8080/).
+Avaa selaimessa [http://localhost:8080/omatsivut/](http://localhost:8080/omatsivut/).
 
 ## mocha-phantomjs -testit
 
