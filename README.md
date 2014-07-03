@@ -41,6 +41,16 @@ $ ./sbt
 
 Avaa selaimessa [http://localhost:8080/omatsivut/](http://localhost:8080/omatsivut/).
 
+### Käynnistä IDEAsta/Eclipsestä
+
+Aja TomcatRunner-luokka. Jotta impersonointi/autentikoinnin ohitus onnistuu, anna parametri `-Domatsivut.testMode=true`.
+
+### Impersonointi / autentikoinnin ohitus
+
+Jos applikaatiota ajetaan "testimoodissa" eli `-Domatsivut.testMode=true`, niin autentikointi on mahdollista ohittaa.
+
+Tämä tapahtuu menemällä urliin http://localhost:8080/omatsivut/util/fakesession?hetu=010101-123N
+
 ## mocha-phantomjs -testit
 
 ### Asenna node package manager
@@ -53,6 +63,10 @@ npm install
 ### Aja testit
 
 `./runtests.sh`
+
+### Testien ajaminen selaimessa
+
+Tomcat käyntiin (ks yllä) ja sitten http://localhost:8080/omatsivut/test/runner.html
 
 ## Paikallinen mongo
 
