@@ -7,14 +7,6 @@ import com.novus.salat._
 import com.novus.salat.global._
 import org.joda.time.DateTime
 
-case class HakuAika(start: DateTime, end: DateTime)
-
-case class Translations(translations: Map[String, String])
-
-case class Haku(name: Translations, applicationPeriods: List[HakuAika])
-
-case class Hakemus(oid: String, received: Long, var hakutoiveet: List[Map[String, String]] = Nil, var haku: Option[Haku] = None)
-
 object HakemusRepository extends Logging {
 
   RegisterJodaTimeConversionHelpers()
@@ -56,6 +48,10 @@ object HakemusRepository extends Logging {
   }
 
   def fetchHakemukset(oid: String): List[Hakemus] = {
+    ApplicationDaoWrapper.findByPersonOid(oid)
+  }
+
+  def fetchHakemuksetOLD(oid: String): List[Hakemus] = {
 
     val query = MongoDBObject("personOid" -> oid)
 

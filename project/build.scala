@@ -39,6 +39,7 @@ object OmatsivutBuild extends Build {
       scalaVersion := ScalaVersion,
       javacOptions ++= Seq("-source", "1.7", "-target", "1.7"),
       scalacOptions ++= Seq("-target:jvm-1.7", "-deprecation"),
+      resolvers += "Local Maven Repository" at "file://"+Path.userHome.absolutePath+"/.m2/repository",
       resolvers += Classpaths.typesafeReleases,
       resolvers += "oph-sade-artifactory-releases" at "http://penaali.hard.ware.fi/artifactory/oph-sade-release-local",
       resolvers += "oph-sade-artifactory-snapshots" at "http://penaali.hard.ware.fi/artifactory/oph-sade-snapshot-local",
@@ -67,7 +68,8 @@ object OmatsivutBuild extends Build {
         "fi.vm.sade.haku" % "hakemus-api" % "9.5-SNAPSHOT" excludeAll(
           ExclusionRule(organization = "org.json4s"),
           ExclusionRule(organization = "com.wordnik")
-        )
+        ),
+        "com.sun.jersey" % "jersey-client" % "1.17.1" // <- TODO: should be removed. Just patch for transitive dependency problem
       ),
       artifactName <<= (name in (Compile, packageWar)) { projectName =>
         (config: ScalaVersion, module: ModuleID, artifact: Artifact) =>

@@ -4,8 +4,8 @@ import org.scalatra._
 import javax.servlet.ServletContext
 
 class ScalatraBootstrap extends LifeCycle {
-
   implicit val swagger = new OmatSivutSwagger
+  OmatSivutSpringContext.check
 
   override def init(context: ServletContext) {
     AppConfig.loadSettings // <- to fail-fast
