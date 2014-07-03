@@ -12,6 +12,7 @@ object OmatsivutBuild extends Build {
   val Version = "0.1.0-SNAPSHOT"
   val ScalaVersion = "2.11.1"
   val ScalatraVersion = "2.3.0.RC3"
+  val TomcatVersion = "7.0.22"
 
   // task for running mocha tests
   lazy val mocha = taskKey[Int]("run phantomJS tests")
@@ -54,9 +55,9 @@ object OmatsivutBuild extends Build {
         "ch.qos.logback" % "logback-classic" % "1.0.6" % "runtime",
         "javax.servlet" % "javax.servlet-api" % "3.0.1" % "provided",
         "org.scalaj" %% "scalaj-http" % "0.3.15",
-        "org.apache.tomcat.embed" % "tomcat-embed-core"         % "7.0.22" % "container;test",
-        "org.apache.tomcat.embed" % "tomcat-embed-logging-juli" % "7.0.22" % "container;test",
-        "org.apache.tomcat.embed" % "tomcat-embed-jasper"       % "7.0.22" % "container;test",
+        "org.apache.tomcat.embed" % "tomcat-embed-core"         % TomcatVersion % "container;test",
+        "org.apache.tomcat.embed" % "tomcat-embed-logging-juli" % TomcatVersion % "container;test",
+        "org.apache.tomcat.embed" % "tomcat-embed-jasper"       % TomcatVersion % "container;test",
         "org.mongodb" %% "casbah" % "2.7.2",
         "org.json4s" %% "json4s-jackson" % "3.2.10",
         "org.json4s" %% "json4s-ext" % "3.2.10",
