@@ -1,6 +1,7 @@
 package fi.vm.sade.omatsivut
 
 import org.joda.time.DateTime
+import fi.vm.sade.omatsivut.servlet.{OmatSivutSwagger, ApplicationsServlet}
 
 class AuthenticationSpec extends TestSupport {
   "GET /applications" should {
@@ -27,7 +28,7 @@ class AuthenticationSpec extends TestSupport {
     }
   }
 
-  addServlet(new OHPServlet()(new OHPSwagger) {
+  addServlet(new ApplicationsServlet()(new OmatSivutSwagger) {
     override val cookieTimeoutMinutes = 0
   }, "/*")
 

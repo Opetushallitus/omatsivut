@@ -1,7 +1,7 @@
-package fi.vm.sade.omatsivut
+package fi.vm.sade.omatsivut.json
 
 import org.json4s.{DefaultFormats, Formats}
 
-trait OHPJsonFormats {
+trait JsonFormats {
   protected implicit val jsonFormats: Formats = DefaultFormats ++ org.json4s.ext.JodaTimeSerializers.all
 }

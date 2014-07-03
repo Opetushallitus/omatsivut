@@ -15,7 +15,7 @@
 
   <filter>
     <filter-name>CacheControlFilter</filter-name>
-    <filter-class>fi.vm.sade.omatsivut.CacheControlFilter</filter-class>
+    <filter-class>fi.vm.sade.omatsivut.servlet.CacheControlFilter</filter-class>
   </filter>
 
   <filter-mapping>

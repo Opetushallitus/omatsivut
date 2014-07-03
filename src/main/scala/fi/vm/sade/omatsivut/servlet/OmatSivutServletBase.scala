@@ -1,9 +1,10 @@
-package fi.vm.sade.omatsivut
+package fi.vm.sade.omatsivut.servlet
 
 import org.scalatra._
 import org.slf4j.LoggerFactory
+import fi.vm.sade.omatsivut.Logging
 
-trait OmatsivutStack extends ScalatraServlet with Logging {
+trait OmatSivutServletBase extends ScalatraServlet with Logging {
   notFound {
     // remove content type in case it was set through an action
     contentType = null

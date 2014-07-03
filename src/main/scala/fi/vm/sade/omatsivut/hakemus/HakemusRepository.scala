@@ -1,5 +1,6 @@
-package fi.vm.sade.omatsivut
+package fi.vm.sade.omatsivut.hakemus
 
+import fi.vm.sade.omatsivut._
 import com.mongodb.casbah.Imports._
 import com.mongodb.casbah.commons.conversions.scala.RegisterJodaTimeConversionHelpers
 import com.novus.salat._

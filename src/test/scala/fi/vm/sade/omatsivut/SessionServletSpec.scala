@@ -1,6 +1,7 @@
 package fi.vm.sade.omatsivut
 
 import org.scalatra.test.specs2.MutableScalatraSpec
+import fi.vm.sade.omatsivut.servlet.SessionServlet
 
 class SessionServletSpec extends MutableScalatraSpec {
 

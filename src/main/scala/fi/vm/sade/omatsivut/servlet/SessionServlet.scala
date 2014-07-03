@@ -1,4 +1,4 @@
-package fi.vm.sade.omatsivut
+package fi.vm.sade.omatsivut.servlet
 
 import org.scalatra.{CookieOptions, Cookie}
 import fi.vm.sade.omatsivut.security.{AuthenticationInfoService, CookieCredentials, AuthCookieParsing, AuthenticationCipher}
@@ -16,7 +16,7 @@ class SessionServlet extends AuthCookieCreating {
   }
 }
 
-trait AuthCookieCreating extends OmatsivutStack with AuthCookieParsing  with Logging {
+trait AuthCookieCreating extends OmatSivutServletBase with AuthCookieParsing  with fi.vm.sade.omatsivut.Logging {
   def createAuthCookieResponse(hetuOption: () => Option[String], cookieOptions: CookieOptions = CookieOptions(secure = true, path = "/", maxAge = 1799), redirectUri: String) {
     fetchOid(hetuOption) match {
       case Some(oid) =>

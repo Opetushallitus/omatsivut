@@ -1,19 +1,17 @@
-package fi.vm.sade.omatsivut
+package fi.vm.sade.omatsivut.servlet
 
 import fi.vm.sade.omatsivut.http.HttpClient
 import org.scalatra.json._
 import org.scalatra.swagger._
 import org.json4s.jackson.Serialization
 import fi.vm.sade.omatsivut.security.Authentication
+import fi.vm.sade.omatsivut.json.JsonFormats
+import fi.vm.sade.omatsivut.hakemus.{HakemusRepository, Hakemus}
 
-class OHPServlet(implicit val swagger: Swagger) extends OmatsivutStack with HttpClient with JacksonJsonSupport with OHPJsonFormats with SwaggerSupport with Authentication {
+class ApplicationsServlet(implicit val swagger: Swagger) extends OmatSivutServletBase with HttpClient with JacksonJsonSupport with JsonFormats with SwaggerSupport with Authentication {
   override def applicationName = Some("api")
 
   protected val applicationDescription = "Oppijan henkilökohtaisen palvelun REST API, jolla voi hakea ja muokata hakemuksia ja omia tietoja"
-
-  before() {
-    contentType = formats("json")
-  }
 
   val getApplicationsSwagger = (apiOperation[List[Hakemus]]("getApplications")
     summary "Hae oppijan hakemukset"
@@ -24,6 +22,10 @@ class OHPServlet(implicit val swagger: Swagger) extends OmatsivutStack with Http
     summary "Tallenna hakemus"
     )
 
+  before() {
+    contentType = formats("json")
+  }
+
   get("/applications", operation(getApplicationsSwagger)) {
     HakemusRepository.fetchHakemukset(oid())
   }
@@ -32,4 +34,5 @@ class OHPServlet(implicit val swagger: Swagger) extends OmatsivutStack with Http
     val updated = Serialization.read[Hakemus](request.body)
     HakemusRepository.updateHakemus(updated)
   }
+
 }

@@ -1,4 +1,4 @@
-package fi.vm.sade.omatsivut
+package fi.vm.sade.omatsivut.servlet
 
 import javax.servlet._
 import javax.servlet.http.HttpServletResponse

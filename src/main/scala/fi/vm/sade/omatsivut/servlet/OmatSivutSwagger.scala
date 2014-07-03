@@ -1,12 +1,10 @@
-package fi.vm.sade.omatsivut
+package fi.vm.sade.omatsivut.servlet
 
-import org.scalatra.swagger.{JacksonSwaggerBase, Swagger}
-import org.scalatra.ScalatraServlet
+import org.scalatra.swagger.Swagger
 import org.scalatra.swagger.ApiInfo
+import fi.vm.sade.omatsivut.BuildInfo
 
-class ResourcesApp(implicit val swagger: Swagger) extends ScalatraServlet with JacksonSwaggerBase 
-
-class OHPSwagger extends Swagger(
+class OmatSivutSwagger extends Swagger(
 	Swagger.SpecVersion,
     BuildInfo.version,
     ApiInfo("omatsivut",

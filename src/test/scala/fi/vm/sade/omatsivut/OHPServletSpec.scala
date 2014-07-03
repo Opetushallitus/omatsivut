@@ -1,8 +1,11 @@
 package fi.vm.sade.omatsivut
 
 import org.json4s.native.Serialization
+import fi.vm.sade.omatsivut.servlet.{OmatSivutSwagger, ApplicationsServlet}
+import fi.vm.sade.omatsivut.json.JsonFormats
+import fi.vm.sade.omatsivut.hakemus.Hakemus
 
-class OHPServletSpec extends OHPJsonFormats with TestSupport {
+class OHPServletSpec extends JsonFormats with TestSupport {
 
   "GET /applications" should {
     "return person's applications" in {
@@ -27,5 +30,5 @@ class OHPServletSpec extends OHPJsonFormats with TestSupport {
     hakemus.hakutoiveet(0)("Opetuspiste-id") must_== "1.2.246.562.10.60222091211"
   }
 
-  addServlet(new OHPServlet()(new OHPSwagger), "/*")
+  addServlet(new ApplicationsServlet()(new OmatSivutSwagger), "/*")
 }
