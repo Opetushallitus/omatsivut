@@ -10,16 +10,10 @@ import java.util.regex.Pattern
 object ApplicationDaoWrapper {
   def findByPersonOid(personOid: String): List[Hakemus] = {
     val dao = OmatSivutSpringContext.context.getBean(classOf[ApplicationDAO])
-    val applicationJavaObjects: List[Application] = dao.find(createSearchParameterApplication(personOid)).toList
+    val applicationJavaObjects: List[Application] = dao.find(new Application().setPersonOid(personOid)).toList
     applicationJavaObjects.map { application =>
       Hakemus(application.getOid, application.getReceived.getTime, convertHakuToiveet(application), convertApplicationSystem(application))
     }
-  }
-
-  def createSearchParameterApplication(personOid: String): Application = {
-    val searchApplication = new Application()
-    searchApplication.setPersonOid(personOid)
-    searchApplication
   }
 
   def convertApplicationSystem(application: Application): Option[Haku] = application.getApplicationSystemId match {
