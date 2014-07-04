@@ -28,7 +28,7 @@
                         <header class="application-section-heading">
                             Hakutoiveet
                             <button class="float-right save-btn" ng-disabled="!hasChanged || isSaving" ng-click="saveApplication()">Tallenna muutokset</button>
-                            <span class="status-message float-right" ng-class="{'ajax-spinner': isSaving}" ng-bind="saveMessage" ng-class="saveMessageType"></span>
+                            <span class="status-message float-right" ng-class="{'ajax-spinner': isSaving, error: saveMessageType=='error'}" ng-bind="saveMessage" ng-class="saveMessageType"></span>
                         </header>
 
                         <ul class="preference-list" sortable sortable-moved="movePreference">

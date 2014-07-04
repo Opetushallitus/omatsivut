@@ -97,12 +97,15 @@ listApp.controller("hakemusCtrl", ["$scope", "$element", function ($scope, $elem
             $scope.$emit("application-saved");
             $scope.hasChanged = false;
             $scope.isSaving = false;
-
             setSaveMessage("Kaikki muutokset tallennettu", "success");
         }
 
         function onError(err) {
-            setSaveMessage("Tallentaminen epäonnistui", "error");
+            switch (err.status) {
+                case 401: setSaveMessage("Tallentaminen epäonnistui, sillä istunto on vanhentunut. Kirjaudu uudestaan sisään.", "error"); break;
+                default: setSaveMessage("Tallentaminen epäonnistui", "error");
+            };
+
             $scope.isSaving = false;
             console.log(err);
         }
