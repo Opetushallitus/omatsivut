@@ -43,11 +43,11 @@ Avaa selaimessa [http://localhost:8080/omatsivut/](http://localhost:8080/omatsiv
 
 ### Käynnistä IDEAsta/Eclipsestä
 
-Aja TomcatRunner-luokka. Jotta impersonointi/autentikoinnin ohitus onnistuu, anna parametri `-Domatsivut.testMode=true`.
+Aja TomcatRunner-luokka. Jotta impersonointi/autentikoinnin ohitus onnistuu, anna parametri `-Domatsivut.profile=dev`.
 
 ### Impersonointi / autentikoinnin ohitus
 
-Jos applikaatiota ajetaan "testimoodissa" eli `-Domatsivut.testMode=true`, niin autentikointi on mahdollista ohittaa.
+Jos applikaatiota ajetaan "testimoodissa" eli `-Domatsivut.profile=test`, niin autentikointi on mahdollista ohittaa.
 
 Tämä tapahtuu menemällä urliin http://localhost:8080/omatsivut/util/fakesession?hetu=010101-123N
 

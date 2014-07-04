@@ -8,8 +8,7 @@ import com.novus.salat._
 import com.novus.salat.global._
 
 object HakuRepository {
-  private val settings = AppConfig.settings
-  private val lomakkeet = settings.hakuAppMongoDb("applicationSystem")
+  private val lomakkeet = AppConfig.settings.hakuAppMongoDb("applicationSystem")
 
   def getApplicationSystemById(hakuOid: Option[String]): Option[Haku] = {
     val res = lomakkeet.findOne(MongoDBObject("_id" -> hakuOid), MongoDBObject("name" -> 1, "applicationPeriods" -> 1))

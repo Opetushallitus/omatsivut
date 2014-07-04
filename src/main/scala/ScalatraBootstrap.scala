@@ -14,7 +14,7 @@ class ScalatraBootstrap extends LifeCycle {
     context.mount(new SwaggerServlet, "/swagger/*")
     context.mount(new SessionServlet, "/secure")
 
-    if("true" == System.getProperty("omatsivut.testMode")){
+    if(AppConfig.config.usesFixtures){
       context.mount(new TestHelperServlet, "/util")
     }
   }

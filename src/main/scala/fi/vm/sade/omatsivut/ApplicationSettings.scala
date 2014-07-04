@@ -6,14 +6,7 @@ import com.typesafe.config.{ConfigFactory, Config}
 import java.io.File
 
 object ApplicationSettings extends Logging {
-  def loadSettings: ApplicationSettings = {
-    val fileLocations = List(
-      System.getProperty("omatsivut.configFile"),
-      "../module-install-parent/config/common/omatsivut/omatsivut.properties",
-      "./module-install-parent/config/common/omatsivut/omatsivut.properties",
-      System.getProperty("user.home") + "/oph-configuration/common.properties", // for server environments
-      System.getProperty("user.home") + "/oph-configuration/omatsivut.properties"
-    )
+  def loadSettings(fileLocations: List[String]): ApplicationSettings = {
     fileLocations.flatMap(getFile).headOption match {
       case Some(configFile) =>
         logger.info("Using configuration file " + configFile)
