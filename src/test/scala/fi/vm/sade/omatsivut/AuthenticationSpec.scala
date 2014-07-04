@@ -3,7 +3,7 @@ package fi.vm.sade.omatsivut
 import org.joda.time.DateTime
 import fi.vm.sade.omatsivut.servlet.{OmatSivutSwagger, ApplicationsServlet}
 
-class AuthenticationSpec extends TestSupport {
+class AuthenticationSpec extends ScalatraTestSupport {
   "GET /applications" should {
     "return 401 if not authenticated" in {
       get("/applications") {

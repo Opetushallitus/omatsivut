@@ -5,7 +5,7 @@ import fi.vm.sade.omatsivut.servlet.{OmatSivutSwagger, ApplicationsServlet}
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.hakemus.Hakemus
 
-class OHPServletSpec extends JsonFormats with TestSupport {
+class OHPServletSpec extends JsonFormats with ScalatraTestSupport {
 
   "GET /applications" should {
     "return person's applications" in {
