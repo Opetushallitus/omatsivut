@@ -8,7 +8,7 @@
       it('hakemuslistassa on hakemus henkilölle 010101-123N', function () {
         expect(ApplicationListPage().applications()).to.deep.equal([
           {
-            applicationSystemName: "MUUTettu TAAS Ammatillisen koulutuksen ja lukiokoulutuksen kevään 2014 yhteishaku"
+            applicationSystemName: "Perusopetuksen jälkeisen valmistavan koulutuksen kesän 2014 haku MUOKATTU"
           }
         ])
       })
@@ -16,16 +16,16 @@
       it("henkilön 010101-123N hakutoiveet ovat näkyvissä", function () {
         expect(preferencesAsText()).to.deep.equal([
           {
-            "hakutoive.Opetuspiste": "Ahlmanin ammattiopisto",
-            "hakutoive.Koulutus": "Eläintenhoidon koulutusohjelma, pk (Maatalousalan perustutkinto)"
+            "hakutoive.Opetuspiste": "Amiedu, Valimotie 8",
+            "hakutoive.Koulutus": "Maahanmuuttajien ammatilliseen peruskoulutukseen valmistava koulutus"
           },
           {
             "hakutoive.Opetuspiste": "Ammatti-instituutti Iisakki",
-            "hakutoive.Koulutus": "Kone- ja metallialan perustutkinto, pk"
+            "hakutoive.Koulutus": "Kymppiluokka"
           },
           {
-            "hakutoive.Koulutus": "Musiikin koulutusohjelma, pk (Musiikkialan perustutkinto)",
-            "hakutoive.Opetuspiste": "Ammattiopisto Lappia,  Pop & Jazz Konservatorio Lappia"
+            "hakutoive.Opetuspiste": "Turun Kristillinen opisto",
+            "hakutoive.Koulutus": "Kymppiluokka"
           }
         ]);
       })
@@ -38,32 +38,35 @@
     })
 
     describe("hakemuslistauksen muokkaus", function () {
-      it("järjestys muuttuu nuolta klikkaamalla", function (done) {
-        endToEndTest(function () {
-          var pref2 = getPreference(1)
-          var pref3 = getPreference(2)
-          pref2.arrowDown().click()
-          return wait.until(function () {
-            return pref2.element().index() === 2 && pref3.element().index() === 1 && pref2.number().text() === "3."
-          })()
-        }, function (dbStart, dbEnd) {
-          dbStart.hakutoiveet[1].should.deep.equal(dbEnd.hakutoiveet[2])
-          dbStart.hakutoiveet[2].should.deep.equal(dbEnd.hakutoiveet[1])
-          done()
+      describe("järjestys", function() {
+        it("järjestys muuttuu nuolta klikkaamalla", function (done) {
+          endToEndTest(function () {
+            var pref2 = getPreference(1)
+            var pref3 = getPreference(2)
+            pref2.arrowDown().click()
+            return wait.until(function () {
+              return pref2.element().index() === 2 && pref3.element().index() === 1 && pref2.number().text() === "3."
+            })()
+          }, function (dbStart, dbEnd) {
+            dbStart.hakutoiveet[1].should.deep.equal(dbEnd.hakutoiveet[2])
+            dbStart.hakutoiveet[2].should.deep.equal(dbEnd.hakutoiveet[1])
+            done()
+          })
         })
       })
-
-      it("hakutoiveen voi poistaa", function (done) {
-        endToEndTest(function () {
-          var pref1 = getPreference(0)
-          var pref2 = getPreference(1)
-          pref1.deleteBtn().click().click()
-          return wait.until(function () {
-            return pref2.element().index() === 0 && pref1.element().parent().length === 0
-          })()
-        }, function (dbStart, dbEnd) {
-          dbEnd.hakutoiveet.should.deep.equal(_.flatten([_.rest(dbStart.hakutoiveet), {}]))
-          done()
+      describe("poisto", function() {
+        it("hakutoiveen voi poistaa", function (done) {
+          endToEndTest(function () {
+            var pref1 = getPreference(0)
+            var pref2 = getPreference(1)
+            pref1.deleteBtn().click().click()
+            return wait.until(function () {
+              return pref2.element().index() === 0 && pref1.element().parent().length === 0
+            })()
+          }, function (dbStart, dbEnd) {
+            dbEnd.hakutoiveet.should.deep.equal(_.flatten([_.rest(dbStart.hakutoiveet), {}]))
+            done()
+          })
         })
       })
     })

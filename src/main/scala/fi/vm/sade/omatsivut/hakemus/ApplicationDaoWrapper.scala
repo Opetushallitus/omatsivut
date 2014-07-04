@@ -12,7 +12,7 @@ object ApplicationDaoWrapper {
     val dao = OmatSivutSpringContext.context.getBean(classOf[ApplicationDAO])
     val applicationJavaObjects: List[Application] = dao.find(createSearchParameterApplication(personOid)).toList
     applicationJavaObjects.map { application =>
-      Hakemus(application.getOid, application.getReceived.getTime, convertHakuToiveet(application), None)
+      Hakemus(application.getOid, application.getReceived.getTime, convertHakuToiveet(application), convertApplicationSystem(application))
     }
   }
 
@@ -20,6 +20,11 @@ object ApplicationDaoWrapper {
     val searchApplication = new Application()
     searchApplication.setPersonOid(personOid)
     searchApplication
+  }
+
+  def convertApplicationSystem(application: Application): Option[Haku] = application.getApplicationSystemId match {
+    case "" => None
+    case applicationSystemId => HakuRepository.getApplicationSystemById(Some(applicationSystemId))
   }
 
   def convertHakuToiveet(application: Application): List[Map[String, String]] = {

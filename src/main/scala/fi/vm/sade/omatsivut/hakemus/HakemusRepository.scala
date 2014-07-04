@@ -8,7 +8,6 @@ import com.novus.salat.global._
 import org.joda.time.DateTime
 
 object HakemusRepository extends Logging {
-
   RegisterJodaTimeConversionHelpers()
 
   private val settings = AppConfig.loadSettings
@@ -52,29 +51,14 @@ object HakemusRepository extends Logging {
   }
 
   def fetchHakemuksetOLD(oid: String): List[Hakemus] = {
-
     val query = MongoDBObject("personOid" -> oid)
 
-    hakemukset.find(query).toList.map((hakemus: DBObject) => {
-      val haku = getHaku(hakemus)
-      (hakemus, haku)
-    }).map((tuple: (DBObject, DBObject)) => {
-      val hakem = grater[Hakemus].asObject(tuple._1)
-      val toiveet = tuple._1.getAs[Map[String, String]]("answers").get.asDBObject.getAs[Map[String, String]]("hakutoiveet").get
-      hakem.hakutoiveet = HakutoiveetConverter.convert(toiveet)
-      if (!tuple._2.isEmpty) {
-        hakem.haku = Some(grater[Haku].asObject(tuple._2))
-      }
-      hakem
+    hakemukset.find(query).toList.map((applicationDbObject: DBObject) => {
+      val application = grater[Hakemus].asObject(applicationDbObject)
+      application.haku = HakuRepository.getApplicationSystemById(applicationDbObject.getAs[String]("applicationSystemId"))
+      val toiveet = applicationDbObject.getAs[Map[String, String]]("answers").get.asDBObject.getAs[Map[String, String]]("hakutoiveet").get
+      application.hakutoiveet = HakutoiveetConverter.convert(toiveet)
+      application
     })
-  }
-
-  private def getHaku(hakemus: DBObject): DBObject = {
-    val hakuOid = hakemus.getAs[String]("applicationSystemId")
-    val res = lomakkeet.findOne(MongoDBObject("_id" -> hakuOid), MongoDBObject("name" -> 1, "applicationPeriods" -> 1))
-    res match {
-      case Some(x) => x.asDBObject
-      case None => DBObject.empty
-    }
   }
 }
