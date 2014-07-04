@@ -5,6 +5,7 @@ import scala.collection.JavaConversions._
 import fi.vm.sade.omatsivut.OmatSivutSpringContext
 import java.util
 import fi.vm.sade.haku.oppija.hakemus.it.dao.ApplicationDAO
+import java.util.regex.Pattern
 
 object ApplicationDaoWrapper {
   def findByPersonOid(personOid: String): List[Hakemus] = {
@@ -47,10 +48,10 @@ object HakutoiveetConverter {
   }
 
   private def groupPreferences(toiveet: Map[String, String]) = {
-    val pattern = "preference(\\d+).*".r
-    toiveet.groupBy((key) => key._1 match {
-      case pattern(x: String) => x
-      case _ => ""
+    val regex = "preference(\\d+).*".r
+
+    toiveet.filter((key) => regex.pattern.matcher(key._1).matches()).groupBy((key) => key._1 match {
+      case regex(x: String) => x
     })
   }
 
