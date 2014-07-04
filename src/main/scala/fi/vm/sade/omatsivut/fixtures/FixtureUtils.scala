@@ -8,13 +8,17 @@ import fi.vm.sade.haku.testfixtures.{MongoFixtureImporter, ProjectRootFinder}
 import org.springframework.data.mongodb.core.MongoTemplate
 
 object FixtureUtils {
-
   def applyFixtures(): Unit = {
+    importHakemusApiFixtures
+    importLocalFixtures
+  }
 
+  private def importHakemusApiFixtures {
     val mongoTemplate = OmatSivutSpringContext.context.getBean(classOf[MongoTemplate])
-
     MongoFixtureImporter.importJsonFixtures(mongoTemplate)
+  }
 
+  private def importLocalFixtures {
     val fixtureDir = new java.io.File("testfixtures")
 
     for (collection <- fixtureDir.listFiles if collection.isDirectory) {

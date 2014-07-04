@@ -4,34 +4,36 @@
       session.init("010101-123N").then(ApplicationListPage().resetDataAndOpen).done(done)
     })
 
-    it('hakemuslistassa on hakemus henkilölle 010101-123N', function () {
-      expect(ApplicationListPage().applications()).to.deep.equal([
-        {
-          applicationSystemName: "MUUTettu TAAS Ammatillisen koulutuksen ja lukiokoulutuksen kevään 2014 yhteishaku"
-        }
-      ])
-    })
+    describe("näyttäminen", function() {
+      it('hakemuslistassa on hakemus henkilölle 010101-123N', function () {
+        expect(ApplicationListPage().applications()).to.deep.equal([
+          {
+            applicationSystemName: "MUUTettu TAAS Ammatillisen koulutuksen ja lukiokoulutuksen kevään 2014 yhteishaku"
+          }
+        ])
+      })
 
-    it("henkilön 010101-123N hakutoiveet ovat näkyvissä", function () {
-      expect(preferencesAsText()).to.deep.equal([
-        {
-          "hakutoive.Opetuspiste": "Ahlmanin ammattiopisto",
-          "hakutoive.Koulutus": "Eläintenhoidon koulutusohjelma, pk (Maatalousalan perustutkinto)"
-        },
-        {
-          "hakutoive.Opetuspiste": "Ammatti-instituutti Iisakki",
-          "hakutoive.Koulutus": "Kone- ja metallialan perustutkinto, pk"
-        },
-        {
-          "hakutoive.Koulutus": "Musiikin koulutusohjelma, pk (Musiikkialan perustutkinto)",
-          "hakutoive.Opetuspiste": "Ammattiopisto Lappia,  Pop & Jazz Konservatorio Lappia"
-        }
-      ]);
-    })
+      it("henkilön 010101-123N hakutoiveet ovat näkyvissä", function () {
+        expect(preferencesAsText()).to.deep.equal([
+          {
+            "hakutoive.Opetuspiste": "Ahlmanin ammattiopisto",
+            "hakutoive.Koulutus": "Eläintenhoidon koulutusohjelma, pk (Maatalousalan perustutkinto)"
+          },
+          {
+            "hakutoive.Opetuspiste": "Ammatti-instituutti Iisakki",
+            "hakutoive.Koulutus": "Kone- ja metallialan perustutkinto, pk"
+          },
+          {
+            "hakutoive.Koulutus": "Musiikin koulutusohjelma, pk (Musiikkialan perustutkinto)",
+            "hakutoive.Opetuspiste": "Ammattiopisto Lappia,  Pop & Jazz Konservatorio Lappia"
+          }
+        ]);
+      })
 
-    it("tyhjiä rivejä ei voi muokata", function () {
-      _.each(ApplicationListPage().emptyPreferencesForApplication(0), function (row) {
-        row.isDisabled().should.be.true
+      it("tyhjiä rivejä ei voi muokata", function () {
+        _.each(ApplicationListPage().emptyPreferencesForApplication(0), function (row) {
+          row.isDisabled().should.be.true
+        })
       })
     })
 
