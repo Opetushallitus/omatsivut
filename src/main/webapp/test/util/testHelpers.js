@@ -1,5 +1,6 @@
 var expect = chai.expect
 chai.should()
+chai.config.truncateThreshold = 0; // disable truncating
 var testFrame = window.parent.frames[0]
 
 function S(selector) {
