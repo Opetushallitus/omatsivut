@@ -69,6 +69,7 @@ object OmatsivutBuild extends Build {
           ExclusionRule(organization = "org.json4s"),
           ExclusionRule(organization = "com.wordnik")
         ),
+        "fi.vm.sade.haku" % "hakemus-api" % "9.5-SNAPSHOT" % "test" classifier "tests",
         "com.sun.jersey" % "jersey-client" % "1.17.1" // <- TODO: should be removed. Just patch for transitive dependency problem
       ),
       artifactName <<= (name in (Compile, packageWar)) { projectName =>

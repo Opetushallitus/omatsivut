@@ -3,11 +3,17 @@ package fi.vm.sade.omatsivut.fixtures
 import com.mongodb.util.JSON
 import scala.io.Source
 import com.mongodb.casbah.Imports._
-import fi.vm.sade.omatsivut.AppConfig
+import fi.vm.sade.omatsivut.{OmatSivutSpringContext, AppConfig}
+import fi.vm.sade.haku.testfixtures.{MongoFixtureImporter, ProjectRootFinder}
+import org.springframework.data.mongodb.core.MongoTemplate
 
 object FixtureUtils {
 
   def applyFixtures(): Unit = {
+
+    val mongoTemplate = OmatSivutSpringContext.context.getBean(classOf[MongoTemplate])
+
+    MongoFixtureImporter.importJsonFixtures(mongoTemplate)
 
     val fixtureDir = new java.io.File("testfixtures")
 

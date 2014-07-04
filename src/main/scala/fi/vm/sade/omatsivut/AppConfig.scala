@@ -5,6 +5,7 @@ import com.mongodb.MongoCredential
 import com.mongodb.ServerAddress
 import com.mongodb.casbah.MongoClient
 import java.io.File
+import org.springframework.data.mongodb.core.MongoTemplate
 
 object AppConfig extends Logging {
   val loadSettings: Settings = {
