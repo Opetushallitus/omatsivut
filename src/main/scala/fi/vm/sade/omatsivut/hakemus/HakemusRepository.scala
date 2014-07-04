@@ -10,7 +10,7 @@ import org.joda.time.DateTime
 object HakemusRepository extends Logging {
   RegisterJodaTimeConversionHelpers()
 
-  private val settings = AppConfig.loadSettings
+  private val settings = AppConfig.settings
   private val hakemukset = settings.hakuAppMongoDb("application")
 
   def getDelimiter(s: String) = if(s.contains("_")) "_" else "-"

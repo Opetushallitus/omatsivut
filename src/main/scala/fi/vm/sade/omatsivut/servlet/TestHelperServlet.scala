@@ -2,10 +2,11 @@ package fi.vm.sade.omatsivut.servlet
 
 import fi.vm.sade.omatsivut.fixtures.FixtureUtils
 import org.scalatra.CookieOptions
+import fi.vm.sade.omatsivut.security.AuthenticationInfoService
 
-class TestHelperServlet extends AuthCookieCreating  {
+class TestHelperServlet(implicit val authService: AuthenticationInfoService) extends AuthCookieCreating  {
   get("/fakesession") {
-    createAuthCookieResponse(() => paramOption("hetu"), CookieOptions(secure = false, path = "/"), paramOption("redirect").getOrElse("/index.html"))
+    createAuthCookieResponse(paramOption("hetu"), CookieOptions(secure = false, path = "/"), paramOption("redirect").getOrElse("/index.html"))
   }
 
   put("/fixtures/apply") {

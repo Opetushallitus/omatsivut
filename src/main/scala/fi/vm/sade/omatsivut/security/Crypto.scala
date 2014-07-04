@@ -36,7 +36,7 @@ trait AES {
 }
 
 object AuthenticationCipher extends AES with HmacSHA256 {
-  val settings = AppConfig.loadSettings
+  val settings = AppConfig.settings
 
   val key = settings.aesKey.getBytes("UTF-8")
   val macKey = settings.hmacKey.getBytes("UTF-8")

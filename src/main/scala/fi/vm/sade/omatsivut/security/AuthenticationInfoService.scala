@@ -1,17 +1,20 @@
 package fi.vm.sade.omatsivut.security
 
 import fi.vm.sade.omatsivut.http.HttpClient
-import fi.vm.sade.omatsivut.{AppConfig, Logging}
+import fi.vm.sade.omatsivut.{RemoteApplicationConfig, AppConfig, Logging}
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
 
-object AuthenticationInfoService extends Logging with HttpClient {
-  def getHenkiloOID(hetu : String) : Option[String] = {
-    val settings = AppConfig.loadSettings.authenticationService
-    implicit val formats = DefaultFormats
-    val ticket = CASClient.getServiceTicket(settings)
+trait AuthenticationInfoService extends Logging with HttpClient {
+  def getHenkiloOID(hetu : String) : Option[String]
+}
 
-    val (responseCode, headersMap, resultString) = httpGet(settings.url + "/" + settings.path + "/" + hetu)
+class RemoteAuthenticationInfoService(config: RemoteApplicationConfig) extends AuthenticationInfoService with Logging with HttpClient {
+  def getHenkiloOID(hetu : String) : Option[String] = {
+    implicit val formats = DefaultFormats
+    val ticket = CASClient.getServiceTicket(config)
+
+    val (responseCode, headersMap, resultString) = httpGet(config.url + "/" + config.path + "/" + hetu)
       .param("ticket", ticket.getOrElse("no_ticket"))
       .responseWithHeaders
 
@@ -21,8 +24,8 @@ object AuthenticationInfoService extends Logging with HttpClient {
         val json = parse(resultString)
         logger.info("Got user info: " + json)
         (for {
-           JObject(child) <- json
-           JField("oidHenkilo", JString(oid))  <- child
+          JObject(child) <- json
+          JField("oidHenkilo", JString(oid))  <- child
         } yield oid).headOption
       }
     }

@@ -23,7 +23,7 @@ object FixtureUtils {
 
     for (collection <- fixtureDir.listFiles if collection.isDirectory) {
 
-      val coll = AppConfig.loadSettings.hakuAppMongoDb(collection.getName)
+      val coll = AppConfig.settings.hakuAppMongoDb(collection.getName)
 
       for (file <- collection.listFiles if file.getName endsWith ".json") {
         val source = Source.fromFile(file)

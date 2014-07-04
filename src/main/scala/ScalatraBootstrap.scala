@@ -8,7 +8,8 @@ class ScalatraBootstrap extends LifeCycle {
   OmatSivutSpringContext.check
 
   override def init(context: ServletContext) {
-    AppConfig.loadSettings // <- to fail-fast
+    implicit val authService = AppConfig.config.authenticationInfoService
+
     context.mount(new ApplicationsServlet, "/api")
     context.mount(new SwaggerServlet, "/swagger/*")
     context.mount(new SessionServlet, "/secure")

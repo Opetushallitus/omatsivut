@@ -5,7 +5,7 @@ import fi.vm.sade.omatsivut.{AppConfig, Logging, RemoteApplicationConfig}
 
 object CASClient extends HttpClient with Logging {
   
-  val settings = AppConfig.loadSettings
+  val settings = AppConfig.settings
 
   private def getTicketGrantingTicket(username: String, password: String): Option[String] = {
     val (responseCode, headersMap, resultString) = httpPost(settings.casTicketUrl)
