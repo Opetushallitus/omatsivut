@@ -53,6 +53,7 @@
 // Colors
 
 @font-color: #333;
+@font-color-light: #555;
 @status-text-color: #555;
 @error-color: #c9302c;
 @border-color: #dcdcdc;
@@ -123,7 +124,8 @@ h2 {
 }
 
 .status-message {
-  .body-font();
+  .body-font(@font-color-light);
+  line-height: 32px;
 
   &.error {
     color: @error-color;
@@ -207,14 +209,21 @@ button.delete-btn:not(.confirm) {
   margin-left: 20px;
 }
 
+.ajax-spinner:after {
+  content: url(../img/ajax-loader.gif);
+  vertical-align: top;
+  margin-left: 15px;
+}
+
 .application-section-heading {
   .section-heading-font();
   border-bottom: 1px solid @section-border-color;
-  padding-bottom: 20px;
+  padding-bottom: 10px;
+  line-height: 40px;
   letter-spacing: 0.12em;
 
-  button {
-    margin-top: -5px;
+  .status-message {
+    line-height: 30px;
   }
 }
 
@@ -222,6 +231,10 @@ button.delete-btn:not(.confirm) {
   padding: 20px;
   border: 1px solid @border-color;
   .body-font();
+
+  &.ajax-spinner:after {
+    vertical-align: -50%;
+  }
 
   &.error {
     color: @error-color;
