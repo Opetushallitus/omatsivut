@@ -12,7 +12,6 @@ object HakemusRepository extends Logging {
 
   private val settings = AppConfig.loadSettings
   private val hakemukset = settings.hakuAppMongoDb("application")
-  private val lomakkeet = settings.hakuAppMongoDb("applicationSystem")
 
   def getDelimiter(s: String) = if(s.contains("_")) "_" else "-"
 
