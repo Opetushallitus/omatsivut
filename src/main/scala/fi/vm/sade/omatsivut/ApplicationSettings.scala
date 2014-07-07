@@ -3,6 +3,7 @@ package fi.vm.sade.omatsivut
 import com.mongodb.casbah.MongoClient
 import com.mongodb.{MongoCredential, ServerAddress}
 import com.typesafe.config.{ConfigFactory, Config}
+import collection.JavaConversions._
 import java.io.File
 
 object ApplicationSettings extends Logging {
@@ -15,6 +16,9 @@ object ApplicationSettings extends Logging {
         val configReader = new ApplicationSettings(new SettingsReader() {
           def getProperty(key: String) = {
             settings.getString(key)
+          }
+          def keys = {
+            settings.entrySet().toList.map(_.getKey)
           }
         })
         logger.info("Settings: " + settings)
@@ -33,19 +37,19 @@ object ApplicationSettings extends Logging {
   }
 
 }
-case class ApplicationSettings(config: SettingsReader) {
-  val casTicketUrl = config getString "omatsivut.cas.ticket.url"
+case class ApplicationSettings(settingsReader: SettingsReader) {
+  val casTicketUrl = settingsReader getString "omatsivut.cas.ticket.url"
 
-  val authenticationService = getRemoteApplicationConfig(config.getConfig("omatsivut.authentication-service"))
+  val authenticationService = getRemoteApplicationConfig(settingsReader.getConfig("omatsivut.authentication-service"))
 
-  val aesKey = config getString "omatsivut.crypto.aes.key"
-  val hmacKey = config getString "omatsivut.crypto.hmac.key"
+  val aesKey = settingsReader getString "omatsivut.crypto.aes.key"
+  val hmacKey = settingsReader getString "omatsivut.crypto.hmac.key"
 
-  private val hakuAppMongoHost = config getProperty "omatsivut.haku-app.mongo.host"
-  private val hakuAppMongoPort = config getInt "omatsivut.haku-app.mongo.port"
-  private val hakuAppMongoDbName = config getString "omatsivut.haku-app.mongo.db.name"
-  private val hakuAppMongoDbUsername = config getString "omatsivut.haku-app.mongo.db.username"
-  private val hakuAppMongoDbPassword = config getString "omatsivut.haku-app.mongo.db.password" toCharArray ()
+  private val hakuAppMongoHost = settingsReader getProperty "omatsivut.haku-app.mongo.host"
+  private val hakuAppMongoPort = settingsReader getInt "omatsivut.haku-app.mongo.port"
+  private val hakuAppMongoDbName = settingsReader getString "omatsivut.haku-app.mongo.db.name"
+  private val hakuAppMongoDbUsername = settingsReader getString "omatsivut.haku-app.mongo.db.username"
+  private val hakuAppMongoDbPassword = settingsReader getString "omatsivut.haku-app.mongo.db.password" toCharArray ()
 
   private def getRemoteApplicationConfig(config: SettingsReader) = {
     RemoteApplicationConfig(config getString "url", config getString "username", config getString "password", config getString "path", config getString "ticket_consumer_path")
@@ -73,6 +77,12 @@ case class ApplicationSettings(config: SettingsReader) {
 
 
 trait SettingsReader {
+  def keys: Seq[String]
+  def toMap: Map[String, String] = {
+    keys.map { key =>
+      (key, getString(key))
+    }.toMap
+  }
   def getProperty(key: String): String
   def getInt(key: String): Int = Integer.parseInt(getProperty(key))
   def getString(key: String) = getProperty(key)
@@ -82,6 +92,7 @@ trait SettingsReader {
       def getProperty(subKey: String) = {
         parent.getProperty(key + "." + subKey)
       }
+      def keys = throw new UnsupportedOperationException()
     }
   }
 }

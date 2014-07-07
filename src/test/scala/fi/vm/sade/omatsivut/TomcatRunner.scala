@@ -9,6 +9,7 @@ import java.io.File
 object TomcatRunner extends App {
   val tomcat = new Tomcat()
   val webappDirLocation = "src/main/webapp/"
+
   tomcat.setPort(8080)
   tomcat.addWebapp("/omatsivut", new File(webappDirLocation).getAbsolutePath());
   System.out.println("configuring app with basedir: " + new File("./" + webappDirLocation).getAbsolutePath());

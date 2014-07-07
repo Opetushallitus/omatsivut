@@ -1,59 +1,89 @@
 package fi.vm.sade.omatsivut
 
+import java.util
+import java.util.Properties
+import fi.vm.sade.omatsivut.AppConfig.AppConfig
+
+import collection.JavaConversions._
 import org.springframework.context.annotation._
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer
+import org.springframework.core.env.{MapPropertySource, MutablePropertySources}
+
+import scala.collection.JavaConversions
 
 object OmatSivutSpringContext {
-  val context = createApplicationContext
+  val context = createApplicationContext(AppConfig.config)
 
   def check {}
 
-  private def createApplicationContext: AnnotationConfigApplicationContext = {
+  private def createApplicationContext(configuration: AppConfig): AnnotationConfigApplicationContext = {
     val appContext: AnnotationConfigApplicationContext = new AnnotationConfigApplicationContext
-    appContext.getEnvironment.setActiveProfiles(AppConfig.config.springProfile)
-    appContext.register(classOf[Dev], classOf[IT], classOf[Default])
+    println("Using spring configuration " + configuration.springConfiguration)
+    appContext.getEnvironment.setActiveProfiles(configuration.springConfiguration.profile)
+    customPropertiesHack(appContext, configuration)
+    appContext.register(configuration.springConfiguration.getClass)
     appContext.refresh
     return appContext
   }
 
+  def customPropertiesHack(appContext: AnnotationConfigApplicationContext, configuration: AppConfig) {
+    val configurer: PropertySourcesPlaceholderConfigurer = new PropertySourcesPlaceholderConfigurer()
+    val sources: MutablePropertySources = new MutablePropertySources()
+
+    val properties: Map[String, String] = configuration.springConfiguration.extraProps(configuration)
+
+    sources.addFirst(new MapPropertySource("omatsivut custom props", mapAsJavaMap(properties)));
+    configurer.setPropertySources(sources);
+    appContext.addBeanFactoryPostProcessor(configurer)
+  }
+
   @Configuration
   @ComponentScan (basePackages = Array ("fi.vm.sade.haku") )
-  @PropertySource (value = Array ("config/dev/haku.properties",
-                                  "config/dev/ext.properties") )
   @Profile (Array ("dev") )
   @ImportResource (Array ("/META-INF/spring/logger-mock-context.xml") )
-  class Dev extends OmatSivutConfiguration {
+  object Dev extends OmatSivutConfiguration {
+    val profile = "dev"
   }
 
   @Configuration
   @ComponentScan (basePackages = Array ("fi.vm.sade.haku") )
-  @PropertySource (value = Array ("config/it/haku.properties", "config/it/ext.properties") )
+  @Profile (Array ("dev") )
+  @ImportResource (Array ("/META-INF/spring/logger-mock-context.xml") )
+  object DevWithRemoteMongo extends OmatSivutConfiguration {
+    val profile = "dev"
+  }
+
+  @Configuration
+  @ComponentScan (basePackages = Array ("fi.vm.sade.haku") )
   @Profile (Array ("it") )
   @ImportResource (Array ("/META-INF/spring/logger-mock-context.xml") )
-  class IT extends OmatSivutConfiguration {
+  object IT extends OmatSivutConfiguration {
+    val profile = "it"
   }
 
   @Configuration
   @ComponentScan (basePackages = Array ("fi.vm.sade.haku") )
-  @PropertySource (value = Array (  "file:///${user.home:''}/oph-configuration/haku.properties",
-                                    "file:///${user.home:''}/oph-configuration/common.properties",
-                                    "file:///${user.home:''}/oph-configuration/override.properties") )
   @Profile (Array ("default") )
   @ImportResource (Array (  "file:///${user.home:''}/oph-configuration/security-context-backend.xml",
                             "/META-INF/spring/logger-context.xml") )
-  class Default extends OmatSivutConfiguration {
+  object Default extends OmatSivutConfiguration {
     @Bean override def enablePlaceholderReplacement: PropertySourcesPlaceholderConfigurer = {
       val configurer: PropertySourcesPlaceholderConfigurer = new PropertySourcesPlaceholderConfigurer
       configurer.setIgnoreResourceNotFound(true)
       return configurer
     }
+
+    val profile = "default"
+  }
+}
+
+trait OmatSivutConfiguration {
+  @Bean def enablePlaceholderReplacement: PropertySourcesPlaceholderConfigurer = {
+    val configurer: PropertySourcesPlaceholderConfigurer = new PropertySourcesPlaceholderConfigurer
+    configurer.setIgnoreResourceNotFound(true)
+    return configurer
   }
 
-  abstract class OmatSivutConfiguration {
-    @Bean def enablePlaceholderReplacement: PropertySourcesPlaceholderConfigurer = {
-      val configurer: PropertySourcesPlaceholderConfigurer = new PropertySourcesPlaceholderConfigurer
-      configurer.setIgnoreResourceNotFound(true)
-      return configurer
-    }
-  }
+  def profile: String // <- should be able to get from annotation
+  def extraProps(configuration: AppConfig) = configuration.settings.settingsReader.toMap
 }

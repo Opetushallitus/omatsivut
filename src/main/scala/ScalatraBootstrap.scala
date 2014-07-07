@@ -13,9 +13,6 @@ class ScalatraBootstrap extends LifeCycle {
     context.mount(new ApplicationsServlet, "/api")
     context.mount(new SwaggerServlet, "/swagger/*")
     context.mount(new SessionServlet, "/secure")
-
-    if(AppConfig.config.usesFixtures){
-      context.mount(new TestHelperServlet, "/util")
-    }
+    context.mount(new TestHelperServlet(AppConfig.config), "/util")
   }
 }

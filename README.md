@@ -47,7 +47,7 @@ Aja TomcatRunner-luokka. Jotta impersonointi/autentikoinnin ohitus onnistuu, ann
 
 ### Impersonointi / autentikoinnin ohitus
 
-Jos applikaatiota ajetaan "testimoodissa" eli `-Domatsivut.profile=test`, niin autentikointi on mahdollista ohittaa.
+Jos applikaatiota ajetaan "testimoodissa" eli esim. `-Domatsivut.profile=dev`, niin autentikointi on mahdollista ohittaa.
 
 Tämä tapahtuu menemällä urliin http://localhost:8080/omatsivut/util/fakesession?hetu=010101-123N
 
