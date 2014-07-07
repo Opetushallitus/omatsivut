@@ -13,6 +13,7 @@ object OmatsivutBuild extends Build {
   val ScalaVersion = "2.11.1"
   val ScalatraVersion = "2.3.0.RC3"
   val TomcatVersion = "7.0.22"
+  val SpringVersion = "3.2.9.RELEASE"
 
   // task for running mocha tests
   lazy val mocha = taskKey[Int]("run phantomJS tests")
@@ -71,7 +72,9 @@ object OmatsivutBuild extends Build {
         ),
         "fi.vm.sade.haku" % "hakemus-api" % "9.5-SNAPSHOT" % "test" classifier "tests",
         "com.sun.jersey" % "jersey-client" % "1.17.1" // <- patch for transitive dependency problem
-        ,"org.springframework" % "spring-jms" % "3.2.9.RELEASE" // <- patch for spring-core-3.1.3 transitive dep
+        ,"org.springframework" % "spring-jms" % SpringVersion // <- patch for spring-core-3.1.3 transitive dep
+        ,"org.springframework" % "spring-core" % SpringVersion
+        ,"org.springframework" % "spring-context" % SpringVersion
       ),
       artifactName <<= (name in (Compile, packageWar)) { projectName =>
         (config: ScalaVersion, module: ModuleID, artifact: Artifact) =>
