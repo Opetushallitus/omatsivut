@@ -88,7 +88,7 @@ object OmatsivutBuild extends Build {
     ) ++ container.deploy(
       "/omatsivut" -> projectRef
     )
-  )
+  ).settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
   lazy val projectRef: ProjectReference = project
 
 }
