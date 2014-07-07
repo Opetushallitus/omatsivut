@@ -13,10 +13,8 @@ class TestHelperServlet(config: AppConfig)(implicit val authService: Authenticat
       createAuthCookieResponse(paramOption("hetu"), CookieOptions(secure = false, path = "/"), paramOption("redirect").getOrElse("/index.html"))
     }
 
-    if(AppConfig.config.usesFixtures){
-      put("/fixtures/apply") {
-        FixtureUtils.applyFixtures()
-      }
+    put("/fixtures/apply") {
+      FixtureUtils.applyFixtures()
     }
   }
 }

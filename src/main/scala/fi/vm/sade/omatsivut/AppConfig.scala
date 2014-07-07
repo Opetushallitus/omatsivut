@@ -20,18 +20,18 @@ object AppConfig extends Logging {
     def springConfiguration = OmatSivutSpringContext.Default
   }
 
-  object Dev extends AppConfig with StubbedExternalDeps with ReferenceProps with Fixtures {
+  object Dev extends AppConfig with StubbedExternalDeps with ReferenceProps {
     def springConfiguration = OmatSivutSpringContext.Dev
   }
   object DevWithRemoteMongo extends StubbedExternalDeps with ExternalProps {
     def springConfiguration = OmatSivutSpringContext.DevWithRemoteMongo
   }
   
-  object IT extends StubbedExternalDeps with ReferenceProps with Fixtures {
+  object IT extends StubbedExternalDeps with ReferenceProps {
     def springConfiguration = OmatSivutSpringContext.IT
   }
 
-  trait ReferenceProps {
+  trait ReferenceProps extends TestMode {
     val settings = ApplicationSettings.loadSettings(List("src/main/resources/reference.conf"))
   }
 
@@ -42,11 +42,6 @@ object AppConfig extends Logging {
       System.getProperty("user.home") + "/oph-configuration/common.properties", // for server environments
       System.getProperty("user.home") + "/oph-configuration/omatsivut.properties"
     ))
-    val usesFixtures = false
-  }
-
-  trait Fixtures extends TestMode {
-    val usesFixtures = true
   }
 
   trait StubbedExternalDeps extends TestMode {
@@ -65,7 +60,6 @@ object AppConfig extends Logging {
   trait AppConfig {
     def settings: ApplicationSettings
     def authenticationInfoService: AuthenticationInfoService
-    def usesFixtures: Boolean
     def springConfiguration: OmatSivutConfiguration
     def isTest: Boolean = false
   }
