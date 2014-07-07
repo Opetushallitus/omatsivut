@@ -47,14 +47,6 @@ object OmatSivutSpringContext {
 
   @Configuration
   @ComponentScan (basePackages = Array ("fi.vm.sade.haku") )
-  @Profile (Array ("dev") )
-  @ImportResource (Array ("/META-INF/spring/logger-mock-context.xml") )
-  object DevWithRemoteMongo extends OmatSivutConfiguration {
-    val profile = "dev"
-  }
-
-  @Configuration
-  @ComponentScan (basePackages = Array ("fi.vm.sade.haku") )
   @Profile (Array ("it") )
   @ImportResource (Array ("/META-INF/spring/logger-mock-context.xml") )
   object IT extends OmatSivutConfiguration {
@@ -67,23 +59,11 @@ object OmatSivutSpringContext {
   @ImportResource (Array (  "file:///${user.home:''}/oph-configuration/security-context-backend.xml",
                             "/META-INF/spring/logger-context.xml") )
   object Default extends OmatSivutConfiguration {
-    @Bean override def enablePlaceholderReplacement: PropertySourcesPlaceholderConfigurer = {
-      val configurer: PropertySourcesPlaceholderConfigurer = new PropertySourcesPlaceholderConfigurer
-      configurer.setIgnoreResourceNotFound(true)
-      return configurer
-    }
-
     val profile = "default"
   }
 }
 
 trait OmatSivutConfiguration {
-  @Bean def enablePlaceholderReplacement: PropertySourcesPlaceholderConfigurer = {
-    val configurer: PropertySourcesPlaceholderConfigurer = new PropertySourcesPlaceholderConfigurer
-    configurer.setIgnoreResourceNotFound(true)
-    return configurer
-  }
-
   def profile: String // <- should be able to get from annotation
   def extraProps(configuration: AppConfig) = configuration.settings.settingsReader.toMap
 }

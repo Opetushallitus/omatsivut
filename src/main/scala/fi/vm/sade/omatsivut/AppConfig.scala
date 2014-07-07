@@ -24,7 +24,7 @@ object AppConfig extends Logging {
     def springConfiguration = OmatSivutSpringContext.Dev
   }
   object DevWithRemoteMongo extends StubbedExternalDeps with ExternalProps {
-    def springConfiguration = OmatSivutSpringContext.DevWithRemoteMongo
+    def springConfiguration = OmatSivutSpringContext.Dev
   }
   
   object IT extends StubbedExternalDeps with ReferenceProps {
