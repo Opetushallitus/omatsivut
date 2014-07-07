@@ -10,7 +10,7 @@ object OmatSivutSpringContext {
 
   private def createApplicationContext: AnnotationConfigApplicationContext = {
     val appContext: AnnotationConfigApplicationContext = new AnnotationConfigApplicationContext
-    appContext.getEnvironment.setActiveProfiles("dev")
+    appContext.getEnvironment.setActiveProfiles(AppConfig.config.springProfile)
     appContext.register(classOf[Dev], classOf[IT], classOf[Default])
     appContext.refresh
     return appContext

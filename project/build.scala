@@ -70,8 +70,7 @@ object OmatsivutBuild extends Build {
           ExclusionRule(organization = "com.wordnik")
         ),
         "fi.vm.sade.haku" % "hakemus-api" % "9.5-SNAPSHOT" % "test" classifier "tests",
-        "com.sun.jersey" % "jersey-client" % "1.17.1", // <- TODO: should be removed. Just patch for transitive dependency problem
-        "org.springframework" % "spring-core" % "3.2.2.RELEASE" // override spring version to fix class loading issues in test
+        "com.sun.jersey" % "jersey-client" % "1.17.1" // <- TODO: should be removed. Just patch for transitive dependency problem
       ),
       artifactName <<= (name in (Compile, packageWar)) { projectName =>
         (config: ScalaVersion, module: ModuleID, artifact: Artifact) =>

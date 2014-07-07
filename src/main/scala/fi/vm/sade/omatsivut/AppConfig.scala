@@ -34,6 +34,7 @@ object AppConfig extends Logging {
       }
     }
     override def usesFixtures = true
+    override def springProfile = "dev"
     System.getProperty("omatsivut.configFile")
   }
 
@@ -41,6 +42,7 @@ object AppConfig extends Logging {
     def settings: ApplicationSettings
     def authenticationInfoService: AuthenticationInfoService
     def usesFixtures = false
+    def springProfile = "default"
   }
 
   // Maybe this global should be removed
