@@ -74,7 +74,8 @@ object OmatsivutBuild extends Build {
         "com.sun.jersey" % "jersey-client" % "1.17.1" // <- patch for transitive dependency problem
         ,"org.springframework" % "spring-jms" % SpringVersion // <- patch for spring-core-3.1.3 transitive dep
         ,"org.springframework" % "spring-core" % SpringVersion
-        ,"org.springframework" % "spring-context" % SpringVersion
+        ,"org.springframework" % "spring-context" % SpringVersion,
+        "de.flapdoodle.embed" % "de.flapdoodle.embed.mongo" % "1.36" % "test"
       ),
       artifactName <<= (name in (Compile, packageWar)) { projectName =>
         (config: ScalaVersion, module: ModuleID, artifact: Artifact) =>
