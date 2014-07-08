@@ -5,6 +5,8 @@ Oppijan henkilökohtainen palvelu
 ## Asetukset
 
 Sovellus tukee eri profiileita. Profiili määritellään `-Domatsivut.profile` systeemiasetuksella. Ks `AppConfig.scala`.
+Profiili määrittää lähinnä, mistä propertyt haetaan (huom! reference.conf ladataan aina), mutta sen avulla myös
+voidaan mockata palveluita.
 
 ### dev-profiili
 
