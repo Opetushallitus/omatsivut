@@ -37,6 +37,38 @@ omatsivut.haku-app.mongo.db.name=hakulomake
 omatsivut.haku-app.mongo.db.username={{mongodb_hakemus_username}}
 omatsivut.haku-app.mongo.db.password={{mongodb_hakemus_password}}
 
+# for hakemus-api
+koulutusinformaatio.ao.resource.url=https\://${host.haku}/ao
+tarjonta.data.url=https\://${host.virkailija}/tarjonta-service/rest/
+tarjonta.haku.resource.url=https\://${host.virkailija}/tarjonta-service/rest/haku
+tarjonta.hakukohde.resource.url=https\://${host.virkailija}/tarjonta-service/rest/hakukohde
+authentication.app.username.to.organisaatioservice={{authentication_app_username_to_organisaatioservice}}
+authentication.app.password.to.organisaatioservice={{authentication_app_password_to_organisaatioservice}}
+email.from={{email_from}}
+email.replyTo={{email_replyTo}}
+email.smtp.host={{email_smtp_host}}
+email.smtp.port={{email_smtp_port}}
+hakemus.aes.key={{hakemus_aes_key}}
+hakemus.aes.salt={{hakemus_aes_salt}}
+hakemus.sha.salt={{hakemus_sha_salt}}
+haku.app.username.to.usermanagement={{haku_app_username_to_usermanagement}}
+haku.app.password.to.usermanagement={{haku_app_password_to_usermanagement}}
+haku.app.username.to.valintalaskenta={{haku_app_username_to_valintalaskenta}}
+haku.app.password.to.valintalaskenta={{haku_app_password_to_valintalaskenta}}
+haku.app.username.to.sijoittelu={{haku_app_username_to_sijoittelu}}
+haku.app.password.to.sijoittelu={{haku_app_password_to_sijoittelu}}
+haku.app.username.to.suoritusrekisteri={{haku_app_username_to_suoritusrekisteri}}
+haku.app.password.to.suoritusrekisteri={{haku_app_password_to_suoritusrekisteri}}
+host.haku={{host_haku}}
+host.ldap={{host_ldap}}
+mongo.db.maxpoolsize=100
+mongodb.oppija.uri=mongodb://{{mongodb_hakemus_auth}}@{{mongodb_hakemus_host}}:{{mongodb_hakemus_port}}
+scheduler.run={{haku_scheduler_run}}
+scheduler.delay={{haku_scheduler_delay}}
+scheduler.sendMail={{haku_scheduler_sendMail}}
+user.oid.prefix=1.2.246.562.24
+application.oid.prefix = 1.2.246.562.11
+
 server.name={{ansible_hostname}}
 
 # Oletusarvoja
