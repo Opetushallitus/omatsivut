@@ -18,7 +18,7 @@ object ApplicationDaoWrapper {
 
   private def convertApplicationSystem(application: Application): Option[Haku] = application.getApplicationSystemId match {
     case "" => None
-    case applicationSystemId => HakuRepository.getApplicationSystemById(Some(applicationSystemId))
+    case applicationSystemId => HakuRepository.getApplicationSystemById(applicationSystemId)
   }
 
   private def convertHakuToiveet(application: Application): List[Map[String, String]] = {
