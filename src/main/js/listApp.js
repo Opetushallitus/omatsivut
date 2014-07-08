@@ -28,16 +28,18 @@ listApp.factory("settings", ["$animate", function($animate) {
 
 listApp.controller("listCtrl", ["$scope", "applicationsResource", function ($scope, applicationsResource) {
     $scope.applicationStatusMessage = "Hakemuksia ladataan...";
+    $scope.applicationStatusMessageType = "ajax-spinner";
     applicationsResource.query(success, error)
 
     function success(data) {
         $scope.applications = data;
         $scope.applicationStatusMessage = "";
+        $scope.applicationStatusMessageType = "";
     }
 
     function error(err) {
         switch (err.status) {
-            case 401: $scope.applicationStatusMessage = "Tietojen lataus epäonnistui: ei käyttöoikeuksia."; break;
+            case 401: $scope.applicationStatusMessage = "Tietojen lataus epäonnistui: et ole kirjautunut sisään."; break;
             default: $scope.applicationStatusMessage = "Tietojen lataus epäonnistui. Yritä myöhemmin uudelleen.";
         };
         $scope.applicationStatusMessageType = "error";
@@ -47,6 +49,7 @@ listApp.controller("listCtrl", ["$scope", "applicationsResource", function ($sco
 
 listApp.controller("hakemusCtrl", ["$scope", "$element", function ($scope, $element) {
     $scope.hasChanged = false;
+    $scope.isSaving = false;
 
     function setDirty(indexes) {
         $scope.$emit("application-preferences-changed", indexes);
@@ -87,16 +90,23 @@ listApp.controller("hakemusCtrl", ["$scope", "$element", function ($scope, $elem
     };
 
     $scope.saveApplication = function() {
+        $scope.isSaving = true;
         $scope.application.$update({id: $scope.application.oid }, onSuccess, onError);
 
         function onSuccess() {
             $scope.$emit("application-saved");
             $scope.hasChanged = false;
+            $scope.isSaving = false;
             setSaveMessage("Kaikki muutokset tallennettu", "success");
         }
 
         function onError(err) {
-            setSaveMessage("Tallentaminen epäonnistui", "error");
+            switch (err.status) {
+                case 401: setSaveMessage("Tallentaminen epäonnistui, sillä istunto on vanhentunut. Kirjaudu uudestaan sisään.", "error"); break;
+                default: setSaveMessage("Tallentaminen epäonnistui", "error");
+            };
+
+            $scope.isSaving = false;
             console.log(err);
         }
     };

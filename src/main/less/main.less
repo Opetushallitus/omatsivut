@@ -43,16 +43,18 @@
     content: @symbol;
   }
   &:hover:before {
-    color: @button-hover-color;
+    color: @button-hover-background-color;
   }
   &.disabled:before {
-    color: @button-disabled-background;
+    color: #eee;
   }
 }
 
 // Colors
 
 @font-color: #333;
+@font-color-light: #555;
+@font-color-disabled: #ccc;
 @status-text-color: #555;
 @error-color: #c9302c;
 @border-color: #dcdcdc;
@@ -60,18 +62,27 @@
 @input-background: #ebf3f7;
 @input-focus-background: #fff5da;
 
+@link-color: #06526b;
+@link-visited-color: #707070;
+@link-active-color: #06526b;
+@link-hover-color: #062B37;
+
 @button-color: #333;
-@button-background: #fecf4c;
-@button-border-color: darken(@button-background, 20);
-@button-hover-color: lighten(@button-background, 10);
-@button-hover-border-color: lighten(@button-border-color, 10);
+@button-background: #feba00;
+@button-border-color: #dea300;
+@button-inset-shadow: #fdedc1;
+
+@button-hover-background-color: #e99f00;
+@button-hover-border-color: #c69100;
+
 @button-confirm-color: white;
 @button-confirm-background: @error-color;
 @button-confirm-hover-color: lighten(@button-confirm-background, 10);
 @button-confirm-border-color: darken(@button-confirm-background, 20);
-@button-disabled-color: #757575;
-@button-disabled-background: #dedede;
-@button-disabled-border-color: darken(@button-disabled-background, 20);
+
+@button-disabled-color: #333;
+@button-disabled-background: url(../img/disabled-pat.png);
+@button-disabled-border-color: #ababab;
 
 // Layout
 
@@ -122,8 +133,16 @@ h2 {
   }
 }
 
+a {
+  color: @link-color;
+  &:active { color: @link-active-color; }
+  &:hover { color: @link-hover-color; }
+  &:visited { color: @link-visited-color; }
+}
+
 .status-message {
-  .body-font();
+  .body-font(@font-color-light);
+  line-height: 32px;
 
   &.error {
     color: @error-color;
@@ -151,14 +170,18 @@ input {
 
 button {
   .body-font(@button-color);
-
-  background: @button-background;
   font-size: @body-font-size;
-  padding: 5px 10px;
+  padding: 4px 12px;
+  color: #333333;
+  text-shadow: none;
+  background-color: @button-background;
   border: 1px solid @button-border-color;
+  box-shadow: inset 1px 1px 1px @button-inset-shadow;
+  border-radius: 3px;
+  cursor: pointer;
 
   &:hover {
-    background: @button-hover-color;
+    background: @button-hover-background-color;
     border: 1px solid @button-hover-border-color;
     color: #444;
   }
@@ -167,10 +190,12 @@ button {
     color: @button-disabled-color;
     background: @button-disabled-background;
     border: 1px solid @button-disabled-border-color;
+    box-shadow: none;
+    opacity: 0.65;
   }
 
   &:active {
-    box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3) inset
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.15);
   }
 }
 
@@ -188,6 +213,7 @@ button.delete-btn:not(.confirm) {
   border: none;
   font-size: 30px;
   color: #999;
+  box-shadow: none;
 
   &:before {
     content: '\00D7';
@@ -207,21 +233,28 @@ button.delete-btn:not(.confirm) {
   margin-left: 20px;
 }
 
+.ajax-spinner:after {
+  content: url(../img/ajax-loader.gif);
+  vertical-align: top;
+  margin-left: 15px;
+}
+
 .application-section-heading {
   .section-heading-font();
   border-bottom: 1px solid @section-border-color;
-  padding-bottom: 20px;
+  padding-bottom: 0px;
+  line-height: 40px;
   letter-spacing: 0.12em;
-
-  button {
-    margin-top: -5px;
-  }
 }
 
 .application-list-status {
   padding: 20px;
   border: 1px solid @border-color;
   .body-font();
+
+  &.ajax-spinner:after {
+    vertical-align: -50%;
+  }
 
   &.error {
     color: @error-color;
@@ -248,8 +281,13 @@ button.delete-btn:not(.confirm) {
   transition: background-color 1000ms;
 
   border-bottom: 1px solid @border-color;
+
   &:last-child {
     border-bottom: 0;
+  }
+
+  &.empty {
+    color: @font-color-disabled;
   }
 
   &.saved {
@@ -279,6 +317,7 @@ button.delete-btn:not(.confirm) {
   label > span {
     width: 20%;
     display: inline-block;
+    font-weight: bold;
   }
 
   input {
@@ -312,5 +351,10 @@ button.delete-btn:not(.confirm) {
     max-height: 0px;
     padding-top: 0px;
     padding-bottom: 0px;
+  }
+
+  input[disabled] {
+    background: transparent;
+    box-shadow: none;
   }
 }
