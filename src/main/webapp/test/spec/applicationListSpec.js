@@ -48,7 +48,6 @@
       }, function (dbStart, dbEnd) {
         dbStart.hakutoiveet[1].should.deep.equal(dbEnd.hakutoiveet[2])
         dbStart.hakutoiveet[2].should.deep.equal(dbEnd.hakutoiveet[1])
-        done()
       })
       endToEndTest("poisto", "hakutoiveen voi poistaa", function () {
         var pref1 = getPreference(0)
@@ -59,7 +58,6 @@
         })()
       }, function (dbStart, dbEnd) {
         dbEnd.hakutoiveet.should.deep.equal(_.flatten([_.rest(dbStart.hakutoiveet), {}]))
-        done()
       })
     })
   })
