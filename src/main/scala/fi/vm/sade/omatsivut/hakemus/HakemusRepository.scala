@@ -12,36 +12,8 @@ object HakemusRepository extends Logging {
 
   private val hakemukset = AppConfig.settings.hakuAppMongoDb("application")
 
-  def getDelimiter(s: String) = if(s.contains("_")) "_" else "-"
-
   def updateHakemus(hakemus: Hakemus) {
-    def clearPrevValues(hakemus: Hakemus) = {
-      val query = MongoDBObject("oid" -> hakemus.oid)
-      hakemukset.findOne(query).toList.map((hakemus: DBObject) => {
-        val toiveet = hakemus.expand[Map[String, String]]("answers.hakutoiveet").getOrElse(Map()).toList
-        toiveet.map { case (key, value) => ("answers.hakutoiveet." + key, "") }
-      }).head
-    }
-
-    def getUpdates(hakemus: Hakemus) = {
-      hakemus.hakutoiveet.zipWithIndex.flatMap {
-        (t) => t._1.map {
-          (elem) => ("answers.hakutoiveet.preference" + (t._2 + 1) + getDelimiter(elem._1) + elem._1, elem._2)
-        }
-      }.toMap[String, String]
-    }
-
-    def updateValues(hakemus: Hakemus, newData: List[(String, String)]) = {
-      // TODO validation and identity check
-      val query = MongoDBObject("oid" -> hakemus.oid)
-      val update = $set(newData:_*)
-      hakemukset.update(query, update)
-    }
-
-    val clearedValues = clearPrevValues(hakemus)
-    val updates = getUpdates(hakemus)
-    val combined = clearedValues ++ updates
-    updateValues(hakemus, combined.toList)
+    ApplicationDaoWrapper.updateApplication(hakemus)
   }
 
   def fetchHakemukset(oid: String): List[Hakemus] = {

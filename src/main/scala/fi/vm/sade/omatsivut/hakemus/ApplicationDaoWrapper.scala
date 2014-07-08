@@ -5,11 +5,11 @@ import scala.collection.JavaConversions._
 import fi.vm.sade.omatsivut.OmatSivutSpringContext
 import java.util
 import fi.vm.sade.haku.oppija.hakemus.it.dao.ApplicationDAO
-import java.util.regex.Pattern
 
 object ApplicationDaoWrapper {
+  val dao = OmatSivutSpringContext.context.getBean(classOf[ApplicationDAO])
+
   def findByPersonOid(personOid: String): List[Hakemus] = {
-    val dao = OmatSivutSpringContext.context.getBean(classOf[ApplicationDAO])
     val applicationJavaObjects: List[Application] = dao.find(new Application().setPersonOid(personOid)).toList
     applicationJavaObjects.map { application =>
       Hakemus(application.getOid, application.getReceived.getTime, convertHakuToiveet(application), convertApplicationSystem(application))
@@ -26,6 +26,31 @@ object ApplicationDaoWrapper {
     val hakuToiveetData: Map[String, String] = answers.get("hakutoiveet").toMap
     HakutoiveetConverter.convert(hakuToiveetData)
   }
+
+  def updateApplication(hakemus: Hakemus): Unit = {
+    val applicationQuery: Application = new Application().setOid(hakemus.oid)
+    val applicationJavaObjects: List[Application] = dao.find(applicationQuery).toList
+    applicationJavaObjects.foreach { application =>
+      val hakutoiveet: Map[String, String] = application.getPhaseAnswers("hakutoiveet").toMap
+      val hakuToiveetWithEmptyValues = hakutoiveet.filterKeys(s => s.startsWith("preference")).mapValues(s => "")
+      val hakutoiveetWithoutOldPreferences = hakutoiveet.filterKeys(s => !s.startsWith("preference"))
+      val updatedHakutoiveet = hakutoiveetWithoutOldPreferences ++ hakuToiveetWithEmptyValues ++ getUpdates(hakemus)
+      application.addVaiheenVastaukset("hakutoiveet", updatedHakutoiveet)
+      dao.update(applicationQuery, application)
+    }
+  }
+
+  private def getUpdates(hakemus: Hakemus): Map[String, String] = {
+    hakemus.hakutoiveet.zipWithIndex.flatMap {
+      (t) => t._1.map {
+        (elem) => ("preference" + (t._2 + 1) + getDelimiter(elem._1) + elem._1, elem._2)
+      }
+    }.toMap[String, String]
+  }
+
+
+
+  private def getDelimiter(s: String) = if(s.contains("_")) "_" else "-"
 }
 
 object HakutoiveetConverter {
