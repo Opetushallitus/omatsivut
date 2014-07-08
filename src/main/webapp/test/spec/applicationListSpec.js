@@ -65,10 +65,9 @@
   function endToEndTest(descName, testName, manipulationFunction, dbCheckFunction) {
     describe(descName, function() {
       var applicationsBefore, applicationsAfter;
-      before(function(done) {
-        db.getApplications().then(function(apps) {
+      before(function() {
+        return db.getApplications().then(function(apps) {
           applicationsBefore = apps
-          done()
         })
       })
       before(manipulationFunction)
@@ -87,15 +86,8 @@
     function save() {
       return wait.until(ApplicationListPage().saveButton(0).isEnabled(true))()
         .then(ApplicationListPage().saveButton(0).click)
-        .then(wait.until(ApplicationListPage().saveButton(0).isEnabled(false)))
-    }
-
-    function sameArgs(f) {
-      return function (val) {
-        return f().then(function () {
-          return val;
-        })
-      }
+        .then(wait.until(ApplicationListPage().saveButton(0).isEnabled(false))) // Tallennus on joko alkanut tai valmis
+        .then(wait.until(ApplicationListPage().isSavingState(0, false))) // Tallennus ei ole kesken
     }
   }
 

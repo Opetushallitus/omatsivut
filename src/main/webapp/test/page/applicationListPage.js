@@ -49,6 +49,10 @@ function ApplicationListPage() {
                 .map(function() { return { applicationSystemName: $(this).find("h2").text().trim() } }).toArray()
         },
 
+        isSavingState: function(applicationIndex, isSaving) {
+            return function() { return (getApplication(applicationIndex).find(".ajax-spinner").length > 0) === isSaving }
+        },
+
         preferencesForApplication: function(index) {
             return preferencesForApplication(index,  function(item) { return item.data()["hakutoive.Koulutus"].length > 0 })
         },
