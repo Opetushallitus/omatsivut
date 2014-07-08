@@ -16,12 +16,12 @@ object ApplicationDaoWrapper {
     }
   }
 
-  def convertApplicationSystem(application: Application): Option[Haku] = application.getApplicationSystemId match {
+  private def convertApplicationSystem(application: Application): Option[Haku] = application.getApplicationSystemId match {
     case "" => None
     case applicationSystemId => HakuRepository.getApplicationSystemById(Some(applicationSystemId))
   }
 
-  def convertHakuToiveet(application: Application): List[Map[String, String]] = {
+  private def convertHakuToiveet(application: Application): List[Map[String, String]] = {
     val answers: util.Map[String, util.Map[String, String]] = application.getAnswers
     val hakuToiveetData: Map[String, String] = answers.get("hakutoiveet").toMap
     HakutoiveetConverter.convert(hakuToiveetData)
