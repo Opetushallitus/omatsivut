@@ -4,9 +4,19 @@ Oppijan henkilökohtainen palvelu
 
 ## Asetukset
 
-Oletusasetukset ovat `reference.conf` tiedostossa versionhallinnassa. Oletusasetuksilla käytetään paikallista mongo-kantaa.
-Ympäristökohtaisesti arvoja voidaan ylimäärittää `omatsivut.properties` tiedostolla.
-`omatsivut.properties` tiedoston etsintäjärjestys:
+Sovellus tukee eri profiileita. Profiili määritellään `-Domatsivut.profile` systeemiasetuksella. Ks `AppConfig.scala`.
+
+### dev-profiili
+
+Näillä asetuksilla käytetään paikallista mongo-kantaa ja mockattuja ulkoisia järjestelmiä. kehityskäyttöön soveltuvat arvot ovat `dev.conf` tiedostossa versionhallinnassa.
+
+### it-profiili
+
+It-profiililla käytetään embedded mongo-kantaa.
+
+### default-profiili
+
+Oletusasetuksilla käytetään ulkoista konfiguraatiotiedostoa `omatsivut.properties`. `omatsivut.properties` tiedoston etsintäjärjestys:
 `omatsivut.confiFile` system property  - kehityksessä IDE:stä käytettävä tapa, jos haluaa ajaa eri asetuksilla serveriä
 `~/oph-configuration/omatsivut.properties` - sovelluspalvelimilla  käytettävä tapa
 `../module-install-parent/config/common/omatsivut/omatsivut.properties` - kehityksessä käytettävä oletustapa, joten sinun tulee hakea `module-install-parent` tämän projektin rinnalle.

@@ -1,5 +1,6 @@
 package fi.vm.sade.omatsivut
 
+import fi.vm.sade.omatsivut.mongo.EmbeddedMongo
 import org.apache.catalina.startup.Tomcat
 import java.io.File
 
@@ -14,6 +15,8 @@ object TomcatRunner extends App {
   tomcat.addWebapp("/omatsivut", new File(webappDirLocation).getAbsolutePath());
   System.out.println("configuring app with basedir: " + new File("./" + webappDirLocation).getAbsolutePath());
 
-  tomcat.start();
-  tomcat.getServer().await();
+  EmbeddedMongo.withEmbeddedMongo(AppConfig.config) {
+    tomcat.start();
+    tomcat.getServer().await();
+  }
 }

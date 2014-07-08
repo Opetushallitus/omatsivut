@@ -30,7 +30,7 @@ object OmatSivutSpringContext {
     val configurer: PropertySourcesPlaceholderConfigurer = new PropertySourcesPlaceholderConfigurer()
     val sources: MutablePropertySources = new MutablePropertySources()
 
-    val properties: Map[String, String] = configuration.springConfiguration.extraProps(configuration)
+    val properties: Map[String, String] = configuration.settings.toProperties
 
     sources.addFirst(new MapPropertySource("omatsivut custom props", mapAsJavaMap(properties)));
     configurer.setPropertySources(sources);
@@ -39,7 +39,6 @@ object OmatSivutSpringContext {
 
   @Configuration
   @ComponentScan (basePackages = Array ("fi.vm.sade.haku") )
-  @Profile (Array ("dev") )
   @ImportResource (Array ("/META-INF/spring/logger-mock-context.xml") )
   object Dev extends OmatSivutConfiguration {
     val profile = "dev"
@@ -47,15 +46,13 @@ object OmatSivutSpringContext {
 
   @Configuration
   @ComponentScan (basePackages = Array ("fi.vm.sade.haku") )
-  @Profile (Array ("it") )
   @ImportResource (Array ("/META-INF/spring/logger-mock-context.xml") )
   object IT extends OmatSivutConfiguration {
-    val profile = "it"
+    val profile = "dev"
   }
 
   @Configuration
   @ComponentScan (basePackages = Array ("fi.vm.sade.haku") )
-  @Profile (Array ("default") )
   @ImportResource (Array (  "file:///${user.home:''}/oph-configuration/security-context-backend.xml",
                             "/META-INF/spring/logger-context.xml") )
   object Default extends OmatSivutConfiguration {
@@ -65,5 +62,4 @@ object OmatSivutSpringContext {
 
 trait OmatSivutConfiguration {
   def profile: String // <- should be able to get from annotation
-  def extraProps(configuration: AppConfig) = configuration.settings.settingsReader.toMap
 }

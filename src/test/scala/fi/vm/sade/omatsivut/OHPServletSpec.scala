@@ -6,7 +6,6 @@ import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.hakemus.Hakemus
 
 class OHPServletSpec extends JsonFormats with ScalatraTestSupport {
-
   "GET /applications" should {
     "return person's applications" in {
       authGet("/applications", "1.2.246.562.24.14229104472") {

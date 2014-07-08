@@ -1,5 +1,5 @@
 package fi.vm.sade.omatsivut
-
+import collection.JavaConversions._
 import fi.vm.sade.omatsivut.security.{RemoteAuthenticationInfoService, AuthenticationInfoService}
 
 object AppConfig extends Logging {
@@ -20,19 +20,17 @@ object AppConfig extends Logging {
     def springConfiguration = OmatSivutSpringContext.Default
   }
 
-  object Dev extends AppConfig with StubbedExternalDeps with ReferenceProps {
+  object Dev extends AppConfig with StubbedExternalDeps with TestMode {
     def springConfiguration = OmatSivutSpringContext.Dev
+    val settings = ApplicationSettings.loadSettings(List("src/main/resources/dev.conf"))
   }
   object DevWithRemoteMongo extends StubbedExternalDeps with ExternalProps {
     def springConfiguration = OmatSivutSpringContext.Dev
   }
   
-  object IT extends StubbedExternalDeps with ReferenceProps {
+  object IT extends StubbedExternalDeps with TestMode {
     def springConfiguration = OmatSivutSpringContext.IT
-  }
-
-  trait ReferenceProps extends TestMode {
-    val settings = ApplicationSettings.loadSettings(List("src/main/resources/reference.conf"))
+    val settings = ApplicationSettings.loadSettings(List("src/main/resources/it.conf"))
   }
 
   trait ExternalProps {
@@ -62,6 +60,8 @@ object AppConfig extends Logging {
     def authenticationInfoService: AuthenticationInfoService
     def springConfiguration: OmatSivutConfiguration
     def isTest: Boolean = false
+    def start {}
+    def stop {}
   }
 
   // Maybe this global should be removed
