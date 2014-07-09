@@ -4,7 +4,7 @@ require('angular-animate/angular-animate');
 _ = require("underscore");
 require("../lib/ui-bootstrap-custom-tpls-0.10.0.min.js");
 
-var listApp = angular.module('listApp', ["ngResource", "ngAnimate"], function($locationProvider) {
+var listApp = angular.module('listApp', ["ngResource", "ngAnimate", "ui.bootstrap.typeahead", "template/typeahead/typeahead-popup.html", "template/typeahead/typeahead-match.html"], function($locationProvider) {
     $locationProvider.html5Mode(true);
 });
 
@@ -47,7 +47,7 @@ listApp.controller("listCtrl", ["$scope", "applicationsResource", function ($sco
     }
 }]);
 
-listApp.controller("hakemusCtrl", ["$scope", "$element", function ($scope, $element) {
+listApp.controller("hakemusCtrl", ["$scope", "$element", "$http", function ($scope, $element, $http) {
     $scope.hasChanged = false;
     $scope.isSaving = false;
 
@@ -75,8 +75,13 @@ listApp.controller("hakemusCtrl", ["$scope", "$element", function ($scope, $elem
     }
 
     $scope.isNew = function(index) {
-        return false
+        return !this.application.hakutoiveet[index]["Opetuspiste-id"]
     }
+
+   $scope.oppilaitosValittu = function($item, $model, $label) {
+       this.hakutoive["Opetuspiste"] = $item.name
+       this.hakutoive["Opetuspiste-id"] = $item.id
+   }
 
     $scope.movePreference = function(from, to) {
         if (to >= 0 && to < this.application.hakutoiveet.length) {
@@ -113,6 +118,16 @@ listApp.controller("hakemusCtrl", ["$scope", "$element", function ($scope, $elem
             $scope.isSaving = false;
             console.log(err);
         }
+    };
+
+    $scope.findOppilaitokset = function(val) {
+        return $http.get('https://testi.opintopolku.fi/lop/search/' + val, {
+            params: {
+                asId: '1.2.246.562.5.2014022711042555034240'
+            }
+        }).then(function(res){
+            return res.data;
+        });
     };
 }]);
 
