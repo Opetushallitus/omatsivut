@@ -6,7 +6,7 @@ var gulp = require('gulp'),
     livereload = require('gulp-livereload');
 
 var jsFiles = 'src/main/js/**/*.js';
-var lessFiles = 'src/main/less/**/*.less';
+var lessFiles = 'src/main/less/main.less';
 
 function handleError(err) {
     console.log(err.toString());
