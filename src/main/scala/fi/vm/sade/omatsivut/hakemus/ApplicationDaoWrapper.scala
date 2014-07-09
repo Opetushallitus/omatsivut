@@ -13,7 +13,12 @@ object ApplicationDaoWrapper {
   def findByPersonOid(personOid: String): List[Hakemus] = {
     val applicationJavaObjects: List[Application] = dao.find(new Application().setPersonOid(personOid)).toList
     applicationJavaObjects.map { application =>
-      Hakemus(application.getOid, application.getReceived.getTime, convertHakuToiveet(application), convertApplicationSystem(application))
+      Hakemus(
+        application.getOid,
+        application.getReceived.getTime,
+        convertHakuToiveet(application),
+        convertApplicationSystem(application),
+        application.getAnswers.get("koulutustausta").get("POHJAKOULUTUS"))
     }
   }
 
