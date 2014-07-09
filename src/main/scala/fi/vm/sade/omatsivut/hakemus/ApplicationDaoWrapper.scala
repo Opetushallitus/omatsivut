@@ -21,7 +21,7 @@ object ApplicationDaoWrapper {
         application.getReceived.getTime,
         convertHakuToiveet(application),
         convertApplicationSystem(application),
-        EducationBackground(koulutusTaustaAnswers.get("POHJAKOULUTUS"), Try {koulutusTaustaAnswers.get("ammatillinenTutkintoSuoritettu").toBoolean}.getOrElse(false))
+        EducationBackground(koulutusTaustaAnswers.get("POHJAKOULUTUS"), !Try {koulutusTaustaAnswers.get("ammatillinenTutkintoSuoritettu").toBoolean}.getOrElse(false))
       )
     }
   }
