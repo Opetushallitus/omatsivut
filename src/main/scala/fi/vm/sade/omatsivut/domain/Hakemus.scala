@@ -5,5 +5,7 @@ case class Hakemus(
                     received: Long,
                     hakutoiveet: List[Map[String, String]] = Nil,
                     haku: Option[Haku] = None,
-                    baseEducation: String
+                    educationBackground: EducationBackground
                   )
+
+case class EducationBackground(baseEducation: String, vocational: Boolean)

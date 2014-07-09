@@ -78,12 +78,12 @@ listApp.controller("hakemusCtrl", ["$scope", "$element", "$http", function ($sco
         return !this.application.hakutoiveet[index]["Opetuspiste-id"]
     }
 
-    function findKoulutukset(applicationOid, opetuspisteId) {
+    function findKoulutukset(applicationOid, opetuspisteId, educationBackground) {
         return $http.get("https://testi.opintopolku.fi/ao/search/" + applicationOid + "/" + opetuspisteId, {
             params: {
-                baseEducation: 1,
-                vocational: true,
-                uiLang: "fi"
+                baseEducation: educationBackground.baseEducation,
+                vocational: educationBackground.vocational,
+                uiLang: "fi" // TODO: kieliversio
             }
         }).then(function(res){
             return res.data;
@@ -93,7 +93,7 @@ listApp.controller("hakemusCtrl", ["$scope", "$element", "$http", function ($sco
     $scope.oppilaitosValittu = function($item, $model, $label) {
         this.hakutoive["Opetuspiste"] = $item.name
         this.hakutoive["Opetuspiste-id"] = $item.id
-        findKoulutukset(this.application.haku.oid, $item.id)
+        findKoulutukset(this.application.haku.oid, $item.id, this.application.educationBackground)
             .then(function(koulutukset) { $scope.koulutukset = koulutukset; })
     }
 
