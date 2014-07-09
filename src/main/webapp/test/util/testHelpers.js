@@ -48,7 +48,7 @@ session = {
 
 uiUtil = {
     inputValues: function(el) {
-        return _.chain(el.find("[ng-model]"))
+        return _.chain(el.find("[ng-model]:visible"))
             .map(function(el) { return [$(el).attr("ng-model"), $(el).val() ]})
             .object().value()
     }

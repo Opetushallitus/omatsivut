@@ -41,23 +41,28 @@
 
                                 <div class="item-content">
                                     <div class="row">
-                                        <label><span>Opetuspiste:</span></label>
+                                        <label><span>Opetuspiste:</span>
 
+                                            <input type="text" placeholder=""
+                                                   ng-model="hakutoive.Opetuspiste"
+                                                   typeahead="oppilaitos.name for oppilaitos in findOppilaitokset($viewValue)"
+                                                   typeahead-loading="loadingLocations"
+                                                   typeahead-on-select="oppilaitosValittu($item, $model, $label)"
+                                                   ng-disabled="!isNew($index)"/>
 
-                                        <input type="text" placeholder=""
-                                               ng-model="hakutoive.Opetuspiste"
-                                               typeahead="oppilaitos.name for oppilaitos in findOppilaitokset($viewValue)"
-                                               typeahead-loading="loadingLocations"
-                                               typeahead-on-select="oppilaitosValittu($item, $model, $label)"
-                                               ng-disabled="!isNew($index)">
+                                        </label>
+
                                     </div>
                                     <div class="row">
-                                        <label><span>Koulutus:</span><input type="text" ng-model="hakutoive.Koulutus" ng-disabled="!isNew($index)"/></label>
+                                        <label><span>Koulutus:</span>
+                                            <input type="text" ng-model="hakutoive.Koulutus" disabled ng-hide="isNew($index)"/>
+                                            <select ng-model="valittuKoulutus" ng-options="koulutus.name for koulutus in koulutukset" ng-show="isNew($index)" ng-change="koulutusValittu()"></select>
+                                        </label>
                                     </div>
                                 </div>
 
                                 <div class="item-content">
-                                    <button ng-show="hasPreference($index)" class="delete-btn" confirm confirm-text="Poista" confirm-action="removePreference($index)"></button>
+                                    <button ng-show="true || hasPreference($index)" class="delete-btn" confirm confirm-text="Poista" confirm-action="removePreference($index)"></button>
                                 </div>
                             </li>
                         </ul>

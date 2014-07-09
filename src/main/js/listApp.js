@@ -78,10 +78,37 @@ listApp.controller("hakemusCtrl", ["$scope", "$element", "$http", function ($sco
         return !this.application.hakutoiveet[index]["Opetuspiste-id"]
     }
 
-   $scope.oppilaitosValittu = function($item, $model, $label) {
-       this.hakutoive["Opetuspiste"] = $item.name
-       this.hakutoive["Opetuspiste-id"] = $item.id
-   }
+    function findKoulutukset(applicationOid, opetuspisteId) {
+        return $http.get("https://testi.opintopolku.fi/ao/search/" + applicationOid + "/" + opetuspisteId, {
+            params: {
+                baseEducation: 1,
+                vocational: true,
+                uiLang: "fi"
+            }
+        }).then(function(res){
+            return res.data;
+        });
+    }
+
+    $scope.oppilaitosValittu = function($item, $model, $label) {
+        this.hakutoive["Opetuspiste"] = $item.name
+        this.hakutoive["Opetuspiste-id"] = $item.id
+        findKoulutukset(this.application.haku.oid, $item.id)
+            .then(function(koulutukset) { $scope.koulutukset = koulutukset; })
+    }
+
+    $scope.koulutusValittu = function() {
+        var koulutus = this["valittuKoulutus"]
+        this.hakutoive["Koulutus"] = koulutus.name.toString()
+        this.hakutoive["Koulutus-id"] = koulutus.id.toString()
+        this.hakutoive["Koulutus-educationDegree"] = koulutus.educationDegree.toString()
+        this.hakutoive["Koulutus-id-sora"] = koulutus.sora.toString()
+        this.hakutoive["Koulutus-id-aoIdentifier"] = koulutus.aoIdentifier.toString()
+        this.hakutoive["Koulutus-id-kaksoistutkinto"] = koulutus.kaksoistutkinto.toString()
+        this.hakutoive["Koulutus-id-vocational"] = koulutus.vocational.toString()
+        this.hakutoive["Koulutus-id-educationcode"] = koulutus.educationCodeUri.toString()
+        this.hakutoive["Koulutus-id-athlete"] = koulutus.athleteEducation.toString()
+    }
 
     $scope.movePreference = function(from, to) {
         if (to >= 0 && to < this.application.hakutoiveet.length) {
