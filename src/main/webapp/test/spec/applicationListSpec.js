@@ -59,12 +59,22 @@
       }, function (dbStart, dbEnd) {
         dbEnd.hakutoiveet.should.deep.equal(_.flatten([_.rest(dbStart.hakutoiveet), {}]))
       })
+      endToEndTest("lisäys", "hakutoiveen voi lisätä", function() {
+        var pref = getPreference(2)
+        return pref.selectOpetusPiste("Ahl").then(
+            pref.selectKoulutus(0)
+        )
+      }, function(dbStart, dbEnd) {
+          debugger
+          dbEnd.hakutoiveet.should.deep.equal(_.flatten([_.rest(dbStart.hakutoiveet), {}])) // <- todo: copy pasta
+      })
     })
   })
 
   function endToEndTest(descName, testName, manipulationFunction, dbCheckFunction) {
     describe(descName, function() {
       var applicationsBefore, applicationsAfter;
+      before(ApplicationListPage().resetDataAndOpen)
       before(function() {
         return db.getApplications().then(function(apps) {
           applicationsBefore = apps

@@ -11,7 +11,15 @@ function ApplicationListPage() {
             arrowUp: function() { return el.find(".sort-arrow-up") },
             number: function() { return el.find(".row-number") },
             deleteBtn: function() { return el.find(".delete-btn") },
-            isDisabled: function() { return this.arrowDown().hasClass("disabled") && this.arrowUp().hasClass("disabled") && this.deleteBtn().is(":hidden")}
+            isDisabled: function() { return this.arrowDown().hasClass("disabled") && this.arrowUp().hasClass("disabled") && this.deleteBtn().is(":hidden")},
+            selectOpetusPiste: function(query) {
+                var inputField = el.find(".opetuspiste input");
+                inputField.val(query).change()
+                return wait.until(function() { return inputField.next().find("li").eq(0).find("a").length > 0 })().then(function() {
+                  inputField.next().find("li").eq(0).find("a").click()
+                })
+            },
+            selectKoulutus: function() {}
         }
     }
 

@@ -82,7 +82,10 @@ function openPage(path, predicate) {
         predicate = function() { return testFrame.jQuery }
     }
     return function() {
+        S("body").attr("stale", "true")
         testFrame.location.replace(path)
-        return wait.until(predicate)()
+        return wait.until(function() {
+          return predicate() && !S("body").attr("stale")
+        })()
     }
 }
