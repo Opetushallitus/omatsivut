@@ -32,7 +32,7 @@
                         </header>
 
                         <ul class="preference-list" sortable sortable-moved="movePreference">
-                            <li class="preference-list-item" ng-repeat="hakutoive in application.hakutoiveet" ng-class="{empty: !hasPreference($index)}">
+                            <li class="preference-list-item" ng-repeat="hakutoive in application.hakutoiveet" ng-controller="hakutoiveCtrl" ng-class="{empty: !hasPreference($index)}">
                                 <div class="item-content">
                                     <span class="sort-arrow-down" ng-class="{disabled: !canMoveTo($index, $index+1)}"></span>
                                     <span class="sort-arrow-up" ng-class="{disabled: !canMoveTo($index, $index-1)}"></span>
@@ -48,15 +48,15 @@
                                                    typeahead="oppilaitos.name for oppilaitos in findOppilaitokset($viewValue)"
                                                    typeahead-loading="loadingLocations"
                                                    typeahead-on-select="oppilaitosValittu($item, $model, $label)"
-                                                   ng-disabled="!isNew($index)"/>
+                                                   ng-disabled="!isNew"/>
 
                                         </label>
 
                                     </div>
                                     <div class="row">
                                         <label><span>Koulutus:</span>
-                                            <input type="text" ng-model="hakutoive.Koulutus" disabled ng-hide="isNew($index)"/>
-                                            <select ng-model="valittuKoulutus" ng-options="koulutus.name for koulutus in koulutukset" ng-show="isNew($index)" ng-change="koulutusValittu()"></select>
+                                            <input type="text" ng-model="hakutoive.Koulutus" disabled ng-hide="isNew"/>
+                                            <select ng-model="valittuKoulutus" ng-options="koulutus.name for koulutus in koulutukset" ng-show="isNew" ng-change="koulutusValittu($index)"></select>
                                         </label>
                                     </div>
                                 </div>

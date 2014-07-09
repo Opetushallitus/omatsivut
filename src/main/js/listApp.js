@@ -47,6 +47,11 @@ listApp.controller("listCtrl", ["$scope", "applicationsResource", function ($sco
     }
 }]);
 
+listApp.controller("hakutoiveCtrl", ["$scope", function($scope) {
+    $scope.isNew = $scope.hakutoive["Opetuspiste-id"] == null
+    $scope.$on("application-saved", function() { $scope.isNew = false })
+}])
+
 listApp.controller("hakemusCtrl", ["$scope", "$element", "$http", function ($scope, $element, $http) {
     $scope.hasChanged = false;
     $scope.isSaving = false;
@@ -74,10 +79,6 @@ listApp.controller("hakemusCtrl", ["$scope", "$element", "$http", function ($sco
         return index >= 0 && index <= this.application.hakutoiveet.length-1 && hasData(this.application.hakutoiveet[index]);
     }
 
-    $scope.isNew = function(index) {
-        return !this.application.hakutoiveet[index]["Opetuspiste-id"]
-    }
-
     function findKoulutukset(applicationOid, opetuspisteId, educationBackground) {
         return $http.get("https://testi.opintopolku.fi/ao/search/" + applicationOid + "/" + opetuspisteId, {
             params: {
@@ -97,7 +98,7 @@ listApp.controller("hakemusCtrl", ["$scope", "$element", "$http", function ($sco
             .then(function(koulutukset) { $scope.koulutukset = koulutukset; })
     }
 
-    $scope.koulutusValittu = function() {
+    $scope.koulutusValittu = function(index) {
         var koulutus = this["valittuKoulutus"]
         this.hakutoive["Koulutus"] = koulutus.name.toString()
         this.hakutoive["Koulutus-id"] = koulutus.id.toString()
@@ -108,6 +109,7 @@ listApp.controller("hakemusCtrl", ["$scope", "$element", "$http", function ($sco
         this.hakutoive["Koulutus-id-vocational"] = koulutus.vocational.toString()
         this.hakutoive["Koulutus-id-educationcode"] = koulutus.educationCodeUri.toString()
         this.hakutoive["Koulutus-id-athlete"] = koulutus.athleteEducation.toString()
+        setDirty([index])
     }
 
     $scope.movePreference = function(from, to) {
@@ -131,6 +133,7 @@ listApp.controller("hakemusCtrl", ["$scope", "$element", "$http", function ($sco
 
         function onSuccess() {
             $scope.$emit("application-saved");
+            $scope.$broadcast("application-saved");
             $scope.hasChanged = false;
             $scope.isSaving = false;
             setSaveMessage("Kaikki muutokset tallennettu", "success");
