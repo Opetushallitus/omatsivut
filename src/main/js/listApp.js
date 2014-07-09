@@ -2,7 +2,7 @@ require("angular/angular");
 require('angular-resource/angular-resource');
 require('angular-animate/angular-animate');
 _ = require("underscore");
-
+require("../lib/ui-bootstrap-custom-tpls-0.10.0.min.js");
 
 var listApp = angular.module('listApp', ["ngResource", "ngAnimate"], function($locationProvider) {
     $locationProvider.html5Mode(true);
