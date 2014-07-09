@@ -74,6 +74,10 @@ listApp.controller("hakemusCtrl", ["$scope", "$element", function ($scope, $elem
         return index >= 0 && index <= this.application.hakutoiveet.length-1 && hasData(this.application.hakutoiveet[index]);
     }
 
+    $scope.isNew = function(index) {
+        return false
+    }
+
     $scope.movePreference = function(from, to) {
         if (to >= 0 && to < this.application.hakutoiveet.length) {
             var arr = this.application.hakutoiveet;
