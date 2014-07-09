@@ -47,49 +47,17 @@ listApp.controller("listCtrl", ["$scope", "applicationsResource", function ($sco
     }
 }]);
 
-listApp.controller("hakutoiveCtrl", ["$scope", function($scope) {
+function hasData(item) {
+    return _.any(item, function(val, key) { return key[0] != "$" })
+}
+
+listApp.controller("hakutoiveCtrl", ["$scope", "$http", function($scope, $http) {
     $scope.isNew = $scope.hakutoive["Opetuspiste-id"] == null
-    $scope.$on("application-saved", function() { $scope.isNew = false })
-}])
 
-listApp.controller("hakemusCtrl", ["$scope", "$element", "$http", function ($scope, $element, $http) {
-    $scope.hasChanged = false;
-    $scope.isSaving = false;
-
-    function setDirty(indexes) {
-        $scope.$emit("application-preferences-changed", indexes);
-        $scope.hasChanged = true;
-    }
-
-    function setSaveMessage(msg, type) {
-        $scope.saveMessage = msg;
-        $scope.saveMessageType = type;
-    }
-
-    $scope.$watch("hasChanged", function(val) {
-        if (val===true) setSaveMessage("");
-    });
-
-    $scope.canMoveTo = function(from, to) {
-        return $scope.hasPreference(from) && $scope.hasPreference(to);
-    };
-
-    $scope.hasPreference = function(index) {
-        function hasData(item) { return _.any(item, function(val, key) { return key[0] != "$" }) }
-        return index >= 0 && index <= this.application.hakutoiveet.length-1 && hasData(this.application.hakutoiveet[index]);
-    }
-
-    function findKoulutukset(applicationOid, opetuspisteId, educationBackground) {
-        return $http.get("https://testi.opintopolku.fi/ao/search/" + applicationOid + "/" + opetuspisteId, {
-            params: {
-                baseEducation: educationBackground.baseEducation,
-                vocational: educationBackground.vocational,
-                uiLang: "fi" // TODO: kieliversio
-            }
-        }).then(function(res){
-            return res.data;
-        });
-    }
+    $scope.$on("application-saved", function() {
+        if (hasData($scope.hakutoive))
+            $scope.isNew = false
+    })
 
     $scope.oppilaitosValittu = function($item, $model, $label) {
         this.hakutoive["Opetuspiste"] = $item.name
@@ -109,14 +77,63 @@ listApp.controller("hakemusCtrl", ["$scope", "$element", "$http", function ($sco
         this.hakutoive["Koulutus-id-vocational"] = koulutus.vocational.toString()
         this.hakutoive["Koulutus-id-educationcode"] = koulutus.educationCodeUri.toString()
         this.hakutoive["Koulutus-id-athlete"] = koulutus.athleteEducation.toString()
-        setDirty([index])
+        $scope.$parent.setDirty([$scope.index])
+    }
+
+    function findKoulutukset(applicationOid, opetuspisteId, educationBackground) {
+        return $http.get("https://testi.opintopolku.fi/ao/search/" + applicationOid + "/" + opetuspisteId, {
+            params: {
+                baseEducation: educationBackground.baseEducation,
+                vocational: educationBackground.vocational,
+                uiLang: "fi" // TODO: kieliversio
+            }
+        }).then(function(res){
+                return res.data;
+            });
+    }
+
+    $scope.findOppilaitokset = function(val) {
+        return $http.get('https://testi.opintopolku.fi/lop/search/' + val, {
+            params: {
+                asId: '1.2.246.562.5.2014022711042555034240'
+            }
+        }).then(function(res){
+                return res.data;
+            });
+    };
+}])
+
+listApp.controller("hakemusCtrl", ["$scope", "$element", "$http", function ($scope, $element, $http) {
+    $scope.hasChanged = false;
+    $scope.isSaving = false;
+
+    $scope.setDirty = function(indexes) {
+        $scope.$emit("application-preferences-changed", indexes);
+        $scope.hasChanged = true;
+    }
+
+    function setSaveMessage(msg, type) {
+        $scope.saveMessage = msg;
+        $scope.saveMessageType = type;
+    }
+
+    $scope.$watch("hasChanged", function(val) {
+        if (val===true) setSaveMessage("");
+    });
+
+    $scope.canMoveTo = function(from, to) {
+        return $scope.hasPreference(from) && $scope.hasPreference(to);
+    };
+
+    $scope.hasPreference = function(index) {
+        return index >= 0 && index <= this.application.hakutoiveet.length-1 && hasData(this.application.hakutoiveet[index]);
     }
 
     $scope.movePreference = function(from, to) {
         if (to >= 0 && to < this.application.hakutoiveet.length) {
             var arr = this.application.hakutoiveet;
             arr.splice(to, 0, arr.splice(from, 1)[0]);
-            setDirty([from, to]);
+            $scope.setDirty([from, to]);
             setSaveMessage();
         }
     };
@@ -148,16 +165,6 @@ listApp.controller("hakemusCtrl", ["$scope", "$element", "$http", function ($sco
             $scope.isSaving = false;
             console.log(err);
         }
-    };
-
-    $scope.findOppilaitokset = function(val) {
-        return $http.get('https://testi.opintopolku.fi/lop/search/' + val, {
-            params: {
-                asId: '1.2.246.562.5.2014022711042555034240'
-            }
-        }).then(function(res){
-            return res.data;
-        });
     };
 }]);
 
