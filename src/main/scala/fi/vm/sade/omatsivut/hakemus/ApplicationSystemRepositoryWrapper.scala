@@ -3,6 +3,7 @@ package fi.vm.sade.omatsivut.hakemus
 import fi.vm.sade.haku.oppija.lomake.domain.{ApplicationPeriod, ApplicationSystem}
 import fi.vm.sade.haku.oppija.repository.ApplicationSystemRepository
 import fi.vm.sade.omatsivut.OmatSivutSpringContext
+import fi.vm.sade.omatsivut.domain.{Translations, HakuAika, Haku}
 import org.joda.time.DateTime
 import scala.collection.JavaConversions._
 

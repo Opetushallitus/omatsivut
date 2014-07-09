@@ -1,6 +1,7 @@
 package fi.vm.sade.omatsivut.hakemus
 
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
+import fi.vm.sade.omatsivut.domain.{Haku, Hakemus}
 import scala.collection.JavaConversions._
 import fi.vm.sade.omatsivut.OmatSivutSpringContext
 import java.util

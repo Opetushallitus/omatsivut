@@ -1,9 +1,9 @@
 package fi.vm.sade.omatsivut
 
+import fi.vm.sade.omatsivut.domain.Hakemus
 import org.json4s.native.Serialization
 import fi.vm.sade.omatsivut.servlet.{OmatSivutSwagger, ApplicationsServlet}
 import fi.vm.sade.omatsivut.json.JsonFormats
-import fi.vm.sade.omatsivut.hakemus.Hakemus
 
 class OHPServletSpec extends JsonFormats with ScalatraTestSupport {
   "GET /applications" should {

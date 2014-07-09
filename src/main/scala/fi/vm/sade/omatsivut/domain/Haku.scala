@@ -1,4 +1,4 @@
-package fi.vm.sade.omatsivut.hakemus
+package fi.vm.sade.omatsivut.domain
 
 import org.joda.time.DateTime
 

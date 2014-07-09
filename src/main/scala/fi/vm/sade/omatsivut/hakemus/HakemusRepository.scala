@@ -1,6 +1,7 @@
 package fi.vm.sade.omatsivut.hakemus
 
 import fi.vm.sade.omatsivut._
+import fi.vm.sade.omatsivut.domain.Hakemus
 
 object HakemusRepository extends Logging {
   def updateHakemus(hakemus: Hakemus) {
