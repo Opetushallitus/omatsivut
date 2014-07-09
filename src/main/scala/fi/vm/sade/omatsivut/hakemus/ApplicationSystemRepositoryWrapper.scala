@@ -13,7 +13,7 @@ object ApplicationSystemRepositoryWrapper {
   def findByOid(applicationSystemOid: String): Option[Haku] = {
     tryFind(applicationSystemOid).map { applicationSystem =>
       val hakuAjat = applicationSystem.getApplicationPeriods.toList.map(applicationPeriod => convertToHakuAika(applicationPeriod))
-      Haku(convertTranslations(applicationSystem), hakuAjat)
+      Haku(applicationSystem.getId, convertTranslations(applicationSystem), hakuAjat)
     }
   }
 
