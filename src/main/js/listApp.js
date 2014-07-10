@@ -83,7 +83,11 @@ listApp.controller("hakutoiveCtrl", ["$scope", "$http", function($scope, $http) 
     }
 
     $scope.canSelectKoulutus = function() {
-        return !_.isEmpty(this.hakutoive["Opetuspiste-id"])
+        return $scope.isNew && !_.isEmpty(this.hakutoive["Opetuspiste-id"])
+    }
+
+    $scope.isLoadingKoulutus = function() {
+        return $scope.canSelectKoulutus() && _.isEmpty($scope.koulutukset)
     }
 
     $scope.koulutusValittu = function(index) {
@@ -138,6 +142,8 @@ listApp.controller("hakemusCtrl", ["$scope", "$element", "$http", function ($sco
             setSaveMessage("")
         }
         $scope.isValid = _(hakutoiveet).every(validateHakutoive)
+        if (!$scope.isValid)
+            setSaveMessage("Täytä kaikki tiedot", "error");
     }, true)
 
     function validateHakutoive(hakutoive) {

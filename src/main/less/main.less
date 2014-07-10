@@ -135,6 +135,11 @@ h2 {
   }
 }
 
+.instruction {
+  font-weight: normal;
+  color: @font-color-light;
+}
+
 a {
   color: @link-color;
   &:active { color: @link-active-color; }
@@ -241,6 +246,17 @@ button.delete-btn:not(.confirm) {
   margin-left: 15px;
 }
 
+.ajax-spinner-small:after {
+  content: "";
+  background: url(../img/ajax-loader.gif);
+  background-size: 15px 15px;
+  vertical-align: text-bottom;
+  width: 15px;
+  height: 15px;
+  margin-left: 15px;
+  display: inline-block;
+}
+
 .application-section-heading {
   .section-heading-font();
   border-bottom: 1px solid @section-border-color;
@@ -316,7 +332,7 @@ button.delete-btn:not(.confirm) {
     text-align: right;
   }
 
-  label > span {
+  label > span.label {
     width: 20%;
     display: inline-block;
     font-weight: bold;

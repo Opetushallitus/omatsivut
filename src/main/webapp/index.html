@@ -41,7 +41,7 @@
 
                                 <div class="item-content">
                                     <div class="row opetuspiste">
-                                        <label><span>Opetuspiste:</span>
+                                        <label><span class="label">Opetuspiste:</span>
 
                                             <input type="text" placeholder="" ng-change="oppilaitosChanged()"
                                                    ng-model="hakutoive.Opetuspiste"
@@ -54,9 +54,11 @@
 
                                     </div>
                                     <div class="row koulutus">
-                                        <label><span>Koulutus:</span>
+                                        <label><span class="label">Koulutus:</span>
                                             <input type="text" ng-model="hakutoive.Koulutus" disabled ng-hide="isNew"/>
-                                            <select ng-model="valittuKoulutus" ng-options="koulutus.name for koulutus in koulutukset" ng-show="isNew" ng-change="koulutusValittu($index)" ng-disabled="!canSelectKoulutus()"></select>
+                                            <select ng-model="valittuKoulutus" ng-options="koulutus.name for koulutus in koulutukset" ng-show="isNew" ng-change="koulutusValittu($index)" ng-hide="!canSelectKoulutus() || isLoadingKoulutus()"></select>
+                                            <span class="instruction" ng-hide="!isNew || canSelectKoulutus()">Valitse ensin opetuspiste</span>
+                                            <span class="instruction ajax-spinner-small" ng-show="isLoadingKoulutus()">Lataa tietoja...</span>
                                         </label>
                                     </div>
                                 </div>
