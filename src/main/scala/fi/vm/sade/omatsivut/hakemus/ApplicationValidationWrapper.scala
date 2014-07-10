@@ -15,7 +15,7 @@ object ApplicationValidationWrapper extends Logging {
   private val dao: ApplicationDAO = OmatSivutSpringContext.context.getBean(classOf[ApplicationDAO])
   private val validator: ElementTreeValidator = OmatSivutSpringContext.context.getBean(classOf[ElementTreeValidator])
 
-  def verify(hakemus: Hakemus): Option[List[ValidationError]] = {
+  def validate(hakemus: Hakemus): Option[List[ValidationError]] = {
     try {
       val applicationSystem = applicationSystemService.getApplicationSystem(hakemus.haku.get.oid)
       val applications = dao.find(new Application().setOid(hakemus.oid)).toList
