@@ -75,6 +75,17 @@ listApp.controller("hakutoiveCtrl", ["$scope", "$http", function($scope, $http) 
             .then(function(koulutukset) { $scope.koulutukset = koulutukset; })
     }
 
+    $scope.oppilaitosChanged = function() {
+        _.each(this.hakutoive, function(value, key) {
+            if (key.indexOf("$")!=0 && key != "Opetuspiste")
+                delete $scope.hakutoive[key]
+        })
+    }
+
+    $scope.canSelectKoulutus = function() {
+        return !_.isEmpty(this.hakutoive["Opetuspiste-id"])
+    }
+
     $scope.koulutusValittu = function(index) {
         var koulutus = this["valittuKoulutus"]
         this.hakutoive["Koulutus"] = koulutus.name.toString()
@@ -130,9 +141,9 @@ listApp.controller("hakemusCtrl", ["$scope", "$element", "$http", function ($sco
     }, true)
 
     function validateHakutoive(hakutoive) {
-        // TODO parempi validointi
-        if ((hakutoive["Opetuspiste-id"] || "").length > 0)
+        if ((hakutoive["Opetuspiste"] || "").length > 0) {
             return (hakutoive["Koulutus-id"] || "").length > 0
+        }
         else
             return true
     }
