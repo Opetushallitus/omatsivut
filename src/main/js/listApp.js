@@ -41,8 +41,8 @@ listApp.controller("listCtrl", ["$scope", "applicationsResource", function ($sco
         switch (err.status) {
             case 401: $scope.applicationStatusMessage = "Tietojen lataus epäonnistui: et ole kirjautunut sisään."; break;
             default: $scope.applicationStatusMessage = "Tietojen lataus epäonnistui. Yritä myöhemmin uudelleen.";
-        };
-        $scope.applicationStatusMessageType = "error";
+        }
+        $scope.applicationStatusMessageType = "error"
         $scope.applications = [];
     }
 }]);
@@ -52,7 +52,7 @@ function hasData(item) {
 }
 
 listApp.controller("hakutoiveCtrl", ["$scope", "$http", function($scope, $http) {
-    $scope.isNew = $scope.hakutoive["Opetuspiste-id"] == null
+    $scope.isNew = $scope.hakutoive["Opetuspiste-id"] === null
 
     $scope.$on("application-saved", function() {
         if (hasData($scope.hakutoive))
@@ -158,12 +158,12 @@ listApp.controller("hakemusCtrl", ["$scope", "$element", "$http", function ($sco
 
         function onError(err) {
             switch (err.status) {
-                case 401: setSaveMessage("Tallentaminen epäonnistui, sillä istunto on vanhentunut. Kirjaudu uudestaan sisään.", "error"); break;
-                default: setSaveMessage("Tallentaminen epäonnistui", "error");
-            };
+                case 401: setSaveMessage("Tallentaminen epäonnistui, sillä istunto on vanhentunut. Kirjaudu uudestaan sisään.", "error"); break
+                default: setSaveMessage("Tallentaminen epäonnistui", "error")
+            }
 
-            $scope.isSaving = false;
-            console.log(err);
+            $scope.isSaving = false
+            console.log(err)
         }
     };
 }]);
@@ -255,7 +255,7 @@ listApp.directive("confirm", function () {
                 element.text(originalText);
                 element.off(".cancelConfirm");
                 $("body").off(".cancelConfirm");
-            };
+            }
 
             var originalText = element.text();
 
