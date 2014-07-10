@@ -23,7 +23,7 @@ object EmbeddedMongo {
       case AppConfig.IT =>
         val server = start
         block
-        server.foreach(_.destroy)
+        server.foreach(_.stop)
       case _ => block
     }
   }
@@ -35,7 +35,7 @@ class MongoServer(val port: Int) {
   private val mongodExecutable = runtime.prepare(mongodConfig)
   private val mongod = mongodExecutable.start
 
-  def destroy {
+  def stop {
     mongod.stop
     mongodExecutable.stop
   }

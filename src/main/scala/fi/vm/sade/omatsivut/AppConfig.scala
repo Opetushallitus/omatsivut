@@ -1,4 +1,7 @@
 package fi.vm.sade.omatsivut
+
+import fi.vm.sade.omatsivut.mongo.{EmbeddedMongo, MongoServer}
+
 import collection.JavaConversions._
 import fi.vm.sade.omatsivut.security.{RemoteAuthenticationInfoService, AuthenticationInfoService}
 
@@ -31,6 +34,14 @@ object AppConfig extends Logging {
   object IT extends StubbedExternalDeps with TestMode {
     def springConfiguration = OmatSivutSpringContext.IT
     val settings = ApplicationSettings.loadSettings(List("src/main/resources/it.conf"))
+    private var mongo: Option[MongoServer] = None
+
+    override def start {
+      mongo = EmbeddedMongo.start
+    }
+    override def stop {
+      mongo.foreach(_.stop)
+    }
   }
 
   trait ExternalProps {
@@ -62,6 +73,14 @@ object AppConfig extends Logging {
     def isTest: Boolean = false
     def start {}
     def stop {}
+    def withConfig[T](f: => T) = {
+      start
+      try {
+        f
+      } finally {
+        stop
+      }
+    }
   }
 
   // Maybe this global should be removed

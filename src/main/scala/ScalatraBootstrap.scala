@@ -7,14 +7,11 @@ import javax.servlet.ServletContext
 
 class ScalatraBootstrap extends LifeCycle {
   implicit val swagger = new OmatSivutSwagger
-  var mongo: Option[MongoServer] = None
+  val config: AppConfig = AppConfig.config
   OmatSivutSpringContext.check
 
   override def init(context: ServletContext) {
-    val config: AppConfig = AppConfig.config
-    if (config == AppConfig.IT) {
-      mongo = EmbeddedMongo.start
-    }
+    config.start
 
     implicit val authService = config.authenticationInfoService
 
@@ -25,7 +22,7 @@ class ScalatraBootstrap extends LifeCycle {
   }
 
   override def destroy(context: ServletContext) = {
-    mongo.foreach(_.destroy)
+    config.stop
     super.destroy(context)
   }
 }
