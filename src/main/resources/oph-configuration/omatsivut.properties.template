@@ -63,6 +63,8 @@ host.haku={{host_haku}}
 host.ldap={{host_ldap}}
 mongo.db.maxpoolsize=100
 mongodb.oppija.uri=mongodb://{{mongodb_hakemus_auth}}@{{mongodb_hakemus_host}}:{{mongodb_hakemus_port}}
+mongodb.url=${mongodb.oppija.uri}/hakulomake?maxpoolsize=${mongo.db.maxpoolsize}
+
 scheduler.run={{haku_scheduler_run}}
 scheduler.delay={{haku_scheduler_delay}}
 scheduler.sendMail={{haku_scheduler_sendMail}}
