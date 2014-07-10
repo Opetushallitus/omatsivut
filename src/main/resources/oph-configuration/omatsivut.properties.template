@@ -72,6 +72,7 @@ application.oid.prefix = 1.2.246.562.11
 server.name={{ansible_hostname}}
 
 # Oletusarvoja
+spring_security_default_access=permitAll
 accessRight.webservice.url.backend=https\://${host.virkailija}/authentication-service/services/accessRightService
 accessRightAdmin.webservice.url.backend=https\://${host.virkailija}/authentication-service/services/accessRightAdminService
 accessRightHistory.webservice.url.backend=https\://${host.virkailija}/authentication-service/services/accessRightHistoryService
