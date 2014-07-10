@@ -59,6 +59,15 @@ listApp.controller("hakutoiveCtrl", ["$scope", "$http", function($scope, $http) 
             $scope.isNew = false
     })
 
+    $scope.canMoveTo = function(from, to) {
+        return $scope.hasPreference(from) && $scope.hasPreference(to);
+    };
+
+    $scope.removePreference = function() {
+        var row = this.application.hakutoiveet.splice(this.$index, 1)[0];
+        this.application.hakutoiveet.push({});
+    };
+
     $scope.oppilaitosValittu = function($item, $model, $label) {
         this.hakutoive["Opetuspiste"] = $item.name
         this.hakutoive["Opetuspiste-id"] = $item.id
@@ -104,44 +113,46 @@ listApp.controller("hakutoiveCtrl", ["$scope", "$http", function($scope, $http) 
 }])
 
 listApp.controller("hakemusCtrl", ["$scope", "$element", "$http", function ($scope, $element, $http) {
-    $scope.hasChanged = false;
-    $scope.isSaving = false;
+    $scope.hasChanged = false
+    $scope.isSaving = false
+    $scope.isValid = true
 
     $scope.setDirty = function(indexes) {
         $scope.$emit("application-preferences-changed", indexes);
-        $scope.hasChanged = true;
+    }
+
+    $scope.$watch("application.hakutoiveet", function(hakutoiveet, oldHakutoiveet) {
+        if (!_.isEqual(hakutoiveet, oldHakutoiveet)) {
+            $scope.hasChanged = true
+            setSaveMessage("")
+        }
+        $scope.isValid = _(hakutoiveet).every(validateHakutoive)
+    }, true)
+
+    function validateHakutoive(hakutoive) {
+        // TODO parempi validointi
+        if ((hakutoive["Opetuspiste-id"] || "").length > 0)
+            return (hakutoive["Koulutus-id"] || "").length > 0
+        else
+            return true
     }
 
     function setSaveMessage(msg, type) {
-        $scope.saveMessage = msg;
-        $scope.saveMessageType = type;
+        $scope.saveMessage = msg
+        $scope.saveMessageType = type
     }
 
-    $scope.$watch("hasChanged", function(val) {
-        if (val===true) setSaveMessage("");
-    });
-
-    $scope.canMoveTo = function(from, to) {
-        return $scope.hasPreference(from) && $scope.hasPreference(to);
-    };
-
     $scope.hasPreference = function(index) {
-        return index >= 0 && index <= this.application.hakutoiveet.length-1 && hasData(this.application.hakutoiveet[index]);
+        return index >= 0 && index <= this.application.hakutoiveet.length-1 && hasData(this.application.hakutoiveet[index])
     }
 
     $scope.movePreference = function(from, to) {
         if (to >= 0 && to < this.application.hakutoiveet.length) {
-            var arr = this.application.hakutoiveet;
-            arr.splice(to, 0, arr.splice(from, 1)[0]);
-            $scope.setDirty([from, to]);
-            setSaveMessage();
+            var arr = this.application.hakutoiveet
+            arr.splice(to, 0, arr.splice(from, 1)[0])
+            $scope.setDirty([from, to])
+            setSaveMessage()
         }
-    };
-
-    $scope.removePreference = function(index) {
-        var row = this.application.hakutoiveet.splice(index, 1)[0];
-        this.application.hakutoiveet.push({});
-        $scope.hasChanged = true;
     };
 
     $scope.saveApplication = function() {
@@ -151,8 +162,8 @@ listApp.controller("hakemusCtrl", ["$scope", "$element", "$http", function ($sco
         function onSuccess() {
             $scope.$emit("application-saved");
             $scope.$broadcast("application-saved");
-            $scope.hasChanged = false;
             $scope.isSaving = false;
+            $scope.hasChanged = false
             setSaveMessage("Kaikki muutokset tallennettu", "success");
         }
 
