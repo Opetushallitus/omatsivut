@@ -6,7 +6,7 @@ var gulp = require('gulp'),
     livereload = require('gulp-livereload');
 
 var jsFiles = 'src/main/js/**/*.js';
-var lessFiles = 'src/main/less/main.less';
+var lessFiles = 'src/main/less/**/*.less';
 
 function handleError(err) {
     console.log(err.toString());
@@ -27,6 +27,7 @@ gulp.task('lint', function() {
 gulp.task('less', function () {
     gulp.src(lessFiles)
         .pipe(less().on('error', handleError))
+        .pipe(concat('main.css'))
         .pipe(gulp.dest('src/main/webapp/css'));
 });
 
