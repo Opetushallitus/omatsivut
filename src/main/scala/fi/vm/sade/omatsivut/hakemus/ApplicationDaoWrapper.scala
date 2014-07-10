@@ -7,7 +7,7 @@ import java.util
 import fi.vm.sade.haku.oppija.hakemus.it.dao.ApplicationDAO
 
 object ApplicationDaoWrapper {
-  private val dao = OmatSivutSpringContext.context.getBean(classOf[ApplicationDAO])
+  private val dao = OmatSivutSpringContext.context.applicationDAO
 
   def findByPersonOid(personOid: String): List[Hakemus] = {
     val applicationJavaObjects: List[Application] = dao.find(new Application().setPersonOid(personOid)).toList

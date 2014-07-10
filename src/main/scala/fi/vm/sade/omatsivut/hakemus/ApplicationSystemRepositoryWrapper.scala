@@ -7,7 +7,7 @@ import org.joda.time.DateTime
 import scala.collection.JavaConversions._
 
 object ApplicationSystemRepositoryWrapper {
-  val repository = OmatSivutSpringContext.context.getBean(classOf[ApplicationSystemRepository])
+  val repository = OmatSivutSpringContext.context.applicationSystemRepository
 
   def findByOid(applicationSystemOid: String): Option[Haku] = {
     tryFind(applicationSystemOid).map { applicationSystem =>

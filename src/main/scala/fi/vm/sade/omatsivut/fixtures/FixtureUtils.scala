@@ -10,7 +10,7 @@ object FixtureUtils {
   }
 
   private def importHakemusApiFixtures {
-    val mongoTemplate = OmatSivutSpringContext.context.getBean(classOf[MongoTemplate])
+    val mongoTemplate = OmatSivutSpringContext.context.mongoTemplate
     MongoFixtureImporter.importJsonFixtures(mongoTemplate)
   }
 }

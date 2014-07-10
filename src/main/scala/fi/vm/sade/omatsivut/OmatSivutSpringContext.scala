@@ -2,7 +2,17 @@ package fi.vm.sade.omatsivut
 
 import java.util
 import java.util.Properties
+import fi.vm.sade.haku.oppija.configuration.MongoConfiguration
+import fi.vm.sade.haku.oppija.hakemus.it.dao.ApplicationDAO
+import fi.vm.sade.haku.oppija.hakemus.service.HakuPermissionService
+import fi.vm.sade.haku.oppija.hakemus.service.impl.HakuPermissionServiceMockImpl
+import fi.vm.sade.haku.oppija.repository.ApplicationSystemRepository
+import fi.vm.sade.haku.virkailija.authentication.AuthenticationService
+import fi.vm.sade.haku.virkailija.authentication.impl.AuthenticationServiceMockImpl
 import fi.vm.sade.omatsivut.AppConfig.AppConfig
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.ApplicationContext
+import org.springframework.data.mongodb.core.MongoTemplate
 
 import collection.JavaConversions._
 import org.springframework.context.annotation._
@@ -11,8 +21,16 @@ import org.springframework.core.env.{MapPropertySource, MutablePropertySources}
 
 import scala.collection.JavaConversions
 
+class OmatSivutSpringContext(context: ApplicationContext) {
+  def applicationSystemRepository = context.getBean(classOf[ApplicationSystemRepository])
+
+  def applicationDAO = context.getBean(classOf[ApplicationDAO])
+
+  def mongoTemplate = context.getBean(classOf[MongoTemplate])
+}
+
 object OmatSivutSpringContext {
-  val context = createApplicationContext(AppConfig.config)
+  val context = new OmatSivutSpringContext(createApplicationContext(AppConfig.config))
 
   def check {}
 
@@ -52,11 +70,19 @@ object OmatSivutSpringContext {
   }
 
   @Configuration
-  @ComponentScan (basePackages = Array ("fi.vm.sade.haku") )
-  @ImportResource (Array (  "file:///${user.home:''}/oph-configuration/security-context-backend.xml",
-                            "/META-INF/spring/logger-context.xml") )
+  @ComponentScan (basePackages = Array (
+    "fi.vm.sade.haku.oppija.lomake",
+    "fi.vm.sade.haku.oppija.repository",
+    "fi.vm.sade.haku.oppija.hakemus.it.dao",
+    "fi.vm.sade.haku.oppija.hakemus.converter",
+    "fi.vm.sade.haku.oppija.common.koulutusinformaatio") )
+  @ImportResource (Array (  "/META-INF/spring/logger-mock-context.xml") )
+  @Import(Array(classOf[MongoConfiguration]))
   object Default extends OmatSivutConfiguration {
     val profile = "default"
+
+    @Bean def authenticationService: AuthenticationService = new AuthenticationServiceMockImpl
+    @Bean def hakuPermissionService: HakuPermissionService = new HakuPermissionServiceMockImpl
   }
 }
 
