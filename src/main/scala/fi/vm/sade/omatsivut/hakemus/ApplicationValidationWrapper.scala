@@ -1,22 +1,20 @@
 package fi.vm.sade.omatsivut.hakemus
 
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
-import fi.vm.sade.haku.oppija.hakemus.it.dao.ApplicationDAO
 import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
 import fi.vm.sade.haku.oppija.lomake.domain.elements.Titled
 import fi.vm.sade.haku.oppija.lomake.domain.elements.questions.{DropdownSelect, TextQuestion, OptionQuestion => HakuOption, Radio => HakuRadio, TextArea => HakuTextArea}
-import fi.vm.sade.haku.oppija.lomake.service.ApplicationSystemService
 import fi.vm.sade.haku.oppija.lomake.util.ElementTree
-import fi.vm.sade.haku.oppija.lomake.validation.{ElementTreeValidator, ValidationInput, ValidationResult}
+import fi.vm.sade.haku.oppija.lomake.validation.{ValidationInput, ValidationResult}
 import fi.vm.sade.omatsivut.domain._
 import fi.vm.sade.omatsivut.{Logging, OmatSivutSpringContext}
 
 import scala.collection.JavaConversions._
 
 object ApplicationValidationWrapper extends Logging {
-  private val applicationSystemService: ApplicationSystemService = OmatSivutSpringContext.context.getBean(classOf[ApplicationSystemService])
-  private val dao: ApplicationDAO = OmatSivutSpringContext.context.getBean(classOf[ApplicationDAO])
-  private val validator: ElementTreeValidator = OmatSivutSpringContext.context.getBean(classOf[ElementTreeValidator])
+  private val applicationSystemService = OmatSivutSpringContext.context.applicationSystemService
+  private val dao = OmatSivutSpringContext.context.applicationDAO
+  private val validator = OmatSivutSpringContext.context.validator
 
   def validate(hakemus: Hakemus): Option[List[ValidationError]] = {
     try {
