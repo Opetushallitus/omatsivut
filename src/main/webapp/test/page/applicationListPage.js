@@ -96,9 +96,15 @@ function ApplicationListPage() {
           return inputField.next().find("li").eq(0).find("a").length > 0
         })().then(function () {
           inputField.next().find("li").eq(0).find("a").click()
-        })
+        }).then(wait.until(function() {
+          return el().find(".koulutus select option").length > 1
+        }))
       },
-      selectKoulutus: function () {
+      selectKoulutus: function (index) {
+        return function() {
+          var selectElement = el().find(".koulutus select")
+          selectElement.val(index).change()
+        }
       }
     }
   }

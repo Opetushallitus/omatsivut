@@ -71,7 +71,20 @@
             pref.selectKoulutus(0)
         )
       }, function(dbStart, dbEnd) {
-          dbEnd.hakutoiveet.should.deep.equal(_.flatten([_.rest(dbStart.hakutoiveet), {}])) // <- todo: copy pasta
+        var newOne = { 'Opetuspiste-id': '1.2.246.562.10.60222091211',
+          Opetuspiste: 'Ahlmanin ammattiopisto',
+          Koulutus: 'Ammattistartti',
+          'Koulutus-id-kaksoistutkinto': 'false',
+          'Koulutus-id-sora': 'false',
+          'Koulutus-id-vocational': 'true',
+          'Koulutus-id-lang': '',
+          'Koulutus-id-aoIdentifier': '028',
+          'Koulutus-id-athlete': 'false',
+          'Koulutus-educationDegree': '32',
+          'Koulutus-id': '1.2.246.562.14.2014040912353139913320',
+          'Opetuspiste-id-parents': '',
+          'Koulutus-id-educationcode': 'koulutus_039996' }
+        dbEnd.hakutoiveet.should.deep.equal(dbStart.hakutoiveet.slice(0, 2).concat(newOne))
       })
     })
   })
