@@ -55,20 +55,14 @@ function ApplicationListPage() {
   return api
 
   function PreferenceItem(el) {
-    function arrowDown() {
-      return el().find(".sort-arrow-down")
-    }
-
-    function arrowUp() {
-      return el().find(".sort-arrow-up")
-    }
-
-    return {
+    api = {
       data: function () {
         return uiUtil.inputValues(el())
       },
       moveDown: function () {
-        arrowDown().click()
+        return waitForChange(function() {
+          arrowDown().click()
+        })
       },
       moveUp: function () {
         arrowUp().click()
@@ -78,27 +72,37 @@ function ApplicationListPage() {
         return el().find(".row-number").text()
       },
       remove: function () {
-        el().find(".delete-btn").click().click()
+        return waitForChange(function() {
+          el().find(".delete-btn").click().click()
+        })
       },
       isNew: function () {
         return el().find("input:visible").length > 0
       },
       isDisabled: function () {
-        return arrowDown().hasClass("disabled") && arrowUp().hasClass("disabled") && this.deleteBtn().is(":hidden")
+        return arrowDown().hasClass("disabled") && arrowUp().hasClass("disabled") && api.deleteBtn().is(":hidden")
       },
       opetuspiste: function () {
         return el().find(".opetuspiste input").val()
       },
+      koulutus: function () {
+        return el().find(".koulutus input").val()
+      },
+      toString: function() {
+        return api.opetuspiste() + " " + api.koulutus()
+      },
       selectOpetusPiste: function (query) {
-        var inputField = el().find(".opetuspiste input");
-        inputField.val(query).change()
-        return wait.until(function () {
-          return inputField.next().find("li").eq(0).find("a").length > 0
-        })().then(function () {
-          inputField.next().find("li").eq(0).find("a").click()
-        }).then(wait.until(function() {
-          return el().find(".koulutus select option").length > 1
-        }))
+        return function() {
+          var inputField = el().find(".opetuspiste input");
+          inputField.val(query).change()
+          return wait.until(function () {
+            return inputField.next().find("li").eq(0).find("a").length > 0
+          })().then(function () {
+            inputField.next().find("li").eq(0).find("a").click()
+          }).then(wait.until(function() {
+            return el().find(".koulutus select option").length > 1
+          }))
+        }
       },
       selectKoulutus: function (index) {
         return function() {
@@ -106,6 +110,23 @@ function ApplicationListPage() {
           selectElement.val(index).change()
         }
       }
+    }
+    return api
+
+    function arrowDown() {
+      return el().find(".sort-arrow-down")
+    }
+
+    function arrowUp() {
+      return el().find(".sort-arrow-up")
+    }
+
+    function waitForChange(modification) {
+      var description = api.toString()
+      modification()
+      return wait.until(function() {
+        return description != api.toString()
+      })()
     }
   }
 

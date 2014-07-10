@@ -41,34 +41,21 @@
 
     describe("hakemuslistauksen muokkaus", function () {
       endToEndTest("järjestys", "järjestys muuttuu nuolta klikkaamalla", function () {
-        var pref2 = page.getPreference(1)
-        var pref3 = page.getPreference(2)
-        var opetuspiste2 = pref2.opetuspiste()
-        var opetuspiste3 = pref3.opetuspiste()
-        pref2.moveDown()
-        return wait.until(function () {
-          return pref2.opetuspiste() === opetuspiste3 && pref3.opetuspiste() === opetuspiste2 && pref3.number() === "3."
-        })()
+        return page.getPreference(1).moveDown()
       }, function (dbStart, dbEnd) {
         dbStart.hakutoiveet[1].should.deep.equal(dbEnd.hakutoiveet[2])
         dbStart.hakutoiveet[2].should.deep.equal(dbEnd.hakutoiveet[1])
       })
       endToEndTest("poisto", "hakutoiveen voi poistaa", function () {
-        var pref1 = page.getPreference(0)
-        var pref2 = page.getPreference(1)
-        var opetuspiste2 = pref2.opetuspiste()
-        pref1.remove()
-        return wait.until(function () {
-          return pref1.opetuspiste() === opetuspiste2
-        })()
+        return page.getPreference(0).remove()
       }, function (dbStart, dbEnd) {
         dbEnd.hakutoiveet.should.deep.equal(_.flatten([_.rest(dbStart.hakutoiveet), {}]))
       })
       endToEndTest("lisäys", "hakutoiveen voi lisätä", function() {
         var pref = page.getPreference(2)
-        pref.remove()
-        return pref.selectOpetusPiste("Ahl").then(
-            pref.selectKoulutus(0)
+        return pref.remove()
+          .then(pref.selectOpetusPiste("Ahl"))
+          .then(pref.selectKoulutus(0)
         )
       }, function(dbStart, dbEnd) {
         var newOne = { 'Opetuspiste-id': '1.2.246.562.10.60222091211',
