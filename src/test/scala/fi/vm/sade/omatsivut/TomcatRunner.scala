@@ -15,8 +15,6 @@ object TomcatRunner extends App {
   tomcat.addWebapp("/omatsivut", new File(webappDirLocation).getAbsolutePath());
   System.out.println("configuring app with basedir: " + new File("./" + webappDirLocation).getAbsolutePath());
 
-  EmbeddedMongo.withEmbeddedMongo(AppConfig.config) {
-    tomcat.start();
-    tomcat.getServer().await();
-  }
+  tomcat.start();
+  tomcat.getServer().await();
 }

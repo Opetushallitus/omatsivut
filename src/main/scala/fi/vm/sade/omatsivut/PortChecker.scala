@@ -1,0 +1,16 @@
+package fi.vm.sade.omatsivut
+
+import java.io.IOException
+import java.net.{Socket, ServerSocket}
+
+object PortChecker {
+  def isFreeLocalPort(port: Int): Boolean = {
+    try {
+      val socket = new Socket("127.0.0.1", port)
+      socket.close()
+      false
+    } catch {
+      case e:IOException => true
+    }
+  }
+}
