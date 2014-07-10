@@ -52,7 +52,7 @@ function hasData(item) {
 }
 
 listApp.controller("hakutoiveCtrl", ["$scope", "$http", function($scope, $http) {
-    $scope.isNew = $scope.hakutoive["Opetuspiste-id"] === null
+    $scope.isNew = $scope.hakutoive["Opetuspiste-id"] == null
 
     $scope.$on("application-saved", function() {
         if (hasData($scope.hakutoive))
