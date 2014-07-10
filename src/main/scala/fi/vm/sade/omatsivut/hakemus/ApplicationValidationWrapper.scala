@@ -31,13 +31,13 @@ object ApplicationValidationWrapper extends Logging {
     }
   }
 
-  def convertoToValidationErrors(validationResult: ValidationResult): List[ValidationError] = {
+  private def convertoToValidationErrors(validationResult: ValidationResult): List[ValidationError] = {
     validationResult.getErrorMessages.map { case (key, translations) =>
       ValidationError(key, Translations(translations.getTranslations.toMap))
     }.toList
   }
 
-  def convertToValidationInput(applicationSystem: ApplicationSystem, application: Application): ValidationInput = {
+  private def convertToValidationInput(applicationSystem: ApplicationSystem, application: Application): ValidationInput = {
     new ValidationInput(applicationSystem.getForm, application.getVastauksetMerged, application.getOid, applicationSystem.getId)
   }
 }
