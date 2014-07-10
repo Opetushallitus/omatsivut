@@ -7,7 +7,7 @@ import fi.vm.sade.omatsivut.domain.{Translations, HakuAika, Haku}
 import org.joda.time.DateTime
 import scala.collection.JavaConversions._
 
-object ApplicationSystemRepositoryWrapper {
+object ApplicationSystemServiceWrapper {
   val repository = OmatSivutSpringContext.context.getBean(classOf[ApplicationSystemService])
 
   def findByOid(applicationSystemOid: String): Option[Haku] = {
