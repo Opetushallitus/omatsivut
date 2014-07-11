@@ -17,6 +17,15 @@ object EmbeddedMongo {
       None
     }
   }
+
+  def withEmbeddedMongo[T](f: => T) = {
+    val mongoServer = start
+    try {
+      f
+    } finally {
+      mongoServer.foreach(_.stop)
+    }
+  }
 }
 
 class MongoServer(val port: Int) {
