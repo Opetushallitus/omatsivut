@@ -26,13 +26,133 @@ listApp.factory("settings", ["$animate", function($animate) {
     };
 }]);
 
+var Hakutoive = function(json) {
+    this.data = json
+    this.isModified = false
+    this.isNew = _.isEmpty(json)
+}
+
+Hakutoive.prototype = {
+    toJson: function() {
+        return this.data
+    },
+
+    clear: function() {
+        this.data = {}
+        this.isNew = true
+        this.isModified = false
+    },
+
+    hasData: function() {
+        return !_.isEmpty(this.data)
+    },
+
+    setOpetuspiste: function(id, name) {
+        this.data["Opetuspiste"] = name
+        this.data["Opetuspiste-id"] = id
+        this.isModified = true
+    },
+
+    setKoulutus: function(koulutus) {
+        this.data["Koulutus"] = koulutus.name.toString()
+        this.data["Koulutus-id"] = koulutus.id.toString()
+        this.data["Koulutus-educationDegree"] = koulutus.educationDegree.toString()
+        this.data["Koulutus-id-sora"] = koulutus.sora.toString()
+        this.data["Koulutus-id-aoIdentifier"] = koulutus.aoIdentifier.toString()
+        this.data["Koulutus-id-kaksoistutkinto"] = koulutus.kaksoistutkinto.toString()
+        this.data["Koulutus-id-vocational"] = koulutus.vocational.toString()
+        this.data["Koulutus-id-educationcode"] = koulutus.educationCodeUri.toString()
+        this.data["Koulutus-id-athlete"] = koulutus.athleteEducation.toString()
+        this.isModified = true
+    },
+
+    hasOpetuspiste: function() {
+        return !_.isEmpty(this.data["Opetuspiste-id"])
+    },
+
+    removeOppilaitosData: function() {
+        var self = this
+        _.each(this.data, function(value, key) {
+            if (key.indexOf("$")!==0 && key != "Opetuspiste")
+                delete self.data[key]
+        })
+    },
+
+    isValid: function() {
+        if (!_.isEmpty(this.data["Opetuspiste"]))
+            return !_.isEmpty(this.data["Koulutus-id"])
+        else
+            return true
+    },
+
+    setAsSaved: function() {
+        this.isNew = false
+        this.isModified = false
+    },
+
+    setAsModified: function() {
+        this.isModified = true
+    }
+}
+
+var Hakemus = function(json) {
+    _.extend(this, json)
+    this.hakutoiveet = _(this.hakutoiveet).map(function(hakutoive) { return new Hakutoive(hakutoive) })
+}
+
+Hakemus.prototype = {
+    removePreference: function(index) {
+        var row = this.hakutoiveet.splice(index, 1)[0]
+        this.hakutoiveet.push(new Hakutoive({}))
+    },
+
+    hasPreference: function(index) {
+        return index >= 0 && index <= this.hakutoiveet.length-1 && this.hakutoiveet[index].hasData()
+    },
+
+    canMoveTo: function(from, to) {
+        return this.hasPreference(from) && this.hasPreference(to);
+    },
+
+    toJson: function() {
+        return _.extend({}, this, { hakutoiveet: _(this.hakutoiveet).map(function(hakutoive) { return hakutoive.toJson() })})
+    },
+
+    setAsSaved: function() {
+        _(this.hakutoiveet).each(function(hakutoive) {
+            if (hakutoive.hasData()) hakutoive.setAsSaved() }
+        )
+    },
+
+    isValid: function() {
+        return _(this.hakutoiveet).every(function(hakutoive) { return hakutoive.isValid() })
+    },
+
+    getHakutoiveWatchCollection: function() {
+        return _(this.hakutoiveet).map(function(hakutoive) { return hakutoive.data })
+    },
+
+    moveHakutoive: function(from, to) {
+        this.hakutoiveet[from].setAsModified()
+        this.hakutoiveet[to].setAsModified()
+        this.hakutoiveet.splice(to, 0, this.hakutoiveet.splice(from, 1)[0])
+    },
+
+    getChangedItems: function() {
+        return _(this.hakutoiveet).chain()
+            .map(function(hakutoive, index) { return hakutoive.isModified ? index : null })
+            .without(null)
+            .value()
+    }
+}
+
 listApp.controller("listCtrl", ["$scope", "applicationsResource", function ($scope, applicationsResource) {
     $scope.applicationStatusMessage = "Hakemuksia ladataan...";
     $scope.applicationStatusMessageType = "ajax-spinner";
     applicationsResource.query(success, error)
 
     function success(data) {
-        $scope.applications = data;
+        $scope.applications = _.map(data, function(json) { return new Hakemus(json) })
         $scope.applicationStatusMessage = "";
         $scope.applicationStatusMessageType = "";
     }
@@ -47,61 +167,30 @@ listApp.controller("listCtrl", ["$scope", "applicationsResource", function ($sco
     }
 }]);
 
-function hasData(item) {
-    return _.any(item, function(val, key) { return key[0] != "$" })
-}
-
 listApp.controller("hakutoiveCtrl", ["$scope", "$http", function($scope, $http) {
-    $scope.isNew = $scope.hakutoive["Opetuspiste-id"] == null
-
-    $scope.$on("application-saved", function() {
-        if (hasData($scope.hakutoive))
-            $scope.isNew = false
-    })
-
-    $scope.canMoveTo = function(from, to) {
-        return $scope.hasPreference(from) && $scope.hasPreference(to);
-    };
-
-    $scope.removePreference = function() {
-        var row = this.application.hakutoiveet.splice(this.$index, 1)[0];
-        this.application.hakutoiveet.push({});
-    };
-
     $scope.oppilaitosValittu = function($item, $model, $label) {
-        this.hakutoive["Opetuspiste"] = $item.name
-        this.hakutoive["Opetuspiste-id"] = $item.id
+        this.hakutoive.setOpetuspiste($item.id, $item.name)
         findKoulutukset(this.application.haku.oid, $item.id, this.application.educationBackground)
-            .then(function(koulutukset) { $scope.koulutukset = koulutukset; })
+            .then(function(koulutukset) { $scope.koulutusList = koulutukset; })
     }
 
-    $scope.oppilaitosChanged = function() {
-        _.each(this.hakutoive, function(value, key) {
-            if (key.indexOf("$")!=0 && key != "Opetuspiste")
-                delete $scope.hakutoive[key]
-        })
+    $scope.oppilaitosModified = function() {
+        if (_.isEmpty(this.hakutoive.data.Opetuspiste))
+            this.hakutoive.clear()
+        else
+            this.hakutoive.removeOppilaitosData()
     }
 
     $scope.canSelectKoulutus = function() {
-        return $scope.isNew && !_.isEmpty(this.hakutoive["Opetuspiste-id"])
+        return this.hakutoive.isNew && this.hakutoive.hasOpetuspiste()
     }
 
-    $scope.isLoadingKoulutus = function() {
-        return $scope.canSelectKoulutus() && _.isEmpty($scope.koulutukset)
+    $scope.isLoadingKoulutusList = function() {
+        return $scope.canSelectKoulutus() && _.isEmpty($scope.koulutusList)
     }
 
     $scope.koulutusValittu = function(index) {
-        var koulutus = this["valittuKoulutus"]
-        this.hakutoive["Koulutus"] = koulutus.name.toString()
-        this.hakutoive["Koulutus-id"] = koulutus.id.toString()
-        this.hakutoive["Koulutus-educationDegree"] = koulutus.educationDegree.toString()
-        this.hakutoive["Koulutus-id-sora"] = koulutus.sora.toString()
-        this.hakutoive["Koulutus-id-aoIdentifier"] = koulutus.aoIdentifier.toString()
-        this.hakutoive["Koulutus-id-kaksoistutkinto"] = koulutus.kaksoistutkinto.toString()
-        this.hakutoive["Koulutus-id-vocational"] = koulutus.vocational.toString()
-        this.hakutoive["Koulutus-id-educationcode"] = koulutus.educationCodeUri.toString()
-        this.hakutoive["Koulutus-id-athlete"] = koulutus.athleteEducation.toString()
-        $scope.$parent.setDirty([$scope.index])
+        this.hakutoive.setKoulutus(this["valittuKoulutus"])
     }
 
     function findKoulutukset(applicationOid, opetuspisteId, educationBackground) {
@@ -112,8 +201,8 @@ listApp.controller("hakutoiveCtrl", ["$scope", "$http", function($scope, $http) 
                 uiLang: "fi" // TODO: kieliversio
             }
         }).then(function(res){
-                return res.data;
-            });
+            return res.data;
+        });
     }
 
     $scope.findOppilaitokset = function(val) {
@@ -122,63 +211,47 @@ listApp.controller("hakutoiveCtrl", ["$scope", "$http", function($scope, $http) 
                 asId: '1.2.246.562.5.2014022711042555034240'
             }
         }).then(function(res){
-                return res.data;
-            });
+            return res.data;
+        });
     };
 }])
 
-listApp.controller("hakemusCtrl", ["$scope", "$element", "$http", function ($scope, $element, $http) {
+listApp.controller("hakemusCtrl", ["$scope", "$element", "$http", "applicationsResource", function ($scope, $element, $http, applicationsResource) {
     $scope.hasChanged = false
     $scope.isSaving = false
     $scope.isValid = true
 
-    $scope.setDirty = function(indexes) {
-        $scope.$emit("application-preferences-changed", indexes);
-    }
-
-    $scope.$watch("application.hakutoiveet", function(hakutoiveet, oldHakutoiveet) {
+    $scope.$watch("application.getHakutoiveWatchCollection()", function(hakutoiveet, oldHakutoiveet) {
+        // Skip initial values angular style
         if (!_.isEqual(hakutoiveet, oldHakutoiveet)) {
             $scope.hasChanged = true
             setSaveMessage("")
-        }
-        $scope.isValid = _(hakutoiveet).every(validateHakutoive)
-        if (!$scope.isValid)
-            setSaveMessage("Täytä kaikki tiedot", "error");
-    }, true)
 
-    function validateHakutoive(hakutoive) {
-        if ((hakutoive["Opetuspiste"] || "").length > 0) {
-            return (hakutoive["Koulutus-id"] || "").length > 0
+            $scope.isValid = $scope.application.isValid()
+            if (!$scope.isValid)
+                setSaveMessage("Täytä kaikki tiedot", "error");
         }
-        else
-            return true
-    }
+    }, true)
 
     function setSaveMessage(msg, type) {
         $scope.saveMessage = msg
         $scope.saveMessageType = type
     }
 
-    $scope.hasPreference = function(index) {
-        return index >= 0 && index <= this.application.hakutoiveet.length-1 && hasData(this.application.hakutoiveet[index])
-    }
-
     $scope.movePreference = function(from, to) {
         if (to >= 0 && to < this.application.hakutoiveet.length) {
-            var arr = this.application.hakutoiveet
-            arr.splice(to, 0, arr.splice(from, 1)[0])
-            $scope.setDirty([from, to])
+            this.application.moveHakutoive(from, to)
             setSaveMessage()
         }
-    };
+    }
 
     $scope.saveApplication = function() {
         $scope.isSaving = true;
-        $scope.application.$update({id: $scope.application.oid }, onSuccess, onError);
+        applicationsResource.update({id: $scope.application.oid }, $scope.application.toJson(), onSuccess, onError)
 
         function onSuccess() {
-            $scope.$emit("application-saved");
-            $scope.$broadcast("application-saved");
+            $scope.$emit("highlight-items", $scope.application.getChangedItems());
+            $scope.application.setAsSaved();
             $scope.isSaving = false;
             $scope.hasChanged = false
             setSaveMessage("Kaikki muutokset tallennettu", "success");
@@ -252,21 +325,16 @@ listApp.directive('sortable', ["settings", function(settings) {
     };
 }]);
 
-listApp.directive("saveEffects", function() {
+listApp.directive("highlightItems", function() {
     return function($scope, $element) {
-        $scope.$on("application-preferences-changed", function(evt, changedItems) {
-            _.each(changedItems, function(index) {
-                $element.find(".preference-list-item").eq(index).addClass("preference-changed");
-            });
-        });
-
-        $scope.$on("application-saved", function(evt) {
-            $element.find(".preference-list-item.preference-changed")
-                .removeClass("preference-changed")
-                .addClass("saved")
+        $scope.$on("highlight-items", function(event, indexes) {
+            var items = $element.find(".preference-list-item")
+            _.each(indexes, function(index) {
+                items.eq(index).addClass("saved")
+            })
 
             window.setTimeout(function() {
-                $element.find(".preference-list-item").removeClass("saved");
+                items.removeClass("saved");
             }, 3000);
         });
     };

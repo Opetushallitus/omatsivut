@@ -24,7 +24,7 @@
                     </p>
                     <p>Hakemus jätetty: {{application.received | date:'dd.MM.yyyy HH:mm:ss'}}</p>
 
-                    <section class="application-section" save-effects>
+                    <section class="application-section" highlight-items>
                         <header class="application-section-heading">
                             Hakutoiveet
                             <button class="float-right save-btn" ng-disabled="!hasChanged || isSaving || !isValid" ng-click="saveApplication()">Tallenna muutokset</button>
@@ -32,10 +32,10 @@
                         </header>
 
                         <ul class="preference-list" sortable sortable-moved="movePreference">
-                            <li class="preference-list-item" ng-repeat="hakutoive in application.hakutoiveet" ng-controller="hakutoiveCtrl" ng-class="{empty: !hasPreference($index)}">
+                            <li class="preference-list-item" ng-repeat="hakutoive in application.hakutoiveet" ng-controller="hakutoiveCtrl" ng-class="{empty: !application.hasPreference($index)}">
                                 <div class="item-content">
-                                    <span class="sort-arrow-down" ng-class="{disabled: !canMoveTo($index, $index+1)}"></span>
-                                    <span class="sort-arrow-up" ng-class="{disabled: !canMoveTo($index, $index-1)}"></span>
+                                    <span class="sort-arrow-down" ng-class="{disabled: !application.canMoveTo($index, $index+1)}"></span>
+                                    <span class="sort-arrow-up" ng-class="{disabled: !application.canMoveTo($index, $index-1)}"></span>
                                     <span class="row-number">{{$index+1}}.</span>
                                 </div>
 
@@ -43,28 +43,28 @@
                                     <div class="row opetuspiste">
                                         <label><span class="label">Opetuspiste:</span>
 
-                                            <input type="text" placeholder="" ng-change="oppilaitosChanged()"
-                                                   ng-model="hakutoive.Opetuspiste"
+                                            <input type="text" placeholder="" ng-change="oppilaitosModified()"
+                                                   ng-model="hakutoive.data.Opetuspiste"
                                                    typeahead="oppilaitos.name for oppilaitos in findOppilaitokset($viewValue)"
                                                    typeahead-loading="loadingLocations"
                                                    typeahead-on-select="oppilaitosValittu($item, $model, $label)"
-                                                   ng-disabled="!isNew"/>
+                                                   ng-disabled="!hakutoive.isNew"/>
 
                                         </label>
 
                                     </div>
                                     <div class="row koulutus">
                                         <label><span class="label">Koulutus:</span>
-                                            <input type="text" ng-model="hakutoive.Koulutus" disabled ng-hide="isNew"/>
-                                            <select ng-model="valittuKoulutus" ng-options="koulutus.name for koulutus in koulutukset" ng-show="isNew" ng-change="koulutusValittu($index)" ng-hide="!canSelectKoulutus() || isLoadingKoulutus()"></select>
-                                            <span class="instruction" ng-hide="!isNew || canSelectKoulutus()">Valitse ensin opetuspiste</span>
-                                            <span class="instruction ajax-spinner-small" ng-show="isLoadingKoulutus()">Lataa tietoja...</span>
+                                            <input type="text" ng-model="hakutoive.data.Koulutus" disabled ng-hide="hakutoive.isNew"/>
+                                            <select ng-model="valittuKoulutus" ng-options="koulutus.name for koulutus in koulutusList" ng-change="koulutusValittu($index)" ng-hide="!hakutoive.isNew || !canSelectKoulutus() || isLoadingKoulutusList()"></select>
+                                            <span class="instruction" ng-hide="!hakutoive.isNew || canSelectKoulutus()">Valitse ensin opetuspiste</span>
+                                            <span class="instruction ajax-spinner-small" ng-show="isLoadingKoulutusList()">Lataa tietoja...</span>
                                         </label>
                                     </div>
                                 </div>
 
                                 <div class="item-content">
-                                    <button ng-show="true || hasPreference($index)" class="delete-btn" confirm confirm-text="Poista" confirm-action="removePreference($index)"></button>
+                                    <button ng-show="application.hasPreference($index)" class="delete-btn" confirm confirm-text="Poista" confirm-action="application.removePreference($index)"></button>
                                 </div>
                             </li>
                         </ul>
