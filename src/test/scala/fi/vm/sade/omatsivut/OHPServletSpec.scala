@@ -3,8 +3,7 @@ package fi.vm.sade.omatsivut
 import fi.vm.sade.omatsivut.domain.{Hakemus, ValidationError}
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.servlet.{ApplicationsServlet, OmatSivutSwagger}
-import org.json4s.JValue
-import org.json4s.JsonAST.JString
+import org.json4s._
 import org.json4s.native.{JsonMethods, Serialization}
 
 class OHPServletSpec extends JsonFormats with ScalatraTestSupport {
