@@ -7,6 +7,8 @@ import org.json4s._
 import org.json4s.native.{JsonMethods, Serialization}
 
 class OHPServletSpec extends JsonFormats with ScalatraTestSupport {
+  sequential
+
   "GET /applications" should {
     "return person's applications" in {
       AppConfig.fromSystemProperty.withConfig {
@@ -20,13 +22,15 @@ class OHPServletSpec extends JsonFormats with ScalatraTestSupport {
 
   "POST /application/validate" should {
     "validate application" in {
-      authGet("/applications", "1.2.246.562.24.14229104472") {
-        val applications: List[Hakemus] = Serialization.read[List[Hakemus]](body)
-        val hakemus = applications(0)
-        authPost("/applications/validate/" + hakemus.oid, "1.2.246.562.24.14229104472", Serialization.write(hakemus)) {
-          status must_== 200
-          val errors: List[ValidationError] = Serialization.read[List[ValidationError]](body)
-          errors.size must_== 3
+      AppConfig.fromSystemProperty.withConfig {
+        authGet("/applications", "1.2.246.562.24.14229104472") {
+          val applications: List[Hakemus] = Serialization.read[List[Hakemus]](body)
+          val hakemus = applications(0)
+          authPost("/applications/validate/" + hakemus.oid, "1.2.246.562.24.14229104472", Serialization.write(hakemus)) {
+            status must_== 200
+            val errors: List[ValidationError] = Serialization.read[List[ValidationError]](body)
+            errors.size must_== 3
+          }
         }
       }
     }
@@ -34,15 +38,17 @@ class OHPServletSpec extends JsonFormats with ScalatraTestSupport {
 
   "POST /application/unanswered" should {
     "find unanswered question from application" in {
-      authGet("/applications", "1.2.246.562.24.14229104472") {
-        val applications: List[Hakemus] = Serialization.read[List[Hakemus]](body)
-        val hakemus = applications(0)
-        authPost("/applications/unanswered/" + hakemus.oid, "1.2.246.562.24.14229104472", Serialization.write(hakemus)) {
-          val questions: JValue = JsonMethods.parse(body)
-          val titles: List[String] = questions \\ "title" \\ "fi" \\ classOf[JString]
-          questions.children.size must_== 2
-          titles.head must_== "Päättötodistuksen kaikkien oppiaineiden keskiarvo?"
-          status must_== 200
+      AppConfig.fromSystemProperty.withConfig {
+        authGet("/applications", "1.2.246.562.24.14229104472") {
+          val applications: List[Hakemus] = Serialization.read[List[Hakemus]](body)
+          val hakemus = applications(0)
+          authPost("/applications/unanswered/" + hakemus.oid, "1.2.246.562.24.14229104472", Serialization.write(hakemus)) {
+            val questions: JValue = JsonMethods.parse(body)
+            val titles: List[String] = questions \\ "title" \\ "fi" \\ classOf[JString]
+            questions.children.size must_== 2
+            titles.head must_== "Päättötodistuksen kaikkien oppiaineiden keskiarvo?"
+            status must_== 200
+          }
         }
       }
     }
