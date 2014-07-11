@@ -4,6 +4,8 @@ import javax.crypto.spec.{IvParameterSpec, SecretKeySpec}
 import javax.crypto.{Cipher, Mac}
 
 import fi.vm.sade.omatsivut.AppConfig
+import fi.vm.sade.omatsivut.AppConfig
+import fi.vm.sade.omatsivut.AppConfig.AppConfig
 import org.apache.commons.codec.binary.{Base64, Hex}
 
 trait HmacSHA256 {
@@ -35,9 +37,9 @@ trait AES {
   case class AesResult(cipher: Array[Byte], initialVector: Array[Byte])
 }
 
-object AuthenticationCipher extends AES with HmacSHA256 {
-  val key = AppConfig.fromSystemProperty.settings.aesKey.getBytes("UTF-8")
-  val macKey = AppConfig.fromSystemProperty.settings.hmacKey.getBytes("UTF-8")
+case class AuthenticationCipher(implicit val appConfig: AppConfig) extends AES with HmacSHA256 {
+  val key = appConfig.settings.aesKey.getBytes("UTF-8")
+  val macKey = appConfig.settings.hmacKey.getBytes("UTF-8")
 
   def encrypt(s: String) = {
     val aesResult = encryptAES(s.getBytes("UTF-8"), key)

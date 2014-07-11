@@ -18,7 +18,7 @@ object AppConfig extends Logging {
   }
 
   class Default extends AppConfig with ExternalProps {
-    def authenticationInfoService: AuthenticationInfoService = new RemoteAuthenticationInfoService(settings.authenticationService)
+    def authenticationInfoService: AuthenticationInfoService = new RemoteAuthenticationInfoService(settings.authenticationService)(this)
     def springConfiguration = OmatSivutSpringContext.Default
   }
 

@@ -7,8 +7,9 @@ class CryptoSpec extends Specification {
 
   "AES crypto" should {
     "encrypt and decrypt" in {
-      val encrypted = AuthenticationCipher.encrypt("testString")
-      AuthenticationCipher.decrypt(encrypted) must_== "testString"
+      val cipher: AuthenticationCipher = AuthenticationCipher()(AppConfig.fromSystemProperty)
+      val encrypted = cipher.encrypt("testString")
+      cipher.decrypt(encrypted) must_== "testString"
     }
   }
 }

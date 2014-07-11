@@ -1,5 +1,6 @@
 package fi.vm.sade.omatsivut.servlet
 
+import fi.vm.sade.omatsivut.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.domain.Hakemus
 import fi.vm.sade.omatsivut.http.HttpClient
 import org.scalatra.json._
@@ -9,7 +10,7 @@ import fi.vm.sade.omatsivut.security.Authentication
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.hakemus.{HakemusValidator, HakemusRepository}
 
-class ApplicationsServlet(implicit val swagger: Swagger) extends OmatSivutServletBase with HttpClient with JacksonJsonSupport with JsonFormats with SwaggerSupport with Authentication {
+class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfig) extends OmatSivutServletBase with HttpClient with JacksonJsonSupport with JsonFormats with SwaggerSupport with Authentication {
   override def applicationName = Some("api")
 
   protected val applicationDescription = "Oppijan henkilökohtaisen palvelun REST API, jolla voi hakea ja muokata hakemuksia ja omia tietoja"
@@ -36,22 +37,22 @@ class ApplicationsServlet(implicit val swagger: Swagger) extends OmatSivutServle
   }
 
   get("/applications", operation(getApplicationsSwagger)) {
-    HakemusRepository.fetchHakemukset(oid())
+    HakemusRepository().fetchHakemukset(oid())
   }
 
   put("/applications/:oid", operation(putApplicationsSwagger)) {
     val updated = Serialization.read[Hakemus](request.body)
-    HakemusRepository.updateHakemus(updated)
+    HakemusRepository().updateHakemus(updated)
   }
 
   post("/applications/validate/:oid", operation(validateApplicationsSwagger)) {
     val validate = Serialization.read[Hakemus](request.body)
-    HakemusValidator.validate(validate)
+    HakemusValidator().validate(validate)
   }
 
 
   post("/applications/unanswered/:oid", operation(findUnansweredQuestionsFromApplicationSwagger)) {
     val hakemus = Serialization.read[Hakemus](request.body)
-    HakemusValidator.findMissingQuestions(hakemus)
+    HakemusValidator().findMissingQuestions(hakemus)
   }
 }

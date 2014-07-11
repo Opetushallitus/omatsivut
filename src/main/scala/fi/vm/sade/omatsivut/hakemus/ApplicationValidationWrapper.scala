@@ -6,15 +6,16 @@ import fi.vm.sade.haku.oppija.lomake.domain.elements.Titled
 import fi.vm.sade.haku.oppija.lomake.domain.elements.questions.{DropdownSelect, TextQuestion, OptionQuestion => HakuOption, Radio => HakuRadio, TextArea => HakuTextArea}
 import fi.vm.sade.haku.oppija.lomake.util.ElementTree
 import fi.vm.sade.haku.oppija.lomake.validation.{ValidationInput, ValidationResult}
+import fi.vm.sade.omatsivut.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.domain._
 import fi.vm.sade.omatsivut.{AppConfig, Logging}
 
 import scala.collection.JavaConversions._
 
-object ApplicationValidationWrapper extends Logging {
-  private val applicationSystemService = AppConfig.fromSystemProperty.springContext.applicationSystemService
-  private val dao = AppConfig.fromSystemProperty.springContext.applicationDAO
-  private val validator = AppConfig.fromSystemProperty.springContext.validator
+case class ApplicationValidationWrapper(implicit val appConfig: AppConfig) extends Logging {
+  private val applicationSystemService = appConfig.springContext.applicationSystemService
+  private val dao = appConfig.springContext.applicationDAO
+  private val validator = appConfig.springContext.validator
 
   def validate(hakemus: Hakemus): Option[List[ValidationError]] = {
     try {

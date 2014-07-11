@@ -1,5 +1,6 @@
 package fi.vm.sade.omatsivut.security
 
+import fi.vm.sade.omatsivut.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.http.HttpClient
 import fi.vm.sade.omatsivut.{RemoteApplicationConfig, AppConfig, Logging}
 import org.json4s._
@@ -9,10 +10,10 @@ trait AuthenticationInfoService extends Logging with HttpClient {
   def getHenkiloOID(hetu : String) : Option[String]
 }
 
-class RemoteAuthenticationInfoService(config: RemoteApplicationConfig) extends AuthenticationInfoService with Logging with HttpClient {
+class RemoteAuthenticationInfoService(config: RemoteApplicationConfig)(implicit val appConfig: AppConfig) extends AuthenticationInfoService with Logging with HttpClient {
   def getHenkiloOID(hetu : String) : Option[String] = {
     implicit val formats = DefaultFormats
-    val ticket = CASClient.getServiceTicket(config)
+    val ticket = CASClient().getServiceTicket(config)
 
     val (responseCode, headersMap, resultString) = httpGet(config.url + "/" + config.path + "/" + hetu)
       .param("ticket", ticket.getOrElse("no_ticket"))

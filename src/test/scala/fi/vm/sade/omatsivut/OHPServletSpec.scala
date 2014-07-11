@@ -63,5 +63,5 @@ class OHPServletSpec extends JsonFormats with ScalatraTestSupport {
     hakemus.hakutoiveet(0)("Opetuspiste-id") must_== "1.2.246.562.10.60222091211"
   }
 
-  addServlet(new ApplicationsServlet()(new OmatSivutSwagger), "/*")
+  addServlet(new ApplicationsServlet(), "/*")
 }

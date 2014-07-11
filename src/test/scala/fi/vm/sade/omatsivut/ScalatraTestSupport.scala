@@ -1,9 +1,12 @@
 package fi.vm.sade.omatsivut
 
+import fi.vm.sade.omatsivut.security.{AuthenticationCipher, CookieCredentials}
+import fi.vm.sade.omatsivut.servlet.OmatSivutSwagger
 import org.scalatra.test.specs2.MutableScalatraSpec
-import fi.vm.sade.omatsivut.security.{CookieCredentials, AuthenticationCipher}
 
 trait ScalatraTestSupport extends MutableScalatraSpec {
+  implicit val appConfig = AppConfig.fromSystemProperty
+  implicit val swagger = new OmatSivutSwagger
 
   def authGet[A](uri: String, oid : String)(f: => A): A = {
     get(uri, headers = authHeaders(oid))(f)
@@ -14,6 +17,6 @@ trait ScalatraTestSupport extends MutableScalatraSpec {
   }
 
   def authHeaders[A](oid: String): Map[String, String] = {
-    Map("Cookie" -> ("auth=" + AuthenticationCipher.encrypt(CookieCredentials(oid).toString)))
+    Map("Cookie" -> ("auth=" + AuthenticationCipher().encrypt(CookieCredentials(oid).toString)))
   }
 }

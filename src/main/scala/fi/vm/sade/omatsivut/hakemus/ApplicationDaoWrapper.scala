@@ -1,6 +1,8 @@
 package fi.vm.sade.omatsivut.hakemus
 
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
+import fi.vm.sade.omatsivut.AppConfig
+import fi.vm.sade.omatsivut.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.domain.{EducationBackground, Haku, Hakemus}
 import scala.collection.JavaConversions._
 import fi.vm.sade.omatsivut.{AppConfig, OmatSivutSpringContext}
@@ -9,8 +11,8 @@ import fi.vm.sade.haku.oppija.hakemus.it.dao.ApplicationDAO
 
 import scala.util.Try
 
-object ApplicationDaoWrapper {
-  private val dao = AppConfig.fromSystemProperty.springContext.applicationDAO
+case class ApplicationDaoWrapper(implicit val appConfig: AppConfig) {
+  private val dao = appConfig.springContext.applicationDAO
 
   def findByPersonOid(personOid: String): List[Hakemus] = {
     val applicationJavaObjects: List[Application] = dao.find(new Application().setPersonOid(personOid)).toList
@@ -28,7 +30,7 @@ object ApplicationDaoWrapper {
 
   private def convertApplicationSystem(application: Application): Option[Haku] = application.getApplicationSystemId match {
     case "" => None
-    case applicationSystemId => HakuRepository.getApplicationSystemById(applicationSystemId)
+    case applicationSystemId => HakuRepository().getApplicationSystemById(applicationSystemId)
   }
 
   private def convertHakuToiveet(application: Application): List[Map[String, String]] = {

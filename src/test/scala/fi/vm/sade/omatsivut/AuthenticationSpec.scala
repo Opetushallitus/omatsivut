@@ -27,7 +27,7 @@ class AuthenticationSpec extends ScalatraTestSupport {
     }
   }
 
-  addServlet(new ApplicationsServlet()(new OmatSivutSwagger) {
+  addServlet(new ApplicationsServlet() {
     override val cookieTimeoutMinutes = 0
   }, "/*")
 

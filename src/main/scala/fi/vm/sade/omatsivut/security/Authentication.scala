@@ -2,11 +2,14 @@ package fi.vm.sade.omatsivut.security
 
 import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
 
+import fi.vm.sade.omatsivut.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.Logging
 import org.joda.time.DateTime
 import org.scalatra.ScalatraBase
 
 trait Authentication extends ScalatraBase with AuthCookieParsing with Logging {
+  implicit val appConfig: AppConfig
+
   val cookieTimeoutMinutes = 30
 
   def oid() = oidOpt.getOrElse(sys.error("Not authenticated account"))
@@ -43,11 +46,11 @@ trait AuthCookieParsing extends Logging {
     } yield auth
   }
   
-  def parseCredentials(req: HttpServletRequest): Option[CookieCredentials] = {
+  def parseCredentials(req: HttpServletRequest)(implicit appConfig: AppConfig): Option[CookieCredentials] = {
     authCookie(req) match {
       case Some(c) => {
         try {
-          val decrypt: String = AuthenticationCipher.decrypt(c.getValue)
+          val decrypt: String = AuthenticationCipher().decrypt(c.getValue)
           Some(CookieCredentials.fromString(decrypt))
         } catch {
           case e: Exception => {
