@@ -1,7 +1,6 @@
 package fi.vm.sade.omatsivut
 
-import org.joda.time.DateTime
-import fi.vm.sade.omatsivut.servlet.{OmatSivutSwagger, ApplicationsServlet}
+import fi.vm.sade.omatsivut.servlet.{ApplicationsServlet, OmatSivutSwagger}
 
 class AuthenticationSpec extends ScalatraTestSupport {
   "GET /applications" should {

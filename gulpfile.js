@@ -27,6 +27,7 @@ gulp.task('lint', function() {
 gulp.task('less', function () {
     gulp.src(lessFiles)
         .pipe(less().on('error', handleError))
+        .pipe(concat('main.css'))
         .pipe(gulp.dest('src/main/webapp/css'));
 });
 

@@ -1,10 +1,13 @@
 package fi.vm.sade.omatsivut.hakemus
 
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
+import fi.vm.sade.omatsivut.domain.{EducationBackground, Haku, Hakemus}
 import scala.collection.JavaConversions._
 import fi.vm.sade.omatsivut.OmatSivutSpringContext
 import java.util
 import fi.vm.sade.haku.oppija.hakemus.it.dao.ApplicationDAO
+
+import scala.util.Try
 
 object ApplicationDaoWrapper {
   private val dao = OmatSivutSpringContext.context.applicationDAO
@@ -12,7 +15,14 @@ object ApplicationDaoWrapper {
   def findByPersonOid(personOid: String): List[Hakemus] = {
     val applicationJavaObjects: List[Application] = dao.find(new Application().setPersonOid(personOid)).toList
     applicationJavaObjects.map { application =>
-      Hakemus(application.getOid, application.getReceived.getTime, convertHakuToiveet(application), convertApplicationSystem(application))
+      val koulutusTaustaAnswers: util.Map[String, String] = application.getAnswers.get("koulutustausta")
+      Hakemus(
+        application.getOid,
+        application.getReceived.getTime,
+        convertHakuToiveet(application),
+        convertApplicationSystem(application),
+        EducationBackground(koulutusTaustaAnswers.get("POHJAKOULUTUS"), !Try {koulutusTaustaAnswers.get("ammatillinenTutkintoSuoritettu").toBoolean}.getOrElse(false))
+      )
     }
   }
 

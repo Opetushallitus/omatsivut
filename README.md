@@ -57,7 +57,17 @@ Avaa selaimessa [http://localhost:8080/omatsivut/](http://localhost:8080/omatsiv
 
 Aja TomcatRunner-luokka. Jotta impersonointi/autentikoinnin ohitus onnistuu, anna parametri `-Domatsivut.profile=dev`.
 
-### Impersonointi / autentikoinnin ohitus
+## Fronttidevaus
+
+Frontti paketoidaan gulpilla ja browserifyllä. Paketointi tapahtuu mocha-testien ajon yhteydessä (`runtests.sh`).
+
+Jatkuva fronttikäännös käyntiin näin:
+
+    node_modules/gulp/bin/gulp.js dev
+
+Tyylit tehty lessillä. Css-fileet src-puussa generoidaan siitä ja ovat ignoroitu gitissä.
+
+## Impersonointi / autentikoinnin ohitus
 
 Jos applikaatiota ajetaan "testimoodissa" eli esim. `-Domatsivut.profile=dev`, niin autentikointi on mahdollista ohittaa.
 

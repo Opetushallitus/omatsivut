@@ -15,18 +15,27 @@ import org.springframework.context.ApplicationContext
 import org.springframework.data.mongodb.core.MongoTemplate
 
 import collection.JavaConversions._
+import fi.vm.sade.haku.oppija.lomake.service.ApplicationSystemService
+import fi.vm.sade.haku.oppija.lomake.validation.ElementTreeValidator
+import fi.vm.sade.haku.virkailija.authentication.AuthenticationService
+import fi.vm.sade.haku.virkailija.authentication.impl.AuthenticationServiceMockImpl
+import fi.vm.sade.omatsivut.AppConfig.AppConfig
+import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation._
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer
 import org.springframework.core.env.{MapPropertySource, MutablePropertySources}
+import org.springframework.data.mongodb.core.MongoTemplate
 
-import scala.collection.JavaConversions
+import scala.collection.JavaConversions._
 
 class OmatSivutSpringContext(context: ApplicationContext) {
-  def applicationSystemRepository = context.getBean(classOf[ApplicationSystemRepository])
+  def applicationSystemService = context.getBean(classOf[ApplicationSystemService])
 
   def applicationDAO = context.getBean(classOf[ApplicationDAO])
 
   def mongoTemplate = context.getBean(classOf[MongoTemplate])
+
+  def validator = context.getBean(classOf[ElementTreeValidator])
 }
 
 object OmatSivutSpringContext {

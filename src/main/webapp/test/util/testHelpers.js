@@ -48,8 +48,10 @@ session = {
 
 uiUtil = {
     inputValues: function(el) {
-        return _.chain(el.find("[ng-model]"))
-            .map(function(el) { return [$(el).attr("ng-model"), $(el).val() ]})
+        function formatKey(key) { return key.replace(".data.", ".") }
+
+        return _.chain(el.find("[ng-model]:visible"))
+            .map(function(el) { return [formatKey($(el).attr("ng-model")), $(el).val() ]})
             .object().value()
     }
 }
@@ -82,7 +84,10 @@ function openPage(path, predicate) {
         predicate = function() { return testFrame.jQuery }
     }
     return function() {
+        S("body").attr("stale", "true")
         testFrame.location.replace(path)
-        return wait.until(predicate)()
+        return wait.until(function() {
+          return predicate() && !S("body").attr("stale")
+        })()
     }
 }

@@ -1,12 +1,13 @@
 package fi.vm.sade.omatsivut.servlet
 
+import fi.vm.sade.omatsivut.domain.Hakemus
 import fi.vm.sade.omatsivut.http.HttpClient
 import org.scalatra.json._
 import org.scalatra.swagger._
 import org.json4s.jackson.Serialization
 import fi.vm.sade.omatsivut.security.Authentication
 import fi.vm.sade.omatsivut.json.JsonFormats
-import fi.vm.sade.omatsivut.hakemus.{HakemusRepository, Hakemus}
+import fi.vm.sade.omatsivut.hakemus.{HakemusValidator, HakemusRepository}
 
 class ApplicationsServlet(implicit val swagger: Swagger) extends OmatSivutServletBase with HttpClient with JacksonJsonSupport with JsonFormats with SwaggerSupport with Authentication {
   override def applicationName = Some("api")
@@ -22,6 +23,10 @@ class ApplicationsServlet(implicit val swagger: Swagger) extends OmatSivutServle
     summary "Tallenna hakemus"
     )
 
+  val validateApplicationsSwagger = (apiOperation[Unit]("validateApplication")
+    summary "Tarkista hakemus ja palauta virheet"
+    )
+
   before() {
     contentType = formats("json")
   }
@@ -35,4 +40,8 @@ class ApplicationsServlet(implicit val swagger: Swagger) extends OmatSivutServle
     HakemusRepository.updateHakemus(updated)
   }
 
+  post("/applications/validate/:oid", operation(validateApplicationsSwagger)) {
+    val validate = Serialization.read[Hakemus](request.body)
+    HakemusValidator.validate(validate)
+  }
 }
