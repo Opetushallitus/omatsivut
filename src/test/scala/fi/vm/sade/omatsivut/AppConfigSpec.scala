@@ -3,7 +3,7 @@ package fi.vm.sade.omatsivut
 import java.io.{File, FileInputStream}
 import java.util.Properties
 
-import fi.vm.sade.omatsivut.AppConfig.{AppConfig, Default}
+import fi.vm.sade.omatsivut.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.mongo.EmbeddedMongo
 import org.fusesource.scalate.support.FileTemplateSource
 import org.specs2.mutable.Specification
