@@ -38,7 +38,7 @@ object AppConfig extends Logging {
 
     override def start {
       mongo = EmbeddedMongo.start
-      FixtureImporter.importFixtures()
+      FixtureImporter.importFixtures(mongoTemplate)
     }
     override def stop {
       mongo.foreach(_.stop)
@@ -85,12 +85,10 @@ object AppConfig extends Logging {
     }
 
     def configFiles: List[String]
+    lazy val mongoTemplate = springContext.mongoTemplate
 
     val settings = ApplicationSettings.loadSettings(configFiles)
   }
-
-  // Maybe this global should be removed
-  def settings = fromSystemProperty.settings
 }
 
 case class RemoteApplicationConfig(url: String, username: String, password: String, path: String, ticketConsumerPath: String)

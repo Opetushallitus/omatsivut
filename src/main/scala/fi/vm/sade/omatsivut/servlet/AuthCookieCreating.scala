@@ -1,11 +1,12 @@
 package fi.vm.sade.omatsivut.servlet
 
+import fi.vm.sade.omatsivut.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.security.{AuthenticationInfoService, CookieCredentials, AuthenticationCipher, AuthCookieParsing}
 import org.scalatra.{Cookie, CookieOptions}
 
 trait AuthCookieCreating extends OmatSivutServletBase with AuthCookieParsing  with fi.vm.sade.omatsivut.Logging {
-  def createAuthCookieResponse(hetuOption: Option[String], cookieOptions: CookieOptions = CookieOptions(secure = true, path = "/", maxAge = 1799), redirectUri: String)(implicit authService: AuthenticationInfoService) {
-    fetchOid(hetuOption) match {
+  def createAuthCookieResponse(hetuOption: Option[String], cookieOptions: CookieOptions = CookieOptions(secure = true, path = "/", maxAge = 1799), redirectUri: String)(implicit appConfig: AppConfig) {
+    fetchOid(hetuOption, appConfig.authenticationInfoService) match {
       case Some(oid) =>
         val encryptedCredentials = AuthenticationCipher.encrypt(CookieCredentials(oid).toString)
         response.addCookie(Cookie("auth", encryptedCredentials)(cookieOptions))
@@ -17,7 +18,7 @@ trait AuthCookieCreating extends OmatSivutServletBase with AuthCookieParsing  wi
     }
   }
 
-  private def fetchOid(hetuOption: Option[String])(implicit authService: AuthenticationInfoService) = {
+  private def fetchOid(hetuOption: Option[String], authService: AuthenticationInfoService) = {
     for {
       hetu <- hetuOption
       oid <- authService.getHenkiloOID(hetu)
