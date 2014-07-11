@@ -3,14 +3,14 @@ package fi.vm.sade.omatsivut.hakemus
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.omatsivut.domain.{EducationBackground, Haku, Hakemus}
 import scala.collection.JavaConversions._
-import fi.vm.sade.omatsivut.OmatSivutSpringContext
+import fi.vm.sade.omatsivut.{AppConfig, OmatSivutSpringContext}
 import java.util
 import fi.vm.sade.haku.oppija.hakemus.it.dao.ApplicationDAO
 
 import scala.util.Try
 
 object ApplicationDaoWrapper {
-  private val dao = OmatSivutSpringContext.context.applicationDAO
+  private val dao = AppConfig.fromSystemProperty.springContext.applicationDAO
 
   def findByPersonOid(personOid: String): List[Hakemus] = {
     val applicationJavaObjects: List[Application] = dao.find(new Application().setPersonOid(personOid)).toList

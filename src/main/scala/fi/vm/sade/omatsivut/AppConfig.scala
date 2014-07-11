@@ -7,7 +7,7 @@ import collection.JavaConversions._
 import fi.vm.sade.omatsivut.security.{RemoteAuthenticationInfoService, AuthenticationInfoService}
 
 object AppConfig extends Logging {
-  lazy val config: AppConfig = {
+  lazy val fromSystemProperty: AppConfig = {
     val profile: String = System.getProperty("omatsivut.profile", "default")
     logger.info("Using omatsivut.profile=" + profile)
     profile match {
@@ -72,6 +72,8 @@ object AppConfig extends Logging {
     def settings: ApplicationSettings
     def authenticationInfoService: AuthenticationInfoService
     def springConfiguration: OmatSivutConfiguration
+    lazy val springContext = new OmatSivutSpringContext(OmatSivutSpringContext.createApplicationContext(this))
+
     def isTest: Boolean = false
     def start {}
     def stop {}
@@ -86,7 +88,7 @@ object AppConfig extends Logging {
   }
 
   // Maybe this global should be removed
-  def settings = config.settings
+  def settings = fromSystemProperty.settings
 }
 
 case class RemoteApplicationConfig(url: String, username: String, password: String, path: String, ticketConsumerPath: String)

@@ -7,7 +7,7 @@ import javax.servlet.ServletContext
 
 class ScalatraBootstrap extends LifeCycle {
   implicit val swagger = new OmatSivutSwagger
-  val config: AppConfig = AppConfig.config
+  val config: AppConfig = AppConfig.fromSystemProperty
   OmatSivutSpringContext.check
 
   override def init(context: ServletContext) {

@@ -28,11 +28,9 @@ class OmatSivutSpringContext(context: ApplicationContext) {
 }
 
 object OmatSivutSpringContext {
-  val context = new OmatSivutSpringContext(createApplicationContext(AppConfig.config))
-
   def check {}
 
-  private def createApplicationContext(configuration: AppConfig): AnnotationConfigApplicationContext = {
+  def createApplicationContext(configuration: AppConfig): AnnotationConfigApplicationContext = {
     val appContext: AnnotationConfigApplicationContext = new AnnotationConfigApplicationContext
     println("Using spring configuration " + configuration.springConfiguration)
     appContext.getEnvironment.setActiveProfiles(configuration.springConfiguration.profile)
@@ -42,7 +40,7 @@ object OmatSivutSpringContext {
     return appContext
   }
 
-  def customPropertiesHack(appContext: AnnotationConfigApplicationContext, configuration: AppConfig) {
+  private def customPropertiesHack(appContext: AnnotationConfigApplicationContext, configuration: AppConfig) {
     val configurer: PropertySourcesPlaceholderConfigurer = new PropertySourcesPlaceholderConfigurer()
     val sources: MutablePropertySources = new MutablePropertySources()
 

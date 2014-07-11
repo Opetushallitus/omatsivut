@@ -8,7 +8,7 @@ import org.json4s.native.Serialization
 class OHPServletSpec extends JsonFormats with ScalatraTestSupport {
   "GET /applications" should {
     "return person's applications" in {
-      AppConfig.config.withConfig {
+      AppConfig.fromSystemProperty.withConfig {
         authGet("/applications", "1.2.246.562.24.14229104472") {
           verifyApplications(1)
           //verifyOneApplication() TODO FIX

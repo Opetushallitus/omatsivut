@@ -1,14 +1,14 @@
 package fi.vm.sade.omatsivut.hakemus
 
 import fi.vm.sade.haku.oppija.lomake.domain.{ApplicationPeriod, ApplicationSystem}
-import fi.vm.sade.omatsivut.OmatSivutSpringContext
+import fi.vm.sade.omatsivut.AppConfig
 import fi.vm.sade.omatsivut.domain.{Haku, HakuAika, Translations}
 import org.joda.time.DateTime
 
 import scala.collection.JavaConversions._
 
 object ApplicationSystemServiceWrapper {
-  val repository = OmatSivutSpringContext.context.applicationSystemService
+  val repository = AppConfig.fromSystemProperty.springContext.applicationSystemService
 
   def findByOid(applicationSystemOid: String): Option[Haku] = {
     tryFind(applicationSystemOid).map { applicationSystem =>

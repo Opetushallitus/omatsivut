@@ -7,14 +7,14 @@ import fi.vm.sade.haku.oppija.lomake.domain.elements.questions.{DropdownSelect, 
 import fi.vm.sade.haku.oppija.lomake.util.ElementTree
 import fi.vm.sade.haku.oppija.lomake.validation.{ValidationInput, ValidationResult}
 import fi.vm.sade.omatsivut.domain._
-import fi.vm.sade.omatsivut.{Logging, OmatSivutSpringContext}
+import fi.vm.sade.omatsivut.{AppConfig, Logging, OmatSivutSpringContext}
 
 import scala.collection.JavaConversions._
 
 object ApplicationValidationWrapper extends Logging {
-  private val applicationSystemService = OmatSivutSpringContext.context.applicationSystemService
-  private val dao = OmatSivutSpringContext.context.applicationDAO
-  private val validator = OmatSivutSpringContext.context.validator
+  private val applicationSystemService = AppConfig.fromSystemProperty.springContext.applicationSystemService
+  private val dao = AppConfig.fromSystemProperty.springContext.applicationDAO
+  private val validator = AppConfig.fromSystemProperty.springContext.validator
 
   def validate(hakemus: Hakemus): Option[List[ValidationError]] = {
     try {

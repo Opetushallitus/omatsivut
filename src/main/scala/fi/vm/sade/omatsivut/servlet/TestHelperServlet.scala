@@ -8,7 +8,7 @@ import org.scalatra.CookieOptions
 import fi.vm.sade.omatsivut.security.AuthenticationInfoService
 
 class TestHelperServlet(config: AppConfig)(implicit val authService: AuthenticationInfoService) extends AuthCookieCreating  {
-  if(AppConfig.config.isTest){
+  if(AppConfig.fromSystemProperty.isTest){
     get("/fakesession") {
       createAuthCookieResponse(paramOption("hetu"), CookieOptions(secure = false, path = "/"), paramOption("redirect").getOrElse("/index.html"))
     }
