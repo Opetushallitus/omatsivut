@@ -51,8 +51,8 @@ object ApplicationValidationWrapper extends Logging {
     }
   }
 
-  private def getOptions(e: HakuOption): List[Translations] = {
-    e.getOptions.map(o => getTitle(o)).toList
+  private def getOptions(e: HakuOption): List[Choice] = {
+    e.getOptions.map(o => Choice(getTitle(o), o.isDefaultOption)).toList
   }
 
   private def getTitle(e: Titled): Translations = {
