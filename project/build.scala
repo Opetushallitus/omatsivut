@@ -67,7 +67,7 @@ object OmatsivutBuild extends Build {
         "com.novus" %% "salat-core" % "1.9.8",
         "org.scalatra.scalate" %% "scalate-core" % "1.7.0" % "test",
         "commons-codec" % "commons-codec" % "1.9",
-        "fi.vm.sade.haku" % "hakemus-api" % "9.5-SNAPSHOT" excludeAll(
+        "fi.vm.sade.haku" % "hakemus-api" % "10.0-SNAPSHOT" excludeAll(
           ExclusionRule(organization = "org.json4s"),
           ExclusionRule(organization = "com.wordnik")
         ),
