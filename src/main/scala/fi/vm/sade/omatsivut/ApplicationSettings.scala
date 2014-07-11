@@ -16,7 +16,7 @@ object ApplicationSettings extends Logging {
         logger.info("Settings: " + settings)
         applicationSettings
       case None =>
-        throw new RuntimeException("Configuration file missing. Please set the omatsivut.configFile property correctly, or make sure you have ../module-install-parent or ~/oph-configuration/omatsivut.properties")
+        throw new RuntimeException("Configuration file missing. Please set the omatsivut.configFile property correctly, or make sure you have one of the following: " + fileLocations)
     }
   }
 

@@ -1,12 +1,11 @@
 package fi.vm.sade.omatsivut.mongo
 
-import de.flapdoodle.embed.mongo.{Command, MongodProcess, MongodExecutable, MongodStarter}
-import de.flapdoodle.embed.mongo.config.{RuntimeConfigBuilder, Net, MongodConfigBuilder, IMongodConfig}
+import de.flapdoodle.embed.mongo.config.{IMongodConfig, MongodConfigBuilder, Net, RuntimeConfigBuilder}
 import de.flapdoodle.embed.mongo.distribution.Version
+import de.flapdoodle.embed.mongo.{Command, MongodStarter}
 import de.flapdoodle.embed.process.config.io.ProcessOutput
 import de.flapdoodle.embed.process.runtime.Network
-import fi.vm.sade.omatsivut.{PortChecker, AppConfig}
-import fi.vm.sade.omatsivut.AppConfig.AppConfig
+import fi.vm.sade.omatsivut.PortChecker
 
 object EmbeddedMongo {
   val port = 28018
@@ -16,16 +15,6 @@ object EmbeddedMongo {
       Some(new MongoServer(port))
     } else {
       None
-    }
-  }
-
-  def withEmbeddedMongo(config: AppConfig)(block: => Unit) {
-    config match {
-      case AppConfig.IT =>
-        val server = start
-        block
-        server.foreach(_.stop)
-      case _ => block
     }
   }
 }

@@ -9,30 +9,31 @@ object AppConfig extends Logging {
     val profile: String = System.getProperty("omatsivut.profile", "default")
     logger.info("Using omatsivut.profile=" + profile)
     profile match {
-      case "default" => Default
-      case "dev" => Dev
-      case "dev-remote-mongo" => DevWithRemoteMongo
-      case "it" => IT
+      case "default" => new Default
+      case "dev" => new Dev
+      case "dev-remote-mongo" => new DevWithRemoteMongo
+      case "it" => new IT
       case name => throw new IllegalArgumentException("Unknown value for omatsivut.profile: " + name);
     }
   }
 
-  object Default extends AppConfig with ExternalProps {
+  class Default extends AppConfig with ExternalProps {
     def authenticationInfoService: AuthenticationInfoService = new RemoteAuthenticationInfoService(settings.authenticationService)
     def springConfiguration = OmatSivutSpringContext.Default
   }
 
-  object Dev extends AppConfig with StubbedExternalDeps with TestMode {
+  class Dev extends AppConfig with StubbedExternalDeps with TestMode {
     def springConfiguration = OmatSivutSpringContext.Dev
-    val settings = ApplicationSettings.loadSettings(List("src/main/resources/dev.conf"))
+    def configFiles = List("src/main/resources/dev.conf")
   }
-  object DevWithRemoteMongo extends StubbedExternalDeps with ExternalProps {
+  class DevWithRemoteMongo extends StubbedExternalDeps with ExternalProps {
     def springConfiguration = OmatSivutSpringContext.Dev
   }
-  
-  object IT extends StubbedExternalDeps with TestMode {
+
+  class IT extends StubbedExternalDeps with TestMode {
     def springConfiguration = OmatSivutSpringContext.IT
-    val settings = ApplicationSettings.loadSettings(List("src/main/resources/it.conf"))
+    def configFiles = List("src/main/resources/it.conf")
+
     private var mongo: Option[MongoServer] = None
 
     override def start {
@@ -45,12 +46,12 @@ object AppConfig extends Logging {
   }
 
   trait ExternalProps {
-    val settings = ApplicationSettings.loadSettings(List(
+    def configFiles = List(
       "../module-install-parent/config/common/omatsivut/omatsivut.properties",
       "./module-install-parent/config/common/omatsivut/omatsivut.properties",
       System.getProperty("user.home") + "/oph-configuration/common.properties", // for server environments
       System.getProperty("user.home") + "/oph-configuration/omatsivut.properties"
-    ))
+    )
   }
 
   trait StubbedExternalDeps extends TestMode {
@@ -67,7 +68,6 @@ object AppConfig extends Logging {
   }
 
   trait AppConfig {
-    def settings: ApplicationSettings
     def authenticationInfoService: AuthenticationInfoService
     def springConfiguration: OmatSivutConfiguration
     lazy val springContext = new OmatSivutSpringContext(OmatSivutSpringContext.createApplicationContext(this))
@@ -83,6 +83,10 @@ object AppConfig extends Logging {
         stop
       }
     }
+
+    def configFiles: List[String]
+
+    val settings = ApplicationSettings.loadSettings(configFiles)
   }
 
   // Maybe this global should be removed

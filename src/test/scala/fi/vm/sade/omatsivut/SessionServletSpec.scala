@@ -16,5 +16,5 @@ class SessionServletSpec extends MutableScalatraSpec {
     }
   }
 
-  addServlet(new SessionServlet()(AppConfig.IT.authenticationInfoService), "/secure")
+  addServlet(new SessionServlet()((new AppConfig.IT).authenticationInfoService), "/secure")
 }
