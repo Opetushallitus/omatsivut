@@ -19,6 +19,23 @@ class AppConfigSpec extends Specification{
     }
   }
 
+  "Config with it profile" should {
+    "Start up" in {
+      validateConfig(new AppConfig.IT())
+    }
+  }
+
+  "Config with dev profile" should {
+    "Start up" in {
+      validateConfig(new AppConfig.Dev())
+    }
+  }
+
+  "Config with dev-remote-mongo profile" should {
+    "Start up" in {
+      validateConfig(new AppConfig.DevWithRemoteMongo())
+    }
+  }
   def validateConfig(config: AppConfig) = {
     config.authenticationInfoService
     config.springContext.applicationDAO
