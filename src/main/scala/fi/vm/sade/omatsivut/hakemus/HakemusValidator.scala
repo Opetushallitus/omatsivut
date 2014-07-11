@@ -9,4 +9,11 @@ object HakemusValidator {
       case None => List()
     }
   }
+
+  def findMissingQuestions(hakemus: Hakemus) = {
+    ApplicationValidationWrapper.findMissingElements(hakemus) match {
+      case Some(e) => e
+      case None => List()
+    }
+  }
 }

@@ -7,7 +7,7 @@ import fi.vm.sade.haku.oppija.lomake.domain.elements.questions.{DropdownSelect, 
 import fi.vm.sade.haku.oppija.lomake.util.ElementTree
 import fi.vm.sade.haku.oppija.lomake.validation.{ValidationInput, ValidationResult}
 import fi.vm.sade.omatsivut.domain._
-import fi.vm.sade.omatsivut.{AppConfig, Logging, OmatSivutSpringContext}
+import fi.vm.sade.omatsivut.{AppConfig, Logging}
 
 import scala.collection.JavaConversions._
 
@@ -28,39 +28,27 @@ object ApplicationValidationWrapper extends Logging {
     }
   }
 
-  def validate(hakemus: Hakemus, applicationSystem: ApplicationSystem): List[ValidationError] = {
+  def findMissingElements(hakemus: Hakemus): Option[List[Question]] = {
+    try {
+      val applicationSystem = applicationSystemService.getApplicationSystem(hakemus.haku.get.oid)
+      val requiredFieldErrors = validate(hakemus, applicationSystem).filter(error => findError(error, "Pakollinen tieto.").isDefined)
+      val form: ElementTree = new ElementTree(applicationSystem.getForm)
+      val elements: List[Titled] = requiredFieldErrors.map(error => form.getChildById(error.key).asInstanceOf[Titled])
+      Some(convertToQuestions(elements))
+    } catch {
+      case e: Exception => {
+        logger.error("There was an error finding missing questions from application: " + hakemus.oid + "error was: " + e.getMessage)
+        None
+      }
+    }
+  }
+
+  private def validate(hakemus: Hakemus, applicationSystem: ApplicationSystem): List[ValidationError] = {
     val applications = dao.find(new Application().setOid(hakemus.oid)).toList
     if (applications.size > 1) throw new Error("Too many applications")
     val application = applications.head
     val validationResult = validator.validate(convertToValidationInput(applicationSystem, application))
     convertoToValidationErrors(validationResult)
-  }
-
-  def findMissingElements(hakemus: Hakemus): List[Question] = {
-    val applicationSystem = applicationSystemService.getApplicationSystem(hakemus.haku.get.oid)
-    val requiredFieldErrors = validate(hakemus, applicationSystem).filter(error => findError(error, "Pakollinen tieto.").isDefined)
-    val form: ElementTree = new ElementTree(applicationSystem.getForm)
-    val elements: List[Titled] = requiredFieldErrors.map(error => form.getChildById(error.key).asInstanceOf[Titled])
-    elements.flatMap { element => element match {
-        case e: TextQuestion => List(Text(getTitle(e)))
-        case e: HakuTextArea => List(TextArea(getTitle(e)))
-        case e: HakuRadio => List(Radio(getTitle(e), getOptions(e)))
-        case e: DropdownSelect => List(Dropdown(getTitle(e), getOptions(e)))
-        case _ => Nil
-      }
-    }
-  }
-
-  private def getOptions(e: HakuOption): List[Choice] = {
-    e.getOptions.map(o => Choice(getTitle(o), o.isDefaultOption)).toList
-  }
-
-  private def getTitle(e: Titled): Translations = {
-    Translations(e.getI18nText.getTranslations.toMap)
-  }
-
-  private def findError(error: ValidationError, searchText: String) = {
-    error.translation.translations.find{ case (_, text) => text == searchText }
   }
 
   private def convertoToValidationErrors(validationResult: ValidationResult): List[ValidationError] = {
@@ -71,5 +59,28 @@ object ApplicationValidationWrapper extends Logging {
 
   private def convertToValidationInput(applicationSystem: ApplicationSystem, application: Application): ValidationInput = {
     new ValidationInput(applicationSystem.getForm, application.getVastauksetMerged, application.getOid, applicationSystem.getId)
+  }
+
+  private def findError(error: ValidationError, searchText: String) = {
+    error.translation.translations.find{ case (_, text) => text == searchText }
+  }
+
+  private def getOptions(e: HakuOption): List[Choice] = {
+    e.getOptions.map(o => Choice(getTitle(o), o.isDefaultOption)).toList
+  }
+
+  private def getTitle(e: Titled): Translations = {
+    Translations(e.getI18nText.getTranslations.toMap)
+  }
+
+  private def convertToQuestions(elements: List[Titled]): List[Question with Product with Serializable] = {
+    elements.flatMap { element => element match {
+        case e: TextQuestion => List(Text(getTitle(e)))
+        case e: HakuTextArea => List(TextArea(getTitle(e)))
+        case e: HakuRadio => List(Radio(getTitle(e), getOptions(e)))
+        case e: DropdownSelect => List(Dropdown(getTitle(e), getOptions(e)))
+        case _ => Nil
+      }
+    }
   }
 }

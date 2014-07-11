@@ -27,6 +27,10 @@ class ApplicationsServlet(implicit val swagger: Swagger) extends OmatSivutServle
     summary "Tarkista hakemus ja palauta virheet"
     )
 
+  val findUnansweredQuestionsFromApplicationSwagger = (apiOperation[Unit]("findUnansweredQuestionsFromApplication")
+    summary "Tarkista hakemus ja palauta kysymykset joihin ei ole vastattu"
+    )
+
   before() {
     contentType = formats("json")
   }
@@ -43,5 +47,11 @@ class ApplicationsServlet(implicit val swagger: Swagger) extends OmatSivutServle
   post("/applications/validate/:oid", operation(validateApplicationsSwagger)) {
     val validate = Serialization.read[Hakemus](request.body)
     HakemusValidator.validate(validate)
+  }
+
+
+  post("/applications/unanswered/:oid", operation(findUnansweredQuestionsFromApplicationSwagger)) {
+    val hakemus = Serialization.read[Hakemus](request.body)
+    HakemusValidator.findMissingQuestions(hakemus)
   }
 }
