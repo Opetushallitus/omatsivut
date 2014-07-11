@@ -4,9 +4,9 @@ Oppijan henkilökohtainen palvelu
 
 ## Asetukset
 
-Sovellus tukee eri profiileita. Profiili määritellään `-Domatsivut.profile` systeemiasetuksella. Ks `AppConfig.scala`.
+Sovellus tukee eri profiileita. Profiili määritellään `omatsivut.profile` system propertyllä, esim `-Domatsivut.profile=it`.
 Profiili määrittää lähinnä, mistä propertyt haetaan (huom! reference.conf ladataan aina), mutta sen avulla myös
-voidaan mockata palveluita.
+voidaan mockata palveluita. Ks `AppConfig.scala`.
 
 ### dev-profiili
 
@@ -14,7 +14,7 @@ Näillä asetuksilla käytetään paikallista mongo-kantaa ja mockattuja ulkoisi
 
 ### it-profiili
 
-It-profiililla käytetään embedded mongo-kantaa.
+It-profiililla käytetään embedded mongo-kantaa, joka käynnistetään serverin käynnistyksen yhteydessä porttiin 28018.
 
 ### default-profiili
 

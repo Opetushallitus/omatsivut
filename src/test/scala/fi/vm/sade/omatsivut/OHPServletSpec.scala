@@ -1,16 +1,14 @@
 package fi.vm.sade.omatsivut
 
-import fi.vm.sade.omatsivut.fixtures.FixtureUtils
-import fi.vm.sade.omatsivut.domain.{ValidationError, Hakemus}
-import org.json4s.native.Serialization
-import fi.vm.sade.omatsivut.servlet.{OmatSivutSwagger, ApplicationsServlet}
+import fi.vm.sade.omatsivut.domain.{Hakemus, ValidationError}
 import fi.vm.sade.omatsivut.json.JsonFormats
+import fi.vm.sade.omatsivut.servlet.{ApplicationsServlet, OmatSivutSwagger}
+import org.json4s.native.Serialization
 
 class OHPServletSpec extends JsonFormats with ScalatraTestSupport {
   "GET /applications" should {
     "return person's applications" in {
       AppConfig.config.withConfig {
-        FixtureUtils.applyFixtures
         authGet("/applications", "1.2.246.562.24.14229104472") {
           verifyApplications(1)
           //verifyOneApplication() TODO FIX

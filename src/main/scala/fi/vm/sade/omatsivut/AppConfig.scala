@@ -1,5 +1,6 @@
 package fi.vm.sade.omatsivut
 
+import fi.vm.sade.omatsivut.fixtures.FixtureImporter
 import fi.vm.sade.omatsivut.mongo.{EmbeddedMongo, MongoServer}
 
 import collection.JavaConversions._
@@ -38,6 +39,7 @@ object AppConfig extends Logging {
 
     override def start {
       mongo = EmbeddedMongo.start
+      FixtureImporter.importFixtures()
     }
     override def stop {
       mongo.foreach(_.stop)
