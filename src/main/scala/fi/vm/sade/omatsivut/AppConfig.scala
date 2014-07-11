@@ -2,9 +2,7 @@ package fi.vm.sade.omatsivut
 
 import fi.vm.sade.omatsivut.fixtures.FixtureImporter
 import fi.vm.sade.omatsivut.mongo.{EmbeddedMongo, MongoServer}
-
-import collection.JavaConversions._
-import fi.vm.sade.omatsivut.security.{RemoteAuthenticationInfoService, AuthenticationInfoService}
+import fi.vm.sade.omatsivut.security.{AuthenticationInfoService, RemoteAuthenticationInfoService}
 
 object AppConfig extends Logging {
   lazy val fromSystemProperty: AppConfig = {
