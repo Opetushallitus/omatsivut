@@ -38,10 +38,17 @@ object AppConfig extends Logging {
 
     override def start {
       mongo = EmbeddedMongo.start
-      FixtureImporter.importFixtures(mongoTemplate)
+      try {
+        FixtureImporter.importFixtures(mongoTemplate)
+      } catch {
+        case e: Exception =>
+          stop
+          throw e
+      }
     }
     override def stop {
       mongo.foreach(_.stop)
+      mongo = None
     }
   }
 
