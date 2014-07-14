@@ -54,7 +54,6 @@ object OmatsivutBuild extends Build {
         "org.scalatra" %% "scalatra-swagger" % ScalatraVersion,
         "org.scalatra" %% "scalatra-specs2" % ScalatraVersion % "test",
         "junit" % "junit" % "4.11" % "test",
-        "ch.qos.logback" % "logback-classic" % "1.0.6" % "runtime",
         "javax.servlet" % "javax.servlet-api" % "3.0.1" % "provided",
         "org.scalaj" %% "scalaj-http" % "0.3.15",
         "org.apache.tomcat.embed" % "tomcat-embed-core"         % TomcatVersion % "container;test",
