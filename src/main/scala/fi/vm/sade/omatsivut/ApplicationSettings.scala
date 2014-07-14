@@ -13,7 +13,6 @@ object ApplicationSettings extends Logging {
         logger.info("Using configuration file " + configFile)
         val settings: Config = ConfigFactory.load(ConfigFactory.parseFile(configFile))
         val applicationSettings = new ApplicationSettings(settings)
-        logger.info("Settings: " + settings)
         applicationSettings
       case None =>
         throw new RuntimeException("Configuration file missing. Please set the omatsivut.configFile property correctly, or make sure you have one of the following: " + fileLocations)
