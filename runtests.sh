@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash -e
 npm install
 node_modules/gulp/bin/gulp.js compile
 ./sbt mocha -java-home $JAVA_HOME -Domatsivut.profile=it

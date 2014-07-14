@@ -7,10 +7,14 @@ var gulp = require('gulp'),
 
 var jsFiles = 'src/main/js/**/*.js';
 var lessFiles = 'src/main/less/**/*.less';
+var isWatch
 
 function handleError(err) {
     console.log(err.toString());
     this.emit('end');
+    if (!isWatch) {
+      throw err
+    }
 }
 
 gulp.task('lint', function() {
@@ -42,6 +46,7 @@ gulp.task('browserify', function() {
 });
 
 gulp.task('watch', function() {
+    isWatch = true
     livereload.listen();
     gulp.watch(['src/main/webapp/**/*.js', 'src/main/webapp/**/*.css', 'src/main/webapp/**/*.html'], livereload.changed);
     gulp.watch([jsFiles],['lint', 'browserify']);
