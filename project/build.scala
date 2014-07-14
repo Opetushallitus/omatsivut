@@ -45,6 +45,7 @@ object OmatsivutBuild extends Build {
       resolvers += "oph-sade-artifactory-releases" at "http://penaali.hard.ware.fi/artifactory/oph-sade-release-local",
       resolvers += "oph-sade-artifactory-snapshots" at "http://penaali.hard.ware.fi/artifactory/oph-sade-snapshot-local",
       sourceGenerators in Compile <+= buildInfo,
+      parallelExecution in Test := false,
       buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
       EclipseKeys.createSrc := EclipseCreateSrc.Default + EclipseCreateSrc.Managed,
       buildInfoPackage := "fi.vm.sade.omatsivut",
