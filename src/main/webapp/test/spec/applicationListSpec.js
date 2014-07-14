@@ -67,6 +67,7 @@
         var pref = page.getPreference(1)
         return pref.selectOpetusPiste("Ahl")()
           .then(wait.until(page.saveButton(0).isEnabled(false)))
+          .then(function() { page.isValidationErrorVisible().should.be.true })
           .then(pref.selectKoulutus(0))
           .then(wait.until(page.saveButton(0).isEnabled(true)))
       })

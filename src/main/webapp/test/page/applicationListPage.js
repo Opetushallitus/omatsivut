@@ -50,6 +50,10 @@ function ApplicationListPage() {
         var applicationElement = getApplication(0)
         return applicationElement.find(".preference-list-item").eq(index)
       })
+    },
+
+    isValidationErrorVisible: function() {
+      return getApplication(0).find(".status-message.error").is(":visible")
     }
   }
   return api
