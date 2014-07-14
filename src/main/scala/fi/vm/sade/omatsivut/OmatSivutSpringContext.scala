@@ -54,14 +54,14 @@ object OmatSivutSpringContext {
   @Configuration
   @ComponentScan(basePackages = Array("fi.vm.sade.haku"))
   @ImportResource(Array("/META-INF/spring/logger-mock-context.xml"))
-  object Dev extends OmatSivutConfiguration {
+  class Dev extends OmatSivutConfiguration {
     val profile = "dev"
   }
 
   @Configuration
   @ComponentScan(basePackages = Array("fi.vm.sade.haku"))
   @ImportResource(Array("/META-INF/spring/logger-mock-context.xml"))
-  object IT extends OmatSivutConfiguration {
+  class IT extends OmatSivutConfiguration {
     val profile = "dev"
   }
 
@@ -74,7 +74,7 @@ object OmatSivutSpringContext {
     "fi.vm.sade.haku.oppija.common.koulutusinformaatio"))
   @ImportResource(Array("/META-INF/spring/logger-mock-context.xml"))
   @Import(Array(classOf[MongoConfiguration]))
-  object Default extends OmatSivutConfiguration {
+  class Default extends OmatSivutConfiguration {
     val profile = "default"
 
     @Bean def authenticationService: AuthenticationService = new AuthenticationServiceMockImpl

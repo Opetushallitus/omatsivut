@@ -19,19 +19,19 @@ object AppConfig extends Logging {
 
   class Default extends AppConfig with ExternalProps {
     def authenticationInfoService: AuthenticationInfoService = new RemoteAuthenticationInfoService(settings.authenticationService)(this)
-    def springConfiguration = OmatSivutSpringContext.Default
+    def springConfiguration = new OmatSivutSpringContext.Default()
   }
 
   class Dev extends AppConfig with StubbedExternalDeps with TestMode {
-    def springConfiguration = OmatSivutSpringContext.Dev
+    def springConfiguration = new OmatSivutSpringContext.Dev()
     def configFiles = List("src/main/resources/dev.conf")
   }
   class DevWithRemoteMongo extends StubbedExternalDeps with ExternalProps {
-    def springConfiguration = OmatSivutSpringContext.Dev
+    def springConfiguration = new OmatSivutSpringContext.Dev()
   }
 
   class IT extends StubbedExternalDeps with TestMode {
-    def springConfiguration = OmatSivutSpringContext.IT
+    def springConfiguration = new OmatSivutSpringContext.IT()
     def configFiles = List("src/main/resources/it.conf")
 
     private var mongo: Option[MongoServer] = None
