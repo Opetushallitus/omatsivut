@@ -1,9 +1,8 @@
-require("angular/angular");
-require('angular-resource/angular-resource');
-require('angular-animate/angular-animate');
+_ng = require("angular");
+require('ng-resource')(window, _ng);
+require('angular-animate');
 _ = require("underscore");
 require("../lib/ui-bootstrap-custom-tpls-0.10.0.min.js");
-
 var listApp = angular.module('listApp', ["ngResource", "ngAnimate", "ui.bootstrap.typeahead", "template/typeahead/typeahead-popup.html", "template/typeahead/typeahead-match.html"], function($locationProvider) {
   $locationProvider.html5Mode(true);
 });
