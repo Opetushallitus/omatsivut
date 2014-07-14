@@ -1,11 +1,8 @@
 package fi.vm.sade.omatsivut.servlet
 
-import fi.vm.sade.omatsivut.AppConfig
-import fi.vm.sade.omatsivut.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.fixtures.FixtureImporter
 import org.scalatra.CookieOptions
-import fi.vm.sade.omatsivut.security.AuthenticationInfoService
 
 class TestHelperServlet(config: AppConfig)(implicit val appConfig: AppConfig) extends AuthCookieCreating  {
   if(appConfig.isTest){
