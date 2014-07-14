@@ -33,7 +33,9 @@ class AppConfigSpec extends Specification{
 
   "Config with dev-remote-mongo profile" should {
     "Start up" in {
-      validateConfig(new AppConfig.DevWithRemoteMongo())
+      validateConfig(new AppConfig.DevWithRemoteMongo(){
+        override def configFiles = List(ConfigTemplateProcessor.createPropertyFileForTestingWithTemplate)
+      })
     }
   }
   def validateConfig(config: AppConfig) = {
