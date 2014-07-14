@@ -9,7 +9,6 @@ import org.json4s.native.{JsonMethods, Serialization}
 class PostApplicationSpec extends JsonFormats with ScalatraTestSupport {
   "POST /application/unanswered" should {
     "find unanswered question from application" in {
-      println("******************* 3")
       AppConfig.fromSystemProperty.withConfig {
         authGet("/applications", "1.2.246.562.24.14229104472") {
           val applications: List[Hakemus] = Serialization.read[List[Hakemus]](body)

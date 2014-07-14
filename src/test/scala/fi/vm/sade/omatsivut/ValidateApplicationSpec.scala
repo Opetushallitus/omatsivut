@@ -12,7 +12,6 @@ class ValidateApplicationSpec extends JsonFormats with ScalatraTestSupport {
 
   "POST /application/validate" should {
     "validate application" in {
-      println("******************* 2")
       AppConfig.fromSystemProperty.withConfig {
         authGet("/applications", "1.2.246.562.24.14229104472") {
           val applications: List[Hakemus] = Serialization.read[List[Hakemus]](body)

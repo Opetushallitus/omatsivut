@@ -13,7 +13,6 @@ object TomcatRunner extends App {
 
   tomcat.setPort(8080)
   tomcat.addWebapp("/omatsivut", new File(webappDirLocation).getAbsolutePath())
-  System.out.println("configuring app with basedir: " + new File("./" + webappDirLocation).getAbsolutePath())
 
   tomcat.start()
   tomcat.getServer().await()
