@@ -11,19 +11,17 @@ class ValidateApplicationSpec extends JsonFormats with ScalatraTestSupport {
 
   "POST /application/validate" should {
     "validate application" in {
-      AppConfig.fromSystemProperty.withConfig {
-        authGet("/applications", "1.2.246.562.24.14229104472") {
-          val applications: List[Hakemus] = Serialization.read[List[Hakemus]](body)
-          val hakemus = applications(0)
-          authPost("/applications/validate/" + hakemus.oid, "1.2.246.562.24.14229104472", Serialization.write(hakemus)) {
-            status must_== 200
-            val result: JValue = JsonMethods.parse(body)
-            val errors: List[ValidationError] = (result \ "errors").extract[List[ValidationError]]
-            val questions: List[AnyQuestion] = (result \ "questions").extract[List[AnyQuestion]]
-            errors.size must_== 3
-            questions.size must_== 3
-            questions.head must_== AnyQuestion(Translations(Map("fi" -> "Päättötodistuksen kaikkien oppiaineiden keskiarvo?")), "Text")
-          }
+      authGet("/applications", "1.2.246.562.24.14229104472") {
+        val applications: List[Hakemus] = Serialization.read[List[Hakemus]](body)
+        val hakemus = applications(0)
+        authPost("/applications/validate/" + hakemus.oid, "1.2.246.562.24.14229104472", Serialization.write(hakemus)) {
+          status must_== 200
+          val result: JValue = JsonMethods.parse(body)
+          val errors: List[ValidationError] = (result \ "errors").extract[List[ValidationError]]
+          val questions: List[AnyQuestion] = (result \ "questions").extract[List[AnyQuestion]]
+          errors.size must_== 3
+          questions.size must_== 3
+          questions.head must_== AnyQuestion(Translations(Map("fi" -> "Päättötodistuksen kaikkien oppiaineiden keskiarvo?")), "Text")
         }
       }
     }
