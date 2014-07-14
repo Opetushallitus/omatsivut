@@ -1,5 +1,5 @@
-_ng = require("angular");
-require('ng-resource')(window, _ng);
+require("angular");
+require('ng-resource')(window, angular);
 require('angular-animate');
 _ = require("underscore");
 require("../lib/ui-bootstrap-custom-tpls-0.10.0.min.js");
