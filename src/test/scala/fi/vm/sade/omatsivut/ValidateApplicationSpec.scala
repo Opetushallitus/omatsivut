@@ -22,14 +22,14 @@ class ValidateApplicationSpec extends JsonFormats with ScalatraTestSupport {
             val questions: List[AnyQuestion] = (result \ "questions").extract[List[AnyQuestion]]
             errors.size must_== 3
             questions.size must_== 3
-            questions.head.title must_== Translations(Map("fi" -> "Päättötodistuksen kaikkien oppiaineiden keskiarvo?"))
+            questions.head must_== AnyQuestion(Translations(Map("fi" -> "Päättötodistuksen kaikkien oppiaineiden keskiarvo?")), "Text")
           }
         }
       }
     }
   }
 
-  case class AnyQuestion(title: Translations, questionType: String) extends Question
-
   addServlet(new ApplicationsServlet(), "/*")
 }
+
+case class AnyQuestion(title: Translations, questionType: String) extends Question
