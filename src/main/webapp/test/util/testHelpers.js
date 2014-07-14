@@ -49,9 +49,10 @@ session = {
 uiUtil = {
     inputValues: function(el) {
         function formatKey(key) { return key.replace(".data.", ".") }
+        function getId(el) { return [el.attr("ng-model"), el.attr("ng-bind")].join("") }
 
-        return _.chain(el.find("[ng-model]:visible"))
-            .map(function(el) { return [formatKey($(el).attr("ng-model")), $(el).val() ]})
+        return _.chain(el.find("[ng-model]:visible, [ng-bind]:visible"))
+            .map(function(el) { return [formatKey(getId($(el))), $(el).val() + $(el).text() ]})
             .object().value()
     }
 }

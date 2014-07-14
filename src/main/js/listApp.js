@@ -70,7 +70,7 @@ Hakutoive.prototype = {
         return !_.isEmpty(this.data["Opetuspiste-id"])
     },
 
-    removeOppilaitosData: function() {
+    removeOpetuspisteData: function() {
         var self = this
         _.each(this.data, function(value, key) {
             if (key.indexOf("$")!==0 && key != "Opetuspiste")
@@ -143,6 +143,11 @@ Hakemus.prototype = {
             .map(function(hakutoive, index) { return hakutoive.isModified ? index : null })
             .without(null)
             .value()
+    },
+
+    isEditable: function(index) {
+      var firstEditableIndex = _(this.hakutoiveet).filter(function(hakutoive) { return hakutoive.hasData() }).length
+      return index >= 0 && index < this.hakutoiveet.length && index <= firstEditableIndex
     }
 }
 
@@ -168,25 +173,24 @@ listApp.controller("listCtrl", ["$scope", "applicationsResource", function ($sco
 }]);
 
 listApp.controller("hakutoiveCtrl", ["$scope", "$http", function($scope, $http) {
-    $scope.oppilaitosValittu = function($item, $model, $label) {
+    $scope.isEditingDisabled = function() { return !$scope.hakutoive.isNew || !$scope.application.isEditable($scope.$index) }
+
+    $scope.isKoulutusSelectable = function() { return !$scope.isEditingDisabled() && this.hakutoive.hasOpetuspiste() && !_.isEmpty($scope.koulutusList) }
+
+    $scope.isLoadingKoulutusList = function() { return !$scope.isEditingDisabled() && this.hakutoive.hasOpetuspiste() && _.isEmpty($scope.koulutusList) }
+
+    $scope.opetuspisteValittu = function($item, $model, $label) {
         this.hakutoive.setOpetuspiste($item.id, $item.name)
+
         findKoulutukset(this.application.haku.oid, $item.id, this.application.educationBackground)
             .then(function(koulutukset) { $scope.koulutusList = koulutukset; })
     }
 
-    $scope.oppilaitosModified = function() {
+    $scope.opetuspisteModified = function() {
         if (_.isEmpty(this.hakutoive.data.Opetuspiste))
             this.hakutoive.clear()
         else
-            this.hakutoive.removeOppilaitosData()
-    }
-
-    $scope.canSelectKoulutus = function() {
-        return this.hakutoive.isNew && this.hakutoive.hasOpetuspiste()
-    }
-
-    $scope.isLoadingKoulutusList = function() {
-        return $scope.canSelectKoulutus() && _.isEmpty($scope.koulutusList)
+            this.hakutoive.removeOpetuspisteData()
     }
 
     $scope.koulutusValittu = function(index) {
@@ -205,7 +209,7 @@ listApp.controller("hakutoiveCtrl", ["$scope", "$http", function($scope, $http) 
         });
     }
 
-    $scope.findOppilaitokset = function(val) {
+    $scope.findOpetuspiste = function(val) {
         return $http.get('https://testi.opintopolku.fi/lop/search/' + val, {
             params: {
                 asId: '1.2.246.562.5.2014022711042555034240'
