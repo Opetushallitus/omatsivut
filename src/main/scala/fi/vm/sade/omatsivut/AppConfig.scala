@@ -5,7 +5,7 @@ import fi.vm.sade.omatsivut.mongo.{EmbeddedMongo, MongoServer}
 import fi.vm.sade.omatsivut.security.{AuthenticationInfoService, RemoteAuthenticationInfoService}
 
 object AppConfig extends Logging {
-  lazy val fromSystemProperty: AppConfig = {
+  def fromSystemProperty: AppConfig = {
     val profile: String = System.getProperty("omatsivut.profile", "default")
     logger.info("Using omatsivut.profile=" + profile)
     profile match {
