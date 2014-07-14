@@ -3,6 +3,7 @@ package fi.vm.sade.omatsivut.hakemus
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
 import fi.vm.sade.haku.oppija.lomake.domain.elements.Titled
+import fi.vm.sade.haku.oppija.lomake.domain.elements.custom.SocialSecurityNumber
 import fi.vm.sade.haku.oppija.lomake.domain.elements.questions.{DropdownSelect, TextQuestion, OptionQuestion => HakuOption, Radio => HakuRadio, TextArea => HakuTextArea}
 import fi.vm.sade.haku.oppija.lomake.util.ElementTree
 import fi.vm.sade.haku.oppija.lomake.validation.{ValidationInput, ValidationResult}
@@ -80,6 +81,7 @@ case class ApplicationValidationWrapper(implicit val appConfig: AppConfig) exten
         case e: HakuTextArea => List(TextArea(getTitle(e)))
         case e: HakuRadio => List(Radio(getTitle(e), getOptions(e)))
         case e: DropdownSelect => List(Dropdown(getTitle(e), getOptions(e)))
+        case e: SocialSecurityNumber => List(Text(getTitle(e))) // Should never happen in prod
         case _ => {
           logger.error("Could not convert element of type: " + element.getType)
           Nil

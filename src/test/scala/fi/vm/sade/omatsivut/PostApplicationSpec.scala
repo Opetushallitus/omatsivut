@@ -16,7 +16,7 @@ class PostApplicationSpec extends JsonFormats with ScalatraTestSupport {
           authPost("/applications/unanswered/" + hakemus.oid, "1.2.246.562.24.14229104472", Serialization.write(hakemus)) {
             val questions: JValue = JsonMethods.parse(body)
             val titles: List[String] = questions \\ "title" \\ "fi" \\ classOf[JString]
-            questions.children.size must_== 2
+            questions.children.size must_== 3
             titles.head must_== "Päättötodistuksen kaikkien oppiaineiden keskiarvo?"
             status must_== 200
           }
