@@ -37,7 +37,7 @@ function ApplicationListPage() {
 
     emptyPreferencesForApplication: function (index) {
       return preferencesForApplication(index, function (item) {
-        return item.data()["hakutoive.Koulutus"].length == 0
+        return _.isEmpty(item.data()["hakutoive.Koulutus"])
       })
     },
 
@@ -55,7 +55,7 @@ function ApplicationListPage() {
   return api
 
   function PreferenceItem(el) {
-    api = {
+    var api = {
       data: function () {
         return uiUtil.inputValues(el())
       },
@@ -74,15 +74,23 @@ function ApplicationListPage() {
       remove: function () {
         var parent = el().parent()
         var itemCount = parent.children().length
-        return waitForChange(function() {
-          el().find(".delete-btn").click().click()
-        }).then(wait.until(function() { return parent.children().length === itemCount })) // wait until a new element has been inserted
+        var element = el()
+        element.find(".delete-btn").click().click()
+
+        return wait.until(function() { return element.parent().length === 0 })()
+          .then(wait.until(function() { return parent.children().length === itemCount })) // wait until a new element has been inserted
+      },
+      canRemove: function() {
+        return el().find(".delete-btn").is(":visible")
       },
       isNew: function () {
         return el().find("input:visible").length > 0
       },
       isDisabled: function () {
-        return arrowDown().hasClass("disabled") && arrowUp().hasClass("disabled") && api.deleteBtn().is(":hidden")
+        return arrowDown().hasClass("disabled") && arrowUp().hasClass("disabled") && !api.canRemove()
+      },
+      isEditable: function() {
+        return el().find("input").is(":visible")
       },
       opetuspiste: function () {
         return el().find(".opetuspiste input").val()
