@@ -18,25 +18,14 @@ case class ApplicationValidationWrapper(implicit val appConfig: AppConfig) exten
   private val dao = appConfig.springContext.applicationDAO
   private val validator = appConfig.springContext.validator
 
-  def validate(hakemus: Hakemus): Option[List[ValidationError]] = {
+  def validate(hakemus: Hakemus): Option[(List[ValidationError], List[Question])] = {
     try {
       val applicationSystem = applicationSystemService.getApplicationSystem(hakemus.haku.get.oid)
-      Some(validate(hakemus, applicationSystem))
-    } catch {
-      case e: Exception => {
-        logger.error("There was an error validating application: " + hakemus.oid + "error was: " + e.getMessage)
-        None
-      }
-    }
-  }
-
-  def findMissingElements(hakemus: Hakemus): Option[List[Question]] = {
-    try {
-      val applicationSystem = applicationSystemService.getApplicationSystem(hakemus.haku.get.oid)
-      val requiredFieldErrors = validate(hakemus, applicationSystem).filter(error => findError(error, "Pakollinen tieto.").isDefined)
+      val validationErrors: List[ValidationError] = validate(hakemus, applicationSystem)
+      val requiredFieldErrors = validationErrors.filter(error => findError(error, "Pakollinen tieto.").isDefined)
       val form: ElementTree = new ElementTree(applicationSystem.getForm)
       val elements: List[Titled] = requiredFieldErrors.map(error => form.getChildById(error.key).asInstanceOf[Titled])
-      Some(convertToQuestions(elements))
+      Some(validationErrors, convertToQuestions(elements))
     } catch {
       case e: Exception => {
         logger.error("There was an error finding missing questions from application: " + hakemus.oid + "error was: " + e.getMessage)

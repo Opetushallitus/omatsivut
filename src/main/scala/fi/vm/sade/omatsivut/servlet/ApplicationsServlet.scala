@@ -1,14 +1,15 @@
 package fi.vm.sade.omatsivut.servlet
 
 import fi.vm.sade.omatsivut.AppConfig.AppConfig
-import fi.vm.sade.omatsivut.domain.Hakemus
+import fi.vm.sade.omatsivut.domain.{Question, ValidationError, Hakemus}
+import fi.vm.sade.omatsivut.hakemus.{HakemusRepository, HakemusValidator}
 import fi.vm.sade.omatsivut.http.HttpClient
+import fi.vm.sade.omatsivut.json.JsonFormats
+import fi.vm.sade.omatsivut.security.Authentication
+import org.json4s.jackson.Serialization
 import org.scalatra.json._
 import org.scalatra.swagger._
-import org.json4s.jackson.Serialization
-import fi.vm.sade.omatsivut.security.Authentication
-import fi.vm.sade.omatsivut.json.JsonFormats
-import fi.vm.sade.omatsivut.hakemus.{HakemusValidator, HakemusRepository}
+import org.json4s.JsonDSL._
 
 class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfig) extends OmatSivutServletBase with HttpClient with JacksonJsonSupport with JsonFormats with SwaggerSupport with Authentication {
   override def applicationName = Some("api")
@@ -47,12 +48,9 @@ class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfi
 
   post("/applications/validate/:oid", operation(validateApplicationsSwagger)) {
     val validate = Serialization.read[Hakemus](request.body)
-    HakemusValidator().validate(validate)
+    val (errors, questions) = HakemusValidator().validate(validate)
+    ValidationResult(errors, questions)
   }
 
-
-  post("/applications/unanswered/:oid", operation(findUnansweredQuestionsFromApplicationSwagger)) {
-    val hakemus = Serialization.read[Hakemus](request.body)
-    HakemusValidator().findMissingQuestions(hakemus)
-  }
+  case class ValidationResult(errors: List[ValidationError], questions: List[Question])
 }
