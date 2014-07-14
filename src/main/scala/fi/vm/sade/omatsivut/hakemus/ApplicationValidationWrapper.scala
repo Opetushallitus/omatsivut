@@ -7,8 +7,8 @@ import fi.vm.sade.haku.oppija.lomake.domain.elements.questions.{DropdownSelect, 
 import fi.vm.sade.haku.oppija.lomake.util.ElementTree
 import fi.vm.sade.haku.oppija.lomake.validation.{ValidationInput, ValidationResult}
 import fi.vm.sade.omatsivut.AppConfig.AppConfig
+import fi.vm.sade.omatsivut.Logging
 import fi.vm.sade.omatsivut.domain._
-import fi.vm.sade.omatsivut.{AppConfig, Logging}
 
 import scala.collection.JavaConversions._
 
@@ -80,7 +80,10 @@ case class ApplicationValidationWrapper(implicit val appConfig: AppConfig) exten
         case e: HakuTextArea => List(TextArea(getTitle(e)))
         case e: HakuRadio => List(Radio(getTitle(e), getOptions(e)))
         case e: DropdownSelect => List(Dropdown(getTitle(e), getOptions(e)))
-        case _ => Nil
+        case _ => {
+          logger.error("Could not convert element of type: " + element.getType)
+          Nil
+        }
       }
     }
   }
