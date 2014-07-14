@@ -72,9 +72,11 @@ function ApplicationListPage() {
         return el().find(".row-number").text()
       },
       remove: function () {
+        var parent = el().parent()
+        var itemCount = parent.children().length
         return waitForChange(function() {
           el().find(".delete-btn").click().click()
-        })
+        }).then(wait.until(function() { return parent.children().length === itemCount })) // wait until a new element has been inserted
       },
       isNew: function () {
         return el().find("input:visible").length > 0
@@ -86,7 +88,7 @@ function ApplicationListPage() {
         return el().find(".opetuspiste input").val()
       },
       koulutus: function () {
-        return el().find(".koulutus input").val()
+        return el().find(".koulutus [ng-bind='hakutoive.data.Koulutus']").text()
       },
       toString: function() {
         return api.opetuspiste() + " " + api.koulutus()

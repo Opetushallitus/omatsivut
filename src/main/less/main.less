@@ -367,6 +367,16 @@ button.delete-btn:not(.confirm) {
     padding-bottom: 0px;
   }
 
+  &.ng-enter {
+    -webkit-transition:0.5s all;
+    transition:0.5s all;
+    opacity: 0;
+  }
+
+  &.ng-enter-active {
+    opacity: 1;
+  }
+
   input[disabled] {
     background: transparent;
     box-shadow: none;

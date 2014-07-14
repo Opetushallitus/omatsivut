@@ -69,7 +69,7 @@
                                 </div>
 
                                 <div class="item-content">
-                                    <button ng-show="application.hasPreference($index)" class="delete-btn" confirm confirm-text="Poista" confirm-action="application.removePreference($index)"></button>
+                                    <button ng-show="canRemovePreference($index)" class="delete-btn" confirm confirm-text="Poista" confirm-action="removeHakutoive($index)"></button>
                                 </div>
                             </li>
                         </ul>

@@ -103,7 +103,10 @@ var Hakemus = function(json) {
 Hakemus.prototype = {
     removePreference: function(index) {
         var row = this.hakutoiveet.splice(index, 1)[0]
-        this.hakutoiveet.push(new Hakutoive({}))
+    },
+
+    addPreference: function(hakutoive) {
+      this.hakutoiveet.push(hakutoive)
     },
 
     hasPreference: function(index) {
@@ -172,7 +175,7 @@ listApp.controller("listCtrl", ["$scope", "applicationsResource", function ($sco
     }
 }]);
 
-listApp.controller("hakutoiveCtrl", ["$scope", "$http", function($scope, $http) {
+listApp.controller("hakutoiveCtrl", ["$scope", "$http", "$timeout", "settings", function($scope, $http, $timeout, settings) {
     $scope.isEditingDisabled = function() { return !$scope.hakutoive.isNew || !$scope.application.isEditable($scope.$index) }
 
     $scope.isKoulutusSelectable = function() { return !$scope.isEditingDisabled() && this.hakutoive.hasOpetuspiste() && !_.isEmpty($scope.koulutusList) }
@@ -191,6 +194,21 @@ listApp.controller("hakutoiveCtrl", ["$scope", "$http", function($scope, $http) 
             this.hakutoive.clear()
         else
             this.hakutoive.removeOpetuspisteData()
+    }
+
+    $scope.removeHakutoive = function(index) {
+      $scope.application.removePreference(index)
+
+      $timeout(function() {
+        $scope.application.addPreference(new Hakutoive({}))
+      }, settings.uiTransitionTime)
+    }
+
+    $scope.canRemovePreference = function(index) {
+      if (index === 0)
+        return $scope.application.hasPreference(1)
+      else
+        return $scope.application.hasPreference(index)
     }
 
     $scope.koulutusValittu = function(index) {
