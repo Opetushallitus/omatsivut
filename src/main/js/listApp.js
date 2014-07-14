@@ -148,7 +148,7 @@ Hakemus.prototype = {
   },
 
   isEditable: function(index) {
-    var firstEditableIndex = _(this.hakutoiveet).filter(function(hakutoive) { return hakutoive.hasData() }).length
+    var firstEditableIndex = _(this.hakutoiveet).filter(function(hakutoive) { return hakutoive.hasData() && hakutoive.isValid() }).length
     return index >= 0 && index < this.hakutoiveet.length && index <= firstEditableIndex
   }
 }
