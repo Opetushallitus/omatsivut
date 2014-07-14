@@ -26,11 +26,7 @@ class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfi
     )
 
   val validateApplicationsSwagger = (apiOperation[Unit]("validateApplication")
-    summary "Tarkista hakemus ja palauta virheet"
-    )
-
-  val findUnansweredQuestionsFromApplicationSwagger = (apiOperation[Unit]("findUnansweredQuestionsFromApplication")
-    summary "Tarkista hakemus ja palauta kysymykset joihin ei ole vastattu"
+    summary "Tarkista hakemus ja palauta virheet sekä kysymykset joihin ei ole vastattu"
     )
 
   before() {
