@@ -7,6 +7,7 @@ import org.json4s._
 import org.json4s.native.{JsonMethods, Serialization}
 
 class ValidateApplicationSpec extends JsonFormats with ScalatraTestSupport {
+  override implicit lazy val appConfig = new AppConfig.IT
   sequential
 
   "POST /application/validate" should {
@@ -21,7 +22,7 @@ class ValidateApplicationSpec extends JsonFormats with ScalatraTestSupport {
           val questions: List[AnyQuestion] = (result \ "questions").extract[List[AnyQuestion]]
           errors.size must_== 3
           questions.size must_== 3
-          questions.head must_== AnyQuestion(Translations(Map("fi" -> "Päättötodistuksen kaikkien oppiaineiden keskiarvo?")), "Text")
+          questions must contain(AnyQuestion(Translations(Map("fi" -> "Päättötodistuksen kaikkien oppiaineiden keskiarvo?")), "Text"))
         }
       }
     }
