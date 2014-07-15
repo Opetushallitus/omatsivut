@@ -153,7 +153,7 @@ Hakemus.prototype = {
   }
 }
 
-listApp.controller("listCtrl", ["$scope", "applicationsResource", function ($scope, applicationsResource) {
+listApp.controller("listController", ["$scope", "applicationsResource", function ($scope, applicationsResource) {
   $scope.applicationStatusMessage = "Hakemuksia ladataan...";
   $scope.applicationStatusMessageType = "ajax-spinner";
   applicationsResource.query(success, error)
@@ -174,7 +174,7 @@ listApp.controller("listCtrl", ["$scope", "applicationsResource", function ($sco
   }
 }]);
 
-listApp.controller("hakutoiveCtrl", ["$scope", "$http", "$timeout", "settings", function($scope, $http, $timeout, settings) {
+listApp.controller("hakutoiveController", ["$scope", "$http", "$timeout", "settings", function($scope, $http, $timeout, settings) {
   $scope.isEditingDisabled = function() { return !$scope.hakutoive.isNew || !$scope.application.isEditable($scope.$index) }
 
   $scope.isKoulutusSelectable = function() { return !$scope.isEditingDisabled() && this.hakutoive.hasOpetuspiste() && !_.isEmpty($scope.koulutusList) }
@@ -237,7 +237,7 @@ listApp.controller("hakutoiveCtrl", ["$scope", "$http", "$timeout", "settings", 
   };
 }])
 
-listApp.controller("questionsCtrl", ["$scope", "$element", "$http", function ($scope, $element, $http) {
+listApp.controller("questionsController", ["$scope", "$element", "$http", function ($scope, $element, $http) {
   $scope.$watch("application.getHakutoiveWatchCollection()", function(hakutoiveet, oldHakutoiveet) {
     // Skip initial values angular style
     var application = $scope.application
@@ -250,7 +250,7 @@ listApp.controller("questionsCtrl", ["$scope", "$element", "$http", function ($s
 
 }])
 
-listApp.controller("hakemusCtrl", ["$scope", "$element", "$http", "applicationsResource", function ($scope, $element, $http, applicationsResource) {
+listApp.controller("hakemusController", ["$scope", "$element", "$http", "applicationsResource", function ($scope, $element, $http, applicationsResource) {
   $scope.hasChanged = false
   $scope.isSaving = false
   $scope.isValid = true

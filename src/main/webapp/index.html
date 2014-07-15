@@ -7,7 +7,7 @@
 
 <body>
     <div class="container">
-        <div ng-controller="listCtrl">
+        <div ng-controller="listController">
             <h1>Omat hakemukseni</h1>
             <a href="/Shibboleth.sso/LoginFI" target="_self">Kirjaudu sisään</a>
             <a href="secure/logout" target="_self">Kirjaudu ulos</a>
@@ -17,7 +17,7 @@
 
             <ul id="hakemus-list" ng-cloak>
 
-                <li ng-repeat="application in applications" class="application-list-item" ng-controller="hakemusCtrl">
+                <li ng-repeat="application in applications" class="application-list-item" ng-controller="hakemusController">
                     <h2>{{application.haku.name.translations.fi}}</h2>
                     <p ng-repeat="period in application.haku.applicationPeriods">
                       Hakukausi: {{period.start | date:'dd.MM.yyyy HH:mm'}} - {{period.end | date:'dd.MM.yyyy HH:mm'}}</p>
@@ -32,7 +32,7 @@
                         </header>
 
                         <ul class="preference-list" sortable sortable-moved="movePreference">
-                            <li class="preference-list-item" ng-repeat="hakutoive in application.hakutoiveet" ng-controller="hakutoiveCtrl">
+                            <li class="preference-list-item" ng-repeat="hakutoive in application.hakutoiveet" ng-controller="hakutoiveController">
                                 <div class="item-content">
                                     <span class="sort-arrow-down" ng-class="{disabled: !application.canMoveTo($index, $index+1)}"></span>
                                     <span class="sort-arrow-up" ng-class="{disabled: !application.canMoveTo($index, $index-1)}"></span>
@@ -76,7 +76,7 @@
                     </section>
                     <section class="application-section">
                         <header class="application-section-heading">Lisäkysymykset</header>
-                        <div class="questions" ng-controller="questionsCtrl">
+                        <div class="questions" ng-controller="questionsController">
                             <li class="question" ng-repeat="question in questions">
                                 <label class="title">{{question.title.translations.fi}}</label>
                                 <span class="answer" ng-switch="question.questionType">
