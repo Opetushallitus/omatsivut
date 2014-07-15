@@ -9,7 +9,7 @@ import fi.vm.sade.omatsivut.domain.{EducationBackground, Hakemus, Haku}
 import scala.collection.JavaConversions._
 import scala.util.Try
 
-case class ApplicationDaoWrapper(implicit val appConfig: AppConfig) extends HakemusMerging {
+case class ApplicationDaoWrapper(implicit val appConfig: AppConfig) {
   private val dao = appConfig.springContext.applicationDAO
 
   def findByPersonOid(personOid: String): List[Hakemus] = {
@@ -41,7 +41,7 @@ case class ApplicationDaoWrapper(implicit val appConfig: AppConfig) extends Hake
     val applicationQuery: Application = new Application().setOid(hakemus.oid)
     val applicationJavaObjects: List[Application] = dao.find(applicationQuery).toList
     applicationJavaObjects.foreach { application =>
-      mergeWithApplication(hakemus, application)
+      HakemusMerger.merge(hakemus, application)
       dao.update(applicationQuery, application)
     }
   }

@@ -6,8 +6,8 @@ import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.omatsivut.domain.Hakemus
 import scala.collection.JavaConversions._
 
-trait HakemusMerging {
-  def mergeWithApplication(hakemus: Hakemus, application: Application) {
+object HakemusMerger {
+  def merge(hakemus: Hakemus, application: Application) {
     val hakutoiveet: Map[String, String] = application.getPhaseAnswers("hakutoiveet").toMap
     val hakuToiveetWithEmptyValues = hakutoiveet.filterKeys(s => s.startsWith("preference")).mapValues(s => "")
     val hakutoiveetWithoutOldPreferences = hakutoiveet.filterKeys(s => !s.startsWith("preference"))
