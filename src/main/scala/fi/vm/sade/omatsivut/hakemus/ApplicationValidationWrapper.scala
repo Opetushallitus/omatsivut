@@ -23,7 +23,7 @@ case class ApplicationValidationWrapper(implicit val appConfig: AppConfig) exten
       Some(validationErrors, questions)
     } catch {
       case e: Exception => {
-        logger.error("There was an error finding missing questions from application: " + hakemus.oid + "error was: " + e.getMessage)
+        logger.error("There was an error finding missing questions from application: " + hakemus.oid + "error was: " + e.getMessage, e)
         None
       }
     }
