@@ -77,6 +77,12 @@
                             <h3>Lisäkysymykset</h3>
                             <li class="question" ng-repeat="question in questions">
                                 <label class="title">{{question.title.translations.fi}}</label>
+                                <span class="answer" ng-switch="question.questionType">
+                                    <input ng-switch-when="Text">
+                                    <select ng-switch-when="Dropdown">
+                                        <option ng-repeat="option in question.options">{{option.title.translations.fi}}</option>
+                                    </select>
+                                </span>
                             </li>
                         </div>
                     </section>
