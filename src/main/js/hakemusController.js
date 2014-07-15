@@ -8,14 +8,18 @@ module.exports = function(listApp) {
     $scope.$watch("application.getHakutoiveWatchCollection()", function(hakutoiveet, oldHakutoiveet) {
       // Skip initial values angular style
       if (!_.isEqual(hakutoiveet, oldHakutoiveet)) {
-        $scope.hasChanged = true
-        setSaveMessage("")
-
-        $scope.isValid = $scope.application.isValid()
-        if (!$scope.isValid)
-          setSaveMessage("Täytä kaikki tiedot", "error");
+        $scope.$emit("applicationChange")
       }
     }, true)
+
+    $scope.$on("applicationChange", function() {
+      $scope.hasChanged = true
+      setSaveMessage("")
+
+      $scope.isValid = $scope.application.isValid()
+      if (!$scope.isValid)
+        setSaveMessage("Täytä kaikki tiedot", "error");
+    })
 
     function setSaveMessage(msg, type) {
       $scope.saveMessage = msg

@@ -56,6 +56,20 @@ Hakemus.prototype = {
   isEditable: function(index) {
     var firstEditableIndex = _(this.hakutoiveet).filter(function(hakutoive) { return hakutoive.hasData() && hakutoive.isValid() }).length
     return index >= 0 && index < this.hakutoiveet.length && index <= firstEditableIndex
+  },
+
+  getAnswer: function(question) {
+    if (this.answers[question.id.phaseId])
+      return this.answers[question.id.phaseId][question.id.questionId]
+  },
+
+  setAnswer: function(question, answer) {
+    if (!this.answers[question.id.phaseId]) {
+      this.answers[question.id.phaseId] = {}
+    }
+    this.answers[question.id.phaseId][question.id.questionId] = answer
+    console.log("Set " + question.title.translations.fi + " -> " + answer)
   }
+
 }
 module.exports = Hakemus

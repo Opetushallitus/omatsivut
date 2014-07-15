@@ -76,11 +76,11 @@
                     </section>
                     <section class="application-section" ng-show="questions" ng-controller="questionsController">
                         <header class="application-section-heading">Lisäkysymykset</header>
-                        <div class="questions">
-                            <li class="question" ng-repeat="question in questions">
+                        <div class="questions" ng-controller="questionsController">
+                            <li class="question" ng-repeat="question in questions" ng-controller="questionController">
                                 <label class="title">{{question.title.translations.fi}}</label>
                                 <span class="answer" ng-switch="question.questionType">
-                                    <input type="text" ng-switch-when="Text">
+                                    <input type="text" ng-switch-when="Text" ng-model="question.answer">
                                     <select ng-switch-when="Dropdown">
                                         <option ng-repeat="option in question.options">{{option.title.translations.fi}}</option>
                                     </select>
