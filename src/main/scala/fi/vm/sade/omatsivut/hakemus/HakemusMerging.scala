@@ -13,7 +13,7 @@ trait HakemusMerging {
     application.addVaiheenVastaukset("hakutoiveet", updatedHakutoiveet)
   }
 
-  def getUpdates(hakemus: Hakemus): Map[String, String] = {
+  private def getUpdates(hakemus: Hakemus): Map[String, String] = {
     hakemus.hakutoiveet.zipWithIndex.flatMap {
       (t) => t._1.map {
         (elem) => ("preference" + (t._2 + 1) + getDelimiter(elem._1) + elem._1, elem._2)
