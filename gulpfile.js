@@ -36,7 +36,7 @@ gulp.task('less', function () {
 });
 
 gulp.task('browserify', function() {
-    gulp.src(['src/main/js/listApp.js'])
+    gulp.src(['src/main/js/app.js'])
         .pipe(browserify({
             insertGlobals: true,
             debug: true
