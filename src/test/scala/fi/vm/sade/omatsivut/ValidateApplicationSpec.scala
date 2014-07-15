@@ -1,6 +1,6 @@
 package fi.vm.sade.omatsivut
 
-import fi.vm.sade.omatsivut.domain.{Question, Translations, Hakemus, ValidationError}
+import fi.vm.sade.omatsivut.domain._
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.servlet.ApplicationsServlet
 import org.json4s._
@@ -22,7 +22,7 @@ class ValidateApplicationSpec extends JsonFormats with ScalatraTestSupport {
           val questions: List[AnyQuestion] = (result \ "questions").extract[List[AnyQuestion]]
           errors.size must_== 3
           questions.size must_== 3
-          questions must contain(AnyQuestion(Translations(Map("fi" -> "Päättötodistuksen kaikkien oppiaineiden keskiarvo?")), "Text"))
+          questions must contain(AnyQuestion(QuestionId("osaaminen", "539159b0e4b0b56e67d2c74d"), Translations(Map("fi" -> "Päättötodistuksen kaikkien oppiaineiden keskiarvo?")), "Text"))
         }
       }
     }
@@ -31,4 +31,4 @@ class ValidateApplicationSpec extends JsonFormats with ScalatraTestSupport {
   addServlet(new ApplicationsServlet(), "/*")
 }
 
-case class AnyQuestion(title: Translations, questionType: String) extends Question
+case class AnyQuestion(id: QuestionId, title: Translations, questionType: String) extends Question

@@ -16,7 +16,9 @@ object FormQuestionHelper extends Logging {
     getPhases(applicationSystem).flatMap { phase =>
       getElementsOfType[Titled](phase)
         .filter(filterFn)
-        .flatMap(titledElementToQuestions)
+        .flatMap { titled =>
+          titledElementToQuestions(phase, titled)
+        }
     }
   }
 
@@ -39,21 +41,21 @@ object FormQuestionHelper extends Logging {
   }
 
 
-  private def getOptions(e: HakuOption): List[Choice] = {
-    e.getOptions.map(o => Choice(getTitle(o), o.isDefaultOption)).toList
-  }
+  private def titledElementToQuestions(phase: Phase, element: Titled): List[Question] = {
+    def id = QuestionId(phase.getId, element.getId)
+    def title: Translations = {
+      Translations(element.getI18nText.getTranslations.toMap)
+    }
+    def options(e: HakuOption): List[Choice] = {
+      e.getOptions.map(o => Choice(title, o.isDefaultOption)).toList
+    }
 
-  private def getTitle(e: Titled): Translations = {
-    Translations(e.getI18nText.getTranslations.toMap)
-  }
-
-  private def titledElementToQuestions(element: Titled): List[Question with Product with Serializable] = {
     element match {
-      case e: TextQuestion => List(Text(getTitle(e)))
-      case e: HakuTextArea => List(TextArea(getTitle(e)))
-      case e: HakuRadio => List(Radio(getTitle(e), getOptions(e)))
-      case e: DropdownSelect => List(Dropdown(getTitle(e), getOptions(e)))
-      case e: SocialSecurityNumber => List(Text(getTitle(e))) // Should never happen in prod
+      case e: TextQuestion => List(Text(id, title))
+      case e: HakuTextArea => List(TextArea(id, title))
+      case e: HakuRadio => List(Radio(id, title, options(e)))
+      case e: DropdownSelect => List(Dropdown(id, title, options(e)))
+      case e: SocialSecurityNumber => List(Text(id, title)) // Should never happen in prod
       case _ => {
         logger.error("Could not convert element of type: " + element.getType)
         Nil
