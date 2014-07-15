@@ -13,7 +13,7 @@ import fi.vm.sade.omatsivut.domain._
 
 import scala.collection.JavaConversions._
 
-case class ApplicationValidationWrapper(implicit val appConfig: AppConfig) extends Logging {
+case class ApplicationValidationWrapper(implicit val appConfig: AppConfig) extends Logging with HakemusMerging {
   private val applicationSystemService = appConfig.springContext.applicationSystemService
   private val dao = appConfig.springContext.applicationDAO
   private val validator = appConfig.springContext.validator
@@ -38,6 +38,7 @@ case class ApplicationValidationWrapper(implicit val appConfig: AppConfig) exten
     val applications = dao.find(new Application().setOid(hakemus.oid)).toList
     if (applications.size > 1) throw new Error("Too many applications")
     val application = applications.head
+    mergeWithApplication(hakemus, application)
     val validationResult = validator.validate(convertToValidationInput(applicationSystem, application))
     convertoToValidationErrors(validationResult)
   }

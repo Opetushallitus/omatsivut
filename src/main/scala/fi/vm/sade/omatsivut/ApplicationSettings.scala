@@ -20,7 +20,7 @@ object ApplicationSettings extends Logging {
   }
 
   private def getFile(name: String): List[File] = {
-    if (name != null && new File(name).exists) {
+    if (new File(name).exists) {
       List(new File(name))
     } else {
       Nil
