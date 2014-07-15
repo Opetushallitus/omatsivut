@@ -1,8 +1,10 @@
 var Hakutoive = require('./hakutoive')
+var QuestionItem = require('./questionItem')
 
 function Hakemus(json) {
   _.extend(this, json)
   this.hakutoiveet = _(this.hakutoiveet).map(function(hakutoive) { return new Hakutoive(hakutoive) })
+  this.questionItems = null
 }
 
 Hakemus.prototype = {
@@ -23,7 +25,9 @@ Hakemus.prototype = {
   },
 
   toJson: function() {
-    return _.extend({}, this, { hakutoiveet: _(this.hakutoiveet).map(function(hakutoive) { return hakutoive.toJson() })})
+    var json = _.extend({}, this, { hakutoiveet: _(this.hakutoiveet).map(function(hakutoive) { return hakutoive.toJson() })})
+    delete json.questions // TODO add answers
+    return json
   },
 
   setAsSaved: function() {
@@ -38,6 +42,10 @@ Hakemus.prototype = {
 
   getHakutoiveWatchCollection: function() {
     return _(this.hakutoiveet).map(function(hakutoive) { return hakutoive.data })
+  },
+
+  getAnswerWatchCollection: function() {
+    return this.questionItems
   },
 
   moveHakutoive: function(from, to) {
@@ -58,18 +66,18 @@ Hakemus.prototype = {
     return index >= 0 && index < this.hakutoiveet.length && index <= firstEditableIndex
   },
 
-  getAnswer: function(question) {
-    if (this.answers[question.id.phaseId])
-      return this.answers[question.id.phaseId][question.id.questionId]
-  },
-
-  setAnswer: function(question, answer) {
-    if (!this.answers[question.id.phaseId]) {
-      this.answers[question.id.phaseId] = {}
-    }
-    this.answers[question.id.phaseId][question.id.questionId] = answer
-    console.log("Set " + question.title.translations.fi + " -> " + answer)
+  updateQuestions: function(data) {
+    var questions = data.questions
+    var errors = _.reduce(data.errors, function(memo, error) {
+      if (memo[error.key] == null)
+        memo[error.key] = []
+      memo[error.key].push(error.translation.translations["fi"])
+      return memo
+    }, {})
+    // TODO "Invisible" answers are removed - is it ok?
+    var prevItems = _(this.questionItems).chain().map(function(item) { return [item.question.id.questionId, item.answer] }).object().value()
+    this.questionItems = _(questions).map(function(question) { return new QuestionItem(question, prevItems[question.id.questionId], errors[question.id.questionId]) })
   }
-
 }
+
 module.exports = Hakemus

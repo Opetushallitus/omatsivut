@@ -74,19 +74,21 @@
                             </li>
                         </ul>
                     </section>
-                    <section class="application-section" ng-show="questions" ng-controller="questionsController">
+                    <section class="application-section" ng-show="application.questionItems">
                         <header class="application-section-heading">Lisäkysymykset</header>
-                        <div class="questions" ng-controller="questionsController">
-                            <li class="question" ng-repeat="question in questions" ng-controller="questionController">
-                                <label class="title">{{question.title.translations.fi}}</label>
-                                <span class="answer" ng-switch="question.questionType">
-                                    <input type="text" ng-switch-when="Text" ng-model="question.answer">
+                        <div class="questions">
+                            <li class="question" ng-repeat="item in application.questionItems">
+                                <label class="title">{{item.question.title.translations.fi}}</label>
+                                <span class="validation-message">{{item.validationMessage}}</span>
+
+                                <span class="answer" ng-switch="item.question.questionType">
+                                    <input type="text" ng-switch-when="Text" ng-model="item.answer">
                                     <select ng-switch-when="Dropdown">
-                                        <option ng-repeat="option in question.options">{{option.title.translations.fi}}</option>
+                                        <option ng-repeat="option in item.question.options">{{option.title.translations.fi}}</option>
                                     </select>
                                     <div ng-switch-when="Radio">
-                                        <label class="radio-button-item" ng-repeat="option in question.options">
-                                            <input type="radio" /> {{option.title.translations.fi}}
+                                        <label class="radio-button-item" ng-repeat="option in item.question.options">
+                                            <input name="{{item.question.id.questionId}}" type="radio" /> {{option.title.translations.fi}}
                                         </label>
                                     </div>
                                 </span>

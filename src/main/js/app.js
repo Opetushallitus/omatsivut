@@ -10,7 +10,6 @@ var listApp = angular.module('listApp', ["ngResource", "ngAnimate", "ui.bootstra
 
 require('./hakutoiveController')(listApp)
 require('./listController')(listApp)
-require('./questionsController')(listApp)
 require('./hakemusController')(listApp)
 
 listApp.factory("applicationsResource", ["$resource", "$location", function($resource, $location) {

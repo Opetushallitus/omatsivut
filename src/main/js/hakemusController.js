@@ -10,7 +10,23 @@ module.exports = function(listApp) {
       if (!_.isEqual(hakutoiveet, oldHakutoiveet)) {
         $scope.$emit("applicationChange")
       }
+
+      updateQuestions()
     }, true)
+
+    $scope.$watch("application.getAnswerWatchCollection()", function(answers, oldAnswers) {
+      if (oldAnswers != null) {
+        $scope.$emit("applicationChange")
+      }
+    }, true)
+
+    function updateQuestions() {
+      var application = $scope.application
+      var responsePromise = $http.post("api/applications/validate/" + application.oid, application.toJson());
+      responsePromise.success(function(data, status, headers, config) {
+        application.updateQuestions(data)
+      })
+    }
 
     $scope.$on("applicationChange", function() {
       $scope.hasChanged = true
