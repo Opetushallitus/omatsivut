@@ -161,7 +161,7 @@ a {
   }
 }
 
-input {
+input[type="text"] {
   background: @input-background;
   color: @font-color;
   box-shadow: 0 1px 1px #b5b5b5 inset, 0 -1px 4px rgba(0, 0, 0, 0.05) inset;
@@ -382,4 +382,36 @@ button.delete-btn:not(.confirm) {
     background: transparent;
     box-shadow: none;
   }
+}
+
+.questions {
+  padding: 15px 0px;
+
+  .question {
+    margin-top: 15px;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  input[type=text] {
+    width: 400px;
+  }
+
+  input[type=radio] {
+    margin-right: 5px;
+  }
+
+  .radio-button-item {
+    display: block;
+  }
+}
+
+label.title {
+  font-weight: bold;
+  display: block;
+  color: #444;
+  margin-bottom: 5px;
+
 }

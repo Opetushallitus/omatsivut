@@ -74,16 +74,21 @@
                             </li>
                         </ul>
                     </section>
-                    <section class="application-section">
+                    <section class="application-section" ng-show="questions" ng-controller="questionsController">
                         <header class="application-section-heading">Lisäkysymykset</header>
-                        <div class="questions" ng-controller="questionsController">
+                        <div class="questions">
                             <li class="question" ng-repeat="question in questions">
                                 <label class="title">{{question.title.translations.fi}}</label>
                                 <span class="answer" ng-switch="question.questionType">
-                                    <input ng-switch-when="Text">
+                                    <input type="text" ng-switch-when="Text">
                                     <select ng-switch-when="Dropdown">
                                         <option ng-repeat="option in question.options">{{option.title.translations.fi}}</option>
                                     </select>
+                                    <div ng-switch-when="Radio">
+                                        <label class="radio-button-item" ng-repeat="option in question.options">
+                                            <input type="radio" /> {{option.title.translations.fi}}
+                                        </label>
+                                    </div>
                                 </span>
                             </li>
                         </div>
