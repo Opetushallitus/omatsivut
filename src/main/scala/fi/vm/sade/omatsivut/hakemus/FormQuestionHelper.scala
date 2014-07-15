@@ -10,12 +10,13 @@ import collection.JavaConversions._
 
 object FormQuestionHelper extends Logging {
   def questionsByIds(applicationSystem: ApplicationSystem, ids: Seq[String]): List[Question] = {
+    findQuestions(applicationSystem, { titledElement => ids.contains(titledElement.getId)})
+  }
+  def findQuestions(applicationSystem: ApplicationSystem, filterFn: (Titled => Boolean)): List[Question] = {
     getPhases(applicationSystem).flatMap { phase =>
       getElementsOfType[Titled](phase)
-        .filter { titledElement =>
-        ids.contains(titledElement.getId)
-      }
-      .flatMap(titledElementToQuestions)
+        .filter(filterFn)
+        .flatMap(titledElementToQuestions)
     }
   }
 
@@ -46,7 +47,7 @@ object FormQuestionHelper extends Logging {
     Translations(e.getI18nText.getTranslations.toMap)
   }
 
-  def titledElementToQuestions(element: Titled): List[Question with Product with Serializable] = {
+  private def titledElementToQuestions(element: Titled): List[Question with Product with Serializable] = {
     element match {
       case e: TextQuestion => List(Text(getTitle(e)))
       case e: HakuTextArea => List(TextArea(getTitle(e)))
