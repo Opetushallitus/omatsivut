@@ -1,5 +1,7 @@
 package fi.vm.sade.omatsivut.hakemus
 
+import java.util.Date
+
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.omatsivut.domain.Hakemus
 import scala.collection.JavaConversions._
@@ -10,6 +12,7 @@ trait HakemusMerging {
     val hakuToiveetWithEmptyValues = hakutoiveet.filterKeys(s => s.startsWith("preference")).mapValues(s => "")
     val hakutoiveetWithoutOldPreferences = hakutoiveet.filterKeys(s => !s.startsWith("preference"))
     val updatedHakutoiveet = hakutoiveetWithoutOldPreferences ++ hakuToiveetWithEmptyValues ++ getUpdates(hakemus)
+    application.setUpdated(new Date())
     application.addVaiheenVastaukset("hakutoiveet", updatedHakutoiveet)
   }
 
