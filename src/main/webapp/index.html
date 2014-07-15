@@ -73,6 +73,12 @@
                                 </div>
                             </li>
                         </ul>
+                        <div class="questions" ng-controller="questionsCtrl">
+                            <h3>Lisäkysymykset</h3>
+                            <li class="question" ng-repeat="question in questions">
+                                <label class="title">{{question.title.translations.fi}}</label>
+                            </li>
+                        </div>
                     </section>
                 </li>
             </ul>
