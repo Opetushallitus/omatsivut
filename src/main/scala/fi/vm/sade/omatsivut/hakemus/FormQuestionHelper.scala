@@ -43,19 +43,19 @@ object FormQuestionHelper extends Logging {
 
   private def titledElementToQuestions(phase: Phase, element: Titled): List[Question] = {
     def id = QuestionId(phase.getId, element.getId)
-    def title: Translations = {
-      Translations(element.getI18nText.getTranslations.toMap)
+    def title(e: Titled): Translations = {
+      Translations(e.getI18nText.getTranslations.toMap)
     }
     def options(e: HakuOption): List[Choice] = {
-      e.getOptions.map(o => Choice(title, o.isDefaultOption)).toList
+      e.getOptions.map(o => Choice(title(o), o.isDefaultOption)).toList
     }
 
     element match {
-      case e: TextQuestion => List(Text(id, title))
-      case e: HakuTextArea => List(TextArea(id, title))
-      case e: HakuRadio => List(Radio(id, title, options(e)))
-      case e: DropdownSelect => List(Dropdown(id, title, options(e)))
-      case e: SocialSecurityNumber => List(Text(id, title)) // Should never happen in prod
+      case e: TextQuestion => List(Text(id, title(e)))
+      case e: HakuTextArea => List(TextArea(id, title(e)))
+      case e: HakuRadio => List(Radio(id, title(e), options(e)))
+      case e: DropdownSelect => List(Dropdown(id, title(e), options(e)))
+      case e: SocialSecurityNumber => List(Text(id, title(e))) // Should never happen in prod
       case _ => {
         logger.error("Could not convert element of type: " + element.getType)
         Nil
