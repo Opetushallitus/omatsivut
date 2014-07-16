@@ -14,21 +14,14 @@ case class ApplicationValidationWrapper(implicit val appConfig: AppConfig) exten
   private val dao = appConfig.springContext.applicationDAO
   private val validator = appConfig.springContext.validator
 
-  def validate(hakemus: Hakemus): Option[(List[ValidationError], List[Question])] = {
-    try {
-      val applicationSystem = applicationSystemService.getApplicationSystem(hakemus.haku.get.oid)
-      val validationErrors: List[ValidationError] = validate(hakemus, applicationSystem)
-      val requiredFieldErrors = validationErrors.filter(error => findError(error, "Pakollinen tieto.").isDefined)
-      val questions: List[Question] = hakemus.hakutoiveet.flatMap { hakutoive =>
-        RelatedQuestionHelper.findQuestionsByHakutoive(applicationSystem, hakutoive)
-      }
-      Some(validationErrors, questions)
-    } catch {
-      case e: Exception => {
-        logger.error("There was an error finding missing questions from application: " + hakemus.oid + " error was: " + e.getMessage, e)
-        None
-      }
+  def validate(hakemus: Hakemus): (List[ValidationError], List[Question]) = {
+    val applicationSystem = applicationSystemService.getApplicationSystem(hakemus.haku.get.oid)
+    val validationErrors: List[ValidationError] = validate(hakemus, applicationSystem)
+    val requiredFieldErrors = validationErrors.filter(error => findError(error, "Pakollinen tieto.").isDefined)
+    val questions: List[Question] = hakemus.hakutoiveet.flatMap { hakutoive =>
+      RelatedQuestionHelper.findQuestionsByHakutoive(applicationSystem, hakutoive)
     }
+    (validationErrors, questions)
   }
 
   private def validate(hakemus: Hakemus, applicationSystem: ApplicationSystem): List[ValidationError] = {
