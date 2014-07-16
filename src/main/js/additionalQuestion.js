@@ -3,4 +3,4 @@ function AdditionalQuestion(question, validationErrors) {
   this.validationMessage = validationErrors.join(", ")
 }
 
-module.exports = QuestionItem
+module.exports = AdditionalQuestion
