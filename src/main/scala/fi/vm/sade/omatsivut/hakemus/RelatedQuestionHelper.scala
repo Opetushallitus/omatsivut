@@ -14,13 +14,12 @@ object RelatedQuestionHelper {
   }
 
   def findAddedQuestions(applicationSystem: ApplicationSystem, newAnswers: Answers, oldAnswers: Answers): Seq[Question] = {
-    FormQuestionHelper.getPhases(applicationSystem).flatMap { phase =>
-      val addedElements = findAddedElements(phase, newAnswers, oldAnswers)
-      val addedQuestions = addedElements.flatMap { element =>
-        FormQuestionHelper.findQuestions(phase, element)
-      }
-      addedQuestions
+    val form = applicationSystem.getForm
+    val addedElements = findAddedElements(form, newAnswers, oldAnswers)
+    val addedQuestions = addedElements.flatMap { element =>
+      FormQuestionHelper.findQuestions(form, element)
     }
+    addedQuestions.toList
   }
   def findAddedElements(element: Element, newAnswers: Answers, oldAnswers: Answers, path: List[Element] = Nil): Set[Element] = {
     def flattenAnswers(answers: Map[String, Map[String, String]]): Map[String, String] = {

@@ -31,4 +31,6 @@ class ValidateApplicationSpec extends JsonFormats with ScalatraTestSupport {
   addServlet(new ApplicationsServlet(), "/*")
 }
 
-case class AnyQuestion(id: QuestionId, title: Translations, questionType: String) extends Question
+case class AnyQuestion(id: QuestionId, title: Translations, questionType: String) extends Question {
+  def context = QuestionContext(Nil)
+}
