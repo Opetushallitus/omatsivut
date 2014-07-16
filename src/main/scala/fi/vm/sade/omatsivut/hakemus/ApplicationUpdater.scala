@@ -6,14 +6,14 @@ import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.omatsivut.domain.Hakemus
 import scala.collection.JavaConversions._
 
-object HakemusMerger {
-  def merge(hakemus: Hakemus, application: Application) {
-    mergeHakutoiveet(hakemus, application)
-    mergeAllOtherPhases(hakemus, application)
+object ApplicationUpdater {
+  def update(application: Application, hakemus: Hakemus) {
+    updateHakutoiveet(application, hakemus)
+    updateAllOtherPhases(application, hakemus)
     application.setUpdated(new Date())
   }
 
-  private def mergeAllOtherPhases(hakemus: Hakemus, application: Application) {
+  private def updateAllOtherPhases(application: Application, hakemus: Hakemus) {
     val allOtherPhaseAnswers = hakemus.answers.filterKeys(phase => phase == "hakutoiveet")
     allOtherPhaseAnswers.foreach { case (phase, answers) =>
       val existingAnswers = application.getPhaseAnswers(phase)
@@ -21,11 +21,11 @@ object HakemusMerger {
     }
   }
 
-  private def mergeHakutoiveet(hakemus: Hakemus, application: Application) {
+  private def updateHakutoiveet(application: Application, hakemus: Hakemus) {
     val hakutoiveet: Map[String, String] = application.getPhaseAnswers("hakutoiveet").toMap
     val hakuToiveetWithEmptyValues = hakutoiveet.filterKeys(s => s.startsWith("preference")).mapValues(s => "")
     val hakutoiveetWithoutOldPreferences = hakutoiveet.filterKeys(s => !s.startsWith("preference"))
-    val hakutoiveetAnswers: Map[String, String] = hakemus.answers.get("hakutoiveet").getOrElse(Map())
+    val hakutoiveetAnswers: Map[String, String] = hakemus.answers.getOrElse("hakutoiveet", Map())
     val updatedHakutoiveet = hakutoiveetWithoutOldPreferences ++ hakuToiveetWithEmptyValues ++ getUpdates(hakemus) ++ hakutoiveetAnswers
     application.addVaiheenVastaukset("hakutoiveet", updatedHakutoiveet)
   }

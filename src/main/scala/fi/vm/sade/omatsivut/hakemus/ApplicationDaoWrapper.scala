@@ -41,7 +41,7 @@ case class ApplicationDaoWrapper(implicit val appConfig: AppConfig) {
     val applicationQuery: Application = new Application().setOid(hakemus.oid)
     val applicationJavaObjects: List[Application] = dao.find(applicationQuery).toList
     applicationJavaObjects.foreach { application =>
-      HakemusMerger.merge(hakemus, application)
+      ApplicationUpdater.update(application, hakemus)
       dao.update(applicationQuery, application)
     }
   }

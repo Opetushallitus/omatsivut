@@ -33,7 +33,7 @@ case class ApplicationValidationWrapper(implicit val appConfig: AppConfig) exten
     val applications = dao.find(new Application().setOid(hakemus.oid)).toList
     if (applications.size > 1) throw new Error("Too many applications")
     val application = applications.head
-    HakemusMerger.merge(hakemus, application)
+    ApplicationUpdater.update(application, hakemus)
     val validationResult = validator.validate(convertToValidationInput(applicationSystem, application))
     convertoToValidationErrors(validationResult)
   }
