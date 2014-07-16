@@ -7,6 +7,9 @@ import fi.vm.sade.omatsivut.domain.Hakemus
 import scala.collection.JavaConversions._
 
 object ApplicationUpdater {
+  val hakutoiveetPhase: String = "hakutoiveet"
+  val preferenceKeyPrefix: String = "preference"
+
   def update(application: Application, hakemus: Hakemus) {
     updateHakutoiveet(application, hakemus)
     updateAllOtherPhases(application, hakemus)
@@ -22,18 +25,18 @@ object ApplicationUpdater {
   }
 
   private def updateHakutoiveet(application: Application, hakemus: Hakemus) {
-    val hakutoiveet: Map[String, String] = application.getPhaseAnswers("hakutoiveet").toMap
-    val hakuToiveetWithEmptyValues = hakutoiveet.filterKeys(s => s.startsWith("preference")).mapValues(s => "")
-    val hakutoiveetWithoutOldPreferences = hakutoiveet.filterKeys(s => !s.startsWith("preference"))
-    val hakutoiveetAnswers: Map[String, String] = hakemus.answers.getOrElse("hakutoiveet", Map())
+    val hakutoiveet: Map[String, String] = application.getPhaseAnswers(hakutoiveetPhase).toMap
+    val hakuToiveetWithEmptyValues = hakutoiveet.filterKeys(s => s.startsWith(preferenceKeyPrefix)).mapValues(s => "")
+    val hakutoiveetWithoutOldPreferences = hakutoiveet.filterKeys(s => !s.startsWith(preferenceKeyPrefix))
+    val hakutoiveetAnswers: Map[String, String] = hakemus.answers.getOrElse(hakutoiveetPhase, Map())
     val updatedHakutoiveet = hakutoiveetWithoutOldPreferences ++ hakuToiveetWithEmptyValues ++ getUpdates(hakemus) ++ hakutoiveetAnswers
-    application.addVaiheenVastaukset("hakutoiveet", updatedHakutoiveet)
+    application.addVaiheenVastaukset(hakutoiveetPhase, updatedHakutoiveet)
   }
 
   private def getUpdates(hakemus: Hakemus): Map[String, String] = {
     hakemus.hakutoiveet.zipWithIndex.flatMap {
       (t) => t._1.map {
-        (elem) => ("preference" + (t._2 + 1) + getDelimiter(elem._1) + elem._1, elem._2)
+        (elem) => (preferenceKeyPrefix + (t._2 + 1) + getDelimiter(elem._1) + elem._1, elem._2)
       }
     }.toMap[String, String]
   }
