@@ -1,10 +1,10 @@
 package fi.vm.sade.omatsivut
 
-import com.mongodb.casbah.MongoClient
-import com.mongodb.{MongoCredential, ServerAddress}
-import com.typesafe.config.{ConfigFactory, Config}
-import collection.JavaConversions._
 import java.io.File
+
+import com.typesafe.config.{Config, ConfigFactory}
+
+import scala.collection.JavaConversions._
 
 object ApplicationSettings extends Logging {
   def loadSettings(fileLocations: List[String]): ApplicationSettings = {
@@ -31,38 +31,13 @@ object ApplicationSettings extends Logging {
 class ApplicationSettings(config: Config) {
   val casTicketUrl = config getString "omatsivut.cas.ticket.url"
 
-  val authenticationService = getRemoteApplicationConfig(config.getConfig("omatsivut.authentication-service"))
+  val authenticationServiceConfig = getRemoteApplicationConfig(config.getConfig("omatsivut.authentication-service"))
 
   val aesKey = config getString "omatsivut.crypto.aes.key"
   val hmacKey = config getString "omatsivut.crypto.hmac.key"
 
-  private val hakuAppMongoHost = config getString "omatsivut.haku-app.mongo.host"
-  private val hakuAppMongoPort = config getInt "omatsivut.haku-app.mongo.port"
-  private val hakuAppMongoDbName = config getString "omatsivut.haku-app.mongo.db.name"
-  private val hakuAppMongoDbUsername = config getString "omatsivut.haku-app.mongo.db.username"
-  private val hakuAppMongoDbPassword = config getString "omatsivut.haku-app.mongo.db.password" toCharArray ()
-
   private def getRemoteApplicationConfig(config: Config) = {
     RemoteApplicationConfig(config getString "url", config getString "username", config getString "password", config getString "path", config getString "ticket_consumer_path")
-  }
-
-  private def hakuAppMongoClient: MongoClient = {
-    val mongoAddress = new ServerAddress(hakuAppMongoHost, hakuAppMongoPort)
-    if(hakuAppMongoDbUsername.isEmpty()) {
-      MongoClient(mongoAddress)
-    }
-    else {
-      MongoClient(
-        List(mongoAddress),
-        List(MongoCredential.createMongoCRCredential(hakuAppMongoDbUsername, hakuAppMongoDbName, hakuAppMongoDbPassword))
-      )
-    }
-  }
-
-  def hakuAppMongoDb = hakuAppMongoClient.getDB(hakuAppMongoDbName)
-
-  override def toString = {
-    "Mongo: " + hakuAppMongoHost + ":" + hakuAppMongoPort + "/" + hakuAppMongoDbName
   }
 
   def toProperties = {

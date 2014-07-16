@@ -14,7 +14,7 @@ object AuthenticationInfoService {
         case _ => None
       }
     }
-    case _ => new RemoteAuthenticationInfoService(appConfig.settings.authenticationService)(appConfig)
+    case _ => new RemoteAuthenticationInfoService(appConfig.settings.authenticationServiceConfig)(appConfig)
   }
 }
 
