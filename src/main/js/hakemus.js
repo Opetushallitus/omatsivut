@@ -1,10 +1,9 @@
 var Hakutoive = require('./hakutoive')
-var QuestionItem = require('./questionItem')
 
 function Hakemus(json) {
   _.extend(this, json)
   this.hakutoiveet = _(this.hakutoiveet).map(function(hakutoive) { return new Hakutoive(hakutoive) })
-  this.questionItems = null
+  this.answers = this.answers || {}
 }
 
 Hakemus.prototype = {
@@ -45,7 +44,7 @@ Hakemus.prototype = {
   },
 
   getAnswerWatchCollection: function() {
-    return this.questionItems
+    return this.answers
   },
 
   moveHakutoive: function(from, to) {
@@ -66,17 +65,12 @@ Hakemus.prototype = {
     return index >= 0 && index < this.hakutoiveet.length && index <= firstEditableIndex
   },
 
-  updateQuestions: function(data) {
-    var questions = data.questions
-    var errors = _.reduce(data.errors, function(memo, error) {
-      if (memo[error.key] == null)
-        memo[error.key] = []
-      memo[error.key].push(error.translation.translations["fi"])
-      return memo
-    }, {})
-    // TODO "Invisible" answers are removed - is it ok?
-    var prevItems = _(this.questionItems).chain().map(function(item) { return [item.question.id.questionId, item.answer] }).object().value()
-    this.questionItems = _(questions).map(function(question) { return new QuestionItem(question, prevItems[question.id.questionId], errors[question.id.questionId]) })
+  prepareDatabinding: function(questions) {
+    var self = this
+    _(questions).each(function(item) {
+      if (!self.answers[item.question.id.phaseId])
+        self.answers[item.question.id.phaseId] = {}
+    })
   }
 }
 

@@ -1,6 +1,5 @@
-function QuestionItem(question, answer, validationErrors) {
+function QuestionItem(question, validationErrors) {
   this.question = question
-  this.answer = answer
   this.validationMessage = validationErrors.join(", ")
 }
 

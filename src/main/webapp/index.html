@@ -74,15 +74,15 @@
                             </li>
                         </ul>
                     </section>
-                    <section class="application-section" ng-show="application.questionItems">
+                    <section class="application-section" ng-show="additionalQuestions">
                         <header class="application-section-heading">Lisäkysymykset</header>
                         <div class="questions">
-                            <li class="question" ng-repeat="item in application.questionItems">
+                            <li class="question" ng-repeat="item in additionalQuestions">
                                 <label class="title">{{item.question.title.translations.fi}}</label>
-                                <span class="validation-message">{{item.validationMessage}}</span>
+                                <span class="validation-message error">{{item.validationMessage}}</span>
 
                                 <span class="answer" ng-switch="item.question.questionType">
-                                    <input type="text" ng-switch-when="Text" ng-model="item.answer">
+                                    <input type="text" ng-switch-when="Text" ng-model="application.answers[item.question.id.phaseId][item.question.id.questionId]">
                                     <select ng-switch-when="Dropdown">
                                         <option ng-repeat="option in item.question.options">{{option.title.translations.fi}}</option>
                                     </select>

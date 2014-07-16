@@ -1,4 +1,5 @@
 var Hakemus = require('./hakemus')
+var QuestionItem = require('./questionItem')
 module.exports = function(listApp) {
   listApp.controller("hakemusController", ["$scope", "$element", "$http", "applicationsResource", function ($scope, $element, $http, applicationsResource) {
     $scope.hasChanged = false
@@ -20,11 +21,24 @@ module.exports = function(listApp) {
       }
     }, true)
 
+    function getQuestions(data) {
+      var errors = _.reduce(data.errors, function(memo, error) {
+        if (memo[error.key] == null)
+          memo[error.key] = []
+        memo[error.key].push(error.translation.translations["fi"])
+        return memo
+      }, {})
+
+      return _(data.questions).map(function(question) { return new QuestionItem(question, errors[question.id.questionId]) })
+    }
+
     function updateQuestions() {
       var application = $scope.application
       var responsePromise = $http.post("api/applications/validate/" + application.oid, application.toJson());
       responsePromise.success(function(data, status, headers, config) {
-        application.updateQuestions(data)
+        questions = getQuestions(data)
+        $scope.additionalQuestions = questions
+        application.prepareDatabinding(questions)
       })
     }
 
