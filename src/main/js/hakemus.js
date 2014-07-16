@@ -67,6 +67,23 @@ Hakemus.prototype = {
     if (!this.answers[phaseId])
       this.answers[phaseId] = {}
     return this.answers[phaseId]
+  },
+
+  setDefaultAnswers: function(questions) {
+    var self = this
+    function defaultValue(options) {
+      var defaultOption = _(options).find(function(option) { return option.default })
+      return defaultOption == null ? "" : defaultOption.value
+    }
+
+    function setDefaultAnswer(item) {
+      var phaseAnswers = self.getAnswers(item.question.id.phaseId)
+      phaseAnswers[item.question.id.questionId] = phaseAnswers[item.question.id.questionId] || defaultValue(item.question.options)
+    }
+
+    _(questions).chain()
+      .filter(function(item) { return item.question.options != null })
+      .each(setDefaultAnswer)
   }
 }
 
