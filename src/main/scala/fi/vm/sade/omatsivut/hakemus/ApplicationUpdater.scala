@@ -14,7 +14,7 @@ object ApplicationUpdater {
   }
 
   private def updateAllOtherPhases(application: Application, hakemus: Hakemus) {
-    val allOtherPhaseAnswers = hakemus.answers.filterKeys(phase => phase == "hakutoiveet")
+    val allOtherPhaseAnswers = hakemus.answers.filterKeys(phase => phase != hakutoiveetPhase)
     allOtherPhaseAnswers.foreach { case (phase, answers) =>
       val existingAnswers = application.getPhaseAnswers(phase)
       application.addVaiheenVastaukset(phase, existingAnswers ++ answers)
