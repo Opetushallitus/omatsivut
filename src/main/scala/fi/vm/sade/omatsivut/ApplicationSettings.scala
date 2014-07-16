@@ -33,6 +33,9 @@ class ApplicationSettings(config: Config) {
 
   val authenticationServiceConfig = getRemoteApplicationConfig(config.getConfig("omatsivut.authentication-service"))
 
+  val koulutusinformaatioAoUrl = config getString "omatsivut.koulutusinformaatio.ao.url"
+  val koulutusinformaatioLopUrl = config getString "omatsivut.koulutusinformaatio.lop.url"
+
   val aesKey = config getString "omatsivut.crypto.aes.key"
   val hmacKey = config getString "omatsivut.crypto.hmac.key"
 

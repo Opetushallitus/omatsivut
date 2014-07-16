@@ -39,7 +39,7 @@ case class RemoteKoulutusService(implicit appConfig: AppConfig) extends Koulutus
   import org.json4s.jackson.JsonMethods._
 
   def opetuspisteet(asId: String, query: String): List[Opetuspiste] = {
-    val (responseCode, headersMap, resultString) = HttpClient.httpGet("https://testi.opintopolku.fi/lop/search/" + query)
+    val (responseCode, headersMap, resultString) = HttpClient.httpGet(appConfig.settings.koulutusinformaatioLopUrl + "/search/" + query)
       .param("asId", asId)
       .responseWithHeaders
 
@@ -49,7 +49,7 @@ case class RemoteKoulutusService(implicit appConfig: AppConfig) extends Koulutus
 
   def koulutukset(asId: String, opetuspisteId: String, baseEducation: String, vocational: String, uiLang: String): List[Koulutus] = {
     // TODO: fixed url
-    val (responseCode, headersMap, resultString) = HttpClient.httpGet("https://testi.opintopolku.fi/ao/search/" + asId + "/" + opetuspisteId)
+    val (responseCode, headersMap, resultString) = HttpClient.httpGet(appConfig.settings.koulutusinformaatioAoUrl + "/search/" + asId + "/" + opetuspisteId)
       .param("baseEducation", baseEducation)
       .param("vocational", vocational)
       .param("uiLang", uiLang)

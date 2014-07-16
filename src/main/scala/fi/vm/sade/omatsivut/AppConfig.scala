@@ -21,15 +21,15 @@ object AppConfig extends Logging {
     def springConfiguration = new OmatSivutSpringContext.Default()
   }
 
-  class Dev extends AppConfig with StubbedExternalDeps with TestMode {
+  class Dev extends AppConfig with MockAuthentication {
     def springConfiguration = new OmatSivutSpringContext.Dev()
     def configFiles = List("src/main/resources/dev.conf")
   }
-  class DevWithRemoteMongo extends StubbedExternalDeps with ExternalProps {
+  class DevWithRemoteMongo extends MockAuthentication with ExternalProps {
     def springConfiguration = new OmatSivutSpringContext.Dev()
   }
 
-  class IT extends StubbedExternalDeps with TestMode {
+  class IT extends MockAuthentication with StubbedExternalDeps {
     def springConfiguration = new OmatSivutSpringContext.IT()
     def configFiles = List("src/main/resources/it.conf")
 
@@ -61,6 +61,9 @@ object AppConfig extends Logging {
   }
 
   trait StubbedExternalDeps extends TestMode {
+  }
+
+  trait MockAuthentication extends TestMode {
   }
 
   trait TestMode extends AppConfig {
