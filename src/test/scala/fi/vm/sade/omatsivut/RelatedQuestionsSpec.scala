@@ -19,7 +19,7 @@ class RelatedQuestionsSpec extends Specification {
       val oldAnswers = Hakemus.emptyAnswers
       val newAnswers = Hakemus.emptyAnswers
       val addedElements = RelatedQuestionHelper.findAddedElements(as.getForm, newAnswers, oldAnswers)
-      addedElements.length must_== 1
+      addedElements.length must_== 0
     }
   }
 }
