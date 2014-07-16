@@ -1,8 +1,8 @@
 package fi.vm.sade.omatsivut.servlet
 
 import fi.vm.sade.omatsivut.AppConfig.AppConfig
-import fi.vm.sade.omatsivut.http.HttpClient
 import fi.vm.sade.omatsivut.json.JsonFormats
+import fi.vm.sade.omatsivut.koulutusinformaatio.KoulutusInformaatioService
 import org.scalatra.json.JacksonJsonSupport
 import org.scalatra.swagger.{Swagger, SwaggerSupport}
 
@@ -14,22 +14,10 @@ class KoulutusServlet(implicit val swagger: Swagger, val appConfig: AppConfig) e
   }
 
   get("/opetuspisteet/:query") {
-    // TODO: fixed urls
-    val (responseCode, headersMap, resultString) = HttpClient.httpGet("https://testi.opintopolku.fi/lop/search/" + params("query"))
-      .param("asId", params("asId"))
-      .responseWithHeaders
-    resultString
+    KoulutusInformaatioService.opetuspisteet(params("asId"), params("query"))
   }
 
   get("/koulutukset/:asId/:opetuspisteId") {
-    // TODO: fixed urls
-    val (responseCode, headersMap, resultString) = HttpClient.httpGet("https://testi.opintopolku.fi/ao/search/" + params("asId") + "/" + params("opetuspisteId"))
-      .param("baseEducation", params("baseEducation"))
-      .param("vocational", params("vocational"))
-      .param("uiLang", params("uiLang"))
-      .responseWithHeaders
-
-    resultString
+    KoulutusInformaatioService.koulutukset(params("asId"), params("opetuspisteId"), params("baseEducation"), params("vocational"), params("uiLang"))
   }
-
 }
