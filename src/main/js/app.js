@@ -11,6 +11,7 @@ var listApp = angular.module('listApp', ["ngResource", "ngAnimate", "ui.bootstra
 require('./hakutoiveController')(listApp)
 require('./listController')(listApp)
 require('./hakemusController')(listApp)
+require('./applicationValidator')(listApp)
 
 listApp.factory("applicationsResource", ["$resource", "$location", function($resource, $location) {
   return $resource("api/applications", null, {

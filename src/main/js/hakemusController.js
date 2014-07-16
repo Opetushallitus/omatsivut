@@ -1,7 +1,7 @@
 var Hakemus = require('./hakemus')
-var QuestionItem = require('./questionItem')
+
 module.exports = function(listApp) {
-  listApp.controller("hakemusController", ["$scope", "$element", "$http", "applicationsResource", function ($scope, $element, $http, applicationsResource) {
+  listApp.controller("hakemusController", ["$scope", "$element", "$http", "applicationsResource", "applicationValidator", function ($scope, $element, $http, applicationsResource, applicationValidator) {
     $scope.hasChanged = false
     $scope.isSaving = false
     $scope.isValid = true
@@ -12,31 +12,18 @@ module.exports = function(listApp) {
         $scope.$emit("applicationChange")
       }
 
-      updateQuestions()
+      updateAdditionalQuestions()
     }, true)
 
     $scope.$watch("application.getAnswerWatchCollection()", function(answers, oldAnswers) {
-      if (oldAnswers != null) {
+      if (!_.isEqual(oldAnswers, {})) {
         $scope.$emit("applicationChange")
       }
     }, true)
 
-    function getQuestions(data) {
-      var errors = _.reduce(data.errors, function(memo, error) {
-        if (memo[error.key] == null)
-          memo[error.key] = []
-        memo[error.key].push(error.translation.translations["fi"])
-        return memo
-      }, {})
-
-      return _(data.questions).map(function(question) { return new QuestionItem(question, errors[question.id.questionId]) })
-    }
-
-    function updateQuestions() {
+    function updateAdditionalQuestions() {
       var application = $scope.application
-      var responsePromise = $http.post("api/applications/validate/" + application.oid, application.toJson());
-      responsePromise.success(function(data, status, headers, config) {
-        questions = getQuestions(data)
+      applicationValidator(application, function(questions) {
         $scope.additionalQuestions = questions
         application.prepareDatabinding(questions)
       })

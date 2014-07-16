@@ -24,9 +24,7 @@ Hakemus.prototype = {
   },
 
   toJson: function() {
-    var json = _.extend({}, this, { hakutoiveet: _(this.hakutoiveet).map(function(hakutoive) { return hakutoive.toJson() })})
-    delete json.questions // TODO add answers
-    return json
+    return _.extend({}, this, { hakutoiveet: _(this.hakutoiveet).map(function(hakutoive) { return hakutoive.toJson() })})
   },
 
   setAsSaved: function() {
