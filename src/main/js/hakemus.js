@@ -63,12 +63,10 @@ Hakemus.prototype = {
     return index >= 0 && index < this.hakutoiveet.length && index <= firstEditableIndex
   },
 
-  prepareDatabinding: function(questions) {
-    var self = this
-    _(questions).each(function(item) {
-      if (!self.answers[item.question.id.phaseId])
-        self.answers[item.question.id.phaseId] = {}
-    })
+  getAnswers: function(phaseId) {
+    if (!this.answers[phaseId])
+      this.answers[phaseId] = {}
+    return this.answers[phaseId]
   }
 }
 

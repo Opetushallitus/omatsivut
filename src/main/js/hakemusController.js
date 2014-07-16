@@ -25,7 +25,6 @@ module.exports = function(listApp) {
       var application = $scope.application
       applicationValidator(application, function(questions) {
         $scope.additionalQuestions = questions
-        application.prepareDatabinding(questions)
       })
     }
 

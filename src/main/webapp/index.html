@@ -82,7 +82,7 @@
                                 <span class="validation-message error">{{item.validationMessage}}</span>
 
                                 <span class="answer" ng-switch="item.question.questionType">
-                                    <input type="text" ng-switch-when="Text" ng-model="application.answers[item.question.id.phaseId][item.question.id.questionId]">
+                                    <input type="text" ng-switch-when="Text" ng-model="application.getAnswers(item.question.id.phaseId)[item.question.id.questionId]">
                                     <select ng-switch-when="Dropdown">
                                         <option ng-repeat="option in item.question.options">{{option.title.translations.fi}}</option>
                                     </select>
