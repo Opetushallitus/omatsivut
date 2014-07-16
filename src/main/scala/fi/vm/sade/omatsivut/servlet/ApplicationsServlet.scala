@@ -3,7 +3,6 @@ package fi.vm.sade.omatsivut.servlet
 import fi.vm.sade.omatsivut.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.domain.{Hakemus, Question, ValidationError}
 import fi.vm.sade.omatsivut.hakemus.{HakemusRepository, HakemusValidator}
-import fi.vm.sade.omatsivut.http.HttpClient
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.security.Authentication
 import org.json4s.jackson.Serialization
