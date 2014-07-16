@@ -8,16 +8,17 @@ import org.scalatra.swagger.{Swagger, SwaggerSupport}
 
 class KoulutusServlet(implicit val swagger: Swagger, val appConfig: AppConfig) extends OmatSivutServletBase with JacksonJsonSupport with JsonFormats with SwaggerSupport {
   protected val applicationDescription = "Oppijan henkilökohtaisen palvelun REST API, jolla etsitään opetuspisteitä ja koulutuksia"
+  val koulutusInformaatio = KoulutusInformaatioService.apply
 
   before() {
     contentType = formats("json")
   }
 
   get("/opetuspisteet/:query") {
-    KoulutusInformaatioService.opetuspisteet(params("asId"), params("query"))
+    koulutusInformaatio.opetuspisteet(params("asId"), params("query"))
   }
 
   get("/koulutukset/:asId/:opetuspisteId") {
-    KoulutusInformaatioService.koulutukset(params("asId"), params("opetuspisteId"), params("baseEducation"), params("vocational"), params("uiLang"))
+    koulutusInformaatio.koulutukset(params("asId"), params("opetuspisteId"), params("baseEducation"), params("vocational"), params("uiLang"))
   }
 }

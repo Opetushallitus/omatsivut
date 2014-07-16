@@ -6,7 +6,7 @@ import org.scalatra.{Cookie, CookieOptions}
 
 trait AuthCookieCreating extends OmatSivutServletBase with AuthCookieParsing  with fi.vm.sade.omatsivut.Logging {
   def createAuthCookieResponse(hetuOption: Option[String], cookieOptions: CookieOptions = CookieOptions(secure = true, path = "/", maxAge = 1799), redirectUri: String)(implicit appConfig: AppConfig) {
-    fetchOid(hetuOption, appConfig.authenticationInfoService) match {
+    fetchOid(hetuOption, AuthenticationInfoService.apply) match {
       case Some(oid) =>
         val encryptedCredentials = AuthenticationCipher().encrypt(CookieCredentials(oid).toString)
         response.addCookie(Cookie("auth", encryptedCredentials)(cookieOptions))

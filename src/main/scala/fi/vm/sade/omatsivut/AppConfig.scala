@@ -18,7 +18,6 @@ object AppConfig extends Logging {
   }
 
   class Default extends AppConfig with ExternalProps {
-    def authenticationInfoService: AuthenticationInfoService = new RemoteAuthenticationInfoService(settings.authenticationService)(this)
     def springConfiguration = new OmatSivutSpringContext.Default()
   }
 
@@ -62,12 +61,6 @@ object AppConfig extends Logging {
   }
 
   trait StubbedExternalDeps extends TestMode {
-    def authenticationInfoService: AuthenticationInfoService = new AuthenticationInfoService {
-      def getHenkiloOID(hetu: String) = hetu match {
-        case "010101-123N" => Some("1.2.246.562.24.14229104472")
-        case _ => None
-      }
-    }
   }
 
   trait TestMode extends AppConfig {
@@ -75,7 +68,6 @@ object AppConfig extends Logging {
   }
 
   trait AppConfig {
-    def authenticationInfoService: AuthenticationInfoService
     def springConfiguration: OmatSivutConfiguration
     lazy val springContext = new OmatSivutSpringContext(OmatSivutSpringContext.createApplicationContext(this))
 
