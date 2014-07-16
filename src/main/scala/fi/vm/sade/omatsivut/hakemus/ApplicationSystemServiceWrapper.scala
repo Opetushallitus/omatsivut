@@ -8,7 +8,7 @@ import org.joda.time.DateTime
 import scala.collection.JavaConversions._
 
 case class ApplicationSystemServiceWrapper(implicit val appConfig: AppConfig) {
-  val repository = appConfig.springContext.applicationSystemService
+  private val repository = appConfig.springContext.applicationSystemService
 
   def findByOid(applicationSystemOid: String): Option[Haku] = {
     tryFind(applicationSystemOid).map { applicationSystem =>

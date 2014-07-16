@@ -82,10 +82,10 @@ object AppConfig extends Logging {
     def isTest: Boolean = false
     def start {}
     def stop {}
-    def withConfig[T](f: => T) = {
+    def withConfig[T](f: (AppConfig => T)): T = {
       start
       try {
-        f
+        f(this)
       } finally {
         stop
       }
