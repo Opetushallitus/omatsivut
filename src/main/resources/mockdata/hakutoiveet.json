@@ -1,0 +1,17 @@
+{
+  "1.2.246.562.14.2014032812530780195965": {
+    "Opetuspiste-id": "1.2.246.562.10.49832689993",
+    "Opetuspiste": "Turun Kristillinen opisto",
+    "Koulutus": "Kymppiluokka",
+    "Koulutus-id-kaksoistutkinto": "false",
+    "Koulutus-id-sora": "false",
+    "Koulutus-id-vocational": "true",
+    "Koulutus-id-lang": "FI",
+    "Koulutus-id-aoIdentifier": "019",
+    "Koulutus-id-athlete": "false",
+    "Koulutus-educationDegree": "22",
+    "Koulutus-id": "1.2.246.562.14.2014032812530780195965",
+    "Opetuspiste-id-parents": "1.2.246.562.10.49832689993,1.2.246.562.10.99018323263,1.2.246.562.10.00000000001",
+    "Koulutus-id-educationcode": "koulutus_020075"
+  }
+}

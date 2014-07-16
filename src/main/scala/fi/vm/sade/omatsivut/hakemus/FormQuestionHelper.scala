@@ -21,30 +21,36 @@ object FormQuestionHelper extends Logging {
         }
     }
   }
-
-  private def getPhases(applicationSystem: ApplicationSystem) = {
-    getElementsOfType[Phase](applicationSystem.getForm)
+  def findQuestions(phase: Phase, element: Element): List[Question] = {
+    getElementsOfType[Titled](element).flatMap { titled =>
+      titledElementToQuestions(phase, titled)
+    }
   }
 
-  private def getElementsOfType[A](rootElement: Element)(implicit mf : Manifest[A]): List[A] = {
+  def getPhases(applicationSystem: ApplicationSystem) = {
+    getChildElementsOfType[Phase](applicationSystem.getForm)
+  }
+
+  private def getChildElementsOfType[A](rootElement: Element)(implicit mf : Manifest[A]): List[A] = {
+    rootElement.getChildren.toList.flatMap { child => getElementsOfType(child)}
+  }
+
+  private def getElementsOfType[A](rootElement: Element, includeRoot: Boolean = false)(implicit mf : Manifest[A]): List[A] = {
     def convertChildElements(element: Element): List[A] = {
-      element.getChildren.toList.flatMap { child => getForChildElements(child)}
+      element.getChildren.toList.flatMap { child => getElementsOfType(child)}
     }
-    def getForChildElements(element: Element): List[A] = {
-      if (mf.runtimeClass.isAssignableFrom(element.getClass)) {
-        element.asInstanceOf[A] :: convertChildElements(element)
-      } else {
-        convertChildElements(element)
-      }
+    if (mf.runtimeClass.isAssignableFrom(rootElement.getClass)) {
+      rootElement.asInstanceOf[A] :: convertChildElements(rootElement)
+    } else {
+      convertChildElements(rootElement)
     }
-    convertChildElements(rootElement)
   }
 
   private def options(e: HakuOption): List[Choice] = {
     e.getOptions.map(o => Choice(title(o), o.getValue, o.isDefaultOption)).toList
   }
   private def options(e: TitledGroup): List[Choice] = {
-    getElementsOfType[HakuCheckBox](e).map(o => Choice(title(o), o.getValue))
+    getChildElementsOfType[HakuCheckBox](e).map(o => Choice(title(o), o.getValue))
   }
   private def title[T <: Titled](e: T): Translations = {
     Translations(e.getI18nText.getTranslations.toMap)
@@ -53,7 +59,7 @@ object FormQuestionHelper extends Logging {
   private def titledElementToQuestions(phase: Phase, element: Titled): List[Question] = {
     def id = QuestionId(phase.getId, element.getId)
     def containsCheckBoxes(e: TitledGroup): Boolean = {
-      getElementsOfType[HakuCheckBox](e).nonEmpty
+      getChildElementsOfType[HakuCheckBox](e).nonEmpty
     }
 
     element match {

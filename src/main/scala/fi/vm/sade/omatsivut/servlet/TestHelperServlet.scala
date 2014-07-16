@@ -1,7 +1,7 @@
 package fi.vm.sade.omatsivut.servlet
 
+import fi.vm.sade.haku.testfixtures.MongoFixtureImporter
 import fi.vm.sade.omatsivut.AppConfig.AppConfig
-import fi.vm.sade.omatsivut.fixtures.FixtureImporter
 import org.scalatra.CookieOptions
 
 class TestHelperServlet(config: AppConfig)(implicit val appConfig: AppConfig) extends AuthCookieCreating  {
@@ -11,7 +11,7 @@ class TestHelperServlet(config: AppConfig)(implicit val appConfig: AppConfig) ex
     }
 
     put("/fixtures/apply") {
-      FixtureImporter.importFixtures(appConfig.mongoTemplate)
+      MongoFixtureImporter.importJsonFixtures(appConfig.mongoTemplate)
     }
   }
 }

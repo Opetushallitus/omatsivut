@@ -1,6 +1,6 @@
 package fi.vm.sade.omatsivut
 
-import fi.vm.sade.omatsivut.fixtures.FixtureImporter
+import fi.vm.sade.haku.testfixtures.MongoFixtureImporter
 import fi.vm.sade.omatsivut.mongo.{EmbeddedMongo, MongoServer}
 import fi.vm.sade.omatsivut.security.{AuthenticationInfoService, RemoteAuthenticationInfoService}
 
@@ -38,7 +38,7 @@ object AppConfig extends Logging {
     override def start {
       mongo = EmbeddedMongo.start
       try {
-        FixtureImporter.importFixtures(mongoTemplate)
+        MongoFixtureImporter.importJsonFixtures(mongoTemplate)
       } catch {
         case e: Exception =>
           stop

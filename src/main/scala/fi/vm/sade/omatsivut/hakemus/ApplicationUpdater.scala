@@ -29,12 +29,12 @@ object ApplicationUpdater {
     val hakuToiveetWithEmptyValues = hakutoiveet.filterKeys(s => s.startsWith(preferenceKeyPrefix)).mapValues(s => "")
     val hakutoiveetWithoutOldPreferences = hakutoiveet.filterKeys(s => !s.startsWith(preferenceKeyPrefix))
     val hakutoiveetAnswers: Map[String, String] = hakemus.answers.getOrElse(hakutoiveetPhase, Map())
-    val updatedHakutoiveet = hakutoiveetWithoutOldPreferences ++ hakuToiveetWithEmptyValues ++ getUpdates(hakemus) ++ hakutoiveetAnswers
+    val updatedHakutoiveet = hakutoiveetWithoutOldPreferences ++ hakuToiveetWithEmptyValues ++ convertHakutoiveet(hakemus.hakutoiveet) ++ hakutoiveetAnswers
     application.addVaiheenVastaukset(hakutoiveetPhase, updatedHakutoiveet)
   }
 
-  private def getUpdates(hakemus: Hakemus): Map[String, String] = {
-    hakemus.hakutoiveet.zipWithIndex.flatMap {
+  def convertHakutoiveet(hakutoiveet: List[Hakemus.Hakutoive]): Map[String, String] = {
+    hakutoiveet.zipWithIndex.flatMap {
       (t) => t._1.map {
         (elem) => (preferenceKeyPrefix + (t._2 + 1) + getDelimiter(elem._1) + elem._1, elem._2)
       }

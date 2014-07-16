@@ -19,7 +19,9 @@ case class ApplicationValidationWrapper(implicit val appConfig: AppConfig) exten
       val applicationSystem = applicationSystemService.getApplicationSystem(hakemus.haku.get.oid)
       val validationErrors: List[ValidationError] = validate(hakemus, applicationSystem)
       val requiredFieldErrors = validationErrors.filter(error => findError(error, "Pakollinen tieto.").isDefined)
-      val questions: List[Question] = FormQuestionHelper.questionsByIds(applicationSystem, requiredFieldErrors.map(_.key))
+      val questions: List[Question] = hakemus.hakutoiveet.flatMap { hakutoive =>
+        RelatedQuestionHelper.findQuestionsByHakutoive(applicationSystem, hakutoive)
+      }
       Some(validationErrors, questions)
     } catch {
       case e: Exception => {

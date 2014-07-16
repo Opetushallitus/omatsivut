@@ -1,6 +1,7 @@
 package fi.vm.sade.omatsivut.koulutusinformaatio
 
 import fi.vm.sade.omatsivut.AppConfig.{AppConfig, StubbedExternalDeps}
+import fi.vm.sade.omatsivut.fixtures.JsonFixtureMaps
 import fi.vm.sade.omatsivut.json.JsonFormats
 
 
@@ -13,26 +14,17 @@ object KoulutusInformaatioService {
   def apply(implicit appConfig: AppConfig): KoulutusInformaatioService = appConfig match {
     case x: StubbedExternalDeps => new KoulutusInformaatioService {
       def opetuspisteet(asId: String, query: String) = {
-        JsonFixtureMaps.find[Opetuspiste]("/mockdata/opetuspisteet.json", query.substring(0, 1).toLowerCase)
+        JsonFixtureMaps.find[List[Opetuspiste]]("/mockdata/opetuspisteet.json", query.substring(0, 1).toLowerCase)
       }
       def koulutukset(asId: String, opetuspisteId: String, baseEducation: String, vocational: String, uiLang: String) = {
-        JsonFixtureMaps.find[Koulutus]("/mockdata/koulutukset.json", opetuspisteId)
+        JsonFixtureMaps.find[List[Koulutus]]("/mockdata/koulutukset.json", opetuspisteId)
       }
     }
     case _ => RemoteKoulutusService()
   }
 }
 
-object JsonFixtureMaps extends JsonFormats {
-  import org.json4s._
-  import org.json4s.jackson.JsonMethods._
-  def find[T](dataFile: String, key: String)(implicit mf: Manifest[T]): List[T] = {
-    val text = io.Source.fromInputStream(getClass.getResourceAsStream(dataFile)).mkString
-    val parsed: JValue = parse(text).asInstanceOf[JObject]
-    val found = parsed \ (key)
-    found.extract[List[T]]
-  }
-}
+
 
 case class RemoteKoulutusService(implicit appConfig: AppConfig) extends KoulutusInformaatioService with JsonFormats {
   import fi.vm.sade.omatsivut.http.HttpClient

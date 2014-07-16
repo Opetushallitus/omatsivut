@@ -10,7 +10,9 @@ module.exports = function(listApp) {
         return memo
       }, {})
 
-      return _(data.questions).map(function(question) { return new QuestionItem(question, errors[question.id.questionId]) })
+      return _(data.questions).map(function(question) {
+        return new QuestionItem(question, errors[question.id.questionId] || [])
+      })
     }
 
     return function(application, success) {

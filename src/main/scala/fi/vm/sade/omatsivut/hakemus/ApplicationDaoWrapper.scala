@@ -4,6 +4,7 @@ import java.util
 
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.omatsivut.AppConfig.AppConfig
+import fi.vm.sade.omatsivut.domain.Hakemus.Hakutoive
 import fi.vm.sade.omatsivut.domain.{EducationBackground, Hakemus, Haku}
 
 import scala.collection.JavaConversions._
@@ -31,7 +32,7 @@ case class ApplicationDaoWrapper(implicit val appConfig: AppConfig) {
     case applicationSystemId => HakuRepository().getApplicationSystemById(applicationSystemId)
   }
 
-  private def convertHakuToiveet(application: Application): List[Map[String, String]] = {
+  private def convertHakuToiveet(application: Application): List[Hakutoive] = {
     val answers: util.Map[String, util.Map[String, String]] = application.getAnswers
     val hakuToiveetData: Map[String, String] = answers.get("hakutoiveet").toMap
     HakutoiveetConverter.convert(hakuToiveetData)
