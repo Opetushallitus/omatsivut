@@ -56,7 +56,7 @@ module.exports = function(listApp) {
     $scope.findOpetuspiste = function(val) {
       return $http.get('koulutusinformaatio/opetuspisteet/' + val, {
         params: {
-          asId: '1.2.246.562.5.2014022711042555034240' // TODO: fixed data
+          asId: $scope.application.haku.oid
         }
       }).then(function(res){
         return res.data;
