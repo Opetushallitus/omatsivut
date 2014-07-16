@@ -18,7 +18,7 @@ trait AuthCookieCreating extends OmatSivutServletBase with AuthCookieParsing  wi
     }
   }
 
-  private def fetchOid(hetuOption: Option[String], authService: AuthenticationInfoService) = {
+  def fetchOid(hetuOption: Option[String], authService: AuthenticationInfoService) = {
     for {
       hetu <- hetuOption
       oid <- authService.getHenkiloOID(hetu)

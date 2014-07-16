@@ -17,7 +17,7 @@ class ScalatraBootstrap extends LifeCycle {
     context.mount(new KoulutusServlet, "/koulutusinformaatio")
     context.mount(new SwaggerServlet, "/swagger/*")
     context.mount(new SessionServlet, "/secure")
-    context.mount(new TestHelperServlet(config), "/util")
+    context.mount(new TestHelperServlet, "/util")
   }
 
   override def destroy(context: ServletContext) = {
