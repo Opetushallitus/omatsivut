@@ -16,6 +16,6 @@ case class Radio(id: QuestionId, title: Translations, options: List[Choice], que
 case class Checkbox(id: QuestionId, title: Translations, options: List[Choice], questionType: String = "Checkbox") extends Optional
 case class Dropdown(id: QuestionId, title: Translations, options: List[Choice], questionType: String = "Dropdown") extends Optional
 
-case class Choice(title: Translations, default: Boolean)
+case class Choice(title: Translations, value: String, default: Boolean = false)
 
 case class QuestionId(phaseId: String, questionId: String)

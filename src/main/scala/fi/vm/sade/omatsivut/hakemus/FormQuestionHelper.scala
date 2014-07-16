@@ -2,10 +2,10 @@ package fi.vm.sade.omatsivut.hakemus
 
 import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
 import fi.vm.sade.haku.oppija.lomake.domain.elements.custom.SocialSecurityNumber
-import fi.vm.sade.haku.oppija.lomake.domain.elements.{Element, Phase, Titled}
+import fi.vm.sade.haku.oppija.lomake.domain.elements.{TitledGroup, Element, Phase, Titled}
 import fi.vm.sade.omatsivut.Logging
 import fi.vm.sade.omatsivut.domain._
-import fi.vm.sade.haku.oppija.lomake.domain.elements.questions.{DropdownSelect, TextQuestion, OptionQuestion => HakuOption, Radio => HakuRadio, TextArea => HakuTextArea}
+import fi.vm.sade.haku.oppija.lomake.domain.elements.questions.{DropdownSelect, TextQuestion, OptionQuestion => HakuOption, Radio => HakuRadio, TextArea => HakuTextArea, CheckBox => HakuCheckBox}
 import collection.JavaConversions._
 
 object FormQuestionHelper extends Logging {
@@ -40,14 +40,20 @@ object FormQuestionHelper extends Logging {
     convertChildElements(rootElement)
   }
 
+  private def options(e: HakuOption): List[Choice] = {
+    e.getOptions.map(o => Choice(title(o), o.getValue, o.isDefaultOption)).toList
+  }
+  private def options(e: TitledGroup): List[Choice] = {
+    getElementsOfType[HakuCheckBox](e).map(o => Choice(title(o), o.getValue))
+  }
+  private def title[T <: Titled](e: T): Translations = {
+    Translations(e.getI18nText.getTranslations.toMap)
+  }
 
   private def titledElementToQuestions(phase: Phase, element: Titled): List[Question] = {
     def id = QuestionId(phase.getId, element.getId)
-    def title(e: Titled): Translations = {
-      Translations(e.getI18nText.getTranslations.toMap)
-    }
-    def options(e: HakuOption): List[Choice] = {
-      e.getOptions.map(o => Choice(title(o), o.isDefaultOption)).toList
+    def containsCheckBoxes(e: TitledGroup): Boolean = {
+      getElementsOfType[HakuCheckBox](e).nonEmpty
     }
 
     element match {
@@ -55,6 +61,7 @@ object FormQuestionHelper extends Logging {
       case e: HakuTextArea => List(TextArea(id, title(e)))
       case e: HakuRadio => List(Radio(id, title(e), options(e)))
       case e: DropdownSelect => List(Dropdown(id, title(e), options(e)))
+      case e: TitledGroup if containsCheckBoxes(e) => List(Checkbox(id, title(e), options(e)))
       case e: SocialSecurityNumber => List(Text(id, title(e))) // Should never happen in prod
       case _ => {
         logger.error("Could not convert element of type: " + element.getType)
