@@ -41,8 +41,8 @@ module.exports = function(listApp) {
       this.hakutoive.setKoulutus(this["valittuKoulutus"])
     }
 
-    function findKoulutukset(applicationOid, opetuspisteId, educationBackground) {
-      return $http.get("https://testi.opintopolku.fi/ao/search/" + applicationOid + "/" + opetuspisteId, {
+    function findKoulutukset(asId, opetuspisteId, educationBackground) {
+      return $http.get("koulutusinformaatio/koulutukset/" + asId + "/" + opetuspisteId, {
         params: {
           baseEducation: educationBackground.baseEducation,
           vocational: educationBackground.vocational,
@@ -54,7 +54,7 @@ module.exports = function(listApp) {
     }
 
     $scope.findOpetuspiste = function(val) {
-      return $http.get('https://testi.opintopolku.fi/lop/search/' + val, {
+      return $http.get('koulutusinformaatio/opetuspisteet/' + val, {
         params: {
           asId: '1.2.246.562.5.2014022711042555034240'
         }

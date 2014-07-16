@@ -3,9 +3,7 @@ package fi.vm.sade.omatsivut.http
 import scalaj.http.Http
 import scalaj.http.HttpOptions
 
-
-trait HttpClient {
-
+object HttpClient {
   def httpGet(url: String) : HttpRequest = {
     new HttpRequest(Http.get(url)
   		.options(HttpOptions.connTimeout(5000))
@@ -19,5 +17,4 @@ trait HttpClient {
   		.option(HttpOptions.readTimeout(10000))
     )
   }
-  
 }
