@@ -81,6 +81,7 @@
                                 <label class="title">{{item.question.context.path}}</label>
                                 <label class="title">{{item.question.title.translations.fi}}</label>
                                 <span class="validation-message error">{{item.validationMessage}}</span>
+                                <div class="instruction">{{item.question.help.translations.fi}}</div>
 
                                 <span class="answer" ng-switch="item.question.questionType">
                                     <input type="text" ng-switch-when="Text" ng-model="application.getAnswers(item.question.id.phaseId)[item.question.id.questionId]">

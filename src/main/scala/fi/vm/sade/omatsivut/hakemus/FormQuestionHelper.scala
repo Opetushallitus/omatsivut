@@ -66,6 +66,13 @@ object FormQuestionHelper extends Logging {
   private def title[T <: Titled](e: T): Translations = {
     Translations(e.getI18nText.getTranslations.toMap)
   }
+  private def helpText[T <: Titled](e: T): Translations = {
+    val help = e.getVerboseHelp()
+    if (help == null)
+      Translations(Map())
+    else
+      Translations(e.getVerboseHelp().getTranslations.toMap)
+  }
 
   private def titledElementToQuestions(contextElement: Element, element: Titled): List[Question] = {
     val elementContext = new ElementContext(contextElement, element)
@@ -78,12 +85,12 @@ object FormQuestionHelper extends Logging {
     }
 
     element match {
-      case e: TextQuestion => List(Text(ctx, id, title(e)))
-      case e: HakuTextArea => List(TextArea(ctx, id, title(e)))
-      case e: HakuRadio => List(Radio(ctx, id, title(e), options(e)))
-      case e: DropdownSelect => List(Dropdown(ctx, id, title(e), options(e)))
-      case e: TitledGroup if containsCheckBoxes(e) => List(Checkbox(ctx, id, title(e), options(e)))
-      case e: SocialSecurityNumber => List(Text(ctx, id, title(e))) // Should never happen in prod
+      case e: TextQuestion => List(Text(ctx, id, title(e), helpText(e)))
+      case e: HakuTextArea => List(TextArea(ctx, id, title(e), helpText(e)))
+      case e: HakuRadio => List(Radio(ctx, id, title(e), helpText(e), options(e)))
+      case e: DropdownSelect => List(Dropdown(ctx, id, title(e), helpText(e), options(e)))
+      case e: TitledGroup if containsCheckBoxes(e) => List(Checkbox(ctx, id, title(e), helpText(e), options(e)))
+      case e: SocialSecurityNumber => List(Text(ctx, id, title(e), helpText(e))) // Should never happen in prod
       case _ => {
         logger.error("Could not convert element of type: " + element.getType)
         Nil
