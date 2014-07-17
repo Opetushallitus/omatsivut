@@ -6,6 +6,8 @@ import fi.vm.sade.omatsivut.servlet.ApplicationsServlet
 import org.json4s._
 import org.json4s.native.{JsonMethods, Serialization}
 
+import scala.tools.nsc.interpreter.JList
+
 class ValidateApplicationSpec extends JsonFormats with ScalatraTestSupport {
   override implicit lazy val appConfig = new AppConfig.IT
   sequential
@@ -19,18 +21,16 @@ class ValidateApplicationSpec extends JsonFormats with ScalatraTestSupport {
           status must_== 200
           val result: JValue = JsonMethods.parse(body)
           val errors: List[ValidationError] = (result \ "errors").extract[List[ValidationError]]
-          //val questions: List[QuestionGroup] = (result \ "questions").extract[List[QuestionGroup]]
+          val structuredQuestions: List[QuestionNode] = (result \ "questions").extract[List[QuestionNode]]
           errors.size must_== 3
-          //questions.size must_== 2
-          //questions must contain(AnyQuestion(QuestionId("osaaminen", "539159b0e4b0b56e67d2c74d"), "Päättötodistuksen kaikkien oppiaineiden keskiarvo?", "", "Text"))
+          structuredQuestions.size must_== 1
+          val flatQuestions = structuredQuestions.flatMap(_.flatten)
+          flatQuestions.size must_== 4
+          flatQuestions must contain(Text(QuestionContext(List("Osaaminen", "Arvosanat", "Turun Kristillinen opisto")), QuestionId("osaaminen", "539159b0e4b0b56e67d2c74d"), "Päättötodistuksen kaikkien oppiaineiden keskiarvo?", "", "Text"))
         }
       }
     }
   }
 
   addServlet(new ApplicationsServlet(), "/*")
-}
-
-case class AnyQuestion(id: QuestionId, title: String, help: String, questionType: String) extends Question {
-  def context = QuestionContext(Nil)
 }

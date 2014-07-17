@@ -2,15 +2,19 @@ package fi.vm.sade.omatsivut.domain
 
 sealed trait QuestionNode {
   def title: String
+  def flatten: List[Question]
 }
 
-case class QuestionGroup(title: String, questions: List[QuestionNode]) extends QuestionNode
+case class QuestionGroup(title: String, questions: List[QuestionNode]) extends QuestionNode {
+  def flatten = questions.flatMap(_.flatten)
+}
 
 trait Question extends QuestionNode {
   def help: String
   def questionType: String
   def id: QuestionId
   def context: QuestionContext
+  def flatten = List(this)
 }
 
 trait Optional extends Question {
