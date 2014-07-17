@@ -51,7 +51,7 @@ object FormQuestionHelper extends Logging {
     e.getOptions.map(o => Choice(title(o), o.getValue, o.isDefaultOption)).toList
   }
   private def options(e: TitledGroup): List[Choice] = {
-    getChildElementsOfType[HakuCheckBox](e).map(o => Choice(title(o), o.getValue))
+    getChildElementsOfType[HakuCheckBox](e).map(o => Choice(title(o), o.getId()))
   }
   private def title[T <: Titled](e: T): Translations = {
     Translations(e.getI18nText.getTranslations.toMap)

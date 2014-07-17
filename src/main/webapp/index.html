@@ -95,6 +95,13 @@
                                                    value={{option.value}} /> {{option.title.translations.fi}}
                                         </label>
                                     </div>
+
+                                    <div ng-switch-when="Checkbox">
+                                        <label class="radio-button-item" ng-repeat="option in item.question.options">
+                                            <input type="checkbox" ng-model="application.getAnswers(item.question.id.phaseId)[option.value]">
+                                            {{option.title.translations.fi}}
+                                        </label>
+                                    </div>
                                 </span>
                             </li>
                         </div>
