@@ -23,13 +23,9 @@ object FormQuestionHelper extends Logging {
     }
   }
 
-  def describePath(path: List[String]): String = path.foldLeft("") { (a,b) => a + " > " + b}
-
-  def findQuestions(contextElement: Element, element: Element): List[QuestionNode] = {
+  def findQuestions(contextElement: Element, element: Element): List[Question] = {
     getElementsOfType[Titled](element).flatMap { titled =>
-      titledElementToQuestions(contextElement, titled).groupBy(_.context.path).toList.map {
-        case (path, questions) => QuestionGroup(describePath(path), questions)
-      }
+      titledElementToQuestions(contextElement, titled)
     }
   }
 
