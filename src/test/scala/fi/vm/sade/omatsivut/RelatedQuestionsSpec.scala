@@ -16,9 +16,9 @@ class RelatedQuestionsSpec extends Specification {
 
     "Find related questions when adding Hakutoive" in {
       var addedQuestions = findAddedQuestions(answersWithNewHakutoive, Hakemus.emptyAnswers)
-      addedQuestions.length must_== 4
+      addedQuestions.length must_== 2
       addedQuestions = RelatedQuestionHelper.findQuestionsByHakutoive(as, hakutoive)
-      addedQuestions.length must_== 4
+      addedQuestions.length must_== 2
     }
 
     "Report zero additional questions when keeping same answers" in {
