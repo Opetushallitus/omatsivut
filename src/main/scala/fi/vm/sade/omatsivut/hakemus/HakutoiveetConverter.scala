@@ -1,8 +1,5 @@
 package fi.vm.sade.omatsivut.hakemus
 
-import java.util
-
-import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.omatsivut.domain.Hakemus
 import fi.vm.sade.omatsivut.domain.Hakemus._
 

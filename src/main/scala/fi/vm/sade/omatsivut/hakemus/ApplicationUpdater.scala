@@ -24,10 +24,7 @@ object ApplicationUpdater {
   }
 
   private def updateHakutoiveet(application: Application, hakemus: Hakemus) {
-    val hakutoiveetAnswers: Map[String, String] = application.getPhaseAnswers(hakutoiveetPhase).toMap
-
-    val updatedHakutoiveet: Map[String, String] = HakutoiveetConverter.updateAnswers(hakemus, hakutoiveetAnswers)
-
-    application.addVaiheenVastaukset(hakutoiveetPhase, updatedHakutoiveet)
+    val updatedAnswers: Map[String, String] = HakutoiveetConverter.updateAnswers(hakemus, application.getPhaseAnswers(hakutoiveetPhase).toMap)
+    application.addVaiheenVastaukset(hakutoiveetPhase, updatedAnswers)
   }
 }
