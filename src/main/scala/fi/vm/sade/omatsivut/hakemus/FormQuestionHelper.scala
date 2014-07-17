@@ -32,6 +32,16 @@ object FormQuestionHelper extends Logging {
     getChildElementsOfType[Phase](applicationSystem.getForm)
   }
 
+  private def getImmediateChildElementsOfType[A](rootElement: Element)(implicit mf : Manifest[A]): List[A] = {
+    rootElement.getChildren.toList.flatMap { child =>
+      if (mf.runtimeClass.isAssignableFrom(child.getClass)) {
+        List(child.asInstanceOf[A])
+      } else {
+        Nil
+      }
+    }
+  }
+
   private def getChildElementsOfType[A](rootElement: Element)(implicit mf : Manifest[A]): List[A] = {
     rootElement.getChildren.toList.flatMap { child => getElementsOfType(child)}
   }
@@ -61,7 +71,7 @@ object FormQuestionHelper extends Logging {
     val elementContext = new ElementContext(contextElement, element)
     def id = QuestionId(elementContext.phase.getId, element.getId)
     def containsCheckBoxes(e: TitledGroup): Boolean = {
-      getChildElementsOfType[HakuCheckBox](e).nonEmpty
+      getImmediateChildElementsOfType[HakuCheckBox](e).nonEmpty
     }
     def ctx = {
       QuestionContext(elementContext.namedParentPath)
