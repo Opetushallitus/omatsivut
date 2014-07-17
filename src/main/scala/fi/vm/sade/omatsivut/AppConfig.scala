@@ -2,7 +2,6 @@ package fi.vm.sade.omatsivut
 
 import fi.vm.sade.haku.testfixtures.MongoFixtureImporter
 import fi.vm.sade.omatsivut.mongo.{EmbeddedMongo, MongoServer}
-import fi.vm.sade.omatsivut.security.{AuthenticationInfoService, RemoteAuthenticationInfoService}
 
 object AppConfig extends Logging {
   def fromSystemProperty: AppConfig = {
