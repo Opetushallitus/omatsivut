@@ -1,13 +1,13 @@
 package fi.vm.sade.omatsivut.hakemus
 
 import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
-import fi.vm.sade.haku.oppija.lomake.domain.elements.custom.SocialSecurityNumber
 import fi.vm.sade.haku.oppija.lomake.domain.elements._
+import fi.vm.sade.haku.oppija.lomake.domain.elements.custom.SocialSecurityNumber
+import fi.vm.sade.haku.oppija.lomake.domain.elements.questions.{DropdownSelect, TextQuestion, CheckBox => HakuCheckBox, OptionQuestion => HakuOption, Radio => HakuRadio, TextArea => HakuTextArea}
 import fi.vm.sade.omatsivut.Logging
-import fi.vm.sade.omatsivut.domain.Text
 import fi.vm.sade.omatsivut.domain._
-import fi.vm.sade.haku.oppija.lomake.domain.elements.questions.{DropdownSelect, TextQuestion, OptionQuestion => HakuOption, Radio => HakuRadio, TextArea => HakuTextArea, CheckBox => HakuCheckBox}
-import collection.JavaConversions._
+
+import scala.collection.JavaConversions._
 
 object FormQuestionHelper extends Logging {
   def questionsByIds(applicationSystem: ApplicationSystem, ids: Seq[String]): List[Question] = {

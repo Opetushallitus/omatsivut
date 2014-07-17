@@ -1,11 +1,10 @@
 package fi.vm.sade.omatsivut.http
 
-import scalaj.http.Http
-import scalaj.http.Http.Request
-import java.io.FileNotFoundException
-import scala.collection.immutable.HashMap
-import scalaj.http.HttpException
 import fi.vm.sade.omatsivut.Logging
+
+import scala.collection.immutable.HashMap
+import scalaj.http.Http.Request
+import scalaj.http.{Http, HttpException}
 
 class HttpRequest(private val request: Request) extends Logging {
 

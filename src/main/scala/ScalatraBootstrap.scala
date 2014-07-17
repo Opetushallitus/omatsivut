@@ -1,9 +1,9 @@
+import javax.servlet.ServletContext
+
 import fi.vm.sade.omatsivut.AppConfig.AppConfig
 import fi.vm.sade.omatsivut._
-import fi.vm.sade.omatsivut.mongo.{EmbeddedMongo, MongoServer}
 import fi.vm.sade.omatsivut.servlet._
 import org.scalatra._
-import javax.servlet.ServletContext
 
 class ScalatraBootstrap extends LifeCycle {
   implicit val swagger = new OmatSivutSwagger

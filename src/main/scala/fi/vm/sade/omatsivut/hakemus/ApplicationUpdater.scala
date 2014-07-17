@@ -4,6 +4,7 @@ import java.util.Date
 
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.omatsivut.domain.Hakemus
+
 import scala.collection.JavaConversions._
 
 object ApplicationUpdater {

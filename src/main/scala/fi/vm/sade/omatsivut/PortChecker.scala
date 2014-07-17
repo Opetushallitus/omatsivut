@@ -1,7 +1,7 @@
 package fi.vm.sade.omatsivut
 
 import java.io.IOException
-import java.net.{Socket, ServerSocket}
+import java.net.Socket
 
 object PortChecker {
   def isFreeLocalPort(port: Int): Boolean = {

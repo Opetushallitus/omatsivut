@@ -3,7 +3,7 @@ package fi.vm.sade.omatsivut.hakemus
 import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
 import fi.vm.sade.haku.oppija.lomake.domain.elements.Element
 import fi.vm.sade.omatsivut.domain.Hakemus._
-import fi.vm.sade.omatsivut.domain.{QuestionGroup, QuestionNode, Question}
+import fi.vm.sade.omatsivut.domain.{QuestionGroup, QuestionNode}
 
 import scala.collection.JavaConversions._
 

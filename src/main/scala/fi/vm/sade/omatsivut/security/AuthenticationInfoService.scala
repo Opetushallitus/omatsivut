@@ -1,8 +1,8 @@
 package fi.vm.sade.omatsivut.security
 
-import fi.vm.sade.omatsivut.AppConfig.{MockAuthentication, StubbedExternalDeps, AppConfig}
+import fi.vm.sade.omatsivut.AppConfig.{AppConfig, MockAuthentication}
 import fi.vm.sade.omatsivut.http.HttpClient
-import fi.vm.sade.omatsivut.{RemoteApplicationConfig, AppConfig, Logging}
+import fi.vm.sade.omatsivut.{Logging, RemoteApplicationConfig}
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
 

@@ -4,6 +4,7 @@ import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.virkailija.authentication.{Person, PersonBuilder}
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 import fi.vm.sade.omatsivut.AppConfig.AppConfig
+
 import scala.collection.JavaConversions._
 
 class FixtureUtility(implicit val appConfig: AppConfig) {

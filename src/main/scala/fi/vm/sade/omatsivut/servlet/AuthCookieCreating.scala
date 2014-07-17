@@ -1,7 +1,7 @@
 package fi.vm.sade.omatsivut.servlet
 
 import fi.vm.sade.omatsivut.AppConfig.AppConfig
-import fi.vm.sade.omatsivut.security.{AuthenticationInfoService, CookieCredentials, AuthenticationCipher, AuthCookieParsing}
+import fi.vm.sade.omatsivut.security.{AuthCookieParsing, AuthenticationCipher, AuthenticationInfoService, CookieCredentials}
 import org.scalatra.{Cookie, CookieOptions}
 
 trait AuthCookieCreating extends OmatSivutServletBase with AuthCookieParsing  with fi.vm.sade.omatsivut.Logging {

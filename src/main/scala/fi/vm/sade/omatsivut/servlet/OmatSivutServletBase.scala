@@ -1,8 +1,7 @@
 package fi.vm.sade.omatsivut.servlet
 
-import org.scalatra._
-import org.slf4j.LoggerFactory
 import fi.vm.sade.omatsivut.Logging
+import org.scalatra._
 
 trait OmatSivutServletBase extends ScalatraServlet with Logging {
   notFound {

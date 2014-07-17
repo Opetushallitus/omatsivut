@@ -5,8 +5,8 @@ import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
 import fi.vm.sade.haku.oppija.lomake.validation.{ValidationInput, ValidationResult}
 import fi.vm.sade.omatsivut.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.Logging
-import fi.vm.sade.omatsivut.domain._
 import fi.vm.sade.omatsivut.domain.Hakemus._
+import fi.vm.sade.omatsivut.domain._
 
 import scala.collection.JavaConversions._
 

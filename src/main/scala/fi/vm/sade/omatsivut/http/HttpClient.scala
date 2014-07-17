@@ -1,7 +1,6 @@
 package fi.vm.sade.omatsivut.http
 
-import scalaj.http.Http
-import scalaj.http.HttpOptions
+import scalaj.http.{Http, HttpOptions}
 
 object HttpClient {
   def httpGet(url: String) : HttpRequest = {

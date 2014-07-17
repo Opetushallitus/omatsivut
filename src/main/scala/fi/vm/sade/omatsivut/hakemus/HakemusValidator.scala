@@ -1,8 +1,8 @@
 package fi.vm.sade.omatsivut.hakemus
 
 import fi.vm.sade.omatsivut.AppConfig.AppConfig
-import fi.vm.sade.omatsivut.domain.{QuestionNode, Question, ValidationError, Hakemus}
 import fi.vm.sade.omatsivut.Logging
+import fi.vm.sade.omatsivut.domain.{Hakemus, QuestionNode, ValidationError}
 
 case class HakemusValidator(implicit val appConfig: AppConfig) extends Logging {
   def validate(hakemus: Hakemus): (List[ValidationError], List[QuestionNode]) = {
