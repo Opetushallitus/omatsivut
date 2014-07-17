@@ -25,6 +25,28 @@
       "name": "Anna Tapion säätiö"
     }
   ],
+  "e": [
+    {
+      "id": "1.2.246.562.10.51207906986",
+      "name": "Etelä-Kymenlaakson ammattiopisto, Haminan kampus"
+    },
+    {
+      "id": "1.2.246.562.10.508585004610",
+      "name": "Etelä-Kymenlaakson ammattiopisto, Kotekon kampus"
+    },
+    {
+      "id": "1.2.246.562.10.46273628811",
+      "name": "Etelä-Pohjanmaan Opisto"
+    },
+    {
+      "id": "1.2.246.562.10.290189957610",
+      "name": "Etelä-Savon ammattiopisto,  Otavankatu 4"
+    },
+    {
+      "id": "1.2.246.562.10.64653891404",
+      "name": "Etelä-Savon ammattiopisto,  peruskoulutukseen valmistavat koulutukset"
+    }
+  ],
   "t": [
     {
       "id": "1.2.246.562.10.49832689993",

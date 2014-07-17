@@ -109,13 +109,16 @@ class ElementContext(val contextElement: Element, val element: Element) {
 
   lazy val phase: Phase = byType[Phase](parentsFromRootDown).head
 
-  def namedParentPath: List[String] = {
-    parentsFromRootDown.flatMap {
-      case t: Theme => List(t.getId)
-      case p: Phase => List(p.getId)
-      case t: TitledGroup => List(t.getId)
-      case _ => Nil
+  lazy val namedParentPath: List[String] = {
+    def title(e: Element): List[String] = {
+      val lang: String = "fi" // TODO: kieliversio
+      e match {
+        case e: Titled if (e.getI18nText != null && e.getI18nText.getTranslations != null && e.getI18nText.getTranslations.get(lang) != null) =>
+          List(e.getI18nText.getTranslations.get(lang))
+        case _ => Nil
+      }
     }
+    parentsFromRootDown.tail.flatMap(title).distinct
   }
 
   private def byType[T](xs: List[AnyRef])(implicit mf: Manifest[T]): List[T] = {

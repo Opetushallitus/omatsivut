@@ -78,6 +78,7 @@
                         <header class="application-section-heading">Lisäkysymykset</header>
                         <div class="questions">
                             <li class="question" ng-repeat="item in additionalQuestions">
+                                <label class="title">{{item.question.context.path}}</label>
                                 <label class="title">{{item.question.title.translations.fi}}</label>
                                 <span class="validation-message error">{{item.validationMessage}}</span>
 
