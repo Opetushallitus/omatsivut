@@ -78,7 +78,15 @@ Hakemus.prototype = {
 
     function setDefaultAnswer(item) {
       var phaseAnswers = self.getAnswers(item.question.id.phaseId)
-      phaseAnswers[item.question.id.questionId] = phaseAnswers[item.question.id.questionId] || defaultValue(item.question.options)
+      function setValueIfEmpty(key, val) { phaseAnswers[key] = phaseAnswers[key] || val }
+
+      if (item.question.questionType == "Checkbox") {
+        _(item.question.options).each(function(option) {
+          setValueIfEmpty(option.value, false)
+        })
+      } else {
+        setValueIfEmpty(item.question.id.questionId, defaultValue(item.question.options))
+      }
     }
 
     _(questions).chain()
