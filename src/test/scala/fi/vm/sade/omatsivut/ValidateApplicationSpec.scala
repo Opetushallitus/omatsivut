@@ -6,8 +6,6 @@ import fi.vm.sade.omatsivut.servlet.ApplicationsServlet
 import org.json4s._
 import org.json4s.native.{JsonMethods, Serialization}
 
-import scala.tools.nsc.interpreter.JList
-
 class ValidateApplicationSpec extends JsonFormats with ScalatraTestSupport {
   override implicit lazy val appConfig = new AppConfig.IT
   sequential
