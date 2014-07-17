@@ -36,12 +36,14 @@ object HakutoiveetConverter {
   }
 
   def answersContainHakutoive(answers: Map[String, String], hakutoive: Hakutoive) = {
-    val opetusPiste = hakutoive.get("Opetuspiste-id").get
-    val koulutus = hakutoive.get("Koulutus-id").get
-    val flatAnswers = answers.toList.map {
-      case (key, value) => (shortenKey(key), value)
+    (hakutoive.get("Opetuspiste-id"), hakutoive.get("Koulutus-id")) match {
+      case (Some(opetusPiste), Some(koulutus)) =>
+        val flatAnswers = answers.toList.map {
+          case (key, value) => (shortenKey(key), value)
+        }
+        flatAnswers.contains(("Opetuspiste-id", opetusPiste)) && flatAnswers.contains("Koulutus-id", koulutus)
+      case _ => false
     }
-    flatAnswers.contains(("Opetuspiste-id", opetusPiste)) && flatAnswers.contains("Koulutus-id", koulutus)
   }
 
   private def shortenKey(key: String): String = {
