@@ -19,13 +19,18 @@ class ValidateApplicationSpec extends JsonFormats with ScalatraTestSupport {
           status must_== 200
           val result: JValue = JsonMethods.parse(body)
           val errors: List[ValidationError] = (result \ "errors").extract[List[ValidationError]]
-          val structuredQuestions: List[QuestionNode] = (result \ "questions").extract[List[QuestionNode]]
           errors.size must_== 1
-          structuredQuestions.size must_== 1
+          val structuredQuestions: List[QuestionNode] = (result \ "questions").extract[List[QuestionNode]]
+          structuredQuestions.size must_== 0
+        }
+
+        /* TODO: test adding new hakutoive and check questions
+
           val flatQuestions = structuredQuestions.flatMap(_.flatten)
           flatQuestions.size must_== 4
           flatQuestions must contain(Text(QuestionContext(List("Osaaminen", "Arvosanat", "Turun Kristillinen opisto")), QuestionId("osaaminen", "539159b0e4b0b56e67d2c74d"), "Päättötodistuksen kaikkien oppiaineiden keskiarvo?", "", "Text"))
-        }
+
+         */
       }
     }
   }

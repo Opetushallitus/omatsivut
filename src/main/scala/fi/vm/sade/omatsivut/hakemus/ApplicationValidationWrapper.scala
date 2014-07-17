@@ -31,10 +31,7 @@ case class ApplicationValidationWrapper(implicit val appConfig: AppConfig) exten
   }
 
   private def applicationContains(application: Application)(hakutoive: Hakutoive) = {
-    val opetusPiste = hakutoive.get("Opetuspiste-id")
-    val koulutus = hakutoive.get("Koulutus-id")
-    //application.getAnswers.get("hakutoiveet").toMap.
-    false
+    HakutoiveetConverter.answersContainHakutoive(application.getAnswers.get("hakutoiveet").toMap, hakutoive)
   }
 
   private def validate(hakemus: Hakemus, applicationSystem: ApplicationSystem): List[ValidationError] = {
