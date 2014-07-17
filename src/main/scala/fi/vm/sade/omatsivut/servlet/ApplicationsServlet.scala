@@ -6,6 +6,7 @@ import fi.vm.sade.omatsivut.hakemus.{HakemusRepository, HakemusValidator}
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.security.Authentication
 import org.json4s.jackson.Serialization
+import org.scalatra.{Ok, BadRequest}
 import org.scalatra.json._
 import org.scalatra.swagger.SwaggerSupportSyntax.OperationBuilder
 import org.scalatra.swagger._
@@ -38,7 +39,13 @@ class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfi
 
   put("/applications/:oid", operation(putApplicationsSwagger)) {
     val updated = Serialization.read[Hakemus](request.body)
-    HakemusRepository().updateHakemus(updated)
+    val (errors, _) = HakemusValidator().validate(updated)
+    if(errors.isEmpty) {
+      HakemusRepository().updateHakemus(updated)
+      Ok(updated.oid)
+    } else {
+      BadRequest(errors)
+    }
   }
 
   post("/applications/validate/:oid", operation(validateApplicationsSwagger)) {

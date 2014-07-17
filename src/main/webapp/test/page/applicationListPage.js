@@ -4,7 +4,7 @@ function ApplicationListPage() {
 
   var api = {
     resetDataAndOpen: function () {
-      return db.resetData().then(openListPage)
+      return db.resetData().then(function() { return session.init(testHetu)} ).then(openListPage)
     },
 
     hetu: function () {
