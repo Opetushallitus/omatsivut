@@ -18,7 +18,7 @@
             <ul id="hakemus-list" ng-cloak>
 
                 <li ng-repeat="application in applications" class="application-list-item" ng-controller="hakemusController">
-                    <h2>{{application.haku.name.translations.fi}}</h2>
+                    <h2>{{application.haku.name }}</h2>
                     <p ng-repeat="period in application.haku.applicationPeriods">
                       Hakukausi: {{period.start | date:'dd.MM.yyyy HH:mm'}} - {{period.end | date:'dd.MM.yyyy HH:mm'}}</p>
                     </p>
