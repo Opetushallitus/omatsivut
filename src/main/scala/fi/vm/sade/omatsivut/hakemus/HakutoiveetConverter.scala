@@ -1,10 +1,19 @@
 package fi.vm.sade.omatsivut.hakemus
 
+import java.util
+
+import fi.vm.sade.haku.oppija.hakemus.domain.Application
+import fi.vm.sade.omatsivut.domain.Hakemus
+import fi.vm.sade.omatsivut.domain.Hakemus._
+
 /**
  * Created by singen on 15.7.2014.
  */
 object HakutoiveetConverter {
-  def convert(toiveet: Map[String, String]): List[Map[String, String]] = {
+  val preferenceKeyPrefix: String = "preference"
+  val hakutoiveetPhase: String = "hakutoiveet"
+
+  def convertFromAnswers(toiveet: Map[String, String]): List[Map[String, String]] = {
     groupPreferences(toiveet)
       .toList
       .map(shortenNames)
@@ -13,12 +22,36 @@ object HakutoiveetConverter {
       .map((m) => m.filterKeys { Set("priority").contains(_) == false})
   }
 
-  private def shortenKey(v: (String, String), delimiter: Char = '-') = {
-    v._1.substring(v._1.indexOf(delimiter) + 1)
+  def convertToAnswers(hakutoiveet: List[Hakemus.Hakutoive]): Map[String, String] = {
+    def getDelimiter(s: String) = if(s.contains("_")) "_" else "-"
+
+    hakutoiveet.zipWithIndex.flatMap {
+      case (hakutoive, index) => hakutoive.map {
+        case (key, value) => (preferenceKeyPrefix + (index + 1) + getDelimiter(key) + key, value)
+      }
+    }.toMap[String, String]
   }
 
-  private def tupleWithShortKey(v: (String, String)) = {
-    if (v._1.contains("_")) (shortenKey(v, '_'), v._2) else (shortenKey(v), v._2)
+  def updateAnswers(hakemus: Hakemus, answers: Map[String, String]): Map[String, String] = {
+    val hakuToiveetWithEmptyValues = answers.filterKeys(s => s.startsWith(HakutoiveetConverter.preferenceKeyPrefix)).mapValues(s => "")
+    val hakutoiveetWithoutOldPreferences = answers.filterKeys(s => !s.startsWith(HakutoiveetConverter.preferenceKeyPrefix))
+    val hakutoiveetAnswers: Map[String, String] = hakemus.answers.getOrElse(hakutoiveetPhase, Map())
+    val updatedHakutoiveet = hakutoiveetWithoutOldPreferences ++ hakuToiveetWithEmptyValues ++ HakutoiveetConverter.convertToAnswers(hakemus.hakutoiveet) ++ hakutoiveetAnswers
+    updatedHakutoiveet
+  }
+
+  private def shortenNames(tuple: (String, Map[String, String])) = {
+    def tupleWithShortKey(v: (String, String)) = v match {
+      case (key: String, value: String) =>
+        if (key.contains("_"))
+          (shortenKey(key, '_'), value)
+        else
+          (shortenKey(key, '-'), value)
+    }
+    def shortenKey(v: String, delimiter: Char): String = {
+      v.substring(v.indexOf(delimiter) + 1)
+    }
+    tuple._2.map(tupleWithShortKey) ++ Map("priority" -> tuple._1)
   }
 
   private def groupPreferences(toiveet: Map[String, String]) = {
@@ -35,9 +68,5 @@ object HakutoiveetConverter {
     } else {
       toiveet
     }
-  }
-
-  private def shortenNames(tuple: (String, Map[String, String])) = {
-    tuple._2.map(tupleWithShortKey) ++ Map("priority" -> tuple._1)
   }
 }

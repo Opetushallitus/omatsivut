@@ -35,7 +35,7 @@ case class ApplicationDaoWrapper(implicit val appConfig: AppConfig) {
   private def convertHakuToiveet(application: Application): List[Hakutoive] = {
     val answers: util.Map[String, util.Map[String, String]] = application.getAnswers
     val hakuToiveetData: Map[String, String] = answers.get("hakutoiveet").toMap
-    HakutoiveetConverter.convert(hakuToiveetData)
+    HakutoiveetConverter.convertFromAnswers(hakuToiveetData)
   }
 
   def updateApplication(hakemus: Hakemus): Unit = {

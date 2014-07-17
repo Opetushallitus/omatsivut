@@ -9,7 +9,7 @@ import scala.collection.JavaConversions._
 
 object RelatedQuestionHelper {
   def findQuestionsByHakutoive(applicationSystem: ApplicationSystem, hakutoive: Hakutoive): Seq[QuestionNode] = {
-    val answersWithNewHakutoive = Map(ApplicationUpdater.hakutoiveetPhase -> ApplicationUpdater.convertHakutoiveet(List(hakutoive)))
+    val answersWithNewHakutoive = Map(ApplicationUpdater.hakutoiveetPhase -> HakutoiveetConverter.convertToAnswers(List(hakutoive)))
     findAddedQuestions(applicationSystem, answersWithNewHakutoive, emptyAnswers)
   }
 

@@ -4,7 +4,7 @@ import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
 import fi.vm.sade.omatsivut.domain.Hakemus
 import fi.vm.sade.omatsivut.domain.Hakemus._
 import fi.vm.sade.omatsivut.fixtures.JsonFixtureMaps
-import fi.vm.sade.omatsivut.hakemus.{ApplicationUpdater, HakuRepository, RelatedQuestionHelper}
+import fi.vm.sade.omatsivut.hakemus.{HakutoiveetConverter, ApplicationUpdater, HakuRepository, RelatedQuestionHelper}
 import org.specs2.mutable.Specification
 
 class RelatedQuestionsSpec extends Specification {
@@ -38,5 +38,5 @@ class RelatedQuestionsSpec extends Specification {
   }
   val as: ApplicationSystem = getFixtureApplicationSystem
   val hakutoive: Hakutoive = JsonFixtureMaps.find[Hakutoive]("/mockdata/hakutoiveet.json", "1.2.246.562.14.2014032812530780195965")
-  val answersWithNewHakutoive = Map(ApplicationUpdater.hakutoiveetPhase -> ApplicationUpdater.convertHakutoiveet(List(hakutoive)))
+  val answersWithNewHakutoive = Map(ApplicationUpdater.hakutoiveetPhase -> HakutoiveetConverter.convertToAnswers(List(hakutoive)))
 }
