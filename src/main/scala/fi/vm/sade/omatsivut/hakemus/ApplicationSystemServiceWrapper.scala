@@ -17,8 +17,8 @@ case class ApplicationSystemServiceWrapper(implicit val appConfig: AppConfig) {
     }
   }
 
-  private def convertTranslations(applicationSystem: ApplicationSystem): Translations = {
-    Translations(applicationSystem.getName.getTranslations.toMap)
+  private def convertTranslations(applicationSystem: ApplicationSystem): String = {
+    applicationSystem.getName.getTranslations.get("fi") // TODO: kieliversiot
   }
 
   private def convertToHakuAika(applicationPeriod: ApplicationPeriod): HakuAika = {

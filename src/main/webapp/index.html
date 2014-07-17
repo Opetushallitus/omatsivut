@@ -18,7 +18,7 @@
             <ul id="hakemus-list" ng-cloak>
 
                 <li ng-repeat="application in applications" class="application-list-item" ng-controller="hakemusController">
-                    <h2>{{application.haku.name.translations.fi}}</h2>
+                    <h2>{{application.haku.name}}</h2>
                     <p ng-repeat="period in application.haku.applicationPeriods">
                       Hakukausi: {{period.start | date:'dd.MM.yyyy HH:mm'}} - {{period.end | date:'dd.MM.yyyy HH:mm'}}</p>
                     </p>
@@ -79,29 +79,29 @@
                         <div class="questions">
                             <li class="question" ng-repeat="item in additionalQuestions">
                                 <label class="title">{{item.question.context.path}}</label>
-                                <label class="title">{{item.question.title.translations.fi}}</label>
+                                <label class="title">{{item.question.title}}</label>
                                 <span class="validation-message error">{{item.validationMessage}}</span>
-                                <div class="instruction">{{item.question.help.translations.fi}}</div>
+                                <div class="instruction">{{item.question.help}}</div>
 
                                 <span class="answer" ng-switch="item.question.questionType">
                                     <input type="text" ng-switch-when="Text" ng-model="application.getAnswers(item.question.id.phaseId)[item.question.id.questionId]">
                                     <select ng-switch-when="Dropdown"
                                             ng-model="application.getAnswers(item.question.id.phaseId)[item.question.id.questionId]"
-                                            ng-options="option.value as option.title.translations.fi for option in item.question.options">
+                                            ng-options="option.value as option.title for option in item.question.options">
                                     </select>
 
                                     <div ng-switch-when="Radio">
                                         <label class="radio-button-item" ng-repeat="option in item.question.options">
                                             <input name="{{item.question.id.questionId}}" type="radio"
                                                    ng-model="application.getAnswers(item.question.id.phaseId)[item.question.id.questionId]"
-                                                   value={{option.value}} /> {{option.title.translations.fi}}
+                                                   value={{option.value}} /> {{option.title}}
                                         </label>
                                     </div>
 
                                     <div ng-switch-when="Checkbox">
                                         <label class="radio-button-item" ng-repeat="option in item.question.options">
                                             <input type="checkbox" ng-model="application.getAnswers(item.question.id.phaseId)[option.value]">
-                                            {{option.title.translations.fi}}
+                                            {{option.title}}
                                         </label>
                                     </div>
                                 </span>

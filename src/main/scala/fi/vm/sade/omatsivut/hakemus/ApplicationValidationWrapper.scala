@@ -17,12 +17,11 @@ case class ApplicationValidationWrapper(implicit val appConfig: AppConfig) exten
   def validate(hakemus: Hakemus): (List[ValidationError], List[QuestionNode]) = {
     val applicationSystem = applicationSystemService.getApplicationSystem(hakemus.haku.get.oid)
     val validationErrors: List[ValidationError] = validate(hakemus, applicationSystem)
-    val requiredFieldErrors = validationErrors.filter(error => findError(error, "Pakollinen tieto.").isDefined)
     val questions: List[QuestionNode] = hakemus.hakutoiveet.flatMap { hakutoive =>
       val questions: Seq[QuestionNode] = RelatedQuestionHelper.findQuestionsByHakutoive(applicationSystem, hakutoive)
       questions match {
         case Nil => Nil
-        case _ => List(QuestionGroup(Translations(hakutoive.getOrElse("Koulutus", "")), questions.toList))
+        case _ => List(QuestionGroup(hakutoive.getOrElse("Koulutus", ""), questions.toList))
       }
     }
     (validationErrors, questions)
@@ -37,13 +36,9 @@ case class ApplicationValidationWrapper(implicit val appConfig: AppConfig) exten
     convertoToValidationErrors(validationResult)
   }
 
-  private def findError(error: ValidationError, searchText: String) = {
-    error.translation.translations.find{ case (_, text) => text == searchText }
-  }
-
   private def convertoToValidationErrors(validationResult: ValidationResult): List[ValidationError] = {
     validationResult.getErrorMessages.map { case (key, translations) =>
-      ValidationError(key, Translations(translations.getTranslations.toMap))
+      ValidationError(key, translations.getTranslations.get("fi")) // TODO: kieliversiot
     }.toList
   }
 

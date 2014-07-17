@@ -6,7 +6,7 @@ module.exports = function(listApp) {
       var errors = _.reduce(data.errors, function(memo, error) {
         if (memo[error.key] == null)
           memo[error.key] = []
-        memo[error.key].push(error.translation.translations["fi"])
+        memo[error.key].push(error.message)
         return memo
       }, {})
 

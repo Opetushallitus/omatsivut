@@ -23,12 +23,12 @@ object FormQuestionHelper extends Logging {
     }
   }
 
-  def pathToTranslations(path: List[String]): Translations = Translations(path.foldLeft("") { (a,b) => a + " > " + b})
+  def describePath(path: List[String]): String = path.foldLeft("") { (a,b) => a + " > " + b}
 
   def findQuestions(contextElement: Element, element: Element): List[QuestionNode] = {
     getElementsOfType[Titled](element).flatMap { titled =>
       titledElementToQuestions(contextElement, titled).groupBy(_.context.path).toList.map {
-        case (path, questions) => QuestionGroup(pathToTranslations(path), questions)
+        case (path, questions) => QuestionGroup(describePath(path), questions)
       }
     }
   }
@@ -68,15 +68,15 @@ object FormQuestionHelper extends Logging {
   private def options(e: TitledGroup): List[Choice] = {
     getChildElementsOfType[HakuCheckBox](e).map(o => Choice(title(o), o.getId()))
   }
-  private def title[T <: Titled](e: T): Translations = {
-    Translations(e.getI18nText.getTranslations.toMap)
+  private def title[T <: Titled](e: T): String = {
+    e.getI18nText.getTranslations.get("fi") // TODO: kieliversiot
   }
-  private def helpText[T <: Titled](e: T): Translations = {
+  private def helpText[T <: Titled](e: T): String = {
     val help = e.getVerboseHelp()
     if (help == null)
-      Translations("")
+      ""
     else
-      Translations(e.getVerboseHelp().getTranslations.toMap)
+      e.getVerboseHelp().getTranslations.get("fi") // TODO: kieliversiot
   }
 
   private def titledElementToQuestions(contextElement: Element, element: Titled): List[Question] = {
