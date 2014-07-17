@@ -1,7 +1,7 @@
 package fi.vm.sade.omatsivut.servlet
 
 import fi.vm.sade.omatsivut.AppConfig.AppConfig
-import fi.vm.sade.omatsivut.domain.{Hakemus, Question, ValidationError}
+import fi.vm.sade.omatsivut.domain.{QuestionNode, Hakemus, Question, ValidationError}
 import fi.vm.sade.omatsivut.hakemus.{HakemusRepository, HakemusValidator}
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.security.Authentication
@@ -47,5 +47,5 @@ class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfi
     ValidationResult(errors, questions)
   }
 
-  case class ValidationResult(errors: List[ValidationError], questions: List[Question])
+  case class ValidationResult(errors: List[ValidationError], questions: List[QuestionNode])
 }

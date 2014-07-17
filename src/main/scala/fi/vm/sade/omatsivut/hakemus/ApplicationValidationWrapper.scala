@@ -14,14 +14,22 @@ case class ApplicationValidationWrapper(implicit val appConfig: AppConfig) exten
   private val dao = appConfig.springContext.applicationDAO
   private val validator = appConfig.springContext.validator
 
-  def validate(hakemus: Hakemus): (List[ValidationError], List[Question]) = {
+  def validate(hakemus: Hakemus): (List[ValidationError], List[QuestionNode]) = {
     val applicationSystem = applicationSystemService.getApplicationSystem(hakemus.haku.get.oid)
     val validationErrors: List[ValidationError] = validate(hakemus, applicationSystem)
     val requiredFieldErrors = validationErrors.filter(error => findError(error, "Pakollinen tieto.").isDefined)
-    val questions: List[Question] = hakemus.hakutoiveet.flatMap { hakutoive =>
-      RelatedQuestionHelper.findQuestionsByHakutoive(applicationSystem, hakutoive)
+    val questions: List[QuestionNode] = hakemus.hakutoiveet.flatMap { hakutoive =>
+      val questions: Seq[QuestionNode] = RelatedQuestionHelper.findQuestionsByHakutoive(applicationSystem, hakutoive)
+      questions match {
+        case Nil => Nil
+        case _ => List(QuestionGroup(toTranslations(hakutoive.getOrElse("Koulutus", "")), questions.toList))
+      }
     }
     (validationErrors, questions)
+  }
+
+  private def toTranslations(text: String) = {
+    new Translations(Map("fi" -> text)) // TODO: kieliversiot
   }
 
   private def validate(hakemus: Hakemus, applicationSystem: ApplicationSystem): List[ValidationError] = {

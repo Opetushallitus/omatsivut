@@ -1,7 +1,12 @@
 package fi.vm.sade.omatsivut.domain
 
-trait Question {
+sealed trait QuestionNode {
   def title: Translations
+}
+
+case class QuestionGroup(title: Translations, questions: List[QuestionNode]) extends QuestionNode
+
+trait Question extends QuestionNode {
   def help: Translations
   def questionType: String
   def id: QuestionId

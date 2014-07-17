@@ -10,10 +10,19 @@ module.exports = function(listApp) {
         return memo
       }, {})
 
-      return _(data.questions).map(function(question) {
-        return new QuestionItem(question, errors[question.id.questionId] || [])
-      })
+      return flattenQuestions(data.questions)
+
+      function flattenQuestions(questions) {
+        return _.flatten(_(questions).map(function(questionNode) {
+          if (questionNode.id) {
+            return [new QuestionItem(questionNode, errors[questionNode.id.questionId] || [])]
+          } else {
+            return flattenQuestions(questionNode.questions)
+          }
+        }))
+      }
     }
+
 
     return function(application, success) {
       var responsePromise = $http.post("api/applications/validate/" + application.oid, application.toJson())

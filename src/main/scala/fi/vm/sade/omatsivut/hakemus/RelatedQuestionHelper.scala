@@ -3,17 +3,17 @@ package fi.vm.sade.omatsivut.hakemus
 import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
 import fi.vm.sade.haku.oppija.lomake.domain.elements.Element
 import fi.vm.sade.omatsivut.domain.Hakemus._
-import fi.vm.sade.omatsivut.domain.Question
+import fi.vm.sade.omatsivut.domain.{QuestionNode, Question}
 
 import scala.collection.JavaConversions._
 
 object RelatedQuestionHelper {
-  def findQuestionsByHakutoive(applicationSystem: ApplicationSystem, hakutoive: Hakutoive) = {
+  def findQuestionsByHakutoive(applicationSystem: ApplicationSystem, hakutoive: Hakutoive): Seq[QuestionNode] = {
     val answersWithNewHakutoive = Map(ApplicationUpdater.hakutoiveetPhase -> ApplicationUpdater.convertHakutoiveet(List(hakutoive)))
     findAddedQuestions(applicationSystem, answersWithNewHakutoive, emptyAnswers)
   }
 
-  def findAddedQuestions(applicationSystem: ApplicationSystem, newAnswers: Answers, oldAnswers: Answers): Seq[Question] = {
+  def findAddedQuestions(applicationSystem: ApplicationSystem, newAnswers: Answers, oldAnswers: Answers): Seq[QuestionNode] = {
     val form = applicationSystem.getForm
     val addedElements = findAddedElements(form, newAnswers, oldAnswers)
     val addedQuestions = addedElements.flatMap { element =>
