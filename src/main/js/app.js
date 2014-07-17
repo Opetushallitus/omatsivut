@@ -4,7 +4,7 @@ require('angular-animate');
 _ = require("underscore");
 require("../lib/ui-bootstrap-custom-tpls-0.10.0.min.js");
 
-var listApp = angular.module('listApp', ["ngResource", "ngAnimate", "ui.bootstrap.typeahead", "template/typeahead/typeahead-popup.html", "template/typeahead/typeahead-match.html"], function($locationProvider) {
+var listApp = angular.module('listApp', ["ngResource", "ngAnimate", "RecursionHelper", "ui.bootstrap.typeahead", "template/typeahead/typeahead-popup.html", "template/typeahead/typeahead-match.html"], function($locationProvider) {
   $locationProvider.html5Mode(true);
 });
 
@@ -12,6 +12,7 @@ require('./hakutoiveController')(listApp)
 require('./listController')(listApp)
 require('./hakemusController')(listApp)
 require('./applicationValidator')(listApp)
+require('./recursionHelper')
 
 listApp.factory("applicationsResource", ["$resource", "$location", function($resource, $location) {
   return $resource("api/applications", null, {
@@ -134,3 +135,22 @@ listApp.directive("confirm", function () {
     }
   };
 });
+
+listApp.directive("questionTemplate", function(RecursionHelper) {
+  return {
+    restrict: 'E',
+    scope: {
+      questionNode: '=questionNode',
+      application: '=application'
+    },
+    templateUrl: 'questionTemplate.html',
+    compile: function(element) {
+      return RecursionHelper.compile(element, function($scope, iElement, iAttrs, controller, transcludeFn){
+        $scope.isGroup = function() {
+          return $scope.questionNode && !_.isEmpty($scope.questionNode.questionNodes)
+        }
+      });
+    }
+  };
+});
+

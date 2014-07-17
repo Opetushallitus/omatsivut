@@ -1,5 +1,10 @@
 var QuestionItem = require('./additionalQuestion')
 
+function QuestionGroup(title) {
+  this.title = title
+  this.questionNodes = []
+}
+
 module.exports = function(listApp) {
   listApp.factory("applicationValidator", ["$http", function($http) {
     function getQuestions(data) {
@@ -10,19 +15,19 @@ module.exports = function(listApp) {
         return memo
       }, {})
 
-      return flattenQuestions(data.questions)
+      return convertToItems(data.questions, new QuestionGroup("päätaso")).questionNodes[0]
 
-      function flattenQuestions(questions) {
-        return _.flatten(_(questions).map(function(questionNode) {
+      function convertToItems(questions, results) {
+        _(questions).each(function(questionNode) {
           if (questionNode.id) {
-            return [new QuestionItem(questionNode, errors[questionNode.id.questionId] || [])]
+            results.questionNodes.push(new QuestionItem(questionNode, errors[questionNode.id.questionId] || []))
           } else {
-            return flattenQuestions(questionNode.questions)
+            results.questionNodes.push(convertToItems(questionNode.questions, new QuestionGroup(questionNode.title )))
           }
-        }))
+        })
+        return results
       }
     }
-
 
     return function(application, success) {
       var responsePromise = $http.post("api/applications/validate/" + application.oid, application.toJson())

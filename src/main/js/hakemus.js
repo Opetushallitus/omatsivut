@@ -89,8 +89,9 @@ Hakemus.prototype = {
       }
     }
 
+    return questions
     _(questions).chain()
-      .filter(function(item) { return item.question.options != null })
+      .filter(function(item) { return item.questionNodes == null && item.question.options != null })
       .each(setDefaultAnswer)
   }
 }
