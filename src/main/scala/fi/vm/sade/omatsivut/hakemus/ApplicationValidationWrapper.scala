@@ -22,14 +22,10 @@ case class ApplicationValidationWrapper(implicit val appConfig: AppConfig) exten
       val questions: Seq[QuestionNode] = RelatedQuestionHelper.findQuestionsByHakutoive(applicationSystem, hakutoive)
       questions match {
         case Nil => Nil
-        case _ => List(QuestionGroup(toTranslations(hakutoive.getOrElse("Koulutus", "")), questions.toList))
+        case _ => List(QuestionGroup(Translations(hakutoive.getOrElse("Koulutus", "")), questions.toList))
       }
     }
     (validationErrors, questions)
-  }
-
-  private def toTranslations(text: String) = {
-    new Translations(Map("fi" -> text)) // TODO: kieliversiot
   }
 
   private def validate(hakemus: Hakemus, applicationSystem: ApplicationSystem): List[ValidationError] = {

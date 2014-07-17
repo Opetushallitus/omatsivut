@@ -22,9 +22,14 @@ object FormQuestionHelper extends Logging {
         }
     }
   }
-  def findQuestions(contextElement: Element, element: Element): List[Question] = {
+
+  def pathToTranslations(path: List[String]): Translations = Translations(path.foldLeft("") { (a,b) => a + " > " + b})
+
+  def findQuestions(contextElement: Element, element: Element): List[QuestionNode] = {
     getElementsOfType[Titled](element).flatMap { titled =>
-      titledElementToQuestions(contextElement, titled)
+      titledElementToQuestions(contextElement, titled).groupBy(_.context.path).toList.map {
+        case (path, questions) => QuestionGroup(pathToTranslations(path), questions)
+      }
     }
   }
 
@@ -69,7 +74,7 @@ object FormQuestionHelper extends Logging {
   private def helpText[T <: Titled](e: T): Translations = {
     val help = e.getVerboseHelp()
     if (help == null)
-      Translations(Map())
+      Translations("")
     else
       Translations(e.getVerboseHelp().getTranslations.toMap)
   }
@@ -118,9 +123,9 @@ class ElementContext(val contextElement: Element, val element: Element) {
 
   lazy val namedParentPath: List[String] = {
     def title(e: Element): List[String] = {
-      val lang: String = "fi" // TODO: kieliversio
+      val lang = "fi" // TODO: kieliversiot
       e match {
-        case e: Titled if (e.getI18nText != null && e.getI18nText.getTranslations != null && e.getI18nText.getTranslations.get(lang) != null) =>
+        case e: Titled if (e.getI18nText != null && e.getI18nText.getTranslations != null) =>
           List(e.getI18nText.getTranslations.get(lang))
         case _ => Nil
       }
