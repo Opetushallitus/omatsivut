@@ -106,7 +106,7 @@
                                         <div ng-switch-when="Radio">
                                             <label class="radio-button-item" ng-repeat="option in questionNode.question.options">
                                                 <input name="{{questionNode.question.id.questionId}}" type="radio"
-                                                       ng-model="application.getAnswers(item.question.id.phaseId)[questionNode.question.id.questionId]"
+                                                       ng-model="application.getAnswers(questionNode.question.id.phaseId)[questionNode.question.id.questionId]"
                                                        value={{option.value}} /> {{option.title }}
                                             </label>
                                         </div>

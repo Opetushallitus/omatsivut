@@ -69,30 +69,40 @@ Hakemus.prototype = {
     return this.answers[phaseId]
   },
 
-  setDefaultAnswers: function(questions) {
+  setDefaultAnswers: function(questionNode) {
     var self = this
+
+    if (questionNode != null) {
+      _(questionNode.questionNodes).each(function(node) {
+        if (node.questionNodes != null)
+          self.setDefaultAnswers(node)
+        else
+          setDefaultAnswer(node.question)
+      })
+    }
+
+    function setDefaultAnswer(question) {
+      if (question.options != null) { // Aseta default-arvo vain monivalinnoille
+        var phaseAnswers = self.getAnswers(question.id.phaseId)
+
+        var setValueIfEmpty = function(key, val) {
+          phaseAnswers[key] = phaseAnswers[key] || val
+        }
+
+        if (question.questionType == "Checkbox") {
+          _(question.options).each(function(option) {
+            setValueIfEmpty(option.value, false)
+          })
+        } else {
+          setValueIfEmpty(question.id.questionId, defaultValue(question.options))
+        }
+      }
+    }
+
     function defaultValue(options) {
       var defaultOption = _(options).find(function(option) { return option.default })
       return defaultOption == null ? "" : defaultOption.value
     }
-
-    function setDefaultAnswer(item) {
-      var phaseAnswers = self.getAnswers(item.question.id.phaseId)
-      function setValueIfEmpty(key, val) { phaseAnswers[key] = phaseAnswers[key] || val }
-
-      if (item.question.questionType == "Checkbox") {
-        _(item.question.options).each(function(option) {
-          setValueIfEmpty(option.value, false)
-        })
-      } else {
-        setValueIfEmpty(item.question.id.questionId, defaultValue(item.question.options))
-      }
-    }
-
-    return questions
-    _(questions).chain()
-      .filter(function(item) { return item.questionNodes == null && item.question.options != null })
-      .each(setDefaultAnswer)
   }
 }
 
