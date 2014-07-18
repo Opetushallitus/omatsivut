@@ -74,17 +74,15 @@
                             </li>
                         </ul>
                     </section>
-                    <section class="application-section" ng-show="additionalQuestions">
-                        <question-template question-node="additionalQuestions" application="application" class="questions" level="0">
+                    <section class="application-section additional-questions" ng-show="additionalQuestions">
+                        <question-template question-node="additionalQuestions" application="application" class="questions" level="-1">
                         </question-template>
 
                         <script type="text/ng-template" id="questionTemplate.html">
                             <div ng-switch="isGroup()">
                                 <div ng-switch-when="true">
-                                    <div ng-switch="level">
-                                        <div ng-switch-when="0" class="application-section-heading">Lisäkysymykset: {{ questionNode.title }}</div>
-                                        <label ng-switch-default class="question-group-title">{{ questionNode.title }}:</label>
-                                    </div>
+                                    <div ng-if="level == 0" class="application-section-heading">Lisäkysymykset: {{ questionNode.title }}</div>
+                                    <label ng-if="level > 0" class="question-group-title">{{ questionNode.title }}:</label>
 
                                     <div ng-class="{ 'question-group-indent': level > 0, 'question-group-section': level == 0 }" ng-repeat="subItem in questionNode.questionNodes">
                                         <question-template question-node="subItem" application="application" level="level+1">

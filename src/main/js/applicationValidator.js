@@ -15,7 +15,7 @@ module.exports = function(listApp) {
         return memo
       }, {})
 
-      return convertToItems(data.questions, new QuestionGroup("päätaso")).questionNodes[0]
+      return convertToItems(data.questions, new QuestionGroup())
 
       function convertToItems(questions, results) {
         _(questions).each(function(questionNode) {
