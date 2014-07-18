@@ -2,8 +2,9 @@ package fi.vm.sade.omatsivut.hakemus
 
 import fi.vm.sade.haku.oppija.lomake.domain.elements.custom.SocialSecurityNumber
 import fi.vm.sade.haku.oppija.lomake.domain.elements.questions.{DropdownSelect, TextQuestion, CheckBox => HakuCheckBox, OptionQuestion => HakuOption, Radio => HakuRadio, TextArea => HakuTextArea}
-import fi.vm.sade.haku.oppija.lomake.domain.elements.{Element, Titled, Phase, Theme, TitledGroup}
+import fi.vm.sade.haku.oppija.lomake.domain.elements._
 import fi.vm.sade.omatsivut.Logging
+import fi.vm.sade.omatsivut.domain.Text
 import fi.vm.sade.omatsivut.domain._
 
 import scala.collection.JavaConversions._
@@ -11,18 +12,23 @@ import scala.collection.JavaConversions._
 protected object FormQuestionFinder extends Logging {
   def findQuestions(contextElement: Element, elementsToScan: Set[Element]): List[QuestionGroup] = {
     elementsToScan.flatMap { element =>
-      getElementsOfType[Titled](element).flatMap { titled =>
-        titledElementToQuestions(contextElement, titled)
+        getElementsOfType[Titled](element).flatMap { titled =>
+          titledElementToQuestions(contextElement, titled)
+        }
       }
-    }.groupBy { case (question, elementContext) => elementContext.namedParents}.toList.map {
-      case (parents, questions) =>
-        val lang = "fi" // TODO: kieliversiot
-        val groupNamePath = parents.map(_.getI18nText.getTranslations.get(lang))
-        val groupName = groupNamePath.mkString("", " - ", "")
-
-        QuestionGroup(groupName, questions.map(_._1).toList)
-    }
+      .groupBy { case (question, elementContext) => elementContext.namedParents}
+      .toList
+      .sortBy(_._1)(ParentPathOrdering(contextElement))
+      .map {
+        case (parents, questions) =>
+          val lang = "fi" // TODO: kieliversiot
+          val groupNamePath = parents.tail.map(_.getI18nText.getTranslations.get(lang))
+          val groupName = groupNamePath.mkString("", " - ", "")
+          QuestionGroup(groupName, questions.map(_._1).toList)
+      }
   }
+
+
 
   private def getImmediateChildElementsOfType[A](rootElement: Element)(implicit mf : Manifest[A]): List[A] = {
     rootElement.getChildren.toList.flatMap { child =>
@@ -88,6 +94,35 @@ protected object FormQuestionFinder extends Logging {
   }
 }
 
+case class ParentPathOrdering(contextElement: Element) extends scala.math.Ordering[List[Titled]] {
+  override def compare(left: List[Titled], right: List[Titled]) = {
+    val leftOrderingPath: List[Int] = orderingPath(left)
+    val rightOrderingPath: List[Int] = orderingPath(right)
+    compareOrderingPath(leftOrderingPath, rightOrderingPath)
+  }
+
+  private def orderingPath(parentPath: List[Element]): List[Int] = {
+    parentPath.zip(parentPath.tail).map {
+      case (mother, child) =>
+        mother.getChildren.indexOf(child)
+    }
+  }
+
+  private def compareOrderingPath(p1: List[Int], p2: List[Int]): Int = (p1, p2) match {
+    case (x :: xs, y :: ys) =>
+      if (x < y) {
+        -1
+      } else if (x > y) {
+        1
+      } else {
+        compareOrderingPath(xs, ys)
+      }
+    case (x :: xs, Nil) => 1
+    case (Nil, y :: ys) => -1
+    case _ => 0
+  }
+}
+
 class ElementContext(val contextElement: Element, val element: Element) {
   lazy val parentsFromRootDown: List[Element] = {
     def findParents(e: Element, r: Element): Option[List[Element]] = {
@@ -107,6 +142,7 @@ class ElementContext(val contextElement: Element, val element: Element) {
 
   lazy val namedParents: List[Titled] = {
     parentsFromRootDown.flatMap {
+      case e: Form => List(e)
       case e: Phase => List(e)
       case e: Theme => List(e)
       case _ => Nil
