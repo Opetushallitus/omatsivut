@@ -7,6 +7,13 @@ function ApplicationListPage() {
       return db.resetData().then(function() { return session.init(testHetu)} ).then(openListPage)
     },
 
+    save: function() {
+      return wait.until(api.saveButton(0).isEnabled(true))()
+        .then(api.saveButton(0).click)
+        .then(wait.until(api.saveButton(0).isEnabled(false))) // Tallennus on joko alkanut tai valmis
+        .then(wait.until(api.isSavingState(0, false))) // Tallennus ei ole kesken
+    },
+
     hetu: function () {
       return testHetu
     },
@@ -40,15 +47,18 @@ function ApplicationListPage() {
       })
     },
 
+    preferencesForApplication: function (index) {
+      return preferencesForApplication(index, function (item) {
+        return item.data()["hakutoive.Koulutus"].length > 0
+      }).map(function (item) {
+        return item.data()
+      })
+    },
+
     isValidationErrorVisible: function() {
       return getApplication(0).find(".status-message.error").is(":visible")
     },
 
-    preferencesForApplication: function (index) {
-      return preferencesForApplication(index, function (item) {
-        return item.data()["hakutoive.Koulutus"].length > 0
-      })
-    },
 
     emptyPreferencesForApplication: function (index) {
       return preferencesForApplication(index, function (item) {

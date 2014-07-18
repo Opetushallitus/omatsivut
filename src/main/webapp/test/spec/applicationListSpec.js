@@ -16,7 +16,7 @@
       })
 
       it("henkilön 010101-123N hakutoiveet ovat näkyvissä", function () {
-        expect(preferencesAsText()).to.deep.equal([
+        expect(ApplicationListPage().preferencesForApplication(0)).to.deep.equal([
           {
             "hakutoive.Opetuspiste": "Amiedu, Valimotie 8",
             "hakutoive.Koulutus": "Maahanmuuttajien ammatilliseen peruskoulutukseen valmistava koulutus"
@@ -43,7 +43,10 @@
       })
 
       describe("lisätty hakutoive, jolla on lisäkysymyksiä", function() {
-        before(replacePreference(2, "Etelä-Savon ammattiopisto"))
+        before(ApplicationListPage().getPreference(1).remove)
+        before(ApplicationListPage().getPreference(2).remove)
+        before(ApplicationListPage().save)
+        before(replacePreference(1, "Etelä-Savon ammattiopisto"))
 
         it("lisäkysymykset näytetään", function() {
           var questionTitles = ApplicationListPage().questionsForApplication(0).titles()
@@ -61,6 +64,8 @@
     })
 
     describe("validaatiot", function() {
+      before(ApplicationListPage().resetDataAndOpen)
+
       beforeEach(function() {
         return page.openPage().then(leaveOnlyOnePreference)
       })
@@ -150,7 +155,7 @@
         })
       })
       before(manipulationFunction)
-      before(save)
+      before(ApplicationListPage().save)
       before(function(done) {
         db.getApplications().then(function(apps) {
           applicationsAfter = apps
@@ -160,19 +165,6 @@
       it(testName, function() {
         dbCheckFunction(applicationsBefore[0], applicationsAfter[0])
       })
-    })
-
-    function save() {
-      return wait.until(ApplicationListPage().saveButton(0).isEnabled(true))()
-        .then(ApplicationListPage().saveButton(0).click)
-        .then(wait.until(ApplicationListPage().saveButton(0).isEnabled(false))) // Tallennus on joko alkanut tai valmis
-        .then(wait.until(ApplicationListPage().isSavingState(0, false))) // Tallennus ei ole kesken
-    }
-  }
-
-  function preferencesAsText() {
-    return ApplicationListPage().preferencesForApplication(0).map(function (item) {
-      return item.data()
     })
   }
 })()
