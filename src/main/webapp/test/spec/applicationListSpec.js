@@ -50,6 +50,9 @@
         'Päättötodistukseni on' ]
 
       before(ApplicationListPage().resetDataAndOpen)
+      before(ApplicationListPage().getPreference(1).remove)
+      before(ApplicationListPage().getPreference(1).remove)
+      before(ApplicationListPage().save)
 
       describe("tallennetut hakutoiveet, joilla on lisäkysymyksiä", function() {
         it("lisäkysymyksiä ei näytetä", function() {
@@ -58,9 +61,6 @@
       })
 
       describe("lisätty hakutoive, jolla on lisäkysymyksiä", function() {
-        before(ApplicationListPage().getPreference(1).remove)
-        before(ApplicationListPage().getPreference(2).remove)
-        before(ApplicationListPage().save)
         before(replacePreference(1, "Etelä-Savon ammattiopisto"))
 
         it("lisäkysymykset näytetään", function() {
@@ -70,9 +70,6 @@
       })
 
       describe("lisätty kaksi hakutoivetta, jolla on lisäkysymyksiä", function() {
-        before(ApplicationListPage().getPreference(1).remove)
-        before(ApplicationListPage().getPreference(2).remove)
-        before(ApplicationListPage().save)
         before(replacePreference(1, "Etelä-Savon ammattiopisto"))
         before(replacePreference(2, "Turun Kristillinen"))
 
