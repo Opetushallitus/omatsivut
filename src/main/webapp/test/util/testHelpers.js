@@ -50,6 +50,15 @@ wait = {
       deferred.reject(e)
     }
     return deferred.promise
+  },
+  forMilliseconds: function(ms) {
+    return function() {
+      var deferred = Q.defer()
+      setTimeout(function() {
+        deferred.resolve()
+      }, ms)
+      return deferred.promise
+    }
   }
 }
 
