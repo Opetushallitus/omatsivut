@@ -45,8 +45,19 @@
       describe("lisätty hakutoive, jolla on lisäkysymyksiä", function() {
         before(replacePreference(2, "Etelä-Savon ammattiopisto"))
 
+        before(wait.forAngular)
+
         it("lisäkysymykset näytetään", function() {
-          expect(ApplicationListPage().questionsForApplication(0).data()).to.deep.equal([])
+          var questionTitles = ApplicationListPage().questionsForApplication(0).titles()
+          expect(questionTitles).to.deep.equal([ 'Testikysymys, avaoin vastaus kenttä (pakollinen)?',
+            'Valitse kahdesta vaihtoehdosta paremmin itsellesi sopiva?',
+            'Mikä tai mitkä ovat mielestäsi parhaiten soveltuvat vastausket?',
+            'Testikysymys arvosanat, avoin vastaus',
+            'Valitse parhaat vaihtoehdot valittavista vaihtoehdoista?',
+            'Testivalintakysymys arvosanat',
+            'Testikysymys lupatiedot-kohta avoin vastaus',
+            'Testikysymys valitse vaihtoehdoista paras tai parhaat',
+            'Testikysymys valitse toinen vaihtoehdoista' ])
         })
       })
     })

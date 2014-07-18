@@ -37,6 +37,15 @@ wait = {
       })(count)
       return deferred.promise
     }
+  },
+  forAngular: function(callback) {
+    try {
+      var angular = testFrame.angular
+      var el = angular.element(S("#appRoot"))
+      angular.element(el).injector().get('$browser').notifyWhenNoOutstandingRequests(callback);
+    } catch (e) {
+      callback(e);
+    }
   }
 }
 

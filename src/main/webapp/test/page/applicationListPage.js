@@ -57,16 +57,23 @@ function ApplicationListPage() {
     },
 
     questionsForApplication: function (index) {
-      return Questions(function() {
-
-      })
+      return Questions(function() { return getApplication(index).find(".questions") })
     }
   }
   return api
 
   function Questions(el) {
     return {
-      data: function() { return [] }
+      data: function() {
+        return el().find(".question").map(function() {
+          return {
+            title: $(this).find(".title").text()
+          }
+        }).toArray()
+      },
+      titles: function() {
+        return _.pluck(this.data(), "title")
+      }
     }
   }
 
