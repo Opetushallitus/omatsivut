@@ -45,8 +45,6 @@
       describe("lisätty hakutoive, jolla on lisäkysymyksiä", function() {
         before(replacePreference(2, "Etelä-Savon ammattiopisto"))
 
-        before(wait.forAngular)
-
         it("lisäkysymykset näytetään", function() {
           var questionTitles = ApplicationListPage().questionsForApplication(0).titles()
           expect(questionTitles).to.deep.equal([ 'Testikysymys, avaoin vastaus kenttä (pakollinen)?',
@@ -137,8 +135,8 @@
       var pref = ApplicationListPage().getPreference(index)
       return pref.remove()
         .then(pref.selectOpetusPiste(searchString))
-        .then(pref.selectKoulutus(0)
-      )
+        .then(pref.selectKoulutus(0))
+        .then(wait.forAngular)
     }
   }
 

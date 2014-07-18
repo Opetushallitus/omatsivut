@@ -38,14 +38,18 @@ wait = {
       return deferred.promise
     }
   },
-  forAngular: function(callback) {
+  forAngular: function() {
+    var deferred = Q.defer()
     try {
       var angular = testFrame.angular
       var el = angular.element(S("#appRoot"))
-      angular.element(el).injector().get('$browser').notifyWhenNoOutstandingRequests(callback);
+      angular.element(el).injector().get('$browser').notifyWhenNoOutstandingRequests(function() {
+        deferred.resolve()
+      })
     } catch (e) {
-      callback(e);
+      deferred.reject(e)
     }
+    return deferred.promise
   }
 }
 
