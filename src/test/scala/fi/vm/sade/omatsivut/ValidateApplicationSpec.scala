@@ -4,7 +4,7 @@ import fi.vm.sade.omatsivut.domain._
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.servlet.ApplicationsServlet
 import org.json4s._
-import org.json4s.native.{JsonMethods, Serialization}
+import org.json4s.jackson.{JsonMethods, Serialization}
 
 class ValidateApplicationSpec extends JsonFormats with ScalatraTestSupport {
   override implicit lazy val appConfig = new AppConfig.IT

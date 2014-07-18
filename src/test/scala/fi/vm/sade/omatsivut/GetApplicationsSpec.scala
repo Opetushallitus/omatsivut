@@ -3,7 +3,7 @@ package fi.vm.sade.omatsivut
 import fi.vm.sade.omatsivut.domain.Hakemus
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.servlet.ApplicationsServlet
-import org.json4s.native.Serialization
+import org.json4s.jackson.Serialization
 
 class GetApplicationsSpec extends JsonFormats with ScalatraTestSupport {
   sequential
