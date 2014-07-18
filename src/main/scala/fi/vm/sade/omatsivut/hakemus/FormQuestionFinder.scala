@@ -106,14 +106,11 @@ class ElementContext(val contextElement: Element, val element: Element) {
   lazy val phase: Phase = byType[Phase](parentsFromRootDown).head
 
   lazy val namedParents: List[Titled] = {
-    def title(e: Element): List[Titled] = {
-      e match {
-        case e: Titled if (e.isInstanceOf[Phase] || e.isInstanceOf[Theme]) && (e.getI18nText != null && e.getI18nText.getTranslations != null) =>
-          List(e)
-        case _ => Nil
-      }
+    parentsFromRootDown.flatMap {
+      case e: Phase => List(e)
+      case e: Theme => List(e)
+      case _ => Nil
     }
-    parentsFromRootDown.tail.flatMap(title).distinct
   }
 
   private def byType[T](xs: List[AnyRef])(implicit mf: Manifest[T]): List[T] = {
