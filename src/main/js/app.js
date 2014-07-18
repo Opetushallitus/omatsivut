@@ -141,13 +141,18 @@ listApp.directive("questionTemplate", function(RecursionHelper) {
     restrict: 'E',
     scope: {
       questionNode: '=questionNode',
-      application: '=application'
+      application: '=application',
+      level: '=level'
     },
     templateUrl: 'questionTemplate.html',
     compile: function(element) {
       return RecursionHelper.compile(element, function($scope, iElement, iAttrs, controller, transcludeFn){
         $scope.isGroup = function() {
           return $scope.questionNode && !_.isEmpty($scope.questionNode.questionNodes)
+        }
+
+        $scope.shortenPath = function(path) {
+          return _.chain(path.split(">")).without(" ").first().value().trim()
         }
       });
     }
