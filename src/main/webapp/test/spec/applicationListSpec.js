@@ -34,6 +34,21 @@
     })
 
     describe("Lisäkysymykset", function() {
+      var questions1 = [ 'Testikysymys, avaoin vastaus kenttä (pakollinen)?',
+        'Valitse kahdesta vaihtoehdosta paremmin itsellesi sopiva?',
+        'Mikä tai mitkä ovat mielestäsi parhaiten soveltuvat vastausket?',
+        'Testikysymys arvosanat, avoin vastaus',
+        'Valitse parhaat vaihtoehdot valittavista vaihtoehdoista?',
+        'Testivalintakysymys arvosanat',
+        'Testikysymys lupatiedot-kohta avoin vastaus',
+        'Testikysymys valitse vaihtoehdoista paras tai parhaat',
+        'Testikysymys valitse toinen vaihtoehdoista' ]
+
+      var questions2 = [ 'Haen ensisijaisesti kielitukikympille?',
+        'Miksi haet kymppiluokalle?',
+        'Päättötodistuksen kaikkien oppiaineiden keskiarvo?',
+        'Päättötodistukseni on' ]
+
       before(ApplicationListPage().resetDataAndOpen)
 
       describe("tallennetut hakutoiveet, joilla on lisäkysymyksiä", function() {
@@ -50,18 +65,24 @@
 
         it("lisäkysymykset näytetään", function() {
           var questionTitles = ApplicationListPage().questionsForApplication(0).titles()
-          expect(questionTitles).to.deep.equal([ 'Testikysymys, avaoin vastaus kenttä (pakollinen)?',
-            'Valitse kahdesta vaihtoehdosta paremmin itsellesi sopiva?',
-            'Mikä tai mitkä ovat mielestäsi parhaiten soveltuvat vastausket?',
-            'Testikysymys arvosanat, avoin vastaus',
-            'Valitse parhaat vaihtoehdot valittavista vaihtoehdoista?',
-            'Testivalintakysymys arvosanat',
-            'Testikysymys lupatiedot-kohta avoin vastaus',
-            'Testikysymys valitse vaihtoehdoista paras tai parhaat',
-            'Testikysymys valitse toinen vaihtoehdoista' ])
+          expect(questionTitles).to.deep.equal(questions1)
+        })
+      })
+
+      describe("lisätty kaksi hakutoivetta, jolla on lisäkysymyksiä", function() {
+        before(ApplicationListPage().getPreference(1).remove)
+        before(ApplicationListPage().getPreference(2).remove)
+        before(ApplicationListPage().save)
+        before(replacePreference(1, "Etelä-Savon ammattiopisto"))
+        before(replacePreference(2, "Turun Kristillinen"))
+
+        it("molempien lisäkysymykset näytetään", function() {
+          var questionTitles = ApplicationListPage().questionsForApplication(0).titles()
+          expect(questionTitles).to.deep.equal(questions1.concat(questions2))
         })
       })
     })
+
 
     describe("validaatiot", function() {
       before(ApplicationListPage().resetDataAndOpen)
