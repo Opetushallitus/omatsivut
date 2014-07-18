@@ -1,10 +1,9 @@
 package fi.vm.sade.omatsivut
 
-import fi.vm.sade.omatsivut.domain.{Hakemus, ValidationError}
+import fi.vm.sade.omatsivut.domain.Hakemus
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.servlet.ApplicationsServlet
-import org.json4s._
-import org.json4s.native.{JsonMethods, Serialization}
+import org.json4s.native.Serialization
 
 class GetApplicationsSpec extends JsonFormats with ScalatraTestSupport {
   sequential
