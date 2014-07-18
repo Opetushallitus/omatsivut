@@ -42,7 +42,7 @@ class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfi
     val (errors, _) = ApplicationValidator().validate(updated)
     if(errors.isEmpty) {
       HakemusRepository().updateHakemus(updated)
-      Ok(updated.oid)
+      Ok(updated)
     } else {
       BadRequest(errors)
     }
