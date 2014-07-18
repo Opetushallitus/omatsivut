@@ -18,13 +18,18 @@ protected object FormQuestionFinder extends Logging {
       }
       .groupBy { case (question, elementContext) => elementContext.namedParents}
       .toList
-      .sortBy(_._1)(ParentPathOrdering(contextElement))
+      .sortBy{case (path, questions) => path.asInstanceOf[List[Element]]}(ParentPathOrdering())
       .map {
         case (parents, questions) =>
           val lang = "fi" // TODO: kieliversiot
           val groupNamePath = parents.tail.map(_.getI18nText.getTranslations.get(lang))
           val groupName = groupNamePath.mkString("", " - ", "")
-          QuestionGroup(groupName, questions.map(_._1).toList)
+
+          val sortedQuestions = questions.toList
+            .sortBy { case (question, elementContext) => elementContext.selfAndParents }(ParentPathOrdering())
+            .map {case (question, elementContext) => question }
+
+          QuestionGroup(groupName, sortedQuestions)
       }
   }
 
@@ -94,8 +99,8 @@ protected object FormQuestionFinder extends Logging {
   }
 }
 
-case class ParentPathOrdering(contextElement: Element) extends scala.math.Ordering[List[Titled]] {
-  override def compare(left: List[Titled], right: List[Titled]) = {
+case class ParentPathOrdering() extends scala.math.Ordering[List[Element]] {
+  override def compare(left: List[Element], right: List[Element]) = {
     val leftOrderingPath: List[Int] = orderingPath(left)
     val rightOrderingPath: List[Int] = orderingPath(right)
     compareOrderingPath(leftOrderingPath, rightOrderingPath)
@@ -123,7 +128,7 @@ case class ParentPathOrdering(contextElement: Element) extends scala.math.Orderi
   }
 }
 
-class ElementContext(val contextElement: Element, val element: Element) {
+class ElementContext(val contextElement: Element, val element: Titled) {
   lazy val parentsFromRootDown: List[Element] = {
     def findParents(e: Element, r: Element): Option[List[Element]] = {
       if (e == r) {
@@ -147,6 +152,10 @@ class ElementContext(val contextElement: Element, val element: Element) {
       case e: Theme => List(e)
       case _ => Nil
     }
+  }
+
+  def selfAndParents: List[Element] = {
+    parentsFromRootDown ++ List(element)
   }
 
   private def byType[T](xs: List[AnyRef])(implicit mf: Manifest[T]): List[T] = {
