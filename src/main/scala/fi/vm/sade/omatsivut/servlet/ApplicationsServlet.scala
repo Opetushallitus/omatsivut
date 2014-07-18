@@ -41,8 +41,8 @@ class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfi
     val updated = Serialization.read[Hakemus](request.body)
     val (errors, _) = ApplicationValidator().validate(updated)
     if(errors.isEmpty) {
-      HakemusRepository().updateHakemus(updated)
-      Ok(updated)
+      val saved = HakemusRepository().updateHakemus(updated)
+      Ok(saved)
     } else {
       BadRequest(errors)
     }

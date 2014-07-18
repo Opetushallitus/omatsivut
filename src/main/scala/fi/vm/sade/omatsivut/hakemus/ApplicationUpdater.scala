@@ -13,7 +13,7 @@ object ApplicationUpdater {
   def update(application: Application, hakemus: Hakemus) {
     updateHakutoiveet(application, hakemus)
     updateAllOtherPhases(application, hakemus)
-    application.setUpdated(new Date())
+    application.setUpdated(new Date(hakemus.updated))
   }
 
   private def updateAllOtherPhases(application: Application, hakemus: Hakemus) {

@@ -20,6 +20,7 @@ case class ApplicationDaoWrapper(implicit val appConfig: AppConfig) {
       Hakemus(
         application.getOid,
         application.getReceived.getTime,
+        application.getUpdated.getTime,
         convertHakuToiveet(application),
         convertApplicationSystem(application),
         EducationBackground(koulutusTaustaAnswers.get("POHJAKOULUTUS"), !Try {koulutusTaustaAnswers.get("ammatillinenTutkintoSuoritettu").toBoolean}.getOrElse(false))
@@ -38,13 +39,13 @@ case class ApplicationDaoWrapper(implicit val appConfig: AppConfig) {
     HakutoiveetConverter.convertFromAnswers(hakuToiveetData)
   }
 
-  def updateApplication(hakemus: Hakemus): Unit = {
+  def updateApplication(hakemus: Hakemus) = {
     val applicationQuery: Application = new Application().setOid(hakemus.oid)
     val applicationJavaObjects: List[Application] = dao.find(applicationQuery).toList
     applicationJavaObjects.foreach { application =>
       ApplicationUpdater.update(application, hakemus)
       dao.update(applicationQuery, application)
     }
+    hakemus
   }
 }
-

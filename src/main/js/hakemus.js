@@ -27,7 +27,9 @@ Hakemus.prototype = {
     return _.extend({}, this, { hakutoiveet: _(this.hakutoiveet).map(function(hakutoive) { return hakutoive.toJson() })})
   },
 
-  setAsSaved: function() {
+  setAsSaved: function(savedApplication) {
+    this.updated = savedApplication.updated
+
     _(this.hakutoiveet).each(function(hakutoive) {
         if (hakutoive.hasData()) hakutoive.setAsSaved() }
     )

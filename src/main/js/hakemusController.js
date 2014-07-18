@@ -6,6 +6,13 @@ module.exports = function(listApp) {
     $scope.isSaving = false
     $scope.isValid = true
 
+    $scope.timestampLabel = function() {
+      if ($scope.application.received == $scope.application.updated)
+        return "Hakemus jätetty"
+      else
+        return "Hakemusta muokattu"
+    }
+
     $scope.$watch("application.getHakutoiveWatchCollection()", function(hakutoiveet, oldHakutoiveet) {
       // Skip initial values angular style
       if (!_.isEqual(hakutoiveet, oldHakutoiveet)) {
@@ -54,12 +61,12 @@ module.exports = function(listApp) {
       $scope.isSaving = true;
       applicationsResource.update({id: $scope.application.oid }, $scope.application.toJson(), onSuccess, onError)
 
-      function onSuccess() {
-        $scope.$emit("highlight-items", $scope.application.getChangedItems());
-        $scope.application.setAsSaved();
-        $scope.isSaving = false;
+      function onSuccess(savedApplication) {
+        $scope.$emit("highlight-items", $scope.application.getChangedItems())
+        $scope.application.setAsSaved(savedApplication)
+        $scope.isSaving = false
         $scope.hasChanged = false
-        setSaveMessage("Kaikki muutokset tallennettu", "success");
+        setSaveMessage("Kaikki muutokset tallennettu", "success")
       }
 
       function onError(err) {
