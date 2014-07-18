@@ -29,14 +29,31 @@
             "hakutoive.Opetuspiste": "Turun Kristillinen opisto",
             "hakutoive.Koulutus": "Kymppiluokka"
           }
-        ]);
+        ])
+      })
+    })
+
+    describe("Lisäkysymykset", function() {
+      before(ApplicationListPage().resetDataAndOpen)
+
+      describe("tallennetut hakutoiveet, joilla on lisäkysymyksiä", function() {
+        it("lisäkysymyksiä ei näytetä", function() {
+          expect(ApplicationListPage().questionsForApplication(0).data()).to.deep.equal([])
+        })
+      })
+
+      describe("lisätty hakutoive, jolla on lisäkysymyksiä", function() {
+        before(replacePreference(2, "Etelä-Savon ammattiopisto"))
+
+        it("lisäkysymykset näytetään", function() {
+          expect(ApplicationListPage().questionsForApplication(0).data()).to.deep.equal([])
+        })
       })
     })
 
     describe("validaatiot", function() {
       beforeEach(function() {
-        return page.openPage()
-          .then(leaveOnlyOnePreference)
+        return page.openPage().then(leaveOnlyOnePreference)
       })
 
       function leaveOnlyOnePreference() {
@@ -85,13 +102,7 @@
       }, function (dbStart, dbEnd) {
         dbEnd.hakutoiveet.should.deep.equal(_.flatten([_.rest(dbStart.hakutoiveet), {}]))
       })
-      endToEndTest("lisäys", "hakutoiveen voi lisätä", function() {
-        var pref = page.getPreference(2)
-        return pref.remove()
-          .then(pref.selectOpetusPiste("Ahl"))
-          .then(pref.selectKoulutus(0)
-        )
-      }, function(dbStart, dbEnd) {
+      endToEndTest("lisäys", "hakutoiveen voi lisätä", replacePreference(2, "Ahl"), function(dbStart, dbEnd) {
         var newOne = { 'Opetuspiste-id': '1.2.246.562.10.60222091211',
           Opetuspiste: 'Ahlmanin ammattiopisto',
           Koulutus: 'Ammattistartti',
@@ -109,6 +120,16 @@
       })
     })
   })
+
+  function replacePreference(index, searchString) {
+    return function() {
+      var pref = ApplicationListPage().getPreference(index)
+      return pref.remove()
+        .then(pref.selectOpetusPiste(searchString))
+        .then(pref.selectKoulutus(0)
+      )
+    }
+  }
 
   function endToEndTest(descName, testName, manipulationFunction, dbCheckFunction) {
     describe(descName, function() {

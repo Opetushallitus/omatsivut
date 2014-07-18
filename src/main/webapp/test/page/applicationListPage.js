@@ -29,18 +29,6 @@ function ApplicationListPage() {
       }
     },
 
-    preferencesForApplication: function (index) {
-      return preferencesForApplication(index, function (item) {
-        return item.data()["hakutoive.Koulutus"].length > 0
-      })
-    },
-
-    emptyPreferencesForApplication: function (index) {
-      return preferencesForApplication(index, function (item) {
-        return _.isEmpty(item.data()["hakutoive.Koulutus"])
-      })
-    },
-
     saveButton: function (applicationIndex) {
       return saveButton(getApplication(applicationIndex).find(".save-btn"))
     },
@@ -54,9 +42,33 @@ function ApplicationListPage() {
 
     isValidationErrorVisible: function() {
       return getApplication(0).find(".status-message.error").is(":visible")
+    },
+
+    preferencesForApplication: function (index) {
+      return preferencesForApplication(index, function (item) {
+        return item.data()["hakutoive.Koulutus"].length > 0
+      })
+    },
+
+    emptyPreferencesForApplication: function (index) {
+      return preferencesForApplication(index, function (item) {
+        return _.isEmpty(item.data()["hakutoive.Koulutus"])
+      })
+    },
+
+    questionsForApplication: function (index) {
+      return Questions(function() {
+
+      })
     }
   }
   return api
+
+  function Questions(el) {
+    return {
+      data: function() { return [] }
+    }
+  }
 
   function PreferenceItem(el) {
     var api = {
@@ -112,7 +124,7 @@ function ApplicationListPage() {
           return wait.until(function () {
             return inputField.next().find("li").eq(0).find("a").length > 0
           })().then(function () {
-            inputField.next().find("li").eq(0).find("a").click()
+            inputField.next().find("li:contains('" + query + "')").eq(0).find("a").click()
           }).then(wait.until(function() {
             return el().find(".koulutus select option").length > 1
           }))
