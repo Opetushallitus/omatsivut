@@ -14,13 +14,15 @@ protected object FormQuestionFinder extends Logging {
       getElementsOfType[Titled](element).flatMap { titled =>
         titledElementToQuestions(contextElement, titled)
       }
-    }.groupBy { case (question, elementContext) => describePath(elementContext.namedParentPath)}.toList.map {
-      case (groupTitle, questions) =>
-        QuestionGroup(groupTitle, questions.map(_._1).toList)
+    }.groupBy { case (question, elementContext) => elementContext.namedParents}.toList.map {
+      case (parents, questions) =>
+        val lang = "fi" // TODO: kieliversiot
+        val groupNamePath = parents.map(_.getI18nText.getTranslations.get(lang))
+        val groupName = groupNamePath.mkString("", " - ", "")
+
+        QuestionGroup(groupName, questions.map(_._1).toList)
     }
   }
-
-  def describePath(path: List[String]): String = path.mkString("", " - ", "")
 
   private def getImmediateChildElementsOfType[A](rootElement: Element)(implicit mf : Manifest[A]): List[A] = {
     rootElement.getChildren.toList.flatMap { child =>
@@ -103,12 +105,11 @@ class ElementContext(val contextElement: Element, val element: Element) {
 
   lazy val phase: Phase = byType[Phase](parentsFromRootDown).head
 
-  lazy val namedParentPath: List[String] = {
-    def title(e: Element): List[String] = {
-      val lang = "fi" // TODO: kieliversiot
+  lazy val namedParents: List[Titled] = {
+    def title(e: Element): List[Titled] = {
       e match {
         case e: Titled if (e.isInstanceOf[Phase] || e.isInstanceOf[Theme]) && (e.getI18nText != null && e.getI18nText.getTranslations != null) =>
-          List(e.getI18nText.getTranslations.get(lang))
+          List(e)
         case _ => Nil
       }
     }
