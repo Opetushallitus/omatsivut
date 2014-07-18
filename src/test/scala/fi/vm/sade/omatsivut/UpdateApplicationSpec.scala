@@ -20,10 +20,14 @@ class UpdateApplicationSpec extends JsonFormats with ScalatraTestSupport {
         authPut("/applications/" + hakemus.oid, "1.2.246.562.24.14229104472", Serialization.write(newHakemus)) {
           val result: JValue = JsonMethods.parse(body)
           status must_== 200
-          newHakemus must_== result.extract[Hakemus]
+          compareWithoutTimestamp(newHakemus, result.extract[Hakemus]) must_== true
         }
       }
     }
+  }
+
+  def compareWithoutTimestamp(hakemus1: Hakemus, hakemus2: Hakemus) = {
+    hakemus1.copy(updated = hakemus2.updated) == hakemus2
   }
 
   addServlet(new ApplicationsServlet(), "/*")
