@@ -24,19 +24,21 @@ Hakemus.prototype = {
   },
 
   toJson: function() {
-    function convertBooleans(obj) {
-      _.each($.extend(true, {}, obj), function(val, key) {
-        if (_.isBoolean(val))
-          obj[key] = val.toString()
+    function removeFalseBooleans(obj) {
+      _.each(obj, function(val, key) {
+        if (_.isBoolean(val) && val === false)
+          delete obj[key]
         else if (_.isObject(val))
-          convertBooleans(val)
+          removeFalseBooleans(val)
       })
       return obj;
     }
 
     return _.extend({}, this,
       { hakutoiveet: _(this.hakutoiveet).map(function(hakutoive) { return hakutoive.toJson() })},
-      { answers: convertBooleans(this.answers)})
+      { answers: removeFalseBooleans($.extend(true, {}, this.answers))})
+
+    return _.extend({}, this, { hakutoiveet: _(this.hakutoiveet).map(function(hakutoive) { return hakutoive.toJson() })})
   },
 
   setAsSaved: function(savedApplication) {
@@ -105,7 +107,6 @@ Hakemus.prototype = {
 
         if (question.questionType == "Checkbox") {
           _(question.options).each(function(option) {
-            console.log("setvalueifempty", option.value, false, "old value", phaseAnswers[option.value])
             setValueIfEmpty(option.value, false)
           })
         } else {
