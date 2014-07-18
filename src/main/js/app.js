@@ -150,10 +150,6 @@ listApp.directive("questionTemplate", function(RecursionHelper) {
         $scope.isGroup = function() {
           return $scope.questionNode && !_.isEmpty($scope.questionNode.questionNodes)
         }
-
-        $scope.shortenPath = function(path) {
-          return _.chain(path.split(">")).without(" ").first().value().trim()
-        }
       });
     }
   };

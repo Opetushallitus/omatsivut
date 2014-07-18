@@ -25,7 +25,7 @@ protected object AddedQuestionFinder {
     addedQuestions.toList
   }
 
-  def describePath(path: List[String]): String = path.foldLeft("") { (a,b) => a + " > " + b}
+  def describePath(path: List[String]): String = path.mkString("", " - ", "")
 
   def findAddedElements(element: Element, newAnswers: Answers, oldAnswers: Answers, path: List[Element] = Nil): Set[Element] = {
     def flattenAnswers(answers: Map[String, Map[String, String]]): Map[String, String] = {
@@ -37,11 +37,6 @@ protected object AddedQuestionFinder {
     val existing = newChildren.union(oldChildren).toList
     added ++ existing.flatMap { element => findAddedElements(element, newAnswers, oldAnswers, (path ++ List(element))) }
   }
-
-  private def descElementPath(els: List[Element]) = {
-    els.map(descElement).foldLeft(""){(a,b) => a + "/" + b}
-  }
-
 
   private def descElement(el: Element) = el.getId
 }

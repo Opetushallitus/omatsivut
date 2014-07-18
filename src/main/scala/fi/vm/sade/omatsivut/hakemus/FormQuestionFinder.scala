@@ -2,8 +2,9 @@ package fi.vm.sade.omatsivut.hakemus
 
 import fi.vm.sade.haku.oppija.lomake.domain.elements.custom.SocialSecurityNumber
 import fi.vm.sade.haku.oppija.lomake.domain.elements.questions.{DropdownSelect, TextQuestion, CheckBox => HakuCheckBox, OptionQuestion => HakuOption, Radio => HakuRadio, TextArea => HakuTextArea}
-import fi.vm.sade.haku.oppija.lomake.domain.elements.{Element, Phase, Titled, TitledGroup}
+import fi.vm.sade.haku.oppija.lomake.domain.elements._
 import fi.vm.sade.omatsivut.Logging
+import fi.vm.sade.omatsivut.domain.Text
 import fi.vm.sade.omatsivut.domain._
 
 import scala.collection.JavaConversions._
@@ -103,7 +104,7 @@ class ElementContext(val contextElement: Element, val element: Element) {
     def title(e: Element): List[String] = {
       val lang = "fi" // TODO: kieliversiot
       e match {
-        case e: Titled if (e.getI18nText != null && e.getI18nText.getTranslations != null) =>
+        case e: Titled if (e.isInstanceOf[Phase] || e.isInstanceOf[Theme]) && (e.getI18nText != null && e.getI18nText.getTranslations != null) =>
           List(e.getI18nText.getTranslations.get(lang))
         case _ => Nil
       }

@@ -83,7 +83,7 @@
                                 <div ng-switch-when="true">
                                     <div ng-switch="level">
                                         <div ng-switch-when="0" class="application-section-heading">Lisäkysymykset: {{ questionNode.title }}</div>
-                                        <label ng-switch-default class="question-group-title">{{ shortenPath(questionNode.title) }}:</label>
+                                        <label ng-switch-default class="question-group-title">{{ questionNode.title }}:</label>
                                     </div>
 
                                     <div ng-class="{ 'question-group-indent': level > 0, 'question-group-section': level == 0 }" ng-repeat="subItem in questionNode.questionNodes">

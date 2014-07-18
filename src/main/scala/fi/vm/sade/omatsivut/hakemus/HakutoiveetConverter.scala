@@ -46,6 +46,10 @@ object HakutoiveetConverter {
     }
   }
 
+  def describe(hakutoive: Hakutoive) = {
+    hakutoive.getOrElse("Opetuspiste", "") + " - " + hakutoive.getOrElse("Koulutus", "")
+  }
+
   private def shortenKey(key: String): String = {
     key.substring(key.indexOf(getDelimiter(key)) + 1)
   }

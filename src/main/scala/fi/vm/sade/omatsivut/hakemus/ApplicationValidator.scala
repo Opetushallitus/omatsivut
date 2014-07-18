@@ -21,14 +21,14 @@ case class ApplicationValidator(implicit val appConfig: AppConfig) extends Loggi
       val validationErrors: List[ValidationError] = validate(hakemus, applicationSystem)
       val storedApplication = findStoredApplication(hakemus)
 
-      val questions: List[QuestionNode] = hakemus.hakutoiveet.filterNot(applicationContains(storedApplication)).flatMap { hakutoive =>
-        val questions: Seq[QuestionNode] = AddedQuestionFinder.findQuestionsByHakutoive(applicationSystem, hakutoive)
-        questions match {
+      val questionsPerHakutoive: List[QuestionNode] = hakemus.hakutoiveet.filterNot(applicationContains(storedApplication)).flatMap { hakutoive =>
+        val groupedQuestions: Seq[QuestionNode] = AddedQuestionFinder.findQuestionsByHakutoive(applicationSystem, hakutoive)
+        groupedQuestions match {
           case Nil => Nil
-          case _ => List(QuestionGroup(hakutoive.getOrElse("Koulutus", ""), questions.toList))
+          case _ => List(QuestionGroup(HakutoiveetConverter.describe(hakutoive), groupedQuestions.toList))
         }
       }
-      (validationErrors, questions)
+      (validationErrors, questionsPerHakutoive)
     } ("Error validating application: " + hakemus.oid)
   }
 
@@ -46,7 +46,7 @@ case class ApplicationValidator(implicit val appConfig: AppConfig) extends Loggi
   def findStoredApplication(hakemus: Hakemus): Application = {
     val applications = dao.find(new Application().setOid(hakemus.oid)).toList
     if (applications.size > 1) throw new RuntimeException("Too many applications for oid " + hakemus.oid)
-    if (applications.size == 0) throw new RuntimeException("Applicadtion not found for oid " + hakemus.oid)
+    if (applications.size == 0) throw new RuntimeException("Application not found for oid " + hakemus.oid)
     val application = applications.head
     application
   }
