@@ -3,13 +3,13 @@ package fi.vm.sade.omatsivut.servlet
 import fi.vm.sade.omatsivut.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.domain.{Hakemus, QuestionNode, ValidationError}
 import fi.vm.sade.omatsivut.hakemus.{ApplicationValidator, HakemusRepository}
-import fi.vm.sade.omatsivut.json.JsonFormats
+import fi.vm.sade.omatsivut.json.{JsonConverter, JsonFormats}
 import fi.vm.sade.omatsivut.security.Authentication
-import org.json4s.jackson.Serialization
-import org.scalatra.{Ok, BadRequest}
+import org.json4s.jackson.{JsonMethods, Serialization}
 import org.scalatra.json._
 import org.scalatra.swagger.SwaggerSupportSyntax.OperationBuilder
 import org.scalatra.swagger._
+import org.scalatra.{BadRequest, Ok}
 
 class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfig) extends OmatSivutServletBase with JacksonJsonSupport with JsonFormats with SwaggerSupport with Authentication {
   override def applicationName = Some("api")
@@ -38,7 +38,8 @@ class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfi
   }
 
   put("/applications/:oid", operation(putApplicationsSwagger)) {
-    val updated = Serialization.read[Hakemus](request.body)
+    val json = JsonMethods.parse(request.body)
+    val updated = json.extract[Hakemus].copy(answers = JsonConverter.stringyfiedAnswers(json))
     val (errors, _) = ApplicationValidator().validate(updated)
     if(errors.isEmpty) {
       val saved = HakemusRepository().updateHakemus(updated)
