@@ -2,7 +2,7 @@ package fi.vm.sade.omatsivut.servlet
 
 import fi.vm.sade.omatsivut.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.domain.{Hakemus, QuestionNode, ValidationError}
-import fi.vm.sade.omatsivut.hakemus.{HakemusRepository, HakemusValidator}
+import fi.vm.sade.omatsivut.hakemus.{ApplicationValidator, HakemusRepository}
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.security.Authentication
 import org.json4s.jackson.Serialization
@@ -39,7 +39,7 @@ class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfi
 
   put("/applications/:oid", operation(putApplicationsSwagger)) {
     val updated = Serialization.read[Hakemus](request.body)
-    val (errors, _) = HakemusValidator().validate(updated)
+    val (errors, _) = ApplicationValidator().validate(updated)
     if(errors.isEmpty) {
       HakemusRepository().updateHakemus(updated)
       Ok(updated.oid)
@@ -50,7 +50,7 @@ class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfi
 
   post("/applications/validate/:oid", operation(validateApplicationsSwagger)) {
     val validate = Serialization.read[Hakemus](request.body)
-    val (errors, questions) = HakemusValidator().validate(validate)
+    val (errors, questions) = ApplicationValidator().validate(validate)
     ValidationResult(errors, questions)
   }
 

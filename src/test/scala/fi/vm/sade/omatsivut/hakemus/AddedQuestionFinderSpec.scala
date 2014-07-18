@@ -1,13 +1,13 @@
-package fi.vm.sade.omatsivut
+package fi.vm.sade.omatsivut.hakemus
 
 import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
+import fi.vm.sade.omatsivut.AppConfig
 import fi.vm.sade.omatsivut.domain.Hakemus
 import fi.vm.sade.omatsivut.domain.Hakemus._
 import fi.vm.sade.omatsivut.fixtures.JsonFixtureMaps
-import fi.vm.sade.omatsivut.hakemus.{HakutoiveetConverter, ApplicationUpdater, HakuRepository, RelatedQuestionHelper}
 import org.specs2.mutable.Specification
 
-class RelatedQuestionsSpec extends Specification {
+class AddedQuestionFinderSpec extends Specification {
   "RelatedQuestionHelper" should {
     "Report zero additional questions when not adding any answers" in {
       val addedQuestions = findAddedQuestions(Hakemus.emptyAnswers, Hakemus.emptyAnswers)
@@ -17,7 +17,7 @@ class RelatedQuestionsSpec extends Specification {
     "Find related questions when adding Hakutoive" in {
       var addedQuestions = findAddedQuestions(answersWithNewHakutoive, Hakemus.emptyAnswers)
       addedQuestions.length must_== 2
-      addedQuestions = RelatedQuestionHelper.findQuestionsByHakutoive(as, hakutoive)
+      addedQuestions = AddedQuestionFinder.findQuestionsByHakutoive(as, hakutoive)
       addedQuestions.length must_== 2
     }
 
@@ -28,7 +28,7 @@ class RelatedQuestionsSpec extends Specification {
   }
 
   def findAddedQuestions(newAnswers: Answers, oldAnswers: Answers) = {
-    RelatedQuestionHelper.findAddedQuestions(as, newAnswers, oldAnswers)
+    AddedQuestionFinder.findAddedQuestions(as, newAnswers, oldAnswers)
   }
 
   def getFixtureApplicationSystem: ApplicationSystem = {

@@ -10,24 +10,26 @@ import fi.vm.sade.omatsivut.domain._
 
 import scala.collection.JavaConversions._
 
-case class ApplicationValidationWrapper(implicit val appConfig: AppConfig) extends Logging {
+case class ApplicationValidator(implicit val appConfig: AppConfig) extends Logging {
   private val applicationSystemService = appConfig.springContext.applicationSystemService
   private val dao = appConfig.springContext.applicationDAO
   private val validator = appConfig.springContext.validator
 
   def validate(hakemus: Hakemus): (List[ValidationError], List[QuestionNode]) = {
-    val applicationSystem = applicationSystemService.getApplicationSystem(hakemus.haku.get.oid)
-    val validationErrors: List[ValidationError] = validate(hakemus, applicationSystem)
-    val storedApplication = findStoredApplication(hakemus)
+    withErrorLogging {
+      val applicationSystem = applicationSystemService.getApplicationSystem(hakemus.haku.get.oid)
+      val validationErrors: List[ValidationError] = validate(hakemus, applicationSystem)
+      val storedApplication = findStoredApplication(hakemus)
 
-    val questions: List[QuestionNode] = hakemus.hakutoiveet.filterNot(applicationContains(storedApplication)).flatMap { hakutoive =>
-      val questions: Seq[QuestionNode] = RelatedQuestionHelper.findQuestionsByHakutoive(applicationSystem, hakutoive)
-      questions match {
-        case Nil => Nil
-        case _ => List(QuestionGroup(hakutoive.getOrElse("Koulutus", ""), questions.toList))
+      val questions: List[QuestionNode] = hakemus.hakutoiveet.filterNot(applicationContains(storedApplication)).flatMap { hakutoive =>
+        val questions: Seq[QuestionNode] = AddedQuestionFinder.findQuestionsByHakutoive(applicationSystem, hakutoive)
+        questions match {
+          case Nil => Nil
+          case _ => List(QuestionGroup(hakutoive.getOrElse("Koulutus", ""), questions.toList))
+        }
       }
-    }
-    (validationErrors, questions)
+      (validationErrors, questions)
+    } ("Error validating application: " + hakemus.oid)
   }
 
   private def applicationContains(application: Application)(hakutoive: Hakutoive) = {

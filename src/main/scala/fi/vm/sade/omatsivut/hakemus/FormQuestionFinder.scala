@@ -1,36 +1,18 @@
 package fi.vm.sade.omatsivut.hakemus
 
-import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
-import fi.vm.sade.haku.oppija.lomake.domain.elements.{Titled, Element, Phase, TitledGroup}
 import fi.vm.sade.haku.oppija.lomake.domain.elements.custom.SocialSecurityNumber
 import fi.vm.sade.haku.oppija.lomake.domain.elements.questions.{DropdownSelect, TextQuestion, CheckBox => HakuCheckBox, OptionQuestion => HakuOption, Radio => HakuRadio, TextArea => HakuTextArea}
+import fi.vm.sade.haku.oppija.lomake.domain.elements.{Element, Phase, Titled, TitledGroup}
 import fi.vm.sade.omatsivut.Logging
 import fi.vm.sade.omatsivut.domain._
 
 import scala.collection.JavaConversions._
 
-object FormQuestionHelper extends Logging {
-  def questionsByIds(applicationSystem: ApplicationSystem, ids: Seq[String]): List[Question] = {
-    findQuestions(applicationSystem, { titledElement => ids.contains(titledElement.getId)})
-  }
-  def findQuestions(applicationSystem: ApplicationSystem, filterFn: (Titled => Boolean)): List[Question] = {
-    getPhases(applicationSystem).flatMap { phase =>
-      getElementsOfType[Titled](phase)
-        .filter(filterFn)
-        .flatMap { titled =>
-          titledElementToQuestions(phase, titled)
-        }
-    }
-  }
-
+protected object FormQuestionFinder extends Logging {
   def findQuestions(contextElement: Element, element: Element): List[Question] = {
     getElementsOfType[Titled](element).flatMap { titled =>
       titledElementToQuestions(contextElement, titled)
     }
-  }
-
-  def getPhases(applicationSystem: ApplicationSystem) = {
-    getChildElementsOfType[Phase](applicationSystem.getForm)
   }
 
   private def getImmediateChildElementsOfType[A](rootElement: Element)(implicit mf : Manifest[A]): List[A] = {

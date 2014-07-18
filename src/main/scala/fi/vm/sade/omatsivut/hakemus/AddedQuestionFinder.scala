@@ -7,7 +7,7 @@ import fi.vm.sade.omatsivut.domain.{QuestionGroup, QuestionNode}
 
 import scala.collection.JavaConversions._
 
-object RelatedQuestionHelper {
+protected object AddedQuestionFinder {
   def findQuestionsByHakutoive(applicationSystem: ApplicationSystem, hakutoive: Hakutoive): Seq[QuestionNode] = {
     val answersWithNewHakutoive = Map(ApplicationUpdater.hakutoiveetPhase -> HakutoiveetConverter.convertToAnswers(List(hakutoive)))
     findAddedQuestions(applicationSystem, answersWithNewHakutoive, emptyAnswers)
@@ -17,7 +17,7 @@ object RelatedQuestionHelper {
     val form = applicationSystem.getForm
     val addedElements = findAddedElements(form, newAnswers, oldAnswers)
     val addedQuestions = addedElements.flatMap { element =>
-      FormQuestionHelper.findQuestions(form, element)
+      FormQuestionFinder.findQuestions(form, element)
     }.groupBy { question => describePath(question.context.path)}.toList.map {
       case (groupTitle, questions) =>
         QuestionGroup(groupTitle, questions.toList)
