@@ -17,6 +17,10 @@ trait ScalatraTestSupport extends MutableScalatraSpec {
     post(uri, body, headers = authHeaders(oid))(f)
   }
 
+  def authPut[A](uri: String, oid: String, body: Array[Byte])(f: => A): A = {
+    put(uri, body, headers = authHeaders(oid))(f)
+  }
+
   def authHeaders[A](oid: String): Map[String, String] = {
     Map("Cookie" -> ("auth=" + AuthenticationCipher().encrypt(CookieCredentials(oid).toString)))
   }
