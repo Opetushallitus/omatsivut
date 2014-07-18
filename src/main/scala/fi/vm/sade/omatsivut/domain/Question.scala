@@ -13,7 +13,6 @@ trait Question extends QuestionNode {
   def help: String
   def questionType: String
   def id: QuestionId
-  def context: QuestionContext
   def flatten = List(this)
 }
 
@@ -21,11 +20,11 @@ trait Optional extends Question {
   def options: List[Choice]
 }
 
-case class Text(context: QuestionContext, id: QuestionId, title: String, help: String, questionType: String = "Text") extends Question
-case class TextArea(context: QuestionContext, id: QuestionId, title: String, help: String, questionType: String = "TextArea") extends Question
-case class Radio(context: QuestionContext, id: QuestionId, title: String, help: String, options: List[Choice], questionType: String = "Radio") extends Optional
-case class Checkbox(context: QuestionContext, id: QuestionId, title: String, help: String, options: List[Choice], questionType: String = "Checkbox") extends Optional
-case class Dropdown(context: QuestionContext, id: QuestionId, title: String, help: String, options: List[Choice], questionType: String = "Dropdown") extends Optional
+case class Text(id: QuestionId, title: String, help: String, questionType: String = "Text") extends Question
+case class TextArea(id: QuestionId, title: String, help: String, questionType: String = "TextArea") extends Question
+case class Radio(id: QuestionId, title: String, help: String, options: List[Choice], questionType: String = "Radio") extends Optional
+case class Checkbox(id: QuestionId, title: String, help: String, options: List[Choice], questionType: String = "Checkbox") extends Optional
+case class Dropdown(id: QuestionId, title: String, help: String, options: List[Choice], questionType: String = "Dropdown") extends Optional
 
 case class Choice(title: String, value: String, default: Boolean = false)
 

@@ -2,19 +2,25 @@ package fi.vm.sade.omatsivut.hakemus
 
 import fi.vm.sade.haku.oppija.lomake.domain.elements.custom.SocialSecurityNumber
 import fi.vm.sade.haku.oppija.lomake.domain.elements.questions.{DropdownSelect, TextQuestion, CheckBox => HakuCheckBox, OptionQuestion => HakuOption, Radio => HakuRadio, TextArea => HakuTextArea}
-import fi.vm.sade.haku.oppija.lomake.domain.elements._
+import fi.vm.sade.haku.oppija.lomake.domain.elements.{Element, Titled, Phase, Theme, TitledGroup}
 import fi.vm.sade.omatsivut.Logging
-import fi.vm.sade.omatsivut.domain.Text
 import fi.vm.sade.omatsivut.domain._
 
 import scala.collection.JavaConversions._
 
 protected object FormQuestionFinder extends Logging {
-  def findQuestions(contextElement: Element, element: Element): List[Question] = {
-    getElementsOfType[Titled](element).flatMap { titled =>
-      titledElementToQuestions(contextElement, titled)
+  def findQuestions(contextElement: Element, elementsToScan: Set[Element]): List[QuestionGroup] = {
+    elementsToScan.flatMap { element =>
+      getElementsOfType[Titled](element).flatMap { titled =>
+        titledElementToQuestions(contextElement, titled)
+      }
+    }.groupBy { case (question, elementContext) => describePath(elementContext.namedParentPath)}.toList.map {
+      case (groupTitle, questions) =>
+        QuestionGroup(groupTitle, questions.map(_._1).toList)
     }
   }
+
+  def describePath(path: List[String]): String = path.mkString("", " - ", "")
 
   private def getImmediateChildElementsOfType[A](rootElement: Element)(implicit mf : Manifest[A]): List[A] = {
     rootElement.getChildren.toList.flatMap { child =>
@@ -58,28 +64,25 @@ protected object FormQuestionFinder extends Logging {
       e.getVerboseHelp().getTranslations.get("fi") // TODO: kieliversiot
   }
 
-  private def titledElementToQuestions(contextElement: Element, element: Titled): List[Question] = {
+  private def titledElementToQuestions(contextElement: Element, element: Titled): List[(Question, ElementContext)] = {
     val elementContext = new ElementContext(contextElement, element)
     def id = QuestionId(elementContext.phase.getId, element.getId)
     def containsCheckBoxes(e: TitledGroup): Boolean = {
       getImmediateChildElementsOfType[HakuCheckBox](e).nonEmpty
     }
-    def ctx = {
-      QuestionContext(elementContext.namedParentPath)
-    }
 
-    element match {
-      case e: TextQuestion => List(Text(ctx, id, title(e), helpText(e)))
-      case e: HakuTextArea => List(TextArea(ctx, id, title(e), helpText(e)))
-      case e: HakuRadio => List(Radio(ctx, id, title(e), helpText(e), options(e)))
-      case e: DropdownSelect => List(Dropdown(ctx, id, title(e), helpText(e), options(e)))
-      case e: TitledGroup if containsCheckBoxes(e) => List(Checkbox(ctx, id, title(e), helpText(e), options(e)))
-      case e: SocialSecurityNumber => List(Text(ctx, id, title(e), helpText(e))) // Should never happen in prod
+    (element match {
+      case e: TextQuestion => List(Text(id, title(e), helpText(e)))
+      case e: HakuTextArea => List(TextArea(id, title(e), helpText(e)))
+      case e: HakuRadio => List(Radio(id, title(e), helpText(e), options(e)))
+      case e: DropdownSelect => List(Dropdown(id, title(e), helpText(e), options(e)))
+      case e: TitledGroup if containsCheckBoxes(e) => List(Checkbox(id, title(e), helpText(e), options(e)))
+      case e: SocialSecurityNumber => List(Text(id, title(e), helpText(e))) // Should never happen in prod
       case _ => {
         logger.error("Could not convert element of type: " + element.getType)
         Nil
       }
-    }
+    }).map { question => (question, elementContext)}
   }
 }
 

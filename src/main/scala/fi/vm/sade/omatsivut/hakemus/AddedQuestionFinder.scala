@@ -16,16 +16,9 @@ protected object AddedQuestionFinder {
   def findAddedQuestions(applicationSystem: ApplicationSystem, newAnswers: Answers, oldAnswers: Answers): Seq[QuestionNode] = {
     val form = applicationSystem.getForm
     val addedElements = findAddedElements(form, newAnswers, oldAnswers)
-    val addedQuestions = addedElements.flatMap { element =>
-      FormQuestionFinder.findQuestions(form, element)
-    }.groupBy { question => describePath(question.context.path)}.toList.map {
-      case (groupTitle, questions) =>
-        QuestionGroup(groupTitle, questions.toList)
-    }
+    val addedQuestions = FormQuestionFinder.findQuestions(form, addedElements)
     addedQuestions.toList
   }
-
-  def describePath(path: List[String]): String = path.mkString("", " - ", "")
 
   def findAddedElements(element: Element, newAnswers: Answers, oldAnswers: Answers, path: List[Element] = Nil): Set[Element] = {
     def flattenAnswers(answers: Map[String, Map[String, String]]): Map[String, String] = {
