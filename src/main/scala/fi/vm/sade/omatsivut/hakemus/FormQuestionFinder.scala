@@ -96,7 +96,7 @@ protected object FormQuestionFinder extends Logging {
       case e: TitledGroup => Nil
       case e: HakuCheckBox => Nil
       case _ => {
-        logger.error("Could not convert element of type: " + element.getType)
+        logger.error("Could not convert element of type: " + element.getType + " with title: " + title(element))
         Nil
       }
     }).map { question => (question, elementContext)}
