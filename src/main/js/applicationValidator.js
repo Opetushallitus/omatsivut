@@ -11,7 +11,7 @@ module.exports = function(listApp) {
       function convertToItems(questions, results) {
         _(questions).each(function(questionNode) {
           if (questionNode.id) {
-            results.questionNodes.push(new QuestionItem(questionNode, [])) // Älä välitä validaatiovirheistä tässä kohtaa
+            results.questionNodes.push(new QuestionItem(questionNode, questionNode.required ? ["*"] : []))
           } else {
             results.questionNodes.push(convertToItems(questionNode.questions, new QuestionGroup(questionNode.title )))
           }
