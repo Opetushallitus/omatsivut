@@ -5,7 +5,7 @@ import java.util.Date
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
-import fi.vm.sade.omatsivut.domain.Hakemus
+import fi.vm.sade.omatsivut.domain.{QuestionId, Hakemus}
 import fi.vm.sade.omatsivut.domain.Hakemus._
 
 import scala.collection.JavaConversions._
@@ -22,10 +22,51 @@ object ApplicationUpdater {
   }
 
   def getUpdatedAnswersForApplication(applicationSystem: ApplicationSystem)(application: Application, hakemus: Hakemus): Answers = {
-    val newAnswers: Answers = updatedAnswersForHakuToiveet(application, hakemus) ++ updatedAnswersForOtherPhases(application, hakemus)
+    val allAnswers = getAllUpdatedAnswersForApplication(applicationSystem)(application, hakemus)
+    val removedQuestionIds = getRemovedQuestionIds(applicationSystem, application, hakemus)
+    pruneOrphanedAnswers(removedQuestionIds, allAnswers)
+  }
+
+  def getAllUpdatedAnswersForApplication(applicationSystem: ApplicationSystem)(application: Application, hakemus: Hakemus): Answers = {
+    allAnswersFromApplication(application) ++ updatedAnswersForHakuToiveet(application, hakemus) ++ updatedAnswersForOtherPhases(application, hakemus)
+  }
+
+
+  private def pruneOrphanedAnswers(removedQuestions: Seq[QuestionId], answers: Answers): Answers = {
+    answers.map { case (phaseId, phaseAnswers) =>
+        (phaseId, phaseAnswers.filterKeys { case questionId =>
+            !removedQuestions.contains(QuestionId(phaseId, questionId))
+        })
+    }
+  }
+
+  private def getRemovedQuestionIds(applicationSystem: ApplicationSystem, application: Application, hakemus: Hakemus): Seq[QuestionId] = {
+    val allOldAnswers = allAnswersFromApplication(application)
+    val allNewAnswers = getAllAnswersForApplication(application, hakemus)
+
+    val removedQuestions = AddedQuestionFinder.findAddedQuestions(applicationSystem, allOldAnswers, allNewAnswers).flatMap(_.flatten)
+    val addedQuestions = AddedQuestionFinder.findAddedQuestions(applicationSystem, allOldAnswers, allNewAnswers).flatMap(_.flatten)
+    removedQuestions.map(_.id)
+  }
+
+  private def getAllAnswersForApplication(application: Application, hakemus: Hakemus): Answers = {
+    allAnswersFromApplication(application) ++ updatedAnswersForHakuToiveet(application, hakemus) ++ updatedAnswersForOtherPhases(application, hakemus)
+  }
+
+  private def allAnswersFromApplication(application: Application) = {
+    application.getAnswers.toMap.mapValues(_.toMap)
+  }
+
+
+  private def removeOrphanedAnswers(applicationSystem: ApplicationSystem, application: Application, newAnswers: Answers): Map[String, Map[String, String]] = {
     val oldAnswers: Answers = application.getAnswers.toMap.mapValues(_.toMap)
-    val removedQuestions = AddedQuestionFinder.findAddedQuestions(applicationSystem, oldAnswers, newAnswers)
-    newAnswers
+    val removedQuestions = AddedQuestionFinder.findAddedQuestions(applicationSystem, oldAnswers, newAnswers).flatMap(_.flatten)
+    val removedQuestionIds: Seq[QuestionId] = removedQuestions.map(_.id)
+    newAnswers.map { case (phaseId, phaseAnswers) =>
+      (phaseId, phaseAnswers.filterKeys { questionId =>
+        !removedQuestionIds.contains(QuestionId(phaseId, questionId))
+      })
+    }
   }
 
   private def updatedAnswersForOtherPhases(application: Application, hakemus: Hakemus): Answers = {

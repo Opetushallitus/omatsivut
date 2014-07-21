@@ -15,19 +15,31 @@ class AddedQuestionFinderSpec extends Specification {
 
     "Find related questions when adding Hakutoive" in {
       var addedQuestions = findAddedQuestions(answersWithNewHakutoive, Hakemus.emptyAnswers)
-      addedQuestions.length must_== 2
-      addedQuestions = AddedQuestionFinder.findQuestionsByHakutoive(as, hakutoive)
-      addedQuestions.length must_== 2
+      addedQuestions.length must_== 9
+      addedQuestions = AddedQuestionFinder.findQuestionsByHakutoive(as, hakutoive).flatMap(_.flatten)
+      addedQuestions.length must_== 9
     }
 
     "Report zero additional questions when keeping same answers" in {
       val addedQuestions = findAddedQuestions(answersWithNewHakutoive, answersWithNewHakutoive)
       addedQuestions.length must_== 0
     }
+
+    "Report zero additional questions when re-ordering hakutoiveet" in {
+      val answers1 = ApplicationUpdater.getAllUpdatedAnswersForApplication(as)(application, hakemus)
+      val answers2 = ApplicationUpdater.getAllUpdatedAnswersForApplication(as)(application, hakemus.copy(
+        hakutoiveet = hakemus.hakutoiveet.reverse
+      ))
+      val addedQuestions = findAddedQuestions(answers1, answers2)
+      val removedQuestions = findAddedQuestions(answers2, answers1)
+      addedQuestions.length must_== 0
+      removedQuestions.length must_== 0
+    }
+
   }
 
   def findAddedQuestions(newAnswers: Answers, oldAnswers: Answers) = {
-    AddedQuestionFinder.findAddedQuestions(as, newAnswers, oldAnswers)
+    AddedQuestionFinder.findAddedQuestions(as, newAnswers, oldAnswers).flatMap(_.flatten)
   }
 
   val as: ApplicationSystem = applicationSystem

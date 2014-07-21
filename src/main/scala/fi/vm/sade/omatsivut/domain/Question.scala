@@ -7,6 +7,15 @@ sealed trait QuestionNode {
 
 case class QuestionGroup(title: String, questions: List[QuestionNode]) extends QuestionNode {
   def flatten = questions.flatMap(_.flatten)
+  def filter (f: (Question => Boolean)): QuestionGroup = {
+    QuestionGroup(title, questions.flatMap {
+      case q: Question => List(q).filter(f)
+      case q: QuestionGroup => q.filter(f) match {
+        case QuestionGroup(_, Nil) => Nil
+        case q:QuestionGroup => List(q)
+      }
+    })
+  }
 }
 
 trait Question extends QuestionNode {

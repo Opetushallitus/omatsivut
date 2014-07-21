@@ -1,5 +1,6 @@
 package fi.vm.sade.omatsivut.hakemus
 
+import fi.vm.sade.haku.oppija.lomake.domain.elements.custom.SocialSecurityNumber
 import fi.vm.sade.haku.oppija.lomake.domain.elements.questions.{DropdownSelect, TextQuestion, CheckBox => HakuCheckBox, OptionQuestion => HakuOption, Radio => HakuRadio, TextArea => HakuTextArea}
 import fi.vm.sade.haku.oppija.lomake.domain.elements._
 import fi.vm.sade.haku.oppija.lomake.validation.validators.RequiredFieldValidator
@@ -132,7 +133,7 @@ private case class ParentPathOrdering() extends scala.math.Ordering[List[Element
   }
 }
 
-private class ElementContext(val contextElement: Element, val element: Titled) {
+class ElementContext(val contextElement: Element, val element: Titled) {
   lazy val parentsFromRootDown: List[Element] = {
     def findParents(e: Element, r: Element): Option[List[Element]] = {
       if (e == r) {
