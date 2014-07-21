@@ -59,6 +59,13 @@ function ApplicationListPage() {
       return getApplication(0).find(".status-message.error").is(":visible")
     },
 
+    statusMessage: function() {
+      return getApplication(0).find(".status-message").text()
+    },
+
+    saveError: function() {
+      return getApplication(0).find(".status-message.error").text()
+    },
 
     emptyPreferencesForApplication: function (index) {
       return preferencesForApplication(index, function (item) {
@@ -77,12 +84,20 @@ function ApplicationListPage() {
       data: function() {
         return el().find(".question").map(function() {
           return {
-            title: $(this).find(".title").text()
+            title: $(this).find(".title").text(),
+            validationMessage: $(this).find(".validation-message").text()
+
           }
         }).toArray()
       },
       titles: function() {
         return _.pluck(this.data(), "title")
+      },
+      validationMessages: function() {
+        return _.pluck(this.data(), "validationMessage")
+      },
+      enterAnswer: function(index, answer) {
+        el().find(".question").eq(index).find("input").val(answer).change()
       }
     }
   }

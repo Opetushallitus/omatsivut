@@ -81,7 +81,7 @@
     })
 
 
-    describe("validaatiot", function() {
+    describe("hakutoiveiden validaatio", function() {
       before(ApplicationListPage().resetDataAndOpen)
 
       beforeEach(function() {
@@ -116,9 +116,29 @@
         var pref = page.getPreference(1)
         return pref.selectOpetusPiste("Ahl")()
           .then(wait.until(page.saveButton(0).isEnabled(false)))
-          .then(function() { page.isValidationErrorVisible().should.be.true })
+          .then(function() { page.isSaveErrorVisible().should.be.true })
           .then(pref.selectKoulutus(0))
           .then(wait.until(page.saveButton(0).isEnabled(true)))
+      })
+    })
+
+    describe("lisäkysymysten vastausten validointi", function() {
+      beforeEach(ApplicationListPage().resetDataAndOpen)
+      beforeEach(replacePreference(1, "Etelä-Savon ammattiopisto"))
+
+      it("pakolliset kentät korostetaan", function() {
+        ApplicationListPage().questionsForApplication(0).validationMessages()[0].should.equal("*")
+      })
+
+      it("validaatiovirheet näytetään oikein 'tallenna'-napin painamisen jälkeen", function() {
+        return page.save().then(function() {
+          page.saveError().should.equal("Ei tallennettu - vastaa ensin kaikkiin lisäkysymyksiin")
+          page.questionsForApplication(0).validationMessages()[0].should.equal("Pakollinen tieto.")
+          page.questionsForApplication(0).enterAnswer(0, "testivastaus")
+          return page.save()
+        }).then(function() {
+          page.questionsForApplication(0).validationMessages()[0].should.equal("")
+        })
       })
     })
 
