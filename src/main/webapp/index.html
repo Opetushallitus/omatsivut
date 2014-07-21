@@ -22,7 +22,7 @@
                     <p ng-repeat="period in application.haku.applicationPeriods">
                       Hakukausi: {{period.start | date:'dd.MM.yyyy HH:mm'}} - {{period.end | date:'dd.MM.yyyy HH:mm'}}</p>
                     </p>
-                    <p>{{ timestampLabel() }} {{ application.updated | date:'dd.MM.yyyy HH:mm:ss' }}</p>
+                    <p class="timestamp">{{ timestampLabel() }} {{ application.updated | date:'dd.MM.yyyy HH:mm:ss' }}</p>
 
                     <section class="application-section" highlight-items>
                         <header class="application-section-heading">

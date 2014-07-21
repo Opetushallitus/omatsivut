@@ -116,15 +116,17 @@
         var pref = page.getPreference(1)
         return pref.selectOpetusPiste("Ahl")()
           .then(wait.until(page.saveButton(0).isEnabled(false)))
-          .then(function() { page.isSaveErrorVisible().should.be.true })
+          .then(function() { page.isValidationErrorVisible().should.be.true })
           .then(pref.selectKoulutus(0))
           .then(wait.until(page.saveButton(0).isEnabled(true)))
       })
     })
 
-    describe("lisäkysymysten vastausten validointi", function() {
+    describe("Lisäkysymyksiin vastaaminen", function() {
       beforeEach(ApplicationListPage().resetDataAndOpen)
-      beforeEach(replacePreference(1, "Etelä-Savon ammattiopisto"))
+      beforeEach(function() { page.getPreference(2).remove() })
+      beforeEach(page.save)
+      beforeEach(replacePreference(2, "Omnian ammattiopisto"))
 
       it("pakolliset kentät korostetaan", function() {
         ApplicationListPage().questionsForApplication(0).validationMessages()[0].should.equal("*")
@@ -139,6 +141,17 @@
         }).then(function() {
           page.questionsForApplication(0).validationMessages()[0].should.equal("")
         })
+      })
+
+      it("onnistuneen tallennuksen jälkeen käyttöliittymä on 'tallennettu'-tilassa", function() {
+        var timestamp = page.changesSavedTimestamp()
+        page.questionsForApplication(0).enterAnswer(0, "testivastaus")
+        page.save()
+          .then(function() {
+            page.changesSavedTimestamp().should.not.equal(timestamp)
+            page.saveButton(0).isEnabled()().should.be.false
+            page.statusMessage().should.equal("Kaikki muutokset tallennettu")
+          })
       })
     })
 

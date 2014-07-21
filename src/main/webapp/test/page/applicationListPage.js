@@ -75,6 +75,10 @@ function ApplicationListPage() {
 
     questionsForApplication: function (index) {
       return Questions(function() { return getApplication(index).find(".questions") })
+    },
+
+    changesSavedTimestamp: function () {
+      return getApplication(0).find(".timestamp").text()
     }
   }
   return api
