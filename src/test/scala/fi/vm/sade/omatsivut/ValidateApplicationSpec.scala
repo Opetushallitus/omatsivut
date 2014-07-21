@@ -19,9 +19,9 @@ class ValidateApplicationSpec extends JsonFormats with ScalatraTestSupport {
           val result: JValue = JsonMethods.parse(body)
           val errors: List[ValidationError] = (result \ "errors").extract[List[ValidationError]]
           val questions: List[AnyQuestion] = (result \ "questions").extract[List[AnyQuestion]]
-          errors.size must_== 3
-          questions.size must_== 3
-          questions.head must_== AnyQuestion(Translations(Map("fi" -> "Päättötodistuksen kaikkien oppiaineiden keskiarvo?")), "Text")
+          errors.size must_== 1
+          questions.size must_== 1
+          questions.head must_== AnyQuestion(Translations(Map("fi" -> "Henkilötunnus")), "Text")
         }
       }
     }
