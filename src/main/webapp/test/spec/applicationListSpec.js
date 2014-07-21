@@ -147,6 +147,7 @@
         var timestamp = page.changesSavedTimestamp()
         page.questionsForApplication(0).enterAnswer(0, "testivastaus")
         return page.save()
+          .then(wait.forMilliseconds(1000))
           .then(function() {
             page.changesSavedTimestamp().should.not.equal(timestamp)
             page.saveButton(0).isEnabled().should.be.false
