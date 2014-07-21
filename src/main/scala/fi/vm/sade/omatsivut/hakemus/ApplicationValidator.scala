@@ -12,15 +12,13 @@ import fi.vm.sade.omatsivut.domain._
 import scala.collection.JavaConversions._
 
 case class ApplicationValidator(implicit val appConfig: AppConfig) extends Logging {
-  private val applicationSystemService = appConfig.springContext.applicationSystemService
   private val dao = appConfig.springContext.applicationDAO
   private val validator = appConfig.springContext.validator
   val preferencePhaseKey = OppijaConstants.PHASE_APPLICATION_OPTIONS
 
-  def validate(hakemus: Hakemus): (List[ValidationError], List[QuestionNode]) = {
+  def validate(applicationSystem: ApplicationSystem)(hakemus: Hakemus): (List[ValidationError], List[QuestionNode]) = {
     withErrorLogging {
-      val applicationSystem = applicationSystemService.getApplicationSystem(hakemus.haku.get.oid)
-      val validationErrors: List[ValidationError] = validate(hakemus, applicationSystem)
+      val validationErrors: List[ValidationError] = justValidate(hakemus, applicationSystem)
       val storedApplication = findStoredApplication(hakemus)
 
       val questionsPerHakutoive: List[QuestionNode] = hakemus.hakutoiveet.filterNot(applicationContains(storedApplication)).flatMap { hakutoive =>
@@ -38,9 +36,9 @@ case class ApplicationValidator(implicit val appConfig: AppConfig) extends Loggi
     HakutoiveetConverter.answersContainHakutoive(application.getAnswers.get(preferencePhaseKey).toMap, hakutoive)
   }
 
-  private def validate(hakemus: Hakemus, applicationSystem: ApplicationSystem): List[ValidationError] = {
+  private def justValidate(hakemus: Hakemus, applicationSystem: ApplicationSystem): List[ValidationError] = {
     val application: Application = findStoredApplication(hakemus)
-    ApplicationUpdater.update(application, hakemus)
+    ApplicationUpdater.update(applicationSystem)(application, hakemus)
     val validationResult = validator.validate(convertToValidationInput(applicationSystem, application))
     convertoToValidationErrors(validationResult)
   }

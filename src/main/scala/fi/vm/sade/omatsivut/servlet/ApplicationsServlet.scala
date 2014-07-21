@@ -13,6 +13,7 @@ import org.scalatra.{BadRequest, Ok}
 
 class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfig) extends OmatSivutServletBase with JacksonJsonSupport with JsonFormats with SwaggerSupport with Authentication {
   override def applicationName = Some("api")
+  private val applicationSystemService = appConfig.springContext.applicationSystemService
 
   protected val applicationDescription = "Oppijan henkilökohtaisen palvelun REST API, jolla voi hakea ja muokata hakemuksia ja omia tietoja"
 
@@ -40,9 +41,10 @@ class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfi
   put("/applications/:oid", operation(putApplicationsSwagger)) {
     val json = JsonMethods.parse(request.body)
     val updated = json.extract[Hakemus].copy(answers = JsonConverter.stringyfiedAnswers(json))
-    val (errors, _) = ApplicationValidator().validate(updated)
+    val applicationSystem = applicationSystemService.getApplicationSystem(updated.haku.get.oid)
+    val (errors, _) = ApplicationValidator().validate(applicationSystem)(updated)
     if(errors.isEmpty) {
-      val saved = HakemusRepository().updateHakemus(updated)
+      val saved = HakemusRepository().updateHakemus(applicationSystem)(updated)
       Ok(saved)
     } else {
       BadRequest(errors)
@@ -51,7 +53,8 @@ class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfi
 
   post("/applications/validate/:oid", operation(validateApplicationsSwagger)) {
     val validate = Serialization.read[Hakemus](request.body)
-    val (errors, questions) = ApplicationValidator().validate(validate)
+    val applicationSystem = applicationSystemService.getApplicationSystem(validate.haku.get.oid)
+    val (errors, questions) = ApplicationValidator().validate(applicationSystem)(validate)
     ValidationResult(errors, questions)
   }
 
