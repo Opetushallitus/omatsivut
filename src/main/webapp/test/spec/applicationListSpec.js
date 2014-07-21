@@ -124,7 +124,7 @@
 
     describe("Lisäkysymyksiin vastaaminen", function() {
       beforeEach(ApplicationListPage().resetDataAndOpen)
-      beforeEach(function() { page.getPreference(2).remove() })
+      beforeEach(page.getPreference(2).remove)
       beforeEach(page.save)
       beforeEach(replacePreference(2, "Omnian ammattiopisto"))
 

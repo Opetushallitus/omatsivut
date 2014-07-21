@@ -45,5 +45,20 @@
       "vocational": true,
       "educationCodeUri": "koulutus_039996"
     }
+  ],
+  "1.2.246.562.10.74355268397": [
+    {
+      "id": "1.2.246.562.14.2014030412193592192583",
+      "name": "Ammattistartti",
+      "aoIdentifier": "028",
+      "educationDegree": "32",
+      "childLONames": [],
+      "sora": false,
+      "teachingLanguages": ["FI"],
+      "athleteEducation": false,
+      "kaksoistutkinto": false,
+      "vocational": true,
+      "educationCodeUri": "koulutus_039996"
+    }
   ]
 }
