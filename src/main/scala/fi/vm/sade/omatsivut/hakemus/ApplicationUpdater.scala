@@ -12,21 +12,27 @@ object ApplicationUpdater {
   val preferencePhaseKey = OppijaConstants.PHASE_APPLICATION_OPTIONS
 
   def update(application: Application, hakemus: Hakemus) {
-    updateHakutoiveet(application, hakemus)
-    updateAllOtherPhases(application, hakemus)
+    val updatedAnswers = getUpdatedAnswersForApplication(application, hakemus)
+    updatedAnswers.foreach { case (phaseId, phaseAnswers) =>
+      application.addVaiheenVastaukset(phaseId, phaseAnswers)
+    }
     application.setUpdated(new Date(hakemus.updated))
   }
 
-  private def updateAllOtherPhases(application: Application, hakemus: Hakemus) {
-    val allOtherPhaseAnswers = hakemus.answers.filterKeys(phase => phase != preferencePhaseKey)
-    allOtherPhaseAnswers.foreach { case (phase, answers) =>
-      val existingAnswers = application.getPhaseAnswers(phase)
-      application.addVaiheenVastaukset(phase, existingAnswers ++ answers)
-    }
+  def getUpdatedAnswersForApplication(application: Application, hakemus: Hakemus): Map[String, Map[String, String]] = {
+    updatedAnswersForHakuToiveet(application, hakemus) ++ updatedAnswersForOtherPhases(application, hakemus)
   }
 
-  private def updateHakutoiveet(application: Application, hakemus: Hakemus) {
+  private def updatedAnswersForOtherPhases(application: Application, hakemus: Hakemus): Map[String, Map[String, String]] = {
+    val allOtherPhaseAnswers = hakemus.answers.filterKeys(phase => phase != preferencePhaseKey)
+    allOtherPhaseAnswers.map { case (phase, answers) =>
+      val existingAnswers = application.getPhaseAnswers(phase).toMap
+      (phase, existingAnswers ++ answers)
+    }.toMap
+  }
+
+  private def updatedAnswersForHakuToiveet(application: Application, hakemus: Hakemus): Map[String, Map[String, String]] = {
     val updatedAnswers: Map[String, String] = HakutoiveetConverter.updateAnswers(hakemus, application.getPhaseAnswers(preferencePhaseKey).toMap)
-    application.addVaiheenVastaukset(preferencePhaseKey, updatedAnswers)
+    Map(preferencePhaseKey -> updatedAnswers)
   }
 }

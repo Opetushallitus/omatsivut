@@ -31,5 +31,5 @@ class AddedQuestionFinderSpec extends Specification {
   }
 
   val as: ApplicationSystem = applicationSystem
-  val answersWithNewHakutoive = Map(ApplicationUpdater.hakutoiveetPhase -> HakutoiveetConverter.convertToAnswers(List(hakutoive)))
+  val answersWithNewHakutoive = Map(ApplicationUpdater.preferencePhaseKey -> HakutoiveetConverter.convertToAnswers(List(hakutoive)))
 }
