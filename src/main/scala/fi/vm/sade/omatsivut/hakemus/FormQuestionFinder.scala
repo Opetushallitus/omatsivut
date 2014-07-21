@@ -3,6 +3,7 @@ package fi.vm.sade.omatsivut.hakemus
 import fi.vm.sade.haku.oppija.lomake.domain.elements.questions.{DropdownSelect, TextQuestion, CheckBox => HakuCheckBox, OptionQuestion => HakuOption, Radio => HakuRadio, TextArea => HakuTextArea}
 import fi.vm.sade.haku.oppija.lomake.domain.elements._
 import fi.vm.sade.haku.oppija.lomake.validation.validators.RequiredFieldValidator
+import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 import fi.vm.sade.omatsivut.Logging
 import fi.vm.sade.omatsivut.domain.Text
 import fi.vm.sade.omatsivut.domain._
@@ -81,13 +82,14 @@ protected object FormQuestionFinder extends Logging {
     val elementContext = new ElementContext(contextElement, element)
     def id = QuestionId(elementContext.phase.getId, element.getId)
     def isRequired = element.getValidators.filter(o => o.isInstanceOf[RequiredFieldValidator]).nonEmpty
+    def maxlength = element.getAttributes.toMap.getOrElse("maxlength", "0").toInt
     def containsCheckBoxes(e: TitledGroup): Boolean = {
       getImmediateChildElementsOfType[HakuCheckBox](e).nonEmpty
     }
 
     (element match {
-      case e: TextQuestion => List(Text(id, title(e), helpText(e), isRequired))
-      case e: HakuTextArea => List(TextArea(id, title(e), helpText(e), isRequired))
+      case e: TextQuestion => List(Text(id, title(e), helpText(e), isRequired, maxlength))
+      case e: HakuTextArea => List(TextArea(id, title(e), helpText(e), isRequired, maxlength))
       case e: HakuRadio => List(Radio(id, title(e), helpText(e), options(e), isRequired))
       case e: DropdownSelect => List(Dropdown(id, title(e), helpText(e), options(e), isRequired))
       case e: TitledGroup if containsCheckBoxes(e) => List(Checkbox(id, title(e), helpText(e), options(e), isRequired))
