@@ -3,9 +3,6 @@ package fi.vm.sade.omatsivut.hakemus
 import fi.vm.sade.omatsivut.domain.Hakemus
 import fi.vm.sade.omatsivut.domain.Hakemus._
 
-/**
- * Created by singen on 15.7.2014.
- */
 object HakutoiveetConverter {
   val preferenceKeyPrefix: String = "preference"
   val hakutoiveetPhase: String = "hakutoiveet"
