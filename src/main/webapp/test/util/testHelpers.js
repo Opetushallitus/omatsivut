@@ -38,6 +38,9 @@ wait = {
       return deferred.promise
     }
   },
+  untilFalse: function(condition) {
+    return wait.until(function() { return !condition()})
+  },
   forAngular: function() {
     var deferred = Q.defer()
     try {

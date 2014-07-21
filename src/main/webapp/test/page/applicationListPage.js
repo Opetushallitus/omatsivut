@@ -8,9 +8,9 @@ function ApplicationListPage() {
     },
 
     save: function() {
-      return wait.until(api.saveButton(0).isEnabled(true))()
+      return wait.until(api.saveButton(0).isEnabled)()
         .then(api.saveButton(0).click)
-        .then(wait.until(api.saveButton(0).isEnabled(false))) // Tallennus on joko alkanut tai valmis
+        .then(wait.untilFalse(api.saveButton(0).isEnabled)) // Tallennus on joko alkanut tai valmis
         .then(wait.until(api.isSavingState(0, false))) // Tallennus ei ole kesken
     },
 
@@ -198,10 +198,8 @@ function ApplicationListPage() {
 
   function saveButton(el) {
     return {
-      isEnabled: function (isEnabled) {
-        return function () {
-          return el.prop("disabled") != isEnabled
-        }
+      isEnabled: function () {
+        return !el.prop("disabled")
       },
       click: function () {
         el.click()

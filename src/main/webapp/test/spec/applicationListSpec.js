@@ -115,10 +115,10 @@
       it("lomaketta ei voi tallentaa, jos hakutoive on epätäydellinen", function() {
         var pref = page.getPreference(1)
         return pref.selectOpetusPiste("Ahl")()
-          .then(wait.until(page.saveButton(0).isEnabled(false)))
+          .then(wait.untilFalse(page.saveButton(0).isEnabled))
           .then(function() { page.isValidationErrorVisible().should.be.true })
           .then(pref.selectKoulutus(0))
-          .then(wait.until(page.saveButton(0).isEnabled(true)))
+          .then(wait.until(page.saveButton(0).isEnabled))
       })
     })
 
@@ -149,7 +149,7 @@
         return page.save()
           .then(function() {
             page.changesSavedTimestamp().should.not.equal(timestamp)
-            page.saveButton(0).isEnabled(true)().should.be.false
+            page.saveButton(0).isEnabled().should.be.false
             page.statusMessage().should.equal("Kaikki muutokset tallennettu")
           })
       })
