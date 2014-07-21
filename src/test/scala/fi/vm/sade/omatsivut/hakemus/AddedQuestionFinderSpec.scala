@@ -1,10 +1,9 @@
 package fi.vm.sade.omatsivut.hakemus
 
 import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
-import fi.vm.sade.omatsivut.AppConfig
 import fi.vm.sade.omatsivut.domain.Hakemus
 import fi.vm.sade.omatsivut.domain.Hakemus._
-import fi.vm.sade.omatsivut.fixtures.JsonFixtureMaps
+import fi.vm.sade.omatsivut.hakemus.TestFixture._
 import org.specs2.mutable.Specification
 
 class AddedQuestionFinderSpec extends Specification {
@@ -31,12 +30,6 @@ class AddedQuestionFinderSpec extends Specification {
     AddedQuestionFinder.findAddedQuestions(as, newAnswers, oldAnswers)
   }
 
-  def getFixtureApplicationSystem: ApplicationSystem = {
-    (new AppConfig.IT).withConfig { appConfig =>
-      appConfig.springContext.applicationSystemService.getApplicationSystem("1.2.246.562.5.2014022711042555034240")
-    }
-  }
-  val as: ApplicationSystem = getFixtureApplicationSystem
-  val hakutoive: Hakutoive = JsonFixtureMaps.find[Hakutoive]("/mockdata/hakutoiveet.json", "1.2.246.562.14.2014032812530780195965")
+  val as: ApplicationSystem = applicationSystem
   val answersWithNewHakutoive = Map(ApplicationUpdater.hakutoiveetPhase -> HakutoiveetConverter.convertToAnswers(List(hakutoive)))
 }
