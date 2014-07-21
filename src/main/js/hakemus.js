@@ -93,11 +93,12 @@ Hakemus.prototype = {
         if (node.questionNodes != null)
           self.setDefaultAnswers(node)
         else
-          setDefaultAnswer(node.question)
+          setDefaultAnswer(node)
       })
     }
 
-    function setDefaultAnswer(question) {
+    function setDefaultAnswer(questionNode) {
+      var question = questionNode.question
       if (question.options != null) { // Aseta default-arvo vain monivalinnoille
         var phaseAnswers = self.getAnswers(question.id.phaseId)
 
@@ -110,14 +111,9 @@ Hakemus.prototype = {
             setValueIfEmpty(option.value, false)
           })
         } else {
-          setValueIfEmpty(question.id.questionId, defaultValue(question.options))
+          setValueIfEmpty(question.id.questionId, questionNode.defaultValue())
         }
       }
-    }
-
-    function defaultValue(options) {
-      var defaultOption = _(options).find(function(option) { return option.default })
-      return defaultOption == null ? "" : defaultOption.value
     }
   }
 }

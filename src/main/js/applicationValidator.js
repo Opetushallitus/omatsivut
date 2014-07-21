@@ -1,26 +1,17 @@
-var QuestionItem = require('./additionalQuestion')
-
-function QuestionGroup(title) {
-  this.title = title
-  this.questionNodes = []
-}
+var QuestionItem = require('./additionalQuestion').AdditionalQuestion
+var QuestionGroup = require('./additionalQuestion').AdditionalQuestionGroup
+var util = require('./util')
 
 module.exports = function(listApp) {
   listApp.factory("applicationValidator", ["$http", function($http) {
     function getQuestions(data) {
-      var errors = _.reduce(data.errors, function(memo, error) {
-        if (memo[error.key] == null)
-          memo[error.key] = []
-        memo[error.key].push(error.message)
-        return memo
-      }, {})
-
+      var errorMap = util.mapArray(data.errors, "key", "message")
       return convertToItems(data.questions, new QuestionGroup())
 
       function convertToItems(questions, results) {
         _(questions).each(function(questionNode) {
           if (questionNode.id) {
-            results.questionNodes.push(new QuestionItem(questionNode, errors[questionNode.id.questionId] || []))
+            results.questionNodes.push(new QuestionItem(questionNode, errorMap[questionNode.id.questionId] || []))
           } else {
             results.questionNodes.push(convertToItems(questionNode.questions, new QuestionGroup(questionNode.title )))
           }

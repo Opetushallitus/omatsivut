@@ -3,4 +3,19 @@ function AdditionalQuestion(question, validationErrors) {
   this.validationMessage = validationErrors.join(", ")
 }
 
-module.exports = AdditionalQuestion
+AdditionalQuestion.prototype = {
+  defaultValue: function() {
+    var defaultOption = _(this.question.options).find(function(option) { return option.default })
+    return defaultOption == null ? "" : defaultOption.value
+  }
+}
+
+function AdditionalQuestionGroup(title) {
+  this.title = title
+  this.questionNodes = []
+}
+
+module.exports = {
+  AdditionalQuestion: AdditionalQuestion,
+  AdditionalQuestionGroup: AdditionalQuestionGroup
+}

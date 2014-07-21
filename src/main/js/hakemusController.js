@@ -1,4 +1,5 @@
 var Hakemus = require('./hakemus')
+var util = require('./util')
 
 module.exports = function(listApp) {
   listApp.controller("hakemusController", ["$scope", "$element", "$http", "applicationsResource", "applicationValidator", function ($scope, $element, $http, applicationsResource, applicationValidator) {
@@ -67,14 +68,20 @@ module.exports = function(listApp) {
         $scope.isSaving = false
         $scope.hasChanged = false
         setSaveMessage("Kaikki muutokset tallennettu", "success")
-        updateValidationMesssages([])
+        updateValidationMessages([])
       }
 
       function onError(err) {
         switch (err.status) {
-          case 400: setSaveMessage(validationError(err.data), "error"); updateValidationMesssages(err.data); break
-          case 401: setSaveMessage("Tallentaminen epäonnistui, sillä istunto on vanhentunut. Kirjaudu uudestaan sisään.", "error"); break
-          default: setSaveMessage("Tallentaminen epäonnistui", "error")
+          case 400:
+            setSaveMessage(validationError(err.data), "error");
+            updateValidationMessages(err.data);
+            break
+          case 401:
+            setSaveMessage("Tallentaminen epäonnistui, sillä istunto on vanhentunut. Kirjaudu uudestaan sisään.", "error");
+            break
+          default:
+            setSaveMessage("Tallentaminen epäonnistui", "error")
         }
 
         $scope.isSaving = false
@@ -87,22 +94,14 @@ module.exports = function(listApp) {
           return "Tallentaminen epäonnistui"
       }
 
-      function updateValidationMesssages(errors) { // TODO refactor
-        var errorMap = _.reduce(errors, function(memo, error) {
-          if (memo[error.key] == null)
-            memo[error.key] = []
-          memo[error.key].push(error.message)
-          return memo
-        }, {});
+      function updateValidationMessages(errors) {
+        var errorMap = util.mapArray(errors, "key", "message");
 
         (function updateErrors(node) {
           if (node.questionNodes == null) {
-
             node.validationMessage = (errorMap[node.question.id.questionId] || []).join(", ")
           } else {
-            _(node.questionNodes).each(function(item) {
-              updateErrors(item)
-            })
+            _(node.questionNodes).each(updateErrors)
           }
         })($scope.additionalQuestions)
       }
