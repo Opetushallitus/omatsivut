@@ -88,7 +88,7 @@ npm install
 
 ### Testien ajaminen selaimessa
 
-Tomcat käyntiin (ks yllä) ja sitten http://localhost:8080/omatsivut/test/runner.html
+Tomcat käyntiin (ks yllä) ja sitten [http://localhost:8080/omatsivut/test/runner.html](http://localhost:8080/omatsivut/test/runner.html)
 
 ## Paikallinen mongo
 
@@ -98,4 +98,4 @@ Käynnistys
 
 ## API-dokumentaatio
 
-[http://localhost:8080/api-docs](http://localhost:8080/api-docs)
+[http://localhost:8080/omatsivut/api-docs](http://localhost:8080/omatsivut/api-docs)
