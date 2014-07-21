@@ -89,7 +89,7 @@ object OmatsivutBuild extends Build {
       artifactPath in (Compile, packageWar) ~= { defaultPath =>
         file("target") / defaultPath.getName
       },
-      testOptions in Test += Tests.Argument("junitxml")
+      testOptions in Test += Tests.Argument("junitxml", "console")
     ) ++ container.deploy(
       "/omatsivut" -> projectRef
     )
