@@ -1,12 +1,12 @@
 (function () {
-  describe('hakemuslistaus', function () {
+  describe('Hakemuslistaus', function () {
     var page = ApplicationListPage();
 
     before(function (done) {
       session.init("010101-123N").then(page.resetDataAndOpen).done(done)
     })
 
-    describe("näyttäminen", function() {
+    describe("Hakemuksen tietojen näyttäminen", function() {
       it('hakemuslistassa on hakemus henkilölle 010101-123N', function () {
         expect(ApplicationListPage().applications()).to.deep.equal([
           {
@@ -33,7 +33,7 @@
       })
     })
 
-    describe("Lisäkysymykset", function() {
+    describe("Lisäkysymyksien näyttäminen", function() {
       var questions1 = [ 'Testikysymys, avaoin vastaus kenttä (pakollinen)?',
         'Valitse kahdesta vaihtoehdosta paremmin itsellesi sopiva?',
         'Mikä tai mitkä ovat mielestäsi parhaiten soveltuvat vastausket?',
@@ -81,7 +81,7 @@
     })
 
 
-    describe("hakutoiveiden validaatio", function() {
+    describe("Hakutoiveiden validaatio", function() {
       before(ApplicationListPage().resetDataAndOpen)
 
       beforeEach(function() {
@@ -155,7 +155,7 @@
       })
     })
 
-    describe("hakemuslistauksen muokkaus", function () {
+    describe("Hakemuslistauksen muokkaus", function () {
       endToEndTest("järjestys", "järjestys muuttuu nuolta klikkaamalla", function () {
         return page.getPreference(1).moveDown()
       }, function (dbStart, dbEnd) {
