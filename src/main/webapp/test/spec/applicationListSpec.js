@@ -146,10 +146,10 @@
       it("onnistuneen tallennuksen jälkeen käyttöliittymä on 'tallennettu'-tilassa", function() {
         var timestamp = page.changesSavedTimestamp()
         page.questionsForApplication(0).enterAnswer(0, "testivastaus")
-        page.save()
+        return page.save()
           .then(function() {
             page.changesSavedTimestamp().should.not.equal(timestamp)
-            page.saveButton(0).isEnabled()().should.be.false
+            page.saveButton(0).isEnabled(true)().should.be.false
             page.statusMessage().should.equal("Kaikki muutokset tallennettu")
           })
       })
