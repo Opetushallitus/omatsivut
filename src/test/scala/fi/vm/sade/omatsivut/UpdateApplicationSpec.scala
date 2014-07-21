@@ -1,6 +1,7 @@
 package fi.vm.sade.omatsivut
 
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
+import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 import fi.vm.sade.omatsivut.domain.Hakemus
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.servlet.ApplicationsServlet
@@ -10,10 +11,10 @@ import org.json4s.jackson.{JsonMethods, Serialization}
 class UpdateApplicationSpec extends JsonFormats with ScalatraTestSupport {
   override implicit lazy val appConfig = new AppConfig.IT
   val testApplicationOid: String = "1.2.246.562.24.14229104472"
-  val personalInfoPhaseKey: String = "henkilotiedot"
-  val preferencesPhaseKey: String = "hakutoiveet"
-  val skillsetPhaseKey: String = "osaaminen"
-  val ssnKey: String = "Henkilotunnus"
+  val personalInfoPhaseKey: String = OppijaConstants.PHASE_PERSONAL
+  val preferencesPhaseKey: String = OppijaConstants.PHASE_APPLICATION_OPTIONS
+  val skillsetPhaseKey: String = OppijaConstants.PHASE_GRADES
+  val ssnKey: String = OppijaConstants.ELEMENT_ID_SOCIAL_SECURITY_NUMBER
   val testSsn: String = "010101-123N"
   sequential
 

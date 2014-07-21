@@ -3,6 +3,7 @@ package fi.vm.sade.omatsivut.hakemus
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
 import fi.vm.sade.haku.oppija.lomake.validation.{ValidationInput, ValidationResult}
+import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 import fi.vm.sade.omatsivut.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.Logging
 import fi.vm.sade.omatsivut.domain.Hakemus._
@@ -14,6 +15,7 @@ case class ApplicationValidator(implicit val appConfig: AppConfig) extends Loggi
   private val applicationSystemService = appConfig.springContext.applicationSystemService
   private val dao = appConfig.springContext.applicationDAO
   private val validator = appConfig.springContext.validator
+  val preferencePhaseKey = OppijaConstants.PHASE_APPLICATION_OPTIONS
 
   def validate(hakemus: Hakemus): (List[ValidationError], List[QuestionNode]) = {
     withErrorLogging {
@@ -33,7 +35,7 @@ case class ApplicationValidator(implicit val appConfig: AppConfig) extends Loggi
   }
 
   private def applicationContains(application: Application)(hakutoive: Hakutoive) = {
-    HakutoiveetConverter.answersContainHakutoive(application.getAnswers.get("hakutoiveet").toMap, hakutoive)
+    HakutoiveetConverter.answersContainHakutoive(application.getAnswers.get(preferencePhaseKey).toMap, hakutoive)
   }
 
   private def validate(hakemus: Hakemus, applicationSystem: ApplicationSystem): List[ValidationError] = {

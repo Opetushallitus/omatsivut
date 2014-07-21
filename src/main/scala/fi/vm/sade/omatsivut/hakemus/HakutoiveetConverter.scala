@@ -1,11 +1,12 @@
 package fi.vm.sade.omatsivut.hakemus
 
+import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 import fi.vm.sade.omatsivut.domain.Hakemus
 import fi.vm.sade.omatsivut.domain.Hakemus._
 
 object HakutoiveetConverter {
   val preferenceKeyPrefix: String = "preference"
-  val hakutoiveetPhase: String = "hakutoiveet"
+  val hakutoiveetPhase: String = OppijaConstants.PHASE_APPLICATION_OPTIONS
 
   def convertFromAnswers(answers: Map[String, String]): List[Hakutoive] = {
     groupPreferences(answers)

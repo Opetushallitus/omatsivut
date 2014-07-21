@@ -3,12 +3,13 @@ package fi.vm.sade.omatsivut.hakemus
 import java.util.Date
 
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
+import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 import fi.vm.sade.omatsivut.domain.Hakemus
 
 import scala.collection.JavaConversions._
 
 object ApplicationUpdater {
-  val hakutoiveetPhase: String = "hakutoiveet"
+  val preferencePhaseKey = OppijaConstants.PHASE_APPLICATION_OPTIONS
 
   def update(application: Application, hakemus: Hakemus) {
     updateHakutoiveet(application, hakemus)
@@ -17,7 +18,7 @@ object ApplicationUpdater {
   }
 
   private def updateAllOtherPhases(application: Application, hakemus: Hakemus) {
-    val allOtherPhaseAnswers = hakemus.answers.filterKeys(phase => phase != hakutoiveetPhase)
+    val allOtherPhaseAnswers = hakemus.answers.filterKeys(phase => phase != preferencePhaseKey)
     allOtherPhaseAnswers.foreach { case (phase, answers) =>
       val existingAnswers = application.getPhaseAnswers(phase)
       application.addVaiheenVastaukset(phase, existingAnswers ++ answers)
@@ -25,7 +26,7 @@ object ApplicationUpdater {
   }
 
   private def updateHakutoiveet(application: Application, hakemus: Hakemus) {
-    val updatedAnswers: Map[String, String] = HakutoiveetConverter.updateAnswers(hakemus, application.getPhaseAnswers(hakutoiveetPhase).toMap)
-    application.addVaiheenVastaukset(hakutoiveetPhase, updatedAnswers)
+    val updatedAnswers: Map[String, String] = HakutoiveetConverter.updateAnswers(hakemus, application.getPhaseAnswers(preferencePhaseKey).toMap)
+    application.addVaiheenVastaukset(preferencePhaseKey, updatedAnswers)
   }
 }
