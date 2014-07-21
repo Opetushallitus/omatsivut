@@ -12,7 +12,6 @@ object HakuConverter {
     Haku(applicationSystem.getId, convertTranslations(applicationSystem), hakuAjat)
   }
 
-
   private def convertTranslations(applicationSystem: ApplicationSystem): String = {
     applicationSystem.getName.getTranslations.get("fi") // TODO: kieliversiot
   }
