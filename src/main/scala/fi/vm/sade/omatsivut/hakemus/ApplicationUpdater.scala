@@ -5,6 +5,7 @@ import java.util.Date
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 import fi.vm.sade.omatsivut.domain.Hakemus
+import fi.vm.sade.omatsivut.domain.Hakemus._
 
 import scala.collection.JavaConversions._
 
@@ -19,11 +20,11 @@ object ApplicationUpdater {
     application.setUpdated(new Date(hakemus.updated))
   }
 
-  def getUpdatedAnswersForApplication(application: Application, hakemus: Hakemus): Map[String, Map[String, String]] = {
+  def getUpdatedAnswersForApplication(application: Application, hakemus: Hakemus): Answers = {
     updatedAnswersForHakuToiveet(application, hakemus) ++ updatedAnswersForOtherPhases(application, hakemus)
   }
 
-  private def updatedAnswersForOtherPhases(application: Application, hakemus: Hakemus): Map[String, Map[String, String]] = {
+  private def updatedAnswersForOtherPhases(application: Application, hakemus: Hakemus): Answers = {
     val allOtherPhaseAnswers = hakemus.answers.filterKeys(phase => phase != preferencePhaseKey)
     allOtherPhaseAnswers.map { case (phase, answers) =>
       val existingAnswers = application.getPhaseAnswers(phase).toMap
@@ -31,8 +32,8 @@ object ApplicationUpdater {
     }.toMap
   }
 
-  private def updatedAnswersForHakuToiveet(application: Application, hakemus: Hakemus): Map[String, Map[String, String]] = {
-    val updatedAnswers: Map[String, String] = HakutoiveetConverter.updateAnswers(hakemus, application.getPhaseAnswers(preferencePhaseKey).toMap)
-    Map(preferencePhaseKey -> updatedAnswers)
+  private def updatedAnswersForHakuToiveet(application: Application, hakemus: Hakemus): Answers = {
+    val updatedAnswersForHakutoiveetPhase = HakutoiveetConverter.updateAnswers(hakemus, application.getPhaseAnswers(preferencePhaseKey).toMap)
+    Map(preferencePhaseKey -> updatedAnswersForHakutoiveetPhase)
   }
 }
