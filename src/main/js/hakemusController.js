@@ -89,7 +89,7 @@ module.exports = function(listApp) {
 
       function validationError(data) {
         if (_.isArray(data) && data.length > 0)
-          return "Osa vastauksista puuttuu"
+          return "Ei tallennettu - vastaa ensin kaikkiin lisäkysymyksiin"
         else
           return "Tallentaminen epäonnistui"
       }
