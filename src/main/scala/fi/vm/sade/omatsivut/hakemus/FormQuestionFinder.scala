@@ -83,7 +83,8 @@ protected object FormQuestionFinder extends Logging {
     val elementContext = new ElementContext(contextElement, element)
     def id = QuestionId(elementContext.phase.getId, element.getId)
     def isRequired = element.getValidators.filter(o => o.isInstanceOf[RequiredFieldValidator]).nonEmpty
-    def maxlength = element.getAttributes.toMap.getOrElse("maxlength", "0").toInt
+    def maxlength = toInt(element.getAttributes.toMap.getOrElse("maxlength", "500")).getOrElse(500)
+    def toInt(s: String):Option[Int] = { try { Some(s.toInt) } catch { case e:Exception => None } }
     def containsCheckBoxes(e: TitledGroup): Boolean = {
       getImmediateChildElementsOfType[HakuCheckBox](e).nonEmpty
     }

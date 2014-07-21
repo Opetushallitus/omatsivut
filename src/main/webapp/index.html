@@ -96,7 +96,9 @@
                                     <div class="instruction">{{questionNode.question.help}}</div>
 
                                     <span class="answer" ng-switch="questionNode.question.questionType">
-                                        <input type="text" ng-switch-when="Text" ng-model="application.getAnswers(questionNode.question.id.phaseId)[questionNode.question.id.questionId]">
+                                        <input type="text" ng-switch-when="Text"
+                                               ng-model="application.getAnswers(questionNode.question.id.phaseId)[questionNode.question.id.questionId]"
+                                               maxlength="{{questionNode.question.maxlength}}">
                                         <select ng-switch-when="Dropdown"
                                                 ng-model="application.getAnswers(questionNode.question.id.phaseId)[questionNode.question.id.questionId]"
                                                 ng-options="option.value as option.title for option in questionNode.question.options">
