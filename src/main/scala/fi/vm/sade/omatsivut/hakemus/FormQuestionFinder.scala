@@ -3,6 +3,7 @@ package fi.vm.sade.omatsivut.hakemus
 import fi.vm.sade.haku.oppija.lomake.domain.elements.custom.SocialSecurityNumber
 import fi.vm.sade.haku.oppija.lomake.domain.elements.questions.{DropdownSelect, TextQuestion, CheckBox => HakuCheckBox, OptionQuestion => HakuOption, Radio => HakuRadio, TextArea => HakuTextArea}
 import fi.vm.sade.haku.oppija.lomake.domain.elements._
+import fi.vm.sade.haku.oppija.lomake.validation.validators.RequiredFieldValidator
 import fi.vm.sade.omatsivut.Logging
 import fi.vm.sade.omatsivut.domain.Text
 import fi.vm.sade.omatsivut.domain._
@@ -80,17 +81,19 @@ protected object FormQuestionFinder extends Logging {
   private def titledElementToQuestions(contextElement: Element, element: Titled): List[(Question, ElementContext)] = {
     val elementContext = new ElementContext(contextElement, element)
     def id = QuestionId(elementContext.phase.getId, element.getId)
+    def isRequired = element.getValidators.filter(o => o.isInstanceOf[RequiredFieldValidator]).nonEmpty
     def containsCheckBoxes(e: TitledGroup): Boolean = {
       getImmediateChildElementsOfType[HakuCheckBox](e).nonEmpty
     }
 
     (element match {
-      case e: TextQuestion => List(Text(id, title(e), helpText(e)))
-      case e: HakuTextArea => List(TextArea(id, title(e), helpText(e)))
-      case e: HakuRadio => List(Radio(id, title(e), helpText(e), options(e)))
-      case e: DropdownSelect => List(Dropdown(id, title(e), helpText(e), options(e)))
-      case e: TitledGroup if containsCheckBoxes(e) => List(Checkbox(id, title(e), helpText(e), options(e)))
-      case e: SocialSecurityNumber => List(Text(id, title(e), helpText(e))) // Should never happen in prod
+      case e: TextQuestion => List(Text(id, title(e), helpText(e), isRequired))
+      case e: HakuTextArea => List(TextArea(id, title(e), helpText(e), isRequired))
+      case e: HakuRadio => List(Radio(id, title(e), helpText(e), options(e), isRequired))
+      case e: DropdownSelect => List(Dropdown(id, title(e), helpText(e), options(e), isRequired))
+      case e: TitledGroup if containsCheckBoxes(e) => List(Checkbox(id, title(e), helpText(e), options(e), isRequired))
+      case e: TitledGroup => Nil
+      case e: HakuCheckBox => Nil
       case _ => {
         logger.error("Could not convert element of type: " + element.getType)
         Nil
