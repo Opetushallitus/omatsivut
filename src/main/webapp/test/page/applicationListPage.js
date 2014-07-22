@@ -1,12 +1,11 @@
 function ApplicationListPage() {
   var testHetu = "010101-123N"
-  var openListPage = openPage("/omatsivut/", visible)
 
   var api = {
-    openPage: openListPage,
+    openPage: openPage("/omatsivut/", visible),
 
     resetDataAndOpen: function () {
-      return db.resetData().then(function() { return session.init(testHetu)} ).then(openListPage)
+      return db.resetData().then(function() { return session.init(testHetu)} ).then(api.openPage)
     },
 
     save: function() {

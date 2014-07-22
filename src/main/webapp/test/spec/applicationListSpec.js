@@ -91,10 +91,12 @@
           'Päättötodistuksen kaikkien oppiaineiden keskiarvo?',
           'Päättötodistukseni on' ]
 
-        before(ApplicationListPage().resetDataAndOpen)
-        before(ApplicationListPage().getPreference(1).remove)
-        before(ApplicationListPage().getPreference(1).remove)
-        before(ApplicationListPage().save)
+        before(
+          ApplicationListPage().resetDataAndOpen,
+          ApplicationListPage().getPreference(1).remove,
+          ApplicationListPage().getPreference(1).remove,
+          ApplicationListPage().save
+        )
 
         describe("tallennetut hakutoiveet, joilla on lisäkysymyksiä", function() {
           it("lisäkysymyksiä ei näytetä", function() {
@@ -124,13 +126,15 @@
       describe("Lisäkysymyksiin vastaaminen", function() {
         var timestamp;
 
-        before(ApplicationListPage().resetDataAndOpen)
-        before(page.getPreference(2).remove)
-        before(page.save)
-        before(replacePreference(2, "Omnian ammattiopisto"))
-        before(function() {
-          timestamp = page.changesSavedTimestamp()
-        })
+        before(
+          ApplicationListPage().resetDataAndOpen,
+          page.getPreference(2).remove,
+          page.save,
+          replacePreference(2, "Omnian ammattiopisto"),
+          function() {
+            timestamp = page.changesSavedTimestamp()
+          }
+        )
 
         describe("Aluksi", function() {
           it("kysymykset näytetään", function() {
