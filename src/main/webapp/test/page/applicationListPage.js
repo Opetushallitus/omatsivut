@@ -15,6 +15,12 @@ function ApplicationListPage() {
         .then(wait.until(api.isSavingState(0, false))) // Tallennus ei ole kesken
     },
 
+    waitForTimestampUpdate: function() {
+      modifyApplicationScope(0)(function(scope) { scope.application.updated = "" })
+      var timestamp = function() { return getApplication(0).find(".timestamp time") }
+      return wait.until(function() { return timestamp().text().length > 0 })()
+    },
+
     hetu: function () {
       return testHetu
     },
@@ -214,6 +220,17 @@ function ApplicationListPage() {
 
   function getApplication(index) {
     return S("#hakemus-list>li").eq(index)
+  }
+
+  function modifyApplicationScope(id) {
+    return function(manipulationFunction) {
+      scope = getApplicationScope(id)
+      scope.$apply(function() { manipulationFunction(scope) })
+    }
+  }
+
+  function getApplicationScope(id) {
+    return testFrame.angular.element(getApplication(id)).scope()
   }
 
   function preferencesForApplication(index, filter) {
