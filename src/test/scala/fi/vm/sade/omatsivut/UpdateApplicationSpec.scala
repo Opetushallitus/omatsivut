@@ -20,6 +20,9 @@ class UpdateApplicationSpec extends JsonFormats with ScalatraTestSupport {
   sequential
 
   "PUT /application/:oid" should {
+
+    // TODO: negative validation case missing
+
     "validate application" in {
       authGet("/applications", personOid) {
         val applications: List[Hakemus] = Serialization.read[List[Hakemus]](body)
@@ -33,9 +36,13 @@ class UpdateApplicationSpec extends JsonFormats with ScalatraTestSupport {
         }
       }
     }
-  }
 
-  "PUT /application/:oid" should {
+    // TODO: case for pruning answers to questions that are no longer relevant
+
+    // TODO: case for saving actual known questions
+
+    // TODO: these unknown questions shouldn't be saved
+
     "save application" in {
       authGet("/applications", personOid) {
         val applications: List[Hakemus] = Serialization.read[List[Hakemus]](body)
@@ -52,7 +59,10 @@ class UpdateApplicationSpec extends JsonFormats with ScalatraTestSupport {
         }
       }
     }
+
   }
+
+
 
   def compareWithoutTimestamp(hakemus1: Hakemus, hakemus2: Hakemus) = {
     hakemus1.copy(updated = hakemus2.updated) == hakemus2
