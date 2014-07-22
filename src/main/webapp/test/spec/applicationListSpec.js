@@ -139,11 +139,10 @@
         })
 
         describe("Kun tallennetaan vastaamatta pakollisiin kysymyksiin", function() {
+          before(page.save)
           it("näytetään validaatiovirheet oikein", function() {
-            return page.save().then(function() {
-              page.saveError().should.equal("Ei tallennettu - vastaa ensin kaikkiin lisäkysymyksiin")
-              page.questionsForApplication(0).validationMessages()[0].should.equal("Pakollinen tieto.")
-            })
+            page.saveError().should.equal("Ei tallennettu - vastaa ensin kaikkiin lisäkysymyksiin")
+            page.questionsForApplication(0).validationMessages()[0].should.equal("Pakollinen tieto.")
           })
         })
 
