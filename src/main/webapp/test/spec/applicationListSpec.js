@@ -76,18 +76,20 @@
 
     describe("Lisäkysymykset", function() {
       describe("Lisäkysymyksien näyttäminen", function() {
-        var questions1 = [ 'Testikysymys, avaoin vastaus kenttä (pakollinen)?',
+        var questions1 = [
+          'Testikysymys, avaoin vastaus kenttä (pakollinen)?',
           'Valitse kahdesta vaihtoehdosta paremmin itsellesi sopiva?',
           'Mikä tai mitkä ovat mielestäsi parhaiten soveltuvat vastausket?',
-          'Testikysymys arvosanat, avoin vastaus',
           'Valitse parhaat vaihtoehdot valittavista vaihtoehdoista?',
           'Testivalintakysymys arvosanat',
+          'Testikysymys arvosanat, avoin vastaus',
           'Testikysymys lupatiedot-kohta avoin vastaus',
           'Testikysymys valitse vaihtoehdoista paras tai parhaat',
           'Testikysymys valitse toinen vaihtoehdoista' ]
 
-        var questions2 = [ 'Haen ensisijaisesti kielitukikympille?',
+        var questions2 = [
           'Miksi haet kymppiluokalle?',
+          'Haen ensisijaisesti kielitukikympille?',
           'Päättötodistuksen kaikkien oppiaineiden keskiarvo?',
           'Päättötodistukseni on' ]
 
