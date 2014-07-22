@@ -1,14 +1,20 @@
 package fi.vm.sade.omatsivut.fixtures
 
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
+import fi.vm.sade.haku.testfixtures.MongoFixtureImporter
 import fi.vm.sade.haku.virkailija.authentication.{Person, PersonBuilder}
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 import fi.vm.sade.omatsivut.AppConfig.AppConfig
 
 import scala.collection.JavaConversions._
 
-class FixtureUtility(implicit val appConfig: AppConfig) {
+case class FixtureImporter(implicit val appConfig: AppConfig) {
   private val dao = appConfig.springContext.applicationDAO
+
+  def applyFixtures {
+    MongoFixtureImporter.importJsonFixtures(appConfig.mongoTemplate)
+    updateEmptySsnInApplications(TestFixture.personOid, TestFixture.testHetu)
+  }
 
   def updateEmptySsnInApplications(personOid: String, ssn: String) {
     val queryApplication: Application = new Application().setPersonOid(personOid)
@@ -22,7 +28,7 @@ class FixtureUtility(implicit val appConfig: AppConfig) {
     }
   }
 
-  def setHetu(application: Application, ssn: String) {
+  private def setHetu(application: Application, ssn: String) {
     val allAnswers: Map[String, String] = application.getVastauksetMerged.toMap
     val personBuilder: PersonBuilder = PersonBuilder.start
       .setFirstNames(allAnswers.getOrElse(OppijaConstants.ELEMENT_ID_FIRST_NAMES, null))

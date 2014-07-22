@@ -37,7 +37,7 @@ case class ApplicationValidator(implicit val appConfig: AppConfig) extends Loggi
   }
 
   private def justValidate(hakemus: Hakemus, applicationSystem: ApplicationSystem): List[ValidationError] = {
-    val application: Application = findStoredApplication(hakemus)
+    val application: Application = findStoredApplication(hakemus) // <- needs to be fetched here because is mutated below
     ApplicationUpdater.update(applicationSystem)(application, hakemus)
     val validationResult = validator.validate(convertToValidationInput(applicationSystem, application))
     convertoToValidationErrors(validationResult)

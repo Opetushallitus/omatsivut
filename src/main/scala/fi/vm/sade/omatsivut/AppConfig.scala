@@ -1,6 +1,7 @@
 package fi.vm.sade.omatsivut
 
 import fi.vm.sade.haku.testfixtures.MongoFixtureImporter
+import fi.vm.sade.omatsivut.fixtures.FixtureImporter
 import fi.vm.sade.omatsivut.mongo.{EmbeddedMongo, MongoServer}
 
 object AppConfig extends Logging {
@@ -37,7 +38,7 @@ object AppConfig extends Logging {
     override def start {
       mongo = EmbeddedMongo.start
       try {
-        MongoFixtureImporter.importJsonFixtures(mongoTemplate)
+        FixtureImporter()(this).applyFixtures
       } catch {
         case e: Exception =>
           stop

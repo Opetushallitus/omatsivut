@@ -14,7 +14,9 @@ object ApplicationUpdater {
   val preferencePhaseKey = OppijaConstants.PHASE_APPLICATION_OPTIONS
 
   def update(applicationSystem: ApplicationSystem)(application: Application, hakemus: Hakemus) {
-    val updatedAnswers = getUpdatedAnswersForApplication(applicationSystem)(application, hakemus)
+    val withPrunedAnswers = hakemus.copy(answers = includeOnlyTheseAnswers(getIncludedQuestionIds(applicationSystem, application, hakemus), hakemus.answers))
+
+    val updatedAnswers = getUpdatedAnswersForApplication(applicationSystem)(application, withPrunedAnswers)
     updatedAnswers.foreach { case (phaseId, phaseAnswers) =>
       application.addVaiheenVastaukset(phaseId, phaseAnswers)
     }
@@ -28,9 +30,8 @@ object ApplicationUpdater {
   }
 
   def getAllUpdatedAnswersForApplication(applicationSystem: ApplicationSystem)(application: Application, hakemus: Hakemus): Answers = {
-    allAnswersFromApplication(application) ++ updatedAnswersForHakuToiveet(application, hakemus) ++ updatedAnswersForOtherPhases(application, hakemus)
+    allAnswersFromApplication(application) ++ updatedAnswersForHakuToiveet(applicationSystem, application, hakemus) ++ updatedAnswersForOtherPhases(application, hakemus)
   }
-
 
   private def pruneOrphanedAnswers(removedQuestions: Seq[QuestionId], answers: Answers): Answers = {
     answers.map { case (phaseId, phaseAnswers) =>
@@ -40,16 +41,30 @@ object ApplicationUpdater {
     }
   }
 
+  private def includeOnlyTheseAnswers(includedQuestionIds: Seq[QuestionId], answers: Answers): Answers = {
+    answers.map { case (phaseId, phaseAnswers) =>
+      (phaseId, phaseAnswers.filterKeys {
+        case questionId => includedQuestionIds.contains(QuestionId(phaseId, questionId))
+      })
+    }
+  }
+
+  private def getIncludedQuestionIds(applicationSystem: ApplicationSystem, application: Application, hakemus: Hakemus): Seq[QuestionId] = {
+    val allAnswers = getAllAnswersForApplication(applicationSystem, application, hakemus)
+    AddedQuestionFinder.findAddedQuestions(applicationSystem, allAnswers, Hakemus.emptyAnswers).flatMap(_.flatten)
+      .map(_.id)
+  }
+
   private def getRemovedQuestionIds(applicationSystem: ApplicationSystem, application: Application, hakemus: Hakemus): Seq[QuestionId] = {
     val allOldAnswers = allAnswersFromApplication(application)
-    val allNewAnswers = getAllAnswersForApplication(application, hakemus)
+    val allNewAnswers = getAllAnswersForApplication(applicationSystem, application, hakemus)
 
     val removedQuestions = AddedQuestionFinder.findAddedQuestions(applicationSystem, allOldAnswers, allNewAnswers).flatMap(_.flatten)
     removedQuestions.map(_.id)
   }
 
-  private def getAllAnswersForApplication(application: Application, hakemus: Hakemus): Answers = {
-    allAnswersFromApplication(application) ++ updatedAnswersForHakuToiveet(application, hakemus) ++ updatedAnswersForOtherPhases(application, hakemus)
+  private def getAllAnswersForApplication(applicationSystem: ApplicationSystem, application: Application, hakemus: Hakemus): Answers = {
+    allAnswersFromApplication(application) ++ updatedAnswersForHakuToiveet(applicationSystem, application, hakemus) ++ updatedAnswersForOtherPhases(application, hakemus)
   }
 
   private def allAnswersFromApplication(application: Application) = {
@@ -64,8 +79,11 @@ object ApplicationUpdater {
     }.toMap
   }
 
-  private def updatedAnswersForHakuToiveet(application: Application, hakemus: Hakemus): Answers = {
-    val updatedAnswersForHakutoiveetPhase = HakutoiveetConverter.updateAnswers(hakemus, application.getPhaseAnswers(preferencePhaseKey).toMap)
+  private def updatedAnswersForHakuToiveet(applicationSystem: ApplicationSystem, application: Application, hakemus: Hakemus): Answers = {
+    val hakutoiveetAnswers: Map[String, String] = hakemus.answers.getOrElse(preferencePhaseKey, Map())
+    val previousHakutoiveetAnswers: Map[String, String] = application.getPhaseAnswers(preferencePhaseKey).toMap
+
+    val updatedAnswersForHakutoiveetPhase = HakutoiveetConverter.updateAnswers(hakemus.hakutoiveet, hakutoiveetAnswers, previousHakutoiveetAnswers)
     Map(preferencePhaseKey -> updatedAnswersForHakutoiveetPhase)
   }
 }

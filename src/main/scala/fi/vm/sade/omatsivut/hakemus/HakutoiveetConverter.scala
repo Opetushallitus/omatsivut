@@ -1,7 +1,6 @@
 package fi.vm.sade.omatsivut.hakemus
 
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
-import fi.vm.sade.omatsivut.domain.Hakemus
 import fi.vm.sade.omatsivut.domain.Hakemus._
 
 object HakutoiveetConverter {
@@ -25,11 +24,10 @@ object HakutoiveetConverter {
     }.toMap[String, String]
   }
 
-  def updateAnswers(hakemus: Hakemus, answers: Map[String, String]): Map[String, String] = {
-    val hakuToiveetWithEmptyValues = answers.filterKeys(s => s.startsWith(HakutoiveetConverter.preferenceKeyPrefix)).mapValues(s => "")
-    val hakutoiveetWithoutOldPreferences = answers.filterKeys(s => !s.startsWith(HakutoiveetConverter.preferenceKeyPrefix))
-    val hakutoiveetAnswers: Map[String, String] = hakemus.answers.getOrElse(hakutoiveetPhase, Map())
-    val updatedHakutoiveet = hakutoiveetWithoutOldPreferences ++ hakuToiveetWithEmptyValues ++ HakutoiveetConverter.convertToAnswers(hakemus.hakutoiveet) ++ hakutoiveetAnswers
+  def updateAnswers(hakutoiveet: List[Hakutoive], hakutoiveetAnswers: Map[String, String], previousHakutoiveetAnswers: Map[String, String]): Map[String, String] = {
+    val hakuToiveetWithEmptyValues = previousHakutoiveetAnswers.filterKeys(s => s.startsWith(HakutoiveetConverter.preferenceKeyPrefix)).mapValues(s => "")
+    val hakutoiveetWithoutOldPreferences = previousHakutoiveetAnswers.filterKeys(s => !s.startsWith(HakutoiveetConverter.preferenceKeyPrefix))
+    val updatedHakutoiveet = hakutoiveetWithoutOldPreferences ++ hakuToiveetWithEmptyValues ++ HakutoiveetConverter.convertToAnswers(hakutoiveet) ++ hakutoiveetAnswers
     updatedHakutoiveet
   }
 

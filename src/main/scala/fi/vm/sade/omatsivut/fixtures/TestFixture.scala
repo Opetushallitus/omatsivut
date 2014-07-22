@@ -10,6 +10,7 @@ import scala.collection.JavaConversions._
 
 object TestFixture {
   val personOid = "1.2.246.562.24.14229104472"
+  val testHetu = "010101-123N"
 
   lazy val (as, app) = {
     (new AppConfig.IT).withConfig { appConfig =>

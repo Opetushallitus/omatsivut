@@ -4,6 +4,7 @@ import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 import fi.vm.sade.omatsivut.domain.Hakemus
 import fi.vm.sade.omatsivut.domain.Hakemus._
+import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.servlet.ApplicationsServlet
 import fi.vm.sade.omatsivut.fixtures.TestFixture._
@@ -16,30 +17,22 @@ class UpdateApplicationSpec extends JsonFormats with ScalatraTestSupport {
   val preferencesPhaseKey: String = OppijaConstants.PHASE_APPLICATION_OPTIONS
   val skillsetPhaseKey: String = OppijaConstants.PHASE_GRADES
   val ssnKey: String = OppijaConstants.ELEMENT_ID_SOCIAL_SECURITY_NUMBER
-  val testSsn: String = "010101-123N"
   sequential
 
   addServlet(new ApplicationsServlet(), "/*")
 
   "PUT /application/:oid" should {
     "reject application with empty hakutoiveet" in {
-      modifyHakemus { hakemus => withSsn(hakemus.copy(hakutoiveet = Nil)) } { _ =>
+      modifyHakemus { hakemus => hakemus.copy(hakutoiveet = Nil) } { _ =>
         status must_== 400
       }
     }
-
-    "reject application with missing SSN" in {
-      modifyHakemus { hakemus => hakemus } { _ =>
-        status must_== 400
-      }
-    }
-
 
     "accept valid application" in {
-      modifyHakemus { hakemus => withSsn(hakemus)} { hakemus =>
+      modifyHakemus { hakemus => hakemus} { hakemus =>
         val result: JValue = JsonMethods.parse(body)
         status must_== 200
-        compareWithoutTimestamp(withSsn(hakemus), result.extract[Hakemus]) must_== true
+        compareWithoutTimestamp(hakemus, result.extract[Hakemus]) must_== true
       }
     }
 
@@ -49,8 +42,8 @@ class UpdateApplicationSpec extends JsonFormats with ScalatraTestSupport {
         val result: JValue = JsonMethods.parse(body)
         compareWithoutTimestamp(newHakemus, result.extract[Hakemus]) must_== true
         // verify saved application
-        withApplication(newHakemus) { application =>
-          application.getPhaseAnswers(personalInfoPhaseKey).get(ssnKey) must_== testSsn
+        withSavedApplication(newHakemus) { application =>
+          application.getPhaseAnswers(personalInfoPhaseKey).get(ssnKey) must_== testHetu
           application.getPhaseAnswers(preferencesPhaseKey).get("539158b8e4b0b56e67d2c74b") must_== "yes sir"
         }
       }
@@ -59,7 +52,7 @@ class UpdateApplicationSpec extends JsonFormats with ScalatraTestSupport {
     "prune answers to removed questions" in {
       modifyHakemus(answerExtraQuestion(preferencesPhaseKey, "539158b8e4b0b56e67d2c74b", "yes sir")) { _ =>
         modifyHakemus(removeHakutoive) { hakemus =>
-          withApplication(hakemus) { application =>
+          withSavedApplication(hakemus) { application =>
             application.getPhaseAnswers(preferencesPhaseKey).containsKey("539158b8e4b0b56e67d2c74b") must_== false
           }
         }
@@ -68,8 +61,8 @@ class UpdateApplicationSpec extends JsonFormats with ScalatraTestSupport {
 
     "ignore answers to unknown questions" in {
       modifyHakemus(answerExtraQuestion(preferencesPhaseKey, "unknown", "hacking")) { hakemus =>
-        withApplication(hakemus) { application =>
-          application.getPhaseAnswers(preferencesPhaseKey).containsKey("unknown") must_== true // <-- TODO: should be false
+        withSavedApplication(hakemus) { application =>
+          application.getPhaseAnswers(preferencesPhaseKey).containsKey("unknown") must_== false
         }
       }
     }
@@ -89,11 +82,6 @@ class UpdateApplicationSpec extends JsonFormats with ScalatraTestSupport {
     }
   }
 
-  def withSsn(hakemus: Hakemus) = {
-    val henkiloTiedot: Map[String, String] = hakemus.answers.getOrElse(personalInfoPhaseKey, Map()) + (ssnKey -> testSsn)
-    hakemus.copy(answers = hakemus.answers + (personalInfoPhaseKey -> henkiloTiedot))
-  }
-
   def modifyHakemus[T](modification: (Hakemus => Hakemus))(f: Hakemus => T): T = {
     withHakemus { hakemus =>
       val modified = modification(hakemus)
@@ -105,14 +93,14 @@ class UpdateApplicationSpec extends JsonFormats with ScalatraTestSupport {
 
   def answerExtraQuestion(phaseId: String, questionId: String, answer: String)(hakemus: Hakemus) = {
     val answerToExtraQuestion: Answers = Map(phaseId -> Map(questionId -> answer))
-    withSsn(hakemus.copy(answers = hakemus.answers ++ answerToExtraQuestion))
+    hakemus.copy(answers = hakemus.answers ++ answerToExtraQuestion)
   }
 
   def removeHakutoive(hakemus: Hakemus) = {    val answerToExtraQuestion: Answers = Map(preferencesPhaseKey -> Map("539158b8e4b0b56e67d2c74b" -> "yes sir"))
-    withSsn(hakemus.copy(hakutoiveet = hakemus.hakutoiveet.slice(0, 2)))
+    hakemus.copy(hakutoiveet = hakemus.hakutoiveet.slice(0, 2))
   }
 
-  def withApplication[T](hakemus: Hakemus)(f: Application => T): T = {
+  def withSavedApplication[T](hakemus: Hakemus)(f: Application => T): T = {
     val application = appConfig.springContext.applicationDAO.find(new Application().setOid(hakemus.oid)).get(0)
     f(application)
   }
