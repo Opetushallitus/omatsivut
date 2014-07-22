@@ -133,6 +133,9 @@
         })
 
         describe("Aluksi", function() {
+          it("kysymykset näytetään", function() {
+            ApplicationListPage().questionsForApplication(0).count().should.equal(1)
+          })
           it("pakolliset kentät korostetaan", function() {
             ApplicationListPage().questionsForApplication(0).validationMessages()[0].should.equal("*")
           })
@@ -152,21 +155,39 @@
             return page.save().then(wait.forMilliseconds(1000)) // <- ensure that save timestamp is different
           })
 
-          it("Validaatiovirheitä ei näytetä", function() {
-            page.questionsForApplication(0).validationMessages()[0].should.equal("")
-          })
+          describe("Käyttöliittymän tila", function() {
+            it("kysymykset näytetään edelleen", function() {
+              ApplicationListPage().questionsForApplication(0).count().should.equal(1)
+            })
 
-          it("Tallennuksen aikaleima päivittyy", function() {
-            page.changesSavedTimestamp().should.not.equal(timestamp)
-          })
+            it("validaatiovirheitä ei ole", function() {
+              page.questionsForApplication(0).validationMessages()[0].should.equal("")
+            })
 
-          it("Tallennusnappi disabloituu", function() {
-            page.saveButton(0).isEnabled().should.be.false
-          })
+            it("tallennuksen aikaleima päivittyy", function() {
+              page.changesSavedTimestamp().should.not.equal(timestamp)
+            })
 
-          it("Tallennusviesti näytetään", function() {
-            page.saveError().should.equal("")
-            page.statusMessage().should.equal("Kaikki muutokset tallennettu")
+            it("tallennusnappi disabloituu", function() {
+              page.saveButton(0).isEnabled().should.be.false
+            })
+
+            it("tallennusviesti näytetään", function() {
+              page.saveError().should.equal("")
+              page.statusMessage().should.equal("Kaikki muutokset tallennettu")
+            })
+            it("syötetty vastaus näytetään", function() {
+              page.questionsForApplication(0).getAnswer(0).should.equal("testivastaus")
+            })
+          })
+          describe("Kun ladataan sivu uudelleen", function() {
+            before(page.openPage)
+            it("valitut hakutoiveet näytetään", function() {
+              page.getPreference(2).opetuspiste().should.equal("Omnian ammattiopisto, Espoon keskus, Lehtimäentie")
+            })
+            it("vastauksia ei näytetä", function() {
+              page.questionsForApplication(0).count().should.equal(0)
+            })
           })
         })
       })

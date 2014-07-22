@@ -3,6 +3,8 @@ function ApplicationListPage() {
   var openListPage = openPage("/omatsivut/", visible)
 
   var api = {
+    openPage: openListPage,
+
     resetDataAndOpen: function () {
       return db.resetData().then(function() { return session.init(testHetu)} ).then(openListPage)
     },
@@ -17,8 +19,6 @@ function ApplicationListPage() {
     hetu: function () {
       return testHetu
     },
-
-    openPage: openListPage,
 
     applications: function () {
       return S("#hakemus-list>li")
@@ -102,6 +102,12 @@ function ApplicationListPage() {
       },
       enterAnswer: function(index, answer) {
         el().find(".question").eq(index).find("input").val(answer).change()
+      },
+      getAnswer: function(index) {
+        return el().find(".question").eq(index).find("input").val()
+      },
+      count: function() {
+        return this.data().length
       }
     }
   }
