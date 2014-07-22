@@ -135,6 +135,7 @@
         describe("Aluksi", function() {
           it("kysymykset näytetään", function() {
             ApplicationListPage().questionsForApplication(0).count().should.equal(1)
+            page.questionsForApplication(0).getAnswer(0).should.equal("")
           })
           it("pakolliset kentät korostetaan", function() {
             ApplicationListPage().questionsForApplication(0).validationMessages()[0].should.equal("*")
@@ -187,6 +188,16 @@
             })
             it("vastauksia ei näytetä", function() {
               page.questionsForApplication(0).count().should.equal(0)
+            })
+          })
+          describe("Kun poistetaan hakutoive, tallennetaan ja lisätään se uudelleen", function() {
+            before(page.getPreference(2).remove)
+            before(page.save)
+            before(page.openPage)
+            before(replacePreference(2, "Omnian ammattiopisto"))
+            it("hakutoiveeseen liittyvien lisäkysymysten aiemmat vastaukset hävitetään", function() {
+              ApplicationListPage().questionsForApplication(0).count().should.equal(1)
+              page.questionsForApplication(0).getAnswer(0).should.equal("")
             })
           })
         })
