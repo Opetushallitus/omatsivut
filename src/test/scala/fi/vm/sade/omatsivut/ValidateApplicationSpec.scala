@@ -20,7 +20,7 @@ class ValidateApplicationSpec extends JsonFormats with ScalatraTestSupport {
           status must_== 200
           val result: JValue = JsonMethods.parse(body)
           val errors: List[ValidationError] = (result \ "errors").extract[List[ValidationError]]
-          errors.size must_== 1
+          errors.size must_== 0
           val structuredQuestions: List[QuestionNode] = (result \ "questions").extract[List[QuestionNode]]
           structuredQuestions.size must_== 0
         }
