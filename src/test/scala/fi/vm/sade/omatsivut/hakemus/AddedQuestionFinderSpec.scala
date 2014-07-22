@@ -3,7 +3,8 @@ package fi.vm.sade.omatsivut.hakemus
 import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
 import fi.vm.sade.omatsivut.domain.Hakemus
 import fi.vm.sade.omatsivut.domain.Hakemus._
-import fi.vm.sade.omatsivut.hakemus.TestFixture._
+import fi.vm.sade.omatsivut.fixtures.TestFixture
+import TestFixture._
 import org.specs2.mutable.Specification
 
 class AddedQuestionFinderSpec extends Specification {

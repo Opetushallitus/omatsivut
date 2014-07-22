@@ -1,5 +1,6 @@
 package fi.vm.sade.omatsivut
 
+import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.omatsivut.servlet.{ApplicationsServlet, OmatSivutSwagger}
 
 class AuthenticationSpec extends ScalatraTestSupport {
@@ -11,13 +12,13 @@ class AuthenticationSpec extends ScalatraTestSupport {
     }
 
     "return 401 if cookie has timed out" in {
-      authGet("/applications", "1.2.246.562.24.14229104472") {
+      authGet("/applications", TestFixture.personOid) {
         status must_== 401
       }
     }
 
     "delete cookie if cookie has timed out" in {
-      authGet("/applications", "1.2.246.562.24.14229104472") {
+      authGet("/applications", TestFixture.personOid) {
         val cookieValues = response.getHeader("Set-Cookie").split(";").toList
         val expires = cookieValues.find(_.startsWith("Expires="))
         expires.get must_== "Expires=Thu, 01-Jan-1970 00:00:00 GMT"

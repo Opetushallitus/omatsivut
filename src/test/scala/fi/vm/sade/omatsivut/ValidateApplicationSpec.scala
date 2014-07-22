@@ -1,6 +1,7 @@
 package fi.vm.sade.omatsivut
 
 import fi.vm.sade.omatsivut.domain._
+import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.servlet.ApplicationsServlet
 import org.json4s._
@@ -12,10 +13,10 @@ class ValidateApplicationSpec extends JsonFormats with ScalatraTestSupport {
 
   "POST /application/validate" should {
     "validate application" in {
-      authGet("/applications", "1.2.246.562.24.14229104472") {
+      authGet("/applications", TestFixture.personOid) {
         val applications: List[Hakemus] = Serialization.read[List[Hakemus]](body)
         val hakemus = applications(0)
-        authPost("/applications/validate/" + hakemus.oid, "1.2.246.562.24.14229104472", Serialization.write(hakemus)) {
+        authPost("/applications/validate/" + hakemus.oid, TestFixture.personOid, Serialization.write(hakemus)) {
           status must_== 200
           val result: JValue = JsonMethods.parse(body)
           val errors: List[ValidationError] = (result \ "errors").extract[List[ValidationError]]

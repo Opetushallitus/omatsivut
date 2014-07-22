@@ -1,6 +1,7 @@
 package fi.vm.sade.omatsivut.security
 
 import fi.vm.sade.omatsivut.AppConfig.{AppConfig, MockAuthentication}
+import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.omatsivut.http.HttpClient
 import fi.vm.sade.omatsivut.{Logging, RemoteApplicationConfig}
 import org.json4s._
@@ -10,7 +11,7 @@ object AuthenticationInfoService {
   def apply(implicit appConfig: AppConfig): AuthenticationInfoService = appConfig match {
     case x: MockAuthentication => new AuthenticationInfoService {
       def getHenkiloOID(hetu: String) = hetu match {
-        case "010101-123N" => Some("1.2.246.562.24.14229104472")
+        case "010101-123N" => Some(TestFixture.personOid)
         case _ => None
       }
     }

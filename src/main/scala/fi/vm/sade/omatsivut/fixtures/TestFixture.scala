@@ -1,11 +1,12 @@
-package fi.vm.sade.omatsivut.hakemus
+package fi.vm.sade.omatsivut.fixtures
 
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
 import fi.vm.sade.omatsivut.AppConfig
 import fi.vm.sade.omatsivut.domain.Hakemus._
-import fi.vm.sade.omatsivut.fixtures.JsonFixtureMaps
-import collection.JavaConversions._
+import fi.vm.sade.omatsivut.hakemus.{HakemusConverter, HakuConverter}
+
+import scala.collection.JavaConversions._
 
 object TestFixture {
   val personOid = "1.2.246.562.24.14229104472"
