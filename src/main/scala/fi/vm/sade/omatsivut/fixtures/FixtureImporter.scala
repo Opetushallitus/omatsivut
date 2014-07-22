@@ -8,7 +8,7 @@ import fi.vm.sade.omatsivut.AppConfig.AppConfig
 
 import scala.collection.JavaConversions._
 
-case class FixtureImporter(implicit val appConfig: AppConfig) {
+case class FixtureImporter(implicit val appConfig: AppConfig) { // TODO: move ssn fix to hakemus-api
   private val dao = appConfig.springContext.applicationDAO
 
   def applyFixtures {
