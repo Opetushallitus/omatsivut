@@ -4,7 +4,6 @@ import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 import fi.vm.sade.omatsivut.domain.Hakemus
 import fi.vm.sade.omatsivut.domain.Hakemus._
-import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.servlet.ApplicationsServlet
 import fi.vm.sade.omatsivut.fixtures.TestFixture._
@@ -19,7 +18,7 @@ class UpdateApplicationSpec extends JsonFormats with ScalatraTestSupport {
   val ssnKey: String = OppijaConstants.ELEMENT_ID_SOCIAL_SECURITY_NUMBER
   val testSsn: String = "010101-123N"
   sequential
-  
+
   addServlet(new ApplicationsServlet(), "/*")
 
   "PUT /application/:oid" should {
