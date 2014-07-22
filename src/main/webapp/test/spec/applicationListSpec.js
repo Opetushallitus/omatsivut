@@ -33,54 +33,6 @@
       })
     })
 
-    describe("Lisäkysymyksien näyttäminen", function() {
-      var questions1 = [ 'Testikysymys, avaoin vastaus kenttä (pakollinen)?',
-        'Valitse kahdesta vaihtoehdosta paremmin itsellesi sopiva?',
-        'Mikä tai mitkä ovat mielestäsi parhaiten soveltuvat vastausket?',
-        'Testikysymys arvosanat, avoin vastaus',
-        'Valitse parhaat vaihtoehdot valittavista vaihtoehdoista?',
-        'Testivalintakysymys arvosanat',
-        'Testikysymys lupatiedot-kohta avoin vastaus',
-        'Testikysymys valitse vaihtoehdoista paras tai parhaat',
-        'Testikysymys valitse toinen vaihtoehdoista' ]
-
-      var questions2 = [ 'Haen ensisijaisesti kielitukikympille?',
-        'Miksi haet kymppiluokalle?',
-        'Päättötodistuksen kaikkien oppiaineiden keskiarvo?',
-        'Päättötodistukseni on' ]
-
-      before(ApplicationListPage().resetDataAndOpen)
-      before(ApplicationListPage().getPreference(1).remove)
-      before(ApplicationListPage().getPreference(1).remove)
-      before(ApplicationListPage().save)
-
-      describe("tallennetut hakutoiveet, joilla on lisäkysymyksiä", function() {
-        it("lisäkysymyksiä ei näytetä", function() {
-          expect(ApplicationListPage().questionsForApplication(0).data()).to.deep.equal([])
-        })
-      })
-
-      describe("lisätty hakutoive, jolla on lisäkysymyksiä", function() {
-        before(replacePreference(1, "Etelä-Savon ammattiopisto"))
-
-        it("lisäkysymykset näytetään", function() {
-          var questionTitles = ApplicationListPage().questionsForApplication(0).titles()
-          expect(questionTitles).to.deep.equal(questions1)
-        })
-      })
-
-      describe("lisätty kaksi hakutoivetta, jolla on lisäkysymyksiä", function() {
-        before(replacePreference(1, "Etelä-Savon ammattiopisto"))
-        before(replacePreference(2, "Turun Kristillinen"))
-
-        it("molempien lisäkysymykset näytetään", function() {
-          var questionTitles = ApplicationListPage().questionsForApplication(0).titles()
-          expect(questionTitles).to.deep.equal(questions1.concat(questions2))
-        })
-      })
-    })
-
-
     describe("Hakutoiveiden validaatio", function() {
       before(ApplicationListPage().resetDataAndOpen)
 
@@ -122,37 +74,102 @@
       })
     })
 
-    describe("Lisäkysymyksiin vastaaminen", function() {
-      beforeEach(ApplicationListPage().resetDataAndOpen)
-      beforeEach(page.getPreference(2).remove)
-      beforeEach(page.save)
-      beforeEach(replacePreference(2, "Omnian ammattiopisto"))
+    describe("Lisäkysymykset", function() {
+      describe("Lisäkysymyksien näyttäminen", function() {
+        var questions1 = [ 'Testikysymys, avaoin vastaus kenttä (pakollinen)?',
+          'Valitse kahdesta vaihtoehdosta paremmin itsellesi sopiva?',
+          'Mikä tai mitkä ovat mielestäsi parhaiten soveltuvat vastausket?',
+          'Testikysymys arvosanat, avoin vastaus',
+          'Valitse parhaat vaihtoehdot valittavista vaihtoehdoista?',
+          'Testivalintakysymys arvosanat',
+          'Testikysymys lupatiedot-kohta avoin vastaus',
+          'Testikysymys valitse vaihtoehdoista paras tai parhaat',
+          'Testikysymys valitse toinen vaihtoehdoista' ]
 
-      it("pakolliset kentät korostetaan", function() {
-        ApplicationListPage().questionsForApplication(0).validationMessages()[0].should.equal("*")
-      })
+        var questions2 = [ 'Haen ensisijaisesti kielitukikympille?',
+          'Miksi haet kymppiluokalle?',
+          'Päättötodistuksen kaikkien oppiaineiden keskiarvo?',
+          'Päättötodistukseni on' ]
 
-      it("validaatiovirheet näytetään oikein 'tallenna'-napin painamisen jälkeen", function() {
-        return page.save().then(function() {
-          page.saveError().should.equal("Ei tallennettu - vastaa ensin kaikkiin lisäkysymyksiin")
-          page.questionsForApplication(0).validationMessages()[0].should.equal("Pakollinen tieto.")
-          page.questionsForApplication(0).enterAnswer(0, "testivastaus")
-          return page.save()
-        }).then(function() {
-          page.questionsForApplication(0).validationMessages()[0].should.equal("")
+        before(ApplicationListPage().resetDataAndOpen)
+        before(ApplicationListPage().getPreference(1).remove)
+        before(ApplicationListPage().getPreference(1).remove)
+        before(ApplicationListPage().save)
+
+        describe("tallennetut hakutoiveet, joilla on lisäkysymyksiä", function() {
+          it("lisäkysymyksiä ei näytetä", function() {
+            expect(ApplicationListPage().questionsForApplication(0).data()).to.deep.equal([])
+          })
+        })
+
+        describe("lisätty hakutoive, jolla on lisäkysymyksiä", function() {
+          before(replacePreference(1, "Etelä-Savon ammattiopisto"))
+
+          it("lisäkysymykset näytetään", function() {
+            var questionTitles = ApplicationListPage().questionsForApplication(0).titles()
+            expect(questionTitles).to.deep.equal(questions1)
+          })
+        })
+
+        describe("lisätty kaksi hakutoivetta, jolla on lisäkysymyksiä", function() {
+          before(replacePreference(1, "Etelä-Savon ammattiopisto"))
+          before(replacePreference(2, "Turun Kristillinen"))
+
+          it("molempien lisäkysymykset näytetään", function() {
+            var questionTitles = ApplicationListPage().questionsForApplication(0).titles()
+            expect(questionTitles).to.deep.equal(questions1.concat(questions2))
+          })
         })
       })
+      describe("Lisäkysymyksiin vastaaminen", function() {
+        var timestamp;
 
-      it("onnistuneen tallennuksen jälkeen käyttöliittymä on 'tallennettu'-tilassa", function() {
-        var timestamp = page.changesSavedTimestamp()
-        page.questionsForApplication(0).enterAnswer(0, "testivastaus")
-        return page.save()
-          .then(wait.forMilliseconds(1000))
-          .then(function() {
+        before(ApplicationListPage().resetDataAndOpen)
+        before(page.getPreference(2).remove)
+        before(page.save)
+        before(replacePreference(2, "Omnian ammattiopisto"))
+        before(function() {
+          timestamp = page.changesSavedTimestamp()
+        })
+
+        describe("Aluksi", function() {
+          it("pakolliset kentät korostetaan", function() {
+            ApplicationListPage().questionsForApplication(0).validationMessages()[0].should.equal("*")
+          })
+        })
+
+        describe("Kun tallennetaan vastaamatta pakollisiin kysymyksiin", function() {
+          it("näytetään validaatiovirheet oikein", function() {
+            return page.save().then(function() {
+              page.saveError().should.equal("Ei tallennettu - vastaa ensin kaikkiin lisäkysymyksiin")
+              page.questionsForApplication(0).validationMessages()[0].should.equal("Pakollinen tieto.")
+            })
+          })
+        })
+
+        describe("Onnistuneen tallennuksen jälkeen", function() {
+          before(function() {
+            page.questionsForApplication(0).enterAnswer(0, "testivastaus")
+            return page.save().then(wait.forMilliseconds(1000)) // <- ensure that save timestamp is different
+          })
+
+          it("Validaatiovirheitä ei näytetä", function() {
+            page.questionsForApplication(0).validationMessages()[0].should.equal("")
+          })
+
+          it("Tallennuksen aikaleima päivittyy", function() {
             page.changesSavedTimestamp().should.not.equal(timestamp)
+          })
+
+          it("Tallennusnappi disabloituu", function() {
             page.saveButton(0).isEnabled().should.be.false
+          })
+
+          it("Tallennusviesti näytetään", function() {
+            page.saveError().should.equal("")
             page.statusMessage().should.equal("Kaikki muutokset tallennettu")
           })
+        })
       })
     })
 
