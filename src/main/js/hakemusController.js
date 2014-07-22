@@ -83,7 +83,7 @@ module.exports = function(listApp) {
             setSaveMessage("Tallentaminen epäonnistui, sillä istunto on vanhentunut. Kirjaudu uudestaan sisään.", "error");
             break
           default:
-            setSaveMessage("Tallentaminen epäonnistui", "error")
+            setSaveMessage("Tallentaminen epäonnistui. Yritä myöhemmin uudelleen.", "error")
         }
 
         $scope.isSaving = false
