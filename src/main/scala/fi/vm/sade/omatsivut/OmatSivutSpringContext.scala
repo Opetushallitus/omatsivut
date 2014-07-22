@@ -46,8 +46,8 @@ object OmatSivutSpringContext {
 
     val properties: Map[String, String] = configuration.settings.toProperties
 
-    sources.addFirst(new MapPropertySource("omatsivut custom props", mapAsJavaMap(properties)));
-    configurer.setPropertySources(sources);
+    sources.addFirst(new MapPropertySource("omatsivut custom props", mapAsJavaMap(properties)))
+    configurer.setPropertySources(sources)
     appContext.addBeanFactoryPostProcessor(configurer)
   }
 
