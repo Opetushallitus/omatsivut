@@ -1,6 +1,5 @@
 package fi.vm.sade.omatsivut
 
-import fi.vm.sade.haku.oppija.configuration.MongoConfiguration
 import fi.vm.sade.haku.oppija.hakemus.it.dao.ApplicationDAO
 import fi.vm.sade.haku.oppija.hakemus.service.HakuPermissionService
 import fi.vm.sade.haku.oppija.hakemus.service.impl.HakuPermissionServiceMockImpl
@@ -9,6 +8,7 @@ import fi.vm.sade.haku.oppija.lomake.validation.ElementTreeValidator
 import fi.vm.sade.haku.virkailija.authentication.AuthenticationService
 import fi.vm.sade.haku.virkailija.authentication.impl.AuthenticationServiceMockImpl
 import fi.vm.sade.omatsivut.AppConfig.AppConfig
+import fi.vm.sade.omatsivut.mongo.OmatSivutMongoConfiguration
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation._
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer
@@ -73,7 +73,7 @@ object OmatSivutSpringContext {
     "fi.vm.sade.haku.oppija.hakemus.converter",
     "fi.vm.sade.haku.oppija.common.koulutusinformaatio"))
   @ImportResource(Array("/META-INF/spring/logger-mock-context.xml"))
-  @Import(Array(classOf[MongoConfiguration]))
+  @Import(Array(classOf[OmatSivutMongoConfiguration]))
   class Default extends OmatSivutConfiguration {
     val profile = "default"
 
