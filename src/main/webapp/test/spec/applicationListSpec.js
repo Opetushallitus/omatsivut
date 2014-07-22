@@ -195,10 +195,12 @@
             })
           })
           describe("Kun poistetaan hakutoive, tallennetaan ja lisätään se uudelleen", function() {
-            before(page.getPreference(2).remove)
-            before(page.save)
-            before(page.openPage)
-            before(replacePreference(2, "Omnian ammattiopisto"))
+            before(
+              page.getPreference(2).remove,
+              page.save,
+              page.openPage,
+              replacePreference(2, "Omnian ammattiopisto")
+            )
             it("hakutoiveeseen liittyvien lisäkysymysten aiemmat vastaukset hävitetään", function() {
               ApplicationListPage().questionsForApplication(0).count().should.equal(1)
               page.questionsForApplication(0).getAnswer(0).should.equal("")
@@ -252,20 +254,22 @@
   function endToEndTest(descName, testName, manipulationFunction, dbCheckFunction) {
     describe(descName, function() {
       var applicationsBefore, applicationsAfter;
-      before(ApplicationListPage().resetDataAndOpen)
-      before(function() {
-        return db.getApplications().then(function(apps) {
-          applicationsBefore = apps
-        })
-      })
-      before(manipulationFunction)
-      before(ApplicationListPage().save)
-      before(function(done) {
-        db.getApplications().then(function(apps) {
-          applicationsAfter = apps
-          done()
-        })
-      })
+      before(
+        ApplicationListPage().resetDataAndOpen,
+        function() {
+          return db.getApplications().then(function(apps) {
+            applicationsBefore = apps
+          })
+        },
+        manipulationFunction,
+        ApplicationListPage().save,
+        function(done) {
+          db.getApplications().then(function(apps) {
+            applicationsAfter = apps
+            done()
+          })
+        }
+      )
       it(testName, function() {
         dbCheckFunction(applicationsBefore[0], applicationsAfter[0])
       })
