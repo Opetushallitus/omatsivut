@@ -72,11 +72,11 @@ protected object FormQuestionFinder extends Logging {
     e.getI18nText.getTranslations.get("fi") // TODO: kieliversiot
   }
   private def helpText[T <: Titled](e: T): String = {
-    val help = e.getVerboseHelp()
+    val help = e.getHelp()
     if (help == null)
       ""
     else
-      e.getVerboseHelp().getTranslations.get("fi") // TODO: kieliversiot
+      help.getTranslations.get("fi") // TODO: kieliversiot
   }
 
   private def titledElementToQuestions(contextElement: Element, element: Titled): List[(Question, ElementContext)] = {
