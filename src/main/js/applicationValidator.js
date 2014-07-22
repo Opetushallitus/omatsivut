@@ -20,10 +20,14 @@ module.exports = function(listApp) {
       }
     }
 
+    var currentRequest
     return function(application, success) {
+      currentRequest = {}
+      var thisRequest = currentRequest
       var responsePromise = $http.post("api/applications/validate/" + application.oid, application.toJson())
       responsePromise.success(function(data, status, headers, config) {
-        success(getQuestions(data))
+        if (currentRequest === thisRequest)
+          success(getQuestions(data))
       })
     }
   }])

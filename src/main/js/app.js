@@ -4,7 +4,7 @@ require('angular-animate');
 _ = require("underscore");
 require("../lib/ui-bootstrap-custom-tpls-0.10.0.min.js");
 
-var listApp = angular.module('listApp', ["ngResource", "ngAnimate", "RecursionHelper", "ui.bootstrap.typeahead", "template/typeahead/typeahead-popup.html", "template/typeahead/typeahead-match.html"], function($locationProvider) {
+var listApp = angular.module('listApp', ["ngResource", "ngAnimate", "RecursionHelper", "ui.bootstrap.typeahead", "template/typeahead/typeahead-popup.html", "template/typeahead/typeahead-match.html", "debounce"], function($locationProvider) {
   $locationProvider.html5Mode(true);
 });
 
@@ -13,6 +13,7 @@ require('./listController')(listApp)
 require('./hakemusController')(listApp)
 require('./applicationValidator')(listApp)
 require('./recursionHelper')
+require('../lib/angular-debounce')
 
 listApp.factory("applicationsResource", ["$resource", "$location", function($resource, $location) {
   return $resource("api/applications", null, {
@@ -28,7 +29,8 @@ listApp.factory("settings", ["$animate", function($animate) {
   if (testMode) $animate.enabled(false);
 
   return {
-    uiTransitionTime: testMode ? 10 : 500
+    uiTransitionTime: testMode ? 10 : 500,
+    modelDebounce: testMode? 0 : 300
   };
 }]);
 

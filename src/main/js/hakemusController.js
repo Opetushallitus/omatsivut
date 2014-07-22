@@ -2,7 +2,9 @@ var Hakemus = require('./hakemus')
 var util = require('./util')
 
 module.exports = function(listApp) {
-  listApp.controller("hakemusController", ["$scope", "$element", "$http", "applicationsResource", "applicationValidator", function ($scope, $element, $http, applicationsResource, applicationValidator) {
+  listApp.controller("hakemusController", ["$scope", "$element", "$http", "applicationsResource", "applicationValidator", "settings", "debounce", function ($scope, $element, $http, applicationsResource, applicationValidator, settings, debounce) {
+    applicationValidator = debounce(applicationValidator, settings.modelDebounce)
+
     $scope.hasChanged = false
     $scope.isSaving = false
     $scope.isValid = true
@@ -98,10 +100,12 @@ module.exports = function(listApp) {
         var errorMap = util.mapArray(errors, "key", "message");
 
         (function updateErrors(node) {
-          if (node.questionNodes == null) {
-            node.validationMessage = (errorMap[node.question.id.questionId] || []).join(", ")
-          } else {
-            _(node.questionNodes).each(updateErrors)
+          if (node != null) {
+            if (node.questionNodes == null) {
+              node.validationMessage = (errorMap[node.question.id.questionId] || []).join(", ")
+            } else {
+              _(node.questionNodes).each(updateErrors)
+            }
           }
         })($scope.additionalQuestions)
       }

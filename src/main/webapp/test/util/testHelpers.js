@@ -46,8 +46,9 @@ wait = {
     try {
       var angular = testFrame.angular
       var el = angular.element(S("#appRoot"))
+      var timeout = angular.element(el).injector().get('$timeout')
       angular.element(el).injector().get('$browser').notifyWhenNoOutstandingRequests(function() {
-        deferred.resolve()
+        timeout(function() { deferred.resolve() })
       })
     } catch (e) {
       deferred.reject(e)
