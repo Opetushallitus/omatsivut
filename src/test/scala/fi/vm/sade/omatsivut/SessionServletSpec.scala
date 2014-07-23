@@ -14,6 +14,14 @@ class SessionServletSpec extends MutableScalatraSpec {
         encrypted must_!= ""
       }
     }
+
+    "redirect to Shibboleth login" in {
+      get("/secure/initsession") {
+        status must_== 302
+        val location = response.headers("Location")(0)
+        location must endWith("/omatsivut/Shibboleth.sso/LoginFI")
+      }
+    }
   }
 
   addServlet(new SessionServlet()(new AppConfig.IT), "/secure")

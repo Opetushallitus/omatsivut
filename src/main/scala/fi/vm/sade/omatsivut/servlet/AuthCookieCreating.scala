@@ -1,10 +1,11 @@
 package fi.vm.sade.omatsivut.servlet
 
 import fi.vm.sade.omatsivut.AppConfig.AppConfig
+import fi.vm.sade.omatsivut.Logging
 import fi.vm.sade.omatsivut.security.{AuthCookieParsing, AuthenticationCipher, AuthenticationInfoService, CookieCredentials}
 import org.scalatra.{Cookie, CookieOptions}
 
-trait AuthCookieCreating extends OmatSivutServletBase with AuthCookieParsing  with fi.vm.sade.omatsivut.Logging {
+trait AuthCookieCreating extends OmatSivutServletBase with AuthCookieParsing with Logging {
   def createAuthCookieResponse(hetuOption: Option[String], cookieOptions: CookieOptions = CookieOptions(secure = true, path = "/", maxAge = 1799), redirectUri: String)(implicit appConfig: AppConfig) {
     fetchOid(hetuOption, AuthenticationInfoService.apply) match {
       case Some(oid) =>
@@ -14,7 +15,7 @@ trait AuthCookieCreating extends OmatSivutServletBase with AuthCookieParsing  wi
         response.redirect(request.getContextPath + redirectUri)
       case _ =>
         logger.warn("OID not found for hetu: " + headerOption("hetu"))
-        response.setStatus(401)
+        response.redirect(ssoContextPath + "/Shibboleth.sso/LoginFI") //TODO Localization
     }
   }
 
@@ -24,6 +25,8 @@ trait AuthCookieCreating extends OmatSivutServletBase with AuthCookieParsing  wi
       oid <- authService.getHenkiloOID(hetu)
     } yield oid
   }
+
+  def ssoContextPath: String
 
   protected def headerOption(name: String): Option[String] = {
     Option(request.getHeader(name))

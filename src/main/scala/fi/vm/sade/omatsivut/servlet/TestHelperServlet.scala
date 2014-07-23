@@ -15,4 +15,6 @@ class TestHelperServlet(implicit val appConfig: AppConfig) extends AuthCookieCre
       FixtureImporter().applyFixtures
     }
   }
+
+  def ssoContextPath: String = "/omatsivut"
 }
