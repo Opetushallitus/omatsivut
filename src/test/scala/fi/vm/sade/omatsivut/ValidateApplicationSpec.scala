@@ -2,20 +2,17 @@ package fi.vm.sade.omatsivut
 
 import fi.vm.sade.omatsivut.domain._
 import fi.vm.sade.omatsivut.fixtures.TestFixture
-import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.servlet.ApplicationsServlet
 import org.json4s._
 import org.json4s.jackson.{JsonMethods, Serialization}
 
-class ValidateApplicationSpec extends JsonFormats with ScalatraTestSupport {
+class ValidateApplicationSpec extends HakemusApiSpecification {
   override implicit lazy val appConfig = new AppConfig.IT
   sequential
 
   "POST /application/validate" should {
     "validate application" in {
-      authGet("/applications", TestFixture.personOid) {
-        val applications: List[Hakemus] = Serialization.read[List[Hakemus]](body)
-        val hakemus = applications(0)
+      withHakemus { hakemus =>
         authPost("/applications/validate/" + hakemus.oid, TestFixture.personOid, Serialization.write(hakemus)) {
           status must_== 200
           val result: JValue = JsonMethods.parse(body)
