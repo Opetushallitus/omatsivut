@@ -8,8 +8,8 @@ import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 import fi.vm.sade.omatsivut.Logging
 import fi.vm.sade.omatsivut.domain.Text
 import fi.vm.sade.omatsivut.domain._
-
 import scala.collection.JavaConversions._
+import fi.vm.sade.omatsivut.domain.Notification
 
 protected object FormQuestionFinder extends Logging {
   def findQuestions(contextElement: Element, elementsToScan: Set[Element]): List[QuestionGroup] = {
@@ -79,7 +79,7 @@ protected object FormQuestionFinder extends Logging {
       help.getTranslations.get("fi") // TODO: kieliversiot
   }
 
-  private def titledElementToQuestions(contextElement: Element, element: Titled): List[(Question, ElementContext)] = {
+  private def titledElementToQuestions(contextElement: Element, element: Titled): List[(QuestionNode, ElementContext)] = {
     val elementContext = new ElementContext(contextElement, element)
     def id = QuestionId(elementContext.phase.getId, element.getId)
     def isRequired = element.getValidators.filter(o => o.isInstanceOf[RequiredFieldValidator]).nonEmpty
@@ -99,6 +99,8 @@ protected object FormQuestionFinder extends Logging {
       case e: TitledGroup if containsCheckBoxes(e) => List(Checkbox(id, title(e), helpText(e), options(e), isRequired))
       case e: TitledGroup => Nil
       case e: HakuCheckBox => Nil
+      case e: fi.vm.sade.haku.oppija.lomake.domain.elements.Notification => List(Notification(title(e), e.getNotificationType()))
+      case e: fi.vm.sade.haku.oppija.lomake.domain.elements.Text => List(Label(title(e)))
       case _ => {
         logger.error("Could not convert element of type: " + element.getType + " with title: " + title(element))
         Nil

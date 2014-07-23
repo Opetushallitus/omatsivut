@@ -1,5 +1,7 @@
 package fi.vm.sade.omatsivut.domain
 
+import fi.vm.sade.haku.oppija.lomake.domain.elements.Notification.NotificationType
+
 sealed trait QuestionNode {
   def title: String
   def flatten: List[Question]
@@ -9,6 +11,7 @@ case class QuestionGroup(title: String, questions: List[QuestionNode]) extends Q
   def flatten = questions.flatMap(_.flatten)
   def filter (f: (Question => Boolean)): QuestionGroup = {
     QuestionGroup(title, questions.flatMap {
+      case q: TextNode => Nil
       case q: Question => List(q).filter(f)
       case q: QuestionGroup => q.filter(f) match {
         case QuestionGroup(_, Nil) => Nil
@@ -16,6 +19,10 @@ case class QuestionGroup(title: String, questions: List[QuestionNode]) extends Q
       }
     })
   }
+}
+
+trait TextNode extends QuestionNode {
+  def flatten = Nil
 }
 
 trait Question extends QuestionNode {
@@ -39,6 +46,10 @@ trait MultiValued extends WithOptions {
     }
   }
 }
+
+// TODO voiko labeleita ja notifikaatiota tule lisäkysymyksissä? Nyt niile ei ole näyttämislogiikkaa index.html
+case class Label(title: String) extends TextNode
+case class Notification(title: String, notificationType: NotificationType) extends TextNode
 
 case class Text(id: QuestionId, title: String, help: String, required: Boolean, maxlength: Int, questionType: String = "Text") extends Question
 case class TextArea(id: QuestionId, title: String, help: String, required: Boolean, maxlength: Int, rows: Int, cols: Int, questionType: String = "TextArea") extends Question
