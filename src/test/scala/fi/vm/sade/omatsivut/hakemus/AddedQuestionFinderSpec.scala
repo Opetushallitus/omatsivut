@@ -16,9 +16,9 @@ class AddedQuestionFinderSpec extends Specification {
 
     "Find related questions when adding Hakutoive" in {
       var addedQuestions = findAddedQuestions(answersWithNewHakutoive, Hakemus.emptyAnswers)
-      addedQuestions.length must_== 9
+      addedQuestions.length must_== 11
       addedQuestions = AddedQuestionFinder.findQuestionsByHakutoive(as, hakutoive).flatMap(_.flatten)
-      addedQuestions.length must_== 9
+      addedQuestions.length must_== 11
     }
 
     "Report zero additional questions when keeping same answers" in {
