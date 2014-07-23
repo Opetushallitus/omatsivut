@@ -49,7 +49,7 @@ Hakemus.prototype = {
     )
   },
 
-  isValid: function() {
+  validatePreferences: function() {
     return _(this.hakutoiveet).every(function(hakutoive) { return hakutoive.isValid() })
   },
 

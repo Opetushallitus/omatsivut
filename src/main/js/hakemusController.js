@@ -19,34 +19,40 @@ module.exports = function(listApp) {
     $scope.$watch("application.getHakutoiveWatchCollection()", function(hakutoiveet, oldHakutoiveet) {
       // Skip initial values angular style
       if (!_.isEqual(hakutoiveet, oldHakutoiveet)) {
-        $scope.$emit("applicationChange")
+        applicationChanged()
       }
 
-      updateAdditionalQuestions()
+      $scope.isValid = $scope.application.validatePreferences()
+      if ($scope.isValid)
+        updateAdditionalQuestions()
+      else
+        setSaveMessage("Täytä kaikki tiedot", "error");
     }, true)
 
     $scope.$watch("application.getAnswerWatchCollection()", function(answers, oldAnswers) {
       if (!_.isEqual(oldAnswers, {})) {
-        $scope.$emit("applicationChange")
+        applicationChanged()
       }
     }, true)
 
     function updateAdditionalQuestions() {
       var application = $scope.application
-      applicationValidator(application, function(questions) {
+      applicationValidator(application, success, error)
+
+      function success(questions) {
         $scope.additionalQuestions = questions
         application.setDefaultAnswers(questions)
-      })
+      }
+
+      function error() {
+        setSaveMessage("Tietojen haku epäonnistui. Yritä myöhemmin uudelleen", "error")
+      }
     }
 
-    $scope.$on("applicationChange", function() {
+    function applicationChanged() {
       $scope.hasChanged = true
       setSaveMessage("")
-
-      $scope.isValid = $scope.application.isValid()
-      if (!$scope.isValid)
-        setSaveMessage("Täytä kaikki tiedot", "error");
-    })
+    }
 
     function setSaveMessage(msg, type) {
       $scope.saveMessage = msg
