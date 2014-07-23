@@ -44,8 +44,8 @@ case class ApplicationValidator(implicit val appConfig: AppConfig) extends Loggi
   }
 
   private def errorsForUnknownAnswers(applicationSystem: ApplicationSystem, application: Application, hakemus: Hakemus): List[ValidationError] = {
-    val allAnswers = ApplicationUpdater.getAllAnswersForApplication(applicationSystem, application, hakemus)
-    val questionIds= AddedQuestionFinder.findAddedQuestions(applicationSystem, allAnswers, Hakemus.emptyAnswers).flatMap(_.flatten).flatMap(_.answerIds)
+    val allAnswers: Answers = ApplicationUpdater.getAllAnswersForApplication(applicationSystem, application, hakemus)
+    val acceptedAnswerIds: Seq[AnswerId] = AddedQuestionFinder.findAddedQuestions(applicationSystem, allAnswers, Hakemus.emptyAnswers).flatMap(_.flatten).flatMap(_.answerIds)
 
     val flatAnswers: List[(String, String, String)] = hakemus.answers.toList.flatMap {
       case (phaseId, groupAnswers) =>
@@ -54,8 +54,8 @@ case class ApplicationValidator(implicit val appConfig: AppConfig) extends Loggi
         }
     }
     flatAnswers
-      .filterNot { case (phaseId, questionId, _) => questionIds.contains(QuestionId(phaseId, questionId))}
-      .map{ case (phaseId, questionId, answer) => ValidationError(questionId, "unknown question")}
+      .filterNot { case (phaseId, questionId, _) => acceptedAnswerIds.contains(QuestionId(phaseId, questionId))}
+      .map{ case (phaseId, questionId, answer) => ValidationError(questionId, "unknown answer id")}
   }
 
   def findStoredApplication(hakemus: Hakemus): Application = {

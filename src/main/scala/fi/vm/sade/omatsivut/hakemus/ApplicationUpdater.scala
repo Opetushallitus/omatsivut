@@ -5,7 +5,7 @@ import java.util.Date
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
-import fi.vm.sade.omatsivut.domain.{QuestionId, Hakemus}
+import fi.vm.sade.omatsivut.domain.{AnswerId, QuestionId, Hakemus}
 import fi.vm.sade.omatsivut.domain.Hakemus._
 
 import scala.collection.JavaConversions._
@@ -31,7 +31,7 @@ object ApplicationUpdater {
     allAnswersFromApplication(application) ++ updatedAnswersForHakuToiveet(applicationSystem, application, hakemus) ++ updatedAnswersForOtherPhases(application, hakemus)
   }
 
-  private def pruneOrphanedAnswers(removedAnswerIds: Seq[QuestionId], answers: Answers): Answers = {
+  private def pruneOrphanedAnswers(removedAnswerIds: Seq[AnswerId], answers: Answers): Answers = {
     answers.map { case (phaseId, phaseAnswers) =>
         (phaseId, phaseAnswers.filterKeys { case questionId =>
             !removedAnswerIds.contains(QuestionId(phaseId, questionId))
@@ -39,7 +39,7 @@ object ApplicationUpdater {
     }
   }
 
-  private def getRemovedAnswerIds(applicationSystem: ApplicationSystem, application: Application, hakemus: Hakemus): Seq[QuestionId] = {
+  private def getRemovedAnswerIds(applicationSystem: ApplicationSystem, application: Application, hakemus: Hakemus): Seq[AnswerId] = {
     val allOldAnswers = allAnswersFromApplication(application)
     val allNewAnswers = getAllAnswersForApplication(applicationSystem, application, hakemus)
 

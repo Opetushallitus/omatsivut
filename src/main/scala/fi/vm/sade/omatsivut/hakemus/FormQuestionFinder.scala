@@ -62,11 +62,11 @@ protected object FormQuestionFinder extends Logging {
     }
   }
 
-  private def options(e: HakuOption): List[Choice] = {
-    e.getOptions.map(o => Choice(title(o), o.getValue, o.isDefaultOption)).toList
+  private def options(e: HakuOption): List[AnswerOption] = {
+    e.getOptions.map(o => AnswerOption(title(o), o.getValue, o.isDefaultOption)).toList
   }
-  private def options(e: TitledGroup): List[Choice] = {
-    getChildElementsOfType[HakuCheckBox](e).map(o => Choice(title(o), o.getId()))
+  private def options(e: TitledGroup): List[AnswerOption] = {
+    getChildElementsOfType[HakuCheckBox](e).map(o => AnswerOption(title(o), o.getId()))
   }
   private def title[T <: Titled](e: T): String = {
     e.getI18nText.getTranslations.get("fi") // TODO: kieliversiot

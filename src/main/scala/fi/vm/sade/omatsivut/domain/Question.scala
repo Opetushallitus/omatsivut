@@ -23,29 +23,32 @@ trait Question extends QuestionNode {
   def required: Boolean
   def questionType: String
   def id: QuestionId
-  def answerIds: List[QuestionId] = List(id)
+  def answerIds: List[AnswerId] = List(AnswerId(id.phaseId, id.questionId))
   def flatten = List(this)
 }
 
-trait Optional extends Question {
-  def options: List[Choice]
+trait WithOptions extends Question {
+  def options: List[AnswerOption]
+}
+
+trait MultiValued extends WithOptions {
+  override def answerIds = {
+    val indices: List[Int] = options.zipWithIndex.map(_._2)
+    indices.map { index =>
+      AnswerId(id.phaseId, id.questionId + "-option_" + index)
+    }
+  }
 }
 
 case class Text(id: QuestionId, title: String, help: String, required: Boolean, maxlength: Int, questionType: String = "Text") extends Question
 case class TextArea(id: QuestionId, title: String, help: String, required: Boolean, maxlength: Int, rows: Int, cols: Int, questionType: String = "TextArea") extends Question
-case class Radio(id: QuestionId, title: String, help: String, options: List[Choice], required: Boolean, questionType: String = "Radio") extends Optional
-case class Checkbox(id: QuestionId, title: String, help: String, options: List[Choice], required: Boolean, questionType: String = "Checkbox") extends Optional {
-  override def answerIds = {
-    val indices: List[Int] = options.zipWithIndex.map(_._2)
-    indices.map { index =>
-      QuestionId(id.phaseId, id.questionId + "-option_" + index)
-    }
-  }
-}
-case class Dropdown(id: QuestionId, title: String, help: String, options: List[Choice], required: Boolean, questionType: String = "Dropdown") extends Optional
+case class Radio(id: QuestionId, title: String, help: String, options: List[AnswerOption], required: Boolean, questionType: String = "Radio") extends WithOptions
+case class Checkbox(id: QuestionId, title: String, help: String, options: List[AnswerOption], required: Boolean, questionType: String = "Checkbox") extends MultiValued
+case class Dropdown(id: QuestionId, title: String, help: String, options: List[AnswerOption], required: Boolean, questionType: String = "Dropdown") extends WithOptions
 
-case class Choice(title: String, value: String, default: Boolean = false)
+case class AnswerOption(title: String, value: String, default: Boolean = false)
 
 case class QuestionId(phaseId: String, questionId: String)
+case class AnswerId(phaseId: String, questionId: String)
 
 case class QuestionContext(path: List[String])
