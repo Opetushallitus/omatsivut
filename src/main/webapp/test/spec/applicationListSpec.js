@@ -34,25 +34,10 @@
     })
 
     describe("Hakutoiveiden validaatio", function() {
-      before(ApplicationListPage().resetDataAndOpen)
-
-      beforeEach(function() {
-        return page.openPage().then(leaveOnlyOnePreference)
-      })
-
-      function leaveOnlyOnePreference() {
-        return ApplicationListPage().getPreference(0).remove()
-          .then(function() { return ApplicationListPage().getPreference(0).remove() })
-      }
-
-      it("vain yksi hakutoive voi olla muokattavana kerrallaan", function() {
-        var pref = page.getPreference(1)
-        var pref2 = page.getPreference(2)
-        return pref.selectOpetusPiste("Ahl")()
-          .then(function() { pref2.isEditable().should.be.false } )
-          .then(pref.selectKoulutus(0))
-          .then(function() { pref2.isEditable().should.be.true } )
-      })
+      before(
+        ApplicationListPage().resetDataAndOpen,
+        leaveOnlyOnePreference
+      )
 
       it("tyhjiä rivejä ei voi muokata", function () {
         _.each(ApplicationListPage().emptyPreferencesForApplication(0), function (row) {
@@ -62,6 +47,16 @@
 
       it("ainoaa hakutoivetta ei voi poistaa", function() {
         ApplicationListPage().getPreference(0).canRemove().should.be.false
+      })
+
+
+      it("vain yksi hakutoive voi olla muokattavana kerrallaan", function() {
+        var pref = page.getPreference(1)
+        var pref2 = page.getPreference(2)
+        return pref.selectOpetusPiste("Ahl")()
+          .then(function() { pref2.isEditable().should.be.false } )
+          .then(pref.selectKoulutus(0))
+          .then(function() { pref2.isEditable().should.be.true } )
       })
 
       it("lomaketta ei voi tallentaa, jos hakutoive on epätäydellinen", function() {
@@ -253,6 +248,11 @@
         .then(pref.selectKoulutus(0))
         .then(wait.forAngular)
     }
+  }
+
+  function leaveOnlyOnePreference() {
+    return ApplicationListPage().getPreference(0).remove()
+      .then(function() { return ApplicationListPage().getPreference(0).remove() })
   }
 
   function endToEndTest(descName, testName, manipulationFunction, dbCheckFunction) {
