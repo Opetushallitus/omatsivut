@@ -23,7 +23,8 @@ object HakemusConverter {
       application.getUpdated.getTime,
       convertHakuToiveet(application),
       haku,
-      EducationBackground(koulutusTaustaAnswers.get(baseEducationKey), !Try {koulutusTaustaAnswers.get("ammatillinenTutkintoSuoritettu").toBoolean}.getOrElse(false))
+      EducationBackground(koulutusTaustaAnswers.get(baseEducationKey), !Try {koulutusTaustaAnswers.get("ammatillinenTutkintoSuoritettu").toBoolean}.getOrElse(false)),
+      application.getAnswers.toMap.mapValues { phaseAnswers => phaseAnswers.toMap }
     )
   }
 

@@ -3,7 +3,7 @@ var Hakutoive = require('./hakutoive')
 function Hakemus(json) {
   _.extend(this, json)
   this.hakutoiveet = _(this.hakutoiveet).map(function(hakutoive) { return new Hakutoive(hakutoive) })
-  this.answers = this.answers || {}
+  this.answers = {}
 }
 
 Hakemus.prototype = {
