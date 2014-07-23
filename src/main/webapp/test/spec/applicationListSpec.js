@@ -111,6 +111,31 @@
           .then(pref.selectKoulutus(0))
           .then(wait.until(page.saveButton(0).isEnabled))
       })
+
+      describe("jos kaksi hakutoivetta on identtisiä", function() {
+        before(replacePreference(1, "Turun Kristillinen"))
+        describe("käyttöliittymän tila", function() {
+          it("näytetään validointivirhe", function() {
+            page.getPreference(1).errorMessage().should.equal("Et voi syöttää samaa hakutoivetta useaan kertaan.")
+          })
+
+          it("lomaketta ei voi tallentaa", function() {
+            page.saveButton(0).isEnabled().should.be.false
+          })
+        })
+
+        describe("kun valitaan eri hakukohde", function() {
+          before(replacePreference(1, "Etelä-Savon ammattiopisto"))
+
+          it("lomakkeen voi tallentaa", function() {
+            page.saveButton(0).isEnabled().should.be.true
+          })
+
+          it("poistetaan validointivirhe", function() {
+            page.getPreference(1).errorMessage().should.equal("")
+          })
+        })
+      })
     })
 
     describe("Lisäkysymykset", function() {

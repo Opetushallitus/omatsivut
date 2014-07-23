@@ -2,6 +2,7 @@ function Hakutoive(json) {
   this.data = json
   this.isModified = false
   this.isNew = _.isEmpty(json)
+  this.errors = []
 }
 
 Hakutoive.prototype = {
@@ -23,6 +24,7 @@ Hakutoive.prototype = {
     this.data["Opetuspiste"] = name
     this.data["Opetuspiste-id"] = id
     this.isModified = true
+    this.setErrors([])
   },
 
   setKoulutus: function(koulutus) {
@@ -36,6 +38,7 @@ Hakutoive.prototype = {
     this.data["Koulutus-id-educationcode"] = koulutus.educationCodeUri.toString()
     this.data["Koulutus-id-athlete"] = koulutus.athleteEducation.toString()
     this.isModified = true
+    this.setErrors([])
   },
 
   hasOpetuspiste: function() {
@@ -51,10 +54,11 @@ Hakutoive.prototype = {
   },
 
   isValid: function() {
-    if (!_.isEmpty(this.data["Opetuspiste"]))
-      return !_.isEmpty(this.data["Koulutus-id"])
-    else
-      return true
+    return (!this.errors.length) && (_.isEmpty(this.data["Opetuspiste"]) || !_.isEmpty(this.data["Koulutus-id"]))
+  },
+
+  setErrors: function(errors) {
+    this.errors = errors || []
   },
 
   setAsSaved: function() {

@@ -161,6 +161,9 @@ function ApplicationListPage() {
       isEditable: function() {
         return el().find("input").is(":visible")
       },
+      errorMessage: function() {
+        return el().find(".error").text()
+      },
       opetuspiste: function () {
         return el().find(".opetuspiste input").val()
       },

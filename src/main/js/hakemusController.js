@@ -39,9 +39,12 @@ module.exports = function(listApp) {
       var application = $scope.application
       applicationValidator(application, success, error)
 
-      function success(questions) {
-        $scope.additionalQuestions = questions
-        application.setDefaultAnswers(questions)
+      function success(data) {
+        $scope.additionalQuestions = data.questions
+        application.setDefaultAnswers(data.questions)
+
+        updateHakutoiveValidationMessages(data.errors) // <- don't show question-related errors yet
+        $scope.isValid = $scope.application.validatePreferences()
       }
 
       function error() {
@@ -76,14 +79,14 @@ module.exports = function(listApp) {
         $scope.isSaving = false
         $scope.hasChanged = false
         setSaveMessage("Kaikki muutokset tallennettu", "success")
-        updateValidationMessages([])
+        updateAllValidationMessages([])
       }
 
       function onError(err) {
         switch (err.status) {
           case 400:
             setSaveMessage(validationError(err.data), "error");
-            updateValidationMessages(err.data);
+            updateAllValidationMessages(err.data);
             break
           case 401:
             setSaveMessage("Tallentaminen epäonnistui, sillä istunto on vanhentunut. Kirjaudu uudestaan sisään.", "error");
@@ -101,20 +104,33 @@ module.exports = function(listApp) {
         else
           return "Tallentaminen epäonnistui"
       }
-
-      function updateValidationMessages(errors) {
-        var errorMap = util.mapArray(errors, "key", "message");
-
-        (function updateErrors(node) {
-          if (node != null) {
-            if (node.questionNodes == null) {
-              node.validationMessage = (errorMap[node.question.id.questionId] || []).join(", ")
-            } else {
-              _(node.questionNodes).each(updateErrors)
-            }
-          }
-        })($scope.additionalQuestions)
-      }
     };
+
+    function updateAllValidationMessages(errors) {
+      updateQuestionValidationMessages(errors)
+      updateHakutoiveValidationMessages(errors)
+    }
+
+    function updateHakutoiveValidationMessages(errors) {
+      var errorMap = util.mapArray(errors, "key", "message");
+      $scope.application.hakutoiveet.forEach(function(hakutoive, index) {
+        var errorKey = "preference" + (index+1) + "-Koulutus"
+        var errors = errorMap[errorKey]
+        hakutoive.setErrors(errors)
+      })
+    }
+
+    function updateQuestionValidationMessages(errors) {
+      var errorMap = util.mapArray(errors, "key", "message");
+      (function updateErrors(node) {
+        if (node != null) {
+          if (node.questionNodes == null) {
+            node.validationMessage = (errorMap[node.question.id.questionId] || []).join(", ")
+          } else {
+            _(node.questionNodes).each(updateErrors)
+          }
+        }
+      })($scope.additionalQuestions)
+    }
   }])
 }

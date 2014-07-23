@@ -5,7 +5,6 @@ var util = require('./util')
 module.exports = function(listApp) {
   listApp.factory("applicationValidator", ["$http", function($http) {
     function getQuestions(data) {
-      var errorMap = util.mapArray(data.errors, "key", "message")
       return convertToItems(data.questions, new QuestionGroup())
 
       function convertToItems(questions, results) {
@@ -27,7 +26,7 @@ module.exports = function(listApp) {
       var responsePromise = $http.post("/omatsivut/api/applications/validate/" + application.oid, application.toJson())
       responsePromise.success(function(data, status, headers, config) {
         if (currentRequest === thisRequest)
-          success(getQuestions(data))
+          success({ questions: getQuestions(data), errors: data.errors})
       })
 
       responsePromise.error(function(data, status) {
