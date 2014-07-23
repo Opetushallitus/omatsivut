@@ -168,7 +168,7 @@ a {
   }
 }
 
-input[type="text"] {
+input[type="text"], textarea {
   background: @input-background;
   color: @font-color;
   box-shadow: 0 1px 1px #b5b5b5 inset, 0 -1px 4px rgba(0, 0, 0, 0.05) inset;
@@ -181,6 +181,11 @@ input[type="text"] {
   &:focus {
     background: @input-focus-background;
   }
+}
+
+textarea {
+  resize: none;
+  padding: 5px 10px;
 }
 
 button {
@@ -435,6 +440,11 @@ button.delete-btn:not(.confirm) {
 
   input[type=text] {
     width: 400px;
+  }
+
+  textarea {
+    width: 400px;
+    height: 100px;
   }
 
   input[type=radio] {
