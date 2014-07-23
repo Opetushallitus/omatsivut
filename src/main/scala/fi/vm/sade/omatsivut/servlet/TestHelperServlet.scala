@@ -5,12 +5,12 @@ import fi.vm.sade.omatsivut.fixtures.FixtureImporter
 import fi.vm.sade.omatsivut.security.AuthenticationInfoService
 import org.scalatra.CookieOptions
 
-class TestHelperServlet(implicit val appConfig: AppConfig) extends AuthCookieCreating  {
+class TestHelperServlet(implicit val appConfig: AppConfig) extends OmatSivutServletBase with AuthCookieCreating  {
   if(appConfig.isTest){
     get("/fakesession") {
       val hetuOption: Option[String] = paramOption("hetu")
       createAuthCookieCredentials(hetuOption, "placeholder", AuthenticationInfoService.apply) match {
-        case Some(credentials) => createAuthCookieResponse(credentials, redirectUri = paramOption("redirect").getOrElse("/index.html"))
+        case Some(credentials) => createAuthCookieResponse(credentials, request, response, redirectUri = paramOption("redirect").getOrElse("/index.html"))
         case _ => response.redirect(ssoContextPath + "/Shibboleth.sso/LoginFI") //TODO Localization
       }
     }
