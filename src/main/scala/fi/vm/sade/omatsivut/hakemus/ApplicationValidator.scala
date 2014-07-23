@@ -53,9 +53,12 @@ case class ApplicationValidator(implicit val appConfig: AppConfig) extends Loggi
           (phaseId, questionId, answer)
         }
     }
-    flatAnswers
-      .filterNot { case (phaseId, questionId, _) => acceptedAnswerIds.contains(QuestionId(phaseId, questionId))}
-      .map{ case (phaseId, questionId, answer) => ValidationError(questionId, "unknown answer id")}
+    val unknownAnswers: List[(String, String, String)] = flatAnswers
+      .filterNot { case (phaseId, questionId, _) => acceptedAnswerIds.contains(AnswerId(phaseId, questionId))}
+    unknownAnswers
+      .map{ case (phaseId, questionId, answer) =>
+        ValidationError(questionId, "unknown answer id")
+      }
   }
 
   def findStoredApplication(hakemus: Hakemus): Application = {
