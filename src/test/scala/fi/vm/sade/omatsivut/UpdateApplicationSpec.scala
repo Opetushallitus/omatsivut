@@ -4,7 +4,6 @@ import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 import fi.vm.sade.omatsivut.domain.Hakemus
 import fi.vm.sade.omatsivut.domain.Hakemus._
-import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.servlet.ApplicationsServlet
 import fi.vm.sade.omatsivut.fixtures.TestFixture._
@@ -51,7 +50,9 @@ class UpdateApplicationSpec extends JsonFormats with ScalatraTestSupport {
 
     "prune answers to removed questions" in {
       modifyHakemus(answerExtraQuestion(preferencesPhaseKey, "539158b8e4b0b56e67d2c74b", "yes sir")) { _ =>
+        status must_== 200
         modifyHakemus(removeHakutoive) { hakemus =>
+          status must_== 200
           withSavedApplication(hakemus) { application =>
             application.getPhaseAnswers(preferencesPhaseKey).containsKey("539158b8e4b0b56e67d2c74b") must_== false
           }
