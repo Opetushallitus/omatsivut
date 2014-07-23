@@ -234,24 +234,24 @@
           })
         })
 
-        describe("Onnistuneen tallennuksen jälkeen", function() {
-          before(function() {
-            page.questionsForApplication(0).enterAnswer(0, "tekstivastaus 1")
-            page.questionsForApplication(0).enterAnswer(1, "Vaihtoehto x 1")
-            page.questionsForApplication(0).enterAnswer(2, "Vaihtoehto 1")
-            page.questionsForApplication(0).enterAnswer(2, "Vaihtoehto 2")
-            page.questionsForApplication(0).enterAnswer(3, "Isokyrö")
-            page.questionsForApplication(0).enterAnswer(4, "textarea-vastaus")
-            page.questionsForApplication(0).enterAnswer(5, "Vaihtoehto yyy 1")
-            page.questionsForApplication(0).enterAnswer(5, "Vaihtoehto yyy 2")
-            page.questionsForApplication(0).enterAnswer(6, "Vaihtoehto arvosanat 1")
-            page.questionsForApplication(0).enterAnswer(7, "tekstivastaus 2")
-            page.questionsForApplication(0).enterAnswer(8, "tekstivastaus 3")
-            page.questionsForApplication(0).enterAnswer(9, "Vaihtoehto zzzz 1")
-            page.questionsForApplication(0).enterAnswer(10, "Vaihttoehto yksi")
 
-            return Q.all([page.save(), page.waitForTimestampUpdate()])
+        describe("Kun tallennuksessa esiintyy validointivirhe, joka ei liity lisäkysymyksiin", function() {
+          before(answerAllQuestions)
+          before(page.questionsForApplication(0).modifyAnswers(function(answers) {
+            answers.hakutoiveet.dummyAnswer = "tämä aiheuttaa epämääräisen validointivirheen"
+          }))
+          before(page.save)
+          it("näytetään tallennusvirhe", function() {
+            // TODO: näytä eri viesti, koska tapahtui käsittelemätön validointivirhe
+            page.saveError().should.equal("Ei tallennettu - vastaa ensin kaikkiin lisäkysymyksiin")
           })
+        })
+
+        describe("Onnistuneen tallennuksen jälkeen", function() {
+          before(page.questionsForApplication(0).modifyAnswers(function(answers) {
+            delete answers.hakutoiveet.dummyAnswer
+          }))
+          before(answerAllQuestions)
 
           describe("Tietokanta", function() {
             it("sisältää tallennetut tiedot", function() {
@@ -326,6 +326,24 @@
             })
           })
         })
+
+        function answerAllQuestions() {
+          page.questionsForApplication(0).enterAnswer(0, "tekstivastaus 1")
+          page.questionsForApplication(0).enterAnswer(1, "Vaihtoehto x 1")
+          page.questionsForApplication(0).enterAnswer(2, "Vaihtoehto 1")
+          page.questionsForApplication(0).enterAnswer(2, "Vaihtoehto 2")
+          page.questionsForApplication(0).enterAnswer(3, "Isokyrö")
+          page.questionsForApplication(0).enterAnswer(4, "textarea-vastaus")
+          page.questionsForApplication(0).enterAnswer(5, "Vaihtoehto yyy 1")
+          page.questionsForApplication(0).enterAnswer(5, "Vaihtoehto yyy 2")
+          page.questionsForApplication(0).enterAnswer(6, "Vaihtoehto arvosanat 1")
+          page.questionsForApplication(0).enterAnswer(7, "tekstivastaus 2")
+          page.questionsForApplication(0).enterAnswer(8, "tekstivastaus 3")
+          page.questionsForApplication(0).enterAnswer(9, "Vaihtoehto zzzz 1")
+          page.questionsForApplication(0).enterAnswer(10, "Vaihttoehto yksi")
+
+          return Q.all([page.save(), page.waitForTimestampUpdate()])
+        }
       })
     })
 

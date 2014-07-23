@@ -146,6 +146,13 @@ function ApplicationListPage() {
       getAnswer: function(index) {
         return el().find(".question").eq(index).find("input").val()
       },
+      modifyAnswers: function(f) {
+        return function() {
+          modifyApplicationScope(0)(function(scope) {
+            f(scope.application.answers)
+          })
+        }
+      },
       count: function() {
         return this.data().length
       }
