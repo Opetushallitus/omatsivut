@@ -39,8 +39,7 @@ class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfi
   }
 
   put("/applications/:oid", operation(putApplicationsSwagger)) {
-    val json = JsonMethods.parse(request.body)
-    val updated = json.extract[Hakemus].copy(answers = JsonConverter.stringyfiedAnswers(json))
+    val updated = Serialization.read[Hakemus](request.body)
     val applicationSystem = applicationSystemService.getApplicationSystem(updated.haku.get.oid)
     val (errors: List[ValidationError], _) = ApplicationValidator().validate(applicationSystem)(updated)
     if(errors.isEmpty) {
