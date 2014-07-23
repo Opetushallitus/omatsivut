@@ -199,7 +199,7 @@
           ApplicationListPage().resetDataAndOpen,
           page.getPreference(2).remove,
           page.save,
-          replacePreference(2, "Omnian ammattiopisto"),
+          replacePreference(2, "Etelä-Savon ammattiopisto"),
           function() {
             timestamp = page.changesSavedTimestamp()
           }
@@ -207,7 +207,7 @@
 
         describe("Aluksi", function() {
           it("kysymykset näytetään", function() {
-            ApplicationListPage().questionsForApplication(0).count().should.equal(1)
+            ApplicationListPage().questionsForApplication(0).count().should.equal(11)
             page.questionsForApplication(0).getAnswer(0).should.equal("")
           })
           it("pakolliset kentät korostetaan", function() {
@@ -217,8 +217,19 @@
 
         describe("Kun tallennetaan vastaamatta pakollisiin kysymyksiin", function() {
           before(page.save)
-          it("näytetään validaatiovirheet oikein", function() {
+          it("näytetään tallennusvirhe", function() {
             page.saveError().should.equal("Ei tallennettu - vastaa ensin kaikkiin lisäkysymyksiin")
+          })
+
+          it("näytetään kaikki validaatiovirheet", function() {
+            page.questionsForApplication(0).validationMessageCount().should.equal(11)
+          })
+
+          it("näytetään checkboxin minmax-validaatiovirhe", function() {
+            page.questionsForApplication(0).validationMessages()[2].should.equal("Virheellinen arvo")
+          })
+
+          it("näytetään required-validaatiovirhe", function() {
             page.questionsForApplication(0).validationMessages()[0].should.equal("Pakollinen tieto.")
           })
         })
@@ -226,16 +237,31 @@
         describe("Onnistuneen tallennuksen jälkeen", function() {
           before(function() {
             page.questionsForApplication(0).enterAnswer(0, "testivastaus")
-            return Q.all([page.save(), page.waitForTimestampUpdate])
+            page.questionsForApplication(0).enterAnswer(1, "Vaihtoehto x 1")
+            page.questionsForApplication(0).enterAnswer(2, "Vaihtoehto 1")
+            page.questionsForApplication(0).enterAnswer(2, "Vaihtoehto 2")
+            page.questionsForApplication(0).enterAnswer(3, "Isokyrö")
+            page.questionsForApplication(0).enterAnswer(4, "tekstiä")
+            page.questionsForApplication(0).enterAnswer(5, "Vaihtoehto yyy 1")
+            page.questionsForApplication(0).enterAnswer(5, "Vaihtoehto yyy 2")
+            page.questionsForApplication(0).enterAnswer(6, "Vaihtoehto arvosanat 1")
+            page.questionsForApplication(0).enterAnswer(7, "testivastaus 2")
+            page.questionsForApplication(0).enterAnswer(8, "testivastaus 3")
+            page.questionsForApplication(0).enterAnswer(9, "Vaihtoehto zzzz 1")
+            page.questionsForApplication(0).enterAnswer(10, "Vaihttoehto yksi")
+
+            return Q.all([page.save(), page.waitForTimestampUpdate()])
           })
 
           describe("Käyttöliittymän tila", function() {
             it("kysymykset näytetään edelleen", function() {
-              ApplicationListPage().questionsForApplication(0).count().should.equal(1)
+              ApplicationListPage().questionsForApplication(0).count().should.equal(11)
             })
 
             it("validaatiovirheitä ei ole", function() {
-              page.questionsForApplication(0).validationMessages()[0].should.equal("")
+              _.all(page.questionsForApplication(0).validationMessages(), function(item) {
+                return item == ""
+              }).should.be.true
             })
 
             it("aikaleima päivittyy", function() {
@@ -257,7 +283,7 @@
           describe("Kun ladataan sivu uudelleen", function() {
             before(page.openPage)
             it("valitut hakutoiveet näytetään", function() {
-              page.getPreference(2).opetuspiste().should.equal("Omnian ammattiopisto, Espoon keskus, Lehtimäentie")
+              page.getPreference(2).opetuspiste().should.equal("Etelä-Savon ammattiopisto,  Otavankatu 4")
             })
             it("vastauksia ei näytetä", function() {
               page.questionsForApplication(0).count().should.equal(0)
@@ -268,10 +294,10 @@
               page.getPreference(2).remove,
               page.save,
               page.openPage,
-              replacePreference(2, "Omnian ammattiopisto")
+              replacePreference(2, "Etelä-Savon ammattiopisto")
             )
             it("hakutoiveeseen liittyvien lisäkysymysten aiemmat vastaukset hävitetään", function() {
-              ApplicationListPage().questionsForApplication(0).count().should.equal(1)
+              ApplicationListPage().questionsForApplication(0).count().should.equal(11)
               page.questionsForApplication(0).getAnswer(0).should.equal("")
             })
           })

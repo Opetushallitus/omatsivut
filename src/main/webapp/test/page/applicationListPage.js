@@ -22,9 +22,9 @@ function ApplicationListPage() {
     },
 
     waitForTimestampUpdate: function() {
-      modifyApplicationScope(0)(function(scope) { scope.application.updated = "" })
+      modifyApplicationScope(0)(function(scope) { scope.application.updated = 0 })
       var timestamp = function() { return getApplication(0).find(".timestamp time") }
-      return wait.until(function() { return timestamp().text().length > 0 })()
+      return wait.until(function() { return timestamp().text() != "01.01.1970 02:00:00" })()
     },
 
     hetu: function () {
@@ -111,8 +111,36 @@ function ApplicationListPage() {
       validationMessages: function() {
         return _.pluck(this.data(), "validationMessage")
       },
+      validationMessageCount: function() {
+        return _(this.validationMessages()).filter(function(msg) { return msg.length > 0 }).length
+      },
       enterAnswer: function(index, answer) {
-        el().find(".question").eq(index).find("input").val(answer).change()
+        function inputType(el) {
+          if (el.prop("tagName") == "SELECT" || el.prop("tagName") == "TEXTAREA")
+            return el.prop("tagName")
+          else
+            return el.prop("type").toUpperCase()
+        }
+        var input = el().find(".question").eq(index).find("input, textarea, select")
+        switch (inputType(input)) {
+          case "TEXT":
+          case "TEXTAREA":
+            input.val(answer).change(); break;
+          case "CHECKBOX":
+            var option = _(input).find(function(item) { return $(item).parent().text().trim() == answer })
+            $(option).click()
+            break;
+          case "RADIO":
+            var option = _(input).find(function(item) { return $(item).parent().text().trim() == answer })
+            $(option).click()
+            break;
+          case "SELECT":
+            var option = _(input.children()).find(function(item) { return $(item).text().trim() == answer })
+            input.val($(option).attr("value")).change()
+            break;
+
+        }
+        //input.val(answer).change()
       },
       getAnswer: function(index) {
         return el().find(".question").eq(index).find("input").val()
