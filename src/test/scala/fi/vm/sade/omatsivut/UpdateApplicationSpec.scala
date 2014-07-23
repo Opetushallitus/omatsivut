@@ -94,7 +94,7 @@ class UpdateApplicationSpec extends JsonFormats with ScalatraTestSupport {
     hakemus.copy(answers = hakemus.answers ++ answerToExtraQuestion)
   }
 
-  def removeHakutoive(hakemus: Hakemus) = {    val answerToExtraQuestion: Answers = Map(preferencesPhaseKey -> Map("539158b8e4b0b56e67d2c74b" -> "yes sir"))
+  def removeHakutoive(hakemus: Hakemus) = {
     hakemus.copy(hakutoiveet = hakemus.hakutoiveet.slice(0, 2))
   }
 
