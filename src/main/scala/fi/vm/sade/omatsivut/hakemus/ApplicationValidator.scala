@@ -45,7 +45,7 @@ case class ApplicationValidator(implicit val appConfig: AppConfig) extends Loggi
 
   private def errorsForUnknownAnswers(applicationSystem: ApplicationSystem, application: Application, hakemus: Hakemus): List[ValidationError] = {
     val allAnswers = ApplicationUpdater.getAllAnswersForApplication(applicationSystem, application, hakemus)
-    val questionIds= AddedQuestionFinder.findAddedQuestions(applicationSystem, allAnswers, Hakemus.emptyAnswers).flatMap(_.flatten).map(_.id)
+    val questionIds= AddedQuestionFinder.findAddedQuestions(applicationSystem, allAnswers, Hakemus.emptyAnswers).flatMap(_.flatten).flatMap(_.answerIds)
 
     val flatAnswers: List[(String, String, String)] = hakemus.answers.toList.flatMap {
       case (phaseId, groupAnswers) =>
