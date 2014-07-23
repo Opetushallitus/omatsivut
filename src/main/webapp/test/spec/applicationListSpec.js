@@ -33,6 +33,50 @@
       })
     })
 
+    describe("Virheidenkäsittely", function() {
+      before(ApplicationListPage().resetDataAndOpen)
+      before(mockAjax.init)
+
+      describe("Lisäkysymykset", function() {
+        before(function() { mockAjax.respondOnce("POST", "/omatsivut/api/applications/validate/1.2.246.562.11.00000877107", 400, "") })
+
+        it("haun epäonnistuminen näytetään käyttäjälle", function() {
+          // In current implementation move will trigger validation API call
+          return page.getPreference(0).moveDown()
+            .then(wait.until(function() { return page.saveError().length > 0 }))
+            .then(function() {
+              page.saveError().should.equal("Tietojen haku epäonnistui. Yritä myöhemmin uudelleen.")
+            })
+        })
+      })
+
+      describe("Tallennus", function() {
+        describe("kun tapahtuu palvelinvirhe", function() {
+          before(function() { mockAjax.respondOnce("PUT", "/omatsivut/api/applications/1.2.246.562.11.00000877107", 400, "") })
+
+          it("virheilmoitus näkyy oikein", function() {
+            return page.getPreference(0).moveDown()
+              .then(page.saveWaitError)
+              .then(function() {
+                page.saveError().should.equal("Tallentaminen epäonnistui")
+              })
+          })
+        })
+
+        describe("kun istunto on vanhentunut", function() {
+          before(function() { mockAjax.respondOnce("PUT", "/omatsivut/api/applications/1.2.246.562.11.00000877107", 401, "") })
+
+          it("virheilmoitus näkyy oikein", function() {
+            return page.getPreference(0).moveDown()
+              .then(page.saveWaitError)
+              .then(function() {
+                page.saveError().should.equal("Tallentaminen epäonnistui, sillä istunto on vanhentunut. Kirjaudu uudestaan sisään.")
+              })
+          })
+        })
+      })
+    })
+
     describe("Hakutoiveiden validaatio", function() {
       before(
         ApplicationListPage().resetDataAndOpen,
@@ -122,6 +166,7 @@
           })
         })
       })
+
       describe("Lisäkysymyksiin vastaaminen", function() {
         var timestamp;
 

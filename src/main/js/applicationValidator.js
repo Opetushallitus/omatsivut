@@ -24,7 +24,7 @@ module.exports = function(listApp) {
     return function(application, success, error) {
       currentRequest = {}
       var thisRequest = currentRequest
-      var responsePromise = $http.post("api/applications/validate/" + application.oid, application.toJson())
+      var responsePromise = $http.post("/omatsivut/api/applications/validate/" + application.oid, application.toJson())
       responsePromise.success(function(data, status, headers, config) {
         if (currentRequest === thisRequest)
           success(getQuestions(data))

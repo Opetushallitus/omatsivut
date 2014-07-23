@@ -83,6 +83,39 @@ uiUtil = {
   }
 }
 
+mockAjax = {
+  init: function() {
+    var deferred = Q.defer()
+    if (testFrame.sinon)
+      deferred.resolve()
+    else
+      testFrame.$.getScript('test/lib/sinon-server-1.10.3.js', function() { deferred.resolve() } )
+    return deferred.promise
+  },
+  respondOnce: function (method, url, responseCode, responseBody) {
+    var fakeAjax = function() {
+      var xhr = sinon.useFakeXMLHttpRequest()
+      xhr.useFilters = true
+      xhr.addFilter(function(method, url) {
+        return url != _fakeAjaxParams.url || method != _fakeAjaxParams.method
+      })
+
+      xhr.onCreate = function (request) {
+        window.setTimeout(function() {
+          if (window._fakeAjaxParams && request.method == _fakeAjaxParams.method && request.url == _fakeAjaxParams.url) {
+            request.respond(_fakeAjaxParams.responseCode, { "Content-Type": "application/json" }, _fakeAjaxParams.responseBody)
+            xhr.restore()
+            delete _fakeAjaxParams
+          }
+        }, 0)
+      }
+    }
+
+    testFrame._fakeAjaxParams = { method: method, url: url, responseCode: responseCode, responseBody: responseBody }
+    testFrame.eval("(" + fakeAjax.toString() + ")()")
+  }
+}
+
 db = {
   resetData: function() {
     return Q($.ajax("/omatsivut/util/fixtures/apply", { type: "PUT" }))

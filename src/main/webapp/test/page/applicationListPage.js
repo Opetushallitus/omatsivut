@@ -15,6 +15,12 @@ function ApplicationListPage() {
         .then(wait.until(api.isSavingState(0, false))) // Tallennus ei ole kesken
     },
 
+    saveWaitError: function() {
+      var status = api.statusMessage()
+      api.saveButton(0).click()
+      return wait.until(function() { return api.statusMessage() != status && api.saveError().length > 0 })()
+    },
+
     waitForTimestampUpdate: function() {
       modifyApplicationScope(0)(function(scope) { scope.application.updated = "" })
       var timestamp = function() { return getApplication(0).find(".timestamp time") }

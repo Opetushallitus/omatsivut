@@ -16,10 +16,10 @@ require('./recursionHelper')
 require('../lib/angular-debounce')
 
 listApp.factory("applicationsResource", ["$resource", "$location", function($resource, $location) {
-  return $resource("api/applications", null, {
+  return $resource("/omatsivut/api/applications", null, {
     "update": {
       method: "PUT",
-      url: "api/applications/:id"
+      url: "/omatsivut/api/applications/:id"
     }
   });
 }]);

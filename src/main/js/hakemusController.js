@@ -45,7 +45,7 @@ module.exports = function(listApp) {
       }
 
       function error() {
-        setSaveMessage("Tietojen haku epäonnistui. Yritä myöhemmin uudelleen", "error")
+        setSaveMessage("Tietojen haku epäonnistui. Yritä myöhemmin uudelleen.", "error")
       }
     }
 
