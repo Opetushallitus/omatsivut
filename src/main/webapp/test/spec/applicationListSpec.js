@@ -61,6 +61,13 @@
                 page.saveError().should.equal("Tallentaminen epäonnistui")
               })
           })
+
+          it("tallennus toimii uudella yrittämällä", function() {
+            return page.save().then(function() {
+              page.saveError().should.equal("")
+              page.statusMessage().should.equal("Kaikki muutokset tallennettu")
+            })
+          })
         })
 
         describe("kun istunto on vanhentunut", function() {
