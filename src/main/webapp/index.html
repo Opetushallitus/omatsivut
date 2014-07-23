@@ -100,7 +100,7 @@
                                         <input type="text" ng-switch-when="Text"
                                                ng-model="application.getAnswers(questionNode.question.id.phaseId)[questionNode.question.id.questionId]"
                                                maxlength="{{questionNode.question.maxlength}}"/>
-                                        <textarea type="text" ng-switch-when="TextArea"
+                                        <textarea ng-switch-when="TextArea"
                                                ng-model="application.getAnswers(questionNode.question.id.phaseId)[questionNode.question.id.questionId]"
                                                maxlength="{{questionNode.question.maxlength}}"
                                                rows="{{questionNode.question.rows}}"
