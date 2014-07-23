@@ -84,6 +84,8 @@ protected object FormQuestionFinder extends Logging {
     def id = QuestionId(elementContext.phase.getId, element.getId)
     def isRequired = element.getValidators.filter(o => o.isInstanceOf[RequiredFieldValidator]).nonEmpty
     def maxlength = toInt(element.getAttributes.toMap.getOrElse("maxlength", "500")).getOrElse(500)
+    def rows = toInt(element.getAttributes.toMap.getOrElse("rows", "3")).getOrElse(3)
+    def cols = toInt(element.getAttributes.toMap.getOrElse("cols", "80")).getOrElse(80)
     def toInt(s: String):Option[Int] = { try { Some(s.toInt) } catch { case e:Exception => None } }
     def containsCheckBoxes(e: TitledGroup): Boolean = {
       getImmediateChildElementsOfType[HakuCheckBox](e).nonEmpty
@@ -91,7 +93,7 @@ protected object FormQuestionFinder extends Logging {
 
     (element match {
       case e: TextQuestion => List(Text(id, title(e), helpText(e), isRequired, maxlength))
-      case e: HakuTextArea => List(TextArea(id, title(e), helpText(e), isRequired, maxlength))
+      case e: HakuTextArea => List(TextArea(id, title(e), helpText(e), isRequired, maxlength, rows, cols))
       case e: HakuRadio => List(Radio(id, title(e), helpText(e), options(e), isRequired))
       case e: DropdownSelect => List(Dropdown(id, title(e), helpText(e), options(e), isRequired))
       case e: TitledGroup if containsCheckBoxes(e) => List(Checkbox(id, title(e), helpText(e), options(e), isRequired))

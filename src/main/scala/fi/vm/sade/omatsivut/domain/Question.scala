@@ -31,7 +31,7 @@ trait Optional extends Question {
 }
 
 case class Text(id: QuestionId, title: String, help: String, required: Boolean, maxlength: Int, questionType: String = "Text") extends Question
-case class TextArea(id: QuestionId, title: String, help: String, required: Boolean, maxlength: Int, questionType: String = "TextArea") extends Question
+case class TextArea(id: QuestionId, title: String, help: String, required: Boolean, maxlength: Int, rows: Int, cols: Int, questionType: String = "TextArea") extends Question
 case class Radio(id: QuestionId, title: String, help: String, options: List[Choice], required: Boolean, questionType: String = "Radio") extends Optional
 case class Checkbox(id: QuestionId, title: String, help: String, options: List[Choice], required: Boolean, questionType: String = "Checkbox") extends Optional
 case class Dropdown(id: QuestionId, title: String, help: String, options: List[Choice], required: Boolean, questionType: String = "Dropdown") extends Optional
