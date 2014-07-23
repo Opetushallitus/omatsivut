@@ -40,7 +40,6 @@ case class RemoteKoulutusService(implicit appConfig: AppConfig) extends Koulutus
 
 
   def koulutukset(asId: String, opetuspisteId: String, baseEducation: String, vocational: String, uiLang: String): List[Koulutus] = {
-    // TODO: fixed url
     val (responseCode, headersMap, resultString) = HttpClient.httpGet(appConfig.settings.koulutusinformaatioAoUrl + "/search/" + asId + "/" + opetuspisteId)
       .param("baseEducation", baseEducation)
       .param("vocational", vocational)
