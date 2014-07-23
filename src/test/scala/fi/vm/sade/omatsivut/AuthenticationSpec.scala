@@ -1,7 +1,7 @@
 package fi.vm.sade.omatsivut
 
 import fi.vm.sade.omatsivut.fixtures.TestFixture
-import fi.vm.sade.omatsivut.servlet.{ApplicationsServlet, OmatSivutSwagger}
+import fi.vm.sade.omatsivut.servlet.ApplicationsServlet
 
 class AuthenticationSpec extends ScalatraTestSupport {
   "GET /applications" should {
