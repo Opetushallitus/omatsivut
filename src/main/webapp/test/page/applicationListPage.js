@@ -100,7 +100,8 @@ function ApplicationListPage() {
         return el().find(".question").map(function() {
           return {
             title: $(this).find(".title").text(),
-            validationMessage: $(this).find(".validation-message").text()
+            validationMessage: $(this).find(".validation-message").text(),
+            id: testFrame.angular.element($(this).parent()).scope().questionNode.question.id.questionId
 
           }
         }).toArray()

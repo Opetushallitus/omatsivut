@@ -236,21 +236,44 @@
 
         describe("Onnistuneen tallennuksen jälkeen", function() {
           before(function() {
-            page.questionsForApplication(0).enterAnswer(0, "testivastaus")
+            page.questionsForApplication(0).enterAnswer(0, "tekstivastaus 1")
             page.questionsForApplication(0).enterAnswer(1, "Vaihtoehto x 1")
             page.questionsForApplication(0).enterAnswer(2, "Vaihtoehto 1")
             page.questionsForApplication(0).enterAnswer(2, "Vaihtoehto 2")
             page.questionsForApplication(0).enterAnswer(3, "Isokyrö")
-            page.questionsForApplication(0).enterAnswer(4, "tekstiä")
+            page.questionsForApplication(0).enterAnswer(4, "textarea-vastaus")
             page.questionsForApplication(0).enterAnswer(5, "Vaihtoehto yyy 1")
             page.questionsForApplication(0).enterAnswer(5, "Vaihtoehto yyy 2")
             page.questionsForApplication(0).enterAnswer(6, "Vaihtoehto arvosanat 1")
-            page.questionsForApplication(0).enterAnswer(7, "testivastaus 2")
-            page.questionsForApplication(0).enterAnswer(8, "testivastaus 3")
+            page.questionsForApplication(0).enterAnswer(7, "tekstivastaus 2")
+            page.questionsForApplication(0).enterAnswer(8, "tekstivastaus 3")
             page.questionsForApplication(0).enterAnswer(9, "Vaihtoehto zzzz 1")
             page.questionsForApplication(0).enterAnswer(10, "Vaihttoehto yksi")
 
             return Q.all([page.save(), page.waitForTimestampUpdate()])
+          })
+
+          describe("Tietokanta", function() {
+            it("sisältää tallennetut tiedot", function() {
+              return db.getApplications().then(function(data) {
+                var answers = data[0].answers
+                var questions = page.questionsForApplication(0).data()
+
+                answers.hakutoiveet[questions[0].id].should.equal("tekstivastaus 1")
+                answers.hakutoiveet[questions[1].id].should.equal("option_0")
+                answers.hakutoiveet[questions[2].id + "-option_0"].should.equal("true")
+                answers.hakutoiveet[questions[2].id + "-option_1"].should.equal("true")
+                answers.osaaminen[questions[3].id].should.equal("152")
+                answers.osaaminen[questions[4].id].should.equal("textarea-vastaus")
+                answers.osaaminen[questions[5].id + "-option_0"].should.equal("true")
+                answers.osaaminen[questions[5].id + "-option_1"].should.equal("true")
+                answers.osaaminen[questions[6].id].should.equal("option_0")
+                answers.osaaminen[questions[7].id].should.equal("tekstivastaus 2")
+                answers.lisatiedot[questions[8].id].should.equal("tekstivastaus 3")
+                answers.lisatiedot[questions[9].id + "-option_0"].should.equal("true")
+                answers.lisatiedot[questions[10].id].should.equal("option_0")
+              })
+            })
           })
 
           describe("Käyttöliittymän tila", function() {
@@ -277,9 +300,10 @@
               page.statusMessage().should.equal("Kaikki muutokset tallennettu")
             })
             it("syötetty vastaus näytetään", function() {
-              page.questionsForApplication(0).getAnswer(0).should.equal("testivastaus")
+              page.questionsForApplication(0).getAnswer(0).should.equal("tekstivastaus 1")
             })
           })
+
           describe("Kun ladataan sivu uudelleen", function() {
             before(page.openPage)
             it("valitut hakutoiveet näytetään", function() {
