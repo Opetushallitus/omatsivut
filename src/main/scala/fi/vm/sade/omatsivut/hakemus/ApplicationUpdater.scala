@@ -23,28 +23,28 @@ object ApplicationUpdater {
 
   def getUpdatedAnswersForApplication(applicationSystem: ApplicationSystem)(application: Application, hakemus: Hakemus): Answers = {
     val allAnswers = getAllUpdatedAnswersForApplication(applicationSystem)(application, hakemus)
-    val removedQuestionIds = getRemovedQuestionIds(applicationSystem, application, hakemus)
-    pruneOrphanedAnswers(removedQuestionIds, allAnswers)
+    val removedAnswerIds = getRemovedAnswerIds(applicationSystem, application, hakemus)
+    pruneOrphanedAnswers(removedAnswerIds, allAnswers)
   }
 
   def getAllUpdatedAnswersForApplication(applicationSystem: ApplicationSystem)(application: Application, hakemus: Hakemus): Answers = {
     allAnswersFromApplication(application) ++ updatedAnswersForHakuToiveet(applicationSystem, application, hakemus) ++ updatedAnswersForOtherPhases(application, hakemus)
   }
 
-  private def pruneOrphanedAnswers(removedQuestions: Seq[QuestionId], answers: Answers): Answers = {
+  private def pruneOrphanedAnswers(removedAnswerIds: Seq[QuestionId], answers: Answers): Answers = {
     answers.map { case (phaseId, phaseAnswers) =>
         (phaseId, phaseAnswers.filterKeys { case questionId =>
-            !removedQuestions.contains(QuestionId(phaseId, questionId))
+            !removedAnswerIds.contains(QuestionId(phaseId, questionId))
         })
     }
   }
 
-  private def getRemovedQuestionIds(applicationSystem: ApplicationSystem, application: Application, hakemus: Hakemus): Seq[QuestionId] = {
+  private def getRemovedAnswerIds(applicationSystem: ApplicationSystem, application: Application, hakemus: Hakemus): Seq[QuestionId] = {
     val allOldAnswers = allAnswersFromApplication(application)
     val allNewAnswers = getAllAnswersForApplication(applicationSystem, application, hakemus)
 
     val removedQuestions = AddedQuestionFinder.findAddedQuestions(applicationSystem, allOldAnswers, allNewAnswers).flatMap(_.flatten)
-    removedQuestions.map(_.id)
+    removedQuestions.flatMap(_.answerIds)
   }
 
   def getAllAnswersForApplication(applicationSystem: ApplicationSystem, application: Application, hakemus: Hakemus): Answers = {
