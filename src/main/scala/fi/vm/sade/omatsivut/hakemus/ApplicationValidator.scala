@@ -40,7 +40,22 @@ case class ApplicationValidator(implicit val appConfig: AppConfig) extends Loggi
     val application: Application = findStoredApplication(hakemus) // <- needs to be fetched here because is mutated below
     ApplicationUpdater.update(applicationSystem)(application, hakemus)
     val validationResult = validator.validate(convertToValidationInput(applicationSystem, application))
-    convertoToValidationErrors(validationResult)
+    convertoToValidationErrors(validationResult) ++ errorsForUnknownAnswers(applicationSystem, application, hakemus)
+  }
+
+  private def errorsForUnknownAnswers(applicationSystem: ApplicationSystem, application: Application, hakemus: Hakemus): List[ValidationError] = {
+    val allAnswers = ApplicationUpdater.getAllAnswersForApplication(applicationSystem, application, hakemus)
+    val questionIds= AddedQuestionFinder.findAddedQuestions(applicationSystem, allAnswers, Hakemus.emptyAnswers).flatMap(_.flatten).map(_.id)
+
+    val flatAnswers: List[(String, String, String)] = hakemus.answers.toList.flatMap {
+      case (phaseId, groupAnswers) =>
+        groupAnswers.toList.map { case (questionId, answer) =>
+          (phaseId, questionId, answer)
+        }
+    }
+    flatAnswers
+      .filterNot { case (phaseId, questionId, _) => questionIds.contains(QuestionId(phaseId, questionId))}
+      .map{ case (phaseId, questionId, answer) => ValidationError(questionId, "unknown question")}
   }
 
   def findStoredApplication(hakemus: Hakemus): Application = {

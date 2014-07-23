@@ -14,9 +14,7 @@ object ApplicationUpdater {
   val preferencePhaseKey = OppijaConstants.PHASE_APPLICATION_OPTIONS
 
   def update(applicationSystem: ApplicationSystem)(application: Application, hakemus: Hakemus) {
-    val withPrunedAnswers = hakemus.copy(answers = includeOnlyTheseAnswers(getIncludedQuestionIds(applicationSystem, application, hakemus), hakemus.answers))
-
-    val updatedAnswers = getUpdatedAnswersForApplication(applicationSystem)(application, withPrunedAnswers)
+    val updatedAnswers = getUpdatedAnswersForApplication(applicationSystem)(application, hakemus)
     updatedAnswers.foreach { case (phaseId, phaseAnswers) =>
       application.addVaiheenVastaukset(phaseId, phaseAnswers)
     }
@@ -41,20 +39,6 @@ object ApplicationUpdater {
     }
   }
 
-  private def includeOnlyTheseAnswers(includedQuestionIds: Seq[QuestionId], answers: Answers): Answers = {
-    answers.map { case (phaseId, phaseAnswers) =>
-      (phaseId, phaseAnswers.filterKeys {
-        case questionId => includedQuestionIds.contains(QuestionId(phaseId, questionId))
-      })
-    }
-  }
-
-  private def getIncludedQuestionIds(applicationSystem: ApplicationSystem, application: Application, hakemus: Hakemus): Seq[QuestionId] = {
-    val allAnswers = getAllAnswersForApplication(applicationSystem, application, hakemus)
-    AddedQuestionFinder.findAddedQuestions(applicationSystem, allAnswers, Hakemus.emptyAnswers).flatMap(_.flatten)
-      .map(_.id)
-  }
-
   private def getRemovedQuestionIds(applicationSystem: ApplicationSystem, application: Application, hakemus: Hakemus): Seq[QuestionId] = {
     val allOldAnswers = allAnswersFromApplication(application)
     val allNewAnswers = getAllAnswersForApplication(applicationSystem, application, hakemus)
@@ -63,7 +47,7 @@ object ApplicationUpdater {
     removedQuestions.map(_.id)
   }
 
-  private def getAllAnswersForApplication(applicationSystem: ApplicationSystem, application: Application, hakemus: Hakemus): Answers = {
+  def getAllAnswersForApplication(applicationSystem: ApplicationSystem, application: Application, hakemus: Hakemus): Answers = {
     allAnswersFromApplication(application) ++ updatedAnswersForHakuToiveet(applicationSystem, application, hakemus) ++ updatedAnswersForOtherPhases(application, hakemus)
   }
 

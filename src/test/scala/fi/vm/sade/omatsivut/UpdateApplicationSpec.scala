@@ -59,11 +59,9 @@ class UpdateApplicationSpec extends JsonFormats with ScalatraTestSupport {
       }
     }
 
-    "ignore answers to unknown questions" in {
+    "reject answers to unknown questions" in {
       modifyHakemus(answerExtraQuestion(preferencesPhaseKey, "unknown", "hacking")) { hakemus =>
-        withSavedApplication(hakemus) { application =>
-          application.getPhaseAnswers(preferencesPhaseKey).containsKey("unknown") must_== false
-        }
+        status must_== 400
       }
     }
   }
