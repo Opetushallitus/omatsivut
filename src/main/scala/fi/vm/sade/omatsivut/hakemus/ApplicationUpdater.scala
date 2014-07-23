@@ -5,7 +5,7 @@ import java.util.Date
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
-import fi.vm.sade.omatsivut.domain.{AnswerId, QuestionId, Hakemus}
+import fi.vm.sade.omatsivut.domain.{AnswerId, Hakemus}
 import fi.vm.sade.omatsivut.domain.Hakemus._
 
 import scala.collection.JavaConversions._
@@ -33,8 +33,8 @@ object ApplicationUpdater {
 
   private def pruneOrphanedAnswers(removedAnswerIds: Seq[AnswerId], answers: Answers): Answers = {
     answers.map { case (phaseId, phaseAnswers) =>
-        (phaseId, phaseAnswers.filterKeys { case questionId =>
-            !removedAnswerIds.contains(QuestionId(phaseId, questionId))
+        (phaseId, phaseAnswers.filterKeys { case answerId =>
+            !removedAnswerIds.contains(AnswerId(phaseId, answerId))
         })
     }
   }
