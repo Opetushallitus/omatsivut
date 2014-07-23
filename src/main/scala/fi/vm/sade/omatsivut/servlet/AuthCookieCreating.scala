@@ -9,7 +9,7 @@ trait AuthCookieCreating extends OmatSivutServletBase with AuthCookieParsing wit
   def createAuthCookieResponse(hetuOption: Option[String], cookieOptions: CookieOptions = CookieOptions(secure = true, path = "/", maxAge = 1799), redirectUri: String)(implicit appConfig: AppConfig) {
     fetchOid(hetuOption, AuthenticationInfoService.apply) match {
       case Some(oid) =>
-        val encryptedCredentials = AuthenticationCipher().encrypt(CookieCredentials(oid).toString)
+        val encryptedCredentials = AuthenticationCipher().encrypt(CookieCredentials(oid, "placeholder").toString)
         response.addCookie(Cookie("auth", encryptedCredentials)(cookieOptions))
         logger.info("Redirecting to " + redirectUri)
         response.redirect(request.getContextPath + redirectUri)

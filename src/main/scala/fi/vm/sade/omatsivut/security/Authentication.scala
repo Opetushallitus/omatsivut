@@ -23,11 +23,15 @@ trait Authentication extends ScalatraBase with AuthCookieParsing with Logging {
     parseCredentials(request)
   }
 
+  def validateCredentials(credentials: CookieCredentials, req: HttpServletRequest) = {
+    credentials.creationTime.plusMinutes(cookieTimeoutMinutes).isAfterNow
+  }
+
   before() {
     credentialsOpt match {
-      case Some(cookie) if cookie.creationTime.plusMinutes(cookieTimeoutMinutes).isAfterNow => true
+      case Some(cookie) if validateCredentials(cookie, request) => true
       case Some(cookie) => {
-        logger.info("Cookie timed out: " + cookie)
+        logger.info("Cookie was invalid: " + cookie)
         tellBrowserToDeleteAuthCookie(request, response)
         halt(status = 401, headers = Map("WWW-Authenticate" -> "SecureCookie"))
       }
@@ -77,9 +81,9 @@ trait AuthCookieParsing extends Logging {
 object CookieCredentials {
   def fromString(str: String) = {
     val split = str.split("\\|")
-    CookieCredentials(split(0), new DateTime(split(1).toLong))
+    CookieCredentials(split(0), split(1), new DateTime(split(2).toLong))
   }
 }
-case class CookieCredentials(oid: String, creationTime: DateTime = new DateTime()) {
-  override def toString = oid + "|" + creationTime.getMillis
+case class CookieCredentials(oid: String, shibbolethCookie: String, creationTime: DateTime = new DateTime()) {
+  override def toString = oid + "|" + shibbolethCookie + "|" + creationTime.getMillis
 }

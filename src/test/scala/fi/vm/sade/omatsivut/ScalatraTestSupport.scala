@@ -22,7 +22,7 @@ trait ScalatraTestSupport extends MutableScalatraSpec {
   }
 
   def authHeaders[A](oid: String): Map[String, String] = {
-    Map("Cookie" -> ("auth=" + AuthenticationCipher().encrypt(CookieCredentials(oid).toString)))
+    Map("Cookie" -> ("auth=" + AuthenticationCipher().encrypt(CookieCredentials(oid, "test_session").toString)))
   }
 
   override def map(fs: => Fragments) = Step(appConfig.start) ^ super.map(fs)
