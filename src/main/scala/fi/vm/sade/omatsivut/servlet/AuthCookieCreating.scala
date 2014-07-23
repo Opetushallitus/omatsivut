@@ -6,16 +6,20 @@ import fi.vm.sade.omatsivut.security.{AuthCookieParsing, AuthenticationCipher, A
 import org.scalatra.{Cookie, CookieOptions}
 
 trait AuthCookieCreating extends OmatSivutServletBase with AuthCookieParsing with Logging {
-  def createAuthCookieResponse(hetuOption: Option[String], cookieOptions: CookieOptions = CookieOptions(secure = true, path = "/", maxAge = 1799), redirectUri: String)(implicit appConfig: AppConfig) {
-    fetchOid(hetuOption, AuthenticationInfoService.apply) match {
-      case Some(oid) =>
-        val encryptedCredentials = AuthenticationCipher().encrypt(CookieCredentials(oid, "placeholder").toString)
-        response.addCookie(Cookie("auth", encryptedCredentials)(cookieOptions))
-        logger.info("Redirecting to " + redirectUri)
-        response.redirect(request.getContextPath + redirectUri)
-      case _ =>
-        logger.warn("OID not found for hetu: " + headerOption("hetu"))
-        response.redirect(ssoContextPath + "/Shibboleth.sso/LoginFI") //TODO Localization
+  def createAuthCookieResponse(credentials: CookieCredentials, cookieOptions: CookieOptions = CookieOptions(secure = true, path = "/", maxAge = 1799), redirectUri: String)(implicit appConfig: AppConfig) {
+    val encryptedCredentials = AuthenticationCipher().encrypt(credentials.toString)
+    response.addCookie(Cookie("auth", encryptedCredentials)(cookieOptions))
+    logger.info("Redirecting to " + redirectUri)
+    response.redirect(request.getContextPath + redirectUri)
+  }
+
+  def createAuthCookieCredentials(hetuOption: Option[String], shibbolethCookie: String, authenticationInfoService: AuthenticationInfoService): Option[CookieCredentials] = {
+    fetchOid(hetuOption, authenticationInfoService) match {
+      case Some(oid) => Some(CookieCredentials(oid, shibbolethCookie))
+      case _ => {
+        logger.warn("Person oid not found for hetu: " + hetuOption)
+        None
+      }
     }
   }
 
@@ -25,8 +29,6 @@ trait AuthCookieCreating extends OmatSivutServletBase with AuthCookieParsing wit
       oid <- authService.getHenkiloOID(hetu)
     } yield oid
   }
-
-  def ssoContextPath: String
 
   protected def headerOption(name: String): Option[String] = {
     Option(request.getHeader(name))
