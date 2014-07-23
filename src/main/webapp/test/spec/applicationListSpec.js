@@ -80,6 +80,8 @@
           'Testikysymys, avaoin vastaus kenttä (pakollinen)?',
           'Valitse kahdesta vaihtoehdosta paremmin itsellesi sopiva?',
           'Mikä tai mitkä ovat mielestäsi parhaiten soveltuvat vastausket?',
+          'Kotikunta',
+          'Minkä koulutuksen olet suorittanut ulkomailla?',
           'Valitse parhaat vaihtoehdot valittavista vaihtoehdoista?',
           'Testivalintakysymys arvosanat',
           'Testikysymys arvosanat, avoin vastaus',
