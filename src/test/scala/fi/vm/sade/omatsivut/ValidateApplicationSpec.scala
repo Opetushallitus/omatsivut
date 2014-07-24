@@ -13,12 +13,8 @@ class ValidateApplicationSpec extends HakemusApiSpecification {
   "POST /application/validate" should {
     "validate application" in {
       withHakemus { hakemus =>
-        authPost("/applications/validate/" + hakemus.oid, TestFixture.personOid, Serialization.write(hakemus)) {
-          status must_== 200
-          val result: JValue = JsonMethods.parse(body)
-          val errors: List[ValidationError] = (result \ "errors").extract[List[ValidationError]]
+        validate(hakemus) { (errors, structuredQuestions) =>
           errors.size must_== 0
-          val structuredQuestions: List[QuestionNode] = (result \ "questions").extract[List[QuestionNode]]
           structuredQuestions.size must_== 0
         }
 
@@ -26,6 +22,16 @@ class ValidateApplicationSpec extends HakemusApiSpecification {
         // TODO: test answer validation (pass/fail cases)
         // TODO: test that accepts unknown answers
       }
+    }
+  }
+
+  def validate[T](hakemus:Hakemus)(f: (List[ValidationError], List[QuestionNode]) => T) = {
+    authPost("/applications/validate/" + hakemus.oid, TestFixture.personOid, Serialization.write(hakemus)) {
+      status must_== 200
+      val result: JValue = JsonMethods.parse(body)
+      val errors: List[ValidationError] = (result \ "errors").extract[List[ValidationError]]
+      val structuredQuestions: List[QuestionNode] = (result \ "questions").extract[List[QuestionNode]]
+      f(errors, structuredQuestions)
     }
   }
 
