@@ -35,13 +35,14 @@ module.exports = function(listApp) {
     }
 
     function validateHakutoiveet() {
-      $scope.isSaveable = false
       applicationValidator($scope.application, $scope.additionalQuestions, success, error)
+      $scope.isSaveable = false
 
       function success(data) {
         $scope.isSaveable = true
         setStatusMessage("")
         importQuestions(data.questions)
+        updateHakutoiveValidationMessages([])
       }
 
       function error(data) {
@@ -72,6 +73,7 @@ module.exports = function(listApp) {
     $scope.saveApplication = function() {
       $scope.isSaving = true;
       applicationsResource.update({id: $scope.application.oid }, applicationFormatter($scope.application, $scope.additionalQuestions), onSuccess, onError)
+      setStatusMessage("", "")
 
       function onSuccess(savedApplication) {
         $scope.$emit("highlight-items", $scope.application.getChangedItems())
