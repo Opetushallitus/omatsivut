@@ -1,11 +1,12 @@
 package fi.vm.sade.omatsivut.security
 
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
+import javax.servlet.http.{Cookie, HttpServletRequest, HttpServletResponse}
 
 import fi.vm.sade.omatsivut.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.Logging
 import org.joda.time.DateTime
 import org.scalatra.ScalatraBase
+import org.scalatra.servlet.RichRequest
 
 trait Authentication extends ScalatraBase with AuthCookieParsing with Logging {
   implicit val appConfig: AppConfig
@@ -24,7 +25,23 @@ trait Authentication extends ScalatraBase with AuthCookieParsing with Logging {
   }
 
   def validateCredentials(credentials: CookieCredentials, req: HttpServletRequest) = {
+    shibbolethCookieHasNotChanged(credentials, req) || authenticationCookieHasNotTimedOut(credentials)
+  }
+
+  private def authenticationCookieHasNotTimedOut(credentials: CookieCredentials): Boolean = {
     credentials.creationTime.plusMinutes(cookieTimeoutMinutes).isAfterNow
+  }
+
+  private def shibbolethCookieHasNotChanged(credentials: CookieCredentials, req: HttpServletRequest) = {
+    def shibbolethCookieInRequest: Option[ShibbolethCookie] = {
+      try {
+        val requestCookie = req.getCookies.filter(c => c.getName.startsWith("_shibsession_"))(0)
+        Some(ShibbolethCookie.fromCookie(requestCookie))
+      } catch {
+        case e: Exception => None
+      }
+    }
+    Some(credentials.shibbolethCookie) == shibbolethCookieInRequest
   }
 
   before() {
@@ -81,9 +98,21 @@ trait AuthCookieParsing extends Logging {
 object CookieCredentials {
   def fromString(str: String) = {
     val split = str.split("\\|")
-    CookieCredentials(split(0), split(1), new DateTime(split(2).toLong))
+    CookieCredentials(split(0), ShibbolethCookie.fromString(split(1)), new DateTime(split(2).toLong))
   }
 }
-case class CookieCredentials(oid: String, shibbolethCookie: String, creationTime: DateTime = new DateTime()) {
-  override def toString = oid + "|" + shibbolethCookie + "|" + creationTime.getMillis
+case class CookieCredentials(oid: String, shibbolethCookie: ShibbolethCookie, creationTime: DateTime = new DateTime()) {
+  override def toString = oid + "|" + shibbolethCookie.toString + "|" + creationTime.getMillis
+}
+object ShibbolethCookie {
+  def fromCookie(cookie: Cookie) = {
+    ShibbolethCookie(cookie.getName, cookie.getValue)
+  }
+  def fromString(str: String) = {
+    val split = str.split(":")
+    ShibbolethCookie(split(0), split(1))
+  }
+}
+case class ShibbolethCookie(name: String, value: String) {
+  override def toString = name + ":" + value
 }

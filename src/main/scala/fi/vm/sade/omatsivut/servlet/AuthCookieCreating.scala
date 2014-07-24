@@ -2,7 +2,7 @@ package fi.vm.sade.omatsivut.servlet
 
 import fi.vm.sade.omatsivut.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.Logging
-import fi.vm.sade.omatsivut.security.{AuthCookieParsing, AuthenticationCipher, AuthenticationInfoService, CookieCredentials}
+import fi.vm.sade.omatsivut.security._
 import org.scalatra.servlet.RichResponse
 import org.scalatra.{Cookie, CookieOptions}
 
@@ -17,7 +17,7 @@ trait AuthCookieCreating extends AuthCookieParsing with Logging {
     response.redirect(redirectUri)
   }
 
-  def createAuthCookieCredentials(hetuOption: Option[String], shibbolethCookie: String, authenticationInfoService: AuthenticationInfoService): Option[CookieCredentials] = {
+  def createAuthCookieCredentials(hetuOption: Option[String], shibbolethCookie: ShibbolethCookie, authenticationInfoService: AuthenticationInfoService): Option[CookieCredentials] = {
     fetchOid(hetuOption, authenticationInfoService) match {
       case Some(oid) => Some(CookieCredentials(oid, shibbolethCookie))
       case _ => {
