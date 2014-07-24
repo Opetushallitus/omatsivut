@@ -6,6 +6,8 @@
 #
 
 # Aseta vähintään nämä ympäristökohtaiset arvot
+host.haku={{host_haku}}
+host.ldap={{host_ldap}}
 activemq.brokerurl={{activemq_brokerurl}}
 activemq.jmxurl={{activemq_jmxurl}}
 auth.mode={{auth_mode}}
@@ -37,14 +39,14 @@ omatsivut.haku-app.mongo.db.name=hakulomake
 omatsivut.haku-app.mongo.db.username={{mongodb_hakemus_username}}
 omatsivut.haku-app.mongo.db.password={{mongodb_hakemus_password}}
 
-omatsivut.koulutusinformaatio.ao.url=https\://${host.haku}/ao
-omatsivut.koulutusinformaatio.lop.url=https\://${host.haku}/lop
+omatsivut.koulutusinformaatio.ao.url=https\://{{host_haku}}/ao
+omatsivut.koulutusinformaatio.lop.url=https\://{{host_haku}}/lop
 
 # for hakemus-api
-koulutusinformaatio.ao.resource.url=https\://${host.haku}/ao
-tarjonta.data.url=https\://${host.virkailija}/tarjonta-service/rest/
-tarjonta.haku.resource.url=https\://${host.virkailija}/tarjonta-service/rest/haku
-tarjonta.hakukohde.resource.url=https\://${host.virkailija}/tarjonta-service/rest/hakukohde
+koulutusinformaatio.ao.resource.url=https\://{{host_haku}}/ao
+tarjonta.data.url=https\://{{host_virkailija}}/tarjonta-service/rest/
+tarjonta.haku.resource.url=https\://{{host_virkailija}}/tarjonta-service/rest/haku
+tarjonta.hakukohde.resource.url=https\://{{host_virkailija}}/tarjonta-service/rest/hakukohde
 authentication.app.username.to.organisaatioservice={{authentication_app_username_to_organisaatioservice}}
 authentication.app.password.to.organisaatioservice={{authentication_app_password_to_organisaatioservice}}
 email.from={{email_from}}
@@ -62,8 +64,6 @@ haku.app.username.to.sijoittelu={{haku_app_username_to_sijoittelu}}
 haku.app.password.to.sijoittelu={{haku_app_password_to_sijoittelu}}
 haku.app.username.to.suoritusrekisteri={{haku_app_username_to_suoritusrekisteri}}
 haku.app.password.to.suoritusrekisteri={{haku_app_password_to_suoritusrekisteri}}
-host.haku={{host_haku}}
-host.ldap={{host_ldap}}
 mongo.db.name=hakulomake
 mongo.db.maxpoolsize=100
 mongodb.oppija.uri=mongodb://{{mongodb_hakemus_auth}}@{{mongodb_hakemus_host}}:{{mongodb_hakemus_port}}
@@ -79,9 +79,9 @@ server.name={{ansible_hostname}}
 
 # Oletusarvoja
 spring_security_default_access=permitAll
-accessRight.webservice.url.backend=https\://${host.virkailija}/authentication-service/services/accessRightService
-accessRightAdmin.webservice.url.backend=https\://${host.virkailija}/authentication-service/services/accessRightAdminService
-accessRightHistory.webservice.url.backend=https\://${host.virkailija}/authentication-service/services/accessRightHistoryService
+accessRight.webservice.url.backend=https\://{{host_virkailija}}/authentication-service/services/accessRightService
+accessRightAdmin.webservice.url.backend=https\://{{host_virkailija}}/authentication-service/services/accessRightAdminService
+accessRightHistory.webservice.url.backend=https\://{{host_virkailija}}/authentication-service/services/accessRightHistoryService
 activemq.queue.name.log.error=Sade.Log_Error
 activemq.queue.name.log=Sade.Log
 activemq.queue.name.mail=Sade.Email
@@ -97,14 +97,14 @@ cas.group-role-attribute=cn
 cas.group-search-base=ou\=groups
 cas.group-search-filter=(uniqueMember\={0})
 cas.sendRenew=false
-cas.service.authentication-service=https\://${host.virkailija}/authentication-service
-cas.service.organisaatio-service=https\://${host.virkailija}/organisaatio-service
+cas.service.authentication-service=https\://{{host_virkailija}}/authentication-service
+cas.service.organisaatio-service=https\://{{host_virkailija}}/organisaatio-service
 cas.user-search-base=ou\=people
 cas.user-search-filter=(|(mail\={0})(uid\={0}))
-customAttribute.webservice.url.backend=https://${host.virkailija}/authentication-service/services/customAttributeService
+customAttribute.webservice.url.backend=https://{{host_virkailija}}/authentication-service/services/customAttributeService
 flyway.initOnMigrate=true
-koodi.public.webservice.url.backend=https://${host.virkailija}/koodisto-service/services/koodiService
-koodisto.public.webservice.url.backend=https://${host.virkailija}/koodisto-service/services/koodistoService
+koodi.public.webservice.url.backend=https://{{host_virkailija}}/koodisto-service/services/koodiService
+koodisto.public.webservice.url.backend=https://{{host_virkailija}}/koodisto-service/services/koodistoService
 jpa.schemaUpdate=validate
 jpa.showSql=false
 ldap.cache.size=10000
@@ -120,5 +120,5 @@ oid.rest.url.backend=${host.ilb}/oid-service/rest/oid
 oid.webservice.url.backend=${host.ilb}/services/oidService
 root.organisaatio.oid=1.2.246.562.10.00000000001
 user.home.conf=${user.home}/oph-configuration
-user.webservice.url.backend=https\://${host.virkailija}/authentication-service/services/userService
+user.webservice.url.backend=https\://{{host_virkailija}}/authentication-service/services/userService
 web.url.cas=https\://${host.cas}/cas
