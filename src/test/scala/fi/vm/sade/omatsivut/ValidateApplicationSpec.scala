@@ -22,13 +22,9 @@ class ValidateApplicationSpec extends HakemusApiSpecification {
           structuredQuestions.size must_== 0
         }
 
-        /* TODO: test adding new hakutoive and check questions
-
-          val flatQuestions = structuredQuestions.flatMap(_.flatten)
-          flatQuestions.size must_== 4
-          flatQuestions must contain(Text(QuestionContext(List("Osaaminen", "Arvosanat", "Turun Kristillinen opisto")), QuestionId("osaaminen", "539159b0e4b0b56e67d2c74d"), "Päättötodistuksen kaikkien oppiaineiden keskiarvo?", "", "Text"))
-
-         */
+        // TODO: test with added hakutoive -> some questions
+        // TODO: test answer validation (pass/fail cases)
+        // TODO: test that accepts unknown answers
       }
     }
   }
