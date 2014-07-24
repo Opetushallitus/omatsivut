@@ -24,10 +24,7 @@ module.exports = function(listApp) {
 
     $scope.removeHakutoive = function(index) {
       $scope.application.removePreference(index)
-
-      $timeout(function() {
-        $scope.application.addPreference(new Hakutoive({}))
-      }, settings.uiTransitionTime)
+      $scope.application.addPreference(new Hakutoive({}))
     }
 
     $scope.canRemovePreference = function(index) {
