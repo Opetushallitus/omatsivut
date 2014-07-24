@@ -16,9 +16,13 @@ case class ApplicationValidator(implicit val appConfig: AppConfig) extends Loggi
   private val validator = appConfig.springContext.validator
   val preferencePhaseKey = OppijaConstants.PHASE_APPLICATION_OPTIONS
 
-  def validate(applicationSystem: ApplicationSystem)(hakemus: Hakemus): (List[ValidationError], List[QuestionNode]) = {
+  def validate(applicationSystem: ApplicationSystem)(hakemus: Hakemus): List[ValidationError] = {
+    validateHakutoiveetAndAnswers(hakemus, applicationSystem) ++ errorsForUnknownAnswers(applicationSystem, hakemus)
+  }
+
+  def validateAndFindQuestions(applicationSystem: ApplicationSystem)(hakemus: Hakemus): (List[ValidationError], List[QuestionNode]) = {
     withErrorLogging {
-      val validationErrors: List[ValidationError] = justValidate(hakemus, applicationSystem)
+      val validationErrors: List[ValidationError] = validateHakutoiveetAndAnswers(hakemus, applicationSystem)
       val storedApplication = findStoredApplication(hakemus)
 
       val questionsPerHakutoive: List[QuestionNode] = hakemus.hakutoiveet.filterNot(applicationContains(storedApplication)).flatMap { hakutoive =>
@@ -36,14 +40,15 @@ case class ApplicationValidator(implicit val appConfig: AppConfig) extends Loggi
     HakutoiveetConverter.answersContainHakutoive(application.getAnswers.get(preferencePhaseKey).toMap, hakutoive)
   }
 
-  private def justValidate(hakemus: Hakemus, applicationSystem: ApplicationSystem): List[ValidationError] = {
+  private def validateHakutoiveetAndAnswers(hakemus: Hakemus, applicationSystem: ApplicationSystem): List[ValidationError] = {
     val application: Application = findStoredApplication(hakemus) // <- needs to be fetched here because is mutated below
     ApplicationUpdater.update(applicationSystem)(application, hakemus)
     val validationResult = validator.validate(convertToValidationInput(applicationSystem, application))
-    convertoToValidationErrors(validationResult) ++ errorsForUnknownAnswers(applicationSystem, application, hakemus)
+    convertoToValidationErrors(validationResult)
   }
 
-  private def errorsForUnknownAnswers(applicationSystem: ApplicationSystem, application: Application, hakemus: Hakemus): List[ValidationError] = {
+  private def errorsForUnknownAnswers(applicationSystem: ApplicationSystem, hakemus: Hakemus): List[ValidationError] = {
+    val application = findStoredApplication(hakemus)
     val allAnswers: Answers = ApplicationUpdater.getAllAnswersForApplication(applicationSystem, application, hakemus)
     val acceptedAnswerIds: Seq[AnswerId] = AddedQuestionFinder.findAddedQuestions(applicationSystem, allAnswers, Hakemus.emptyAnswers).flatMap(_.flatten).flatMap(_.answerIds)
 
@@ -61,7 +66,7 @@ case class ApplicationValidator(implicit val appConfig: AppConfig) extends Loggi
       }
   }
 
-  def findStoredApplication(hakemus: Hakemus): Application = {
+  private def findStoredApplication(hakemus: Hakemus): Application = {
     val applications = dao.find(new Application().setOid(hakemus.oid)).toList
     if (applications.size > 1) throw new RuntimeException("Too many applications for oid " + hakemus.oid)
     if (applications.size == 0) throw new RuntimeException("Application not found for oid " + hakemus.oid)
