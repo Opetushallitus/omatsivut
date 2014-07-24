@@ -67,7 +67,8 @@ object OmatsivutBuild extends Build {
         "org.json4s" %% "json4s-ext" % "3.2.10",
         "com.typesafe" % "config" % "1.2.1",
         "com.novus" %% "salat-core" % "1.9.8",
-        "org.scalatra.scalate" %% "scalate-core" % "1.7.0" % "test",
+        "org.scalatra.scalate" %% "scalate-core" % "1.7.0",
+        "com.fasterxml.jackson.dataformat" % "jackson-dataformat-yaml" % "2.4.1",
         "commons-codec" % "commons-codec" % "1.9",
         "fi.vm.sade.haku" % "hakemus-api" % "10.0-SNAPSHOT" excludeAll(
           ExclusionRule(organization = "org.json4s"),

@@ -1,6 +1,5 @@
 package fi.vm.sade.omatsivut
 
-import fi.vm.sade.haku.testfixtures.MongoFixtureImporter
 import fi.vm.sade.omatsivut.fixtures.FixtureImporter
 import fi.vm.sade.omatsivut.mongo.{EmbeddedMongo, MongoServer}
 
@@ -10,6 +9,9 @@ object AppConfig extends Logging {
     logger.info("Using omatsivut.profile=" + profile)
     profile match {
       case "default" => new Default
+      case "templated" => new Default with TemplatedProps with TestMode {
+        def templateAttributesFile = System.getProperty("omatsivut.vars")
+      }
       case "dev" => new Dev
       case "dev-remote-mongo" => new DevWithRemoteMongo
       case "it" => new IT
@@ -58,6 +60,11 @@ object AppConfig extends Logging {
       System.getProperty("user.home") + "/oph-configuration/common.properties", // for server environments
       System.getProperty("user.home") + "/oph-configuration/omatsivut.properties"
     )
+  }
+
+  trait TemplatedProps extends ExternalProps {
+    abstract override def configFiles = List(ConfigTemplateProcessor.createPropertyFileForTestingWithTemplate(templateAttributesFile))
+    def templateAttributesFile: String
   }
 
   trait StubbedExternalDeps extends TestMode {
