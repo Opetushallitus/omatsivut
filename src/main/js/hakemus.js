@@ -75,8 +75,7 @@ Hakemus.prototype = {
   },
 
   isEditable: function(index) {
-    var firstEditableIndex = _(this.hakutoiveet).filter(function(hakutoive) { return hakutoive.hasData() && hakutoive.isValid() }).length
-    return index >= 0 && index < this.hakutoiveet.length && index <= firstEditableIndex
+    return this.hakutoiveet[index].hasData() || (index > 0 && this.hakutoiveet[index - 1].hasData() && this.hakutoiveet[index - 1].isValid())
   },
 
   getAnswers: function(phaseId) {

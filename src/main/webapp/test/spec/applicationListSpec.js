@@ -90,33 +90,70 @@
         leaveOnlyOnePreference
       )
 
-      it("tyhjiä rivejä ei voi muokata", function () {
-        _.each(ApplicationListPage().emptyPreferencesForApplication(0), function (row) {
-          row.isDisabled().should.be.true
+      describe("Kun yksi hakukohde valittu", function() {
+        it("rivejä ei voi siirtää", function () {
+          page.getPreference(0).isDisabled().should.be.true
+          page.getPreference(1).isDisabled().should.be.true
+          page.getPreference(2).isDisabled().should.be.true
+        })
+
+        it("vain ensimmäinen tyhjä rivi on muokattavissa", function () {
+          page.getPreference(0).isEditable().should.be.false
+          page.getPreference(1).isEditable().should.be.true
+          page.getPreference(2).isEditable().should.be.false
+        })
+
+        it("ainoaa hakutoivetta ei voi poistaa", function() {
+          ApplicationListPage().getPreference(0).canRemove().should.be.false
         })
       })
 
-      it("ainoaa hakutoivetta ei voi poistaa", function() {
-        ApplicationListPage().getPreference(0).canRemove().should.be.false
+
+      describe("kun lisätään hakukohde", function() {
+        before(
+          page.getPreference(1).selectOpetusPiste("Ahl"),
+          page.getPreference(1).selectKoulutus(0)
+        )
+
+        it("seuraava hakukohde tulee muokattavaksi", function() {
+          page.getPreference(2).isEditable().should.be.true
+        })
+
+        it("lisätty hakutoive on edelleen muokattavissa", function() {
+          page.getPreference(1).isEditable().should.be.true
+        })
+
+        it("lomake on tallennettavissa", function() {
+          page.isValidationErrorVisible().should.be.false
+        })
       })
 
-
-      it("vain yksi hakutoive voi olla muokattavana kerrallaan", function() {
-        var pref = page.getPreference(1)
-        var pref2 = page.getPreference(2)
-        return pref.selectOpetusPiste("Ahl")()
-          .then(function() { pref2.isEditable().should.be.false } )
-          .then(pref.selectKoulutus(0))
-          .then(function() { pref2.isEditable().should.be.true } )
+      describe("kun valinta jätetään kesken ja siirrytään vaihtamaan toista hakukohdetta", function() {
+        before(
+          page.getPreference(1).selectOpetusPiste("Ahl"),
+          page.getPreference(1).selectKoulutus(0),
+          page.getPreference(2).selectOpetusPiste("Turun Kristillinen"),
+          page.getPreference(1).selectOpetusPiste("Turun Kristillinen"),
+          wait.forAngular
+        )
+        it("keskeneräinen valinta pysyy muokattavassa tilassa", function() {
+          page.getPreference(1).isEditable().should.be.true
+          page.getPreference(2).isEditable().should.be.true
+        })
+        it("näytetään validointivirhe kesken jätetylle hakutoiveelle", function() {
+          page.getPreference(2).errorMessage().should.equal("Pakollinen tieto.")
+          page.getPreference(1).errorMessage().should.equal("")
+          page.isValidationErrorVisible().should.be.true
+        })
       })
 
-      it("lomaketta ei voi tallentaa, jos hakutoive on epätäydellinen", function() {
-        var pref = page.getPreference(1)
-        return pref.selectOpetusPiste("Ahl")()
-          .then(wait.untilFalse(page.saveButton(0).isEnabled))
-          .then(function() { page.isValidationErrorVisible().should.be.true })
-          .then(pref.selectKoulutus(0))
-          .then(wait.until(page.saveButton(0).isEnabled))
+      describe("kun hakutoiveen valinta on kesken", function() {
+        it("lomaketta ei voi tallentaa", function() {
+          var pref = page.getPreference(1)
+          return pref.selectOpetusPiste("Ahl")()
+            .then(wait.untilFalse(page.saveButton(0).isEnabled))
+            .then(function() { page.isValidationErrorVisible().should.be.true })
+        })
       })
 
       describe("jos kaksi hakutoivetta on identtisiä", function() {
