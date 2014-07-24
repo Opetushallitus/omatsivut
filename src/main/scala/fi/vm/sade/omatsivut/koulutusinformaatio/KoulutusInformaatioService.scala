@@ -25,8 +25,6 @@ object KoulutusInformaatioService {
   }
 }
 
-
-
 case class RemoteKoulutusService(implicit appConfig: AppConfig) extends KoulutusInformaatioService with JsonFormats {
   import fi.vm.sade.omatsivut.http.HttpClient
   import org.json4s.jackson.JsonMethods._
