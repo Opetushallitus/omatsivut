@@ -8,23 +8,21 @@ function ApplicationListPage() {
       return db.resetData().then(function() { return session.init(testHetu)} ).then(api.openPage)
     },
 
-    save: function() {
+    saveWaitSuccess: function() {
+      modifyApplicationScope(0)(function(scope) { scope.application.updated = 0 })
       return wait.until(api.saveButton(0).isEnabled)()
         .then(api.saveButton(0).click)
         .then(wait.untilFalse(api.saveButton(0).isEnabled)) // Tallennus on joko alkanut tai valmis
         .then(wait.until(api.isSavingState(0, false))) // Tallennus ei ole kesken
+        .then(wait.until(function() { return timestamp().text() != "01.01.1970 02:00:00" })) // tallennus-aikaleima päivittyy
+
+      function timestamp() { return getApplication(0).find(".timestamp time") }
     },
 
     saveWaitError: function() {
       var status = api.statusMessage()
       api.saveButton(0).click()
       return wait.until(function() { return api.statusMessage() != status && api.saveError().length > 0 })()
-    },
-
-    waitForTimestampUpdate: function() {
-      modifyApplicationScope(0)(function(scope) { scope.application.updated = 0 })
-      var timestamp = function() { return getApplication(0).find(".timestamp time") }
-      return wait.until(function() { return timestamp().text() != "01.01.1970 02:00:00" })()
     },
 
     hetu: function () {

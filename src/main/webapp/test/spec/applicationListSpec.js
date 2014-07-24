@@ -63,7 +63,7 @@
           })
 
           it("tallennus toimii uudella yrittämällä", function() {
-            return page.save().then(function() {
+            return page.saveWaitSuccess().then(function() {
               page.saveError().should.equal("")
               page.statusMessage().should.equal("Kaikki muutokset tallennettu")
             })
@@ -204,7 +204,7 @@
           ApplicationListPage().resetDataAndOpen,
           ApplicationListPage().getPreference(1).remove,
           ApplicationListPage().getPreference(1).remove,
-          ApplicationListPage().save
+          ApplicationListPage().saveWaitSuccess
         )
 
         describe("tallennetut hakutoiveet, joilla on lisäkysymyksiä", function() {
@@ -234,14 +234,9 @@
       })
 
       describe("Lisäkysymyksiin vastaaminen", function() {
-        var timestamp;
-
         before(
           ApplicationListPage().resetDataAndOpen,
-          replacePreference(2, "Etelä-Savon ammattiopisto"),
-          function() {
-            timestamp = page.changesSavedTimestamp()
-          }
+          replacePreference(2, "Etelä-Savon ammattiopisto")
         )
 
         describe("Aluksi", function() {
@@ -255,7 +250,7 @@
         })
 
         describe("Kun tallennetaan vastaamatta pakollisiin kysymyksiin", function() {
-          before(page.save)
+          before(page.saveWaitError)
           it("näytetään tallennusvirhe", function() {
             page.saveError().should.equal("Ei tallennettu - vastaa ensin kaikkiin lisäkysymyksiin")
           })
@@ -274,11 +269,11 @@
         })
 
         describe("Kun tallennuksessa esiintyy validointivirhe, joka ei liity lisäkysymyksiin", function() {
-          before(answerAllQuestions)
+          before(answerAllQuestions, page.saveWaitSuccess)
           before(page.questionsForApplication(0).modifyAnswers(function(answers) {
             answers.hakutoiveet.dummyAnswer = "tämä aiheuttaa epämääräisen validointivirheen"
           }))
-          before(page.save)
+          before(page.saveWaitSuccess)
           it.skip("näytetään tallennusvirhe", function() { // test broken
             // TODO: näytä eri viesti, koska tapahtui käsittelemätön validointivirhe
             page.saveError().should.equal("Ei tallennettu - vastaa ensin kaikkiin lisäkysymyksiin")
@@ -289,7 +284,7 @@
           before(page.questionsForApplication(0).modifyAnswers(function(answers) {
             delete answers.hakutoiveet.dummyAnswer
           }))
-          before(answerAllQuestions)
+          before(answerAllQuestions, page.saveWaitSuccess)
 
           describe("Tietokanta", function() {
             it("sisältää tallennetut tiedot", function() {
@@ -354,7 +349,7 @@
           describe("Kun poistetaan hakutoive, tallennetaan ja lisätään se uudelleen", function() {
             before(
               page.getPreference(2).remove,
-              page.save,
+              page.saveWaitSuccess,
               page.openPage,
               replacePreference(2, "Etelä-Savon ammattiopisto")
             )
@@ -365,10 +360,25 @@
           })
         })
 
-        describe("Kun poistetaan lisätty hakutoive, jolla lisäkysymyksiä", function() {
+        describe("Kun poistetaan lisätty hakutoive, jolla lisäkysymyksiä, joihin ei vastattu", function() {
           before(
             page.getPreference(2).remove,
-            page.save
+            page.saveWaitSuccess
+          )
+
+          it("Tallennus onnistuu", function() {
+            page.saveError().should.equal("")
+            page.statusMessage().should.equal("Kaikki muutokset tallennettu")
+          })
+        })
+
+        describe("Kun poistetaan lisätty hakutoive, jolla lisäkysymyksiä, joihin vastattiin", function() {
+          before(
+            ApplicationListPage().resetDataAndOpen,
+            replacePreference(2, "Etelä-Savon ammattiopisto"),
+            answerAllQuestions,
+            page.getPreference(2).remove,
+            page.saveWaitSuccess
           )
 
           it("Tallennus onnistuu", function() {
@@ -391,8 +401,6 @@
           page.questionsForApplication(0).enterAnswer(8, "tekstivastaus 3")
           page.questionsForApplication(0).enterAnswer(9, "Vaihtoehto zzzz 1")
           page.questionsForApplication(0).enterAnswer(10, "Vaihttoehto yksi")
-
-          return Q.all([page.save(), page.waitForTimestampUpdate()])
         }
       })
     })
@@ -453,7 +461,7 @@
           })
         },
         manipulationFunction,
-        ApplicationListPage().save,
+        ApplicationListPage().saveWaitSuccess,
         function(done) {
           db.getApplications().then(function(apps) {
             applicationsAfter = apps
