@@ -26,7 +26,7 @@ class SessionServlet(implicit val appConfig: AppConfig) extends OmatSivutServlet
 
   protected def makeCookieOptions = if (appConfig.isTest) CookieOptions(path = "/") else CookieOptions(secure = true, path = "/", maxAge = 1799)
 
-  protected def ssoContextPath: String = if (appConfig.isTest) "/omatsivut" else "/"
+  protected def ssoContextPath: String = if (appConfig.isTest) "/omatsivut" else ""
 
   private def createAuthCookieCredentials: Option[CookieCredentials] = {
     checkCredentials match {
