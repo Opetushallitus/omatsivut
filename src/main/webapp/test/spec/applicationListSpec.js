@@ -142,16 +142,13 @@
           page.getPreference(1).selectOpetusPiste("Ahl"),
           page.getPreference(1).selectKoulutus(0),
           page.getPreference(2).selectOpetusPiste("Turun Kristillinen"),
-          page.getPreference(1).selectOpetusPiste("Turun Kristillinen"),
-          wait.forAngular
+          page.getPreference(1).selectOpetusPiste("Turun Kristillinen")
         )
         it("keskeneräinen valinta pysyy muokattavassa tilassa", function() {
           page.getPreference(1).isEditable().should.be.true
           page.getPreference(2).isEditable().should.be.true
         })
-        it("näytetään validointivirhe kesken jätetylle hakutoiveelle", function() {
-          page.getPreference(2).errorMessage().should.equal("Pakollinen tieto.")
-          page.getPreference(1).errorMessage().should.equal("")
+        it("lomaketta ei voi tallentaa", function() {
           page.isValidationErrorVisible().should.be.true
         })
       })
@@ -428,7 +425,6 @@
       return pref.remove()
         .then(pref.selectOpetusPiste(searchString))
         .then(pref.selectKoulutus(0))
-        .then(wait.forAngular)
     }
   }
 

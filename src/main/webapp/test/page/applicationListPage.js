@@ -219,13 +219,14 @@ function ApplicationListPage() {
             inputField.next().find("li:contains('" + query + "')").eq(0).find("a").click()
           }).then(wait.until(function() {
             return el().find(".koulutus select option").length > 1
-          }))
+          })).then(wait.forAngular)
         }
       },
       selectKoulutus: function (index) {
         return function() {
           var selectElement = el().find(".koulutus select")
           selectElement.val(index).change()
+          return wait.forAngular()
         }
       }
     }
