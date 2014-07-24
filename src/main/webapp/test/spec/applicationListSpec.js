@@ -238,8 +238,6 @@
 
         before(
           ApplicationListPage().resetDataAndOpen,
-          page.getPreference(2).remove,
-          page.save,
           replacePreference(2, "Etelä-Savon ammattiopisto"),
           function() {
             timestamp = page.changesSavedTimestamp()
@@ -274,7 +272,6 @@
             page.questionsForApplication(0).validationMessages()[0].should.equal("Pakollinen tieto.")
           })
         })
-
 
         describe("Kun tallennuksessa esiintyy validointivirhe, joka ei liity lisäkysymyksiin", function() {
           before(answerAllQuestions)
@@ -365,6 +362,18 @@
               ApplicationListPage().questionsForApplication(0).count().should.equal(11)
               page.questionsForApplication(0).getAnswer(0).should.equal("")
             })
+          })
+        })
+
+        describe("Kun poistetaan lisätty hakutoive, jolla lisäkysymyksiä", function() {
+          before(
+            page.getPreference(2).remove,
+            page.save
+          )
+
+          it("Tallennus onnistuu", function() {
+            page.saveError().should.equal("")
+            page.statusMessage().should.equal("Kaikki muutokset tallennettu")
           })
         })
 
