@@ -47,7 +47,9 @@ object OmatsivutBuild extends Build {
       sourceGenerators in Compile <+= buildInfo,
       parallelExecution in Test := false,
       buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-      EclipseKeys.createSrc := EclipseCreateSrc.Default + EclipseCreateSrc.Managed,
+      EclipseKeys.createSrc := EclipseCreateSrc.Default + EclipseCreateSrc.Managed + EclipseCreateSrc.Resource,
+      EclipseKeys.executionEnvironment := Some(EclipseExecutionEnvironment.JavaSE17),
+      EclipseKeys.projectFlavor := EclipseProjectFlavor.Scala,
       buildInfoPackage := "fi.vm.sade.omatsivut",
       libraryDependencies ++= Seq(
         "org.scalatra" %% "scalatra" % ScalatraVersion,
