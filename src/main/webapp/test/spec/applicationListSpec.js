@@ -128,6 +128,15 @@
         })
       })
 
+      describe("kun hakutoiveen valinta on kesken", function() {
+        it("lomaketta ei voi tallentaa", function() {
+          var pref = page.getPreference(1)
+          return pref.selectOpetusPiste("Ahl")()
+            .then(wait.untilFalse(page.saveButton(0).isEnabled))
+            .then(function() { page.isValidationErrorVisible().should.be.true })
+        })
+      })
+      
       describe("kun valinta jätetään kesken ja siirrytään vaihtamaan toista hakukohdetta", function() {
         before(
           page.getPreference(1).selectOpetusPiste("Ahl"),
@@ -144,15 +153,6 @@
           page.getPreference(2).errorMessage().should.equal("Pakollinen tieto.")
           page.getPreference(1).errorMessage().should.equal("")
           page.isValidationErrorVisible().should.be.true
-        })
-      })
-
-      describe("kun hakutoiveen valinta on kesken", function() {
-        it("lomaketta ei voi tallentaa", function() {
-          var pref = page.getPreference(1)
-          return pref.selectOpetusPiste("Ahl")()
-            .then(wait.untilFalse(page.saveButton(0).isEnabled))
-            .then(function() { page.isValidationErrorVisible().should.be.true })
         })
       })
 
