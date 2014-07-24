@@ -44,7 +44,7 @@ object OmatSivutSpringContext {
     val configurer: PropertySourcesPlaceholderConfigurer = new PropertySourcesPlaceholderConfigurer()
     val sources: MutablePropertySources = new MutablePropertySources()
 
-    val properties: Map[String, String] = configuration.settings.toProperties
+    val properties: Map[String, String] = configuration.properties
 
     sources.addFirst(new MapPropertySource("omatsivut custom props", mapAsJavaMap(properties)))
     configurer.setPropertySources(sources)
@@ -55,13 +55,6 @@ object OmatSivutSpringContext {
   @ComponentScan(basePackages = Array("fi.vm.sade.haku"))
   @ImportResource(Array("/META-INF/spring/logger-mock-context.xml"))
   class Dev extends OmatSivutConfiguration {
-    val profile = "dev"
-  }
-
-  @Configuration
-  @ComponentScan(basePackages = Array("fi.vm.sade.haku"))
-  @ImportResource(Array("/META-INF/spring/logger-mock-context.xml"))
-  class IT extends OmatSivutConfiguration {
     val profile = "dev"
   }
 

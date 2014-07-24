@@ -7,14 +7,13 @@ import java.util.Properties
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.`type`.MapType
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
-import org.codehaus.jackson.`type`.TypeReference
 import org.fusesource.scalate.TemplateEngine
 import org.fusesource.scalate.support.FileTemplateSource
 import collection.JavaConverters._
 
 object ConfigTemplateProcessor {
   def createPropertyFileForTestingWithTemplate(attributesFile: String) = {
-    val propertyFile: String = "target/omatsivut.fromtemplate.properties"
+    val propertyFile: String = "target/omatsivut.fromtemplate." + attributesFile.hashCode + ".properties"
     val templateFile: String = "src/main/resources/oph-configuration/omatsivut.properties.template"
     ConfigTemplateProcessor.processTemplate(templateFile, attributesFile, propertyFile)
     propertyFile

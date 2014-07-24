@@ -26,17 +26,18 @@ object AppConfig extends Logging {
     def templateAttributesFile = System.getProperty("omatsivut.vars")
   }
 
-  class Dev extends AppConfig with MockAuthentication {
+  class Dev extends AppConfig with ExampleTemplatedProps with MockAuthentication {
     def springConfiguration = new OmatSivutSpringContext.Dev()
-    def configFiles = List("src/main/resources/dev.conf")
+    override def properties = super.properties +
+      ("mongodb.oppija.uri" -> "mongodb://localhost:27017")
   }
+
   class DevWithRemoteMongo extends MockAuthentication with ExternalProps {
     def springConfiguration = new OmatSivutSpringContext.Dev()
   }
 
-  class IT extends MockAuthentication with StubbedExternalDeps {
-    def springConfiguration = new OmatSivutSpringContext.IT()
-    def configFiles = List("src/main/resources/it.conf")
+  class IT extends ExampleTemplatedProps with MockAuthentication with StubbedExternalDeps {
+    def springConfiguration = new OmatSivutSpringContext.Dev()
 
     private var mongo: Option[MongoServer] = None
 
@@ -54,6 +55,10 @@ object AppConfig extends Logging {
       mongo.foreach(_.stop)
       mongo = None
     }
+
+    override def properties = super.properties +
+      ("mongo.db.name" -> "hakulomake") +
+      ("mongodb.oppija.uri" -> "mongodb://localhost:28018")
   }
 
   trait ExternalProps {
@@ -63,6 +68,10 @@ object AppConfig extends Logging {
       System.getProperty("user.home") + "/oph-configuration/common.properties", // for server environments
       System.getProperty("user.home") + "/oph-configuration/omatsivut.properties"
     )
+  }
+
+  trait ExampleTemplatedProps extends TemplatedProps {
+    def templateAttributesFile = "src/main/resources/oph-configuration/dev-vars.yml"
   }
 
   trait TemplatedProps {
@@ -100,6 +109,8 @@ object AppConfig extends Logging {
     lazy val mongoTemplate = springContext.mongoTemplate
 
     val settings = ApplicationSettings.loadSettings(configFiles)
+
+    def properties = settings.toProperties
   }
 }
 
