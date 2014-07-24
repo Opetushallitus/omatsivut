@@ -3,7 +3,7 @@ var QuestionGroup = require('./additionalQuestion').AdditionalQuestionGroup
 var util = require('./util')
 
 module.exports = function(listApp) {
-  listApp.factory("applicationValidator", ["$http", function($http) {
+  listApp.factory("applicationValidator", ["$http", "applicationFormatter", function($http, applicationFormatter) {
     function getQuestions(data) {
       return convertToItems(data.questions, new QuestionGroup())
 
@@ -19,18 +19,58 @@ module.exports = function(listApp) {
       }
     }
 
+    return function(application, questions, success, error) {
+      var preferencesValid = application.validatePreferences()
+
+      if (preferencesValid) {
+        validateBackend(application, questions, success, error)
+      } else {
+        error({
+          errorText: "Täytä kaikki tiedot",
+          errors: [],
+          isSaveable: false
+        })
+      }
+    }
+
     var currentRequest
-    return function(application, success, error) {
+
+    function validateBackend(application, questions, success, error) {
       currentRequest = {}
       var thisRequest = currentRequest
-      var responsePromise = $http.post("/omatsivut/api/applications/validate/" + application.oid, application.toJson())
+      var responsePromise = $http.post("/omatsivut/api/applications/validate/" + application.oid, applicationFormatter(application, questions))
       responsePromise.success(function(data, status, headers, config) {
-        if (currentRequest === thisRequest)
-          success({ questions: getQuestions(data), errors: data.errors})
+        if (currentRequest === thisRequest) {
+          if (data.errors.length === 0) {
+            success({
+              questions: getQuestions(data)
+            })
+          } else {
+            error({
+              isSaveable: !hasHakutoiveErrors(data.errors),
+              errorText: "Täytä kaikki tiedot",
+              errors: data.errors,
+              questions: getQuestions(data)
+            })
+          }
+        }
       })
 
       responsePromise.error(function(data, status) {
-        error(data, status)
+        error({
+          errorText: "Tietojen haku epäonnistui. Yritä myöhemmin uudelleen.",
+          errors: []
+        })
+      })
+    }
+
+    function hasHakutoiveErrors(errors) {
+      var errorMap = util.mapArray(errors, "key", "message");
+      return _(errorMap).any(function(val, key) {
+        if (key.indexOf("preference") === 0 && val.length > 0)
+          return true
+        else
+          return false
       })
     }
   }])

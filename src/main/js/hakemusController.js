@@ -2,12 +2,12 @@ var Hakemus = require('./hakemus')
 var util = require('./util')
 
 module.exports = function(listApp) {
-  listApp.controller("hakemusController", ["$scope", "$element", "$http", "applicationsResource", "applicationValidator", "settings", "debounce", function ($scope, $element, $http, applicationsResource, applicationValidator, settings, debounce) {
+  listApp.controller("hakemusController", ["$scope", "$element", "$http", "applicationsResource", "applicationValidator", "applicationFormatter", "settings", "debounce", function ($scope, $element, $http, applicationsResource, applicationValidator, applicationFormatter, settings, debounce) {
     applicationValidator = debounce(applicationValidator, settings.modelDebounce)
 
     $scope.hasChanged = false
     $scope.isSaving = false
-    $scope.isValid = true
+    $scope.isSaveable = true
 
     $scope.timestampLabel = function() {
       if ($scope.application.received == $scope.application.updated)
@@ -18,46 +18,46 @@ module.exports = function(listApp) {
 
     $scope.$watch("application.getHakutoiveWatchCollection()", function(hakutoiveet, oldHakutoiveet) {
       // Skip initial values angular style
-      if (!_.isEqual(hakutoiveet, oldHakutoiveet)) {
+      if (!_.isEqual(hakutoiveet, oldHakutoiveet))
         applicationChanged()
-      }
 
-      $scope.isValid = $scope.application.validatePreferences()
-      if ($scope.isValid)
-        updateAdditionalQuestions()
-      else
-        setSaveMessage("Täytä kaikki tiedot", "error");
+      validateHakutoiveet()
     }, true)
 
     $scope.$watch("application.getAnswerWatchCollection()", function(answers, oldAnswers) {
-      if (!_.isEqual(oldAnswers, {})) {
+      if (!_.isEqual(oldAnswers, {}))
         applicationChanged()
-      }
     }, true)
-
-    function updateAdditionalQuestions() {
-      var application = $scope.application
-      applicationValidator(application, success, error)
-
-      function success(data) {
-        $scope.additionalQuestions = data.questions
-        application.setDefaultAnswers(data.questions)
-
-        updateHakutoiveValidationMessages(data.errors) // <- don't show question-related errors yet
-        $scope.isValid = $scope.application.validatePreferences()
-      }
-
-      function error() {
-        setSaveMessage("Tietojen haku epäonnistui. Yritä myöhemmin uudelleen.", "error")
-      }
-    }
 
     function applicationChanged() {
       $scope.hasChanged = true
-      setSaveMessage("")
+      setStatusMessage("")
     }
 
-    function setSaveMessage(msg, type) {
+    function validateHakutoiveet() {
+      $scope.isSaveable = false
+      applicationValidator($scope.application, $scope.additionalQuestions, success, error)
+
+      function success(data) {
+        $scope.isSaveable = true
+        setStatusMessage("")
+        importQuestions(data.questions)
+      }
+
+      function error(data) {
+        $scope.isSaveable = data.isSaveable
+        setStatusMessage(data.errorText, "error")
+        importQuestions(data.questions)
+        updateHakutoiveValidationMessages(data.errors) // Lisäkysymysten virheet näytetään vasta tallennuksen yhteydessä
+      }
+    }
+
+    function importQuestions(questions) {
+      $scope.additionalQuestions = questions
+      $scope.application.setDefaultAnswers(questions)
+    }
+
+    function setStatusMessage(msg, type) {
       $scope.saveMessage = msg
       $scope.saveMessageType = type
     }
@@ -65,34 +65,34 @@ module.exports = function(listApp) {
     $scope.movePreference = function(from, to) {
       if (to >= 0 && to < this.application.hakutoiveet.length) {
         this.application.moveHakutoive(from, to)
-        setSaveMessage()
+        setStatusMessage()
       }
     }
 
     $scope.saveApplication = function() {
       $scope.isSaving = true;
-      applicationsResource.update({id: $scope.application.oid }, $scope.application.toJson(), onSuccess, onError)
+      applicationsResource.update({id: $scope.application.oid }, applicationFormatter($scope.application, $scope.additionalQuestions), onSuccess, onError)
 
       function onSuccess(savedApplication) {
         $scope.$emit("highlight-items", $scope.application.getChangedItems())
         $scope.application.setAsSaved(savedApplication)
         $scope.isSaving = false
         $scope.hasChanged = false
-        setSaveMessage("Kaikki muutokset tallennettu", "success")
-        updateAllValidationMessages([])
+        setStatusMessage("Kaikki muutokset tallennettu", "success")
+        updateValidationMessages([])
       }
 
       function onError(err) {
         switch (err.status) {
           case 400:
-            setSaveMessage(validationError(err.data), "error");
-            updateAllValidationMessages(err.data);
+            setStatusMessage(validationError(err.data), "error")
+            updateValidationMessages(err.data)
             break
           case 401:
-            setSaveMessage("Tallentaminen epäonnistui, sillä istunto on vanhentunut. Kirjaudu uudestaan sisään.", "error");
+            setStatusMessage("Tallentaminen epäonnistui, sillä istunto on vanhentunut. Kirjaudu uudestaan sisään.", "error");
             break
           default:
-            setSaveMessage("Tallentaminen epäonnistui. Yritä myöhemmin uudelleen.", "error")
+            setStatusMessage("Tallentaminen epäonnistui. Yritä myöhemmin uudelleen.", "error")
         }
 
         $scope.isSaving = false
@@ -104,9 +104,9 @@ module.exports = function(listApp) {
         else
           return "Tallentaminen epäonnistui"
       }
-    };
+    }
 
-    function updateAllValidationMessages(errors) {
+    function updateValidationMessages(errors) {
       updateQuestionValidationMessages(errors)
       updateHakutoiveValidationMessages(errors)
     }

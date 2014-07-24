@@ -24,21 +24,8 @@ Hakemus.prototype = {
   },
 
   toJson: function() {
-    function removeFalseBooleans(obj) {
-      _.each(obj, function(val, key) {
-        if (_.isBoolean(val) && val === false)
-          delete obj[key]
-        else if (_.isObject(val))
-          removeFalseBooleans(val)
-      })
-      return obj;
-    }
-
     return _.extend({}, this,
-      { hakutoiveet: _(this.hakutoiveet).map(function(hakutoive) { return hakutoive.toJson() })},
-      { answers: removeFalseBooleans($.extend(true, {}, this.answers))})
-
-    return _.extend({}, this, { hakutoiveet: _(this.hakutoiveet).map(function(hakutoive) { return hakutoive.toJson() })})
+      { hakutoiveet: _(this.hakutoiveet).map(function(hakutoive) { return hakutoive.toJson() })})
   },
 
   setAsSaved: function(savedApplication) {
