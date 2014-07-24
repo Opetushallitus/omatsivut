@@ -24,7 +24,7 @@
                     </p>
                     <p class="timestamp">{{ timestampLabel() }} <time>{{ application.updated | date:'dd.MM.yyyy HH:mm:ss' }}</time></p>
 
-                    <section class="application-section" highlight-items>
+                    <section class="application-section" highlight-save>
                         <header class="application-section-heading">
                             Hakutoiveet
                             <button class="float-right save-btn" ng-disabled="!hasChanged || isSaving || !isSaveable" ng-click="saveApplication()">Tallenna muutokset</button>

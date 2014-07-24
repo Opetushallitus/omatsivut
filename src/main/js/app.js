@@ -91,16 +91,20 @@ listApp.directive('sortable', ["settings", function(settings) {
   };
 }]);
 
-listApp.directive("highlightItems", function() {
+listApp.directive("highlightSave", function() {
   return function($scope, $element) {
-    $scope.$on("highlight-items", function(event, indexes) {
+    $scope.$on("highlight-save", function(event, indexes) {
       var items = $element.find(".preference-list-item")
+
       _.each(indexes, function(index) {
         items.eq(index).addClass("saved")
       })
 
+      $(".timestamp").addClass("saved")
+
       window.setTimeout(function() {
-        items.removeClass("saved");
+        items.removeClass("saved")
+        $(".timestamp").removeClass("saved")
       }, 3000);
     });
   };

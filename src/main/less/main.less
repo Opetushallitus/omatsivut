@@ -86,6 +86,9 @@
 @button-disabled-background: url(../img/disabled-pat.png);
 @button-disabled-border-color: #ababab;
 
+@save-highlight-question-color: #f0fff2;
+@save-highlight-timestamp-color: #d9ffdd;
+
 // Layout
 
 .container {
@@ -306,6 +309,15 @@ button.delete-btn:not(.confirm) {
   margin-top: 20px;
 }
 
+.timestamp {
+  transition: background-color 1000ms;
+  display: inline-block;
+
+  &.saved {
+    background-color: @save-highlight-timestamp-color;
+  }
+}
+
 .preference-list-item {
   height: 120px;
   padding: 20px 0px 20px 20px;
@@ -318,7 +330,7 @@ button.delete-btn:not(.confirm) {
   }
 
   &.saved {
-    background: #f0fff2;
+    background: @save-highlight-question-color;
   }
 
   & > .item-content:first-child {

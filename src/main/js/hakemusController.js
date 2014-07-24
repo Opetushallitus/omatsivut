@@ -76,7 +76,7 @@ module.exports = function(listApp) {
       setStatusMessage("", "")
 
       function onSuccess(savedApplication) {
-        $scope.$emit("highlight-items", $scope.application.getChangedItems())
+        $scope.$emit("highlight-save", $scope.application.getChangedItems())
         $scope.application.setAsSaved(savedApplication)
         $scope.isSaving = false
         $scope.hasChanged = false
