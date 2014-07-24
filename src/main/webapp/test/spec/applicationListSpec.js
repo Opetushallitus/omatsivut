@@ -91,8 +91,7 @@
             return page.getPreference(0).moveDown()
               .then(page.saveWaitError)
               .then(function () {
-                // TODO: text should be different
-                page.saveError().should.equal("Ei tallennettu - vastaa ensin kaikkiin lisäkysymyksiin")
+                page.saveError().should.equal("Odottamaton virhe. Ota yhteyttä asiakaspalveluun.")
               })
           })
         })

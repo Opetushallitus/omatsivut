@@ -111,6 +111,7 @@ module.exports = function(listApp) {
     function updateValidationMessages(errors) {
       updateQuestionValidationMessages(errors)
       updateHakutoiveValidationMessages(errors)
+      updateMiscValidationMessages(errors)
     }
 
     function updateHakutoiveValidationMessages(errors) {
@@ -133,6 +134,26 @@ module.exports = function(listApp) {
           }
         }
       })($scope.additionalQuestions)
+    }
+
+    function updateMiscValidationMessages(errors) {
+      var questionKeys = (function getQuestionKeys(node, list) {
+        if (node != null) {
+          if (node.questionNodes == null)
+            list.push(node.question.id.questionId)
+          else
+            _(node.questionNodes).each(function(subnode) { getQuestionKeys(subnode, list) })
+        }
+        return list
+      })($scope.additionalQuestions, [])
+
+      var miscErrors = _(errors).filter(function(error) {
+        return _(questionKeys).find(function(key) { return key === error.key }) == null &&
+          !/^preference\d/.test(error.key)
+      })
+
+      if (miscErrors.length > 0)
+        setStatusMessage("Odottamaton virhe. Ota yhteyttä asiakaspalveluun.", "error")
     }
   }])
 }
