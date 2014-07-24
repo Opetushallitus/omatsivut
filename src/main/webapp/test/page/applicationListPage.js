@@ -209,19 +209,22 @@ function ApplicationListPage() {
       toString: function() {
         return api.opetuspiste() + " " + api.koulutus()
       },
+      searchOpetusPiste: function (query) {
+        return function() {
+          opetusPisteInputField().val(query).change()
+          return wait.forAngular()
+        }
+      },
       selectOpetusPiste: function (query) {
         return function() {
-          var inputField = el().find(".opetuspiste input");
-          inputField.val(query).change()
-          return wait.until(function () {
-            return inputField.next().find("li").eq(0).find("a").length > 0
-          })().then(function () {
-            inputField.next().find("li:contains('" + query + "')").eq(0).find("a").click()
+          return api.searchOpetusPiste(query)().then(function () {
+            opetusPisteListView().find("li:contains('" + query + "')").eq(0).find("a").click()
           }).then(wait.until(function() {
             return el().find(".koulutus select option").length > 1
           })).then(wait.forAngular)
         }
       },
+
       selectKoulutus: function (index) {
         return function() {
           var selectElement = el().find(".koulutus select")
@@ -231,6 +234,14 @@ function ApplicationListPage() {
       }
     }
     return api
+
+    function opetusPisteInputField() {
+      return el().find(".opetuspiste input")
+    }
+
+    function opetusPisteListView() {
+      return opetusPisteInputField().next()
+    }
 
     function arrowDown() {
       return el().find(".sort-arrow-down")

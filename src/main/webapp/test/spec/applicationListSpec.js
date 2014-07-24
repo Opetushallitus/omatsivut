@@ -142,7 +142,7 @@
         })
       })
 
-      describe("kun hakutoiveen valinta on kesken", function() {
+      describe("kun vain opetuspiste on valittu", function() {
         it("lomaketta ei voi tallentaa", function() {
           var pref = page.getPreference(1)
           return pref.selectOpetusPiste("Ahl")()
@@ -150,9 +150,48 @@
             .then(function() { page.isValidationErrorVisible().should.be.true })
         })
       })
-      
+
+      /*
+      describe("kun opetuspisteen syöttö on kesken", function() {
+        before(
+          page.getPreference(1).searchOpetusPiste("Ahl"),
+          wait.untilFalse(page.saveButton(0).isEnabled)
+        )
+        it("lomaketta ei voi tallentaa", function() {
+          page.isValidationErrorVisible().should.be.true
+        })
+      })
+      */
+
+      describe("kun valitun opetuspisteen syöttökenttä tyhjennetään", function() {
+        before(
+          page.getPreference(1).selectOpetusPiste("Ahl"),
+          page.getPreference(1).searchOpetusPiste("")
+        )
+        it("lomakkeen voi tallentaa", function() {
+          page.isValidationErrorVisible().should.be.false
+          page.saveButton(0).isEnabled().should.be.true
+        })
+      })
+
+      describe("kun valittu opetuspiste siirretään ylöspäin ja syöttökenttä tyhjennetään", function() {
+        before(
+          page.getPreference(1).selectOpetusPiste("Ahl"),
+          page.getPreference(1).moveUp,
+          page.getPreference(0).searchOpetusPiste("")
+        )
+        it("lomaketta ei voi tallentaa", function() {
+          page.isValidationErrorVisible().should.be.true
+        })
+        it("hakukohde säilyy muokattavana", function() {
+          page.getPreference(0).isEditable().should.be.true
+        })
+      })
+
       describe("kun valinta jätetään kesken ja siirrytään vaihtamaan toista hakukohdetta", function() {
         before(
+          ApplicationListPage().resetDataAndOpen,
+          leaveOnlyOnePreference, // first two steps to undo previous test case
           page.getPreference(1).selectOpetusPiste("Ahl"),
           page.getPreference(1).selectKoulutus(0),
           page.getPreference(2).selectOpetusPiste("Turun Kristillinen"),
