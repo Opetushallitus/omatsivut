@@ -1,6 +1,6 @@
 package fi.vm.sade.omatsivut
 
-import fi.vm.sade.omatsivut.security.{AuthenticationCipher, CookieCredentials}
+import fi.vm.sade.omatsivut.security.{ShibbolethCookie, AuthenticationCipher, CookieCredentials}
 import fi.vm.sade.omatsivut.servlet.OmatSivutSwagger
 import org.scalatra.test.specs2.MutableScalatraSpec
 import org.specs2.specification.{Step, Fragments}
@@ -22,7 +22,8 @@ trait ScalatraTestSupport extends MutableScalatraSpec {
   }
 
   def authHeaders[A](oid: String): Map[String, String] = {
-    Map("Cookie" -> ("auth=" + AuthenticationCipher().encrypt(CookieCredentials(oid).toString)))
+    val shibbolethCookie: ShibbolethCookie = ShibbolethCookie("_shibsession_test", "test")
+    Map("Cookie" -> ("auth=" + AuthenticationCipher().encrypt(CookieCredentials(oid, shibbolethCookie).toString) + "; " + shibbolethCookie))
   }
 
   override def map(fs: => Fragments) = Step(appConfig.start) ^ super.map(fs)

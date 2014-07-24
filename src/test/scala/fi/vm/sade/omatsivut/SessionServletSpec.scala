@@ -1,13 +1,15 @@
 package fi.vm.sade.omatsivut
 
 import fi.vm.sade.omatsivut.fixtures.TestFixture
+import fi.vm.sade.omatsivut.security.ShibbolethCookie
 import org.scalatra.test.specs2.MutableScalatraSpec
 import fi.vm.sade.omatsivut.servlet.SessionServlet
 
 class SessionServletSpec extends MutableScalatraSpec {
   "GET /secure/initsession" should {
     "generate auth cookie" in {
-      get("/secure/initsession", headers = Map("Hetu" -> TestFixture.testHetu)) {
+      val shibbolethCookie: ShibbolethCookie = ShibbolethCookie("_shibsession_test", "test")
+      get("/secure/initsession", headers = Map("Hetu" -> TestFixture.testHetu, "Cookie" -> shibbolethCookie.toString)) {
         status must_== 302
         val setCookie = response.headers("Set-Cookie")(0)
         val encrypted = setCookie.substring(setCookie.indexOf('='), setCookie.indexOf(';') + 1)

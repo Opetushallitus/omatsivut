@@ -18,4 +18,16 @@ trait OmatSivutServletBase extends ScalatraServlet with Logging {
       "500 Internal Server Error"
     }
   }
+
+  protected def headerOption(name: String): Option[String] = {
+    Option(request.getHeader(name))
+  }
+
+  protected def paramOption(name: String): Option[String] = {
+    try {
+      Option(params(name))
+    } catch {
+      case e: Exception => None
+    }
+  }
 }

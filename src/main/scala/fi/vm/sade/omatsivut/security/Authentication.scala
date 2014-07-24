@@ -1,6 +1,6 @@
 package fi.vm.sade.omatsivut.security
 
-import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
+import javax.servlet.http.{Cookie, HttpServletRequest, HttpServletResponse}
 
 import fi.vm.sade.omatsivut.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.Logging
@@ -23,11 +23,23 @@ trait Authentication extends ScalatraBase with AuthCookieParsing with Logging {
     parseCredentials(request)
   }
 
+  def validateCredentials(credentials: CookieCredentials, req: HttpServletRequest) = {
+    shibbolethCookieHasNotChanged(credentials, req) && authenticationCookieHasNotTimedOut(credentials)
+  }
+
+  private def authenticationCookieHasNotTimedOut(credentials: CookieCredentials): Boolean = {
+    credentials.creationTime.plusMinutes(cookieTimeoutMinutes).isAfterNow
+  }
+
+  private def shibbolethCookieHasNotChanged(credentials: CookieCredentials, req: HttpServletRequest) = {
+    Some(credentials.shibbolethCookie) == shibbolethCookieInRequest(req)
+  }
+
   before() {
     credentialsOpt match {
-      case Some(cookie) if cookie.creationTime.plusMinutes(cookieTimeoutMinutes).isAfterNow => true
+      case Some(cookie) if validateCredentials(cookie, request) => true
       case Some(cookie) => {
-        logger.info("Cookie timed out: " + cookie)
+        logger.info("Cookie was invalid: " + cookie)
         tellBrowserToDeleteAuthCookie(request, response)
         halt(status = 401, headers = Map("WWW-Authenticate" -> "SecureCookie"))
       }
@@ -72,14 +84,35 @@ trait AuthCookieParsing extends Logging {
       })
     })
   }
+
+  def shibbolethCookieInRequest(req: HttpServletRequest): Option[ShibbolethCookie] = {
+    try {
+      val requestCookie = req.getCookies.filter(c => c.getName.startsWith("_shibsession_"))(0)
+      Some(ShibbolethCookie.fromCookie(requestCookie))
+    } catch {
+      case e: Exception => None
+    }
+  }
 }
 
 object CookieCredentials {
   def fromString(str: String) = {
     val split = str.split("\\|")
-    CookieCredentials(split(0), new DateTime(split(1).toLong))
+    CookieCredentials(split(0), ShibbolethCookie.fromString(split(1)), new DateTime(split(2).toLong))
   }
 }
-case class CookieCredentials(oid: String, creationTime: DateTime = new DateTime()) {
-  override def toString = oid + "|" + creationTime.getMillis
+case class CookieCredentials(oid: String, shibbolethCookie: ShibbolethCookie, creationTime: DateTime = new DateTime()) {
+  override def toString = oid + "|" + shibbolethCookie.toString + "|" + creationTime.getMillis
+}
+object ShibbolethCookie {
+  def fromCookie(cookie: Cookie) = {
+    ShibbolethCookie(cookie.getName, cookie.getValue)
+  }
+  def fromString(str: String) = {
+    val split = str.split("=")
+    ShibbolethCookie(split(0), split(1))
+  }
+}
+case class ShibbolethCookie(name: String, value: String) {
+  override def toString = name + "=" + value
 }
