@@ -3,6 +3,7 @@ package fi.vm.sade.omatsivut.koulutusinformaatio
 import fi.vm.sade.omatsivut.AppConfig.{AppConfig, StubbedExternalDeps}
 import fi.vm.sade.omatsivut.fixtures.JsonFixtureMaps
 import fi.vm.sade.omatsivut.json.JsonFormats
+import scalaj.http.Http
 
 
 trait KoulutusInformaatioService {
@@ -31,7 +32,7 @@ case class RemoteKoulutusService(implicit appConfig: AppConfig) extends Koulutus
   import org.json4s.jackson.JsonMethods._
 
   def opetuspisteet(asId: String, query: String): List[Opetuspiste] = {
-    val (responseCode, headersMap, resultString) = HttpClient.httpGet(appConfig.settings.koulutusinformaatioLopUrl + "/search/" + query)
+    val (responseCode, headersMap, resultString) = HttpClient.httpGet(appConfig.settings.koulutusinformaatioLopUrl + "/search/" + Http.urlEncode(query, "UTF-8"))
       .param("asId", asId)
       .responseWithHeaders
 
