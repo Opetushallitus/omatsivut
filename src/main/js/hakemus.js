@@ -20,7 +20,14 @@ Hakemus.prototype = {
   },
 
   canMoveTo: function(from, to) {
-    return this.hasPreference(from) && this.hasPreference(to);
+    var lastFilledItem = (function getLastFilled(hakutoiveet) {
+      for (var i=hakutoiveet.length-1; i>=0; i--)
+        if (hakutoiveet[i].hasData())
+          return i
+      return -1
+    })(this.hakutoiveet)
+
+    return this.hakutoiveet[from].hasData() && from >= 0 && to <= lastFilledItem && to >= 0
   },
 
   toJson: function() {
