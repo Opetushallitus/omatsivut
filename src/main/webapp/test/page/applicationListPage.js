@@ -168,7 +168,9 @@ function ApplicationListPage() {
         })
       },
       moveUp: function () {
-        arrowUp().click()
+        return waitForChange(function() {
+          arrowUp().click()
+        })
       },
 
       number: function () {
@@ -243,7 +245,7 @@ function ApplicationListPage() {
       modification()
       return wait.until(function() {
         return description != api.toString()
-      })()
+      })().then(wait.forAngular)
     }
   }
 

@@ -81,6 +81,21 @@
               })
           })
         })
+
+        describe("Kun tallennuksessa esiintyy odottamaton validointivirhe", function() {
+          before(function () {
+            mockAjax.respondOnce("PUT", "/omatsivut/api/applications/1.2.246.562.11.00000877107", 400, '[{"key":"asdfqwer", "message": "something went wrong"}]')
+          })
+
+          it("virheilmoitus näkyy oikein", function () {
+            return page.getPreference(0).moveDown()
+              .then(page.saveWaitError)
+              .then(function () {
+                // TODO: text should be different
+                page.saveError().should.equal("Ei tallennettu - vastaa ensin kaikkiin lisäkysymyksiin")
+              })
+          })
+        })
       })
     })
 
@@ -265,18 +280,6 @@
 
           it("näytetään required-validaatiovirhe", function() {
             page.questionsForApplication(0).validationMessages()[0].should.equal("Pakollinen tieto.")
-          })
-        })
-
-        describe("Kun tallennuksessa esiintyy validointivirhe, joka ei liity lisäkysymyksiin", function() {
-          before(answerAllQuestions, page.saveWaitSuccess)
-          before(page.questionsForApplication(0).modifyAnswers(function(answers) {
-            answers.hakutoiveet.dummyAnswer = "tämä aiheuttaa epämääräisen validointivirheen"
-          }))
-          before(page.saveWaitSuccess)
-          it.skip("näytetään tallennusvirhe", function() { // test broken
-            // TODO: näytä eri viesti, koska tapahtui käsittelemätön validointivirhe
-            page.saveError().should.equal("Ei tallennettu - vastaa ensin kaikkiin lisäkysymyksiin")
           })
         })
 
