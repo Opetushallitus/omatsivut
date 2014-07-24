@@ -8,7 +8,7 @@ import scala.collection.JavaConverters._
 class SessionServlet(implicit val appConfig: AppConfig) extends OmatSivutServletBase with AuthCookieCreating {
   get("/initsession") {
     request.getHeaderNames.asScala.toList.map(h => logger.info(h + ": " + request.getHeader(h)))
-    createAuthCookieCredentials(headerOption("Hetu"), ShibbolethCookie("_shibsession_placeholder", "fake"), AuthenticationInfoService.apply) match {
+    createAuthCookieCredentials(headerOption("Hetu"), shibbolethCookieInRequest(request), AuthenticationInfoService.apply) match {
       case Some(credentials) => createAuthCookieResponse(credentials, response, redirectUri)
       case _ => response.redirect(ssoContextPath + "/Shibboleth.sso/LoginFI") //TODO Localization
     }

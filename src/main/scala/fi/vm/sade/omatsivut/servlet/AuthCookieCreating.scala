@@ -17,20 +17,21 @@ trait AuthCookieCreating extends AuthCookieParsing with Logging {
     response.redirect(redirectUri)
   }
 
-  def createAuthCookieCredentials(hetuOption: Option[String], shibbolethCookie: ShibbolethCookie, authenticationInfoService: AuthenticationInfoService): Option[CookieCredentials] = {
-    fetchOid(hetuOption, authenticationInfoService) match {
-      case Some(oid) => Some(CookieCredentials(oid, shibbolethCookie))
+  def createAuthCookieCredentials(hetu: Option[String], shibbolethCookie: Option[ShibbolethCookie], authenticationInfoService: AuthenticationInfoService): Option[CookieCredentials] = {
+    checkCredentials(hetu, shibbolethCookie, authenticationInfoService) match {
+      case Some((oid, cookie)) => Some(CookieCredentials(oid, cookie))
       case _ => {
-        logger.warn("Person oid not found for hetu: " + hetuOption)
+        logger.warn("Person oid not found for hetu: " + hetu)
         None
       }
     }
   }
 
-  def fetchOid(hetuOption: Option[String], authService: AuthenticationInfoService) = {
+  private def checkCredentials(hetuOption: Option[String], shibbolethCookie: Option[ShibbolethCookie], authService: AuthenticationInfoService) = {
     for {
       hetu <- hetuOption
+      cookie <- shibbolethCookie
       oid <- authService.getHenkiloOID(hetu)
-    } yield oid
+    } yield (oid, cookie)
   }
 }

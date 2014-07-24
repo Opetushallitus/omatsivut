@@ -25,7 +25,7 @@ trait Authentication extends ScalatraBase with AuthCookieParsing with Logging {
   }
 
   def validateCredentials(credentials: CookieCredentials, req: HttpServletRequest) = {
-    shibbolethCookieHasNotChanged(credentials, req) || authenticationCookieHasNotTimedOut(credentials)
+    shibbolethCookieHasNotChanged(credentials, req) && authenticationCookieHasNotTimedOut(credentials)
   }
 
   private def authenticationCookieHasNotTimedOut(credentials: CookieCredentials): Boolean = {
@@ -33,15 +33,7 @@ trait Authentication extends ScalatraBase with AuthCookieParsing with Logging {
   }
 
   private def shibbolethCookieHasNotChanged(credentials: CookieCredentials, req: HttpServletRequest) = {
-    def shibbolethCookieInRequest: Option[ShibbolethCookie] = {
-      try {
-        val requestCookie = req.getCookies.filter(c => c.getName.startsWith("_shibsession_"))(0)
-        Some(ShibbolethCookie.fromCookie(requestCookie))
-      } catch {
-        case e: Exception => None
-      }
-    }
-    Some(credentials.shibbolethCookie) == shibbolethCookieInRequest
+    Some(credentials.shibbolethCookie) == shibbolethCookieInRequest(req)
   }
 
   before() {
@@ -92,6 +84,15 @@ trait AuthCookieParsing extends Logging {
         res.addCookie(authCookie)
       })
     })
+  }
+
+  def shibbolethCookieInRequest(req: HttpServletRequest): Option[ShibbolethCookie] = {
+    try {
+      val requestCookie = req.getCookies.filter(c => c.getName.startsWith("_shibsession_"))(0)
+      Some(ShibbolethCookie.fromCookie(requestCookie))
+    } catch {
+      case e: Exception => None
+    }
   }
 }
 

@@ -10,7 +10,7 @@ class TestHelperServlet(implicit val appConfig: AppConfig) extends OmatSivutServ
     get("/fakesession") {
       val hetuOption: Option[String] = paramOption("hetu")
       val shibbolethCookie = ShibbolethCookie("_shibsession_fakeshibbolethsession", AuthenticationCipher().encrypt("FAKESESSION"))
-      createAuthCookieCredentials(hetuOption, shibbolethCookie, AuthenticationInfoService.apply) match {
+      createAuthCookieCredentials(hetuOption, Some(shibbolethCookie), AuthenticationInfoService.apply) match {
         case Some(credentials) => {
           response.addCookie(fakeShibbolethSessionCookie(shibbolethCookie))
           createAuthCookieResponse(credentials, response, redirectUri, CookieOptions(path = "/"))
