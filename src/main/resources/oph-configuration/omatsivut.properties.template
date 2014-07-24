@@ -37,6 +37,9 @@ omatsivut.haku-app.mongo.db.name=hakulomake
 omatsivut.haku-app.mongo.db.username={{mongodb_hakemus_username}}
 omatsivut.haku-app.mongo.db.password={{mongodb_hakemus_password}}
 
+omatsivut.koulutusinformaatio.ao.url=https\://${host.haku}/ao
+omatsivut.koulutusinformaatio.lop.url=https\://${host.haku}/lop
+
 # for hakemus-api
 koulutusinformaatio.ao.resource.url=https\://${host.haku}/ao
 tarjonta.data.url=https\://${host.virkailija}/tarjonta-service/rest/

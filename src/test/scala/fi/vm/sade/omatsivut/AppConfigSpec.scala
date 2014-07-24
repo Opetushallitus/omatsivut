@@ -5,6 +5,7 @@ import java.util.Properties
 
 import fi.vm.sade.omatsivut.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.mongo.EmbeddedMongo
+import fi.vm.sade.omatsivut.security.AuthenticationInfoService
 import org.fusesource.scalate.support.FileTemplateSource
 import org.specs2.mutable.Specification
 
@@ -39,7 +40,7 @@ class AppConfigSpec extends Specification{
     }
   }
   def validateConfig(config: AppConfig) = {
-    config.authenticationInfoService
+    AuthenticationInfoService.apply(config)
     config.springContext.applicationDAO
     config.springContext.applicationSystemService
     config.springContext.mongoTemplate

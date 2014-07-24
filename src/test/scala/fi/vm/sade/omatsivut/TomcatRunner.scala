@@ -1,8 +1,8 @@
 package fi.vm.sade.omatsivut
 
-import fi.vm.sade.omatsivut.mongo.EmbeddedMongo
-import org.apache.catalina.startup.Tomcat
 import java.io.File
+
+import org.apache.catalina.startup.Tomcat
 
 /**
  * Runs the application in an embedded Tomcat. Suitable for running in IDEA or Eclipse.

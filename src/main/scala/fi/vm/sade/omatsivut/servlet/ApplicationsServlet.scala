@@ -1,21 +1,23 @@
 package fi.vm.sade.omatsivut.servlet
 
 import fi.vm.sade.omatsivut.AppConfig.AppConfig
-import fi.vm.sade.omatsivut.domain.{Hakemus, Question, ValidationError}
-import fi.vm.sade.omatsivut.hakemus.{HakemusRepository, HakemusValidator}
-import fi.vm.sade.omatsivut.http.HttpClient
+import fi.vm.sade.omatsivut.domain.{Hakemus, QuestionNode, ValidationError}
+import fi.vm.sade.omatsivut.hakemus.{ApplicationValidator, HakemusRepository}
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.security.Authentication
-import org.json4s.jackson.Serialization
+import org.json4s.jackson.{JsonMethods, Serialization}
 import org.scalatra.json._
+import org.scalatra.swagger.SwaggerSupportSyntax.OperationBuilder
 import org.scalatra.swagger._
+import org.scalatra.{BadRequest, Ok}
 
-class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfig) extends OmatSivutServletBase with HttpClient with JacksonJsonSupport with JsonFormats with SwaggerSupport with Authentication {
+class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfig) extends OmatSivutServletBase with JacksonJsonSupport with JsonFormats with SwaggerSupport with Authentication {
   override def applicationName = Some("api")
+  private val applicationSystemService = appConfig.springContext.applicationSystemService
 
   protected val applicationDescription = "Oppijan henkilökohtaisen palvelun REST API, jolla voi hakea ja muokata hakemuksia ja omia tietoja"
 
-  val getApplicationsSwagger = (apiOperation[List[Hakemus]]("getApplications")
+  val getApplicationsSwagger: OperationBuilder = (apiOperation[List[Hakemus]]("getApplications")
     summary "Hae oppijan hakemukset"
     parameters pathParam[String]("hetu").description("Käyttäjän henkilötunnus, jonka hakemukset listataan")
     )
@@ -38,14 +40,22 @@ class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfi
 
   put("/applications/:oid", operation(putApplicationsSwagger)) {
     val updated = Serialization.read[Hakemus](request.body)
-    HakemusRepository().updateHakemus(updated)
+    val applicationSystem = applicationSystemService.getApplicationSystem(updated.haku.get.oid)
+    val errors = ApplicationValidator().validate(applicationSystem)(updated)
+    if(errors.isEmpty) {
+      val saved = HakemusRepository().updateHakemus(applicationSystem)(updated)
+      Ok(saved)
+    } else {
+      BadRequest(errors)
+    }
   }
 
   post("/applications/validate/:oid", operation(validateApplicationsSwagger)) {
     val validate = Serialization.read[Hakemus](request.body)
-    val (errors, questions) = HakemusValidator().validate(validate)
+    val applicationSystem = applicationSystemService.getApplicationSystem(validate.haku.get.oid)
+    val (errors: List[ValidationError], questions: List[QuestionNode]) = ApplicationValidator().validateAndFindQuestions(applicationSystem)(validate)
     ValidationResult(errors, questions)
   }
 
-  case class ValidationResult(errors: List[ValidationError], questions: List[Question])
+  case class ValidationResult(errors: List[ValidationError], questions: List[QuestionNode])
 }

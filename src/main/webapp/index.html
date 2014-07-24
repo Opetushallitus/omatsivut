@@ -7,9 +7,9 @@
 
 <body>
     <div class="container">
-        <div ng-controller="listCtrl">
+        <div id="appRoot" ng-controller="listController">
             <h1>Omat hakemukseni</h1>
-            <a href="/Shibboleth.sso/LoginFI" target="_self">Kirjaudu sisään</a>
+            <a href="secure/initsession" target="_self">Kirjaudu sisään</a>
             <a href="secure/logout" target="_self">Kirjaudu ulos</a>
 
             <div class="application-list-status" ng-bind="applicationStatusMessage" ng-class="applicationStatusMessageType" ng-cloak ng-show="applicationStatusMessage.length > 0">
@@ -17,22 +17,22 @@
 
             <ul id="hakemus-list" ng-cloak>
 
-                <li ng-repeat="application in applications" class="application-list-item" ng-controller="hakemusCtrl">
-                    <h2>{{application.haku.name.translations.fi}}</h2>
+                <li ng-repeat="application in applications" class="application-list-item" ng-controller="hakemusController">
+                    <h2>{{application.haku.name }}</h2>
                     <p ng-repeat="period in application.haku.applicationPeriods">
                       Hakukausi: {{period.start | date:'dd.MM.yyyy HH:mm'}} - {{period.end | date:'dd.MM.yyyy HH:mm'}}</p>
                     </p>
-                    <p>Hakemus jätetty: {{application.received | date:'dd.MM.yyyy HH:mm:ss'}}</p>
+                    <p class="timestamp">{{ timestampLabel() }} <time>{{ application.updated | date:'dd.MM.yyyy HH:mm:ss' }}</time></p>
 
                     <section class="application-section" highlight-items>
                         <header class="application-section-heading">
                             Hakutoiveet
-                            <button class="float-right save-btn" ng-disabled="!hasChanged || isSaving || !isValid" ng-click="saveApplication()">Tallenna muutokset</button>
+                            <button class="float-right save-btn" ng-disabled="!hasChanged || isSaving || !isSaveable" ng-click="saveApplication()">Tallenna muutokset</button>
                             <span class="status-message float-right" ng-class="{'ajax-spinner': isSaving, error: saveMessageType=='error'}" ng-bind="saveMessage" ng-class="saveMessageType"></span>
                         </header>
 
                         <ul class="preference-list" sortable sortable-moved="movePreference">
-                            <li class="preference-list-item" ng-repeat="hakutoive in application.hakutoiveet" ng-controller="hakutoiveCtrl">
+                            <li class="preference-list-item" ng-repeat="hakutoive in application.hakutoiveet" ng-controller="hakutoiveController">
                                 <div class="item-content">
                                     <span class="sort-arrow-down" ng-class="{disabled: !application.canMoveTo($index, $index+1)}"></span>
                                     <span class="sort-arrow-up" ng-class="{disabled: !application.canMoveTo($index, $index-1)}"></span>
@@ -63,6 +63,7 @@
                                                     ng-change="koulutusValittu($index)" ng-show="isKoulutusSelectable()">
                                             </select>
                                             <span class="instruction" ng-hide="isEditingDisabled() || hakutoive.hasOpetuspiste()">Valitse ensin opetuspiste</span>
+                                            <span class="validation-message error" ng-if="hakutoive.errors.length">{{hakutoive.errors[0]}}</span>
                                             <span class="instruction ajax-spinner-small" ng-show="isLoadingKoulutusList()">Lataa tietoja...</span>
                                         </label>
                                     </div>
@@ -73,6 +74,61 @@
                                 </div>
                             </li>
                         </ul>
+                    </section>
+                    <section class="application-section additional-questions" ng-if="additionalQuestions.questionNodes.length > 0">
+                        <question-template question-node="additionalQuestions" application="application" class="questions" level="-1">
+                        </question-template>
+
+                        <script type="text/ng-template" id="questionTemplate.html">
+                            <div ng-switch="isGroup()">
+                                <div ng-switch-when="true" class="question-group">
+                                    <div ng-if="level == 0" class="application-section-heading">Lisäkysymykset: {{ questionNode.title }}</div>
+                                    <label ng-if="level > 0" class="question-group-title">{{ questionNode.title }}:</label>
+
+                                    <div ng-class="{ 'question-group-indent': level > 0, 'question-group-section': level == 0 }" ng-repeat="subItem in questionNode.questionNodes">
+                                        <question-template question-node="subItem" application="application" level="level+1">
+                                        </question-template>
+                                    </div>
+                                </div>
+
+                                <div ng-switch-when="false" class="question">
+                                    <label class="title">{{questionNode.question.title}}</label>
+                                    <span class="validation-message error">{{questionNode.validationMessage}}</span>
+                                    <div class="instruction">{{questionNode.question.help}}</div>
+
+                                    <span class="answer" ng-switch="questionNode.question.questionType">
+                                        <input type="text" ng-switch-when="Text"
+                                               ng-model="application.getAnswers(questionNode.question.id.phaseId)[questionNode.question.id.questionId]"
+                                               maxlength="{{questionNode.question.maxlength}}"/>
+                                        <textarea ng-switch-when="TextArea"
+                                               ng-model="application.getAnswers(questionNode.question.id.phaseId)[questionNode.question.id.questionId]"
+                                               maxlength="{{questionNode.question.maxlength}}"
+                                               rows="{{questionNode.question.rows}}"
+                                               cols="{{questionNode.question.cols}}"
+                                        />
+                                        <select ng-switch-when="Dropdown"
+                                                ng-model="application.getAnswers(questionNode.question.id.phaseId)[questionNode.question.id.questionId]"
+                                                ng-options="option.value as option.title for option in questionNode.question.options">
+                                        </select>
+
+                                        <div ng-switch-when="Radio">
+                                            <label class="radio-button-item" ng-repeat="option in questionNode.question.options">
+                                                <input name="{{questionNode.question.id.questionId}}" type="radio"
+                                                       ng-model="application.getAnswers(questionNode.question.id.phaseId)[questionNode.question.id.questionId]"
+                                                       value={{option.value}} /> {{option.title }}
+                                            </label>
+                                        </div>
+
+                                        <div ng-switch-when="Checkbox">
+                                            <label class="radio-button-item" ng-repeat="option in questionNode.question.options">
+                                                <input type="checkbox" ng-model="application.getAnswers(questionNode.question.id.phaseId)[option.value]">
+                                                {{option.title }}
+                                            </label>
+                                        </div>
+                                    </span>
+                                </div>
+                            </div>
+                        </script>
                     </section>
                 </li>
             </ul>

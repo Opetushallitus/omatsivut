@@ -37,6 +37,32 @@ wait = {
       })(count)
       return deferred.promise
     }
+  },
+  untilFalse: function(condition) {
+    return wait.until(function() { return !condition()})
+  },
+  forAngular: function() {
+    var deferred = Q.defer()
+    try {
+      var angular = testFrame.angular
+      var el = angular.element(S("#appRoot"))
+      var timeout = angular.element(el).injector().get('$timeout')
+      angular.element(el).injector().get('$browser').notifyWhenNoOutstandingRequests(function() {
+        timeout(function() { deferred.resolve() })
+      })
+    } catch (e) {
+      deferred.reject(e)
+    }
+    return deferred.promise
+  },
+  forMilliseconds: function(ms) {
+    return function() {
+      var deferred = Q.defer()
+      setTimeout(function() {
+        deferred.resolve()
+      }, ms)
+      return deferred.promise
+    }
   }
 }
 
@@ -54,6 +80,39 @@ uiUtil = {
     return _.chain(el.find("[ng-model]:visible, [ng-bind]:visible"))
       .map(function(el) { return [formatKey(getId($(el))), $(el).val() + $(el).text() ]})
       .object().value()
+  }
+}
+
+mockAjax = {
+  init: function() {
+    var deferred = Q.defer()
+    if (testFrame.sinon)
+      deferred.resolve()
+    else
+      testFrame.$.getScript('test/lib/sinon-server-1.10.3.js', function() { deferred.resolve() } )
+    return deferred.promise
+  },
+  respondOnce: function (method, url, responseCode, responseBody) {
+    var fakeAjax = function() {
+      var xhr = sinon.useFakeXMLHttpRequest()
+      xhr.useFilters = true
+      xhr.addFilter(function(method, url) {
+        return url != _fakeAjaxParams.url || method != _fakeAjaxParams.method
+      })
+
+      xhr.onCreate = function (request) {
+        window.setTimeout(function() {
+          if (window._fakeAjaxParams && request.method == _fakeAjaxParams.method && request.url == _fakeAjaxParams.url) {
+            request.respond(_fakeAjaxParams.responseCode, { "Content-Type": "application/json" }, _fakeAjaxParams.responseBody)
+            xhr.restore()
+            delete _fakeAjaxParams
+          }
+        }, 0)
+      }
+    }
+
+    testFrame._fakeAjaxParams = { method: method, url: url, responseCode: responseCode, responseBody: responseBody }
+    testFrame.eval("(" + fakeAjax.toString() + ")()")
   }
 }
 
@@ -92,3 +151,15 @@ function openPage(path, predicate) {
     })()
   }
 }
+
+(function improveMocha() {
+  var origBefore = before
+  before = function() {
+    Array.prototype.slice.call(arguments).forEach(function(arg) {
+      if (typeof arg !== "function") {
+        throw ("not a function: " + arg)
+      }
+      origBefore(arg)
+    })
+  }
+})()

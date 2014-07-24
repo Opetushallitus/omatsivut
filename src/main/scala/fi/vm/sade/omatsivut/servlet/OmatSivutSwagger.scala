@@ -1,8 +1,7 @@
 package fi.vm.sade.omatsivut.servlet
 
-import org.scalatra.swagger.Swagger
-import org.scalatra.swagger.ApiInfo
 import fi.vm.sade.omatsivut.BuildInfo
+import org.scalatra.swagger.{ApiInfo, Swagger}
 
 class OmatSivutSwagger extends Swagger(
 	Swagger.SpecVersion,

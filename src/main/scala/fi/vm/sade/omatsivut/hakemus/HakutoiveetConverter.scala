@@ -1,11 +1,14 @@
 package fi.vm.sade.omatsivut.hakemus
 
-/**
- * Created by singen on 15.7.2014.
- */
+import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
+import fi.vm.sade.omatsivut.domain.Hakemus._
+
 object HakutoiveetConverter {
-  def convert(toiveet: Map[String, String]): List[Map[String, String]] = {
-    groupPreferences(toiveet)
+  val preferenceKeyPrefix: String = "preference"
+  val hakutoiveetPhase: String = OppijaConstants.PHASE_APPLICATION_OPTIONS
+
+  def convertFromAnswers(answers: Map[String, String]): List[Hakutoive] = {
+    groupPreferences(answers)
       .toList
       .map(shortenNames)
       .map(convertEmptyPreferences)
@@ -13,12 +16,47 @@ object HakutoiveetConverter {
       .map((m) => m.filterKeys { Set("priority").contains(_) == false})
   }
 
-  private def shortenKey(v: (String, String), delimiter: Char = '-') = {
-    v._1.substring(v._1.indexOf(delimiter) + 1)
+  def convertToAnswers(hakutoiveet: List[Hakutoive]): Map[String, String] = {
+    hakutoiveet.zipWithIndex.flatMap {
+      case (hakutoive, index) => hakutoive.map {
+        case (key, value) => (preferenceKeyPrefix + (index + 1) + getDelimiter(key) + key, value)
+      }
+    }.toMap[String, String]
   }
 
-  private def tupleWithShortKey(v: (String, String)) = {
-    if (v._1.contains("_")) (shortenKey(v, '_'), v._2) else (shortenKey(v), v._2)
+  def updateAnswers(hakutoiveet: List[Hakutoive], hakutoiveetAnswers: Map[String, String], previousHakutoiveetAnswers: Map[String, String]): Map[String, String] = {
+    val hakuToiveetWithEmptyValues = previousHakutoiveetAnswers.filterKeys(s => s.startsWith(HakutoiveetConverter.preferenceKeyPrefix)).mapValues(s => "")
+    val hakutoiveetWithoutOldPreferences = previousHakutoiveetAnswers.filterKeys(s => !s.startsWith(HakutoiveetConverter.preferenceKeyPrefix))
+    val updatedHakutoiveet = hakutoiveetWithoutOldPreferences ++ hakuToiveetWithEmptyValues ++ HakutoiveetConverter.convertToAnswers(hakutoiveet) ++ hakutoiveetAnswers
+    updatedHakutoiveet
+  }
+
+  def answersContainHakutoive(answers: Map[String, String], hakutoive: Hakutoive) = {
+    (hakutoive.get("Opetuspiste-id"), hakutoive.get("Koulutus-id")) match {
+      case (Some(opetusPiste), Some(koulutus)) =>
+        val flatAnswers = answers.toList.map {
+          case (key, value) => (shortenKey(key), value)
+        }
+        flatAnswers.contains(("Opetuspiste-id", opetusPiste)) && flatAnswers.contains("Koulutus-id", koulutus)
+      case _ => false
+    }
+  }
+
+  def describe(hakutoive: Hakutoive) = {
+    hakutoive.getOrElse("Opetuspiste", "") + " - " + hakutoive.getOrElse("Koulutus", "")
+  }
+
+  private def shortenKey(key: String): String = {
+    key.substring(key.indexOf(getDelimiter(key)) + 1)
+  }
+
+  private def getDelimiter(s: String) = if(s.contains("_")) "_" else "-"
+
+  private def shortenNames(tuple: (String, Map[String, String])) = {
+    def tupleWithShortKey(v: (String, String)) = v match {
+      case (key: String, value: String) => (shortenKey(key), value)
+    }
+    tuple._2.map(tupleWithShortKey) ++ Map("priority" -> tuple._1)
   }
 
   private def groupPreferences(toiveet: Map[String, String]) = {
@@ -29,15 +67,11 @@ object HakutoiveetConverter {
     })
   }
 
-  private def convertEmptyPreferences(toiveet: Map[String, String]) = {
-    if (toiveet.getOrElse("Koulutus-id", "").length() == 0) {
-      Map("priority" -> toiveet.getOrElse("priority", ""))
+  private def convertEmptyPreferences(answers: Map[String, String]) = {
+    if (answers.getOrElse("Koulutus-id", "").length() == 0) {
+      Map("priority" -> answers.getOrElse("priority", ""))
     } else {
-      toiveet
+      answers
     }
-  }
-
-  private def shortenNames(tuple: (String, Map[String, String])) = {
-    tuple._2.map(tupleWithShortKey) ++ Map("priority" -> tuple._1)
   }
 }

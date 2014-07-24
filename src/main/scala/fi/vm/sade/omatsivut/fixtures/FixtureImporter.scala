@@ -1,10 +1,12 @@
 package fi.vm.sade.omatsivut.fixtures
 
 import fi.vm.sade.haku.testfixtures.MongoFixtureImporter
-import org.springframework.data.mongodb.core.MongoTemplate
+import fi.vm.sade.omatsivut.AppConfig.AppConfig
 
-object FixtureImporter {
-  def importFixtures(mongoTemplate: MongoTemplate): Unit = {
-    MongoFixtureImporter.importJsonFixtures(mongoTemplate)
+case class FixtureImporter(implicit val appConfig: AppConfig) {
+  private val dao = appConfig.springContext.applicationDAO
+
+  def applyFixtures {
+    MongoFixtureImporter.importJsonFixtures(appConfig.mongoTemplate, appConfig.springContext.applicationDAO)
   }
 }

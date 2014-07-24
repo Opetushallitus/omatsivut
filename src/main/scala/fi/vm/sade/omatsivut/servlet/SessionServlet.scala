@@ -12,6 +12,8 @@ class SessionServlet(implicit val appConfig: AppConfig) extends AuthCookieCreati
 
   get("/logout") {
     tellBrowserToDeleteAuthCookie(request, response)
-    response.redirect("/Shibboleth.sso/Logout")
+    response.redirect(ssoContextPath + "/Shibboleth.sso/Logout?type=Local")
   }
+
+  def ssoContextPath: String = if (appConfig.isTest) "/omatsivut" else "/"
 }

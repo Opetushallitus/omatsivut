@@ -4,14 +4,17 @@ import fi.vm.sade.omatsivut.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.fixtures.FixtureImporter
 import org.scalatra.CookieOptions
 
-class TestHelperServlet(config: AppConfig)(implicit val appConfig: AppConfig) extends AuthCookieCreating  {
+class TestHelperServlet(implicit val appConfig: AppConfig) extends AuthCookieCreating  {
   if(appConfig.isTest){
     get("/fakesession") {
-      createAuthCookieResponse(paramOption("hetu"), CookieOptions(secure = false, path = "/"), paramOption("redirect").getOrElse("/index.html"))
+      val hetuOption: Option[String] = paramOption("hetu")
+      createAuthCookieResponse(hetuOption, CookieOptions(secure = false, path = "/"), paramOption("redirect").getOrElse("/index.html"))
     }
 
     put("/fixtures/apply") {
-      FixtureImporter.importFixtures(appConfig.mongoTemplate)
+      FixtureImporter().applyFixtures
     }
   }
+
+  def ssoContextPath: String = "/omatsivut"
 }

@@ -1,0 +1,62 @@
+{
+  "a": [
+    {
+      "id": "1.2.246.562.10.60222091211",
+      "name": "Ahlmanin ammattiopisto"
+    },
+    {
+      "id": "1.2.246.562.10.87157719573",
+      "name": "Amiedu, Valimotie 8"
+    },
+    {
+      "id": "1.2.246.562.10.72066389551",
+      "name": "Ammatti-instituutti Iisakki"
+    },
+    {
+      "id": "1.2.246.562.10.278233817710",
+      "name": "Ammattiopisto Livia, Sosiaali- ja terveysopisto"
+    },
+    {
+      "id": "1.2.246.562.10.90573717916",
+      "name": "Ammattiopisto Tavastia, Hämeenlinna"
+    },
+    {
+      "id": "1.2.246.562.10.60960979684",
+      "name": "Anna Tapion säätiö"
+    }
+  ],
+  "e": [
+    {
+      "id": "1.2.246.562.10.51207906986",
+      "name": "Etelä-Kymenlaakson ammattiopisto, Haminan kampus"
+    },
+    {
+      "id": "1.2.246.562.10.508585004610",
+      "name": "Etelä-Kymenlaakson ammattiopisto, Kotekon kampus"
+    },
+    {
+      "id": "1.2.246.562.10.46273628811",
+      "name": "Etelä-Pohjanmaan Opisto"
+    },
+    {
+      "id": "1.2.246.562.10.290189957610",
+      "name": "Etelä-Savon ammattiopisto,  Otavankatu 4"
+    },
+    {
+      "id": "1.2.246.562.10.64653891404",
+      "name": "Etelä-Savon ammattiopisto,  peruskoulutukseen valmistavat koulutukset"
+    }
+  ],
+  "o": [
+    {
+      "id": "1.2.246.562.10.74355268397",
+      "name": "Omnian ammattiopisto, Espoon keskus, Lehtimäentie"
+    }
+  ],
+  "t": [
+    {
+      "id": "1.2.246.562.10.49832689993",
+      "name": "Turun Kristillinen opisto"
+    }
+  ]
+}

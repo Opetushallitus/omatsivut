@@ -1,0 +1,64 @@
+{
+  "1.2.246.562.10.60222091211": [
+    {
+      "id": "1.2.246.562.14.2014040912353139913320",
+      "name": "Ammattistartti",
+      "aoIdentifier": "028",
+      "educationDegree": "32",
+      "childLONames": [],
+      "sora": false,
+      "teachingLanguages": [
+        "FI"
+      ],
+      "athleteEducation": false,
+      "kaksoistutkinto": false,
+      "vocational": true,
+      "educationCodeUri": "koulutus_039996"
+    }
+  ],
+  "1.2.246.562.10.49832689993": [
+    {
+      "id": "1.2.246.562.14.2014032812530780195965",
+      "name": "Kymppiluokka",
+      "aoIdentifier": "019",
+      "educationDegree": "22",
+      "childLONames": [],
+      "sora": false,
+      "teachingLanguages": ["FI"],
+      "athleteEducation": false,
+      "kaksoistutkinto": false,
+      "vocational": true,
+      "educationCodeUri": "koulutus_020075"
+    }
+  ],
+  "1.2.246.562.10.290189957610": [
+    {
+      "id": "1.2.246.562.14.2014030415375012208392",
+      "name": "Ammattistartti",
+      "aoIdentifier": "028",
+      "educationDegree": "32",
+      "childLONames": [],
+      "sora": false,
+      "teachingLanguages": ["FI"],
+      "athleteEducation": false,
+      "kaksoistutkinto": false,
+      "vocational": true,
+      "educationCodeUri": "koulutus_039996"
+    }
+  ],
+  "1.2.246.562.10.74355268397": [
+    {
+      "id": "1.2.246.562.14.2014030412193592192583",
+      "name": "Ammattistartti",
+      "aoIdentifier": "028",
+      "educationDegree": "32",
+      "childLONames": [],
+      "sora": false,
+      "teachingLanguages": ["FI"],
+      "athleteEducation": false,
+      "kaksoistutkinto": false,
+      "vocational": true,
+      "educationCodeUri": "koulutus_039996"
+    }
+  ]
+}

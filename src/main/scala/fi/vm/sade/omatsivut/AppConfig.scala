@@ -1,8 +1,8 @@
 package fi.vm.sade.omatsivut
 
+import fi.vm.sade.haku.testfixtures.MongoFixtureImporter
 import fi.vm.sade.omatsivut.fixtures.FixtureImporter
 import fi.vm.sade.omatsivut.mongo.{EmbeddedMongo, MongoServer}
-import fi.vm.sade.omatsivut.security.{AuthenticationInfoService, RemoteAuthenticationInfoService}
 
 object AppConfig extends Logging {
   def fromSystemProperty: AppConfig = {
@@ -18,19 +18,18 @@ object AppConfig extends Logging {
   }
 
   class Default extends AppConfig with ExternalProps {
-    def authenticationInfoService: AuthenticationInfoService = new RemoteAuthenticationInfoService(settings.authenticationService)(this)
     def springConfiguration = new OmatSivutSpringContext.Default()
   }
 
-  class Dev extends AppConfig with StubbedExternalDeps with TestMode {
+  class Dev extends AppConfig with MockAuthentication {
     def springConfiguration = new OmatSivutSpringContext.Dev()
     def configFiles = List("src/main/resources/dev.conf")
   }
-  class DevWithRemoteMongo extends StubbedExternalDeps with ExternalProps {
+  class DevWithRemoteMongo extends MockAuthentication with ExternalProps {
     def springConfiguration = new OmatSivutSpringContext.Dev()
   }
 
-  class IT extends StubbedExternalDeps with TestMode {
+  class IT extends MockAuthentication with StubbedExternalDeps {
     def springConfiguration = new OmatSivutSpringContext.IT()
     def configFiles = List("src/main/resources/it.conf")
 
@@ -39,7 +38,7 @@ object AppConfig extends Logging {
     override def start {
       mongo = EmbeddedMongo.start
       try {
-        FixtureImporter.importFixtures(mongoTemplate)
+        FixtureImporter()(this).applyFixtures
       } catch {
         case e: Exception =>
           stop
@@ -62,12 +61,9 @@ object AppConfig extends Logging {
   }
 
   trait StubbedExternalDeps extends TestMode {
-    def authenticationInfoService: AuthenticationInfoService = new AuthenticationInfoService {
-      def getHenkiloOID(hetu: String) = hetu match {
-        case "010101-123N" => Some("1.2.246.562.24.14229104472")
-        case _ => None
-      }
-    }
+  }
+
+  trait MockAuthentication extends TestMode {
   }
 
   trait TestMode extends AppConfig {
@@ -75,17 +71,16 @@ object AppConfig extends Logging {
   }
 
   trait AppConfig {
-    def authenticationInfoService: AuthenticationInfoService
     def springConfiguration: OmatSivutConfiguration
     lazy val springContext = new OmatSivutSpringContext(OmatSivutSpringContext.createApplicationContext(this))
 
     def isTest: Boolean = false
     def start {}
     def stop {}
-    def withConfig[T](f: => T) = {
+    def withConfig[T](f: (AppConfig => T)): T = {
       start
       try {
-        f
+        f(this)
       } finally {
         stop
       }
