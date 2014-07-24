@@ -9,9 +9,7 @@ object AppConfig extends Logging {
     logger.info("Using omatsivut.profile=" + profile)
     profile match {
       case "default" => new Default
-      case "templated" => new Default with TemplatedProps with TestMode {
-        def templateAttributesFile = System.getProperty("omatsivut.vars")
-      }
+      case "templated" => new LocalTestingWithTemplatedVars
       case "dev" => new Dev
       case "dev-remote-mongo" => new DevWithRemoteMongo
       case "it" => new IT
@@ -21,6 +19,11 @@ object AppConfig extends Logging {
 
   class Default extends AppConfig with ExternalProps {
     def springConfiguration = new OmatSivutSpringContext.Default()
+  }
+
+  class LocalTestingWithTemplatedVars extends AppConfig with TemplatedProps with TestMode {
+    def springConfiguration = new OmatSivutSpringContext.Default()
+    def templateAttributesFile = System.getProperty("omatsivut.vars")
   }
 
   class Dev extends AppConfig with MockAuthentication {
@@ -62,8 +65,8 @@ object AppConfig extends Logging {
     )
   }
 
-  trait TemplatedProps extends ExternalProps {
-    abstract override def configFiles = List(ConfigTemplateProcessor.createPropertyFileForTestingWithTemplate(templateAttributesFile))
+  trait TemplatedProps {
+    def configFiles = List(ConfigTemplateProcessor.createPropertyFileForTestingWithTemplate(templateAttributesFile))
     def templateAttributesFile: String
   }
 
