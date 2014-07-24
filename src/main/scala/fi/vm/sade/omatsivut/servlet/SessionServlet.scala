@@ -35,6 +35,14 @@ class SessionServlet(implicit val appConfig: AppConfig) extends OmatSivutServlet
     }
   }
 
+  private def checkCredentials = {
+    for {
+      hetu <- findHetuFromParams
+      cookie <- shibbolethCookieInRequest(request)
+      oid <- AuthenticationInfoService.apply.getHenkiloOID(hetu)
+    } yield (oid, cookie)
+  }
+
   private def createAuthCookieResponse(credentials: CookieCredentials) {
     val encryptedCredentials = AuthenticationCipher().encrypt(credentials.toString)
     response.addCookie(Cookie("auth", encryptedCredentials)(makeCookieOptions))
@@ -44,14 +52,6 @@ class SessionServlet(implicit val appConfig: AppConfig) extends OmatSivutServlet
 
   private def redirectUri: String = {
     request.getContextPath + paramOption("redirect").getOrElse("/index.html")
-  }
-
-  private def checkCredentials = {
-    for {
-      hetu <- findHetuFromParams
-      cookie <- shibbolethCookieInRequest(request)
-      oid <- AuthenticationInfoService.apply.getHenkiloOID(hetu)
-    } yield (oid, cookie)
   }
 
   get("/logout") {

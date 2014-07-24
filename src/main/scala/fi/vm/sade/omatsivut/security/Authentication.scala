@@ -6,7 +6,6 @@ import fi.vm.sade.omatsivut.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.Logging
 import org.joda.time.DateTime
 import org.scalatra.ScalatraBase
-import org.scalatra.servlet.RichRequest
 
 trait Authentication extends ScalatraBase with AuthCookieParsing with Logging {
   implicit val appConfig: AppConfig
