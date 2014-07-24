@@ -1,7 +1,5 @@
 package fi.vm.sade.omatsivut.servlet
 
-import javax.servlet.http.HttpServletRequest
-
 import fi.vm.sade.omatsivut.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.Logging
 import fi.vm.sade.omatsivut.security.{AuthCookieParsing, AuthenticationCipher, AuthenticationInfoService, CookieCredentials}
@@ -10,14 +8,13 @@ import org.scalatra.{Cookie, CookieOptions}
 
 trait AuthCookieCreating extends AuthCookieParsing with Logging {
   def createAuthCookieResponse(credentials: CookieCredentials,
-                               request: HttpServletRequest,
                                response: RichResponse,
                                redirectUri: String,
                                cookieOptions: CookieOptions = CookieOptions(secure = true, path = "/", maxAge = 1799))(implicit appConfig: AppConfig) {
     val encryptedCredentials = AuthenticationCipher().encrypt(credentials.toString)
     response.addCookie(Cookie("auth", encryptedCredentials)(cookieOptions))
     logger.info("Redirecting to " + redirectUri)
-    response.redirect(request.getContextPath + redirectUri)
+    response.redirect(redirectUri)
   }
 
   def createAuthCookieCredentials(hetuOption: Option[String], shibbolethCookie: String, authenticationInfoService: AuthenticationInfoService): Option[CookieCredentials] = {
