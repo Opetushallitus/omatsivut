@@ -110,10 +110,10 @@ object ShibbolethCookie {
     ShibbolethCookie(cookie.getName, cookie.getValue)
   }
   def fromString(str: String) = {
-    val split = str.split(":")
+    val split = str.split("=")
     ShibbolethCookie(split(0), split(1))
   }
 }
 case class ShibbolethCookie(name: String, value: String) {
-  override def toString = name + ":" + value
+  override def toString = name + "=" + value
 }
