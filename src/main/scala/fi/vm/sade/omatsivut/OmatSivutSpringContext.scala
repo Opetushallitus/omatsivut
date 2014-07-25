@@ -14,8 +14,8 @@ import org.springframework.context.annotation._
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer
 import org.springframework.core.env.{MapPropertySource, MutablePropertySources}
 import org.springframework.data.mongodb.core.MongoTemplate
-
 import scala.collection.JavaConversions._
+import fi.vm.sade.log.client.Logger
 
 class OmatSivutSpringContext(context: ApplicationContext) {
   def applicationSystemService = context.getBean(classOf[ApplicationSystemService])
@@ -25,6 +25,8 @@ class OmatSivutSpringContext(context: ApplicationContext) {
   def mongoTemplate = context.getBean(classOf[MongoTemplate])
 
   def validator = context.getBean(classOf[ElementTreeValidator])
+
+  def auditLogger = context.getBean(classOf[Logger])
 }
 
 object OmatSivutSpringContext {
@@ -55,6 +57,16 @@ object OmatSivutSpringContext {
   @ComponentScan(basePackages = Array("fi.vm.sade.haku"))
   @ImportResource(Array("/META-INF/spring/logger-mock-context.xml"))
   class Dev extends OmatSivutConfiguration {
+    val profile = "dev"
+  }
+
+  @Configuration
+  @ComponentScan(basePackages = Array("fi.vm.sade.haku"))
+  @ImportResource(Array("/META-INF/spring/logger-context.xml",
+                        "/META-INF/spring/context/dao-context.xml",
+                        "/META-INF/spring/context/service-context.xml"
+                        ))
+  class DevWithAuditLog extends OmatSivutConfiguration {
     val profile = "dev"
   }
 

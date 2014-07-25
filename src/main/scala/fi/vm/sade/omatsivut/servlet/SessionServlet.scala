@@ -4,8 +4,9 @@ import fi.vm.sade.omatsivut.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.security._
 import org.scalatra.{Cookie, CookieOptions}
 import org.scalatra.servlet.RichResponse
-
 import scala.collection.JavaConverters._
+import fi.vm.sade.omatsivut.auditlog.AuditLogger
+import fi.vm.sade.omatsivut.auditlog.AuditEventType
 
 class SessionServlet(implicit val appConfig: AppConfig) extends OmatSivutServletBase with AuthCookieParsing {
   get("/initsession") {
@@ -30,7 +31,10 @@ class SessionServlet(implicit val appConfig: AppConfig) extends OmatSivutServlet
 
   private def createAuthCookieCredentials: Option[CookieCredentials] = {
     checkCredentials match {
-      case Some((oid, cookie)) => Some(CookieCredentials(oid, cookie))
+      case Some((oid, cookie)) => {
+        new AuditLogger().logEvent(oid, AuditEventType.Create, cookie.name, cookie.value)
+        Some(CookieCredentials(oid, cookie))
+      }
       case _ => None
     }
   }

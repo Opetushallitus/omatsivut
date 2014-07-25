@@ -2,6 +2,7 @@ package fi.vm.sade.omatsivut
 
 import fi.vm.sade.omatsivut.fixtures.FixtureImporter
 import fi.vm.sade.omatsivut.mongo.{EmbeddedMongo, MongoServer}
+import org.apache.activemq.broker.BrokerService
 
 object AppConfig extends Logging {
   def fromSystemProperty: AppConfig = {
@@ -12,6 +13,7 @@ object AppConfig extends Logging {
       case "templated" => new LocalTestingWithTemplatedVars
       case "dev" => new Dev
       case "dev-remote-mongo" => new DevWithRemoteMongo
+      case "dev-audit-log" => new DevWithAuditLog
       case "it" => new IT
       case name => throw new IllegalArgumentException("Unknown value for omatsivut.profile: " + name);
     }
@@ -30,6 +32,29 @@ object AppConfig extends Logging {
     def springConfiguration = new OmatSivutSpringContext.Dev()
     override def properties = super.properties +
       ("mongodb.oppija.uri" -> "mongodb://localhost:27017")
+  }
+
+  class DevWithAuditLog extends AppConfig with ExampleTemplatedProps with MockAuthentication  {
+    def springConfiguration = new OmatSivutSpringContext.DevWithAuditLog()
+
+    private var activemqOpt: Option[BrokerService] = None
+
+    override def start {
+      val activemq = new BrokerService()
+      activemq.addConnector("tcp://localhost:61616")
+      activemq.start()
+      activemqOpt = Some(activemq)
+    }
+
+    override def stop {
+      activemqOpt.foreach(_.stop)
+      activemqOpt = None
+    }
+
+    override def properties = super.properties +
+      ("mongodb.oppija.uri" -> "mongodb://localhost:27017") +
+      ("log.mongo.uri" -> "${mongodb.oppija.uri}") +
+      ("activemq.brokerurl" -> "vm://transport")
   }
 
   class DevWithRemoteMongo extends MockAuthentication with ExternalProps {

@@ -75,6 +75,10 @@ object OmatsivutBuild extends Build {
           ExclusionRule(organization = "com.wordnik")
         ),
         "fi.vm.sade.haku" % "hakemus-api" % "9.5-SNAPSHOT" % "test" classifier "tests",
+        "fi.vm.sade.log" % "log-service" % "8.0-SNAPSHOT" % "test" classifier "classes" excludeAll(
+          ExclusionRule(organization = "org.springframework.data"),
+          ExclusionRule(organization = "org.springframework")
+        ),
         "com.sun.jersey" % "jersey-client" % "1.17.1" // <- patch for transitive dependency problem
         ,"org.springframework" % "spring-jms" % SpringVersion // <- patch for spring-core-3.1.3 transitive dep
         ,"org.springframework" % "spring-core" % SpringVersion
