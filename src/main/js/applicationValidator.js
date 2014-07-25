@@ -66,8 +66,9 @@ module.exports = function(listApp) {
 
     function hasHakutoiveErrors(errors) {
       var errorMap = util.mapArray(errors, "key", "message");
+      var errorRegexp = /^preference\d$|^preference\d-Koulutus$/
       return _(errorMap).any(function(val, key) {
-        if (key.indexOf("preference") === 0 && val.length > 0)
+        if (errorRegexp.test(key) && val.length > 0)
           return true
         else
           return false

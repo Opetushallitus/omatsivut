@@ -50,6 +50,7 @@ module.exports = function(listApp) {
         setStatusMessage(data.errorText, "error")
         importQuestions(data.questions)
         updateHakutoiveValidationMessages(data.errors) // Lisäkysymysten virheet näytetään vasta tallennuksen yhteydessä
+        updateMiscValidationMessages(data.errors)
       }
     }
 
@@ -149,11 +150,13 @@ module.exports = function(listApp) {
 
       var miscErrors = _(errors).filter(function(error) {
         return _(questionKeys).find(function(key) { return key === error.key }) == null &&
-          !/^preference\d/.test(error.key)
+          !/^preference\d-Koulutus/.test(error.key)
       })
 
-      if (miscErrors.length > 0)
-        setStatusMessage("Odottamaton virhe. Ota yhteyttä asiakaspalveluun.", "error")
+      if (miscErrors.length > 0) {
+        setStatusMessage("Odottamaton virhe. Ota yhteyttä ylläpitoon.", "error")
+        console.log("Käsittelemättömät validointivirheet:", _(miscErrors).map(JSON.stringify).join(", "))
+      }
     }
   }])
 }
