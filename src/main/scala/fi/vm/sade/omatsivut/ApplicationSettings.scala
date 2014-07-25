@@ -29,18 +29,24 @@ object ApplicationSettings extends Logging {
 
 }
 class ApplicationSettings(config: Config) {
-  val casTicketUrl = config getString "omatsivut.cas.ticket.url"
+  val casTicketUrl = config.getString("omatsivut.cas.ticket.url")
 
   val authenticationServiceConfig = getRemoteApplicationConfig(config.getConfig("omatsivut.authentication-service"))
 
-  val koulutusinformaatioAoUrl = config getString "omatsivut.koulutusinformaatio.ao.url"
-  val koulutusinformaatioLopUrl = config getString "omatsivut.koulutusinformaatio.lop.url"
+  val koulutusinformaatioAoUrl = config.getString("omatsivut.koulutusinformaatio.ao.url")
+  val koulutusinformaatioLopUrl = config.getString("omatsivut.koulutusinformaatio.lop.url")
 
-  val aesKey = config getString "omatsivut.crypto.aes.key"
-  val hmacKey = config getString "omatsivut.crypto.hmac.key"
+  val aesKey = config.getString("omatsivut.crypto.aes.key")
+  val hmacKey = config.getString("omatsivut.crypto.hmac.key")
 
   private def getRemoteApplicationConfig(config: Config) = {
-    RemoteApplicationConfig(config getString "url", config getString "username", config getString "password", config getString "path", config getString "ticket_consumer_path")
+    RemoteApplicationConfig(
+      config.getString("url"),
+      config.getString("username"),
+      config.getString("password"),
+      config.getString("path"),
+      config.getString("ticket_consumer_path")
+    )
   }
 
   def toProperties = {
