@@ -1,6 +1,6 @@
 (function () {
   var page = ApplicationListPage()
-  var hakemus1Index = 1
+  var hakemus1Index = "Perusopetuksen jälkeisen valmistavan koulutuksen kesän 2014 haku MUOKATTU"
   var hakemus1 = page.getApplication(hakemus1Index)
 
   describe('Hakemuslistaus', function () {
@@ -321,7 +321,7 @@
           describe("Tietokanta", function() {
             it("sisältää tallennetut tiedot", function() {
               return db.getApplications().then(function(data) {
-                var answers = data[hakemus1Index].answers
+                var answers = findByHaku(data, hakemus1Index).answers
                 var questions = hakemus1.questionsForApplication().data()
 
                 answers.hakutoiveet[questions[0].id].should.equal("tekstivastaus 1")
@@ -502,8 +502,12 @@
         }
       )
       it(testName, function() {
-        dbCheckFunction(applicationsBefore[hakemus1Index], applicationsAfter[hakemus1Index])
+        dbCheckFunction(findByHaku(applicationsBefore, hakemus1Index), findByHaku(applicationsAfter, hakemus1Index))
       })
     })
+  }
+
+  function findByHaku(applications, haku) {
+    return _.find(applications, function(a) { return a.haku.name == haku })
   }
 })()

@@ -138,7 +138,11 @@ function ApplicationListPage() {
     }
 
     function getApplicationElement() {
-      return S("#hakemus-list>li").eq(applicationIndex)
+      if (typeof applicationIndex == "number") {
+        return S("#hakemus-list>li").eq(applicationIndex)
+      } else {
+        return S("#hakemus-list>li:contains('"+ applicationIndex+ "')")
+      }
     }
   }
 
