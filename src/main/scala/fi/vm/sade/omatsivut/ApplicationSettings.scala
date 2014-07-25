@@ -2,7 +2,7 @@ package fi.vm.sade.omatsivut
 
 import java.io.File
 
-import com.typesafe.config.{Config, ConfigFactory}
+import com.typesafe.config.{ConfigException, Config, ConfigFactory}
 
 import scala.collection.JavaConversions._
 
@@ -38,6 +38,16 @@ class ApplicationSettings(config: Config) {
 
   val aesKey = config.getString("omatsivut.crypto.aes.key")
   val hmacKey = config.getString("omatsivut.crypto.hmac.key")
+
+  val environment = getStringWithDefault("omatsivut.environment", "default")
+
+  def getStringWithDefault(path: String, default: String) = {
+    try {
+      config.getString(path)
+    } catch {
+      case _ :ConfigException.Missing | _ :ConfigException.Null => default
+    }
+  }
 
   private def getRemoteApplicationConfig(config: Config) = {
     RemoteApplicationConfig(

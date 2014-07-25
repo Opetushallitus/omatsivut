@@ -22,6 +22,7 @@ object AppConfig extends Logging {
 
   class Default extends AppConfig with ExternalProps {
     def springConfiguration = new OmatSivutSpringContext.Default()
+    override def isTest = if (settings.environment == "ophitest") true else false
   }
 
   class LocalTestingWithTemplatedVars extends AppConfig with TemplatedProps with TestMode {
