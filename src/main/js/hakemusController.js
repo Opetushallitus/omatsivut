@@ -142,15 +142,8 @@ module.exports = function(listApp) {
     }
 
     function updateMiscValidationMessages(errors) {
-      var questionKeys = (function getQuestionKeys(node, list) {
-        if (node != null) {
-          if (node.questionNodes == null)
-            list.push(node.question.id.questionId)
-          else
-            _(node.questionNodes).each(function(subnode) { getQuestionKeys(subnode, list) })
-        }
-        return list
-      })($scope.additionalQuestions, [])
+      function getQuestionId(node) { return node.question.id.questionId }
+      var questionKeys = _(util.flattenTree($scope.additionalQuestions, "questionNodes")).map(getQuestionId)
 
       var miscErrors = _(errors).filter(function(error) {
         return _(questionKeys).find(function(key) { return key === error.key }) == null &&

@@ -7,5 +7,17 @@ module.exports = {
       memo[key].push(item[valueField])
       return memo
     }, {});
+  },
+
+  flattenTree: function(rootNode, childrenAttribute) {
+    return (function flatten(node, list) {
+      if (node != null) {
+        if (node[childrenAttribute] == null)
+          list.push(node)
+        else
+          _(node[childrenAttribute]).each(function(subnode) { flatten(subnode, list) })
+      }
+      return list
+    })(rootNode, [])
   }
 }
