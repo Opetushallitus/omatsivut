@@ -2,27 +2,10 @@ function ApplicationListPage() {
   var testHetu = "010101-123N"
 
   var api = {
-    openPage: openPage("/omatsivut/", visible),
+    openPage: openPage("/omatsivut/", applicationPageVisible),
 
     resetDataAndOpen: function () {
       return db.resetData().then(function() { return session.init(testHetu)} ).then(api.openPage)
-    },
-
-    saveWaitSuccess: function() {
-      modifyApplicationScope(0)(function(scope) { scope.application.updated = 0 })
-      return wait.until(api.saveButton(0).isEnabled)()
-        .then(api.saveButton(0).click)
-        .then(wait.untilFalse(api.saveButton(0).isEnabled)) // Tallennus on joko alkanut tai valmis
-        .then(wait.until(api.isSavingState(0, false))) // Tallennus ei ole kesken
-        .then(wait.until(function() { return timestamp().text() != "01.01.1970 02:00:00" })) // tallennus-aikaleima päivittyy
-
-      function timestamp() { return getApplication(0).find(".timestamp time") }
-    },
-
-    saveWaitError: function() {
-      var status = api.statusMessage()
-      api.saveButton(0).click()
-      return wait.until(function() { return api.statusMessage() != status && api.saveError().length > 0 })()
     },
 
     hetu: function () {
@@ -39,58 +22,125 @@ function ApplicationListPage() {
         }).toArray()
     },
 
-    isSavingState: function (applicationIndex, isSaving) {
-      return function () {
-        return (getApplication(applicationIndex).find(".ajax-spinner").length > 0) === isSaving
-      }
-    },
-
-    saveButton: function (applicationIndex) {
-      return saveButton(getApplication(applicationIndex).find(".save-btn"))
-    },
-
-    getPreference: function (index) {
-      return PreferenceItem(function () {
-        var applicationElement = getApplication(0)
-        return applicationElement.find(".preference-list-item").eq(index)
-      })
-    },
-
-    preferencesForApplication: function (index) {
-      return preferencesForApplication(index, function (item) {
-        return item.data()["hakutoive.Koulutus"].length > 0
-      }).map(function (item) {
-        return item.data()
-      })
-    },
-
-    isValidationErrorVisible: function() {
-      return getApplication(0).find(".status-message.error").is(":visible")
-    },
-
-    statusMessage: function() {
-      return getApplication(0).find(".status-message").text()
-    },
-
-    saveError: function() {
-      return getApplication(0).find(".status-message.error").text()
-    },
-
-    emptyPreferencesForApplication: function (index) {
-      return preferencesForApplication(index, function (item) {
-        return _.isEmpty(item.data()["hakutoive.Koulutus"])
-      })
-    },
-
-    questionsForApplication: function (index) {
-      return Questions(function() { return getApplication(index).find(".questions") })
-    },
-
-    changesSavedTimestamp: function () {
-      return getApplication(0).find(".timestamp").text()
+    getApplication: function(applicationIndex) {
+      return Application(applicationIndex)
     }
   }
+
+  function applicationPageVisible() {
+    return S("#hakemus-list").attr("ng-cloak") == null && api.applications().length > 0
+  }
   return api
+
+  function Application(applicationIndex) {
+    var api = {
+
+      saveWaitSuccess: function() {
+        modifyApplicationScope(function(scope) { scope.application.updated = 0 })
+        return wait.until(api.saveButton().isEnabled)()
+          .then(api.saveButton().click)
+          .then(wait.untilFalse(api.saveButton().isEnabled)) // Tallennus on joko alkanut tai valmis
+          .then(wait.until(api.isSavingState(false))) // Tallennus ei ole kesken
+          .then(wait.until(function() { return timestamp().text() != "01.01.1970 02:00:00" })) // tallennus-aikaleima päivittyy
+
+        function timestamp() { return getApplicationElement().find(".timestamp time") }
+      },
+
+      saveWaitError: function() {
+        var status = api.statusMessage()
+        api.saveButton().click()
+        return wait.until(function() { return api.statusMessage() != status && api.saveError().length > 0 })()
+      },
+
+      isSavingState: function (isSaving) {
+        return function () {
+          return (getApplicationElement().find(".ajax-spinner").length > 0) === isSaving
+        }
+      },
+
+      saveButton: function () {
+        return saveButton(getApplicationElement().find(".save-btn"))
+
+        function saveButton(el) {
+          return {
+            isEnabled: function () {
+              return !el.prop("disabled")
+            },
+            click: function () {
+              el.click()
+            }
+          }
+        }
+      },
+
+      getPreference: function (index) {
+        return PreferenceItem(function () {
+          return getApplicationElement().find(".preference-list-item").eq(index)
+        })
+      },
+
+      preferencesForApplication: function () {
+        return preferencesForApplication(function (item) {
+          return item.data()["hakutoive.Koulutus"].length > 0
+        }).map(function (item) {
+          return item.data()
+        })
+      },
+
+      isValidationErrorVisible: function() {
+        return getApplicationElement().find(".status-message.error").is(":visible")
+      },
+
+      statusMessage: function() {
+        return getApplicationElement().find(".status-message").text()
+      },
+
+      saveError: function() {
+        return getApplicationElement().find(".status-message.error").text()
+      },
+
+      emptyPreferencesForApplication: function () {
+        return preferencesForApplication(function (item) {
+          return _.isEmpty(item.data()["hakutoive.Koulutus"])
+        })
+      },
+
+      questionsForApplication: function () {
+        return Questions(function() { return getApplicationElement().find(".questions") })
+      },
+
+      changesSavedTimestamp: function () {
+        return getApplicationElement().find(".timestamp").text()
+      }
+    }
+    return api
+
+
+    function preferencesForApplication(filter) {
+      var application = getApplicationElement(applicationIndex)
+      return application.find(".preference-list-item")
+        .map(function () {
+          var el = this
+          return PreferenceItem(function () {
+            return S(el)
+          })
+        }).toArray()
+        .filter(filter)
+    }
+
+    function modifyApplicationScope(manipulationFunction) {
+      var scope = getApplicationScope(applicationIndex)
+      scope.$apply(function() { manipulationFunction(scope) })
+
+      function getApplicationScope() {
+        return testFrame.angular.element(getApplicationElement()).scope()
+      }
+    }
+
+    function getApplicationElement() {
+      return S("#hakemus-list>li").eq(applicationIndex)
+    }
+  }
 
   function Questions(el) {
     return {
@@ -143,13 +193,6 @@ function ApplicationListPage() {
       },
       getAnswer: function(index) {
         return el().find(".question").eq(index).find("input").val()
-      },
-      modifyAnswers: function(f) {
-        return function() {
-          modifyApplicationScope(0)(function(scope) {
-            f(scope.application.answers)
-          })
-        }
       },
       count: function() {
         return this.data().length
@@ -258,47 +301,5 @@ function ApplicationListPage() {
         return description != api.toString()
       })().then(wait.forAngular)
     }
-  }
-
-  function visible() {
-    return S("#hakemus-list").attr("ng-cloak") == null && api.applications().length > 0
-  }
-
-  function saveButton(el) {
-    return {
-      isEnabled: function () {
-        return !el.prop("disabled")
-      },
-      click: function () {
-        el.click()
-      }
-    }
-  }
-
-  function getApplication(index) {
-    return S("#hakemus-list>li").eq(index)
-  }
-
-  function modifyApplicationScope(id) {
-    return function(manipulationFunction) {
-      scope = getApplicationScope(id)
-      scope.$apply(function() { manipulationFunction(scope) })
-    }
-  }
-
-  function getApplicationScope(id) {
-    return testFrame.angular.element(getApplication(id)).scope()
-  }
-
-  function preferencesForApplication(index, filter) {
-    var application = getApplication(index)
-    return application.find(".preference-list-item")
-      .map(function () {
-        var el = this
-        return PreferenceItem(function () {
-          return S(el)
-        })
-      }).toArray()
-      .filter(filter)
   }
 }

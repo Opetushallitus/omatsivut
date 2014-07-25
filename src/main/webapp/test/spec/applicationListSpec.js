@@ -1,6 +1,9 @@
 (function () {
+  var page = ApplicationListPage()
+  var hakemus1Index = 1
+  var hakemus1 = page.getApplication(hakemus1Index)
+
   describe('Hakemuslistaus', function () {
-    var page = ApplicationListPage();
 
     before(function (done) {
       session.init("010101-123N").then(page.resetDataAndOpen).done(done)
@@ -10,13 +13,16 @@
       it('hakemuslistassa on hakemus henkilölle 010101-123N', function () {
         expect(ApplicationListPage().applications()).to.deep.equal([
           {
-            applicationSystemName: "Perusopetuksen jälkeisen valmistavan koulutuksen kesän 2014 haku MUOKATTU"
+            applicationSystemName: 'Ammatillisen koulutuksen ja lukiokoulutuksen kevään 2014 yhteishaku'
+          },
+          {
+            applicationSystemName: "Perusopetuksen jälkeisen valmistavan koulutuksen kesän 2014 haku MUOKATTU",
           }
         ])
       })
 
       it("henkilön 010101-123N hakutoiveet ovat näkyvissä", function () {
-        expect(ApplicationListPage().preferencesForApplication(0)).to.deep.equal([
+        expect(ApplicationListPage().getApplication(1).preferencesForApplication()).to.deep.equal([
           {
             "hakutoive.Opetuspiste": "Amiedu, Valimotie 8",
             "hakutoive.Koulutus": "Maahanmuuttajien ammatilliseen peruskoulutukseen valmistava koulutus"
@@ -42,10 +48,10 @@
 
         it("haun epäonnistuminen näytetään käyttäjälle", function() {
           // In current implementation move will trigger validation API call
-          return page.getPreference(0).moveDown()
-            .then(wait.until(function() { return page.saveError().length > 0 }))
+          return hakemus1.getPreference(0).moveDown()
+            .then(wait.until(function() { return hakemus1.saveError().length > 0 }))
             .then(function() {
-              page.saveError().should.equal("Tietojen haku epäonnistui. Yritä myöhemmin uudelleen.")
+              hakemus1.saveError().should.equal("Tietojen haku epäonnistui. Yritä myöhemmin uudelleen.")
             })
         })
       })
@@ -55,17 +61,17 @@
           before(function() { mockAjax.respondOnce("PUT", "/omatsivut/api/applications/1.2.246.562.11.00000877107", 400, "") })
 
           it("virheilmoitus näkyy oikein", function() {
-            return page.getPreference(0).moveDown()
-              .then(page.saveWaitError)
+            return hakemus1.getPreference(0).moveDown()
+              .then(hakemus1.saveWaitError)
               .then(function() {
-                page.saveError().should.equal("Tallentaminen epäonnistui")
+                hakemus1.saveError().should.equal("Tallentaminen epäonnistui")
               })
           })
 
           it("tallennus toimii uudella yrittämällä", function() {
-            return page.saveWaitSuccess().then(function() {
-              page.saveError().should.equal("")
-              page.statusMessage().should.equal("Kaikki muutokset tallennettu")
+            return hakemus1.saveWaitSuccess().then(function() {
+              hakemus1.saveError().should.equal("")
+              hakemus1.statusMessage().should.equal("Kaikki muutokset tallennettu")
             })
           })
         })
@@ -74,10 +80,10 @@
           before(function() { mockAjax.respondOnce("PUT", "/omatsivut/api/applications/1.2.246.562.11.00000877107", 401, "") })
 
           it("virheilmoitus näkyy oikein", function() {
-            return page.getPreference(0).moveDown()
-              .then(page.saveWaitError)
+            return hakemus1.getPreference(0).moveDown()
+              .then(hakemus1.saveWaitError)
               .then(function() {
-                page.saveError().should.equal("Tallentaminen epäonnistui, sillä istunto on vanhentunut. Kirjaudu uudestaan sisään.")
+                hakemus1.saveError().should.equal("Tallentaminen epäonnistui, sillä istunto on vanhentunut. Kirjaudu uudestaan sisään.")
               })
           })
         })
@@ -88,10 +94,10 @@
           })
 
           it("virheilmoitus näkyy oikein", function () {
-            return page.getPreference(0).moveDown()
-              .then(page.saveWaitError)
+            return hakemus1.getPreference(0).moveDown()
+              .then(hakemus1.saveWaitError)
               .then(function () {
-                page.saveError().should.equal("Odottamaton virhe. Ota yhteyttä asiakaspalveluun.")
+                hakemus1.saveError().should.equal("Odottamaton virhe. Ota yhteyttä asiakaspalveluun.")
               })
           })
         })
@@ -106,103 +112,91 @@
 
       describe("Kun yksi hakukohde valittu", function() {
         it("rivejä ei voi siirtää", function () {
-          page.getPreference(0).isDisabled().should.be.true
-          page.getPreference(1).isDisabled().should.be.true
-          page.getPreference(2).isDisabled().should.be.true
+          hakemus1.getPreference(0).isDisabled().should.be.true
+          hakemus1.getPreference(1).isDisabled().should.be.true
+          hakemus1.getPreference(2).isDisabled().should.be.true
         })
 
         it("vain ensimmäinen tyhjä rivi on muokattavissa", function () {
-          page.getPreference(0).isEditable().should.be.false
-          page.getPreference(1).isEditable().should.be.true
-          page.getPreference(2).isEditable().should.be.false
+          hakemus1.getPreference(0).isEditable().should.be.false
+          hakemus1.getPreference(1).isEditable().should.be.true
+          hakemus1.getPreference(2).isEditable().should.be.false
         })
 
         it("ainoaa hakutoivetta ei voi poistaa", function() {
-          ApplicationListPage().getPreference(0).canRemove().should.be.false
+          hakemus1.getPreference(0).canRemove().should.be.false
         })
       })
 
 
       describe("kun lisätään hakukohde", function() {
         before(
-          page.getPreference(1).selectOpetusPiste("Ahl"),
-          page.getPreference(1).selectKoulutus(0)
+          hakemus1.getPreference(1).selectOpetusPiste("Ahl"),
+          hakemus1.getPreference(1).selectKoulutus(0)
         )
 
         it("seuraava hakukohde tulee muokattavaksi", function() {
-          page.getPreference(2).isEditable().should.be.true
+          hakemus1.getPreference(2).isEditable().should.be.true
         })
 
         it("lisätty hakutoive on edelleen muokattavissa", function() {
-          page.getPreference(1).isEditable().should.be.true
+          hakemus1.getPreference(1).isEditable().should.be.true
         })
 
         it("lomake on tallennettavissa", function() {
-          page.isValidationErrorVisible().should.be.false
+          hakemus1.isValidationErrorVisible().should.be.false
         })
       })
 
       describe("kun vain opetuspiste on valittu", function() {
         it("lomaketta ei voi tallentaa", function() {
-          var pref = page.getPreference(1)
+          var pref = hakemus1.getPreference(1)
           return pref.selectOpetusPiste("Ahl")()
-            .then(wait.untilFalse(page.saveButton(0).isEnabled))
-            .then(function() { page.isValidationErrorVisible().should.be.true })
+            .then(wait.untilFalse(hakemus1.saveButton().isEnabled))
+            .then(function() { hakemus1.isValidationErrorVisible().should.be.true })
         })
       })
-
-      /*
-      describe("kun opetuspisteen syöttö on kesken", function() {
-        before(
-          page.getPreference(1).searchOpetusPiste("Ahl"),
-          wait.untilFalse(page.saveButton(0).isEnabled)
-        )
-        it("lomaketta ei voi tallentaa", function() {
-          page.isValidationErrorVisible().should.be.true
-        })
-      })
-      */
 
       describe("kun valitun opetuspisteen syöttökenttä tyhjennetään", function() {
         before(
-          page.getPreference(1).selectOpetusPiste("Ahl"),
-          page.getPreference(1).searchOpetusPiste("")
+          hakemus1.getPreference(1).selectOpetusPiste("Ahl"),
+          hakemus1.getPreference(1).searchOpetusPiste("")
         )
         it("lomakkeen voi tallentaa", function() {
-          page.isValidationErrorVisible().should.be.false
-          page.saveButton(0).isEnabled().should.be.true
+          hakemus1.isValidationErrorVisible().should.be.false
+          hakemus1.saveButton().isEnabled().should.be.true
         })
       })
 
       describe("kun valittu opetuspiste siirretään ylöspäin ja syöttökenttä tyhjennetään", function() {
         before(
-          page.getPreference(1).selectOpetusPiste("Ahl"),
-          page.getPreference(1).moveUp,
-          page.getPreference(0).searchOpetusPiste("")
+          hakemus1.getPreference(1).selectOpetusPiste("Ahl"),
+          hakemus1.getPreference(1).moveUp,
+          hakemus1.getPreference(0).searchOpetusPiste("")
         )
         it("lomaketta ei voi tallentaa", function() {
-          page.isValidationErrorVisible().should.be.true
+          hakemus1.isValidationErrorVisible().should.be.true
         })
         it("hakukohde säilyy muokattavana", function() {
-          page.getPreference(0).isEditable().should.be.true
+          hakemus1.getPreference(0).isEditable().should.be.true
         })
       })
 
       describe("kun valinta jätetään kesken ja siirrytään vaihtamaan toista hakukohdetta", function() {
         before(
-          ApplicationListPage().resetDataAndOpen,
+          page.resetDataAndOpen,
           leaveOnlyOnePreference, // first two steps to undo previous test case
-          page.getPreference(1).selectOpetusPiste("Ahl"),
-          page.getPreference(1).selectKoulutus(0),
-          page.getPreference(2).selectOpetusPiste("Turun Kristillinen"),
-          page.getPreference(1).selectOpetusPiste("Turun Kristillinen")
+          hakemus1.getPreference(1).selectOpetusPiste("Ahl"),
+          hakemus1.getPreference(1).selectKoulutus(0),
+          hakemus1.getPreference(2).selectOpetusPiste("Turun Kristillinen"),
+          hakemus1.getPreference(1).selectOpetusPiste("Turun Kristillinen")
         )
         it("keskeneräinen valinta pysyy muokattavassa tilassa", function() {
-          page.getPreference(1).isEditable().should.be.true
-          page.getPreference(2).isEditable().should.be.true
+          hakemus1.getPreference(1).isEditable().should.be.true
+          hakemus1.getPreference(2).isEditable().should.be.true
         })
         it("lomaketta ei voi tallentaa", function() {
-          page.isValidationErrorVisible().should.be.true
+          hakemus1.isValidationErrorVisible().should.be.true
         })
       })
 
@@ -210,11 +204,11 @@
         before(replacePreference(1, "Turun Kristillinen"))
         describe("käyttöliittymän tila", function() {
           it("näytetään validointivirhe", function() {
-            page.getPreference(1).errorMessage().should.equal("Et voi syöttää samaa hakutoivetta useaan kertaan.")
+            hakemus1.getPreference(1).errorMessage().should.equal("Et voi syöttää samaa hakutoivetta useaan kertaan.")
           })
 
           it("lomaketta ei voi tallentaa", function() {
-            page.saveButton(0).isEnabled().should.be.false
+            hakemus1.saveButton(0).isEnabled().should.be.false
           })
         })
 
@@ -222,11 +216,11 @@
           before(replacePreference(1, "Etelä-Savon ammattiopisto"))
 
           it("lomakkeen voi tallentaa", function() {
-            page.saveButton(0).isEnabled().should.be.true
+            hakemus1.saveButton(0).isEnabled().should.be.true
           })
 
           it("poistetaan validointivirhe", function() {
-            page.getPreference(1).errorMessage().should.equal("")
+            hakemus1.getPreference(1).errorMessage().should.equal("")
           })
         })
       })
@@ -254,15 +248,15 @@
           'Päättötodistukseni on' ]
 
         before(
-          ApplicationListPage().resetDataAndOpen,
-          ApplicationListPage().getPreference(1).remove,
-          ApplicationListPage().getPreference(1).remove,
-          ApplicationListPage().saveWaitSuccess
+          page.resetDataAndOpen,
+          hakemus1.getPreference(1).remove,
+          hakemus1.getPreference(1).remove,
+          hakemus1.saveWaitSuccess
         )
 
         describe("tallennetut hakutoiveet, joilla on lisäkysymyksiä", function() {
           it("lisäkysymyksiä ei näytetä", function() {
-            expect(ApplicationListPage().questionsForApplication(0).data()).to.deep.equal([])
+            expect(hakemus1.questionsForApplication().data()).to.deep.equal([])
           })
         })
 
@@ -270,7 +264,7 @@
           before(replacePreference(1, "Etelä-Savon ammattiopisto"))
 
           it("lisäkysymykset näytetään", function() {
-            var questionTitles = ApplicationListPage().questionsForApplication(0).titles()
+            var questionTitles = hakemus1.questionsForApplication().titles()
             expect(questionTitles).to.deep.equal(questions1)
           })
         })
@@ -280,7 +274,7 @@
           before(replacePreference(2, "Turun Kristillinen"))
 
           it("molempien lisäkysymykset näytetään", function() {
-            var questionTitles = ApplicationListPage().questionsForApplication(0).titles()
+            var questionTitles = hakemus1.questionsForApplication().titles()
             expect(questionTitles).to.deep.equal(questions1.concat(questions2))
           })
         })
@@ -288,50 +282,47 @@
 
       describe("Lisäkysymyksiin vastaaminen", function() {
         before(
-          ApplicationListPage().resetDataAndOpen,
+          page.resetDataAndOpen,
           replacePreference(2, "Etelä-Savon ammattiopisto")
         )
 
         describe("Aluksi", function() {
           it("kysymykset näytetään", function() {
-            ApplicationListPage().questionsForApplication(0).count().should.equal(11)
-            page.questionsForApplication(0).getAnswer(0).should.equal("")
+            hakemus1.questionsForApplication().count().should.equal(11)
+            hakemus1.questionsForApplication().getAnswer(0).should.equal("")
           })
           it("pakolliset kentät korostetaan", function() {
-            ApplicationListPage().questionsForApplication(0).validationMessages()[0].should.equal("*")
+            hakemus1.questionsForApplication().validationMessages()[0].should.equal("*")
           })
         })
 
         describe("Kun tallennetaan vastaamatta pakollisiin kysymyksiin", function() {
-          before(page.saveWaitError)
+          before(hakemus1.saveWaitError)
           it("näytetään tallennusvirhe", function() {
-            page.saveError().should.equal("Ei tallennettu - vastaa ensin kaikkiin lisäkysymyksiin")
+            hakemus1.saveError().should.equal("Ei tallennettu - vastaa ensin kaikkiin lisäkysymyksiin")
           })
 
           it("näytetään kaikki validaatiovirheet", function() {
-            page.questionsForApplication(0).validationMessageCount().should.equal(11)
+            hakemus1.questionsForApplication().validationMessageCount().should.equal(11)
           })
 
           it("näytetään checkboxin minmax-validaatiovirhe", function() {
-            page.questionsForApplication(0).validationMessages()[2].should.equal("Virheellinen arvo")
+            hakemus1.questionsForApplication().validationMessages()[2].should.equal("Virheellinen arvo")
           })
 
           it("näytetään required-validaatiovirhe", function() {
-            page.questionsForApplication(0).validationMessages()[0].should.equal("Pakollinen tieto.")
+            hakemus1.questionsForApplication().validationMessages()[0].should.equal("Pakollinen tieto.")
           })
         })
 
         describe("Onnistuneen tallennuksen jälkeen", function() {
-          before(page.questionsForApplication(0).modifyAnswers(function(answers) {
-            delete answers.hakutoiveet.dummyAnswer
-          }))
-          before(answerAllQuestions, page.saveWaitSuccess)
+          before(answerAllQuestions, hakemus1.saveWaitSuccess)
 
           describe("Tietokanta", function() {
             it("sisältää tallennetut tiedot", function() {
               return db.getApplications().then(function(data) {
-                var answers = data[0].answers
-                var questions = page.questionsForApplication(0).data()
+                var answers = data[hakemus1Index].answers
+                var questions = hakemus1.questionsForApplication().data()
 
                 answers.hakutoiveet[questions[0].id].should.equal("tekstivastaus 1")
                 answers.hakutoiveet[questions[1].id].should.equal("option_0")
@@ -352,109 +343,109 @@
 
           describe("Käyttöliittymän tila", function() {
             it("kysymykset näytetään edelleen", function() {
-              ApplicationListPage().questionsForApplication(0).count().should.equal(11)
+              hakemus1.questionsForApplication().count().should.equal(11)
             })
 
             it("validaatiovirheitä ei ole", function() {
-              _.all(page.questionsForApplication(0).validationMessages(), function(item) {
+              _.all(hakemus1.questionsForApplication().validationMessages(), function(item) {
                 return item == ""
               }).should.be.true
             })
 
             it("aikaleima päivittyy", function() {
-              page.changesSavedTimestamp().should.not.be.empty
+              hakemus1.changesSavedTimestamp().should.not.be.empty
             })
 
             it("tallennusnappi disabloituu", function() {
-              page.saveButton(0).isEnabled().should.be.false
+              hakemus1.saveButton().isEnabled().should.be.false
             })
 
             it("tallennusviesti näytetään", function() {
-              page.saveError().should.equal("")
-              page.statusMessage().should.equal("Kaikki muutokset tallennettu")
+              hakemus1.saveError().should.equal("")
+              hakemus1.statusMessage().should.equal("Kaikki muutokset tallennettu")
             })
             it("syötetty vastaus näytetään", function() {
-              page.questionsForApplication(0).getAnswer(0).should.equal("tekstivastaus 1")
+              hakemus1.questionsForApplication().getAnswer(0).should.equal("tekstivastaus 1")
             })
           })
 
           describe("Kun ladataan sivu uudelleen", function() {
             before(page.openPage)
             it("valitut hakutoiveet näytetään", function() {
-              page.getPreference(2).opetuspiste().should.equal("Etelä-Savon ammattiopisto,  Otavankatu 4")
+              hakemus1.getPreference(2).opetuspiste().should.equal("Etelä-Savon ammattiopisto,  Otavankatu 4")
             })
             it("vastauksia ei näytetä", function() {
-              page.questionsForApplication(0).count().should.equal(0)
+              hakemus1.questionsForApplication().count().should.equal(0)
             })
           })
           describe("Kun poistetaan hakutoive, tallennetaan ja lisätään se uudelleen", function() {
             before(
-              page.getPreference(2).remove,
-              page.saveWaitSuccess,
+              hakemus1.getPreference(2).remove,
+              hakemus1.saveWaitSuccess,
               page.openPage,
               replacePreference(2, "Etelä-Savon ammattiopisto")
             )
             it("hakutoiveeseen liittyvien lisäkysymysten aiemmat vastaukset hävitetään", function() {
-              ApplicationListPage().questionsForApplication(0).count().should.equal(11)
-              page.questionsForApplication(0).getAnswer(0).should.equal("")
+              hakemus1.questionsForApplication().count().should.equal(11)
+              hakemus1.questionsForApplication().getAnswer(0).should.equal("")
             })
           })
         })
 
         describe("Kun poistetaan lisätty hakutoive, jolla lisäkysymyksiä, joihin ei vastattu", function() {
           before(
-            page.getPreference(2).remove,
-            page.saveWaitSuccess
+            hakemus1.getPreference(2).remove,
+            hakemus1.saveWaitSuccess
           )
 
           it("Tallennus onnistuu", function() {
-            page.saveError().should.equal("")
-            page.statusMessage().should.equal("Kaikki muutokset tallennettu")
+            hakemus1.saveError().should.equal("")
+            hakemus1.statusMessage().should.equal("Kaikki muutokset tallennettu")
           })
         })
 
         describe("Kun poistetaan lisätty hakutoive, jolla lisäkysymyksiä, joihin vastattiin", function() {
           before(
-            ApplicationListPage().resetDataAndOpen,
+            page.resetDataAndOpen,
             replacePreference(2, "Etelä-Savon ammattiopisto"),
             answerAllQuestions,
-            page.getPreference(2).remove,
-            page.saveWaitSuccess
+            hakemus1.getPreference(2).remove,
+            hakemus1.saveWaitSuccess
           )
 
           it("Tallennus onnistuu", function() {
-            page.saveError().should.equal("")
-            page.statusMessage().should.equal("Kaikki muutokset tallennettu")
+            hakemus1.saveError().should.equal("")
+            hakemus1.statusMessage().should.equal("Kaikki muutokset tallennettu")
           })
         })
 
         function answerAllQuestions() {
-          page.questionsForApplication(0).enterAnswer(0, "tekstivastaus 1")
-          page.questionsForApplication(0).enterAnswer(1, "Vaihtoehto x 1")
-          page.questionsForApplication(0).enterAnswer(2, "Vaihtoehto 1")
-          page.questionsForApplication(0).enterAnswer(2, "Vaihtoehto 2")
-          page.questionsForApplication(0).enterAnswer(3, "Isokyrö")
-          page.questionsForApplication(0).enterAnswer(4, "textarea-vastaus")
-          page.questionsForApplication(0).enterAnswer(5, "Vaihtoehto yyy 1")
-          page.questionsForApplication(0).enterAnswer(5, "Vaihtoehto yyy 2")
-          page.questionsForApplication(0).enterAnswer(6, "Vaihtoehto arvosanat 1")
-          page.questionsForApplication(0).enterAnswer(7, "tekstivastaus 2")
-          page.questionsForApplication(0).enterAnswer(8, "tekstivastaus 3")
-          page.questionsForApplication(0).enterAnswer(9, "Vaihtoehto zzzz 1")
-          page.questionsForApplication(0).enterAnswer(10, "Vaihttoehto yksi")
+          hakemus1.questionsForApplication().enterAnswer(0, "tekstivastaus 1")
+          hakemus1.questionsForApplication().enterAnswer(1, "Vaihtoehto x 1")
+          hakemus1.questionsForApplication().enterAnswer(2, "Vaihtoehto 1")
+          hakemus1.questionsForApplication().enterAnswer(2, "Vaihtoehto 2")
+          hakemus1.questionsForApplication().enterAnswer(3, "Isokyrö")
+          hakemus1.questionsForApplication().enterAnswer(4, "textarea-vastaus")
+          hakemus1.questionsForApplication().enterAnswer(5, "Vaihtoehto yyy 1")
+          hakemus1.questionsForApplication().enterAnswer(5, "Vaihtoehto yyy 2")
+          hakemus1.questionsForApplication().enterAnswer(6, "Vaihtoehto arvosanat 1")
+          hakemus1.questionsForApplication().enterAnswer(7, "tekstivastaus 2")
+          hakemus1.questionsForApplication().enterAnswer(8, "tekstivastaus 3")
+          hakemus1.questionsForApplication().enterAnswer(9, "Vaihtoehto zzzz 1")
+          hakemus1.questionsForApplication().enterAnswer(10, "Vaihttoehto yksi")
         }
       })
     })
 
     describe("Hakemuslistauksen muokkaus", function () {
       endToEndTest("järjestys", "järjestys muuttuu nuolta klikkaamalla", function () {
-        return page.getPreference(1).moveDown()
+        return hakemus1.getPreference(1).moveDown()
       }, function (dbStart, dbEnd) {
         dbStart.hakutoiveet[1].should.deep.equal(dbEnd.hakutoiveet[2])
         dbStart.hakutoiveet[2].should.deep.equal(dbEnd.hakutoiveet[1])
       })
       endToEndTest("poisto", "hakutoiveen voi poistaa", function () {
-        return page.getPreference(0).remove()
+        return hakemus1.getPreference(0).remove()
       }, function (dbStart, dbEnd) {
         dbEnd.hakutoiveet.should.deep.equal(_.flatten([_.rest(dbStart.hakutoiveet), {}]))
       })
@@ -465,7 +456,7 @@
           'Koulutus-id-kaksoistutkinto': 'false',
           'Koulutus-id-sora': 'false',
           'Koulutus-id-vocational': 'true',
-          'Koulutus-id-lang': '',
+          'Koulutus-id-lang': 'FI',
           'Koulutus-id-aoIdentifier': '028',
           'Koulutus-id-athlete': 'false',
           'Koulutus-educationDegree': '32',
@@ -479,7 +470,7 @@
 
   function replacePreference(index, searchString) {
     return function() {
-      var pref = ApplicationListPage().getPreference(index)
+      var pref = hakemus1.getPreference(index)
       return pref.remove()
         .then(pref.selectOpetusPiste(searchString))
         .then(pref.selectKoulutus(0))
@@ -487,22 +478,22 @@
   }
 
   function leaveOnlyOnePreference() {
-    return ApplicationListPage().getPreference(0).remove()
-      .then(function() { return ApplicationListPage().getPreference(0).remove() })
+    return hakemus1.getPreference(0).remove()
+      .then(function() { return hakemus1.getPreference(0).remove() })
   }
 
   function endToEndTest(descName, testName, manipulationFunction, dbCheckFunction) {
     describe(descName, function() {
       var applicationsBefore, applicationsAfter;
       before(
-        ApplicationListPage().resetDataAndOpen,
+        page.resetDataAndOpen,
         function() {
           return db.getApplications().then(function(apps) {
             applicationsBefore = apps
           })
         },
         manipulationFunction,
-        ApplicationListPage().saveWaitSuccess,
+        hakemus1.saveWaitSuccess,
         function(done) {
           db.getApplications().then(function(apps) {
             applicationsAfter = apps
@@ -511,7 +502,7 @@
         }
       )
       it(testName, function() {
-        dbCheckFunction(applicationsBefore[0], applicationsAfter[0])
+        dbCheckFunction(applicationsBefore[hakemus1Index], applicationsAfter[hakemus1Index])
       })
     })
   }
