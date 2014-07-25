@@ -2,7 +2,7 @@ var Hakemus = require('./hakemus')
 var util = require('./util')
 
 module.exports = function(listApp) {
-  listApp.controller("hakemusController", ["$scope", "$element", "$http", "applicationsResource", "applicationValidator", "applicationFormatter", "settings", "debounce", function ($scope, $element, $http, applicationsResource, applicationValidator, applicationFormatter, settings, debounce) {
+  listApp.controller("hakemusController", ["$scope", "$element", "$http", "applicationsResource", "applicationValidator", "applicationFormatter", "settings", "debounce", "domainUtil", function ($scope, $element, $http, applicationsResource, applicationValidator, applicationFormatter, settings, debounce, domainUtil) {
     applicationValidator = debounce(applicationValidator, settings.modelDebounce)
 
     $scope.hasChanged = false
@@ -118,8 +118,12 @@ module.exports = function(listApp) {
     function updateHakutoiveValidationMessages(errors) {
       var errorMap = util.mapArray(errors, "key", "message");
       $scope.application.hakutoiveet.forEach(function(hakutoive, index) {
-        var errorKey = "preference" + (index+1) + "-Koulutus"
-        var errors = errorMap[errorKey]
+        var errorKeys = ["preference" + (index+1) + "-Koulutus", "preference" + (index+1)]
+        var errors = _(errorKeys).chain()
+          .map(function(errorKey) { return errorMap[errorKey] })
+          .flatten()
+          .without(undefined)
+          .value()
         hakutoive.setErrors(errors)
       })
     }
@@ -150,7 +154,7 @@ module.exports = function(listApp) {
 
       var miscErrors = _(errors).filter(function(error) {
         return _(questionKeys).find(function(key) { return key === error.key }) == null &&
-          !/^preference\d-Koulutus/.test(error.key)
+          !domainUtil.isHakutoiveError(error.key)
       })
 
       if (miscErrors.length > 0) {

@@ -63,7 +63,7 @@
                                                     ng-change="koulutusValittu($index)" ng-show="isKoulutusSelectable()">
                                             </select>
                                             <span class="instruction" ng-hide="isEditingDisabled() || hakutoive.hasOpetuspiste()">Valitse ensin opetuspiste</span>
-                                            <span class="validation-message error" ng-if="hakutoive.errors.length">{{hakutoive.errors[0]}}</span>
+                                            <span class="validation-message error" ng-if="hakutoive.errors.length">{{hakutoive.errors.join(', ')}}</span>
                                             <span class="instruction ajax-spinner-small" ng-show="isLoadingKoulutusList()">Lataa tietoja...</span>
                                         </label>
                                     </div>

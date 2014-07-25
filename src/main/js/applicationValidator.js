@@ -3,7 +3,16 @@ var QuestionGroup = require('./additionalQuestion').AdditionalQuestionGroup
 var util = require('./util')
 
 module.exports = function(listApp) {
-  listApp.factory("applicationValidator", ["$http", "applicationFormatter", function($http, applicationFormatter) {
+  listApp.factory("domainUtil", [function() {
+    var hakutoiveErrorRegexp = /^preference\d$|^preference\d-Koulutus$/
+    return {
+      isHakutoiveError: function(errorKey) {
+        return hakutoiveErrorRegexp.test(errorKey)
+    }
+    }
+  }])
+
+  listApp.factory("applicationValidator", ["$http", "applicationFormatter", "domainUtil", function($http, applicationFormatter, domainUtil) {
     function getQuestions(data) {
       return convertToItems(data.questions, new QuestionGroup())
 
@@ -66,12 +75,8 @@ module.exports = function(listApp) {
 
     function hasHakutoiveErrors(errors) {
       var errorMap = util.mapArray(errors, "key", "message");
-      var errorRegexp = /^preference\d$|^preference\d-Koulutus$/
       return _(errorMap).any(function(val, key) {
-        if (errorRegexp.test(key) && val.length > 0)
-          return true
-        else
-          return false
+        return domainUtil.isHakutoiveError(key) && val.length > 0
       })
     }
   }])
