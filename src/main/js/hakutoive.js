@@ -28,17 +28,20 @@ Hakutoive.prototype = {
   },
 
   setKoulutus: function(koulutus) {
-    this.data["Koulutus"] = koulutus.name.toString()
-    this.data["Koulutus-id"] = koulutus.id.toString()
-    this.data["Koulutus-educationDegree"] = koulutus.educationDegree.toString()
-    this.data["Koulutus-id-sora"] = koulutus.sora.toString()
-    this.data["Koulutus-id-aoIdentifier"] = koulutus.aoIdentifier.toString()
-    this.data["Koulutus-id-kaksoistutkinto"] = koulutus.kaksoistutkinto.toString()
-    this.data["Koulutus-id-vocational"] = koulutus.vocational.toString()
-    this.data["Koulutus-id-educationcode"] = koulutus.educationCodeUri.toString()
-    this.data["Koulutus-id-athlete"] = koulutus.athleteEducation.toString()
+    this.data["Koulutus"] = toString(koulutus.name)
+    this.data["Koulutus-id"] = toString(koulutus.id)
+    this.data["Koulutus-educationDegree"] = toString(koulutus.educationDegree)
+    this.data["Koulutus-id-sora"] = toString(koulutus.sora)
+    this.data["Koulutus-id-aoIdentifier"] = toString(koulutus.aoIdentifier)
+    this.data["Koulutus-id-kaksoistutkinto"] = toString(koulutus.kaksoistutkinto)
+    this.data["Koulutus-id-vocational"] = toString(koulutus.vocational)
+    this.data["Koulutus-id-educationcode"] = toString(koulutus.educationCodeUri)
+    this.data["Koulutus-id-athlete"] = toString(koulutus.athleteEducation)
     this.isModified = true
     this.setErrors([])
+    function toString(x) {
+      return (x==null) ? "" : x.toString()
+    }
   },
 
   hasOpetuspiste: function() {
