@@ -31,6 +31,7 @@ Hakutoive.prototype = {
     this.data["Koulutus"] = toString(koulutus.name)
     this.data["Koulutus-id"] = toString(koulutus.id)
     this.data["Koulutus-educationDegree"] = toString(koulutus.educationDegree)
+    this.data["Koulutus-id-lang"] = toString(koulutus.teachingLanguages[0])
     this.data["Koulutus-id-sora"] = toString(koulutus.sora)
     this.data["Koulutus-id-aoIdentifier"] = toString(koulutus.aoIdentifier)
     this.data["Koulutus-id-kaksoistutkinto"] = toString(koulutus.kaksoistutkinto)
