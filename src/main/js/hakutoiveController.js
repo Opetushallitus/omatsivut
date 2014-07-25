@@ -28,10 +28,7 @@ module.exports = function(listApp) {
     }
 
     $scope.canRemovePreference = function(index) {
-      if (index === 0)
-        return $scope.application.hasPreference(1)
-      else
-        return $scope.application.hasPreference(index)
+      return $scope.application.hasPreference(index)
     }
 
     $scope.koulutusValittu = function(index) {

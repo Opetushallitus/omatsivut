@@ -44,11 +44,12 @@ Hakemus.prototype = {
   },
 
   validatePreferences: function() {
-    return _(this.hakutoiveet).every(function(hakutoive) {
-      return hakutoive.isValid()
-    }) && !_(this.hakutoiveet.slice(0, this.lastIndexWithData() + 1)).any(function(hakutoive) {
-      return !hakutoive.hasData()
-    })
+    return (this.hakutoiveet.length > 0 && this.hakutoiveet[0].hasData()) &&
+      _(this.hakutoiveet).every(function(hakutoive) {
+        return hakutoive.isValid()
+      }) && !_(this.hakutoiveet.slice(0, this.lastIndexWithData() + 1)).any(function(hakutoive) {
+        return !hakutoive.hasData()
+      })
   },
 
   getHakutoiveWatchCollection: function() {
