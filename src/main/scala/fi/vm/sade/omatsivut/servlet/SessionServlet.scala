@@ -15,21 +15,17 @@ class SessionServlet(implicit val appConfig: AppConfig) extends OmatSivutServlet
     request.getHeaderNames.asScala.toList.map(h => logger.info(h + ": " + request.getHeader(h)))
     createAuthCookieCredentials match {
       case Some(credentials) => createAuthCookieResponse(credentials)
-      case _ => response.redirect(ssoContextPath + "/Shibboleth.sso/LoginFI") //TODO Localization
+      case _ => response.redirect(appConfig.authContext.ssoContextPath + "/Shibboleth.sso/LoginFI") //TODO Localization
     }
   }
 
-  protected def findHetuFromParams = {
+  private def findHetuFromParams = {
     headerOption("Hetu") match {
       case Some(hetu) => Some(hetu)
       case None if appConfig.isTest => paramOption("hetu")
       case _ => None
     }
   }
-
-  protected def makeCookieOptions = if (appConfig.isTest) CookieOptions(path = "/") else CookieOptions(secure = true, path = "/", maxAge = 1799)
-
-  protected def ssoContextPath: String = if (appConfig.isTest) "/omatsivut" else ""
 
   private def createAuthCookieCredentials: Option[CookieCredentials] = {
     checkCredentials match {
@@ -51,7 +47,7 @@ class SessionServlet(implicit val appConfig: AppConfig) extends OmatSivutServlet
 
   private def createAuthCookieResponse(credentials: CookieCredentials) {
     val encryptedCredentials = AuthenticationCipher().encrypt(credentials.toString)
-    response.addCookie(Cookie("auth", encryptedCredentials)(makeCookieOptions))
+    response.addCookie(Cookie("auth", encryptedCredentials)(appConfig.authContext.cookieOptions))
     logger.info("Redirecting to " + redirectUri)
     response.redirect(redirectUri)
   }
@@ -62,6 +58,6 @@ class SessionServlet(implicit val appConfig: AppConfig) extends OmatSivutServlet
 
   get("/logout") {
     tellBrowserToDeleteAuthCookie(request, response)
-    response.redirect(ssoContextPath + "/Shibboleth.sso/Logout?type=Local")
+    response.redirect(appConfig.authContext.ssoContextPath + "/Shibboleth.sso/Logout?type=Local")
   }
 }

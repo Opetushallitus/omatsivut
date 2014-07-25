@@ -2,6 +2,7 @@ package fi.vm.sade.omatsivut
 
 import fi.vm.sade.omatsivut.fixtures.FixtureImporter
 import fi.vm.sade.omatsivut.mongo.{EmbeddedMongo, MongoServer}
+import fi.vm.sade.omatsivut.security.{AuthenticationContext, ProductionAuthenticationContext, TestAuthenticationContext}
 import org.apache.activemq.broker.BrokerService
 
 object AppConfig extends Logging {
@@ -117,6 +118,7 @@ object AppConfig extends Logging {
   trait AppConfig {
     def springConfiguration: OmatSivutConfiguration
     lazy val springContext = new OmatSivutSpringContext(OmatSivutSpringContext.createApplicationContext(this))
+    lazy val authContext: AuthenticationContext = if (isTest) new TestAuthenticationContext else new ProductionAuthenticationContext
 
     def isTest: Boolean = false
     def start {}
