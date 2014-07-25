@@ -4,6 +4,7 @@ import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 import fi.vm.sade.omatsivut.domain.Hakemus
 import fi.vm.sade.omatsivut.domain.Hakemus.Answers
+import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.omatsivut.json.JsonFormats
 import org.json4s.jackson.Serialization
 import fi.vm.sade.omatsivut.fixtures.TestFixture._
@@ -13,12 +14,11 @@ trait HakemusApiSpecification extends JsonFormats with ScalatraTestSupport {
   val preferencesPhaseKey: String = OppijaConstants.PHASE_APPLICATION_OPTIONS
   val skillsetPhaseKey: String = OppijaConstants.PHASE_GRADES
   val ssnKey: String = OppijaConstants.ELEMENT_ID_SOCIAL_SECURITY_NUMBER
-  val testApplicationIndex = 1
 
   def withHakemus[T](f: (Hakemus => T)): T = {
     authGet("/applications", personOid) {
       val applications: List[Hakemus] = Serialization.read[List[Hakemus]](body)
-      val hakemus = applications(testApplicationIndex).copy(answers = Hakemus.emptyAnswers)
+      val hakemus = applications.find(_.oid == TestFixture.applicationOid).get.copy(answers = Hakemus.emptyAnswers)
       f(hakemus)
     }
   }

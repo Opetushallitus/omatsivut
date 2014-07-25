@@ -1,14 +1,10 @@
 package fi.vm.sade.omatsivut
 
-import fi.vm.sade.haku.oppija.hakemus.domain.Application
-import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 import fi.vm.sade.omatsivut.domain.Hakemus
-import fi.vm.sade.omatsivut.domain.Hakemus._
-import fi.vm.sade.omatsivut.json.JsonFormats
-import fi.vm.sade.omatsivut.servlet.ApplicationsServlet
 import fi.vm.sade.omatsivut.fixtures.TestFixture._
+import fi.vm.sade.omatsivut.servlet.ApplicationsServlet
 import org.json4s._
-import org.json4s.jackson.{JsonMethods, Serialization}
+import org.json4s.jackson.JsonMethods
 
 class UpdateApplicationSpec extends HakemusApiSpecification {
   override implicit lazy val appConfig = new AppConfig.IT
