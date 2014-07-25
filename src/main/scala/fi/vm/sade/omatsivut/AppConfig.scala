@@ -22,7 +22,7 @@ object AppConfig extends Logging {
 
   class Default extends AppConfig with ExternalProps {
     def springConfiguration = new OmatSivutSpringContext.Default()
-    override def isTest = if (settings.environment == "ophitest") true else false
+    override def usesFakeAuthentication = if (settings.environment == "ophitest") true else false
   }
 
   class LocalTestingWithTemplatedVars extends AppConfig with TemplatedProps with TestMode {
@@ -65,6 +65,7 @@ object AppConfig extends Logging {
 
   class IT extends ExampleTemplatedProps with MockAuthentication with StubbedExternalDeps {
     def springConfiguration = new OmatSivutSpringContext.Dev()
+    override def usesLocalDatabase = true
 
     private var mongo: Option[MongoServer] = None
 
@@ -97,8 +98,9 @@ object AppConfig extends Logging {
     )
   }
 
-  trait ExampleTemplatedProps extends TemplatedProps {
+  trait ExampleTemplatedProps extends AppConfig with TemplatedProps {
     def templateAttributesFile = "src/main/resources/oph-configuration/dev-vars.yml"
+    override def usesLocalDatabase = true
   }
 
   trait TemplatedProps {
@@ -113,15 +115,16 @@ object AppConfig extends Logging {
   }
 
   trait TestMode extends AppConfig {
-    override def isTest = true
+    override def usesFakeAuthentication = true
   }
 
   trait AppConfig {
     def springConfiguration: OmatSivutConfiguration
     lazy val springContext = new OmatSivutSpringContext(OmatSivutSpringContext.createApplicationContext(this))
-    lazy val authContext: AuthenticationContext = if (isTest) new TestAuthenticationContext else new ProductionAuthenticationContext
+    lazy val authContext: AuthenticationContext = if (usesFakeAuthentication) new TestAuthenticationContext else new ProductionAuthenticationContext
 
-    def isTest: Boolean = false
+    def usesFakeAuthentication: Boolean = false
+    def usesLocalDatabase = false
     def start {}
     def stop {}
     def withConfig[T](f: (AppConfig => T)): T = {

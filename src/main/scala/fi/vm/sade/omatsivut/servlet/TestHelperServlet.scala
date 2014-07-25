@@ -6,7 +6,7 @@ import fi.vm.sade.omatsivut.security.{ShibbolethCookie, AuthenticationCipher, Au
 import org.scalatra.{Cookie, CookieOptions}
 
 class TestHelperServlet(implicit val appConfig: AppConfig) extends OmatSivutServletBase  {
-  if(appConfig.isTest){
+  if(appConfig.usesFakeAuthentication) {
     get("/fakesession") {
       val shibbolethCookie = ShibbolethCookie("_shibsession_fakeshibbolethsession", AuthenticationCipher().encrypt("FAKESESSION"))
       response.addCookie(fakeShibbolethSessionCookie(shibbolethCookie))
@@ -15,7 +15,9 @@ class TestHelperServlet(implicit val appConfig: AppConfig) extends OmatSivutServ
         case _ => halt(400, "Can't fake session without ssn")
       }
     }
+  }
 
+  if(appConfig.usesLocalDatabase) {
     put("/fixtures/apply") {
       FixtureImporter().applyFixtures
     }

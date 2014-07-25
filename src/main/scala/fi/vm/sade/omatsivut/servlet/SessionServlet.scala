@@ -22,7 +22,7 @@ class SessionServlet(implicit val appConfig: AppConfig) extends OmatSivutServlet
   private def findHetuFromParams = {
     headerOption("Hetu") match {
       case Some(hetu) => Some(hetu)
-      case None if appConfig.isTest => paramOption("hetu")
+      case None if appConfig.usesFakeAuthentication => paramOption("hetu")
       case _ => None
     }
   }
