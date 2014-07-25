@@ -13,11 +13,12 @@ trait HakemusApiSpecification extends JsonFormats with ScalatraTestSupport {
   val preferencesPhaseKey: String = OppijaConstants.PHASE_APPLICATION_OPTIONS
   val skillsetPhaseKey: String = OppijaConstants.PHASE_GRADES
   val ssnKey: String = OppijaConstants.ELEMENT_ID_SOCIAL_SECURITY_NUMBER
+  val testApplicationIndex = 1
 
   def withHakemus[T](f: (Hakemus => T)): T = {
     authGet("/applications", personOid) {
       val applications: List[Hakemus] = Serialization.read[List[Hakemus]](body)
-      val hakemus = applications(0).copy(answers = Hakemus.emptyAnswers)
+      val hakemus = applications(testApplicationIndex).copy(answers = Hakemus.emptyAnswers)
       f(hakemus)
     }
   }
