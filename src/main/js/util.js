@@ -9,6 +9,13 @@ module.exports = {
     }, {});
   },
 
+  indexBy: function(array, keyFunction) {
+    return _.reduce(array, function(memo, item, index) {
+      memo[keyFunction(item, index)] = item
+      return memo
+    }, {})
+  },
+
   flattenTree: function(rootNode, childrenAttribute) {
     return (function flatten(node, list) {
       if (node != null) {

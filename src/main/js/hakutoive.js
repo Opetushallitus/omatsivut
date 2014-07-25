@@ -65,6 +65,10 @@ Hakutoive.prototype = {
     this.errors = errors || []
   },
 
+  appendErrors: function(errors) {
+    this.errors = this.errors.concat(errors)
+  },
+
   setAsSaved: function() {
     this.isNew = false
     this.isModified = false

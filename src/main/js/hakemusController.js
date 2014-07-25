@@ -42,15 +42,14 @@ module.exports = function(listApp) {
         $scope.isSaveable = true
         setStatusMessage("")
         importQuestions(data.questions)
-        updateHakutoiveValidationMessages([])
+        updateValidationMessages([], true)
       }
 
       function error(data) {
         $scope.isSaveable = data.isSaveable
         setStatusMessage(data.errorText, "error")
         importQuestions(data.questions)
-        updateHakutoiveValidationMessages(data.errors) // Lisäkysymysten virheet näytetään vasta tallennuksen yhteydessä
-        updateMiscValidationMessages(data.errors)
+        updateValidationMessages(data.errors, true)
       }
     }
 
@@ -109,50 +108,33 @@ module.exports = function(listApp) {
       }
     }
 
-    function updateValidationMessages(errors) {
-      updateQuestionValidationMessages(errors)
-      updateHakutoiveValidationMessages(errors)
-      updateMiscValidationMessages(errors)
-    }
+    function updateValidationMessages(errors, skipQuestions) {
+      var errorMap = util.mapArray(errors, "key", "message")
+      var questionMap = domainUtil.questionMap($scope.additionalQuestions)
+      var hakutoiveMap = domainUtil.hakutoiveMap($scope.application.hakutoiveet)
 
-    function updateHakutoiveValidationMessages(errors) {
-      var errorMap = util.mapArray(errors, "key", "message");
-      $scope.application.hakutoiveet.forEach(function(hakutoive, index) {
-        var errorKeys = ["preference" + (index+1) + "-Koulutus", "preference" + (index+1)]
-        var errors = _(errorKeys).chain()
-          .map(function(errorKey) { return errorMap[errorKey] })
-          .flatten()
-          .without(undefined)
-          .value()
-        hakutoive.setErrors(errors)
+      clearErrors()
+
+      _(errorMap).each(function(errorList, key) {
+        showErrors(key, errorList)
       })
-    }
 
-    function updateQuestionValidationMessages(errors) {
-      var errorMap = util.mapArray(errors, "key", "message");
-      (function updateErrors(node) {
-        if (node != null) {
-          if (node.questionNodes == null) {
-            node.validationMessage = (errorMap[node.question.id.questionId] || []).join(", ")
-          } else {
-            _(node.questionNodes).each(updateErrors)
-          }
+      function clearErrors() {
+        _(hakutoiveMap).each(function(item) { item.setErrors() })
+        if (!skipQuestions)
+          _(questionMap).each(function(item) { item.setErrors() })
+      }
+
+      function showErrors(questionId, errors) {
+        if (questionMap[questionId] != null) {
+          if (!skipQuestions)
+            questionMap[questionId].appendErrors(errors)
+        } else if (domainUtil.isHakutoiveError(questionId))
+          hakutoiveMap[domainUtil.questionIdToHakutoiveId(questionId)].appendErrors(errors)
+        else {
+          console.log("Validaatiovirhettä ei käsitelty:", questionId, errors)
+          setStatusMessage("Odottamaton virhe. Ota yhteyttä ylläpitoon.", "error")
         }
-      })($scope.additionalQuestions)
-    }
-
-    function updateMiscValidationMessages(errors) {
-      function getQuestionId(node) { return node.question.id.questionId }
-      var questionKeys = _(util.flattenTree($scope.additionalQuestions, "questionNodes")).map(getQuestionId)
-
-      var miscErrors = _(errors).filter(function(error) {
-        return _(questionKeys).find(function(key) { return key === error.key }) == null &&
-          !domainUtil.isHakutoiveError(error.key)
-      })
-
-      if (miscErrors.length > 0) {
-        setStatusMessage("Odottamaton virhe. Ota yhteyttä ylläpitoon.", "error")
-        console.log("Käsittelemättömät validointivirheet:", _(miscErrors).map(JSON.stringify).join(", "))
       }
     }
   }])

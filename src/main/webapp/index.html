@@ -93,7 +93,7 @@
 
                                 <div ng-switch-when="false" class="question">
                                     <label class="title">{{questionNode.question.title}}</label>
-                                    <span class="validation-message error">{{questionNode.validationMessage}}</span>
+                                    <span class="validation-message error">{{ questionNode.errors.join(', ') }}</span>
                                     <div class="instruction">{{questionNode.question.help}}</div>
 
                                     <span class="answer" ng-switch="questionNode.question.questionType">
