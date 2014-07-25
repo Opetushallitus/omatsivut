@@ -2,14 +2,14 @@ package fi.vm.sade.omatsivut
 
 import java.io.{File, FileInputStream}
 import java.util
-import java.util.Properties
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.`type`.MapType
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import org.fusesource.scalate.TemplateEngine
 import org.fusesource.scalate.support.FileTemplateSource
-import collection.JavaConverters._
+
+import scala.collection.JavaConverters._
 
 object ConfigTemplateProcessor {
   def createPropertyFileForTestingWithTemplate(attributesFile: String) = {
