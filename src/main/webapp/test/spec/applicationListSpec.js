@@ -11,18 +11,16 @@
 
     describe("Hakemuksen tietojen näyttäminen", function() {
       it('hakemuslistassa on hakemus henkilölle 010101-123N', function () {
-        expect(ApplicationListPage().applications()).to.deep.equal([
-          {
-            applicationSystemName: 'Ammatillisen koulutuksen ja lukiokoulutuksen kevään 2014 yhteishaku'
-          },
-          {
-            applicationSystemName: "Perusopetuksen jälkeisen valmistavan koulutuksen kesän 2014 haku MUOKATTU",
-          }
-        ])
+        expect(ApplicationListPage().applications()).to.contain(
+          { applicationSystemName: 'Ammatillisen koulutuksen ja lukiokoulutuksen kevään 2014 yhteishaku' }
+        )
+        expect(ApplicationListPage().applications()).to.contain(
+          { applicationSystemName: "Perusopetuksen jälkeisen valmistavan koulutuksen kesän 2014 haku MUOKATTU" }
+        )
       })
 
       it("henkilön 010101-123N hakutoiveet ovat näkyvissä", function () {
-        expect(ApplicationListPage().getApplication(1).preferencesForApplication()).to.deep.equal([
+        expect(hakemus1.preferencesForApplication()).to.deep.equal([
           {
             "hakutoive.Opetuspiste": "Amiedu, Valimotie 8",
             "hakutoive.Koulutus": "Maahanmuuttajien ammatilliseen peruskoulutukseen valmistava koulutus"
@@ -97,7 +95,7 @@
             return hakemus1.getPreference(0).moveDown()
               .then(hakemus1.saveWaitError)
               .then(function () {
-                hakemus1.saveError().should.equal("Odottamaton virhe. Ota yhteyttä asiakaspalveluun.")
+                hakemus1.saveError().should.equal("Odottamaton virhe. Ota yhteyttä ylläpitoon.")
               })
           })
         })
@@ -112,9 +110,9 @@
 
       describe("Kun yksi hakukohde valittu", function() {
         it("rivejä ei voi siirtää", function () {
-          hakemus1.getPreference(0).isDisabled().should.be.true
-          hakemus1.getPreference(1).isDisabled().should.be.true
-          hakemus1.getPreference(2).isDisabled().should.be.true
+          hakemus1.getPreference(0).isMovable().should.be.false
+          hakemus1.getPreference(1).isMovable().should.be.false
+          hakemus1.getPreference(2).isMovable().should.be.false
         })
 
         it("vain ensimmäinen tyhjä rivi on muokattavissa", function () {
@@ -122,12 +120,7 @@
           hakemus1.getPreference(1).isEditable().should.be.true
           hakemus1.getPreference(2).isEditable().should.be.false
         })
-
-        it("ainoaa hakutoivetta ei voi poistaa", function() {
-          hakemus1.getPreference(0).canRemove().should.be.false
-        })
       })
-
 
       describe("kun lisätään hakukohde", function() {
         before(
