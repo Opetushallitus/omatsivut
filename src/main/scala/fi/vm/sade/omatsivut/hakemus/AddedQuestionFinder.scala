@@ -8,9 +8,9 @@ import fi.vm.sade.omatsivut.domain.{Question, QuestionGroup, QuestionNode}
 import scala.collection.JavaConversions._
 
 protected object AddedQuestionFinder {
-  def findQuestionsByHakutoive(applicationSystem: ApplicationSystem, hakutoive: Hakutoive): Seq[QuestionNode] = {
-    val answersWithNewHakutoive = Map(ApplicationUpdater.preferencePhaseKey -> HakutoiveetConverter.convertToAnswers(List(hakutoive)))
-    findAddedQuestions(applicationSystem, answersWithNewHakutoive, emptyAnswers)
+  def findQuestionsByHakutoive(applicationSystem: ApplicationSystem, existingHakutoiveet: List[Hakutoive], hakutoive: Hakutoive): Seq[QuestionNode] = {
+    def answersWith(hakutoiveet: List[Hakutoive]) = Map(ApplicationUpdater.preferencePhaseKey -> HakutoiveetConverter.convertToAnswers(hakutoiveet))
+    findAddedQuestions(applicationSystem, answersWith(existingHakutoiveet ++ List(hakutoive)), answersWith(existingHakutoiveet))
   }
 
   def findAddedQuestions(applicationSystem: ApplicationSystem, newAnswers: Answers, oldAnswers: Answers): Seq[QuestionNode] = {
