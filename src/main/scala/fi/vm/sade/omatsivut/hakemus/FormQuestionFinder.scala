@@ -24,7 +24,9 @@ protected object FormQuestionFinder extends Logging {
       .map {
         case (parents, questions) =>
           val lang = "fi" // TODO: kieliversiot
-          val groupNamePath = parents.tail.map(_.getI18nText.getTranslations.get(lang))
+          val groupNamePath = parents.tail
+            .filter { t: Titled => t.getI18nText != null }
+            .map(_.getI18nText.getTranslations.get(lang))
           val groupName = groupNamePath.mkString("", " - ", "")
 
           val sortedQuestions = questions.toList
@@ -69,7 +71,11 @@ protected object FormQuestionFinder extends Logging {
     getChildElementsOfType[HakuCheckBox](e).map(o => AnswerOption(title(o), o.getId()))
   }
   private def title[T <: Titled](e: T): String = {
-    e.getI18nText.getTranslations.get("fi") // TODO: kieliversiot
+    val i18ntext = e.getI18nText
+    if (i18ntext == null)
+      ""
+    else
+      i18ntext.getTranslations.get("fi") // TODO: kieliversiot
   }
   private def helpText[T <: Titled](e: T): String = {
     val help = e.getHelp()
