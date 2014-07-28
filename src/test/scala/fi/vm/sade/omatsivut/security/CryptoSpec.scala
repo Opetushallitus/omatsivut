@@ -1,7 +1,7 @@
-package fi.vm.sade.omatsivut
+package fi.vm.sade.omatsivut.security
 
-import fi.vm.sade.omatsivut.security.AuthenticationCipher
 import org.specs2.mutable.Specification
+import fi.vm.sade.omatsivut.AppConfig
 
 class CryptoSpec extends Specification {
   "AES crypto" should {
