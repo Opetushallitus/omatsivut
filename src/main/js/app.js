@@ -99,7 +99,7 @@ listApp.directive("highlightSave", function() {
         items.eq(index).addClass("saved")
       })
 
-      $(".timestamp").addClass("saved")
+      $element.find(".timestamp").addClass("saved")
 
       window.setTimeout(function() {
         items.removeClass("saved")
