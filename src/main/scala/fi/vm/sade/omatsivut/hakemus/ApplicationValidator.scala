@@ -8,6 +8,7 @@ import fi.vm.sade.omatsivut.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.Logging
 import fi.vm.sade.omatsivut.domain.Hakemus._
 import fi.vm.sade.omatsivut.domain._
+import fi.vm.sade.omatsivut.hakemus.ElementWrapper
 
 import scala.collection.JavaConversions._
 
@@ -24,14 +25,16 @@ case class ApplicationValidator(implicit val appConfig: AppConfig) extends Loggi
     withErrorLogging {
       val validationErrors: List[ValidationError] = validateHakutoiveetAndAnswers(hakemus, applicationSystem)
       val storedApplication = findStoredApplication(hakemus)
+      val filteredForm: ElementWrapper = ElementWrapper(applicationSystem.getForm, ApplicationUpdater.getAllAnswersForApplication(applicationSystem, storedApplication, hakemus))
 
       val questionsPerHakutoive: List[QuestionNode] = hakemus.hakutoiveet.zipWithIndex.flatMap { case (hakutoive, index) =>
         if (!applicationContains(storedApplication)(hakutoive)) {
           val errorKeys = validationErrors.filter(_.key.startsWith("preference" + (index+1))).map(_.key)
-          val questionsFromErrors: Set[QuestionLeafNode] = FormQuestionFinder.findQuestionsByElementIds(applicationSystem.getForm, errorKeys)
-          val addedByHakutoive: Set[QuestionLeafNode] = AddedQuestionFinder.findQuestionsByHakutoive(applicationSystem, hakemus.hakutoiveet.take(index), hakutoive)
 
-          val groupedQuestions: Seq[QuestionNode] = FormQuestionFinder.groupQuestionsByStructure(applicationSystem.getForm, addedByHakutoive ++ questionsFromErrors)
+          val questionsFromErrors: Set[QuestionLeafNode] = FormQuestionFinder.findQuestionsByElementIds(filteredForm, errorKeys)
+
+          val addedByHakutoive: Set[QuestionLeafNode] = AddedQuestionFinder.findQuestionsByHakutoive(applicationSystem, storedApplication, hakemus.hakutoiveet.take(index), hakutoive)
+          val groupedQuestions: Seq[QuestionNode] = FormQuestionFinder.groupQuestionsByStructure(ElementWrapper(applicationSystem.getForm), addedByHakutoive ++ questionsFromErrors)
 
           groupedQuestions match {
             case Nil => Nil

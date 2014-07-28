@@ -31,6 +31,12 @@ object ApplicationUpdater {
     allAnswersFromApplication(application) ++ updatedAnswersForHakuToiveet(applicationSystem, application, hakemus) ++ updatedAnswersForOtherPhases(application, hakemus)
   }
 
+  def getAllUpdatedAnswersForApplicationWithHakutoiveet(applicationSystem: ApplicationSystem)(application: Application, hakutoiveet: List[Hakutoive]) = {
+    val originalHakemus = HakemusConverter.convertToHakemus(Some(HakuConverter.convertToHaku(applicationSystem)))(application).copy(answers = emptyAnswers)
+    val hakemus = originalHakemus.copy(hakutoiveet = hakutoiveet)
+    getAllUpdatedAnswersForApplication(applicationSystem)(application, hakemus)
+  }
+
   private def pruneOrphanedAnswers(removedAnswerIds: Seq[AnswerId], answers: Answers): Answers = {
     answers.map { case (phaseId, phaseAnswers) =>
         (phaseId, phaseAnswers.filterKeys { case answerId =>

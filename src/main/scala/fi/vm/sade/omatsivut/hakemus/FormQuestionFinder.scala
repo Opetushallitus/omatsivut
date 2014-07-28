@@ -7,18 +7,19 @@ import fi.vm.sade.haku.oppija.lomake.util.ElementTree
 import fi.vm.sade.haku.oppija.lomake.validation.validators.RequiredFieldValidator
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 import fi.vm.sade.omatsivut.Logging
+import fi.vm.sade.omatsivut.domain.Hakemus.Answers
 import fi.vm.sade.omatsivut.domain.Text
 import fi.vm.sade.omatsivut.domain._
 import scala.collection.JavaConversions._
 import fi.vm.sade.omatsivut.domain.Notification
 
 protected object FormQuestionFinder extends Logging {
-  def findQuestionsByElementIds(contextElement: Element, ids: Seq[String]): Set[QuestionLeafNode] = {
+  def findQuestionsByElementIds(contextElement: ElementWrapper, ids: Seq[String]): Set[QuestionLeafNode] = {
     val elements = ids.flatMap(findElementById(contextElement, _).toList).toSet
     findQuestionsFromElements(contextElement, elements)
   }
 
-  def findQuestionsFromElements(contextElement: Element, elementsToScan: Set[Element]): Set[QuestionLeafNode] = {
+  def findQuestionsFromElements(contextElement: ElementWrapper, elementsToScan: Set[Element]): Set[QuestionLeafNode] = {
     elementsToScan.flatMap { element =>
       getElementsOfType[Titled](element).flatMap { titled =>
         titledElementToQuestions(contextElement, titled)
@@ -26,9 +27,9 @@ protected object FormQuestionFinder extends Logging {
     }
   }
 
-  def groupQuestionsByStructure(contextElement: Element, foundQuestions: Set[(QuestionLeafNode)]): List[QuestionGroup] = {
+  def groupQuestionsByStructure(contextElement: ElementWrapper, foundQuestions: Set[(QuestionLeafNode)]): List[QuestionGroup] = {
     foundQuestions
-      .map { question => (question, new ElementContext(contextElement, findElementById(contextElement, question.id.questionId).get.asInstanceOf[Titled])) }
+      .map { question => (question, new ElementContext(contextElement.element, findElementById(contextElement, question.id.questionId).get.asInstanceOf[Titled])) }
       .groupBy { case (question, elementContext) => elementContext.namedParents}
       .toList
       .sortBy { case (path, questions) => path.asInstanceOf[List[Element]]}(ParentPathOrdering())
@@ -48,11 +49,8 @@ protected object FormQuestionFinder extends Logging {
     }
   }
 
-  private def findElementById(contextElement: Element, id: String): Option[Element] = {
-    new ElementTree(contextElement).getChildById(id) match {
-      case null => None
-      case x => Some(x)
-    }
+  private def findElementById(contextElement: ElementWrapper, id: String): Option[Element] = {
+    contextElement.findById(id).map(_.element)
   }
 
   private def getImmediateChildElementsOfType[A](rootElement: Element)(implicit mf : Manifest[A]): List[A] = {
@@ -101,8 +99,8 @@ protected object FormQuestionFinder extends Logging {
       help.getTranslations.get("fi") // TODO: kieliversiot
   }
 
-  private def titledElementToQuestions(contextElement: Element, element: Titled): List[QuestionLeafNode] = {
-    val elementContext = new ElementContext(contextElement, element)
+  private def titledElementToQuestions(contextElement: ElementWrapper, element: Titled): List[QuestionLeafNode] = {
+    val elementContext = new ElementContext(contextElement.element, element)
     def id = QuestionId(elementContext.phase.getId, element.getId)
     def isRequired = element.getValidators.filter(o => o.isInstanceOf[RequiredFieldValidator]).nonEmpty
     def maxlength = toInt(element.getAttributes.toMap.getOrElse("maxlength", "500")).getOrElse(500)

@@ -1,22 +1,26 @@
 package fi.vm.sade.omatsivut.hakemus
 
+import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
 import fi.vm.sade.haku.oppija.lomake.domain.elements.{Form, Element}
 import fi.vm.sade.omatsivut.domain.Hakemus._
-import fi.vm.sade.omatsivut.domain.{QuestionLeafNode, Question, QuestionGroup, QuestionNode}
+import fi.vm.sade.omatsivut.domain._
 
 import scala.collection.JavaConversions._
 
 protected object AddedQuestionFinder {
-  def findQuestionsByHakutoive(applicationSystem: ApplicationSystem, existingHakutoiveet: List[Hakutoive], hakutoive: Hakutoive): Set[QuestionLeafNode] = {
-    def answersWith(hakutoiveet: List[Hakutoive]) = Map(ApplicationUpdater.preferencePhaseKey -> HakutoiveetConverter.convertToAnswers(hakutoiveet))
+  def findQuestionsByHakutoive(applicationSystem: ApplicationSystem, application: Application, existingHakutoiveet: List[Hakutoive], hakutoive: Hakutoive): Set[QuestionLeafNode] = {
+    def answersWith(hakutoiveet: List[Hakutoive]) = {
+      ApplicationUpdater.getAllUpdatedAnswersForApplicationWithHakutoiveet(applicationSystem)(application, hakutoiveet)
+    }
+
     findAddedQuestions(applicationSystem, answersWith(existingHakutoiveet ++ List(hakutoive)), answersWith(existingHakutoiveet))
   }
 
   def findAddedQuestions(applicationSystem: ApplicationSystem, newAnswers: Answers, oldAnswers: Answers): Set[QuestionLeafNode] = {
     val form = applicationSystem.getForm
     val addedElements = findAddedElements(form, newAnswers, oldAnswers)
-    FormQuestionFinder.findQuestionsFromElements(form, addedElements).filter { question =>
+    FormQuestionFinder.findQuestionsFromElements(ElementWrapper(form), addedElements).filter { question =>
       !containsElementId(question.id.questionId, oldAnswers, form)
     }
   }
