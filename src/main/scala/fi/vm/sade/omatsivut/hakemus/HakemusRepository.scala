@@ -28,8 +28,10 @@ case class HakemusRepository(implicit val appConfig: AppConfig) extends Logging 
 
   def fetchHakemukset(personOid: String): List[Hakemus] = {
     val applicationJavaObjects: List[Application] = dao.find(new Application().setPersonOid(personOid)).toList
-    applicationJavaObjects.map{ application =>
-      HakemusConverter.convertToHakemus(HakuRepository().getHakuById(application.getApplicationSystemId))(application)
-    }
+    applicationJavaObjects.map{ application => {
+      val hakemus = HakemusConverter.convertToHakemus(HakuRepository().getHakuById(application.getApplicationSystemId))(application)
+      auditLog.logFetchHakemus(personOid, hakemus)
+      hakemus
+    }}
   }
 }

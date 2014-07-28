@@ -23,4 +23,11 @@ class AuditLogger(implicit val appConfig: AppConfig) extends Logging  {
       auditLogger.log(tapahtuma)
     }("Could not logUpdatedHakemus for " + userOid)
   }
+
+  def logFetchHakemus(userOid: String, hakemus: Hakemus) {
+    withErrorLogging {
+      val tapahtuma = Tapahtuma.createREAD(systemName, userOid, "Hakemus", "Haettu hakemus: " + hakemus.oid )
+      auditLogger.log(tapahtuma)
+    }("Could not logFetchHakemus for " + userOid)
+  }
 }
