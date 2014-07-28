@@ -241,6 +241,7 @@
 
         describe("vastaaminen", function() {
           before(
+            answerQuestions,
             hakemus2.saveWaitSuccess
           )
 
