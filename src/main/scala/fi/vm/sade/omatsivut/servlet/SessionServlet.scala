@@ -55,9 +55,4 @@ class SessionServlet(implicit val appConfig: AppConfig) extends OmatSivutServlet
   private def redirectUri: String = {
     request.getContextPath + paramOption("redirect").getOrElse("/index.html")
   }
-
-  get("/logout") {
-    tellBrowserToDeleteAuthCookie(request, response)
-    response.redirect(appConfig.authContext.ssoContextPath + "/Shibboleth.sso/Logout?type=Local")
-  }
 }
