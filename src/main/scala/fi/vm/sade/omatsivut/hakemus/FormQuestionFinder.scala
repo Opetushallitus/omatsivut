@@ -3,6 +3,7 @@ package fi.vm.sade.omatsivut.hakemus
 import fi.vm.sade.haku.oppija.lomake.domain.elements.custom.SocialSecurityNumber
 import fi.vm.sade.haku.oppija.lomake.domain.elements.questions.{DropdownSelect, TextQuestion, CheckBox => HakuCheckBox, OptionQuestion => HakuOption, Radio => HakuRadio, TextArea => HakuTextArea}
 import fi.vm.sade.haku.oppija.lomake.domain.elements._
+import fi.vm.sade.haku.oppija.lomake.util.ElementTree
 import fi.vm.sade.haku.oppija.lomake.validation.validators.RequiredFieldValidator
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 import fi.vm.sade.omatsivut.Logging
@@ -12,6 +13,11 @@ import scala.collection.JavaConversions._
 import fi.vm.sade.omatsivut.domain.Notification
 
 protected object FormQuestionFinder extends Logging {
+  def findQuestionsByElementIds(contextElement: Element, ids: Seq[String]): List[QuestionGroup] = {
+    val elements = ids.flatMap(findElementById(contextElement, _).toList).toSet
+    findQuestions(contextElement, elements)
+  }
+
   def findQuestions(contextElement: Element, elementsToScan: Set[Element]): List[QuestionGroup] = {
     elementsToScan.flatMap { element =>
         getElementsOfType[Titled](element).flatMap { titled =>
@@ -38,6 +44,12 @@ protected object FormQuestionFinder extends Logging {
   }
 
 
+  private def findElementById(contextElement: Element, id: String): Option[Element] = {
+    new ElementTree(contextElement).getChildById(id) match {
+      case null => None
+      case x => Some(x)
+    }
+  }
 
   private def getImmediateChildElementsOfType[A](rootElement: Element)(implicit mf : Manifest[A]): List[A] = {
     rootElement.getChildren.toList.flatMap { child =>

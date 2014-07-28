@@ -1,7 +1,9 @@
 (function () {
   var page = ApplicationListPage()
-  var hakemus1Index = "Perusopetuksen jälkeisen valmistavan koulutuksen kesän 2014 haku MUOKATTU"
-  var hakemus1 = page.getApplication(hakemus1Index)
+  var hakemus1nimi = "Perusopetuksen jälkeisen valmistavan koulutuksen kesän 2014 haku MUOKATTU"
+  var hakemus1 = page.getApplication(hakemus1nimi)
+  var hakemus2nimi = "Ammatillisen koulutuksen ja lukiokoulutuksen kevään 2014 yhteishaku"
+  var hakemus2 = page.getApplication(hakemus2nimi)
 
   describe('Hakemuslistaus', function () {
 
@@ -194,7 +196,7 @@
       })
 
       describe("jos kaksi hakutoivetta on identtisiä", function() {
-        before(replacePreference(1, "Turun Kristillinen"))
+        before(replacePreference(hakemus1, 1, "Turun Kristillinen"))
         describe("käyttöliittymän tila", function() {
           it("näytetään validointivirhe", function() {
             hakemus1.getPreference(1).errorMessage().should.equal("Et voi syöttää samaa hakutoivetta useaan kertaan.")
@@ -206,7 +208,7 @@
         })
 
         describe("kun valitaan eri hakukohde", function() {
-          before(replacePreference(1, "Etelä-Savon ammattiopisto"))
+          before(replacePreference(hakemus1, 1, "Etelä-Savon ammattiopisto"))
 
           it("lomakkeen voi tallentaa", function() {
             hakemus1.saveButton(0).isEnabled().should.be.true
@@ -220,6 +222,18 @@
     })
 
     describe("Lisäkysymykset", function() {
+      describe("Suoraan hakutoiveiden alle sijoitetut kysymykset (TODO nimeäminen)", function() {
+        before(
+          page.resetDataAndOpen,
+          hakemus2.getPreference(0).remove,
+          hakemus2.saveWaitSuccess,
+          replacePreference(hakemus2, 1, "Kallion")
+        )
+
+        it("näytetään", function() {
+
+        })
+      })
       describe("Lisäkysymyksien näyttäminen", function() {
         var questions1 = [
           'Testikysymys, avaoin vastaus kenttä (pakollinen)?',
@@ -254,7 +268,7 @@
         })
 
         describe("lisätty hakutoive, jolla on lisäkysymyksiä", function() {
-          before(replacePreference(1, "Etelä-Savon ammattiopisto"))
+          before(replacePreference(hakemus1, 1, "Etelä-Savon ammattiopisto"))
 
           it("lisäkysymykset näytetään", function() {
             var questionTitles = hakemus1.questionsForApplication().titles()
@@ -263,8 +277,8 @@
         })
 
         describe("lisätty kaksi hakutoivetta, jolla on lisäkysymyksiä", function() {
-          before(replacePreference(1, "Etelä-Savon ammattiopisto"))
-          before(replacePreference(2, "Turun Kristillinen"))
+          before(replacePreference(hakemus1, 1, "Etelä-Savon ammattiopisto"))
+          before(replacePreference(hakemus1, 2, "Turun Kristillinen"))
 
           it("molempien lisäkysymykset näytetään", function() {
             var questionTitles = hakemus1.questionsForApplication().titles()
@@ -276,7 +290,7 @@
       describe("Lisäkysymyksiin vastaaminen", function() {
         before(
           page.resetDataAndOpen,
-          replacePreference(2, "Etelä-Savon ammattiopisto")
+          replacePreference(hakemus1, 2, "Etelä-Savon ammattiopisto")
         )
 
         describe("Aluksi", function() {
@@ -314,7 +328,7 @@
           describe("Tietokanta", function() {
             it("sisältää tallennetut tiedot", function() {
               return db.getApplications().then(function(data) {
-                var answers = findByHaku(data, hakemus1Index).answers
+                var answers = findByHaku(data, hakemus1nimi).answers
                 var questions = hakemus1.questionsForApplication().data()
 
                 answers.hakutoiveet[questions[0].id].should.equal("tekstivastaus 1")
@@ -376,7 +390,7 @@
               hakemus1.getPreference(2).remove,
               hakemus1.saveWaitSuccess,
               page.openPage,
-              replacePreference(2, "Etelä-Savon ammattiopisto")
+              replacePreference(hakemus1, 2, "Etelä-Savon ammattiopisto")
             )
             it("hakutoiveeseen liittyvien lisäkysymysten aiemmat vastaukset hävitetään", function() {
               hakemus1.questionsForApplication().count().should.equal(11)
@@ -400,7 +414,7 @@
         describe("Kun poistetaan lisätty hakutoive, jolla lisäkysymyksiä, joihin vastattiin", function() {
           before(
             page.resetDataAndOpen,
-            replacePreference(2, "Etelä-Savon ammattiopisto"),
+            replacePreference(hakemus1, 2, "Etelä-Savon ammattiopisto"),
             answerAllQuestions,
             hakemus1.getPreference(2).remove,
             hakemus1.saveWaitSuccess
@@ -442,7 +456,7 @@
       }, function (dbStart, dbEnd) {
         dbEnd.hakutoiveet.should.deep.equal(_.flatten([_.rest(dbStart.hakutoiveet), {}]))
       })
-      endToEndTest("lisäys", "hakutoiveen voi lisätä", replacePreference(2, "Ahl"), function(dbStart, dbEnd) {
+      endToEndTest("lisäys", "hakutoiveen voi lisätä", replacePreference(hakemus1, 2, "Ahl"), function(dbStart, dbEnd) {
         var newOne = { 'Opetuspiste-id': '1.2.246.562.10.60222091211',
           Opetuspiste: 'Ahlmanin ammattiopisto',
           Koulutus: 'Ammattistartti',
@@ -461,9 +475,9 @@
     })
   })
 
-  function replacePreference(index, searchString) {
+  function replacePreference(hakemus, index, searchString) {
     return function() {
-      var pref = hakemus1.getPreference(index)
+      var pref = hakemus.getPreference(index)
       return pref.remove()
         .then(pref.selectOpetusPiste(searchString))
         .then(pref.selectKoulutus(0))
@@ -495,7 +509,7 @@
         }
       )
       it(testName, function() {
-        dbCheckFunction(findByHaku(applicationsBefore, hakemus1Index), findByHaku(applicationsAfter, hakemus1Index))
+        dbCheckFunction(findByHaku(applicationsBefore, hakemus1nimi), findByHaku(applicationsAfter, hakemus1nimi))
       })
     })
   }

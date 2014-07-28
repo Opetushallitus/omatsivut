@@ -27,7 +27,12 @@ case class ApplicationValidator(implicit val appConfig: AppConfig) extends Loggi
 
       val questionsPerHakutoive: List[QuestionNode] = hakemus.hakutoiveet.zipWithIndex.flatMap { case (hakutoive, index) =>
         if (!applicationContains(storedApplication)(hakutoive)) {
-          val groupedQuestions: Seq[QuestionNode] = AddedQuestionFinder.findQuestionsByHakutoive(applicationSystem, hakemus.hakutoiveet.take(index), hakutoive)
+          val errorKeys = validationErrors.filter(_.key.startsWith("preference" + (index+1))).map(_.key)
+          val questionsFromErrors = FormQuestionFinder.findQuestionsByElementIds(applicationSystem.getForm, errorKeys)
+          val addedByHakutoive: Seq[QuestionNode] = AddedQuestionFinder.findQuestionsByHakutoive(applicationSystem, hakemus.hakutoiveet.take(index), hakutoive)
+
+          val groupedQuestions: Seq[QuestionNode] = addedByHakutoive ++ questionsFromErrors // TODO: regroup
+
           groupedQuestions match {
             case Nil => Nil
             case _ => List(QuestionGroup(HakutoiveetConverter.describe(hakutoive), groupedQuestions.toList))
