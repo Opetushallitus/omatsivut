@@ -28,6 +28,7 @@ trait ElementWrapper {
       forChildren
     }
   }
+  def wrap(element: Element) : ElementWrapper
 }
 
 object ElementWrapper {
@@ -43,6 +44,7 @@ object ElementWrapper {
 case class SimpleElementWrapper(element: Element) extends ElementWrapper {
   import collection.JavaConversions._
   override def children = element.getChildren.toList.map(SimpleElementWrapper)
+  def wrap(element: Element) = { SimpleElementWrapper(element) }
 }
 
 case class FilteredElementWrapper(element: Element, answers: Answers) extends ElementWrapper {
@@ -55,4 +57,6 @@ case class FilteredElementWrapper(element: Element, answers: Answers) extends El
   private def flattenAnswers(answers: Map[String, Map[String, String]]): Map[String, String] = {
     answers.values.foldLeft(Map.empty.asInstanceOf[Map[String, String]]) { (a,b) => a ++ b }
   }
+
+  def wrap(element: Element) = { FilteredElementWrapper(element, answers) }
 }

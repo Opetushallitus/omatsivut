@@ -20,7 +20,7 @@ protected object AddedQuestionFinder {
   def findAddedQuestions(applicationSystem: ApplicationSystem, newAnswers: Answers, oldAnswers: Answers): Set[QuestionLeafNode] = {
     val form = applicationSystem.getForm
     val addedElements = findAddedElements(form, newAnswers, oldAnswers)
-    FormQuestionFinder.findQuestionsFromElements(ElementWrapper(form), addedElements).filter { question =>
+    FormQuestionFinder.findQuestionsFromElements(ElementWrapper(form, newAnswers), addedElements).filter { question =>
       !containsElementId(question.id.questionId, oldAnswers, form)
     }
   }

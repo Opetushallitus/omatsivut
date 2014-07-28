@@ -21,7 +21,7 @@ protected object FormQuestionFinder extends Logging {
 
   def findQuestionsFromElements(contextElement: ElementWrapper, elementsToScan: Set[Element]): Set[QuestionLeafNode] = {
     elementsToScan.flatMap { element =>
-      getElementsOfType[Titled](ElementWrapper(element)).flatMap { titled =>
+      getElementsOfType[Titled](contextElement.wrap(element)).flatMap { titled =>
         titledElementToQuestions(contextElement, titled)
       }
     }
