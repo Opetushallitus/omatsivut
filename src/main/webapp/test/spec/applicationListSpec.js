@@ -222,6 +222,7 @@
     })
 
     describe("Lisäkysymykset", function() {
+      /*
       describe("Suoraan hakutoiveiden alle sijoitetut kysymykset (TODO nimeäminen)", function() {
         before(
           page.resetDataAndOpen,
@@ -255,6 +256,7 @@
           }
         })
       })
+      */
 
       describe("Lisäkysymyksien näyttäminen", function() {
         var questions1 = [
