@@ -4,7 +4,7 @@ var util = require('./util')
 var domainUtil = require('./domainUtil')
 
 module.exports = function(listApp) {
-   listApp.factory("applicationValidator", ["$http", "applicationFormatter", function($http, applicationFormatter) {
+   listApp.factory("applicationValidator", ["$http", function($http) {
     function getQuestions(data) {
       return convertToItems(data.questions, new QuestionGroup())
 
@@ -39,7 +39,7 @@ module.exports = function(listApp) {
     function validateBackend(application, success, error) {
       currentRequest = {}
       var thisRequest = currentRequest
-      var responsePromise = $http.post("/omatsivut/api/applications/validate/" + application.oid, applicationFormatter(application))
+      var responsePromise = $http.post("/omatsivut/api/applications/validate/" + application.oid, application.toJson())
       responsePromise.success(function(data, status, headers, config) {
         if (currentRequest === thisRequest) {
           if (data.errors.length === 0) {

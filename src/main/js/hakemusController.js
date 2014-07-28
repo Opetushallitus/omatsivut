@@ -1,7 +1,7 @@
 var Hakemus = require('./hakemus')
 
 module.exports = function(listApp) {
-  listApp.controller("hakemusController", ["$scope", "$element", "$http", "applicationsResource", "applicationValidator", "applicationFormatter", "settings", "debounce", function ($scope, $element, $http, applicationsResource, applicationValidator, applicationFormatter, settings, debounce) {
+  listApp.controller("hakemusController", ["$scope", "$element", "$http", "applicationsResource", "applicationValidator", "settings", "debounce", function ($scope, $element, $http, applicationsResource, applicationValidator, settings, debounce) {
     applicationValidator = debounce(applicationValidator, settings.modelDebounce)
 
     $scope.hasChanged = false
@@ -66,7 +66,7 @@ module.exports = function(listApp) {
 
     $scope.saveApplication = function() {
       $scope.isSaving = true;
-      applicationsResource.update({id: $scope.application.oid }, applicationFormatter($scope.application), onSuccess, onError)
+      applicationsResource.update({id: $scope.application.oid }, $scope.application.toJson(), onSuccess, onError)
       setStatusMessage("", "")
 
       function onSuccess(savedApplication) {

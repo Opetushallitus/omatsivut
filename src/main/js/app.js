@@ -12,7 +12,6 @@ require('./hakutoiveController')(listApp)
 require('./listController')(listApp)
 require('./hakemusController')(listApp)
 require('./applicationValidator')(listApp)
-require('./applicationFormatter')(listApp)
 require('./recursionHelper')
 require('../lib/angular-debounce')
 

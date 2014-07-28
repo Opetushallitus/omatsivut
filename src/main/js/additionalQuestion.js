@@ -1,6 +1,7 @@
 function AdditionalQuestion(question, validationErrors) {
   this.question = question
   this.errors = validationErrors
+  this.answer = initialValue(this)
 }
 
 AdditionalQuestion.prototype = {
@@ -15,6 +16,19 @@ AdditionalQuestion.prototype = {
 
   appendErrors: function(errors) {
     this.errors = this.errors.concat(errors)
+  }
+}
+
+function initialValue(questionNode) {
+  var question = questionNode.question
+  if (question.options != null) { // Aseta default-arvo vain monivalinnoille
+    if (question.questionType == "Checkbox") {
+      return _(question.options).chain().map(function(option) {
+        return [option.value, false]
+      }).object().value()
+    } else {
+      return questionNode.defaultValue()
+    }
   }
 }
 

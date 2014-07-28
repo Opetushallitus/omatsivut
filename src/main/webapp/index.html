@@ -98,30 +98,30 @@
 
                                     <span class="answer" ng-switch="questionNode.question.questionType">
                                         <input type="text" ng-switch-when="Text"
-                                               ng-model="application.getAnswers(questionNode.question.id.phaseId)[questionNode.question.id.questionId]"
+                                               ng-model="questionNode.answer"
                                                maxlength="{{questionNode.question.maxlength}}"/>
                                         <textarea ng-switch-when="TextArea"
-                                               ng-model="application.getAnswers(questionNode.question.id.phaseId)[questionNode.question.id.questionId]"
+                                               ng-model="questionNode.answer"
                                                maxlength="{{questionNode.question.maxlength}}"
                                                rows="{{questionNode.question.rows}}"
                                                cols="{{questionNode.question.cols}}"
                                         />
                                         <select ng-switch-when="Dropdown"
-                                                ng-model="application.getAnswers(questionNode.question.id.phaseId)[questionNode.question.id.questionId]"
+                                                ng-model="questionNode.answer"
                                                 ng-options="option.value as option.title for option in questionNode.question.options">
                                         </select>
 
                                         <div ng-switch-when="Radio">
                                             <label class="radio-button-item" ng-repeat="option in questionNode.question.options">
                                                 <input name="{{questionNode.question.id.questionId}}" type="radio"
-                                                       ng-model="application.getAnswers(questionNode.question.id.phaseId)[questionNode.question.id.questionId]"
+                                                       ng-model="questionNode.answer"
                                                        value={{option.value}} /> {{option.title }}
                                             </label>
                                         </div>
 
                                         <div ng-switch-when="Checkbox">
                                             <label class="radio-button-item" ng-repeat="option in questionNode.question.options">
-                                                <input type="checkbox" ng-model="application.getAnswers(questionNode.question.id.phaseId)[option.value]">
+                                                <input type="checkbox" ng-model="questionNode.answer[option.value]">
                                                 {{option.title }}
                                             </label>
                                         </div>

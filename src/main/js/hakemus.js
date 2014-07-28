@@ -6,7 +6,6 @@ function Hakemus(json) {
   _.extend(this, json)
   this.hakutoiveet = _(this.hakutoiveet).map(function(hakutoive) { return new Hakutoive(hakutoive) })
   this.additionalQuestions = null
-  this.answers = {}
 }
 
 Hakemus.prototype = {
@@ -34,8 +33,38 @@ Hakemus.prototype = {
   },
 
   toJson: function() {
-    return _.extend({}, this,
-      { hakutoiveet: _(this.hakutoiveet).map(function(hakutoive) { return hakutoive.toJson() })})
+    var self = this
+    return _.extend({}, this, {
+      hakutoiveet: _(this.hakutoiveet).map(function(hakutoive) { return hakutoive.toJson() }),
+      answers: removeFalseBooleans(getAnswers())
+    })
+
+    function getAnswers() {
+      var answers = {};
+      _(domainUtil.questionMap(self.additionalQuestions)).each(function(questionNode, key) {
+        answers[questionNode.question.id.phaseId] = answers[questionNode.question.id.phaseId] || {}
+        var answer = questionNode.answer
+        if (_.isObject(answer)) {
+          _(answer).each(function(val, key) {
+            answers[questionNode.question.id.phaseId][key] = val
+          })
+        } else {
+          answers[questionNode.question.id.phaseId][questionNode.question.id.questionId] = answer
+        }
+      })
+
+      return answers
+    }
+
+    function removeFalseBooleans(obj) {
+      _.each(obj, function(val, key) {
+        if (_.isBoolean(val) && val === false)
+          delete obj[key]
+        else if (_.isObject(val))
+          removeFalseBooleans(val)
+      })
+      return obj;
+    }
   },
 
   setAsSaved: function(savedApplication) {
@@ -62,7 +91,7 @@ Hakemus.prototype = {
   },
 
   getAnswerWatchCollection: function() {
-    return this.answers
+    return _(domainUtil.questionMap(this.additionalQuestions)).map(function(item, key) { return item.answer })
   },
 
   moveHakutoive: function(from, to) {
@@ -89,47 +118,15 @@ Hakemus.prototype = {
     return -1
   },
 
-  getAnswers: function(phaseId) {
-    if (!this.answers[phaseId])
-      this.answers[phaseId] = {}
-    return this.answers[phaseId]
-  },
-
   importQuestions: function(questions) {
-    this.additionalQuestions = questions
-    setDefaultAnswers(questions)
-
-    var self = this
-
-    function setDefaultAnswers(questionNode) {
-      if (questionNode != null) {
-        _(questionNode.questionNodes).each(function(node) {
-          if (node.questionNodes != null)
-            self.setDefaultAnswers(node)
-          else
-            setDefaultAnswer(node)
-        })
-      }
-
-      function setDefaultAnswer(questionNode) {
-        var question = questionNode.question
-        if (question.options != null) { // Aseta default-arvo vain monivalinnoille
-          var phaseAnswers = self.getAnswers(question.id.phaseId)
-
-          var setValueIfEmpty = function(key, val) {
-            phaseAnswers[key] = phaseAnswers[key] || val
-          }
-
-          if (question.questionType == "Checkbox") {
-            _(question.options).each(function(option) {
-              setValueIfEmpty(option.value, false)
-            })
-          } else {
-            setValueIfEmpty(question.id.questionId, questionNode.defaultValue())
-          }
-        }
-      }
-    }
+    this.additionalQuestions = (function mergeOldAnswers(old, questions) {
+      var oldQuestions = domainUtil.questionMap(old)
+      _(domainUtil.questionMap(questions)).each(function(newQuestion, id) {
+        if (oldQuestions[id] != null)
+          newQuestion.answer = oldQuestions[id].answer
+      })
+      return questions
+    })(this.additionalQuestions, questions)
   },
 
   updateValidationMessages: function(errors, skipQuestions) {
