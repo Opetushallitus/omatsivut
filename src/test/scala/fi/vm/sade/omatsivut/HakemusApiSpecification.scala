@@ -3,7 +3,7 @@ package fi.vm.sade.omatsivut
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 import fi.vm.sade.omatsivut.domain.Hakemus
-import fi.vm.sade.omatsivut.domain.Hakemus.Answers
+import fi.vm.sade.omatsivut.domain.Hakemus.{Hakutoive, Answers}
 import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.omatsivut.json.JsonFormats
 import org.json4s.jackson.Serialization
@@ -15,10 +15,10 @@ trait HakemusApiSpecification extends JsonFormats with ScalatraTestSupport {
   val skillsetPhaseKey: String = OppijaConstants.PHASE_GRADES
   val ssnKey: String = OppijaConstants.ELEMENT_ID_SOCIAL_SECURITY_NUMBER
 
-  def withHakemus[T](f: (Hakemus => T)): T = {
+  def withHakemus[T](oid: String)(f: (Hakemus => T)): T = {
     authGet("/applications", personOid) {
       val applications: List[Hakemus] = Serialization.read[List[Hakemus]](body)
-      val hakemus = applications.find(_.oid == TestFixture.applicationOid).get.copy(answers = Hakemus.emptyAnswers)
+      val hakemus = applications.find(_.oid == oid).get.copy(answers = Hakemus.emptyAnswers)
       f(hakemus)
     }
   }
@@ -29,8 +29,8 @@ trait HakemusApiSpecification extends JsonFormats with ScalatraTestSupport {
     }
   }
 
-  def modifyHakemus[T](modification: (Hakemus => Hakemus))(f: Hakemus => T): T = {
-    withHakemus { hakemus =>
+  def modifyHakemus[T](oid: String)(modification: (Hakemus => Hakemus))(f: Hakemus => T): T = {
+    withHakemus(oid) { hakemus =>
       val modified = modification(hakemus)
       saveHakemus(modified) {
         f(modified)
@@ -45,6 +45,11 @@ trait HakemusApiSpecification extends JsonFormats with ScalatraTestSupport {
 
   def removeHakutoive(hakemus: Hakemus) = {
     hakemus.copy(hakutoiveet = hakemus.hakutoiveet.slice(0, 2))
+  }
+
+  def addHakutoive(hakutoive: Hakutoive)(hakemus: Hakemus) = {
+    val emptyIndex = hakemus.hakutoiveet.indexWhere(_.isEmpty)
+    hakemus.copy(hakutoiveet = hakemus.hakutoiveet.patch(emptyIndex, List(hakutoive), 1))
   }
 
   def withSavedApplication[T](hakemus: Hakemus)(f: Application => T): T = {

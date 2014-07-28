@@ -14,13 +14,13 @@ class UpdateApplicationSpec extends HakemusApiSpecification {
 
   "PUT /application/:oid" should {
     "reject application with empty hakutoiveet" in {
-      modifyHakemus { hakemus => hakemus.copy(hakutoiveet = Nil) } { _ =>
+      modifyHakemus(hakemus1) { hakemus => hakemus.copy(hakutoiveet = Nil) } { _ =>
         status must_== 400
       }
     }
 
     "accept valid application" in {
-      modifyHakemus { hakemus => hakemus} { hakemus =>
+      modifyHakemus (hakemus1){ hakemus => hakemus} { hakemus =>
         val result: JValue = JsonMethods.parse(body)
         status must_== 200
         compareWithoutTimestamp(hakemus, result.extract[Hakemus]) must_== true
@@ -28,7 +28,7 @@ class UpdateApplicationSpec extends HakemusApiSpecification {
     }
 
     "save application" in {
-      modifyHakemus(answerExtraQuestion(preferencesPhaseKey, "539158b8e4b0b56e67d2c74b", "yes sir")) { newHakemus =>
+      modifyHakemus(hakemus1)(answerExtraQuestion(preferencesPhaseKey, "539158b8e4b0b56e67d2c74b", "yes sir")) { newHakemus =>
         status must_== 200
         val result: JValue = JsonMethods.parse(body)
         compareWithoutTimestamp(newHakemus, result.extract[Hakemus]) must_== true
@@ -41,9 +41,9 @@ class UpdateApplicationSpec extends HakemusApiSpecification {
     }
 
     "prune answers to removed questions" in {
-      modifyHakemus(answerExtraQuestion(preferencesPhaseKey, "539158b8e4b0b56e67d2c74b", "yes sir")) { _ =>
+      modifyHakemus(hakemus1)(answerExtraQuestion(preferencesPhaseKey, "539158b8e4b0b56e67d2c74b", "yes sir")) { _ =>
         status must_== 200
-        modifyHakemus(removeHakutoive) { hakemus =>
+        modifyHakemus(hakemus1)(removeHakutoive) { hakemus =>
           status must_== 200
           withSavedApplication(hakemus) { application =>
             application.getPhaseAnswers(preferencesPhaseKey).containsKey("539158b8e4b0b56e67d2c74b") must_== false
@@ -53,7 +53,7 @@ class UpdateApplicationSpec extends HakemusApiSpecification {
     }
 
     "reject answers to unknown questions" in {
-      modifyHakemus(answerExtraQuestion(preferencesPhaseKey, "unknown", "hacking")) { hakemus =>
+      modifyHakemus(hakemus1)(answerExtraQuestion(preferencesPhaseKey, "unknown", "hacking")) { hakemus =>
         status must_== 400
       }
     }

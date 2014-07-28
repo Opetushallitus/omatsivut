@@ -2,6 +2,7 @@ package fi.vm.sade.omatsivut
 
 import fi.vm.sade.omatsivut.domain._
 import fi.vm.sade.omatsivut.fixtures.TestFixture
+import fi.vm.sade.omatsivut.fixtures.TestFixture._
 import fi.vm.sade.omatsivut.servlet.ApplicationsServlet
 import org.json4s._
 import org.json4s.jackson.{JsonMethods, Serialization}
@@ -12,7 +13,7 @@ class ValidateApplicationSpec extends HakemusApiSpecification {
 
   "POST /application/validate" should {
     "validate application" in {
-      withHakemus { hakemus =>
+      withHakemus(TestFixture.hakemus1) { hakemus =>
         validate(hakemus) { (errors, structuredQuestions) =>
           errors.size must_== 0
           structuredQuestions.size must_== 0
@@ -21,6 +22,15 @@ class ValidateApplicationSpec extends HakemusApiSpecification {
         // TODO: test with added hakutoive -> some questions
         // TODO: test answer validation (pass/fail cases)
         // TODO: test that accepts unknown answers
+      }
+    }
+
+    "get additional question indices correctly" in {
+      withHakemus(TestFixture.hakemus2) { hakemus =>
+        val modified = addHakutoive(hevostalous)(hakemus)
+        validate(modified) { (errors, structuredQuestions) =>
+          QuestionNode.flatten(structuredQuestions).map(_.id) must_== List(QuestionId("hakutoiveet","preference3_kaksoistutkinnon_lisakysymys"))
+        }
       }
     }
   }

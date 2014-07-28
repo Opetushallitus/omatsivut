@@ -2,6 +2,12 @@ package fi.vm.sade.omatsivut.domain
 
 import fi.vm.sade.haku.oppija.lomake.domain.elements.Notification.NotificationType
 
+object QuestionNode {
+  def flatten(qs: List[QuestionNode]): List[Question] = {
+    qs.flatMap(_.flatten)
+  }
+}
+
 sealed trait QuestionNode {
   def title: String
   def flatten: List[Question]

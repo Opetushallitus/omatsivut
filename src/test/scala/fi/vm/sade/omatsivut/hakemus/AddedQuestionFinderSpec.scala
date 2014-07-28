@@ -17,7 +17,7 @@ class AddedQuestionFinderSpec extends Specification {
     "Find related questions when adding Hakutoive" in {
       var addedQuestions = findAddedQuestions(answersWithNewHakutoive, Hakemus.emptyAnswers)
       addedQuestions.length must_== 11
-      addedQuestions = AddedQuestionFinder.findQuestionsByHakutoive(as, Nil, hakutoive).flatMap(_.flatten)
+      addedQuestions = AddedQuestionFinder.findQuestionsByHakutoive(as, Nil, ammattistartti).flatMap(_.flatten)
       addedQuestions.length must_== 11
     }
 
@@ -44,5 +44,5 @@ class AddedQuestionFinderSpec extends Specification {
   }
 
   val as: ApplicationSystem = applicationSystem
-  val answersWithNewHakutoive = Map(ApplicationUpdater.preferencePhaseKey -> HakutoiveetConverter.convertToAnswers(List(hakutoive)))
+  val answersWithNewHakutoive = Map(ApplicationUpdater.preferencePhaseKey -> HakutoiveetConverter.convertToAnswers(List(ammattistartti)))
 }
