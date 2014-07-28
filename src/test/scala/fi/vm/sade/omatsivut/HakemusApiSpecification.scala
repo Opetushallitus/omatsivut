@@ -16,10 +16,16 @@ trait HakemusApiSpecification extends JsonFormats with ScalatraTestSupport {
   val ssnKey: String = OppijaConstants.ELEMENT_ID_SOCIAL_SECURITY_NUMBER
 
   def withHakemus[T](oid: String)(f: (Hakemus => T)): T = {
-    authGet("/applications", personOid) {
-      val applications: List[Hakemus] = Serialization.read[List[Hakemus]](body)
+    withApplications(oid) { applications =>
       val hakemus = applications.find(_.oid == oid).get.copy(answers = Hakemus.emptyAnswers)
       f(hakemus)
+    }
+  }
+
+  def withApplications[T](oid: String)(f: (List[Hakemus] => T)): T = {
+    authGet("/applications", personOid) {
+      val applications: List[Hakemus] = Serialization.read[List[Hakemus]](body)
+      f(applications)
     }
   }
 
