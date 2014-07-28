@@ -15,13 +15,12 @@ case class CASClient(val httpClient: HttpClient)(implicit val appConfig: AppConf
     responseCode match {
       case 201 => {
         val ticketPattern = """.*/([^/]+)""".r
-        headersMap.getOrElse("Location","no location header") match {
-          case ticketPattern(value) :: nil => {
-            Some(value)
-          }
-          case location => {
-	        logger.warn("Successful ticket granting request, but no ticket found! Location header: " + location)
-	        None
+        val headerValue = headersMap.getOrElse("Location",List("no location header")).head
+        ticketPattern.findFirstMatchIn(headerValue) match {
+          case Some(matched) => Some(matched.group(1))
+          case None => {
+              logger.warn("Successful ticket granting request, but no ticket found! Location header: " + headerValue)
+              None
           }
         }
       }
