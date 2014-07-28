@@ -12,7 +12,7 @@ class GetApplicationsSpec extends JsonFormats with ScalatraTestSupport {
   "GET /applications" should {
     "return person's applications" in {
       authGet("/applications", TestFixture.personOid) {
-        verifyApplications(2)
+        verifyApplications(3)
         //verifyOneApplication() TODO FIX
       }
     }
