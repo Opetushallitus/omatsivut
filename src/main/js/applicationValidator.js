@@ -41,11 +41,11 @@ module.exports = function(listApp) {
       }
     }
 
-    return function(application, questions, success, error) {
+    return function(application, success, error) {
       var preferencesValid = application.validatePreferences()
 
       if (preferencesValid) {
-        validateBackend(application, questions, success, error)
+        validateBackend(application, success, error)
       } else {
         error({
           errorText: "Täytä kaikki tiedot",
@@ -57,10 +57,10 @@ module.exports = function(listApp) {
 
     var currentRequest
 
-    function validateBackend(application, questions, success, error) {
+    function validateBackend(application, success, error) {
       currentRequest = {}
       var thisRequest = currentRequest
-      var responsePromise = $http.post("/omatsivut/api/applications/validate/" + application.oid, applicationFormatter(application, questions))
+      var responsePromise = $http.post("/omatsivut/api/applications/validate/" + application.oid, applicationFormatter(application))
       responsePromise.success(function(data, status, headers, config) {
         if (currentRequest === thisRequest) {
           if (data.errors.length === 0) {

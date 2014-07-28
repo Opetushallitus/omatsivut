@@ -75,8 +75,8 @@
                             </li>
                         </ul>
                     </section>
-                    <section class="application-section additional-questions" ng-if="additionalQuestions.questionNodes.length > 0">
-                        <question-template question-node="additionalQuestions" application="application" class="questions" level="-1">
+                    <section class="application-section additional-questions" ng-if="application.additionalQuestions.questionNodes.length > 0">
+                        <question-template question-node="application.additionalQuestions" application="application" class="questions" level="-1">
                         </question-template>
 
                         <script type="text/ng-template" id="questionTemplate.html">

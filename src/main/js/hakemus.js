@@ -3,6 +3,7 @@ var Hakutoive = require('./hakutoive')
 function Hakemus(json) {
   _.extend(this, json)
   this.hakutoiveet = _(this.hakutoiveet).map(function(hakutoive) { return new Hakutoive(hakutoive) })
+  this.additionalQuestions = null
   this.answers = {}
 }
 
@@ -92,33 +93,38 @@ Hakemus.prototype = {
     return this.answers[phaseId]
   },
 
-  setDefaultAnswers: function(questionNode) {
+  importQuestions: function(questions) {
+    this.additionalQuestions = questions
+    setDefaultAnswers(questions)
+
     var self = this
 
-    if (questionNode != null) {
-      _(questionNode.questionNodes).each(function(node) {
-        if (node.questionNodes != null)
-          self.setDefaultAnswers(node)
-        else
-          setDefaultAnswer(node)
-      })
-    }
+    function setDefaultAnswers(questionNode) {
+      if (questionNode != null) {
+        _(questionNode.questionNodes).each(function(node) {
+          if (node.questionNodes != null)
+            self.setDefaultAnswers(node)
+          else
+            setDefaultAnswer(node)
+        })
+      }
 
-    function setDefaultAnswer(questionNode) {
-      var question = questionNode.question
-      if (question.options != null) { // Aseta default-arvo vain monivalinnoille
-        var phaseAnswers = self.getAnswers(question.id.phaseId)
+      function setDefaultAnswer(questionNode) {
+        var question = questionNode.question
+        if (question.options != null) { // Aseta default-arvo vain monivalinnoille
+          var phaseAnswers = self.getAnswers(question.id.phaseId)
 
-        var setValueIfEmpty = function(key, val) {
-          phaseAnswers[key] = phaseAnswers[key] || val
-        }
+          var setValueIfEmpty = function(key, val) {
+            phaseAnswers[key] = phaseAnswers[key] || val
+          }
 
-        if (question.questionType == "Checkbox") {
-          _(question.options).each(function(option) {
-            setValueIfEmpty(option.value, false)
-          })
-        } else {
-          setValueIfEmpty(question.id.questionId, questionNode.defaultValue())
+          if (question.questionType == "Checkbox") {
+            _(question.options).each(function(option) {
+              setValueIfEmpty(option.value, false)
+            })
+          } else {
+            setValueIfEmpty(question.id.questionId, questionNode.defaultValue())
+          }
         }
       }
     }

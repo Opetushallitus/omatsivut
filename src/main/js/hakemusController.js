@@ -35,27 +35,22 @@ module.exports = function(listApp) {
     }
 
     function validateHakutoiveet() {
-      applicationValidator($scope.application, $scope.additionalQuestions, success, error)
+      applicationValidator($scope.application, success, error)
       $scope.isSaveable = false
 
       function success(data) {
         $scope.isSaveable = true
         setStatusMessage("")
-        importQuestions(data.questions)
+        $scope.application.importQuestions(data.questions)
         updateValidationMessages([], true)
       }
 
       function error(data) {
         $scope.isSaveable = data.isSaveable
         setStatusMessage(data.errorText, "error")
-        importQuestions(data.questions)
+        $scope.application.importQuestions(data.questions)
         updateValidationMessages(data.errors, true)
       }
-    }
-
-    function importQuestions(questions) {
-      $scope.additionalQuestions = questions
-      $scope.application.setDefaultAnswers(questions)
     }
 
     function setStatusMessage(msg, type) {
@@ -72,7 +67,7 @@ module.exports = function(listApp) {
 
     $scope.saveApplication = function() {
       $scope.isSaving = true;
-      applicationsResource.update({id: $scope.application.oid }, applicationFormatter($scope.application, $scope.additionalQuestions), onSuccess, onError)
+      applicationsResource.update({id: $scope.application.oid }, applicationFormatter($scope.application), onSuccess, onError)
       setStatusMessage("", "")
 
       function onSuccess(savedApplication) {
@@ -110,7 +105,7 @@ module.exports = function(listApp) {
 
     function updateValidationMessages(errors, skipQuestions) {
       var errorMap = util.mapArray(errors, "key", "message")
-      var questionMap = domainUtil.questionMap($scope.additionalQuestions)
+      var questionMap = domainUtil.questionMap($scope.application.additionalQuestions)
       var hakutoiveMap = domainUtil.hakutoiveMap($scope.application.hakutoiveet)
 
       clearErrors()

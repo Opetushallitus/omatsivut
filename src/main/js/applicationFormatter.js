@@ -1,6 +1,6 @@
 module.exports = function(listApp) {
   listApp.factory("applicationFormatter", function() {
-    return function(application, additionalQuestions) {
+    return function(application) {
       var json = application.toJson()
       var answers = {};
 
@@ -15,7 +15,7 @@ module.exports = function(listApp) {
             _(node.questionNodes).each(appendOnlyRelatedAnswers)
           }
         }
-      })(additionalQuestions)
+      })(application.additionalQuestions)
 
       return _.extend({}, json, { answers: removeFalseBooleans(answers)})
 
