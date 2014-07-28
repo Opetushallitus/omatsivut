@@ -39,7 +39,7 @@ class ApplicationSettings(config: Config) {
   val aesKey = config.getString("omatsivut.crypto.aes.key")
   val hmacKey = config.getString("omatsivut.crypto.hmac.key")
 
-  val environment = getStringWithDefault("omatsivut.environment", "default")
+  val environment = getStringWithDefault("environment", "default")
 
   def getStringWithDefault(path: String, default: String) = {
     try {
