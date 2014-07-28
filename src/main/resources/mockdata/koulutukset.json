@@ -14,6 +14,72 @@
       "kaksoistutkinto": false,
       "vocational": true,
       "educationCodeUri": "koulutus_039996"
+    },
+
+    {
+      "id": "1.2.246.562.20.60377543289",
+      "name": "Maatalousalan perustutkinto, pk",
+      "aoIdentifier": "149",
+      "educationDegree": "32",
+      "childLONames": ["Maatalousteknologia, maaseutuyrittäjä"],
+      "sora": false,
+      "teachingLanguages": ["FI"],
+      "athleteEducation": false,
+      "kaksoistutkinto": false,
+      "vocational": true,
+      "educationCodeUri": "koulutus_361101"
+    },
+    {
+      "id": "1.2.246.562.5.28277163201",
+      "name": "Matkailualan perustutkinto, yo",
+      "aoIdentifier": "441",
+      "educationDegree": "32",
+      "childLONames": ["Matkailupalvelut, matkailupalvelujen tuottaja"],
+      "sora": false,
+      "teachingLanguages": ["FI"],
+      "athleteEducation": false,
+      "kaksoistutkinto": false,
+      "vocational": true,
+      "educationCodeUri": "koulutus_381106"
+    },
+    {
+      "id": "1.2.246.562.5.346485857010",
+      "name": "Viheralan koulutusohjelma, yo (Puutarhatalouden perustutkinto)",
+      "aoIdentifier": "447",
+      "educationDegree": "32",
+      "childLONames": ["Viherala, puutarhuri"],
+      "sora": false,
+      "teachingLanguages": ["FI"],
+      "athleteEducation": false,
+      "kaksoistutkinto": false,
+      "vocational": true,
+      "educationCodeUri": "koulutus_361201"
+    },
+    {
+      "id": "1.2.246.562.5.461921204610",
+      "name": "Hotelli-, ravintola- ja catering-alan perustutkinto, pk",
+      "aoIdentifier": "473",
+      "educationDegree": "32",
+      "childLONames": ["Asiakaspalvelu, tarjoilija", "Kokin ko, kokki"],
+      "sora": false,
+      "teachingLanguages": ["FI"],
+      "athleteEducation": false,
+      "kaksoistutkinto": false,
+      "vocational": true,
+      "educationCodeUri": "koulutus_381112"
+    },
+    {
+      "id": "1.2.246.562.5.85532589612",
+      "name": "Eläintenhoidon koulutusohjelma, pk (Maatalousalan perustutkinto)",
+      "aoIdentifier": "514",
+      "educationDegree": "32",
+      "childLONames": ["Eläintenhoito, eläintenhoitaja"],
+      "sora": false,
+      "teachingLanguages": ["FI"],
+      "athleteEducation": false,
+      "kaksoistutkinto": false,
+      "vocational": true,
+      "educationCodeUri": "koulutus_361101"
     }
   ],
   "1.2.246.562.10.49832689993": [
@@ -59,6 +125,34 @@
       "kaksoistutkinto": false,
       "vocational": true,
       "educationCodeUri": "koulutus_039996"
+    }
+  ],
+  "1.2.246.562.10.79872001635": [
+    {
+      "id": "1.2.246.562.5.31982630126",
+      "name": "Hevostalouden perustutkinto, pk",
+      "aoIdentifier": "215",
+      "educationDegree": "32",
+      "childLONames": ["Hevostalous, hevostenhoitaja", "Hevostalous, ratsastuksenohjaaja"],
+      "sora": false,
+      "teachingLanguages": ["FI"],
+      "athleteEducation": false,
+      "kaksoistutkinto": true,
+      "vocational": true,
+      "educationCodeUri": "koulutus_361104"
+    },
+    {
+      "id": "1.2.246.562.5.53730074704",
+      "name": "Hevostalouden perustutkinto, yo",
+      "aoIdentifier": "217",
+      "educationDegree": "32",
+      "childLONames": ["Hevostalous, hevostenhoitaja", "Hevostalous, ratsastuksenohjaaja"],
+      "sora": false,
+      "teachingLanguages": ["FI"],
+      "athleteEducation": false,
+      "kaksoistutkinto": false,
+      "vocational": true,
+      "educationCodeUri": "koulutus_361104"
     }
   ]
 }
