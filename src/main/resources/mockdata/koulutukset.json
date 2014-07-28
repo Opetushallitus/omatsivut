@@ -154,5 +154,20 @@
       "vocational": true,
       "educationCodeUri": "koulutus_361104"
     }
+  ],
+  "1.2.246.562.10.591352080610": [
+    {
+      "id": "1.2.246.562.5.72607738902",
+      "name": "Lukion ilmaisutaitolinja",
+      "aoIdentifier": "803",
+      "educationDegree": null,
+      "childLONames": ["ilmaisutaitolinja"],
+      "sora": false,
+      "teachingLanguages": ["FI"],
+      "athleteEducation": false,
+      "kaksoistutkinto": false,
+      "vocational": false,
+      "educationCodeUri": "koulutus_301101"
+    }
   ]
 }
