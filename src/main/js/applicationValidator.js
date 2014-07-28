@@ -1,31 +1,10 @@
 var QuestionItem = require('./additionalQuestion').AdditionalQuestion
 var QuestionGroup = require('./additionalQuestion').AdditionalQuestionGroup
 var util = require('./util')
+var domainUtil = require('./domainUtil')
 
 module.exports = function(listApp) {
-  listApp.factory("domainUtil", [function() {
-    var hakutoiveErrorRegexp = /^(preference\d)$|^(preference\d)-Koulutus$/
-    return {
-      isHakutoiveError: function(questionId) {
-        return hakutoiveErrorRegexp.test(questionId)
-      },
-
-      questionMap: function(questions) {
-        questions = util.flattenTree(questions, "questionNodes")
-        return util.indexBy(questions, function(node) { return node.question.id.questionId })
-      },
-
-      hakutoiveMap: function(hakutoiveet) {
-        return util.indexBy(hakutoiveet, function(hakutoive, index) { return "preference" + (index+1) })
-      },
-
-      questionIdToHakutoiveId: function(questionId) {
-        return _.chain(hakutoiveErrorRegexp.exec(questionId)).rest().without(undefined).first().value()
-      }
-    }
-  }])
-
-  listApp.factory("applicationValidator", ["$http", "applicationFormatter", "domainUtil", function($http, applicationFormatter, domainUtil) {
+   listApp.factory("applicationValidator", ["$http", "applicationFormatter", function($http, applicationFormatter) {
     function getQuestions(data) {
       return convertToItems(data.questions, new QuestionGroup())
 

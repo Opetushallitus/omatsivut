@@ -1,8 +1,7 @@
 var Hakemus = require('./hakemus')
-var util = require('./util')
 
 module.exports = function(listApp) {
-  listApp.controller("hakemusController", ["$scope", "$element", "$http", "applicationsResource", "applicationValidator", "applicationFormatter", "settings", "debounce", "domainUtil", function ($scope, $element, $http, applicationsResource, applicationValidator, applicationFormatter, settings, debounce, domainUtil) {
+  listApp.controller("hakemusController", ["$scope", "$element", "$http", "applicationsResource", "applicationValidator", "applicationFormatter", "settings", "debounce", function ($scope, $element, $http, applicationsResource, applicationValidator, applicationFormatter, settings, debounce) {
     applicationValidator = debounce(applicationValidator, settings.modelDebounce)
 
     $scope.hasChanged = false
@@ -104,32 +103,13 @@ module.exports = function(listApp) {
     }
 
     function updateValidationMessages(errors, skipQuestions) {
-      var errorMap = util.mapArray(errors, "key", "message")
-      var questionMap = domainUtil.questionMap($scope.application.additionalQuestions)
-      var hakutoiveMap = domainUtil.hakutoiveMap($scope.application.hakutoiveet)
+      var unhandledMessages = $scope.application.updateValidationMessages(errors, skipQuestions)
+      if (unhandledMessages.length > 0) {
+        _(unhandledMessages).each(function(item) {
+          console.log("Validaatiovirhettä ei käsitelty:", item.questionId, item.errors)
+        })
 
-      clearErrors()
-
-      _(errorMap).each(function(errorList, key) {
-        showErrors(key, errorList)
-      })
-
-      function clearErrors() {
-        _(hakutoiveMap).each(function(item) { item.setErrors() })
-        if (!skipQuestions)
-          _(questionMap).each(function(item) { item.setErrors() })
-      }
-
-      function showErrors(questionId, errors) {
-        if (questionMap[questionId] != null) {
-          if (!skipQuestions)
-            questionMap[questionId].appendErrors(errors)
-        } else if (domainUtil.isHakutoiveError(questionId))
-          hakutoiveMap[domainUtil.questionIdToHakutoiveId(questionId)].appendErrors(errors)
-        else {
-          console.log("Validaatiovirhettä ei käsitelty:", questionId, errors)
-          setStatusMessage("Odottamaton virhe. Ota yhteyttä ylläpitoon.", "error")
-        }
+        setStatusMessage("Odottamaton virhe. Ota yhteyttä ylläpitoon.", "error")
       }
     }
   }])

@@ -1,4 +1,6 @@
 var Hakutoive = require('./hakutoive')
+var util = require('./util')
+var domainUtil = require('./domainUtil')
 
 function Hakemus(json) {
   _.extend(this, json)
@@ -126,6 +128,41 @@ Hakemus.prototype = {
             setValueIfEmpty(question.id.questionId, questionNode.defaultValue())
           }
         }
+      }
+    }
+  },
+
+  updateValidationMessages: function(errors, skipQuestions) {
+    var errorMap = util.mapArray(errors, "key", "message")
+    var questionMap = domainUtil.questionMap(this.additionalQuestions)
+    var hakutoiveMap = domainUtil.hakutoiveMap(this.hakutoiveet)
+    var unhandled = []
+
+    clearErrors()
+
+    _(errorMap).each(function(errorList, key) {
+      if (!updateErrors(key, errorList))
+        unhandled.push({questionId: key, errors: errorList})
+    })
+
+    return unhandled
+
+    function clearErrors() {
+      _(hakutoiveMap).each(function(item) { item.setErrors() })
+      if (!skipQuestions)
+        _(questionMap).each(function(item) { item.setErrors() })
+    }
+
+    function updateErrors(questionId, errors) {
+      if (questionMap[questionId] != null) {
+        if (!skipQuestions)
+          questionMap[questionId].appendErrors(errors)
+        return true
+      } else if (domainUtil.isHakutoiveError(questionId)) {
+        hakutoiveMap[domainUtil.questionIdToHakutoiveId(questionId)].appendErrors(errors)
+        return true
+      } else {
+        return false
       }
     }
   }
