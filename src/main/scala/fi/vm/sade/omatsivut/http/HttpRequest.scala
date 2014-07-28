@@ -6,10 +6,16 @@ import scala.collection.immutable.HashMap
 import scalaj.http.Http.Request
 import scalaj.http.{Http, HttpException}
 
-class HttpRequest(private val request: Request) extends Logging {
+trait HttpRequest{
+   def responseWithHeaders(): (Int, Map[String, List[String]], String)
+   def response(): Option[String]
+   def param(key: String, value: String): HttpRequest
+}
+
+class DefaultHttpRequest(private val request: Request) extends HttpRequest with Logging {
 
   def param(key: String, value: String) = {
-    new HttpRequest(request.param(key, value))
+    new DefaultHttpRequest(request.param(key, value))
   }
 
   def responseWithHeaders(): (Int, Map[String, List[String]], String) = {

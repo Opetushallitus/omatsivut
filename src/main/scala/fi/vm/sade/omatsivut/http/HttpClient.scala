@@ -2,16 +2,21 @@ package fi.vm.sade.omatsivut.http
 
 import scalaj.http.{Http, HttpOptions}
 
-object HttpClient {
+trait HttpClient {
+  def httpGet(url: String) : HttpRequest
+  def httpPost(url: String) : HttpRequest
+}
+
+object DefaultHttpClient extends HttpClient {
   def httpGet(url: String) : HttpRequest = {
-    new HttpRequest(Http.get(url)
+    new DefaultHttpRequest(Http.get(url)
   		.options(HttpOptions.connTimeout(5000))
   		.option(HttpOptions.readTimeout(10000))
     )
   }
 
   def httpPost(url: String) : HttpRequest = {
-    new HttpRequest(Http.post(url)
+    new DefaultHttpRequest(Http.post(url)
   		.options(HttpOptions.connTimeout(5000))
   		.option(HttpOptions.readTimeout(10000))
     )
