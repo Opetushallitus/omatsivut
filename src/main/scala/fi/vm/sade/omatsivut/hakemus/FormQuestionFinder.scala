@@ -13,36 +13,40 @@ import scala.collection.JavaConversions._
 import fi.vm.sade.omatsivut.domain.Notification
 
 protected object FormQuestionFinder extends Logging {
-  def findQuestionsByElementIds(contextElement: Element, ids: Seq[String]): List[QuestionGroup] = {
+  def findQuestionsByElementIds(contextElement: Element, ids: Seq[String]): Set[QuestionLeafNode] = {
     val elements = ids.flatMap(findElementById(contextElement, _).toList).toSet
-    findQuestions(contextElement, elements)
+    findQuestionsFromElements(contextElement, elements)
   }
 
-  def findQuestions(contextElement: Element, elementsToScan: Set[Element]): List[QuestionGroup] = {
+  def findQuestionsFromElements(contextElement: Element, elementsToScan: Set[Element]): Set[QuestionLeafNode] = {
     elementsToScan.flatMap { element =>
-        getElementsOfType[Titled](element).flatMap { titled =>
-          titledElementToQuestions(contextElement, titled)
-        }
+      getElementsOfType[Titled](element).flatMap { titled =>
+        titledElementToQuestions(contextElement, titled)
       }
+    }
+  }
+
+  def groupQuestionsByStructure(contextElement: Element, foundQuestions: Set[(QuestionLeafNode)]): List[QuestionGroup] = {
+    foundQuestions
+      .map { question => (question, new ElementContext(contextElement, findElementById(contextElement, question.id.questionId).get.asInstanceOf[Titled])) }
       .groupBy { case (question, elementContext) => elementContext.namedParents}
       .toList
-      .sortBy{case (path, questions) => path.asInstanceOf[List[Element]]}(ParentPathOrdering())
+      .sortBy { case (path, questions) => path.asInstanceOf[List[Element]]}(ParentPathOrdering())
       .map {
-        case (parents, questions) =>
-          val lang = "fi" // TODO: kieliversiot
-          val groupNamePath = parents.tail
-            .filter { t: Titled => t.getI18nText != null }
-            .map(_.getI18nText.getTranslations.get(lang))
-          val groupName = groupNamePath.mkString("", " - ", "")
+      case (parents, questions) =>
+        val lang = "fi" // TODO: kieliversiot
+      val groupNamePath = parents.tail
+          .filter { t: Titled => t.getI18nText != null}
+          .map(_.getI18nText.getTranslations.get(lang))
+        val groupName = groupNamePath.mkString("", " - ", "")
 
-          val sortedQuestions = questions.toList
-            .sortBy { case (question, elementContext) => elementContext.selfAndParents }(ParentPathOrdering())
-            .map {case (question, elementContext) => question }
+        val sortedQuestions = questions.toList
+          .sortBy { case (question, elementContext) => elementContext.selfAndParents}(ParentPathOrdering())
+          .map { case (question, elementContext) => question}
 
-          QuestionGroup(groupName, sortedQuestions)
-      }
+        QuestionGroup(groupName, sortedQuestions)
+    }
   }
-
 
   private def findElementById(contextElement: Element, id: String): Option[Element] = {
     new ElementTree(contextElement).getChildById(id) match {
@@ -97,7 +101,7 @@ protected object FormQuestionFinder extends Logging {
       help.getTranslations.get("fi") // TODO: kieliversiot
   }
 
-  private def titledElementToQuestions(contextElement: Element, element: Titled): List[(QuestionNode, ElementContext)] = {
+  private def titledElementToQuestions(contextElement: Element, element: Titled): List[QuestionLeafNode] = {
     val elementContext = new ElementContext(contextElement, element)
     def id = QuestionId(elementContext.phase.getId, element.getId)
     def isRequired = element.getValidators.filter(o => o.isInstanceOf[RequiredFieldValidator]).nonEmpty
@@ -109,7 +113,7 @@ protected object FormQuestionFinder extends Logging {
       getImmediateChildElementsOfType[HakuCheckBox](e).nonEmpty
     }
 
-    (element match {
+    element match {
       case e: TextQuestion => List(Text(id, title(e), helpText(e), isRequired, maxlength))
       case e: HakuTextArea => List(TextArea(id, title(e), helpText(e), isRequired, maxlength, rows, cols))
       case e: HakuRadio => List(Radio(id, title(e), helpText(e), options(e), isRequired))
@@ -117,13 +121,13 @@ protected object FormQuestionFinder extends Logging {
       case e: TitledGroup if containsCheckBoxes(e) => List(Checkbox(id, title(e), helpText(e), options(e), isRequired))
       case e: TitledGroup => Nil
       case e: HakuCheckBox => Nil
-      case e: fi.vm.sade.haku.oppija.lomake.domain.elements.Notification => List(Notification(title(e), e.getNotificationType()))
-      case e: fi.vm.sade.haku.oppija.lomake.domain.elements.Text => List(Label(title(e)))
+      case e: fi.vm.sade.haku.oppija.lomake.domain.elements.Notification => List(Notification(id, title(e), e.getNotificationType()))
+      case e: fi.vm.sade.haku.oppija.lomake.domain.elements.Text => List(Label(id, title(e)))
       case _ => {
         logger.error("Could not convert element of type: " + element.getType + " with title: " + title(element))
         Nil
       }
-    }).map { question => (question, elementContext)}
+    }
   }
 }
 

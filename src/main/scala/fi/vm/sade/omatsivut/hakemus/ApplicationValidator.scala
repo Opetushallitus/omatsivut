@@ -28,10 +28,10 @@ case class ApplicationValidator(implicit val appConfig: AppConfig) extends Loggi
       val questionsPerHakutoive: List[QuestionNode] = hakemus.hakutoiveet.zipWithIndex.flatMap { case (hakutoive, index) =>
         if (!applicationContains(storedApplication)(hakutoive)) {
           val errorKeys = validationErrors.filter(_.key.startsWith("preference" + (index+1))).map(_.key)
-          val questionsFromErrors = FormQuestionFinder.findQuestionsByElementIds(applicationSystem.getForm, errorKeys)
-          val addedByHakutoive: Seq[QuestionNode] = AddedQuestionFinder.findQuestionsByHakutoive(applicationSystem, hakemus.hakutoiveet.take(index), hakutoive)
+          val questionsFromErrors: Set[QuestionLeafNode] = FormQuestionFinder.findQuestionsByElementIds(applicationSystem.getForm, errorKeys)
+          val addedByHakutoive: Set[QuestionLeafNode] = AddedQuestionFinder.findQuestionsByHakutoive(applicationSystem, hakemus.hakutoiveet.take(index), hakutoive)
 
-          val groupedQuestions: Seq[QuestionNode] = addedByHakutoive ++ questionsFromErrors // TODO: regroup
+          val groupedQuestions: Seq[QuestionNode] = FormQuestionFinder.groupQuestionsByStructure(applicationSystem.getForm, addedByHakutoive ++ questionsFromErrors)
 
           groupedQuestions match {
             case Nil => Nil
@@ -59,7 +59,7 @@ case class ApplicationValidator(implicit val appConfig: AppConfig) extends Loggi
   private def errorsForUnknownAnswers(applicationSystem: ApplicationSystem, hakemus: Hakemus): List[ValidationError] = {
     val application = findStoredApplication(hakemus)
     val allAnswers: Answers = ApplicationUpdater.getAllAnswersForApplication(applicationSystem, application, hakemus)
-    val acceptedAnswerIds: Seq[AnswerId] = AddedQuestionFinder.findAddedQuestions(applicationSystem, allAnswers, Hakemus.emptyAnswers).flatMap(_.flatten).flatMap(_.answerIds)
+    val acceptedAnswerIds: Seq[AnswerId] = AddedQuestionFinder.findAddedQuestions(applicationSystem, allAnswers, Hakemus.emptyAnswers).flatMap(_.answerIds).toList
 
     val flatAnswers: List[(String, String, String)] = hakemus.answers.toList.flatMap {
       case (phaseId, groupAnswers) =>

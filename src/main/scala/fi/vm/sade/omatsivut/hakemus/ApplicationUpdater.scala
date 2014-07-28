@@ -43,7 +43,7 @@ object ApplicationUpdater {
     val allOldAnswers = allAnswersFromApplication(application)
     val allNewAnswers = getAllAnswersForApplication(applicationSystem, application, hakemus)
 
-    val removedQuestions = AddedQuestionFinder.findAddedQuestions(applicationSystem, allOldAnswers, allNewAnswers).flatMap(_.flatten)
+    val removedQuestions = AddedQuestionFinder.findAddedQuestions(applicationSystem, allOldAnswers, allNewAnswers).toList
     removedQuestions.flatMap(_.answerIds)
   }
 

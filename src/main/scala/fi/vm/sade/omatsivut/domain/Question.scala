@@ -3,14 +3,20 @@ package fi.vm.sade.omatsivut.domain
 import fi.vm.sade.haku.oppija.lomake.domain.elements.Notification.NotificationType
 
 object QuestionNode {
-  def flatten(qs: List[QuestionNode]): List[Question] = {
+  def flatten(qs: List[QuestionNode]): List[QuestionLeafNode] = {
     qs.flatMap(_.flatten)
   }
 }
 
 sealed trait QuestionNode {
   def title: String
-  def flatten: List[Question]
+  def flatten: List[QuestionLeafNode]
+}
+
+trait QuestionLeafNode extends QuestionNode {
+  def id: QuestionId
+  def flatten = List(this)
+  def answerIds: List[AnswerId]
 }
 
 case class QuestionGroup(title: String, questions: List[QuestionNode]) extends QuestionNode {
@@ -27,17 +33,15 @@ case class QuestionGroup(title: String, questions: List[QuestionNode]) extends Q
   }
 }
 
-trait TextNode extends QuestionNode {
-  def flatten = Nil
+trait TextNode extends QuestionLeafNode {
+  def answerIds: List[AnswerId] = Nil
 }
 
-trait Question extends QuestionNode {
+trait Question extends QuestionLeafNode {
   def help: String
   def required: Boolean
   def questionType: String
-  def id: QuestionId
   def answerIds: List[AnswerId] = List(AnswerId(id.phaseId, id.questionId))
-  def flatten = List(this)
 }
 
 trait WithOptions extends Question {
@@ -53,9 +57,8 @@ trait MultiValued extends WithOptions {
   }
 }
 
-// TODO voiko labeleita ja notifikaatiota tule lisäkysymyksissä? Nyt niile ei ole näyttämislogiikkaa index.html
-case class Label(title: String) extends TextNode
-case class Notification(title: String, notificationType: NotificationType) extends TextNode
+case class Label(id: QuestionId, title: String) extends TextNode
+case class Notification(id: QuestionId, title: String, notificationType: NotificationType) extends TextNode
 
 case class Text(id: QuestionId, title: String, help: String, required: Boolean, maxlength: Int, questionType: String = "Text") extends Question
 case class TextArea(id: QuestionId, title: String, help: String, required: Boolean, maxlength: Int, rows: Int, cols: Int, questionType: String = "TextArea") extends Question

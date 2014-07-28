@@ -29,7 +29,11 @@ class ValidateApplicationSpec extends HakemusApiSpecification {
       withHakemus(TestFixture.hakemus2) { hakemus =>
         val modified = addHakutoive(hevostalous)(hakemus)
         validate(modified) { (errors, structuredQuestions) =>
-          QuestionNode.flatten(structuredQuestions).map(_.id) must_== List(QuestionId("hakutoiveet","preference3_kaksoistutkinnon_lisakysymys"))
+          QuestionNode.flatten(structuredQuestions).map(_.id) must_== List(
+            QuestionId("hakutoiveet","preference3-discretionary"),
+            QuestionId("hakutoiveet","preference3-discretionary-follow-up"),
+            QuestionId("hakutoiveet","preference3_kaksoistutkinnon_lisakysymys")
+          )
         }
       }
     }
