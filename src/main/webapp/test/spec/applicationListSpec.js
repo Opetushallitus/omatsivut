@@ -231,9 +231,13 @@
         )
 
         it("näytetään", function() {
-
+          var questionTitles = hakemus2.questionsForApplication().titles()
+          expect(questionTitles).to.deep.equal([
+            'Haetko koulutukseen harkintaan perustuvassa valinnassa?',
+            'Perustelu harkintaan perustuvan valinnan käyttämiselle' ])
         })
       })
+
       describe("Lisäkysymyksien näyttäminen", function() {
         var questions1 = [
           'Testikysymys, avaoin vastaus kenttä (pakollinen)?',
