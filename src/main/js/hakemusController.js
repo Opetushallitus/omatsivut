@@ -24,8 +24,9 @@ module.exports = function(listApp) {
     }, true)
 
     $scope.$watch("application.getAnswerWatchCollection()", function(answers, oldAnswers) {
-      if (!_.isEqual(oldAnswers, {}))
+      if (!_.isEqual(oldAnswers, [])) {
         applicationChanged()
+      }
     }, true)
 
     function applicationChanged() {
