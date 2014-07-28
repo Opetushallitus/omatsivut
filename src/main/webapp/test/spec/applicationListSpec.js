@@ -230,11 +230,28 @@
           replacePreference(hakemus2, 1, "Kallion")
         )
 
-        it("näytetään", function() {
-          var questionTitles = hakemus2.questionsForApplication().titles()
-          expect(questionTitles).to.deep.equal([
-            'Haetko koulutukseen harkintaan perustuvassa valinnassa?',
-            'Perustelu harkintaan perustuvan valinnan käyttämiselle' ])
+        describe("näyttäminen", function() {
+          it("näytetään", function() {
+            var questionTitles = hakemus2.questionsForApplication().titles()
+            expect(questionTitles).to.deep.equal([
+              'Haetko koulutukseen harkintaan perustuvassa valinnassa?',
+              'Perustelu harkintaan perustuvan valinnan käyttämiselle' ])
+          })
+        })
+
+        describe("vastaaminen", function() {
+          before(
+            hakemus2.saveWaitSuccess
+          )
+
+          it("onnistuu", function() {
+
+          })
+
+          function answerQuestions() {
+            hakemus2.questionsForApplication().enterAnswer(0, "Kyllä")
+            hakemus2.questionsForApplication().enterAnswer(1, "Oppimisvaikeudet")
+          }
         })
       })
 
