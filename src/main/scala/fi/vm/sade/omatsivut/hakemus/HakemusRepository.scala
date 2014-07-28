@@ -1,12 +1,13 @@
 package fi.vm.sade.omatsivut.hakemus
 
+import java.util.Date
+
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
-import fi.vm.sade.omatsivut.AppConfig.AppConfig
 import fi.vm.sade.omatsivut._
-import fi.vm.sade.omatsivut.domain.Hakemus
-import java.util.Date
+import fi.vm.sade.omatsivut.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.auditlog.AuditLogger
+import fi.vm.sade.omatsivut.domain.Hakemus
 
 case class HakemusRepository(implicit val appConfig: AppConfig) extends Logging {
   import collection.JavaConversions._
@@ -19,9 +20,10 @@ case class HakemusRepository(implicit val appConfig: AppConfig) extends Logging 
     val applicationJavaObjects: List[Application] = dao.find(applicationQuery).toList
 
     applicationJavaObjects.foreach { application =>
+      val originalAnswers: Hakemus.Answers = application.getAnswers().toMap.mapValues(_.toMap)
       ApplicationUpdater.update(applicationSystem)(application, updatedHakemus)
       dao.update(applicationQuery, application)
-      auditLog.logUpdatedHakemus(userOid, updatedHakemus)
+      auditLog.logUpdatedHakemus(userOid, updatedHakemus.oid, originalAnswers, application.getAnswers().toMap.mapValues(_.toMap))
     }
     updatedHakemus
   }
