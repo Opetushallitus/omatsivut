@@ -262,11 +262,7 @@
           'Työkokemus kuukausina' ])
       })
 
-      /*
-
-      TODO: vastaaminen epäonnistuu, koska follow-up -kysymystä ei osata näyttää
-
-      describe("vastaaminen", function() {
+      describe("Vastaaminen kun ei haeta harkintaan perustuvassa valinnassa", function() {
         before(
           answerQuestions,
           hakemus2.saveWaitSuccess
@@ -277,11 +273,26 @@
         })
 
         function answerQuestions() {
+          hakemus2.questionsForApplication().enterAnswer(0, "Ei")
+          hakemus2.questionsForApplication().enterAnswer(1, "24")
+        }
+      })
+
+      describe("Vastaaminen kun haetaan harkintaan perustuvassa valinnassa", function() {
+        before(
+          answerQuestions,
+          hakemus2.saveWaitError
+        )
+
+        it("epäonnistuu", function() {
+          //TODO: vastaaminen epäonnistuu, koska follow-up -kysymystä ei osata näyttää
+        })
+
+        function answerQuestions() {
           hakemus2.questionsForApplication().enterAnswer(0, "Kyllä")
           hakemus2.questionsForApplication().enterAnswer(1, "24")
         }
       })
-      */
     })
 
     describe("Lisäkysymykset", function() {
