@@ -5,7 +5,7 @@ import java.util.Date
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
-import fi.vm.sade.omatsivut.domain.{AnswerId, Hakemus}
+import fi.vm.sade.omatsivut.domain.{QuestionId, AnswerId, Hakemus}
 import fi.vm.sade.omatsivut.domain.Hakemus._
 
 import scala.collection.JavaConversions._
@@ -24,7 +24,15 @@ object ApplicationUpdater {
   def getUpdatedAnswersForApplication(applicationSystem: ApplicationSystem)(application: Application, hakemus: Hakemus): Answers = {
     val allAnswers = getAllUpdatedAnswersForApplication(applicationSystem)(application, hakemus)
     val removedAnswerIds = getRemovedAnswerIds(applicationSystem, application, hakemus)
-    pruneOrphanedAnswers(removedAnswerIds, allAnswers)
+
+    applyHiddenValues(applicationSystem)(pruneOrphanedAnswers(removedAnswerIds, allAnswers))
+  }
+
+  def applyHiddenValues(applicationSystem: ApplicationSystem)(allAnswers: Answers): Answers = {
+    val vals: Set[(QuestionId, String)] = FormQuestionFinder.findHiddenValues(ElementWrapper.apply(applicationSystem.getForm, allAnswers))
+    vals.foldLeft(allAnswers) { case (answers: Answers, (question: QuestionId, answer: String)) =>
+        updateSingleAnswer(answers, question, answer)
+    }
   }
 
   def getAllUpdatedAnswersForApplication(applicationSystem: ApplicationSystem)(application: Application, hakemus: Hakemus): Answers = {
@@ -35,6 +43,15 @@ object ApplicationUpdater {
     val originalHakemus = HakemusConverter.convertToHakemus(Some(HakuConverter.convertToHaku(applicationSystem)))(application).copy(answers = emptyAnswers)
     val hakemus = originalHakemus.copy(hakutoiveet = hakutoiveet)
     getAllUpdatedAnswersForApplication(applicationSystem)(application, hakemus)
+  }
+
+  private def updateSingleAnswer(answers: Answers, question: QuestionId, answer: String) = {
+    answers.map { case (phase, phaseAnswers) =>
+      if (phase == question.phaseId)
+        (phase, phaseAnswers)
+      else
+        (phase, phaseAnswers + (question.questionId -> answer))
+    }
   }
 
   private def pruneOrphanedAnswers(removedAnswerIds: Seq[AnswerId], answers: Answers): Answers = {

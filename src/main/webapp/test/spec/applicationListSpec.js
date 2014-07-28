@@ -221,6 +221,30 @@
       })
     })
 
+    describe("Kun hakijalla on ulkomaalainen pohjakoulutus", function() {
+      before(
+        page.resetDataAndOpen,
+        hakemus2.getPreference(0).remove,
+        hakemus2.saveWaitSuccess,
+        replacePreference(hakemus2, 1, "Kallion")
+      )
+
+      describe("näyttäminen", function() {
+        it("ok", function() {
+        })
+      })
+
+      describe("tallentaminen", function() {
+        before(
+          hakemus2.saveWaitSuccess
+        )
+
+        it("onnistuu", function() {
+
+        })
+      })
+    })
+
     describe("Lisäkysymykset", function() {
       /*
       describe("Suoraan hakutoiveiden alle sijoitetut kysymykset (TODO nimeäminen)", function() {

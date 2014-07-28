@@ -21,7 +21,7 @@ protected object FormQuestionFinder extends Logging {
 
   def findQuestionsFromElements(contextElement: ElementWrapper, elementsToScan: Set[Element]): Set[QuestionLeafNode] = {
     elementsToScan.flatMap { element =>
-      getElementsOfType[Titled](element).flatMap { titled =>
+      getElementsOfType[Titled](ElementWrapper(element)).flatMap { titled =>
         titledElementToQuestions(contextElement, titled)
       }
     }
@@ -29,7 +29,7 @@ protected object FormQuestionFinder extends Logging {
 
   def groupQuestionsByStructure(contextElement: ElementWrapper, foundQuestions: Set[(QuestionLeafNode)]): List[QuestionGroup] = {
     foundQuestions
-      .map { question => (question, new ElementContext(contextElement.element, findElementById(contextElement, question.id.questionId).get.asInstanceOf[Titled])) }
+      .map { question => (question, new ElementContext(contextElement, findElementById(contextElement, question.id.questionId).get.asInstanceOf[Titled])) }
       .groupBy { case (question, elementContext) => elementContext.namedParents}
       .toList
       .sortBy { case (path, questions) => path.asInstanceOf[List[Element]]}(ParentPathOrdering())
@@ -49,6 +49,14 @@ protected object FormQuestionFinder extends Logging {
     }
   }
 
+  def findHiddenValues(contextElement: ElementWrapper): Set[(QuestionId, String)] = {
+    getElementsOfType[HiddenValue](contextElement).map { hiddenValue =>
+      val elementContext = ElementContext(contextElement, hiddenValue)
+      val id = QuestionId(elementContext.phase.getId, hiddenValue.getId)
+      (id, hiddenValue.getValue)
+    }.toSet
+  }
+
   private def findElementById(contextElement: ElementWrapper, id: String): Option[Element] = {
     contextElement.findById(id).map(_.element)
   }
@@ -63,16 +71,16 @@ protected object FormQuestionFinder extends Logging {
     }
   }
 
-  private def getChildElementsOfType[A](rootElement: Element)(implicit mf : Manifest[A]): List[A] = {
-    rootElement.getChildren.toList.flatMap { child => getElementsOfType(child)}
+  private def getChildElementsOfType[A](rootElement: ElementWrapper)(implicit mf : Manifest[A]): List[A] = {
+    rootElement.children.toList.flatMap { child => getElementsOfType(child)}
   }
 
-  private def getElementsOfType[A](rootElement: Element, includeRoot: Boolean = false)(implicit mf : Manifest[A]): List[A] = {
-    def convertChildElements(element: Element): List[A] = {
-      element.getChildren.toList.flatMap { child => getElementsOfType(child)}
+  private def getElementsOfType[A](rootElement: ElementWrapper)(implicit mf : Manifest[A]): List[A] = {
+    def convertChildElements(element: ElementWrapper): List[A] = {
+      element.children.flatMap { child => getElementsOfType(child)}
     }
-    if (mf.runtimeClass.isAssignableFrom(rootElement.getClass)) {
-      rootElement.asInstanceOf[A] :: convertChildElements(rootElement)
+    if (mf.runtimeClass.isAssignableFrom(rootElement.element.getClass)) {
+      rootElement.element.asInstanceOf[A] :: convertChildElements(rootElement)
     } else {
       convertChildElements(rootElement)
     }
@@ -82,7 +90,7 @@ protected object FormQuestionFinder extends Logging {
     e.getOptions.map(o => AnswerOption(title(o), o.getValue, o.isDefaultOption)).toList
   }
   private def options(e: TitledGroup): List[AnswerOption] = {
-    getChildElementsOfType[HakuCheckBox](e).map(o => AnswerOption(title(o), o.getId()))
+    getChildElementsOfType[HakuCheckBox](ElementWrapper(e)).map(o => AnswerOption(title(o), o.getId()))
   }
   private def title[T <: Titled](e: T): String = {
     val i18ntext = e.getI18nText
@@ -100,7 +108,7 @@ protected object FormQuestionFinder extends Logging {
   }
 
   private def titledElementToQuestions(contextElement: ElementWrapper, element: Titled): List[QuestionLeafNode] = {
-    val elementContext = new ElementContext(contextElement.element, element)
+    val elementContext = new ElementContext(contextElement, element)
     def id = QuestionId(elementContext.phase.getId, element.getId)
     def isRequired = element.getValidators.filter(o => o.isInstanceOf[RequiredFieldValidator]).nonEmpty
     def maxlength = toInt(element.getAttributes.toMap.getOrElse("maxlength", "500")).getOrElse(500)
@@ -158,19 +166,20 @@ private case class ParentPathOrdering() extends scala.math.Ordering[List[Element
   }
 }
 
-class ElementContext(val contextElement: Element, val element: Titled) {
+case class ElementContext(val contextElement: ElementWrapper, val element: Element) {
   lazy val parentsFromRootDown: List[Element] = {
-    def findParents(e: Element, r: Element): Option[List[Element]] = {
-      if (e == r) {
+    def findParents(e: ElementWrapper, r: ElementWrapper): Option[List[ElementWrapper]] = {
+      if (e.element == r.element) {
         Some(Nil)
       } else {
-        val x: List[List[Element]] = r.getChildren.toList flatMap { child: Element =>
+        val x: List[List[ElementWrapper]] = r.children flatMap { child: ElementWrapper =>
           findParents(e, child).toList.map { path => r :: path }
         }
         x.headOption
       }
     }
-    findParents(element, contextElement).get
+
+    findParents(ElementWrapper(element), contextElement).get.map(_.element)
   }
 
   lazy val phase: Phase = byType[Phase](parentsFromRootDown).head
