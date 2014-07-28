@@ -7,20 +7,20 @@ import fi.vm.sade.omatsivut.domain.Hakemus
 import fi.vm.sade.omatsivut.security.ShibbolethCookie
 
 class AuditLogger(implicit val appConfig: AppConfig) extends Logging  {
-  private val auditLogger = appConfig.springContext.auditLogger;
+  private val auditLogger = appConfig.springContext.auditLogger
   private val systemName = "omatsivut"
   
   def logCreateSession(userOid: String, cookie: ShibbolethCookie) : Unit = {
     withErrorLogging {
       val tapahtuma = Tapahtuma.createCREATE(systemName, userOid, cookie.name, cookie.value )
-      auditLogger.log(tapahtuma);
+      auditLogger.log(tapahtuma)
     }("Could not logCreateSession for " + userOid)
   }
 
   def logUpdatedHakemus(userOid: String, hakemus: Hakemus) {
     withErrorLogging {
       val tapahtuma = Tapahtuma.createUPDATE(systemName, userOid, "Hakemus", hakemus.oid )
-      auditLogger.log(tapahtuma);
+      auditLogger.log(tapahtuma)
     }("Could not logUpdatedHakemus for " + userOid)
   }
 }
