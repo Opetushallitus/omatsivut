@@ -18,8 +18,7 @@ class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfi
   protected val applicationDescription = "Oppijan henkilökohtaisen palvelun REST API, jolla voi hakea ja muokata hakemuksia ja omia tietoja"
 
   val getApplicationsSwagger: OperationBuilder = (apiOperation[List[Hakemus]]("getApplications")
-    summary "Hae oppijan hakemukset"
-    parameters pathParam[String]("hetu").description("Käyttäjän henkilötunnus, jonka hakemukset listataan")
+    summary "Hae kirjautuneen oppijan hakemukset"
     )
 
   val putApplicationsSwagger = (apiOperation[Unit]("putApplication")
