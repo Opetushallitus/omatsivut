@@ -247,43 +247,44 @@
       })
     })
 
-    describe("Lisäkysymykset", function() {
+    describe("Kun hakijalla on koulutus, joka edellyttää harkinnanvaraisuuskysymyksiin vastausta", function() {
+      before(
+        page.applyFixtureAndOpen("peruskoulu"),
+        hakemus2.getPreference(0).remove,
+        hakemus2.saveWaitSuccess,
+        replacePreference(hakemus2, 1, "Ahlman")
+      )
+
+      it("kysymykset näytetään", function() {
+        var questionTitles = hakemus2.questionsForApplication().titles()
+        expect(questionTitles).to.deep.equal([
+          'Haetko koulutukseen harkintaan perustuvassa valinnassa?',
+          'Työkokemus kuukausina' ])
+      })
+
       /*
-      describe("Suoraan hakutoiveiden alle sijoitetut kysymykset (TODO nimeäminen)", function() {
+
+      TODO: vastaaminen epäonnistuu, koska follow-up -kysymystä ei osata näyttää
+
+      describe("vastaaminen", function() {
         before(
-          page.resetDataAndOpen,
-          hakemus2.getPreference(0).remove,
-          hakemus2.saveWaitSuccess,
-          replacePreference(hakemus2, 1, "Kallion")
+          answerQuestions,
+          hakemus2.saveWaitSuccess
         )
 
-        describe("näyttäminen", function() {
-          it("näytetään", function() {
-            var questionTitles = hakemus2.questionsForApplication().titles()
-            expect(questionTitles).to.deep.equal([
-              'Haetko koulutukseen harkintaan perustuvassa valinnassa?',
-              'Perustelu harkintaan perustuvan valinnan käyttämiselle' ])
-          })
+        it("onnistuu", function() {
+
         })
 
-        describe("vastaaminen", function() {
-          before(
-            answerQuestions,
-            hakemus2.saveWaitSuccess
-          )
-
-          it("onnistuu", function() {
-
-          })
-
-          function answerQuestions() {
-            hakemus2.questionsForApplication().enterAnswer(0, "Kyllä")
-            hakemus2.questionsForApplication().enterAnswer(1, "Oppimisvaikeudet")
-          }
-        })
+        function answerQuestions() {
+          hakemus2.questionsForApplication().enterAnswer(0, "Kyllä")
+          hakemus2.questionsForApplication().enterAnswer(1, "24")
+        }
       })
       */
+    })
 
+    describe("Lisäkysymykset", function() {
       describe("Kysymysten suodatus koulutuksen kielen perustella", function() {
         before(
           page.resetDataAndOpen,

@@ -5,7 +5,13 @@ function ApplicationListPage() {
     openPage: openPage("/omatsivut/", applicationPageVisible),
 
     resetDataAndOpen: function () {
-      return db.resetData().then(function() { return session.init(testHetu)} ).then(api.openPage)
+      return db.applyFixture().then(function() { return session.init(testHetu)} ).then(api.openPage)
+    },
+
+    applyFixtureAndOpen: function(fixtureName) {
+      return function() {
+        return db.applyFixture(fixtureName).then(function() { return session.init(testHetu)} ).then(api.openPage)
+      }
     },
 
     hetu: function () {

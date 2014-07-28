@@ -72,7 +72,7 @@ object AppConfig extends Logging {
     override def start {
       mongo = EmbeddedMongo.start
       try {
-        FixtureImporter()(this).applyFixtures
+        FixtureImporter()(this).applyFixtures()
       } catch {
         case e: Exception =>
           stop

@@ -117,8 +117,8 @@ mockAjax = {
 }
 
 db = {
-  resetData: function() {
-    return Q($.ajax("/omatsivut/util/fixtures/apply", { type: "PUT" }))
+  applyFixture: function(fixtureName) {
+    return Q($.ajax("/omatsivut/util/fixtures/apply?fixturename=" + fixtureName, { type: "PUT" }))
   },
 
   getApplications: function() {

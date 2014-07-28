@@ -19,7 +19,8 @@ class TestHelperServlet(implicit val appConfig: AppConfig) extends OmatSivutServ
 
   if(appConfig.usesLocalDatabase) {
     put("/fixtures/apply") {
-      FixtureImporter().applyFixtures
+      val fixtureName: String = params("fixturename")
+      FixtureImporter().applyFixtures(fixtureName)
     }
   }
 
