@@ -169,5 +169,20 @@
       "vocational": false,
       "educationCodeUri": "koulutus_301101"
     }
+  ],
+  "1.2.246.562.10.72927552934": [
+    {
+      "id": "1.2.246.562.5.19132087818",
+      "name": "Grundexamen i fiskeri, gr",
+      "aoIdentifier": "852",
+      "educationDegree": "32",
+      "childLONames": ["fiskeri, fiskare", "fiskeri, fiskeinstruktör", "fiskeri, fiskförädlare", "fiskeri, fiskodlare"],
+      "sora": false,
+      "teachingLanguages": ["SV"],
+      "athleteEducation": false,
+      "kaksoistutkinto": false,
+      "vocational": true,
+      "educationCodeUri": "koulutus_361401"
+    }
   ]
 }

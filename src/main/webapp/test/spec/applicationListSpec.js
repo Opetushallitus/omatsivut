@@ -4,6 +4,8 @@
   var hakemus1 = page.getApplication(hakemus1nimi)
   var hakemus2nimi = "Ammatillisen koulutuksen ja lukiokoulutuksen kevään 2014 yhteishaku"
   var hakemus2 = page.getApplication(hakemus2nimi)
+  var hakemus3nimi = "Lisähaku kevään 2014 yhteishaussa vapaaksi jääneille paikoille"
+  var hakemus3 = page.getApplication(hakemus3nimi)
 
   describe('Hakemuslistaus', function () {
 
@@ -281,6 +283,27 @@
         })
       })
       */
+
+      describe("Kysymysten suodatus koulutuksen kielen perustella", function() {
+        before(
+          page.resetDataAndOpen,
+          hakemus3.getPreference(0).remove,
+          replacePreference(hakemus3, 0, "Ammattiopisto Livia, fiskeri")
+        )
+
+        it("epäoleellisia kysymyksiä ei näytetä", function() {
+          var questionTitles = hakemus3.questionsForApplication().titles()
+          expect(questionTitles).to.deep.equal([
+            'Oletko suorittanut yleisten kielitutkintojen ruotsin kielen tutkinnon kaikki osakokeet vähintään taitotasolla 3?',
+            'Oletko suorittanut Valtionhallinnon kielitutkintojen ruotsin kielen suullisen ja kirjallisen tutkinnon vähintään taitotasolla tyydyttävä?' ])
+        })
+
+        it("suodatetun vastausjoukon tallentaminen onnistuu", function() {
+          hakemus3.questionsForApplication().enterAnswer(0, "Kyllä")
+          hakemus3.questionsForApplication().enterAnswer(1, "Ei")
+          return hakemus3.saveWaitSuccess()
+        })
+      })
 
       describe("Lisäkysymyksien näyttäminen", function() {
         var questions1 = [
