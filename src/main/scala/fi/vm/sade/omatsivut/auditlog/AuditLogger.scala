@@ -19,7 +19,7 @@ class AuditLogger(implicit val appConfig: AppConfig) extends Logging  {
 
   def logUpdatedHakemus(userOid: String, hakemus: Hakemus) {
     withErrorLogging {
-      val tapahtuma = Tapahtuma.createUPDATE(systemName, userOid, "Hakemus", hakemus.oid )
+      val tapahtuma = Tapahtuma.createUPDATE(systemName, userOid, "Hakemus", "Tallennettu päivitetty hakemus: " + hakemus.oid )
       auditLogger.log(tapahtuma)
     }("Could not logUpdatedHakemus for " + userOid)
   }
