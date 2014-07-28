@@ -12,7 +12,7 @@ class AuditLogger(implicit val appConfig: AppConfig) extends Logging  {
   
   def logCreateSession(userOid: String, cookie: ShibbolethCookie) : Unit = {
     withErrorLogging {
-      val tapahtuma = Tapahtuma.createCREATE(systemName, userOid, cookie.name, cookie.value )
+      val tapahtuma = Tapahtuma.createCREATE(systemName, userOid, "Session", cookie.toString )
       auditLogger.log(tapahtuma)
     }("Could not logCreateSession for " + userOid)
   }
