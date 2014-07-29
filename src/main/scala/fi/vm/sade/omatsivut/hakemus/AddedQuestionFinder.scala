@@ -13,19 +13,20 @@ protected object AddedQuestionFinder {
     def answersWith(hakutoiveet: List[Hakutoive]) = {
       ApplicationUpdater.getAllUpdatedAnswersForApplicationWithHakutoiveet(applicationSystem)(application, hakutoiveet)
     }
-
     findAddedQuestions(applicationSystem, answersWith(existingHakutoiveet ++ List(hakutoive)), answersWith(existingHakutoiveet))
   }
 
   def findAddedQuestions(applicationSystem: ApplicationSystem, newAnswers: Answers, oldAnswers: Answers): Set[QuestionLeafNode] = {
     val form = applicationSystem.getForm
-    val addedElements = findAddedElements(form, newAnswers, oldAnswers)
+    val oldAnswersFlat: Map[String, String] = flattenAnswers(oldAnswers)
+    val newAnswersFlat: Map[String, String] = flattenAnswers(newAnswers)
+    val addedElements = findAddedElements(form, newAnswersFlat, oldAnswersFlat)
     FormQuestionFinder.findQuestionsFromElements(ElementWrapper(form, newAnswers), addedElements).filter { question =>
-      !containsElementId(question.id.questionId, oldAnswers, form)
+      !containsElementId(question.id.questionId, oldAnswersFlat, form)
     }
   }
 
-  private def containsElementId(id: String, contextAnswers: Answers, context: Element): Boolean = {
+  private def containsElementId(id: String, contextAnswers: FlatAnswers, context: Element): Boolean = {
     if (context.getId == id) {
       true
     } else {
@@ -35,15 +36,16 @@ protected object AddedQuestionFinder {
     }
   }
 
-  private def getChildrenWithAnswers(element: Element, answers: Answers) = {
-    element.getChildren(flattenAnswers(answers)).toList
+  private def getChildrenWithAnswers(element: Element, answers: FlatAnswers) = {
+    element.getChildren(answers).toList
   }
 
   private def flattenAnswers(answers: Map[String, Map[String, String]]): Map[String, String] = {
     answers.values.foldLeft(Map.empty.asInstanceOf[Map[String, String]]) { (a,b) => a ++ b }
   }
 
-  private def findAddedElements(element: Element, newAnswers: Answers, oldAnswers: Answers, path: List[Element] = Nil): Set[Element] = {
+  private def findAddedElements(element: Element, newAnswers: FlatAnswers, oldAnswers: FlatAnswers, path: List[Element] = Nil): Set[Element] = {
+    // TODO: performance hotspot
     val oldChildren = getChildrenWithAnswers(element, oldAnswers)
     val newChildren = getChildrenWithAnswers(element, newAnswers)
     val added = newChildren.filterNot { e => oldChildren.contains(e) }.toSet
@@ -52,4 +54,6 @@ protected object AddedQuestionFinder {
   }
 
   private def descElement(el: Element) = el.getId
+
+  type FlatAnswers = Map[String, String]
 }
