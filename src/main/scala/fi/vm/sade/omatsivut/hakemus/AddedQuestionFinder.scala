@@ -27,13 +27,9 @@ protected object AddedQuestionFinder {
   }
 
   private def containsElementId(id: String, contextAnswers: FlatAnswers, context: Element): Boolean = {
-    if (context.getId == id) {
-      true
-    } else {
-      getChildrenWithAnswers(context, contextAnswers).find { child: Element =>
-        containsElementId(id, contextAnswers, child)
-      }.isDefined
-    }
+    (context.getId == id) || getChildrenWithAnswers(context, contextAnswers).find { child: Element =>
+      containsElementId(id, contextAnswers, child)
+    }.isDefined
   }
 
   private def getChildrenWithAnswers(element: Element, answers: FlatAnswers) = {
