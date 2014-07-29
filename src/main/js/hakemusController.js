@@ -30,7 +30,8 @@ module.exports = function(listApp) {
 
     function applicationChanged() {
       $scope.hasChanged = true
-      setStatusMessage("")
+      if ($scope.statusMessageType == "success")
+        setStatusMessage("")
     }
 
     function validateHakutoiveet() {
