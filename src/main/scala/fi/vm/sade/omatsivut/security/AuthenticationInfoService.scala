@@ -43,10 +43,11 @@ class RemoteAuthenticationInfoService(config: RemoteApplicationConfig)(implicit 
       case _ => {
         val json = parse(resultString)
         logger.info("Got user info: " + json)
-        (for {
+        val oids: List[String] = for {
           JObject(child) <- json
-          JField("oidHenkilo", JString(oid))  <- child
-        } yield oid).headOption
+          JField("oidHenkilo", JString(oid)) <- child
+        } yield oid
+        oids.headOption
       }
     }
   }
