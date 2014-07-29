@@ -48,4 +48,11 @@ object AuditLogger extends Logging  {
       auditLogger.log(tapahtuma)
     }("Could not logFetchHakemus for " + userOid)
   }
+
+  def logSessionTimeout(credentials: CookieCredentials)(implicit appConfig: AppConfig) {
+    withErrorLogging {
+      val tapahtuma = Tapahtuma.createTRACE(systemName, "Session", "Poistettu eväste sisällöllä: " + credentials.toString, System.currentTimeMillis())
+      auditLogger.log(tapahtuma)
+    }("Could not logSessionTimeout for " + credentials.oid)
+  }
 }

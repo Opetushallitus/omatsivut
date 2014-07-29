@@ -4,6 +4,7 @@ import javax.servlet.http.{Cookie, HttpServletRequest, HttpServletResponse}
 
 import fi.vm.sade.omatsivut.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.Logging
+import fi.vm.sade.omatsivut.auditlog.AuditLogger
 import org.joda.time.DateTime
 import org.scalatra.ScalatraBase
 
@@ -40,7 +41,7 @@ trait Authentication extends ScalatraBase with AuthCookieParsing with Logging {
       case Some(cookie) if validateCredentials(cookie, request) => true
       case Some(cookie) => {
         logger.info("Cookie was invalid: " + cookie)
-
+        AuditLogger.logSessionTimeout(cookie)
         tellBrowserToDeleteAuthCookie(request, response)
         halt(status = 401, headers = Map("WWW-Authenticate" -> "SecureCookie"))
       }
