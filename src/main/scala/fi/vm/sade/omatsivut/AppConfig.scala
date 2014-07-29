@@ -13,7 +13,6 @@ object AppConfig extends Logging {
       case "default" => new Default
       case "templated" => new LocalTestingWithTemplatedVars
       case "dev" => new Dev
-      case "dev-remote-mongo" => new DevWithRemoteMongo
       case "dev-audit-log" => new DevWithAuditLog
       case "it" => new IT
       case name => throw new IllegalArgumentException("Unknown value for omatsivut.profile: " + name);
@@ -57,10 +56,6 @@ object AppConfig extends Logging {
       ("mongodb.oppija.uri" -> "mongodb://localhost:27017") +
       ("log.mongo.uri" -> "${mongodb.oppija.uri}") +
       ("activemq.brokerurl" -> "vm://transport")
-  }
-
-  class DevWithRemoteMongo extends MockAuthentication with ExternalProps {
-    def springConfiguration = new OmatSivutSpringContext.Dev()
   }
 
   class IT extends ExampleTemplatedProps with MockAuthentication with StubbedExternalDeps {
