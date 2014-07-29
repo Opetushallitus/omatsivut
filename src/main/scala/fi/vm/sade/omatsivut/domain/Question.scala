@@ -29,6 +29,7 @@ case class QuestionGroup(title: String, questions: List[QuestionNode]) extends Q
         case QuestionGroup(_, Nil) => Nil
         case q:QuestionGroup => List(q)
       }
+      case _ => Nil
     })
   }
 }
