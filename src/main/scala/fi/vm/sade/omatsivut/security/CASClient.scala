@@ -7,7 +7,7 @@ import fi.vm.sade.omatsivut.{Logging, RemoteApplicationConfig}
 case class CASClient(val httpClient: HttpClient)(implicit val appConfig: AppConfig) extends Logging {
   
   protected[security] def getTicketGrantingTicket(username: String, password: String): Option[String] = {
-    val (responseCode, headersMap, resultString) = httpClient.httpPost(appConfig.settings.casTicketUrl)
+    val (responseCode, headersMap, resultString) = httpClient.httpPost(appConfig.settings.casTicketUrl, None)
   		.param("username", username)
   		.param("password", password)
   		.responseWithHeaders
@@ -38,7 +38,7 @@ case class CASClient(val httpClient: HttpClient)(implicit val appConfig: AppConf
   private def getServiceTicket(appTicketConsumerUrl: String, username: String, password: String): Option[String] = {
     getTicketGrantingTicket(username, password) match {
       case Some(ticket) => {
-        httpClient.httpPost(appConfig.settings.casTicketUrl + "/" + ticket)
+        httpClient.httpPost(appConfig.settings.casTicketUrl + "/" + ticket, None)
     		.param("service", appTicketConsumerUrl)
     		.response        
       } 
