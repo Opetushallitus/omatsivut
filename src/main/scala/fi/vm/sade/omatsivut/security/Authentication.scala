@@ -13,7 +13,7 @@ trait Authentication extends ScalatraBase with AuthCookieParsing with Logging {
 
   val cookieTimeoutMinutes = 30
 
-  def oid() = oidOpt.getOrElse(sys.error("Not authenticated account"))
+  def oid() = oidOpt.getOrElse(sys.error("Unauthenticated account"))
 
   def oidOpt: Option[String] = credentialsOpt match {
     case Some(cookie) => Some(cookie.oid)
@@ -68,7 +68,7 @@ trait AuthCookieParsing extends Logging {
           Some(CookieCredentials.fromString(decrypt))
         } catch {
           case e: Exception => {
-            logger.error("parse", e)
+            logger.error("Error while parsing auth cookie", e)
             None
           }
         }
