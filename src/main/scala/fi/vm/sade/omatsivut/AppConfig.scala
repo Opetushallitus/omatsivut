@@ -86,6 +86,7 @@ object AppConfig extends Logging {
 
   trait ExternalProps {
     def configFile = System.getProperty("user.home") + "/oph-configuration/omatsivut.properties"
+    def settings = ApplicationSettings.loadSettings(configFile)
   }
 
   trait ExampleTemplatedProps extends AppConfig with TemplatedProps {
@@ -94,7 +95,7 @@ object AppConfig extends Logging {
   }
 
   trait TemplatedProps {
-    def configFile = ConfigTemplateProcessor.createPropertyFileForTestingWithTemplate(templateAttributesFile)
+    def settings = ConfigTemplateProcessor.createSettings(templateAttributesFile)
     def templateAttributesFile: String
   }
 
@@ -126,10 +127,10 @@ object AppConfig extends Logging {
       }
     }
 
-    def configFile: String
+
     lazy val mongoTemplate = springContext.mongoTemplate
 
-    val settings = ApplicationSettings.loadSettings(configFile)
+    def settings: ApplicationSettings
 
     def properties = settings.toProperties
   }

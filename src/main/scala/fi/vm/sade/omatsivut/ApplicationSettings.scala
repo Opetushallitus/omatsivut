@@ -19,7 +19,7 @@ object ApplicationSettings extends Logging {
     }
   }
 }
-class ApplicationSettings(config: Config) {
+case class ApplicationSettings(config: Config) {
   val casTicketUrl = config.getString("omatsivut.cas.ticket.url")
 
   val authenticationServiceConfig = getRemoteApplicationConfig(config.getConfig("omatsivut.authentication-service"))
