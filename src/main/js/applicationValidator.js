@@ -40,7 +40,6 @@ module.exports = function(listApp) {
           validateBackend(application, success, error)
         } else {
           error({
-            errorText: "Täytä kaikki tiedot",
             isSaveable: false
           })
         }
@@ -57,7 +56,6 @@ module.exports = function(listApp) {
         } else {
           error({
             isSaveable: !hasHakutoiveErrors(data.errors),
-            errorText: "Täytä kaikki tiedot",
             errors: data.errors,
             questions: getQuestions(data)
           })
@@ -65,11 +63,10 @@ module.exports = function(listApp) {
       })
 
       responsePromise.error(function(data, status) {
-        var errorText = (status == 401) ? "Istunto on vanhentunut. Kirjaudu uudestaan sisään" : "Tietojen haku epäonnistui. Yritä myöhemmin uudelleen."
-
         error({
-          errorText: errorText,
-          errors: []
+          errors: [],
+          statusCode: status,
+          isSaveable: true
         })
       })
     }

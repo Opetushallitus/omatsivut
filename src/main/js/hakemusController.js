@@ -47,9 +47,15 @@ module.exports = function(listApp) {
       }
 
       function error(data) {
+        var errorText
+
+        if (!data.statusCode)
+          errorText = "Täytä kaikki tiedot"
+        else
+          errorText = (status == 401) ? "Istunto on vanhentunut. Kirjaudu uudestaan sisään" : "Tietojen haku epäonnistui. Yritä myöhemmin uudelleen."
+
         $scope.isSaveable = data.isSaveable
-        setStatusMessage(data.errorText, "error")
-        $scope.application.importQuestions(data.questions)
+        setStatusMessage(errorText, "error")
         if (data.questions)
           $scope.application.importQuestions(data.questions)
         updateValidationMessages(data.errors, true)
