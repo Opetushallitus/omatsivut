@@ -17,8 +17,8 @@ protected object AddedQuestionFinder {
     val form = applicationSystem.getForm
     val oldAnswersFlat: Map[String, String] = HakemusConverter.flattenAnswers(oldAnswers)
     val newAnswersFlat: Map[String, String] = HakemusConverter.flattenAnswers(newAnswers)
-    val oldQuestions = FormQuestionFinder.findQuestionsFromElements(ElementWrapper(form, oldAnswersFlat), Set(form))
-    val newQuestions = FormQuestionFinder.findQuestionsFromElements(ElementWrapper(form, newAnswersFlat), Set(form))
+    val oldQuestions = FormQuestionFinder.findQuestionsFromElements(Set(ElementWrapper.wrapFiltered(form, oldAnswersFlat)))
+    val newQuestions = FormQuestionFinder.findQuestionsFromElements(Set(ElementWrapper.wrapFiltered(form, newAnswersFlat)))
     newQuestions.diff(oldQuestions)
   }
 }
