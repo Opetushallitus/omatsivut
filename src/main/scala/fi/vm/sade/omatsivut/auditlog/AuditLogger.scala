@@ -55,4 +55,11 @@ object AuditLogger extends Logging  {
       auditLogger.log(tapahtuma)
     }("Could not logSessionTimeout for " + credentials.oid)
   }
+
+  def logLogout(credentials: CookieCredentials)(implicit appConfig: AppConfig) {
+    withErrorLogging {
+      val tapahtuma = Tapahtuma.createTRACE(systemName, "Session", "Käyttäjä kirjautui ulos: " + credentials.toString, System.currentTimeMillis())
+      auditLogger.log(tapahtuma)
+    }("Could not logLogout for " + credentials.oid)
+  }
 }
