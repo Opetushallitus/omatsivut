@@ -66,8 +66,10 @@ module.exports = function(listApp) {
       })
 
       responsePromise.error(function(data, status) {
+        var errorText = (status == 401) ? "Istunto on vanhentunut. Kirjaudu uudestaan sisään" : "Tietojen haku epäonnistui. Yritä myöhemmin uudelleen."
+
         error({
-          errorText: "Tietojen haku epäonnistui. Yritä myöhemmin uudelleen.",
+          errorText: errorText,
           errors: []
         })
       })
