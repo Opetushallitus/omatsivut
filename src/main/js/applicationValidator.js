@@ -41,7 +41,6 @@ module.exports = function(listApp) {
         } else {
           error({
             errorText: "Täytä kaikki tiedot",
-            errors: [],
             isSaveable: false
           })
         }

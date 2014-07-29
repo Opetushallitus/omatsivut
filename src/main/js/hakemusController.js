@@ -50,6 +50,8 @@ module.exports = function(listApp) {
         $scope.isSaveable = data.isSaveable
         setStatusMessage(data.errorText, "error")
         $scope.application.importQuestions(data.questions)
+        if (data.questions)
+          $scope.application.importQuestions(data.questions)
         updateValidationMessages(data.errors, true)
       }
     }
