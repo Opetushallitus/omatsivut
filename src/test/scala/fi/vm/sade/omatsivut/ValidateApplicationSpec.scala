@@ -18,14 +18,21 @@ class ValidateApplicationSpec extends HakemusApiSpecification {
           errors.size must_== 0
           structuredQuestions.size must_== 0
         }
-
-        // TODO: test with added hakutoive -> some questions
-        // TODO: test answer validation (pass/fail cases)
-        // TODO: test that accepts unknown answers
       }
     }
 
-    "support follow-up questions" in {
+    "validate application with extra answers" in {
+      val extraQuestionOne: (Hakemus) => Hakemus = answerExtraQuestion(skillsetPhaseKey, "osaaminen-tuntematon-kysymys", "osaaminen-testivastaus")
+      val extraQuestionTwo: (Hakemus) => Hakemus = answerExtraQuestion(preferencesPhaseKey, "hakutoive-tuntematon-kysymys", "osaaminen-testivastaus")
+      modifyHakemus(hakemus1)(extraQuestionOne andThen extraQuestionTwo) { newHakemus =>
+        validate(newHakemus) { (errors, structuredQuestions) =>
+          errors.size must_== 0
+          structuredQuestions.size must_== 0
+        }
+      }
+    }
+
+    "add additional questions related to added preference" in {
       FixtureImporter().applyFixtures("peruskoulu")
       withHakemus(TestFixture.hakemus2) { hakemus =>
         val modified = addHakutoive(ammattistarttiAhlman)(hakemus)
@@ -33,8 +40,6 @@ class ValidateApplicationSpec extends HakemusApiSpecification {
           QuestionNode.flatten(structuredQuestions).map(_.id) must_== List(
             QuestionId("hakutoiveet","preference3-discretionary"),
             QuestionId("lisatiedot","TYOKOKEMUSKUUKAUDET")
-
-            // TODO: answer to "preference3-discretionary" then verify that "preference3-discretionary-followup" question appears
           )
         }
       }
