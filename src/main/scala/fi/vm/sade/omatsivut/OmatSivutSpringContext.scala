@@ -77,7 +77,7 @@ object OmatSivutSpringContext {
     "fi.vm.sade.haku.oppija.hakemus.it.dao",
     "fi.vm.sade.haku.oppija.hakemus.converter",
     "fi.vm.sade.haku.oppija.common.koulutusinformaatio"))
-  @ImportResource(Array("/META-INF/spring/logger-mock-context.xml"))
+  @ImportResource(Array("/META-INF/spring/logger-context.xml"))
   @Import(Array(classOf[OmatSivutMongoConfiguration]))
   class Default extends OmatSivutConfiguration {
     val profile = "default"
