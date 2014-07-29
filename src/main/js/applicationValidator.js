@@ -4,23 +4,9 @@ var util = require('./util')
 var domainUtil = require('./domainUtil')
 
 module.exports = function(listApp) {
-   listApp.factory("applicationValidator", ["$http", function($http) {
-    function getQuestions(data) {
-      return convertToItems(data.questions, new QuestionGroup())
+  listApp.factory("applicationValidator", ["$http", function($http) {
 
-      function convertToItems(questions, results) {
-        _(questions).each(function(questionNode) {
-          if (questionNode.id) {
-            results.questionNodes.push(new QuestionItem(questionNode, questionNode.required ? ["*"] : []))
-          } else {
-            results.questionNodes.push(convertToItems(questionNode.questions, new QuestionGroup(questionNode.title )))
-          }
-        })
-        return results
-      }
-    }
-
-    return function() {
+    return function applicationValidator() {
       var currentRequest
 
       function onlyIfCurrentRequest(current, f) {
@@ -40,9 +26,24 @@ module.exports = function(listApp) {
           validateBackend(application, success, error)
         } else {
           error({
-            isSaveable: false
+            errors: []
           })
         }
+      }
+    }
+
+    function getQuestions(data) {
+      return convertToItems(data.questions, new QuestionGroup())
+
+      function convertToItems(questions, results) {
+        _(questions).each(function (questionNode) {
+          if (questionNode.id) {
+            results.questionNodes.push(new QuestionItem(questionNode, questionNode.required ? ["*"] : []))
+          } else {
+            results.questionNodes.push(convertToItems(questionNode.questions, new QuestionGroup(questionNode.title)))
+          }
+        })
+        return results
       }
     }
 
@@ -55,7 +56,7 @@ module.exports = function(listApp) {
           })
         } else {
           error({
-            isSaveable: !hasHakutoiveErrors(data.errors),
+            statusCode: 200,
             errors: data.errors,
             questions: getQuestions(data)
           })
@@ -68,13 +69,6 @@ module.exports = function(listApp) {
           statusCode: status,
           isSaveable: true
         })
-      })
-    }
-
-    function hasHakutoiveErrors(errors) {
-      var errorMap = util.mapArray(errors, "key", "message");
-      return _(errorMap).any(function(val, key) {
-        return domainUtil.isHakutoiveError(key) && val.length > 0
       })
     }
   }])

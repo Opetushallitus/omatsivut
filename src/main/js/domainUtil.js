@@ -6,6 +6,14 @@ module.exports = {
     return hakutoiveErrorRegexp.test(questionId)
   },
 
+  hasHakutoiveErrors: function(errorsJson) {
+    var errorMap = util.mapArray(errorsJson, "key", "message");
+    var self = this
+    return _(errorMap).any(function(val, key) {
+      return self.isHakutoiveError(key) && val.length > 0
+    })
+  },
+
   questionMap: function(questions) {
     questions = util.flattenTree(questions, "questionNodes")
     return util.indexBy(questions, function(node) { return node.question.id.questionId })

@@ -7,16 +7,17 @@ module.exports = function(listApp) {
         loadingFailed_notLoggedIn: "Tietojen lataus epäonnistui: et ole kirjautunut sisään.",
         timestamp_applicationUpdated: "Hakemusta muokattu",
         timestamp_applicatonReceived: "Hakemus jätetty",
-        validationFailed: "Täytä kaikki tiedot",
-        sessionExpired: "Istunto on vanhentunut. Kirjaudu uudestaan sisään",
-        validationFailed_httpError: "Tietojen haku epäonnistui. Yritä myöhemmin uudelleen.",
-        changesSaved: "Kaikki muutokset tallennettu",
 
+        validationFailed: "Täytä kaikki tiedot",
+        validationFailed_httpError: "Tietojen haku epäonnistui. Yritä myöhemmin uudelleen.",
+
+        sessionExpired: "Istunto on vanhentunut. Kirjaudu uudestaan sisään",
+        serverError: "Odottamaton virhe. Ota yhteyttä ylläpitoon.",
+
+        changesSaved: "Kaikki muutokset tallennettu",
         saveFailed: "Tallentaminen epäonnistui. Yritä myöhemmin uudelleen.",
         saveFailed_sessionExpired: "Tallentaminen epäonnistui, sillä istunto on vanhentunut. Kirjaudu uudestaan sisään.",
-        saveFailed_validationError: "Ei tallennettu - vastaa ensin kaikkiin lisäkysymyksiin",
-
-        serverError: "Odottamaton virhe. Ota yhteyttä ylläpitoon."
+        saveFailed_validationError: "Ei tallennettu - vastaa ensin kaikkiin lisäkysymyksiin"
       }
     }
 

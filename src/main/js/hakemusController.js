@@ -1,4 +1,5 @@
-var Hakemus = require('./hakemus')
+var Hakemus = require("./hakemus")
+var domainUtil = require("./domainUtil")
 
 module.exports = function(listApp) {
   listApp.controller("hakemusController", ["$scope", "$element", "$http", "applicationsResource", "applicationValidator", "settings", "debounce", "localization", function ($scope, $element, $http, applicationsResource, applicationValidator, settings, debounce, localization) {
@@ -47,18 +48,25 @@ module.exports = function(listApp) {
       }
 
       function error(data) {
-        var errorText
+        if (!data.statusCode) { // validointi epäonnistui frontendissä
+          setStatusMessage(localization("validationFailed"), "error")
+        } else if (data.statusCode === 200) {
+          $scope.isSaveable = !domainUtil.hasHakutoiveErrors(data.errors)
+          setStatusMessage(localization("validationFailed"), "error")
+        } else if (data.statusCode == 401) {
+          $scope.isSaveable = true
+          setStatusMessage(localization("sessionExpired"), "error")
+        } else if (data.statusCode == 500) {
+          $scope.isSaveable = true
+          setStatusMessage(localization("serverError"), "error")
+        } else {
+          setStatusMessage(localization("validationFailed_httpError"), "error")
+        }
 
-        if (!data.statusCode)
-          errorText = localization("validationFailed")
-        else
-          errorText = (status == 401) ? localization("sessionExpired") : localization("validationFailed_httpError")
-
-        $scope.isSaveable = data.isSaveable
-        setStatusMessage(errorText, "error")
         if (data.questions)
           $scope.application.importQuestions(data.questions)
-        updateValidationMessages(data.errors, true)
+        if (data.errors)
+          updateValidationMessages(data.errors, true)
       }
     }
 
