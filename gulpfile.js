@@ -55,3 +55,4 @@ gulp.task('watch', function() {
 
 gulp.task('compile', ['browserify', 'less']);
 gulp.task('dev', ['lint', 'compile', 'watch']);
+gulp.task('default', ['dev']);
