@@ -7,18 +7,18 @@ import fi.vm.sade.omatsivut.domain.Hakemus
 import fi.vm.sade.omatsivut.domain.Hakemus.Answers
 import fi.vm.sade.omatsivut.security.ShibbolethCookie
 
-class AuditLogger(implicit val appConfig: AppConfig) extends Logging  {
-  private val auditLogger = appConfig.springContext.auditLogger
+object AuditLogger extends Logging  {
+  private def auditLogger(implicit appConfig: AppConfig) = appConfig.springContext.auditLogger
   private val systemName = "omatsivut"
   
-  def logCreateSession(userOid: String, cookie: ShibbolethCookie) : Unit = {
+  def logCreateSession(userOid: String, cookie: ShibbolethCookie)(implicit appConfig: AppConfig) {
     withErrorLogging {
       val tapahtuma = Tapahtuma.createCREATE(systemName, userOid, "Session", "Luotu sessio ShibbolethCookiella: " + cookie.toString )
       auditLogger.log(tapahtuma)
     }("Could not logCreateSession for " + userOid)
   }
 
-  def logUpdatedHakemus(userOid: String, applicationOid: String, originalAnswers: Answers, updatedAnswers: Answers) {
+  def logUpdatedHakemus(userOid: String, applicationOid: String, originalAnswers: Answers, updatedAnswers: Answers)(implicit appConfig: AppConfig) {
     withErrorLogging {
       val tapahtuma = Tapahtuma.createUPDATE(systemName, userOid, "Hakemus", "Tallennettu päivitetty hakemus: " + applicationOid)
       val phaseIds = originalAnswers.keySet ++ updatedAnswers.keySet
@@ -42,7 +42,7 @@ class AuditLogger(implicit val appConfig: AppConfig) extends Logging  {
     }
   }
 
-  def logFetchHakemus(userOid: String, hakemus: Hakemus) {
+  def logFetchHakemus(userOid: String, hakemus: Hakemus)(implicit appConfig: AppConfig) {
     withErrorLogging {
       val tapahtuma = Tapahtuma.createREAD(systemName, userOid, "Hakemus", "Haettu hakemus: " + hakemus.oid )
       auditLogger.log(tapahtuma)

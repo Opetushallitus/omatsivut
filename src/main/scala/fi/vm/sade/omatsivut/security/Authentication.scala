@@ -40,6 +40,7 @@ trait Authentication extends ScalatraBase with AuthCookieParsing with Logging {
       case Some(cookie) if validateCredentials(cookie, request) => true
       case Some(cookie) => {
         logger.info("Cookie was invalid: " + cookie)
+
         tellBrowserToDeleteAuthCookie(request, response)
         halt(status = 401, headers = Map("WWW-Authenticate" -> "SecureCookie"))
       }
@@ -74,7 +75,7 @@ trait AuthCookieParsing extends Logging {
       case None => None
     }
   }
-  
+
   def tellBrowserToDeleteAuthCookie(req: HttpServletRequest, res: HttpServletResponse){
     Option(req.getCookies).map(cookies => {
       cookies.find(_.getName == "auth").map(authCookie => {

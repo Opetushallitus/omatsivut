@@ -8,9 +8,6 @@ import scala.collection.JavaConverters._
 import fi.vm.sade.omatsivut.auditlog.AuditLogger
 
 class SessionServlet(implicit val appConfig: AppConfig) extends OmatSivutServletBase with AuthCookieParsing {
-  
-  val auditLogger = new AuditLogger()
-  
   get("/initsession") {
     request.getHeaderNames.asScala.toList.map(h => logger.info(h + ": " + request.getHeader(h)))
     createAuthCookieCredentials match {
@@ -30,7 +27,7 @@ class SessionServlet(implicit val appConfig: AppConfig) extends OmatSivutServlet
   private def createAuthCookieCredentials: Option[CookieCredentials] = {
     checkCredentials match {
       case Some((oid, cookie)) => {
-        auditLogger.logCreateSession(oid, cookie)
+        AuditLogger.logCreateSession(oid, cookie)
         Some(CookieCredentials(oid, cookie))
       }
       case _ => None
