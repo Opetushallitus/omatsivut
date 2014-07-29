@@ -95,16 +95,18 @@ module.exports = function(listApp) {
       }
 
       function onError(err) {
-        var saveError = (function() { switch (err.status) {
-          case 400:
-            if (_.isArray(err.data) && err.data.length > 0)
-              return "saveFailed_validationError"
-            else
-              return "serverError"
-          case 401: return "saveFailed_sessionExpired"
-          case 500: return "serverError"
-          default: return "saveFailed"
-        }})()
+        var saveError = (function() {
+          if (err.status == 400 && (_.isArray(err.data) && err.data.length > 0))
+            return "saveFailed_validationError"
+          else if (err.status == 400 && !(_.isArray(err.data) && err.data.length > 0))
+            return "serverError"
+          else if (err.status == 401)
+            return "saveFailed_sessionExpired"
+          else if (err.status == 500)
+            return "serverError"
+          else
+            return "saveFailed"
+        })()
 
         setStatusMessage(localization(saveError), "error")
         if (err.status == 400) // Validointivirhe
