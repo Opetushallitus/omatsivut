@@ -2,10 +2,9 @@ var Hakemus = require('./hakemus')
 
 module.exports = function(listApp) {
   listApp.controller("hakemusController", ["$scope", "$element", "$http", "applicationsResource", "applicationValidator", "settings", "debounce", function ($scope, $element, $http, applicationsResource, applicationValidator, settings, debounce) {
-    applicationValidator = debounce(applicationValidator, settings.modelDebounce)
+    applicationValidator = debounce(applicationValidator(), settings.modelDebounce)
 
     $scope.hasChanged = false
-    $scope.isSaving = false
     $scope.isSaveable = true
 
     $scope.timestampLabel = function() {
@@ -35,6 +34,7 @@ module.exports = function(listApp) {
     }
 
     function validateHakutoiveet() {
+      setStatusMessage("", "pending")
       applicationValidator($scope.application, success, error)
       $scope.isSaveable = false
 
@@ -54,8 +54,8 @@ module.exports = function(listApp) {
     }
 
     function setStatusMessage(msg, type) {
-      $scope.saveMessage = msg
-      $scope.saveMessageType = type
+      $scope.statusMessage = msg
+      $scope.statusMessageType = type || ""
     }
 
     $scope.movePreference = function(from, to) {
@@ -66,14 +66,12 @@ module.exports = function(listApp) {
     }
 
     $scope.saveApplication = function() {
-      $scope.isSaving = true;
       applicationsResource.update({id: $scope.application.oid }, $scope.application.toJson(), onSuccess, onError)
-      setStatusMessage("", "")
+      setStatusMessage("", "pending")
 
       function onSuccess(savedApplication) {
         $scope.$emit("highlight-save", $scope.application.getChangedItems())
         $scope.application.setAsSaved(savedApplication)
-        $scope.isSaving = false
         $scope.hasChanged = false
         setStatusMessage("Kaikki muutokset tallennettu", "success")
         updateValidationMessages([])
@@ -91,8 +89,6 @@ module.exports = function(listApp) {
           default:
             setStatusMessage("Tallentaminen epäonnistui. Yritä myöhemmin uudelleen.", "error")
         }
-
-        $scope.isSaving = false
       }
 
       function validationError(data) {

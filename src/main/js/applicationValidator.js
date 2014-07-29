@@ -20,40 +20,48 @@ module.exports = function(listApp) {
       }
     }
 
-    return function(application, success, error) {
-      var preferencesValid = application.validatePreferences()
+    return function() {
+      var currentRequest
 
-      if (preferencesValid) {
-        validateBackend(application, success, error)
-      } else {
-        error({
-          errorText: "Täytä kaikki tiedot",
-          errors: [],
-          isSaveable: false
-        })
+      function onlyIfCurrentRequest(current, f) {
+        return function() {
+          if (currentRequest === current)
+            f.apply(this, arguments)
+        }
+      }
+
+      return function(application, success, error) {
+        currentRequest = {}
+        success = onlyIfCurrentRequest(currentRequest, success)
+        error = onlyIfCurrentRequest(currentRequest, error)
+
+        var preferencesValid = application.validatePreferences()
+        if (preferencesValid) {
+          validateBackend(application, success, error)
+        } else {
+          error({
+            errorText: "Täytä kaikki tiedot",
+            errors: [],
+            isSaveable: false
+          })
+        }
       }
     }
 
-    var currentRequest
-
     function validateBackend(application, success, error) {
-      currentRequest = {}
-      var thisRequest = currentRequest
       var responsePromise = $http.post("/omatsivut/api/applications/validate/" + application.oid, application.toJson())
       responsePromise.success(function(data, status, headers, config) {
-        if (currentRequest === thisRequest) {
-          if (data.errors.length === 0) {
-            success({
-              questions: getQuestions(data)
-            })
-          } else {
-            error({
-              isSaveable: !hasHakutoiveErrors(data.errors),
-              errorText: "Täytä kaikki tiedot",
-              errors: data.errors,
-              questions: getQuestions(data)
-            })
-          }
+        if (data.errors.length === 0) {
+          success({
+            questions: getQuestions(data)
+          })
+        } else {
+          error({
+            isSaveable: !hasHakutoiveErrors(data.errors),
+            errorText: "Täytä kaikki tiedot",
+            errors: data.errors,
+            questions: getQuestions(data)
+          })
         }
       })
 
