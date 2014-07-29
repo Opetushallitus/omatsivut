@@ -66,7 +66,7 @@
             return hakemus1.getPreference(0).moveDown()
               .then(hakemus1.saveWaitError)
               .then(function() {
-                hakemus1.saveError().should.equal("Tallentaminen epäonnistui")
+                hakemus1.saveError().should.equal("Odottamaton virhe. Ota yhteyttä ylläpitoon.")
               })
           })
 

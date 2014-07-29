@@ -12,6 +12,7 @@ require('./hakutoiveController')(listApp)
 require('./listController')(listApp)
 require('./hakemusController')(listApp)
 require('./applicationValidator')(listApp)
+require('./localization')(listApp)
 require('./recursionHelper')
 require('../lib/angular-debounce')
 
@@ -30,7 +31,8 @@ listApp.factory("settings", ["$animate", function($animate) {
 
   return {
     uiTransitionTime: testMode ? 10 : 500,
-    modelDebounce: testMode? 0 : 300
+    modelDebounce: testMode? 0 : 300,
+    language: "fi"
   };
 }]);
 

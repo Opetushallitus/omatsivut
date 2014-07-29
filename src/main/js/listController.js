@@ -1,7 +1,7 @@
 var Hakemus = require('./hakemus')
 module.exports = function(listApp) {
-  listApp.controller("listController", ["$scope", "applicationsResource", function ($scope, applicationsResource) {
-    $scope.applicationStatusMessage = "Hakemuksia ladataan...";
+  listApp.controller("listController", ["$scope", "applicationsResource", "localization", function ($scope, applicationsResource, localization) {
+    $scope.applicationStatusMessage = localization("loadingApplications")
     $scope.applicationStatusMessageType = "ajax-spinner";
     applicationsResource.query(success, error)
 
@@ -13,8 +13,8 @@ module.exports = function(listApp) {
 
     function error(err) {
       switch (err.status) {
-        case 401: $scope.applicationStatusMessage = "Tietojen lataus epäonnistui: et ole kirjautunut sisään."; break;
-        default: $scope.applicationStatusMessage = "Tietojen lataus epäonnistui. Yritä myöhemmin uudelleen.";
+        case 401: $scope.applicationStatusMessage = localization("loadingFailed_notLoggedIn"); break;
+        default: $scope.applicationStatusMessage = localization("loadingFailed");
       }
       $scope.applicationStatusMessageType = "error"
       $scope.applications = [];

@@ -1,7 +1,7 @@
 var Hakemus = require('./hakemus')
 
 module.exports = function(listApp) {
-  listApp.controller("hakemusController", ["$scope", "$element", "$http", "applicationsResource", "applicationValidator", "settings", "debounce", function ($scope, $element, $http, applicationsResource, applicationValidator, settings, debounce) {
+  listApp.controller("hakemusController", ["$scope", "$element", "$http", "applicationsResource", "applicationValidator", "settings", "debounce", "localization", function ($scope, $element, $http, applicationsResource, applicationValidator, settings, debounce, localization) {
     applicationValidator = debounce(applicationValidator(), settings.modelDebounce)
 
     $scope.hasChanged = false
@@ -9,9 +9,9 @@ module.exports = function(listApp) {
 
     $scope.timestampLabel = function() {
       if ($scope.application.received == $scope.application.updated)
-        return "Hakemus jätetty"
+        return localization("timestamp_applicationReceived")
       else
-        return "Hakemusta muokattu"
+        return localization("timestamp_applicationUpdated")
     }
 
     $scope.$watch("application.getHakutoiveWatchCollection()", function(hakutoiveet, oldHakutoiveet) {
@@ -50,9 +50,9 @@ module.exports = function(listApp) {
         var errorText
 
         if (!data.statusCode)
-          errorText = "Täytä kaikki tiedot"
+          errorText = localization("validationFailed")
         else
-          errorText = (status == 401) ? "Istunto on vanhentunut. Kirjaudu uudestaan sisään" : "Tietojen haku epäonnistui. Yritä myöhemmin uudelleen."
+          errorText = (status == 401) ? localization("sessionExpired") : localization("validationFailed_httpError")
 
         $scope.isSaveable = data.isSaveable
         setStatusMessage(errorText, "error")
@@ -82,29 +82,25 @@ module.exports = function(listApp) {
         $scope.$emit("highlight-save", $scope.application.getChangedItems())
         $scope.application.setAsSaved(savedApplication)
         $scope.hasChanged = false
-        setStatusMessage("Kaikki muutokset tallennettu", "success")
+        setStatusMessage(localization("changesSaved"), "success")
         updateValidationMessages([])
       }
 
       function onError(err) {
-        switch (err.status) {
+        var saveError = (function() { switch (err.status) {
           case 400:
-            setStatusMessage(validationError(err.data), "error")
-            updateValidationMessages(err.data)
-            break
-          case 401:
-            setStatusMessage("Tallentaminen epäonnistui, sillä istunto on vanhentunut. Kirjaudu uudestaan sisään.", "error");
-            break
-          default:
-            setStatusMessage("Tallentaminen epäonnistui. Yritä myöhemmin uudelleen.", "error")
-        }
-      }
+            if (_.isArray(err.data) && err.data.length > 0)
+              return "saveFailed_validationError"
+            else
+              return "serverError"
+          case 401: return "saveFailed_sessionExpired"
+          case 500: return "serverError"
+          default: return "saveFailed"
+        }})()
 
-      function validationError(data) {
-        if (_.isArray(data) && data.length > 0)
-          return "Ei tallennettu - vastaa ensin kaikkiin lisäkysymyksiin"
-        else
-          return "Tallentaminen epäonnistui"
+        setStatusMessage(localization(saveError), "error")
+        if (err.status == 400) // Validointivirhe
+          updateValidationMessages(err.data)
       }
     }
 
@@ -115,7 +111,7 @@ module.exports = function(listApp) {
           console.log("Validaatiovirhettä ei käsitelty:", item.questionId, item.errors)
         })
 
-        setStatusMessage("Odottamaton virhe. Ota yhteyttä ylläpitoon.", "error")
+        setStatusMessage(localization("serverError"), "error")
       }
     }
   }])
