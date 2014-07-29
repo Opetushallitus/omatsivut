@@ -2,6 +2,7 @@ package fi.vm.sade.omatsivut.hakemus
 
 import fi.vm.sade.haku.oppija.lomake.domain.elements.Element
 import fi.vm.sade.omatsivut.domain.Hakemus.Answers
+import fi.vm.sade.omatsivut.hakemus.HakemusConverter.FlatAnswers
 
 trait ElementWrapper {
   def element: Element
@@ -36,7 +37,7 @@ object ElementWrapper {
     SimpleElementWrapper(element)
   }
 
-  def apply(element: Element, answers: Answers) = {
+  def apply(element: Element, answers: FlatAnswers) = {
     FilteredElementWrapper(element, answers)
   }
 }
@@ -47,15 +48,11 @@ case class SimpleElementWrapper(element: Element) extends ElementWrapper {
   def wrap(element: Element) = { SimpleElementWrapper(element) }
 }
 
-case class FilteredElementWrapper(element: Element, answers: Answers) extends ElementWrapper {
+case class FilteredElementWrapper(element: Element, answers: FlatAnswers) extends ElementWrapper {
   import collection.JavaConversions._
 
   override def children = {
-    element.getChildren(flattenAnswers(answers)).toList.map(FilteredElementWrapper(_, answers))
-  }
-
-  private def flattenAnswers(answers: Map[String, Map[String, String]]): Map[String, String] = {
-    answers.values.foldLeft(Map.empty.asInstanceOf[Map[String, String]]) { (a,b) => a ++ b }
+    element.getChildren(answers).toList.map(FilteredElementWrapper(_, answers))
   }
 
   def wrap(element: Element) = { FilteredElementWrapper(element, answers) }

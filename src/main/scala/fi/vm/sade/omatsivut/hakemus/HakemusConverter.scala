@@ -33,4 +33,10 @@ object HakemusConverter {
     val hakuToiveetData: Map[String, String] = answers.get(preferencePhaseKey).toMap
     HakutoiveetConverter.convertFromAnswers(hakuToiveetData)
   }
+
+  type FlatAnswers = Map[String, String]
+
+  def flattenAnswers(answers: Map[String, Map[String, String]]): Map[String, String] = {
+    answers.values.foldLeft(Map.empty.asInstanceOf[Map[String, String]]) { (a,b) => a ++ b }
+  }
 }

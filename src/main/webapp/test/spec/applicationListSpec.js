@@ -297,10 +297,11 @@
       describe("Hakutoiveen korvaaminen harkinnanvaraisuuteen perustuvalla valinnalla", function() {
         before(
           hakemus2.getPreference(0).remove,
-          hakemus2.waitValidationError
+          wait.forAngular
         )
 
-        it("epäonnistuu", function() { // TODO
+        it("edellyttää lisäkysymyksiin vastausta", function() { // TODO
+          hakemus2.isValidationErrorVisible().should.be.true
         })
       })
     })

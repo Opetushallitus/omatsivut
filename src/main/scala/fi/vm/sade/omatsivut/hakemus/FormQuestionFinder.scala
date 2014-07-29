@@ -129,10 +129,7 @@ protected object FormQuestionFinder extends Logging {
       case e: HakuCheckBox => Nil
       case e: fi.vm.sade.haku.oppija.lomake.domain.elements.Notification => List(Notification(id, title(e), e.getNotificationType()))
       case e: fi.vm.sade.haku.oppija.lomake.domain.elements.Text => List(Label(id, title(e)))
-      case _ => {
-        logger.error("Could not convert element of type: " + element.getType + " with title: " + title(element))
-        Nil
-      }
+      case _ => Nil
     }
   }
 }

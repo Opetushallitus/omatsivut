@@ -29,7 +29,7 @@ object ApplicationUpdater {
   }
 
   def applyHiddenValues(applicationSystem: ApplicationSystem)(allAnswers: Answers): Answers = {
-    val vals: Set[(QuestionId, String)] = FormQuestionFinder.findHiddenValues(ElementWrapper.apply(applicationSystem.getForm, allAnswers))
+    val vals: Set[(QuestionId, String)] = FormQuestionFinder.findHiddenValues(ElementWrapper.apply(applicationSystem.getForm, HakemusConverter.flattenAnswers(allAnswers)))
     vals.foldLeft(allAnswers) { case (answers: Answers, (question: QuestionId, answer: String)) =>
         updateSingleAnswer(answers, question, answer)
     }
