@@ -25,6 +25,9 @@ trait AuthenticationInfoService extends Logging {
 }
 
 class RemoteAuthenticationInfoService(config: RemoteApplicationConfig)(implicit val appConfig: AppConfig) extends AuthenticationInfoService with Logging {
+
+  implicit val formats = DefaultFormats
+
   def getHenkiloOID(hetu : String) : Option[String] = {
     CASClient(DefaultHttpClient).getServiceTicket(config) match {
       case None => None
@@ -33,8 +36,7 @@ class RemoteAuthenticationInfoService(config: RemoteApplicationConfig)(implicit 
   }
  
   private def getHenkiloOID(hetu: String, serviceTicket: String): Option[String] = {
-    implicit val formats = DefaultFormats
-    val (responseCode, headersMap, resultString) = DefaultHttpClient.httpGet(config.url + "/" + config.path + "/" + hetu)
+    val (responseCode, headersMap, resultString) = DefaultHttpClient.httpGet(config.url + "/" + config.config.getString("get_oid.path") + "/" + hetu)
          .param("ticket", serviceTicket)
          .responseWithHeaders
 
@@ -51,5 +53,4 @@ class RemoteAuthenticationInfoService(config: RemoteApplicationConfig)(implicit 
       }
     }
   }
-
 }

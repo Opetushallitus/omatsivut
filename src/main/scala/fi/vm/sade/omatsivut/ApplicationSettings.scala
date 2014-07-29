@@ -45,8 +45,8 @@ case class ApplicationSettings(config: Config) {
       config.getString("url"),
       config.getString("username"),
       config.getString("password"),
-      config.getString("path"),
-      config.getString("ticket_consumer_path")
+      config.getString("ticket_consumer_path"),
+      config
     )
   }
 

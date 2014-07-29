@@ -4,6 +4,7 @@ import fi.vm.sade.omatsivut.fixtures.FixtureImporter
 import fi.vm.sade.omatsivut.mongo.{EmbeddedMongo, MongoServer}
 import fi.vm.sade.omatsivut.security.{AuthenticationContext, ProductionAuthenticationContext, TestAuthenticationContext}
 import org.apache.activemq.broker.BrokerService
+import com.typesafe.config.Config
 
 object AppConfig extends Logging {
   def fromSystemProperty: AppConfig = {
@@ -136,4 +137,4 @@ object AppConfig extends Logging {
   }
 }
 
-case class RemoteApplicationConfig(url: String, username: String, password: String, path: String, ticketConsumerPath: String)
+case class RemoteApplicationConfig(url: String, username: String, password: String, ticketConsumerPath: String, config: Config)
