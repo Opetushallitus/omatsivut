@@ -293,6 +293,16 @@
           hakemus2.questionsForApplication().enterAnswer(1, "24")
         }
       })
+
+      describe("Hakutoiveen korvaaminen harkinnanvaraisuuteen perustuvalla valinnalla", function() {
+        before(
+          hakemus2.getPreference(0).remove,
+          hakemus2.waitValidationError
+        )
+
+        it("epäonnistuu", function() { // TODO
+        })
+      })
     })
 
     describe("Lisäkysymykset", function() {
