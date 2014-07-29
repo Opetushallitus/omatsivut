@@ -7,7 +7,7 @@ import fi.vm.sade.omatsivut.domain.Hakemus._
 case class PeruskouluFixture(appConfig: AppConfig) {
   private val dao = appConfig.springContext.applicationDAO
   def apply {
-    val application: Application = dao.find(new Application().setOid("1.2.246.562.11.00000441368")).get(0)
+    val application: Application = dao.find(new Application().setOid(TestFixture.hakemus2)).get(0)
 
     val answers: Answers = Map(
       ("koulutustausta" ->

@@ -26,6 +26,21 @@
     "Koulutus-id-vocational": "true",
     "Koulutus-id-educationcode": "koulutus_039996",
     "Koulutus-id-athlete": "false"
+    },
+
+  "1.2.246.562.14.2014040912353139913320": {
+    "Opetuspiste": "Ahlmanin ammattiopisto",
+    "Opetuspiste-id": "1.2.246.562.10.60222091211",
+    "Koulutus": "Ammattistartti",
+    "Koulutus-id": "1.2.246.562.14.2014040912353139913320",
+    "Koulutus-educationDegree": "32",
+    "Koulutus-id-lang": "FI",
+    "Koulutus-id-sora": "false",
+    "Koulutus-id-aoIdentifier": "028",
+    "Koulutus-id-kaksoistutkinto": "false",
+    "Koulutus-id-vocational": "true",
+    "Koulutus-id-educationcode": "koulutus_039996",
+    "Koulutus-id-athlete": "false"
   },
   "1.2.246.562.5.31982630126": {
     "Opetuspiste": "Ypäjän Hevosopisto",

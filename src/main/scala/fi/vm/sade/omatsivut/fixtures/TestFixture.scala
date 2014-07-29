@@ -29,5 +29,6 @@ object TestFixture {
   def hakemus = HakemusConverter.convertToHakemus(Some(haku))(application)
 
   val ammattistartti: Hakutoive = JsonFixtureMaps.find[Hakutoive]("/mockdata/hakutoiveet.json", "1.2.246.562.14.2014030415375012208392")
+  val ammattistarttiAhlman: Hakutoive = JsonFixtureMaps.find[Hakutoive]("/mockdata/hakutoiveet.json", "1.2.246.562.14.2014040912353139913320")
   val hevostalous: Hakutoive = JsonFixtureMaps.find[Hakutoive]("/mockdata/hakutoiveet.json", "1.2.246.562.5.31982630126")
 }

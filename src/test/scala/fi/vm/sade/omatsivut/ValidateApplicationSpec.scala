@@ -1,7 +1,7 @@
 package fi.vm.sade.omatsivut
 
 import fi.vm.sade.omatsivut.domain._
-import fi.vm.sade.omatsivut.fixtures.TestFixture
+import fi.vm.sade.omatsivut.fixtures.{FixtureImporter, TestFixture}
 import fi.vm.sade.omatsivut.fixtures.TestFixture._
 import fi.vm.sade.omatsivut.servlet.ApplicationsServlet
 import org.json4s._
@@ -22,6 +22,21 @@ class ValidateApplicationSpec extends HakemusApiSpecification {
         // TODO: test with added hakutoive -> some questions
         // TODO: test answer validation (pass/fail cases)
         // TODO: test that accepts unknown answers
+      }
+    }
+
+    "support follow-up questions" in {
+      FixtureImporter().applyFixtures("peruskoulu")
+      withHakemus(TestFixture.hakemus2) { hakemus =>
+        val modified = addHakutoive(ammattistarttiAhlman)(hakemus)
+        validate(modified) { (errors, structuredQuestions) =>
+          QuestionNode.flatten(structuredQuestions).map(_.id) must_== List(
+            QuestionId("hakutoiveet","preference3-discretionary"),
+            QuestionId("lisatiedot","TYOKOKEMUSKUUKAUDET")
+
+            // TODO: answer to "preference3-discretionary" then verify that "preference3-discretionary-followup" question appears
+          )
+        }
       }
     }
 
