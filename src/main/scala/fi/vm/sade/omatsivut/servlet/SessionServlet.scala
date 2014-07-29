@@ -10,8 +10,16 @@ import fi.vm.sade.omatsivut.auditlog.AuditLogger
 class SessionServlet(implicit val appConfig: AppConfig) extends OmatSivutServletBase with AuthCookieParsing {
   get("/initsession") {
     request.getHeaderNames.asScala.toList.map(h => logger.info(h + ": " + request.getHeader(h)))
-    createAuthCookieCredentials match {
-      case Some(credentials) => createAuthCookieResponse(credentials)
+    checkCredentials match {
+      case (Some(oid), Some(cookie)) => {
+        val credentials: CookieCredentials = CookieCredentials(oid, cookie)
+        AuditLogger.logCreateSession(credentials)
+        createAuthCookieResponse(credentials)
+      }
+      case (None, Some(cookie)) => {
+        logger.warn("No user OID found. Cookie: " + cookie)
+        resourceNotFound()
+      }
       case _ => response.redirect(appConfig.authContext.ssoContextPath + "/Shibboleth.sso/LoginFI") //TODO Localization
     }
   }
@@ -24,23 +32,12 @@ class SessionServlet(implicit val appConfig: AppConfig) extends OmatSivutServlet
     }
   }
 
-  private def createAuthCookieCredentials: Option[CookieCredentials] = {
-    checkCredentials match {
-      case Some((oid, cookie)) => {
-        val credentials: CookieCredentials = CookieCredentials(oid, cookie)
-        AuditLogger.logCreateSession(credentials)
-        Some(credentials)
-      }
-      case _ => None
-    }
-  }
-
-  private def checkCredentials = {
-    for {
+  private def checkCredentials: (Option[String], Option[ShibbolethCookie]) = {
+    val oid = for {
       hetu <- findHetuFromParams
-      cookie <- shibbolethCookieInRequest(request)
       oid <- AuthenticationInfoService.apply.getHenkiloOID(hetu)
-    } yield (oid, cookie)
+    } yield oid
+    (oid, shibbolethCookieInRequest(request))
   }
 
   private def createAuthCookieResponse(credentials: CookieCredentials) {
