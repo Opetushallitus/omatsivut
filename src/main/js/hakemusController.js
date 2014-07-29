@@ -16,10 +16,10 @@ module.exports = function(listApp) {
 
     $scope.$watch("application.getHakutoiveWatchCollection()", function(hakutoiveet, oldHakutoiveet) {
       // Skip initial values angular style
-      if (!_.isEqual(hakutoiveet, oldHakutoiveet))
+      if (!_.isEqual(hakutoiveet, oldHakutoiveet)) {
         applicationChanged()
-
-      validateHakutoiveet()
+        validateHakutoiveet()
+      }
     }, true)
 
     $scope.$watch("application.getAnswerWatchCollection()", function(answers, oldAnswers) {
