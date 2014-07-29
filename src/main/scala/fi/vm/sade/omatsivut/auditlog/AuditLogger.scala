@@ -5,17 +5,17 @@ import fi.vm.sade.omatsivut.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.Logging
 import fi.vm.sade.omatsivut.domain.Hakemus
 import fi.vm.sade.omatsivut.domain.Hakemus.Answers
-import fi.vm.sade.omatsivut.security.ShibbolethCookie
+import fi.vm.sade.omatsivut.security.CookieCredentials
 
 object AuditLogger extends Logging  {
   private def auditLogger(implicit appConfig: AppConfig) = appConfig.springContext.auditLogger
   private val systemName = "omatsivut"
   
-  def logCreateSession(userOid: String, cookie: ShibbolethCookie)(implicit appConfig: AppConfig) {
+  def logCreateSession(credentials: CookieCredentials)(implicit appConfig: AppConfig) {
     withErrorLogging {
-      val tapahtuma = Tapahtuma.createCREATE(systemName, userOid, "Session", "Luotu sessio ShibbolethCookiella: " + cookie.toString )
+      val tapahtuma = Tapahtuma.createTRACE(systemName, "Session", "Luotu eväste sisällöllä: " + credentials.toString, System.currentTimeMillis())
       auditLogger.log(tapahtuma)
-    }("Could not logCreateSession for " + userOid)
+    }("Could not logCreateSession for " + credentials.oid)
   }
 
   def logUpdatedHakemus(userOid: String, applicationOid: String, originalAnswers: Answers, updatedAnswers: Answers)(implicit appConfig: AppConfig) {
