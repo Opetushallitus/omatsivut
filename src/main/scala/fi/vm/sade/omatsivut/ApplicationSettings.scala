@@ -7,26 +7,17 @@ import com.typesafe.config.{ConfigException, Config, ConfigFactory}
 import scala.collection.JavaConversions._
 
 object ApplicationSettings extends Logging {
-  def loadSettings(fileLocations: List[String]): ApplicationSettings = {
-    fileLocations.flatMap(getFile).headOption match {
-      case Some(configFile) =>
-        logger.info("Using configuration file " + configFile)
-        val settings: Config = ConfigFactory.load(ConfigFactory.parseFile(configFile))
-        val applicationSettings = new ApplicationSettings(settings)
-        applicationSettings
-      case None =>
-        throw new RuntimeException("Configuration file missing. Please set the omatsivut.configFile property correctly, or make sure you have one of the following: " + fileLocations)
-    }
-  }
-
-  private def getFile(name: String): List[File] = {
-    if (new File(name).exists) {
-      List(new File(name))
+  def loadSettings(fileLocation: String): ApplicationSettings = {
+    val configFile = new File(fileLocation)
+    if (configFile.exists()) {
+      logger.info("Using configuration file " + configFile)
+      val settings: Config = ConfigFactory.load(ConfigFactory.parseFile(configFile))
+      val applicationSettings = new ApplicationSettings(settings)
+      applicationSettings
     } else {
-      Nil
+      throw new RuntimeException("Configuration file not found: " + fileLocation)
     }
   }
-
 }
 class ApplicationSettings(config: Config) {
   val casTicketUrl = config.getString("omatsivut.cas.ticket.url")
