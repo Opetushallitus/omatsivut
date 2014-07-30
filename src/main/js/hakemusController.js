@@ -63,7 +63,7 @@ module.exports = function(listApp) {
           setStatusMessage(localization("validationFailed_httpError"), "error")
         }
 
-        if (data.questions)
+        if (data.questions) // frontside validation does not include questions -> don't update // TODO: testikeissi tälle (vastaa kysymykseen, aiheuta fronttivalidaatiovirhe)
           $scope.application.importQuestions(data.questions)
         if (data.errors)
           updateValidationMessages(data.errors, true)
