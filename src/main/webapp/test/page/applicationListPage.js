@@ -256,7 +256,7 @@ function ApplicationListPage() {
         return el().find("input").is(":visible")
       },
       isMovable: function() {
-        return !(arrowDown().hasClass("disabled") && arrowUp().hasClass("disabled"))
+        return !(arrowDown().prop("disabled") && arrowUp().prop("disabled"))
       },
       errorMessage: function() {
         return el().find(".error").text()
