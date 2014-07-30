@@ -1,7 +1,5 @@
 var QuestionItem = require('./additionalQuestion').AdditionalQuestion
 var QuestionGroup = require('./additionalQuestion').AdditionalQuestionGroup
-var util = require('./util')
-var domainUtil = require('./domainUtil')
 
 module.exports = function(listApp) {
   listApp.factory("applicationValidator", ["$http", function($http) {

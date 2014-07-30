@@ -1,6 +1,6 @@
 var Hakutoive = require('./hakutoive')
+var AdditionalQuestion = require('./additionalQuestion').AdditionalQuestion
 var util = require('./util')
-var domainUtil = require('./domainUtil')
 
 function Hakemus(json) {
   _.extend(this, json)
@@ -41,7 +41,7 @@ Hakemus.prototype = {
 
     function getAnswers() {
       var answers = {};
-      _(domainUtil.questionMap(self.additionalQuestions)).each(function(questionNode, key) {
+      _(AdditionalQuestion.questionMap(self.additionalQuestions)).each(function(questionNode, key) {
         answers[questionNode.question.id.phaseId] = answers[questionNode.question.id.phaseId] || {}
         var answer = questionNode.answer
         if (_.isObject(answer)) {
@@ -91,7 +91,7 @@ Hakemus.prototype = {
   },
 
   getAnswerWatchCollection: function() {
-    return _(domainUtil.questionMap(this.additionalQuestions)).map(function(item, key) { return item.answer })
+    return _(AdditionalQuestion.questionMap(this.additionalQuestions)).map(function(item, key) { return item.answer })
   },
 
   moveHakutoive: function(from, to) {
@@ -120,8 +120,8 @@ Hakemus.prototype = {
 
   importQuestions: function(questions) {
     this.additionalQuestions = (function mergeOldAnswers(old, questions) {
-      var oldQuestions = domainUtil.questionMap(old)
-      _(domainUtil.questionMap(questions)).each(function(newQuestion, id) {
+      var oldQuestions = AdditionalQuestion.questionMap(old)
+      _(AdditionalQuestion.questionMap(questions)).each(function(newQuestion, id) {
         if (oldQuestions[id] != null)
           newQuestion.answer = oldQuestions[id].answer
       })
@@ -131,8 +131,8 @@ Hakemus.prototype = {
 
   updateValidationMessages: function(errors, skipQuestions) {
     var errorMap = util.mapArray(errors, "key", "message")
-    var questionMap = domainUtil.questionMap(this.additionalQuestions)
-    var hakutoiveMap = domainUtil.hakutoiveMap(this.hakutoiveet)
+    var questionMap = AdditionalQuestion.questionMap(this.additionalQuestions)
+    var hakutoiveMap = Hakutoive.hakutoiveMap(this.hakutoiveet)
     var unhandled = []
 
     clearErrors()
@@ -155,8 +155,8 @@ Hakemus.prototype = {
         if (!skipQuestions)
           questionMap[questionId].appendErrors(errors)
         return true
-      } else if (domainUtil.isHakutoiveError(questionId)) {
-        hakutoiveMap[domainUtil.questionIdToHakutoiveId(questionId)].appendErrors(errors)
+      } else if (Hakutoive.isHakutoiveError(questionId)) {
+        hakutoiveMap[Hakutoive.questionIdToHakutoiveId(questionId)].appendErrors(errors)
         return true
       } else {
         return false

@@ -1,5 +1,5 @@
 var Hakemus = require("./hakemus")
-var domainUtil = require("./domainUtil")
+var Hakutoive = require("./hakutoive")
 
 module.exports = function(listApp) {
   listApp.controller("hakemusController", ["$scope", "$element", "$http", "applicationsResource", "applicationValidator", "settings", "debounce", "localization", function ($scope, $element, $http, applicationsResource, applicationValidator, settings, debounce, localization) {
@@ -51,7 +51,7 @@ module.exports = function(listApp) {
         if (!data.statusCode) { // validointi epäonnistui frontendissä
           setStatusMessage(localization("validationFailed"), "error")
         } else if (data.statusCode === 200) {
-          $scope.isSaveable = !domainUtil.hasHakutoiveErrors(data.errors)
+          $scope.isSaveable = !Hakutoive.hasHakutoiveErrors(data.errors)
           setStatusMessage(localization("validationFailed"), "error")
         } else if (data.statusCode == 401) {
           $scope.isSaveable = true

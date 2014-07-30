@@ -1,3 +1,5 @@
+var util = require('./util')
+
 function AdditionalQuestion(question, validationErrors) {
   this.question = question
   this.errors = validationErrors
@@ -17,6 +19,11 @@ AdditionalQuestion.prototype = {
   appendErrors: function(errors) {
     this.errors = this.errors.concat(errors)
   }
+}
+
+AdditionalQuestion.questionMap = function(questions) {
+  questions = util.flattenTree(questions, "questionNodes")
+  return util.indexBy(questions, function(node) { return node.question.id.questionId })
 }
 
 function initialValue(questionNode) {

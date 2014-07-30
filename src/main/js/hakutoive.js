@@ -1,3 +1,5 @@
+var util = require('./util')
+
 function Hakutoive(json) {
   this.data = json
   this.isModified = false
@@ -79,4 +81,23 @@ Hakutoive.prototype = {
   }
 }
 
+var hakutoiveErrorRegexp = /^(preference\d)$|^(preference\d)-Koulutus$/
+Hakutoive.isHakutoiveError = function(questionId) {
+  return hakutoiveErrorRegexp.test(questionId)
+}
+
+Hakutoive.hasHakutoiveErrors = function(errorsJson) {
+  var errorMap = util.mapArray(errorsJson, "key", "message");
+  var self = this
+  return _(errorMap).any(function(val, key) {
+    return self.isHakutoiveError(key) && val.length > 0
+  })
+}
+
+Hakutoive.hakutoiveMap = function(hakutoiveet) {
+  return util.indexBy(hakutoiveet, function(hakutoive, index) { return "preference" + (index+1) })
+}
+Hakutoive.questionIdToHakutoiveId = function(questionId) {
+  return _.chain(hakutoiveErrorRegexp.exec(questionId)).rest().without(undefined).first().value()
+}
 module.exports = Hakutoive
