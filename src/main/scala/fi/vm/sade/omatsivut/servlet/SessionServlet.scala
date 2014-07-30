@@ -1,13 +1,13 @@
 package fi.vm.sade.omatsivut.servlet
 
 import fi.vm.sade.omatsivut.AppConfig.AppConfig
+import fi.vm.sade.omatsivut.auditlog.{AuditLogger, Login}
 import fi.vm.sade.omatsivut.security._
-import org.scalatra.{Cookie, CookieOptions}
-import org.scalatra.servlet.RichResponse
-import scala.collection.JavaConverters._
-import fi.vm.sade.omatsivut.auditlog.{Login, AuditLogger}
+import org.scalatra.Cookie
 
-class SessionServlet(implicit val appConfig: AppConfig) extends OmatSivutServletBase with AuthCookieParsing with ShibbolethLogout {
+import scala.collection.JavaConverters._
+
+class SessionServlet(implicit val appConfig: AppConfig) extends OmatSivutServletBase with AuthCookieParsing {
   get("/initsession") {
     request.getHeaderNames.asScala.toList.map(h => logger.info(h + ": " + request.getHeader(h)))
     checkCredentials match {
@@ -18,7 +18,7 @@ class SessionServlet(implicit val appConfig: AppConfig) extends OmatSivutServlet
       }
       case (None, Some(cookie)) => {
         logger.warn("No user OID found. Cookie: " + cookie)
-        redirectToShibbolethLogout(request, response)
+        response.redirect(request.getContextPath + "/userError.html")
       }
       case _ => response.redirect(appConfig.authContext.ssoContextPath + "/Shibboleth.sso/LoginFI") //TODO Localization
     }
