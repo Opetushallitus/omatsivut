@@ -65,8 +65,8 @@ module.exports = function(listApp) {
 
         if (data.questions) // frontside validation does not include questions -> don't update // TODO: testikeissi tälle (vastaa kysymykseen, aiheuta fronttivalidaatiovirhe)
           $scope.application.importQuestions(data.questions)
-        if (data.errors)
-          updateValidationMessages(data.errors, true)
+
+        updateValidationMessages(data.errors, true)
       }
     }
 
