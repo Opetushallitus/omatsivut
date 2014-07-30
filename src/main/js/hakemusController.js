@@ -37,8 +37,8 @@ module.exports = function(listApp) {
 
     function validateHakutoiveet() {
       setStatusMessage("", "pending")
-      applicationValidator($scope.application, success, error)
       $scope.isSaveable = false
+      applicationValidator($scope.application, success, error)
 
       function success(data) {
         $scope.isSaveable = true
