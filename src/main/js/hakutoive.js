@@ -60,7 +60,7 @@ Hakutoive.prototype = {
   },
 
   isValid: function() {
-    return (!this.errors.length) && (_.isEmpty(this.data["Opetuspiste"]) || !_.isEmpty(this.data["Koulutus-id"]))
+    return (_.isEmpty(this.data["Opetuspiste"]) || !_.isEmpty(this.data["Koulutus-id"]))
   },
 
   setErrors: function(errors) {

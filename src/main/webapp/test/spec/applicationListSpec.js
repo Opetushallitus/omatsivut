@@ -209,15 +209,15 @@
           })
         })
 
-        describe("kun valitaan eri hakukohde", function() {
-          before(replacePreference(hakemus1, 1, "Etelä-Savon ammattiopisto"))
+        describe("kun ensimmäinen hakukohde poistetaan", function() {
+          before(hakemus1.getPreference(0).remove)
 
           it("lomakkeen voi tallentaa", function() {
             hakemus1.saveButton(0).isEnabled().should.be.true
           })
 
           it("poistetaan validointivirhe", function() {
-            hakemus1.getPreference(1).errorMessage().should.equal("")
+            hakemus1.getPreference(0).errorMessage().should.equal("")
           })
         })
       })
