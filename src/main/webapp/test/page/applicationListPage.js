@@ -241,6 +241,7 @@ function ApplicationListPage() {
 
         return wait.until(function() { return element.parent().length === 0 })()
           .then(wait.until(function() { return parent.children().length === itemCount })) // wait until a new element has been inserted
+          .then(wait.forAngular)
       },
       canRemove: function() {
         return el().find(".delete-btn").is(":visible")

@@ -328,26 +328,27 @@
         })
       })
 
+      var questions1 = [
+        'Testikysymys, avaoin vastaus kenttä (pakollinen)?',
+        'Valitse kahdesta vaihtoehdosta paremmin itsellesi sopiva?',
+        'Mikä tai mitkä ovat mielestäsi parhaiten soveltuvat vastausket?',
+        'Kotikunta',
+        'Minkä koulutuksen olet suorittanut ulkomailla?',
+        'Valitse parhaat vaihtoehdot valittavista vaihtoehdoista?',
+        'Testivalintakysymys arvosanat',
+        'Testikysymys arvosanat, avoin vastaus',
+        'Testikysymys lupatiedot-kohta avoin vastaus',
+        'Testikysymys valitse vaihtoehdoista paras tai parhaat',
+        'Testikysymys valitse toinen vaihtoehdoista' ]
+
+      var questions2 = [
+        'Miksi haet kymppiluokalle?',
+        'Haen ensisijaisesti kielitukikympille?',
+        'Päättötodistuksen kaikkien oppiaineiden keskiarvo?',
+        'Päättötodistukseni on' ]
+
+
       describe("Lisäkysymyksien näyttäminen", function() {
-        var questions1 = [
-          'Testikysymys, avaoin vastaus kenttä (pakollinen)?',
-          'Valitse kahdesta vaihtoehdosta paremmin itsellesi sopiva?',
-          'Mikä tai mitkä ovat mielestäsi parhaiten soveltuvat vastausket?',
-          'Kotikunta',
-          'Minkä koulutuksen olet suorittanut ulkomailla?',
-          'Valitse parhaat vaihtoehdot valittavista vaihtoehdoista?',
-          'Testivalintakysymys arvosanat',
-          'Testikysymys arvosanat, avoin vastaus',
-          'Testikysymys lupatiedot-kohta avoin vastaus',
-          'Testikysymys valitse vaihtoehdoista paras tai parhaat',
-          'Testikysymys valitse toinen vaihtoehdoista' ]
-
-        var questions2 = [
-          'Miksi haet kymppiluokalle?',
-          'Haen ensisijaisesti kielitukikympille?',
-          'Päättötodistuksen kaikkien oppiaineiden keskiarvo?',
-          'Päättötodistukseni on' ]
-
         before(
           page.resetDataAndOpen,
           hakemus1.getPreference(1).remove,
@@ -365,8 +366,14 @@
           before(replacePreference(hakemus1, 1, "Etelä-Savon ammattiopisto"))
 
           it("lisäkysymykset näytetään", function() {
-            var questionTitles = hakemus1.questionsForApplication().titles()
-            expect(questionTitles).to.deep.equal(questions1)
+            expect(hakemus1.questionsForApplication().titles()).to.deep.equal(questions1)
+          })
+
+          describe("kun hakutoive poistetaan", function() {
+            before(hakemus1.getPreference(1).remove)
+            it("lisäkysymykset piilotetaan", function () {
+              expect(hakemus1.questionsForApplication().titles()).to.deep.equal([])
+            })
           })
         })
 
@@ -520,6 +527,25 @@
           })
         })
 
+        describe("Kun vastataan tallentamatta ja muokataan hakutoiveita", function() {
+          before(
+            page.resetDataAndOpen,
+            replacePreference(hakemus1, 2, "Etelä-Savon ammattiopisto"),
+            answerAllQuestions,
+            hakemus1.getPreference(1).remove,
+            hakemus1.getPreference(2).searchOpetusPiste("qwer")
+          )
+
+          it("kysymykset pysyvät näkyvillä, jos muutoksilla ei vaikutusta kysymyksiin", function() {
+            var questionTitles = hakemus1.questionsForApplication().titles()
+            expect(questionTitles).to.deep.equal(questions1)
+          })
+
+          it("vastaus pysyy näkyvillä, jos muutoksilla ei vaikutusta kysymyksiin", function() {
+            hakemus1.questionsForApplication().getAnswer(0).should.equal("tekstivastaus 1")
+          })
+
+        })
         function answerAllQuestions() {
           hakemus1.questionsForApplication().enterAnswer(0, "tekstivastaus 1")
           hakemus1.questionsForApplication().enterAnswer(1, "Vaihtoehto x 1")
