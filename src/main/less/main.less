@@ -40,6 +40,9 @@
   font-size: 25px;
   color: @button-background;
   cursor: pointer;
+  background: transparent;
+  border: none;
+  box-shadow: none;
 
   &:before {
     content: @symbol;
@@ -47,7 +50,7 @@
   &:hover:before {
     color: @button-hover-background-color;
   }
-  &.disabled:before {
+  &[disabled]:before {
     color: #eee;
   }
 }
@@ -108,10 +111,6 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-}
-
-input:focus, button:focus {
-  outline: 0;
 }
 
 ul {
@@ -370,13 +369,15 @@ button.delete-btn:not(.confirm) {
 
   .sort-arrow-down {
     .arrow-button(@arrow-down);
-    bottom: -35px;
+    bottom: -10px;
+    left: -13px;
     position: absolute;
   }
 
   .sort-arrow-up {
     .arrow-button(@arrow-up);
-    top: -35px;
+    top: -10px;
+    left: -13px;
     position: absolute;
   }
 

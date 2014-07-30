@@ -111,6 +111,16 @@ listApp.directive("highlightSave", function() {
   };
 });
 
+listApp.directive("disableClickFocus", function() {
+  return {
+    link: function (scope, element) {
+      element.on("mousedown", function(event) {
+        event.preventDefault()
+      })
+    }
+  }
+})
+
 listApp.directive("confirm", function () {
   return {
     scope: {
@@ -135,7 +145,8 @@ listApp.directive("confirm", function () {
           element.addClass("confirm");
           element.text(attrs.confirmText);
           $("body").one("click.cancelConfirm", cancel);
-          element.one("mouseout.cancelConfirm", cancel);
+          element.one("mouseout.cancelConfirm", function() { element.blur() });
+          element.one("blur.cancelConfirm", cancel);
           element.fadeIn(100)
         }
         return false;
