@@ -1,8 +1,9 @@
-package fi.vm.sade.omatsivut.servlet
+package fi.vm.sade.omatsivut.servlet.session
 
 import fi.vm.sade.omatsivut.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.auditlog.{AuditLogger, Login}
 import fi.vm.sade.omatsivut.security._
+import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
 import org.scalatra.Cookie
 
 import scala.collection.JavaConverters._

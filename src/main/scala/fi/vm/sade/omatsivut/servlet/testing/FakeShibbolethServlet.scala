@@ -1,7 +1,8 @@
-package fi.vm.sade.omatsivut.servlet
+package fi.vm.sade.omatsivut.servlet.testing
 
 import fi.vm.sade.omatsivut.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.security.AuthCookieParsing
+import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
 
 class FakeShibbolethServlet(implicit val appConfig: AppConfig) extends OmatSivutServletBase with AuthCookieParsing  {
   if(appConfig.usesFakeAuthentication){

@@ -1,4 +1,6 @@
-package fi.vm.sade.omatsivut.servlet
+package fi.vm.sade.omatsivut.servlet.session
+
+import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
 
 class SessionServlet extends OmatSivutServletBase {
   get("/reset") {

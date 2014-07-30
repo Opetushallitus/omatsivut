@@ -1,8 +1,9 @@
-package fi.vm.sade.omatsivut.servlet
+package fi.vm.sade.omatsivut.servlet.testing
 
 import fi.vm.sade.omatsivut.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.fixtures.FixtureImporter
-import fi.vm.sade.omatsivut.security.{ShibbolethCookie, AuthenticationCipher, AuthenticationInfoService}
+import fi.vm.sade.omatsivut.security.{AuthenticationCipher, ShibbolethCookie}
+import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
 import org.scalatra.{Cookie, CookieOptions}
 
 class TestHelperServlet(implicit val appConfig: AppConfig) extends OmatSivutServletBase  {

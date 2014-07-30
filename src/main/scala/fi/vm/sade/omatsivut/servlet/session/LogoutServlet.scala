@@ -1,8 +1,9 @@
-package fi.vm.sade.omatsivut.servlet
+package fi.vm.sade.omatsivut.servlet.session
 
 import fi.vm.sade.omatsivut.AppConfig.AppConfig
-import fi.vm.sade.omatsivut.auditlog.{Logout, AuditLogger}
-import fi.vm.sade.omatsivut.security.{CookieCredentials, AuthCookieParsing}
+import fi.vm.sade.omatsivut.auditlog.{AuditLogger, Logout}
+import fi.vm.sade.omatsivut.security.{AuthCookieParsing, CookieCredentials}
+import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
 
 class LogoutServlet(implicit val appConfig: AppConfig) extends OmatSivutServletBase with AuthCookieParsing with ShibbolethPaths {
   get("/*") {

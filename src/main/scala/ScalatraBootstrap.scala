@@ -3,6 +3,8 @@ import javax.servlet.ServletContext
 import fi.vm.sade.omatsivut.AppConfig.AppConfig
 import fi.vm.sade.omatsivut._
 import fi.vm.sade.omatsivut.servlet._
+import fi.vm.sade.omatsivut.servlet.session.{SecuredSessionServlet, SessionServlet, LogoutServlet, LoginServlet}
+import fi.vm.sade.omatsivut.servlet.testing.{FakeShibbolethServlet, TestHelperServlet}
 import org.scalatra._
 
 class ScalatraBootstrap extends LifeCycle {

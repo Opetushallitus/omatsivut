@@ -1,7 +1,8 @@
-package fi.vm.sade.omatsivut.servlet
+package fi.vm.sade.omatsivut.servlet.session
+
+import javax.servlet.http.HttpServletRequest
 
 import fi.vm.sade.omatsivut.AppConfig.AppConfig
-import javax.servlet.http.HttpServletRequest
 import org.scalatra.servlet.RichResponse
 
 trait ShibbolethPaths {
