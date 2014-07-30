@@ -13,7 +13,7 @@ class SessionServlet(implicit val appConfig: AppConfig) extends OmatSivutServlet
     checkCredentials match {
       case (Some(oid), Some(cookie)) => {
         val credentials: CookieCredentials = CookieCredentials(oid, cookie)
-        AuditLogger.auditLog(Login(credentials))
+        AuditLogger.log(Login(credentials))
         createAuthCookieResponse(credentials)
       }
       case (None, Some(cookie)) => {

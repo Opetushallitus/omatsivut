@@ -6,7 +6,7 @@ import fi.vm.sade.omatsivut.Logging
 object AuditLogger extends Logging  {
   private def auditLogger(implicit appConfig: AppConfig) = appConfig.springContext.auditLogger
 
-  def auditLog(audit: AuditEvent)(implicit appConfig: AppConfig) {
+  def log(audit: AuditEvent)(implicit appConfig: AppConfig) {
     withErrorLogging {
       auditLogger.log(audit.toTapahtuma)
     }(audit.toLogMessage)
