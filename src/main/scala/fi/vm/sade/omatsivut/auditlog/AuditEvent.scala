@@ -4,7 +4,7 @@ import fi.vm.sade.log.model.Tapahtuma
 import fi.vm.sade.omatsivut.domain.Hakemus.Answers
 import fi.vm.sade.omatsivut.security.CookieCredentials
 
-trait AuditEvent {
+sealed trait AuditEvent {
   def target: String
   def targetType: String
   def systemName = "omatsivut"
