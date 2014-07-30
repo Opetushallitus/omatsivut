@@ -3,7 +3,7 @@ package fi.vm.sade.omatsivut
 import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.omatsivut.security.ShibbolethCookie
 import org.scalatra.test.specs2.MutableScalatraSpec
-import fi.vm.sade.omatsivut.servlet.SessionServlet
+import fi.vm.sade.omatsivut.servlet.SecuredSessionServlet
 
 class SessionServletSpec extends MutableScalatraSpec {
   "GET /secure/initsession" should {
@@ -26,5 +26,5 @@ class SessionServletSpec extends MutableScalatraSpec {
     }
   }
 
-  addServlet(new SessionServlet()(new AppConfig.IT), "/secure")
+  addServlet(new SecuredSessionServlet()(new AppConfig.IT), "/secure")
 }
