@@ -7,8 +7,14 @@ module.exports = function(listApp) {
 
     function success(data) {
       $scope.applications = _.map(data, function(json) { return new Hakemus(json) })
-      $scope.applicationStatusMessage = "";
-      $scope.applicationStatusMessageType = "";
+      if($scope.applications.length > 0) {
+        $scope.applicationStatusMessage = "";
+        $scope.applicationStatusMessageType = "";
+      }
+      else {
+        $scope.applicationStatusMessage = localization("noApplications");
+        $scope.applicationStatusMessageType = "info";
+      }
     }
 
     function error(err) {

@@ -11,10 +11,7 @@ import fi.vm.sade.omatsivut.http.DefaultHttpClient
 object AuthenticationInfoService {
   def apply(implicit appConfig: AppConfig): AuthenticationInfoService = appConfig match {
     case x: MockAuthentication => new AuthenticationInfoService {
-      def getHenkiloOID(hetu: String) = hetu match {
-        case TestFixture.testHetu => Some(TestFixture.personOid)
-        case _ => None
-      }
+      def getHenkiloOID(hetu: String) = TestFixture.persons.get(hetu)
     }
     case _ => new RemoteAuthenticationInfoService(appConfig.settings.authenticationServiceConfig)(appConfig)
   }

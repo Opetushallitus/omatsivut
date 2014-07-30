@@ -12,8 +12,11 @@ object TestFixture {
   val hakemus1 = "1.2.246.562.11.00000877107"
   val hakemus2 = "1.2.246.562.11.00000441368"
   val applicationSystemOid = "1.2.246.562.5.2014022711042555034240"
-  val personOid = "1.2.246.562.24.14229104472"
-  val testHetu = "010101-123N"
+  val testHetu =  "010101-123N"
+  val personOid =   "1.2.246.562.24.14229104472"
+  val testHetuWithNoApplications = "300794-937F"
+  val persons = Map((testHetu, personOid),
+                    (testHetuWithNoApplications, "1.2.246.562.24.79213463339"))
 
   lazy val (as, app) = {
     (new AppConfig.IT).withConfig { appConfig =>

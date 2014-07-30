@@ -2,20 +2,29 @@ function ApplicationListPage() {
   var testHetu = "010101-123N"
 
   var api = {
-    openPage: openPage("/omatsivut/", applicationPageVisible),
+    openPage: function(pageLoadedCheck) {
+      if (!pageLoadedCheck) {
+        pageLoadedCheck = applicationPageVisible
+      }
+      return openPage("/omatsivut/", pageLoadedCheck)
+    },
 
     resetDataAndOpen: function () {
-      return db.applyFixture().then(function() { return session.init(testHetu)} ).then(api.openPage)
+      return db.applyFixture().then(function() { return session.init(testHetu)} ).then(api.openPage())
     },
 
     applyFixtureAndOpen: function(fixtureName) {
       return function() {
-        return db.applyFixture(fixtureName).then(function() { return session.init(testHetu)} ).then(api.openPage)
+        return db.applyFixture(fixtureName).then(function() { return session.init(testHetu)} ).then(api.openPage())
       }
     },
 
     hetu: function () {
       return testHetu
+    },
+
+    listStatus: function () {
+      return S(".application-list-status").text().trim()
     },
 
     applications: function () {

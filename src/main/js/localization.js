@@ -7,6 +7,7 @@ module.exports = function(listApp) {
         loadingFailed_notLoggedIn: "Tietojen lataus epäonnistui: et ole kirjautunut sisään.",
         timestamp_applicationUpdated: "Hakemusta muokattu",
         timestamp_applicatonReceived: "Hakemus jätetty",
+        noApplications: "Sinulla ei ole hakemuksia, joita olis mahdollista muokata",
 
         validationFailed: "Täytä kaikki tiedot",
         validationFailed_httpError: "Tietojen haku epäonnistui. Yritä myöhemmin uudelleen.",
