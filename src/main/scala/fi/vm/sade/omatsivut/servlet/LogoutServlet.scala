@@ -1,7 +1,7 @@
 package fi.vm.sade.omatsivut.servlet
 
 import fi.vm.sade.omatsivut.AppConfig.AppConfig
-import fi.vm.sade.omatsivut.auditlog.AuditLogger
+import fi.vm.sade.omatsivut.auditlog.{Logout, AuditLogger}
 import fi.vm.sade.omatsivut.security.{CookieCredentials, AuthCookieParsing}
 
 class LogoutServlet(implicit val appConfig: AppConfig) extends OmatSivutServletBase with AuthCookieParsing with ShibbolethLogout {
@@ -13,7 +13,7 @@ class LogoutServlet(implicit val appConfig: AppConfig) extends OmatSivutServletB
   }
 
   def sendLogOut(credentials: CookieCredentials) {
-    AuditLogger.logLogout(credentials)
+    AuditLogger.auditLog(Logout(credentials))
     tellBrowserToDeleteAuthCookie(request, response)
     redirectToShibbolethLogout(request, response)
   }
