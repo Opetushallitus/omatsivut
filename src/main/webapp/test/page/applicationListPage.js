@@ -23,8 +23,8 @@ function ApplicationListPage() {
       return testHetu
     },
 
-    listStatus: function () {
-      return S(".application-list-status").text().trim()
+    listStatusInfo: function () {
+      return S(".application-list-status.info").text().trim()
     },
 
     applications: function () {

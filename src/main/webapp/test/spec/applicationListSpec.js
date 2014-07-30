@@ -10,7 +10,7 @@
   describe('Tyhjä hakemuslistaus', function () {
     var emptyPage = ApplicationListPage()
     function emptyApplicationPageVisible() {
-      return S("#hakemus-list").attr("ng-cloak") == null && emptyPage.listStatus().length > 0
+      return S("#hakemus-list").attr("ng-cloak") == null && emptyPage.listStatusInfo().length > 0
     }
 
     before(function (done) {
@@ -20,7 +20,7 @@
     describe("jos käyttäjällä ei ole hakemuksia", function() {
 
       it("näytetään ilmoitus", function() {
-        expect(page.listStatus()).to.equal('Sinulla ei ole hakemuksia, joita olis mahdollista muokata' )
+        expect(page.listStatusInfo()).to.equal('Sinulla ei ole hakemuksia, joita olis mahdollista muokata' )
       })
     })
   })
