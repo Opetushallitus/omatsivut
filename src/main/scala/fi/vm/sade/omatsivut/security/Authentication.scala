@@ -53,13 +53,18 @@ trait Authentication extends ScalatraBase with AuthCookieParsing with Logging {
 }
 
 trait AuthCookieParsing extends Logging {
+
   def authCookie(req: HttpServletRequest) = {
+    reqCookie(req, {_.getName == "auth"})
+  }
+
+  private def reqCookie(req: HttpServletRequest, matcher: (Cookie) => Boolean) = {
     for {
       cookies <- Option(req.getCookies)
-      auth <- cookies.find((c) => c.getName == "auth")
-    } yield auth
+      cookie <- cookies.find(matcher)
+    } yield cookie
   }
-  
+
   def parseCredentials(req: HttpServletRequest)(implicit appConfig: AppConfig): Option[CookieCredentials] = {
     authCookie(req) match {
       case Some(c) => {
@@ -77,14 +82,20 @@ trait AuthCookieParsing extends Logging {
     }
   }
 
-  def tellBrowserToDeleteAuthCookie(req: HttpServletRequest, res: HttpServletResponse){
-    Option(req.getCookies).map(cookies => {
-      cookies.find(_.getName == "auth").map(authCookie => {
-        authCookie.setPath("/")
-        authCookie.setMaxAge(0)
-        res.addCookie(authCookie)
-      })
+  private def tellBrowserToDeleteCookie(res: HttpServletResponse, cookie: Option[Cookie]) = {
+    cookie.map(c => {
+      c.setPath("/")
+      c.setMaxAge(0)
+      res.addCookie(c)
     })
+  }
+
+  def tellBrowserToDeleteShibbolethCookie(req: HttpServletRequest, res: HttpServletResponse) {
+    tellBrowserToDeleteCookie(res, reqCookie(req, {_.getName.startsWith("_shibsession_")}))
+  }
+
+  def tellBrowserToDeleteAuthCookie(req: HttpServletRequest, res: HttpServletResponse){
+    tellBrowserToDeleteCookie(res, authCookie(req))
   }
 
   def shibbolethCookieInRequest(req: HttpServletRequest): Option[ShibbolethCookie] = {

@@ -7,6 +7,7 @@ class FakeShibbolethServlet(implicit val appConfig: AppConfig) extends OmatSivut
   if(appConfig.usesFakeAuthentication){
     get("/Logout") {
       tellBrowserToDeleteAuthCookie(request, response)
+      tellBrowserToDeleteShibbolethCookie(request, response)
       paramOption("return") match {
         case Some(url) => response.redirect(url)
         case _ => redirectToFakeLogin
