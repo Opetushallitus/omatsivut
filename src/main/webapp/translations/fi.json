@@ -1,0 +1,24 @@
+{
+    "title.omat.hakemukset": "Omat hakemukseni",
+    "label.applicationPeriod": "Hakukausi",
+    "label.applicationReceived": "Hakemus jätetty",
+    "label.applicationUpdated": "Hakemusta muokattu",
+    "label.preferences": "Hakutoiveet",
+    "label.location": "Opetuspiste",
+    "label.education": "Koulutus",
+    "button.save": "Tallenna muutokset",
+
+    "message.loadingApplications": "Hakemuksia ladataan...",
+    "message.noApplications": "Sinulla ei ole hakemuksia, joita on mahdollista muokata.",
+    "message.changesSaved": "Kaikki muutokset tallennettu",
+    "message.sessionExpired": "Istunto on vanhentunut. Kirjaudu uudestaan sisään",
+
+    "error.loadingFailed": "Tietojen lataus epäonnistui. Yritä myöhemmin uudelleen.",
+    "error.loadingFailed.notLoggedIn": "Tietojen lataus epäonnistui: et ole kirjautunut sisään.",
+    "error.validationFailed": "Täytä kaikki tiedot",
+    "error.validationFailed.httpError": "Tietojen haku epäonnistui. Yritä myöhemmin uudelleen.",
+    "error.saveFailed": "Tallentaminen epäonnistui. Yritä myöhemmin uudelleen.",
+    "error.saveFailed.sessionExpired": "Tallentaminen epäonnistui, sillä istunto on vanhentunut. Kirjaudu uudestaan sisään.",
+    "error.saveFailed.validationError": "Ei tallennettu - vastaa ensin kaikkiin lisäkysymyksiin.",
+    "error.serverError": "Odottamaton virhe. Ota yhteyttä ylläpitoon."
+}

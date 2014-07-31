@@ -1,0 +1,24 @@
+{
+    "title.omat.hakemukset": "My applications",
+    "label.applicationPeriod": "Application period",
+    "label.applicationReceived": "Application created",
+    "label.applicationUpdated": "Last edited",
+    "label.preferences": "Preferences",
+    "label.location": "Location",
+    "label.education": "Educuation",
+    "button.save": "Save changes",
+
+    "message.loadingApplications": "Loading applications...",
+    "message.noApplications": "You don't have applications that can be edited.",
+    "message.changesSaved": "All changes saved.",
+    "message.sessionExpired": "Your session has expired. Please log in.",
+
+    "error.loadingFailed": "Loading data failed. Try again later.",
+    "error.loadingFailed.notLoggedIn": "Loading data failed: you are not logged in.",
+    "error.validationFailed": "Please fill all required information",
+    "error.validationFailed.httpError": "Couldn't load. Try again later.",
+    "error.saveFailed": "Save failed. Try again later.",
+    "error.saveFailed.sessionExpired": "Save failed because you session has expired. Please log in.",
+    "error.saveFailed.validationError": "Couldnt save - all additional questions must be answered.",
+    "error.serverError": "Unexpected error. Contact administrator."
+}
