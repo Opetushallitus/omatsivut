@@ -8,6 +8,10 @@ var listApp = angular.module('listApp', ["ngResource", "ngAnimate", "RecursionHe
   $locationProvider.html5Mode(false);
 });
 
+listApp.run(function ($rootScope, localization) {
+  $rootScope.localization = localization
+})
+
 require('./hakutoiveController')(listApp)
 require('./listController')(listApp)
 require('./hakemusController')(listApp)

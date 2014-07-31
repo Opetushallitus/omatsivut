@@ -1,12 +1,14 @@
 {
-    "title.omat.hakemukset": "My applications",
+    "title.omatHakemukset": "My applications",
     "label.applicationPeriod": "Application period",
     "label.applicationReceived": "Application created",
     "label.applicationUpdated": "Last edited",
     "label.preferences": "Preferences",
     "label.location": "Location",
     "label.education": "Educuation",
+    "label.chooseLocation": "First choose location",
     "button.save": "Save changes",
+    "button.delete": "Delete",
 
     "message.loadingApplications": "Loading applications...",
     "message.noApplications": "You don't have applications that can be edited.",

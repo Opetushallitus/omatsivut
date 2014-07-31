@@ -10,9 +10,9 @@ module.exports = function(listApp) {
 
     $scope.timestampLabel = function() {
       if ($scope.application.received == $scope.application.updated)
-        return localization("timestamp_applicationReceived")
+        return localization("label.applicationReceived")
       else
-        return localization("timestamp_applicationUpdated")
+        return localization("label.applicationUpdated")
     }
 
     $scope.$watch("application.getHakutoiveWatchCollection()", function(hakutoiveet, oldHakutoiveet) {
@@ -49,18 +49,18 @@ module.exports = function(listApp) {
 
       function error(data) {
         if (!data.statusCode) { // validointi epäonnistui frontendissä
-          setStatusMessage(localization("validationFailed"), "error")
+          setStatusMessage(localization("error.validationFailed"), "error")
         } else if (data.statusCode === 200) {
           $scope.isSaveable = !Hakutoive.hasHakutoiveErrors(data.errors)
-          setStatusMessage(localization("validationFailed"), "error")
+          setStatusMessage(localization("error.validationFailed"), "error")
         } else if (data.statusCode == 401) {
           $scope.isSaveable = true
-          setStatusMessage(localization("sessionExpired"), "error")
+          setStatusMessage(localization("error.sessionExpired"), "error")
         } else if (data.statusCode == 500) {
           $scope.isSaveable = true
-          setStatusMessage(localization("serverError"), "error")
+          setStatusMessage(localization("error.serverError"), "error")
         } else {
-          setStatusMessage(localization("validationFailed_httpError"), "error")
+          setStatusMessage(localization("error.validationFailed.httpError"), "error")
         }
 
         if (data.questions) // frontside validation does not include questions -> don't update // TODO: testikeissi tälle (vastaa kysymykseen, aiheuta fronttivalidaatiovirhe)
@@ -90,22 +90,22 @@ module.exports = function(listApp) {
         $scope.$emit("highlight-save", $scope.application.getChangedItems())
         $scope.application.setAsSaved(savedApplication)
         $scope.hasChanged = false
-        setStatusMessage(localization("changesSaved"), "success")
+        setStatusMessage(localization("message.changesSaved"), "success")
         updateValidationMessages([])
       }
 
       function onError(err) {
         var saveError = (function() {
           if (err.status == 400 && (_.isArray(err.data) && err.data.length > 0))
-            return "saveFailed_validationError"
+            return "error.saveFailed.validationError"
           else if (err.status == 400 && !(_.isArray(err.data) && err.data.length > 0))
-            return "serverError"
+            return "error.serverError"
           else if (err.status == 401)
-            return "saveFailed_sessionExpired"
+            return "error.saveFailed.sessionExpired"
           else if (err.status == 500)
-            return "serverError"
+            return "error.serverError"
           else
-            return "saveFailed"
+            return "error.saveFailed"
         })()
 
         setStatusMessage(localization(saveError), "error")
@@ -121,7 +121,7 @@ module.exports = function(listApp) {
           console.log("Validaatiovirhettä ei käsitelty:", item.questionId, item.errors)
         })
 
-        setStatusMessage(localization("serverError"), "error")
+        setStatusMessage(localization("error.serverError"), "error")
       }
     }
   }])

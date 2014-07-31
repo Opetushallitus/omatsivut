@@ -1,12 +1,14 @@
 {
-    "title.omat.hakemukset": "Omat hakemukseni",
+    "title.omatHakemukset": "Omat hakemukseni",
     "label.applicationPeriod": "Hakukausi",
     "label.applicationReceived": "Hakemus jätetty",
     "label.applicationUpdated": "Hakemusta muokattu",
     "label.preferences": "Hakutoiveet",
     "label.location": "Opetuspiste",
     "label.education": "Koulutus",
+    "label.chooseLocation": "Valitse ensin opetuspiste",
     "button.save": "Tallenna muutokset",
+    "button.delete": "Poista",
 
     "message.loadingApplications": "Hakemuksia ladataan...",
     "message.noApplications": "Sinulla ei ole hakemuksia, joita on mahdollista muokata.",

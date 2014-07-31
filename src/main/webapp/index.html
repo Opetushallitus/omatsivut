@@ -8,7 +8,7 @@
 <body>
     <div class="container">
         <div id="appRoot" ng-controller="listController">
-            <h1>Omat hakemukseni</h1>
+            <h1>{{ localization('title.omatHakemukset') }}</h1>
             <a href="login" target="_self">Kirjaudu sisään</a>
             <a href="logout" target="_self">Kirjaudu ulos</a>
 
@@ -20,14 +20,14 @@
                 <li ng-repeat="application in applications" class="application-list-item" ng-controller="hakemusController" highlight-save>
                     <h2>{{application.haku.name }}</h2>
                     <p ng-repeat="period in application.haku.applicationPeriods">
-                      Hakukausi: {{period.start | date:'dd.MM.yyyy HH:mm'}} - {{period.end | date:'dd.MM.yyyy HH:mm'}}</p>
+                      {{ localization('label.applicationPeriod') }}: {{period.start | date:'dd.MM.yyyy HH:mm'}} - {{period.end | date:'dd.MM.yyyy HH:mm'}}</p>
                     </p>
                     <p class="timestamp">{{ timestampLabel() }} <time>{{ application.updated | date:'dd.MM.yyyy HH:mm:ss' }}</time></p>
 
                     <section class="application-section">
                         <header class="application-section-heading">
-                            Hakutoiveet
-                            <button class="float-right save-btn" ng-disabled="!hasChanged || statusMessageType=='pending' || !isSaveable" ng-click="saveApplication()">Tallenna muutokset</button>
+                            {{ localization('label.preferences') }}
+                            <button class="float-right save-btn" ng-disabled="!hasChanged || statusMessageType=='pending' || !isSaveable" ng-click="saveApplication()">{{ localization('button.save') }}</button>
                             <span class="status-message float-right" ng-class="{'ajax-spinner': statusMessageType=='pending', error: statusMessageType=='error'}" ng-bind="statusMessage"></span>
                         </header>
 
@@ -41,7 +41,7 @@
 
                                 <div class="item-content">
                                     <div class="row opetuspiste">
-                                        <label><span class="label">Opetuspiste:</span>
+                                        <label><span class="label">{{localization('label.location')}}:</span>
 
                                             <span ng-bind="hakutoive.data.Opetuspiste" ng-show="isEditingDisabled()"></span>
 
@@ -55,14 +55,14 @@
 
                                     </div>
                                     <div class="row koulutus">
-                                        <label><span class="label">Koulutus:</span>
+                                        <label><span class="label">{{ localization('label.education') }}:</span>
                                             <span ng-bind="hakutoive.data.Koulutus" ng-show="isEditingDisabled()"></span>
 
                                             <select ng-model="valittuKoulutus"
                                                     ng-options="koulutus.name for koulutus in koulutusList"
                                                     ng-change="koulutusValittu($index)" ng-show="isKoulutusSelectable()">
                                             </select>
-                                            <span class="instruction" ng-hide="isEditingDisabled() || hakutoive.hasOpetuspiste()">Valitse ensin opetuspiste</span>
+                                            <span class="instruction" ng-hide="isEditingDisabled() || hakutoive.hasOpetuspiste()">{{localization('label.chooseLocation')}}</span>
                                             <span class="validation-message error" ng-if="hakutoive.errors.length">{{hakutoive.errors.join(', ')}}</span>
                                             <span class="instruction ajax-spinner-small" ng-show="isLoadingKoulutusList()">Lataa tietoja...</span>
                                         </label>
@@ -70,7 +70,7 @@
                                 </div>
 
                                 <div class="item-content">
-                                    <button ng-show="canRemovePreference($index)" class="delete-btn" disable-click-focus confirm confirm-text="Poista" confirm-action="removeHakutoive($index)" aria-label="Poista hakutoive"></button>
+                                    <button ng-show="canRemovePreference($index)" class="delete-btn" disable-click-focus confirm confirm-text="{{localization('button.delete')}}" confirm-action="removeHakutoive($index)" aria-label="Poista hakutoive"></button>
                                 </div>
                             </li>
                         </ul>

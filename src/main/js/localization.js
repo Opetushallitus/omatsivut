@@ -1,37 +1,20 @@
 module.exports = function(listApp) {
-  listApp.factory("localization", ["settings", function(settings) {
-    var translations = {
-      fi: {
-        loadingApplications: "Hakemuksia ladataan...",
-        loadingFailed: "Tietojen lataus epäonnistui. Yritä myöhemmin uudelleen.",
-        loadingFailed_notLoggedIn: "Tietojen lataus epäonnistui: et ole kirjautunut sisään.",
-        timestamp_applicationUpdated: "Hakemusta muokattu",
-        timestamp_applicatonReceived: "Hakemus jätetty",
-        noApplications: "Sinulla ei ole hakemuksia, joita olis mahdollista muokata",
+  listApp.factory("localization", ["$http", "settings", function($http, settings) {
+    var translations = {}
 
-        validationFailed: "Täytä kaikki tiedot",
-        validationFailed_httpError: "Tietojen haku epäonnistui. Yritä myöhemmin uudelleen.",
-
-        sessionExpired: "Istunto on vanhentunut. Kirjaudu uudestaan sisään",
-        serverError: "Odottamaton virhe. Ota yhteyttä ylläpitoon.",
-
-        changesSaved: "Kaikki muutokset tallennettu",
-        saveFailed: "Tallentaminen epäonnistui. Yritä myöhemmin uudelleen.",
-        saveFailed_sessionExpired: "Tallentaminen epäonnistui, sillä istunto on vanhentunut. Kirjaudu uudestaan sisään.",
-        saveFailed_validationError: "Ei tallennettu - vastaa ensin kaikkiin lisäkysymyksiin"
-      }
-    }
+    $http.get('/omatsivut/translations/' + settings.language + '.json')
+        .then(function(data){
+            translations = data.data
+        }, function(reason){
+            throw new Error("Language not found: " + reason)
+        })
 
     return function(key) {
-      var lang = translations[settings.language]
-      if (!lang)
-        throw new Error("Language not found")
-
-      var val = lang[key]
-      if (val)
-        return val
-      else
-        throw new Error("Translation not found for: " + key)
+        // TODO: this should be more safe:
+        // If http promise is not already resolved, returns undefined for every key.
+        // This already works for UI texts, but probably because of scope watches resolving new values after
+        // promise has resolved.
+        return translations[key]
     }
   }])
 }

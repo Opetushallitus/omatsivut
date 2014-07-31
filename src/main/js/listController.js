@@ -1,7 +1,7 @@
 var Hakemus = require('./hakemus')
 module.exports = function(listApp) {
   listApp.controller("listController", ["$scope", "applicationsResource", "localization", function ($scope, applicationsResource, localization) {
-    $scope.applicationStatusMessage = localization("loadingApplications")
+    $scope.applicationStatusMessage = localization("message.loadingApplications")
     $scope.applicationStatusMessageType = "ajax-spinner";
     applicationsResource.query(success, error)
 
@@ -19,8 +19,8 @@ module.exports = function(listApp) {
 
     function error(err) {
       switch (err.status) {
-        case 401: $scope.applicationStatusMessage = localization("loadingFailed_notLoggedIn"); break;
-        default: $scope.applicationStatusMessage = localization("loadingFailed");
+        case 401: $scope.applicationStatusMessage = localization("error.loadingFailed.notLoggedIn"); break;
+        default: $scope.applicationStatusMessage = localization("error.loadingFailed");
       }
       $scope.applicationStatusMessageType = "error"
       $scope.applications = [];
