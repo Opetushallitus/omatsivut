@@ -48,6 +48,7 @@ object OmatsivutBuild extends Build {
       parallelExecution in Test := false,
       buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
       EclipseKeys.createSrc := EclipseCreateSrc.Default + EclipseCreateSrc.Managed + EclipseCreateSrc.Resource,
+      EclipseKeys.eclipseOutput := Some("target/eclipse"),
       EclipseKeys.executionEnvironment := Some(EclipseExecutionEnvironment.JavaSE17),
       EclipseKeys.projectFlavor := EclipseProjectFlavor.Scala,
       buildInfoPackage := "fi.vm.sade.omatsivut",
