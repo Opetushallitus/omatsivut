@@ -23,6 +23,16 @@
     <url-pattern>/*</url-pattern>
   </filter-mapping>
 
+  <filter>
+    <filter-name>LanguageFilter</filter-name>
+    <filter-class>fi.vm.sade.omatsivut.servlet.LanguageFilter</filter-class>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>LanguageFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
   <mime-mapping>
     <extension>html</extension>
     <mime-type>text/html;charset=UTF-8</mime-type>
