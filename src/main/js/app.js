@@ -5,7 +5,7 @@ _ = require("underscore");
 require("../lib/ui-bootstrap-custom-tpls-0.10.0.min.js");
 
 var listApp = angular.module('listApp', ["ngResource", "ngAnimate", "RecursionHelper", "ui.bootstrap.typeahead", "template/typeahead/typeahead-popup.html", "template/typeahead/typeahead-match.html", "debounce"], function($locationProvider) {
-  $locationProvider.html5Mode(true);
+  $locationProvider.html5Mode(false);
 });
 
 require('./hakutoiveController')(listApp)
