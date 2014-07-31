@@ -496,7 +496,7 @@
           })
 
           describe("Kun ladataan sivu uudelleen", function() {
-            before(page.openPage)
+            before(page.openPage())
             it("valitut hakutoiveet näytetään", function() {
               hakemus1.getPreference(2).opetuspiste().should.equal("Etelä-Savon ammattiopisto,  Otavankatu 4")
             })
@@ -508,7 +508,7 @@
             before(
               hakemus1.getPreference(2).remove,
               hakemus1.saveWaitSuccess,
-              page.openPage,
+              page.openPage(),
               replacePreference(hakemus1, 2, "Etelä-Savon ammattiopisto")
             )
             it("hakutoiveeseen liittyvien lisäkysymysten aiemmat vastaukset hävitetään", function() {
