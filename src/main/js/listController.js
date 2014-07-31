@@ -12,7 +12,7 @@ module.exports = function(listApp) {
         $scope.applicationStatusMessageType = "";
       }
       else {
-        $scope.applicationStatusMessage = localization("noApplications");
+        $scope.applicationStatusMessage = localization("message.noApplications");
         $scope.applicationStatusMessageType = "info";
       }
     }

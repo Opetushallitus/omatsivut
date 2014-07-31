@@ -1,7 +1,6 @@
 module.exports = function(listApp) {
   listApp.factory("localization", ["$http", "settings", function($http, settings) {
     var translations = {}
-
     $http.get('/omatsivut/translations/' + settings.language + '.json')
         .then(function(data){
             translations = data.data

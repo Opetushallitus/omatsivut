@@ -20,7 +20,7 @@
     describe("jos käyttäjällä ei ole hakemuksia", function() {
 
       it("näytetään ilmoitus", function() {
-        expect(page.listStatusInfo()).to.equal('Sinulla ei ole hakemuksia, joita olis mahdollista muokata' )
+        expect(page.listStatusInfo()).to.equal('Sinulla ei ole hakemuksia, joita on mahdollista muokata.' )
       })
     })
   })
@@ -436,7 +436,7 @@
         describe("Kun tallennetaan vastaamatta pakollisiin kysymyksiin", function() {
           before(hakemus1.saveWaitError)
           it("näytetään tallennusvirhe", function() {
-            hakemus1.saveError().should.equal("Ei tallennettu - vastaa ensin kaikkiin lisäkysymyksiin")
+            hakemus1.saveError().should.equal("Ei tallennettu - vastaa ensin kaikkiin lisäkysymyksiin.")
           })
 
           it("näytetään kaikki validaatiovirheet", function() {
