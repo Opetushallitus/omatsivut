@@ -64,8 +64,11 @@
 @error-color: #c9302c;
 @border-color: #dcdcdc;
 @section-border-color: #feba00;
-@input-background: #ebf3f7;
-@input-focus-background: #fff5da;
+@input-background: white;
+@input-focus-background: white;
+@input-hover-background: #fff5da;
+@input-border: #ccc;
+@input-focus-border: rgba(82, 168, 236, 0.8);
 
 @link-color: #06526b;
 @link-visited-color: #707070;
@@ -173,15 +176,34 @@ a {
 input[type="text"], textarea {
   background: @input-background;
   color: @font-color;
-  box-shadow: 0 1px 1px #b5b5b5 inset, 0 -1px 4px rgba(0, 0, 0, 0.05) inset;
+  border: 1px solid @input-border;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
   padding: 0px 0px 0px 10px;
-  border-radius: 3px;
+  border-radius: 4px;
   font-size: @body-font-size;
   height: 2 * @body-font-size;
-  border: none;
 
   &:focus {
     background: @input-focus-background;
+  }
+
+  &:hover {
+    background: @input-hover-background;
+  }
+}
+
+input, textarea {
+  &:focus {
+    border: 1px solid @input-focus-border !important;
+    box-shadow: rgba(0, 0, 0, 0.0745098) 0px 1px 1px 0px inset, rgba(82, 168, 236, 0.6) 0px 0px 8px 0px !important;
+    outline: 0;
+  }
+}
+
+button, a {
+  &:focus {
+    outline: 1px solid @input-focus-border !important;
+    box-shadow: rgba(0, 0, 0, 0.0745098) 0px 1px 1px 0px inset, rgba(82, 168, 236, 0.6) 0px 0px 8px 0px !important;
   }
 }
 
