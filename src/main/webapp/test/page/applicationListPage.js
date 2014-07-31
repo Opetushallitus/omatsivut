@@ -78,18 +78,7 @@ function ApplicationListPage() {
       },
 
       saveButton: function () {
-        return saveButton(getApplicationElement().find(".save-btn"))
-
-        function saveButton(el) {
-          return {
-            isEnabled: function () {
-              return !el.prop("disabled")
-            },
-            click: function () {
-              el.click()
-            }
-          }
-        }
+        return Button(function() { return getApplicationElement().find(".save-btn") }) 
       },
 
       getPreference: function (index) {
@@ -229,16 +218,26 @@ function ApplicationListPage() {
         return uiUtil.inputValues(el())
       },
       moveDown: function () {
+        var self = this
         return waitForChange(function() {
-          arrowDown().click()
+          self.arrowDown().click()
         })
       },
       moveUp: function () {
+        var self = this
         return waitForChange(function() {
-          arrowUp().click()
+          self.arrowUp().click()
         })
       },
-
+      arrowDown: function() {
+        return Button(function() { return el().find(".sort-arrow-down") })
+      },
+      arrowUp: function() {
+        return Button(function() { return el().find(".sort-arrow-up") })
+      },
+      removeButton: function() {
+        return Button(function() { return el().find(".delete-btn") })
+      },
       number: function () {
         return el().find(".row-number").text()
       },
@@ -259,13 +258,13 @@ function ApplicationListPage() {
         return el().find("input:visible").length > 0
       },
       isDisabled: function () {
-        return arrowDown().hasClass("disabled") && arrowUp().hasClass("disabled") && !api.canRemove()
+        return !this.arrowDown().isEnabled() && !this.arrowUp().isEnabled() && !api.canRemove()
       },
       isEditable: function() {
         return el().find("input").is(":visible")
       },
       isMovable: function() {
-        return !(arrowDown().prop("disabled") && arrowUp().prop("disabled"))
+        return this.arrowDown().isEnabled() && this.arrowUp().isEnabled()
       },
       errorMessage: function() {
         return el().find(".error").text()
@@ -313,14 +312,6 @@ function ApplicationListPage() {
       return opetusPisteInputField().next()
     }
 
-    function arrowDown() {
-      return el().find(".sort-arrow-down")
-    }
-
-    function arrowUp() {
-      return el().find(".sort-arrow-up")
-    }
-
     function waitForChange(modification) {
       var description = api.toString()
       modification()
@@ -328,5 +319,50 @@ function ApplicationListPage() {
         return description != api.toString()
       })().then(wait.forAngular)
     }
+  }
+
+  function Button(el) {
+    return {
+      element: function() {
+        return el()
+      },
+      isEnabled: function () {
+        return !el().prop("disabled")
+      },
+      click: function () {
+        el().click()
+      },
+      isRealButton: function() {
+        return el().prop("tagName") == "BUTTON"
+      },
+      hasTabIndex: function() {
+        return el().prop("tabIndex") > 0
+      },
+      isFocusableBefore: function(button) {
+        return !this.hasTabIndex() && !button.hasTabIndex() && compareDOMIndex(this.element(), button.element()) < 0
+      }
+    }
+  }
+
+  function compareDOMIndex(el1, el2) {
+    function indexInTree(element, indexes) {
+      indexes = indexes || []
+      indexes.unshift(element.index())
+      if (element.parent().length)
+        indexInTree(element.parent(), indexes)
+      return indexes
+    }
+
+    function compareTrees(tree1, tree2) {
+      for (var i=0; i<tree1.length && i < tree2.length; i++) {
+        if (tree1[i] < tree2[i])
+          return -1
+        else if (tree1[i] > tree2[i])
+          return 1
+      }
+      return 0
+    }
+
+    return compareTrees(indexInTree(el1), indexInTree(el2))
   }
 }

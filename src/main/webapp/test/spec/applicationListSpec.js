@@ -124,6 +124,17 @@
       })
     })
 
+    describe("Käyttö näppäimistöllä", function() {
+      before(ApplicationListPage().resetDataAndOpen)
+      it("tab-nappi toimii oletusjärjestyksessä", function() {
+        hakemus2.getPreference(0).arrowUp().isRealButton().should.be.true
+        hakemus2.getPreference(0).arrowDown().isRealButton().should.be.true
+        hakemus2.getPreference(0).removeButton().isRealButton().should.be.true
+        hakemus2.getPreference(0).arrowUp().isFocusableBefore(hakemus2.getPreference(0).arrowDown()).should.be.true
+        hakemus2.getPreference(0).arrowDown().isFocusableBefore(hakemus2.getPreference(0).removeButton()).should.be.true
+      })
+    })
+
     describe("Hakutoiveiden validaatio", function() {
       before(
         ApplicationListPage().resetDataAndOpen,
