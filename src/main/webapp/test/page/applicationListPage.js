@@ -218,15 +218,13 @@ function ApplicationListPage() {
         return uiUtil.inputValues(el())
       },
       moveDown: function () {
-        var self = this
         return waitForChange(function() {
-          self.arrowDown().click()
+          api.arrowDown().click()
         })
       },
       moveUp: function () {
-        var self = this
         return waitForChange(function() {
-          self.arrowUp().click()
+          api.arrowUp().click()
         })
       },
       arrowDown: function() {
