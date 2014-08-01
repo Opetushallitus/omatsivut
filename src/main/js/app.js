@@ -12,13 +12,20 @@ listApp.run(function ($rootScope, localization) {
   $rootScope.localization = localization
 })
 
+var staticResources = require('./staticResources')
 require('./hakutoiveController')(listApp)
 require('./listController')(listApp)
 require('./hakemusController')(listApp)
 require('./applicationValidator')(listApp)
-require('./localization')(listApp)
+require('./localization')(listApp, staticResources)
 require('./recursionHelper')
 require('../lib/angular-debounce')
+
+angular.element(document).ready(function() {
+  staticResources.init(function() {
+    angular.bootstrap(document, ['listApp'])
+  })
+})
 
 listApp.factory("applicationsResource", ["$resource", "$location", function($resource, $location) {
   return $resource("/omatsivut/api/applications", null, {
@@ -35,8 +42,7 @@ listApp.factory("settings", ["$animate", function($animate) {
 
   return {
     uiTransitionTime: testMode ? 10 : 500,
-    modelDebounce: testMode? 0 : 300,
-    language: "fi"
+    modelDebounce: testMode? 0 : 300
   };
 }]);
 

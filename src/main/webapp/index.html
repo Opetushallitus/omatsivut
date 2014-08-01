@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="listApp">
+<html>
 <head>
     <link href='//fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700' rel='stylesheet' type='text/css'>
     <link href="css/main.css" media="all" rel="stylesheet" type="text/css"/>
@@ -7,7 +7,7 @@
 
 <body>
     <div class="container">
-        <div id="appRoot" ng-controller="listController">
+        <div id="appRoot" ng-controller="listController" ng-cloak>
             <h1>{{ localization('title.omatHakemukset') }}</h1>
             <a href="login" target="_self">Kirjaudu sisään</a>
             <a href="logout" target="_self">Kirjaudu ulos</a>
