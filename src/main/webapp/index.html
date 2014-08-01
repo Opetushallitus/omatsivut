@@ -20,9 +20,9 @@
                 <li ng-repeat="application in applications" class="application-list-item" ng-controller="hakemusController" highlight-save>
                     <h2>{{application.haku.name }}</h2>
                     <p ng-repeat="period in application.haku.applicationPeriods">
-                      {{ localization('label.applicationPeriod') }}: {{period.start | date:'dd.MM.yyyy HH:mm'}} - {{period.end | date:'dd.MM.yyyy HH:mm'}}</p>
+                      {{ localization('label.applicationPeriod') }}: <time datetime="{{ period.start | date:'yyyy-MM-ddTHH:mmZ' }}">{{period.start | date:'dd.MM.yyyy HH:mm'}}</time> - <time datetime="{{ period.end | date:'yyyy-MM-ddTHH:mmZ' }}">{{period.end | date:'dd.MM.yyyy HH:mm'}}</time></p>
                     </p>
-                    <p class="timestamp">{{ timestampLabel() }} <time>{{ application.updated | date:'dd.MM.yyyy HH:mm:ss' }}</time></p>
+                    <p class="timestamp">{{ timestampLabel() }} <time datetime="{{ application.updated | date:'yyyy-MM-ddTHH:mmZ' }}">{{ application.updated | date:'dd.MM.yyyy HH:mm:ss' }}</time></p>
 
                     <section class="application-section">
                         <header class="application-section-heading">
