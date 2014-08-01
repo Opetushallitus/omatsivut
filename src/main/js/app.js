@@ -4,7 +4,7 @@ require('angular-animate');
 _ = require("underscore");
 require("../lib/ui-bootstrap-custom-tpls-0.10.0.min.js");
 
-var listApp = angular.module('listApp', ["ngResource", "ngAnimate", "RecursionHelper", "ui.bootstrap.typeahead", "template/typeahead/typeahead-popup.html", "template/typeahead/typeahead-match.html", "debounce"], function($locationProvider) {
+var listApp = angular.module('listApp', ["ngResource", "ngAnimate", "RecursionHelper", "ui.bootstrap.typeahead", "template/typeahead/typeahead-popup.html", "template/typeahead/typeahead-match.html", "debounce", "exceptionOverride"], function($locationProvider) {
   $locationProvider.html5Mode(false);
 });
 
@@ -35,6 +35,12 @@ listApp.factory("applicationsResource", ["$resource", "$location", function($res
     }
   });
 }]);
+
+angular.module("exceptionOverride", []).factory("$exceptionHandler", function () {
+  return function (exception) {
+    throw exception
+  };
+})
 
 listApp.factory("settings", ["$animate", function($animate) {
   var testMode = window.parent.location.href.indexOf("runner.html") > 0;
