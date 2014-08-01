@@ -5,8 +5,8 @@
     "label.applicationUpdated": "Last edited",
     "label.preferences": "Preferences",
     "label.location": "LOCATION",
-    "label.education": "Educuation",
-    "label.chooseLocation": "First choose location",
+    "label.education": "Education",
+    "label.chooseLocation": "Choose a location first",
     "button.save": "Save changes",
     "button.delete": "Delete",
 
@@ -17,10 +17,10 @@
     "error.sessionExpired": "Your session has expired. Please log in.",
     "error.loadingFailed": "Loading data failed. Try again later.",
     "error.loadingFailed.notLoggedIn": "Loading data failed: you are not logged in.",
-    "error.validationFailed": "Please fill all required information",
-    "error.validationFailed.httpError": "Couldn't load. Try again later.",
+    "error.validationFailed": "Please fill in all required information",
+    "error.validationFailed.httpError": "Connection error. Try again later.",
     "error.saveFailed": "Save failed. Try again later.",
     "error.saveFailed.sessionExpired": "Save failed because you session has expired. Please log in.",
-    "error.saveFailed.validationError": "Couldnt save - all additional questions must be answered.",
+    "error.saveFailed.validationError": "Could not save application - Please answer all additional questions.",
     "error.serverError": "Unexpected error. Contact administrator."
 }
