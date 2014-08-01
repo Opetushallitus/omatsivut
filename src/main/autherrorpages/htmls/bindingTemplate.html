@@ -1,94 +1,124 @@
 <!DOCTYPE html>
 <html lang="fi">
 <head>
-   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-   <link rel="stylesheet" type="text/css" href="<shibmlp styleSheet/>" />
-   <link rel="stylesheet" type="text/css" href="/shibboleth-sp/style.css" />
-   <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=PT+Sans+Narrow:700|PT+Serif:400italic">
-   <title>Kirjautuminen ep&auml;onnistui</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" type="text/css" href="<shibmlp styleSheet/>"/>
+    <link rel="stylesheet" type="text/css" href="/shibboleth-sp/style.css"/>
+    <link rel="stylesheet" type="text/css"
+          href="//fonts.googleapis.com/css?family=PT+Sans+Narrow:700|PT+Serif:400italic">
+    <title>Siirtyminen - F&ouml;rflyttning - Transferring</title>
 </head>
 
-	<body onload="document.forms[0].submit()">
+<body onload="document.forms[0].submit()">
 
 
 <header id="siteheader">
-   <div class="logo-bg">
-      <div class="container">
-         <a href="#" id="home-link"><img alt="Opintopolku.fi" src="/shibboleth-sp/img/opintopolku.png"></a>
-      </div>
-   </div>
+    <div class="logo-bg">
+        <div class="container">
+            <a href="#" id="home-link"><img alt="Opintopolku.fi" src="/shibboleth-sp/img/opintopolku.png"></a>
+        </div>
+    </div>
 </header>
 
 <div class="content container" id="maincontent">
-   <article class="main">
+    <article class="main">
 
-		<h1>Shibboleth Authentication Request</h1>
-		
-		<script type="text/javascript">
-		<!--	
-		document.write("<p>You are automatically being redirected to the authentication service. ");
-		document.write("If the browser appears to be hung up after 15-20 seconds, try reloading ");
-		document.write("the page before contacting the technical support staff in charge of the ");
-		document.write("authentication service you are trying to access.</p>");
-		document.write("<h2>Redirecting...</h2>");
-		// -->
-		</script>
-		
-		<noscript>
-		<p>
-		<strong>Note:</strong> Since your browser does not support JavaScript, you must press the
-		Continue button once to proceed to the authentication service.
-		</p>
-		</noscript>
-	
-		<form method="POST" action="<shibmlp action/>">
-		<shibmlpif TARGET>
-			<input type="hidden" name="TARGET" value="<shibmlp TARGET/>"/>
-		</shibmlpif>
-		<shibmlpif RelayState>
-			<input type="hidden" name="RelayState" value="<shibmlp RelayState/>"/>
-		</shibmlpif>
-		<shibmlpif SAMLRequest>
-			<input type="hidden" name="SAMLRequest" value="<shibmlp SAMLRequest/>"/>
-		</shibmlpif>
-		<shibmlpif SAMLResponse>
-			<input type="hidden" name="SAMLResponse" value="<shibmlp SAMLResponse/>"/>
-		</shibmlpif>
-		<shibmlpif SAMLart>
-			<input type="hidden" name="SAMLart" value="<shibmlp SAMLart/>"/>
-		</shibmlpif>
-		<shibmlpif SigAlg>
-			<input type="hidden" name="SigAlg" value="<shibmlp SigAlg/>"/>
-		</shibmlpif>
-		<shibmlpif Signature>
-			<input type="hidden" name="Signature" value="<shibmlp Signature/>"/>
-		</shibmlpif>
-        <shibmlpif KeyInfo>
-            <input type="hidden" name="KeyInfo" value="<shibmlp KeyInfo/>"/>
-        </shibmlpif>
-		<noscript>
-		<div>
-		<input type="submit" value="Continue"/>
-		</div>
-		</noscript>
-		</form>
-   </article>
+        <h1>Siirtyminen tunnistuspalveluun</h1>
 
-   <footer>
-      <div class="footer-wrapper">
-         <div class="footer-item">
-            <a title="Opetushallitus" href="http://www.oph.fi/"><img alt="Opetushallitus" src="/shibboleth-sp/img/oph_footer_logo.png"></a>
-         </div>
-         <div class="footer-item">
-            <a title="Opetus- ja kulttuuriministeri&ouml;" href="http://www.minedu.fi/OPM/"><img alt="Opetus- ja kulttuuriministeri&ouml;" src="/shibboleth-sp/img/okm_footer_logo.png"></a>
-         </div>
-      </div>
-      <p class="small">Copyright &copy; 2013 Opetushallitus</p>
-   </footer>
+        <script type="text/javascript">
+            <!--
+            document.write("<p>Sinut ohjataan automaattisesti tunnistuspalveluun.");
+            document.write("Jos selain j&auml;&auml; t&auml;lle sivulle yli 15-20 sekunniksi, kokeile p&auml;ivitt&auml;&auml; sivu.</p>");
+            // -->
+        </script>
+
+        <noscript>
+            <p>
+                <strong>Huom!</strong> Koska selaimessasi ei ole JavaScript-tukea, sinun t&auml;ytyy painaa Jatka-nappia siirty&auml;ksesi tunnistuspalveluun.
+            </p>
+        </noscript>
+
+        <h1>F&ouml;rflyttning till autentiseringsservicen</h1>
+
+        <script type="text/javascript">
+            <!--
+            document.write("<p>Du &auml;r automatiskt omdirigerad till autentiseringsservicen.")
+            document.write("Om webbl&auml;saren stannar i denna sidan &ouml;ver 15-20 sekunder, f&ouml;;rs&ouml;ka uppdatera sidan.</p>");
+            // -->
+        </script>
+
+        <noscript>
+            <p>
+                <strong>OBS!</strong>Eftersom din webbläsare stöder inte JavaScript, måste du trycka på
+                Fortsätt-knappen en gång för att gå vidare till autentiseringstjänsten.
+            </p>
+        </noscript>
+
+        <h1>Transferring to the authentication service</h1>
+
+        <script type="text/javascript">
+            <!--
+            document.write("<p>You are automatically being redirected to the authentication service. ");
+            document.write("If the browser appears to be hung up after 15-20 seconds, try reloading the page</p>");
+            // -->
+        </script>
+
+        <noscript>
+            <p>
+                <strong>Note:</strong> Since your browser does not support JavaScript, you must press the
+                Continue button once to proceed to the authentication service.
+            </p>
+        </noscript>
+
+        <form method="POST" action="<shibmlp action/>">
+            <shibmlpif TARGET>
+                <input type="hidden" name="TARGET" value="<shibmlp TARGET/>"/>
+            </shibmlpif>
+            <shibmlpif RelayState>
+                <input type="hidden" name="RelayState" value="<shibmlp RelayState/>"/>
+            </shibmlpif>
+            <shibmlpif SAMLRequest>
+                <input type="hidden" name="SAMLRequest" value="<shibmlp SAMLRequest/>"/>
+            </shibmlpif>
+            <shibmlpif SAMLResponse>
+                <input type="hidden" name="SAMLResponse" value="<shibmlp SAMLResponse/>"/>
+            </shibmlpif>
+            <shibmlpif SAMLart>
+                <input type="hidden" name="SAMLart" value="<shibmlp SAMLart/>"/>
+            </shibmlpif>
+            <shibmlpif SigAlg>
+                <input type="hidden" name="SigAlg" value="<shibmlp SigAlg/>"/>
+            </shibmlpif>
+            <shibmlpif Signature>
+                <input type="hidden" name="Signature" value="<shibmlp Signature/>"/>
+            </shibmlpif>
+            <shibmlpif KeyInfo>
+                <input type="hidden" name="KeyInfo" value="<shibmlp KeyInfo/>"/>
+            </shibmlpif>
+            <noscript>
+                <div>
+                    <input type="submit" value="Jatka - Fotrs&auml;tt - Continue"/>
+                </div>
+            </noscript>
+        </form>
+    </article>
+
+    <footer>
+        <div class="footer-wrapper">
+            <div class="footer-item">
+                <a title="Opetushallitus" href="http://www.oph.fi/"><img alt="Opetushallitus"
+                                                                         src="/shibboleth-sp/img/oph_footer_logo.png"></a>
+            </div>
+            <div class="footer-item">
+                <a title="Opetus- ja kulttuuriministeri&ouml;" href="http://www.minedu.fi/OPM/"><img
+                        alt="Opetus- ja kulttuuriministeri&ouml;" src="/shibboleth-sp/img/okm_footer_logo.png"></a>
+            </div>
+        </div>
+        <p class="small">&copy; 2013 Opetushallitus</p>
+    </footer>
 
 
 </div>
 
 </body>
 </html>
-
