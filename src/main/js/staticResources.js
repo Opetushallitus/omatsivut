@@ -11,6 +11,7 @@ module.exports = resources
 
 function loadTranslations(callback) {
   var language = readLanguageCookie()
+  $('html').attr('lang', language)
   var self = this
   $.ajax({ url: "/omatsivut/translations/" + language + ".json", dataType: "json" }).done(function(data) {
     callback(data)
