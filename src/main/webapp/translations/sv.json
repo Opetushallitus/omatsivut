@@ -13,8 +13,8 @@
     "message.loadingApplications": "Hakemuksia ladataan...",
     "message.noApplications": "Sinulla ei ole hakemuksia, joita on mahdollista muokata.",
     "message.changesSaved": "Kaikki muutokset tallennettu",
-    "message.sessionExpired": "Istunto on vanhentunut. Kirjaudu uudestaan sisään",
 
+    "error.sessionExpired": "Istunto on vanhentunut. Kirjaudu uudestaan sisään",
     "error.loadingFailed": "Tietojen lataus epäonnistui. Yritä myöhemmin uudelleen.",
     "error.loadingFailed.notLoggedIn": "Tietojen lataus epäonnistui: et ole kirjautunut sisään.",
     "error.validationFailed": "Täytä kaikki tiedot",

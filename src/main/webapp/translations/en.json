@@ -13,8 +13,8 @@
     "message.loadingApplications": "Loading applications...",
     "message.noApplications": "You don't have applications that can be edited.",
     "message.changesSaved": "All changes saved.",
-    "message.sessionExpired": "Your session has expired. Please log in.",
 
+    "error.sessionExpired": "Your session has expired. Please log in.",
     "error.loadingFailed": "Loading data failed. Try again later.",
     "error.loadingFailed.notLoggedIn": "Loading data failed: you are not logged in.",
     "error.validationFailed": "Please fill all required information",
