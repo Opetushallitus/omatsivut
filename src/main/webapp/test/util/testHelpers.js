@@ -67,8 +67,12 @@ wait = {
 }
 
 session = {
-  init: function(hetu) {
-    return Q($.get("/omatsivut/util/fakesession?hetu=" + hetu));
+  init: function(hetu,lang) {
+    langParam = ""
+    if (lang) {
+      langParam = "&lang=" + lang
+    }
+    return Q($.get("/omatsivut/util/fakesession?hetu=" + hetu + langParam));
   }
 }
 

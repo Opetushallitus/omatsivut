@@ -15,7 +15,7 @@ class FakeShibbolethServlet(implicit val appConfig: AppConfig) extends OmatSivut
       }
     }
 
-    get("/LoginFI") {
+    get("/Login*") {
       redirectToFakeLogin
     }
   }

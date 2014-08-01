@@ -1,12 +1,13 @@
 package fi.vm.sade.omatsivut.fixtures
 
+import scala.collection.JavaConversions._
+
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
 import fi.vm.sade.omatsivut.AppConfig
 import fi.vm.sade.omatsivut.domain.Hakemus._
+import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.hakemus.{HakemusConverter, HakuConverter}
-
-import scala.collection.JavaConversions._
 
 object TestFixture {
   val hakemus1 = "1.2.246.562.11.00000877107"
@@ -27,9 +28,9 @@ object TestFixture {
   }
 
   def applicationSystem: ApplicationSystem = as
-  def haku = HakuConverter.convertToHaku(applicationSystem)
+  def haku(implicit lang: Language.Language) = HakuConverter.convertToHaku(applicationSystem)
   def application: Application = app
-  def hakemus = HakemusConverter.convertToHakemus(Some(haku))(application)
+  def hakemus(implicit lang: Language.Language) = HakemusConverter.convertToHakemus(Some(haku))(application)
 
   val ammattistartti: Hakutoive = JsonFixtureMaps.find[Hakutoive]("/mockdata/hakutoiveet.json", "1.2.246.562.14.2014030415375012208392")
   val ammattistarttiAhlman: Hakutoive = JsonFixtureMaps.find[Hakutoive]("/mockdata/hakutoiveet.json", "1.2.246.562.14.2014040912353139913320")

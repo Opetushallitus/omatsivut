@@ -2,8 +2,14 @@ package fi.vm.sade.omatsivut.servlet
 
 import fi.vm.sade.omatsivut.Logging
 import org.scalatra._
+import fi.vm.sade.omatsivut.domain.Language
 
 trait OmatSivutServletBase extends ScalatraServlet with Logging {
+
+  implicit def languae: Language.Language = {
+    Option(request.getAttribute("lang").asInstanceOf[Language.Language]).getOrElse(Language.fi)
+  }
+
   notFound {
     // remove content type in case it was set through an action
     contentType = null

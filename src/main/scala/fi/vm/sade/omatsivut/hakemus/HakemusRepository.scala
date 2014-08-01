@@ -1,19 +1,19 @@
 package fi.vm.sade.omatsivut.hakemus
 
 import java.util.Date
-
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
 import fi.vm.sade.omatsivut._
 import fi.vm.sade.omatsivut.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.auditlog.{ShowHakemus, UpdateHakemus, AuditLogger}
 import fi.vm.sade.omatsivut.domain.Hakemus
+import fi.vm.sade.omatsivut.domain.Language
 
 case class HakemusRepository(implicit val appConfig: AppConfig) extends Logging {
   import collection.JavaConversions._
   private val dao = appConfig.springContext.applicationDAO
 
-  def updateHakemus(applicationSystem: ApplicationSystem)(hakemus: Hakemus, userOid: String): Hakemus = {
+  def updateHakemus(applicationSystem: ApplicationSystem)(hakemus: Hakemus, userOid: String)(implicit lang: Language.Language): Hakemus = {
     val updatedHakemus = hakemus.copy(updated = new Date().getTime)
     val applicationQuery: Application = new Application().setOid(updatedHakemus.oid)
     val applicationJavaObjects: List[Application] = dao.find(applicationQuery).toList
@@ -27,7 +27,7 @@ case class HakemusRepository(implicit val appConfig: AppConfig) extends Logging 
     updatedHakemus
   }
 
-  def fetchHakemukset(personOid: String): List[Hakemus] = {
+  def fetchHakemukset(personOid: String)(implicit lang: Language.Language): List[Hakemus] = {
     val applicationJavaObjects: List[Application] = dao.find(new Application().setPersonOid(personOid)).toList
     applicationJavaObjects.map{ application => {
       val hakemus = HakemusConverter.convertToHakemus(HakuRepository().getHakuById(application.getApplicationSystemId))(application)

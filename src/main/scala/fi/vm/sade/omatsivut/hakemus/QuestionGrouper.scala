@@ -2,9 +2,10 @@ package fi.vm.sade.omatsivut.hakemus
 
 import fi.vm.sade.haku.oppija.lomake.domain.elements.{Titled, Element}
 import fi.vm.sade.omatsivut.domain.{QuestionGroup, QuestionLeafNode}
+import fi.vm.sade.omatsivut.domain.Language
 
 object QuestionGrouper {
-  def groupQuestionsByStructure(contextElement: ElementWrapper, foundQuestions: Set[(QuestionLeafNode)]): List[QuestionGroup] = {
+  def groupQuestionsByStructure(contextElement: ElementWrapper, foundQuestions: Set[(QuestionLeafNode)])(implicit lang: Language.Language): List[QuestionGroup] = {
     foundQuestions
       .map { question => (question, contextElement.findById(question.id.questionId).get) }
       .groupBy { case (question, elementContext) => elementContext.namedParents}
@@ -12,10 +13,9 @@ object QuestionGrouper {
       .sortBy { case (path, questions) => path.asInstanceOf[List[Element]]}(ParentPathOrdering)
       .map {
       case (parents, questions) =>
-        val lang = "fi" // TODO: kieliversiot
       val groupNamePath = parents.tail
           .filter { t: Titled => t.getI18nText != null}
-          .map(_.getI18nText.getTranslations.get(lang))
+          .map(_.getI18nText.getTranslations.get(lang.toString()))
         val groupName = groupNamePath.mkString("", " - ", "")
 
         val sortedQuestions = questions.toList
