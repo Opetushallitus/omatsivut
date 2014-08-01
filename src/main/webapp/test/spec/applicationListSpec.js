@@ -63,6 +63,22 @@
     })
   })
 
+  describe("Monikielisyys", function () {
+    it("kaikkien kielitiedostojen rakenne on sama", function() {
+      return Q.all([
+        getJson("/omatsivut/translations/fi.json"),
+        getJson("/omatsivut/translations/en.json"),
+        getJson("/omatsivut/translations/sv.json")
+      ]).then(function(translations) {
+          _.keys(translations[0]).sort().should.deep.equal(_.keys(translations[1]).sort())
+          _.keys(translations[1]).sort().should.deep.equal(_.keys(translations[2]).sort())
+          _(translations[0]).any(function(val) { return _.isEmpty(val) }).should.be.false
+          _(translations[1]).any(function(val) { return _.isEmpty(val) }).should.be.false
+          _(translations[2]).any(function(val) { return _.isEmpty(val) }).should.be.false
+      })
+    })
+  })
+
   describe('Hakemuslistaus', function () {
 
     before(function (done) {

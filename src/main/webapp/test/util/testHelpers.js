@@ -143,6 +143,10 @@ db = {
   }
 }
 
+function getJson(url) {
+  return Q($.ajax({url: url, dataType: "json" }))
+}
+
 function openPage(path, predicate) {
   if (!predicate) {
     predicate = function() { return testFrame.jQuery }
