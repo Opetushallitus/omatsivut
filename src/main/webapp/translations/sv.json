@@ -15,7 +15,8 @@
 
   "button": {
     "save": "Spara förändringar",
-    "delete": "Töm"
+    "delete": "Töm",
+    "logout": "Logga ut"
   },
 
   "message": {
@@ -34,5 +35,12 @@
     "saveFailed_sessionExpired": "Sparingen misslyckades, din session har gåt ut. Logga in igen.",
     "saveFailed_validationError": "Kan inte spara - först svara till alla tillägsfrågarna.",
     "serverError": "Ett oväntat fel inträffade. Var vänlig och kontakta administrationen."
+  },
+
+  "errorPage": {
+    "noApplicationsFound": {
+      "title": "Inga ansöka finns med din personbeteckningen",
+      "text": "Identifiering lyckades men inga ansöka finns med din personbeteckningen."
+    }
   }
 }

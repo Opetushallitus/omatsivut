@@ -15,7 +15,8 @@
 
   "button": {
     "save": "Save changes",
-    "delete": "Delete"
+    "delete": "Delete",
+    "logout": "Log out"
   },
 
   "message": {
@@ -34,5 +35,12 @@
     "saveFailed_sessionExpired": "Save failed because you session has expired. Please log in.",
     "saveFailed_validationError": "Could not save application - Please answer all additional questions.",
     "serverError": "Unexpected error. Contact administrator."
+  },
+
+  "errorPage": {
+    "noApplicationsFound": {
+      "title": "No applications found",
+      "text": "You have logged in successfully, but there are no applications for your social security number."
+    }
   }
 }

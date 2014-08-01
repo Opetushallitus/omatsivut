@@ -15,7 +15,8 @@
 
   "button": {
     "save": "Tallenna muutokset",
-    "delete": "Poista"
+    "delete": "Poista",
+    "logout": "Kirjaudu ulos"
   },
 
   "message": {
@@ -34,5 +35,12 @@
     "saveFailed_sessionExpired": "Tallentaminen epäonnistui, sillä istunto on vanhentunut. Kirjaudu uudestaan sisään.",
     "saveFailed_validationError": "Ei tallennettu - vastaa ensin kaikkiin lisäkysymyksiin.",
     "serverError": "Odottamaton virhe. Ota yhteyttä ylläpitoon."
+  },
+
+  "errorPage": {
+    "noApplicationsFound": {
+      "title": "Henkilötunnuksellasi ei löytynyt hakemuksia",
+      "text": "Tunnistautumisesi onnistui, mutta emme löytäneet hakemuksia henkilötunnuksellasi."
+    }
   }
 }
