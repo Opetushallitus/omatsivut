@@ -1,26 +1,38 @@
 {
-    "title.omatHakemukset": "My applications",
-    "label.applicationPeriod": "Application period",
-    "label.applicationReceived": "Application created",
-    "label.applicationUpdated": "Last edited",
-    "label.preferences": "Preferences",
-    "label.location": "LOCATION",
-    "label.education": "Education",
-    "label.chooseLocation": "Choose a location first",
-    "button.save": "Save changes",
-    "button.delete": "Delete",
+  "title": {
+    "omatHakemukset": "My applications"
+  },
 
-    "message.loadingApplications": "Loading applications...",
-    "message.noApplications": "You don't have applications that can be edited.",
-    "message.changesSaved": "All changes saved.",
+  "label": {
+    "applicationPeriod": "Application period",
+    "applicationReceived": "Application created",
+    "applicationUpdated": "Last edited",
+    "preferences": "Preferences",
+    "location": "LOCATION",
+    "education": "Education",
+    "chooseLocation": "Choose a location first"
+  },
 
-    "error.sessionExpired": "Your session has expired. Please log in.",
-    "error.loadingFailed": "Loading data failed. Try again later.",
-    "error.loadingFailed.notLoggedIn": "Loading data failed: you are not logged in.",
-    "error.validationFailed": "Please fill in all required information",
-    "error.validationFailed.httpError": "Connection error. Try again later.",
-    "error.saveFailed": "Save failed. Try again later.",
-    "error.saveFailed.sessionExpired": "Save failed because you session has expired. Please log in.",
-    "error.saveFailed.validationError": "Could not save application - Please answer all additional questions.",
-    "error.serverError": "Unexpected error. Contact administrator."
+  "button": {
+    "save": "Save changes",
+    "delete": "Delete"
+  },
+
+  "message": {
+    "loadingApplications": "Loading applications...",
+    "noApplications": "You don't have applications that can be edited.",
+    "changesSaved": "All changes saved."
+  },
+
+  "error": {
+    "sessionExpired": "Your session has expired. Please log in.",
+    "loadingFailed": "Loading data failed. Try again later.",
+    "loadingFailed_notLoggedIn": "Loading data failed: you are not logged in.",
+    "validationFailed": "Please fill in all required information",
+    "validationFailed_httpError": "Connection error. Try again later.",
+    "saveFailed": "Save failed. Try again later.",
+    "saveFailed_sessionExpired": "Save failed because you session has expired. Please log in.",
+    "saveFailed_validationError": "Could not save application - Please answer all additional questions.",
+    "serverError": "Unexpected error. Contact administrator."
+  }
 }

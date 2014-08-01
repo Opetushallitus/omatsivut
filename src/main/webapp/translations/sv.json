@@ -1,26 +1,38 @@
 {
-    "title.omatHakemukset": "Mina ansöka",
-    "label.applicationPeriod": "Ansökperiod",
-    "label.applicationReceived": "Ansökan lämnats",
-    "label.applicationUpdated": "Ansökan förändrats",
-    "label.preferences": "Ansökningsönskemål",
-    "label.location": "Undervisnigsställe",
-    "label.education": "Utbildning",
-    "label.chooseLocation": "Välja först undervisnigsställe",
-    "button.save": "Spara förändringar",
-    "button.delete": "Töm",
+  "title": {
+    "omatHakemukset": "Mina ansöka"
+  },
 
-    "message.loadingApplications": "Ansökningar laddats...",
-    "message.noApplications": "Det finns inga ansöka at förändra.",
-    "message.changesSaved": "Alla förändrangar har sparats.",
+  "label": {
+    "applicationPeriod": "Ansökperiod",
+    "applicationReceived": "Ansökan lämnats",
+    "applicationUpdated": "Ansökan förändrats",
+    "preferences": "Ansökningsönskemål",
+    "location": "Undervisnigsställe",
+    "education": "Utbildning",
+    "chooseLocation": "Välja först undervisnigsställe"
+  },
 
-    "error.sessionExpired": "Session har gåt ut. Logga in igen.",
-    "error.loadingFailed": "Kunde inte ladda informationen. Var vänlig och försök igen senare.",
-    "error.loadingFailed.notLoggedIn": "Kunde inte ladda informationen: du har inte loggat in.",
-    "error.validationFailed": "Fylla in alla fält.",
-    "error.validationFailed.httpError": "Kunde inte ladda informationen. Var vänlig och försök igen senare.",
-    "error.saveFailed": "Sparingen misslyckades. Var vänlig och försök igen senare.",
-    "error.saveFailed.sessionExpired": "Sparingen misslyckades, din session har gåt ut. Logga in igen.",
-    "error.saveFailed.validationError": "Kan inte spara - först svara till alla tillägsfrågarna.",
-    "error.serverError": "Ett oväntat fel inträffade. Var vänlig och kontakta administrationen."
+  "button": {
+    "save": "Spara förändringar",
+    "delete": "Töm"
+  },
+
+  "message": {
+    "loadingApplications": "Ansökningar laddats...",
+    "noApplications": "Det finns inga ansöka at förändra.",
+    "changesSaved": "Alla förändrangar har sparats."
+  },
+
+  "error": {
+    "sessionExpired": "Session har gåt ut. Logga in igen.",
+    "loadingFailed": "Kunde inte ladda informationen. Var vänlig och försök igen senare.",
+    "loadingFailed_notLoggedIn": "Kunde inte ladda informationen: du har inte loggat in.",
+    "validationFailed": "Fylla in alla fält.",
+    "validationFailed_httpError": "Kunde inte ladda informationen. Var vänlig och försök igen senare.",
+    "saveFailed": "Sparingen misslyckades. Var vänlig och försök igen senare.",
+    "saveFailed_sessionExpired": "Sparingen misslyckades, din session har gåt ut. Logga in igen.",
+    "saveFailed_validationError": "Kan inte spara - först svara till alla tillägsfrågarna.",
+    "serverError": "Ett oväntat fel inträffade. Var vänlig och kontakta administrationen."
+  }
 }

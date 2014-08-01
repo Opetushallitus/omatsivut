@@ -70,8 +70,9 @@
         getJson("/omatsivut/translations/en.json"),
         getJson("/omatsivut/translations/sv.json")
       ]).then(function(translations) {
-          _.keys(translations[0]).sort().should.deep.equal(_.keys(translations[1]).sort())
-          _.keys(translations[1]).sort().should.deep.equal(_.keys(translations[2]).sort())
+          var translations = _(translations).map(function(translation) { return _.keys(util.flattenObject(translation)).sort() })
+          translations[0].should.deep.equal(translations[1])
+          translations[1].should.deep.equal(translations[2])
           _(translations[0]).any(function(val) { return _.isEmpty(val) }).should.be.false
           _(translations[1]).any(function(val) { return _.isEmpty(val) }).should.be.false
           _(translations[2]).any(function(val) { return _.isEmpty(val) }).should.be.false

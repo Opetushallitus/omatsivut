@@ -120,6 +120,22 @@ mockAjax = {
   }
 }
 
+util = {
+  flattenObject: function(obj) {
+    function flatten(obj, prefix, result) {
+      _.each(obj, function(val, id) {
+        if (_.isObject(val)) {
+          flatten(val, id + ".", result)
+        } else {
+          result[prefix + id] = val
+        }
+      })
+      return result
+    }
+    return flatten(obj, "", {})
+  }
+}
+
 db = {
   applyFixture: function(fixtureName) {
     return Q($.ajax("/omatsivut/util/fixtures/apply?fixturename=" + fixtureName, { type: "PUT" }))
