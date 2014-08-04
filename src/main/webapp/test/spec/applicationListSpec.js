@@ -14,7 +14,7 @@
     }
 
     before(function (done) {
-      session.init("300794-937F").then(emptyPage.openPage(emptyApplicationPageVisible)).done(done)
+      session.init("300794-937F","fi").then(emptyPage.openPage(emptyApplicationPageVisible)).done(done)
     })
 
     describe("jos käyttäjällä ei ole hakemuksia", function() {
@@ -25,10 +25,65 @@
     })
   })
 
+  describe('Hakemuslistaus ruotsiksi', function () {
+
+    before(function (done) {
+      session.init("010101-123N","sv").then(page.resetDataAndOpen).done(done)
+    })
+
+    describe("Hakemuksen tietojen näyttäminen", function() {
+      it("otsikko on ruotsiksi", function() {
+        expect(S("h1:first").text().trim()).to.equal('Mina ansöka' )
+      })
+      it('hakemuslistassa on hakemus henkilölle 010101-123N', function () {
+        expect(ApplicationListPage().applications()).to.contain(
+          { applicationSystemName: 'Gemensam ansökan till yrkes- och gymnasieutbildning våren 2014' }
+        )
+        expect(ApplicationListPage().applications()).to.contain(
+          { applicationSystemName: "Lisähaku kevään 2014 yhteishaussa vapaaksi jääneille paikoille samma på svenska" }
+        )
+      })
+
+      it("henkilön 010101-123N hakutoiveet ovat näkyvissä", function () {
+        expect(page.getApplication("Perusopetuksen jälkeisen valmistavan koulutuksen kesän 2014 haku EDIT").preferencesForApplication()).to.deep.equal([
+          {
+            "hakutoive.Opetuspiste": "Amiedu, Valimotie 8",
+            "hakutoive.Koulutus": "Maahanmuuttajien ammatilliseen peruskoulutukseen valmistava koulutus"
+          },
+          {
+            "hakutoive.Opetuspiste": "Ammatti-instituutti Iisakki",
+            "hakutoive.Koulutus": "Kymppiluokka"
+          },
+          {
+            "hakutoive.Opetuspiste": "Turun Kristillinen opisto",
+            "hakutoive.Koulutus": "Kymppiluokka"
+          }
+        ])
+      })
+    })
+  })
+
+  describe("Monikielisyys", function () {
+    it("kaikkien kielitiedostojen rakenne on sama", function() {
+      return Q.all([
+        getJson("/omatsivut/translations/fi.json"),
+        getJson("/omatsivut/translations/en.json"),
+        getJson("/omatsivut/translations/sv.json")
+      ]).then(function(translations) {
+          var translations = _(translations).map(function(translation) { return _.keys(util.flattenObject(translation)).sort() })
+          translations[0].should.deep.equal(translations[1])
+          translations[1].should.deep.equal(translations[2])
+          _(translations[0]).any(function(val) { return _.isEmpty(val) }).should.be.false
+          _(translations[1]).any(function(val) { return _.isEmpty(val) }).should.be.false
+          _(translations[2]).any(function(val) { return _.isEmpty(val) }).should.be.false
+      })
+    })
+  })
+
   describe('Hakemuslistaus', function () {
 
     before(function (done) {
-      session.init("010101-123N").then(page.resetDataAndOpen).done(done)
+      session.init("010101-123N","fi").then(page.resetDataAndOpen).done(done)
     })
 
     describe("Hakemuksen tietojen näyttäminen", function() {
@@ -336,7 +391,7 @@
     })
 
     describe("Lisäkysymykset", function() {
-      describe("Kysymysten suodatus koulutuksen kielen perustella", function() {
+      describe("Kysymysten suodatus koulutuksen kielen perusteella", function() {
         before(
           page.resetDataAndOpen,
           hakemus3.getPreference(0).remove,

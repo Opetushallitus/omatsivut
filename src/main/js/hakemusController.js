@@ -60,7 +60,7 @@ module.exports = function(listApp) {
           $scope.isSaveable = true
           setStatusMessage(localization("error.serverError"), "error")
         } else {
-          setStatusMessage(localization("error.validationFailed.httpError"), "error")
+          setStatusMessage(localization("error.validationFailed_httpError"), "error")
         }
 
         if (data.questions) // frontside validation does not include questions -> don't update // TODO: testikeissi tälle (vastaa kysymykseen, aiheuta fronttivalidaatiovirhe)
@@ -97,11 +97,11 @@ module.exports = function(listApp) {
       function onError(err) {
         var saveError = (function() {
           if (err.status == 400 && (_.isArray(err.data) && err.data.length > 0))
-            return "error.saveFailed.validationError"
+            return "error.saveFailed_validationError"
           else if (err.status == 400 && !(_.isArray(err.data) && err.data.length > 0))
             return "error.serverError"
           else if (err.status == 401)
-            return "error.saveFailed.sessionExpired"
+            return "error.saveFailed_sessionExpired"
           else if (err.status == 500)
             return "error.serverError"
           else

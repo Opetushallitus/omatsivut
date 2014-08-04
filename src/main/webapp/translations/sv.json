@@ -1,26 +1,46 @@
 {
-    "title.omatHakemukset": "Omat hakemukseni",
-    "label.applicationPeriod": "Hakukausi",
-    "label.applicationReceived": "Hakemus jätetty",
-    "label.applicationUpdated": "Hakemusta muokattu",
-    "label.preferences": "Hakutoiveet",
-    "label.location": "Opetuspiste",
-    "label.education": "Koulutus",
-    "label.chooseLocation": "Valitse ensin opetuspiste",
-    "button.save": "Tallenna muutokset",
-    "button.delete": "Poista",
+  "title": {
+    "omatHakemukset": "Mina ansöka"
+  },
 
-    "message.loadingApplications": "Hakemuksia ladataan...",
-    "message.noApplications": "Sinulla ei ole hakemuksia, joita on mahdollista muokata.",
-    "message.changesSaved": "Kaikki muutokset tallennettu",
-    "message.sessionExpired": "Istunto on vanhentunut. Kirjaudu uudestaan sisään",
+  "label": {
+    "applicationPeriod": "Ansökperiod",
+    "applicationReceived": "Ansökan lämnats",
+    "applicationUpdated": "Ansökan förändrats",
+    "preferences": "Ansökningsönskemål",
+    "location": "Undervisnigsställe",
+    "education": "Utbildning",
+    "chooseLocation": "Välja först undervisnigsställe"
+  },
 
-    "error.loadingFailed": "Tietojen lataus epäonnistui. Yritä myöhemmin uudelleen.",
-    "error.loadingFailed.notLoggedIn": "Tietojen lataus epäonnistui: et ole kirjautunut sisään.",
-    "error.validationFailed": "Täytä kaikki tiedot",
-    "error.validationFailed.httpError": "Tietojen haku epäonnistui. Yritä myöhemmin uudelleen.",
-    "error.saveFailed": "Tallenntaminen epäonnistui. Yritä myöhemmin uudelleen.",
-    "error.saveFailed.sessionExpired": "Tallentaminen epäonnistui, sillä istunto on vanhentunut. Kirjaudu uudestaan sisään.",
-    "error.saveFailed.validationError": "Ei tallennettu - vastaa ensin kaikkiin lisäkysymyksiin.",
-    "error.serverError": "Odottamaton virhe. Ota yhteyttä ylläpitoon."
+  "button": {
+    "save": "Spara förändringar",
+    "delete": "Töm",
+    "logout": "Logga ut"
+  },
+
+  "message": {
+    "loadingApplications": "Ansökningar laddats...",
+    "noApplications": "Det finns inga ansöka at förändra.",
+    "changesSaved": "Alla förändrangar har sparats."
+  },
+
+  "error": {
+    "sessionExpired": "Session har gåt ut. Logga in igen.",
+    "loadingFailed": "Kunde inte ladda informationen. Var vänlig och försök igen senare.",
+    "loadingFailed_notLoggedIn": "Kunde inte ladda informationen: du har inte loggat in.",
+    "validationFailed": "Fylla in alla fält.",
+    "validationFailed_httpError": "Kunde inte ladda informationen. Var vänlig och försök igen senare.",
+    "saveFailed": "Sparingen misslyckades. Var vänlig och försök igen senare.",
+    "saveFailed_sessionExpired": "Sparingen misslyckades, din session har gåt ut. Logga in igen.",
+    "saveFailed_validationError": "Kan inte spara - först svara till alla tillägsfrågarna.",
+    "serverError": "Ett oväntat fel inträffade. Var vänlig och kontakta administrationen."
+  },
+
+  "errorPage": {
+    "noApplicationsFound": {
+      "title": "Inga ansöka finns med din personbeteckningen",
+      "text": "Identifiering lyckades men inga ansöka finns med din personbeteckningen."
+    }
+  }
 }

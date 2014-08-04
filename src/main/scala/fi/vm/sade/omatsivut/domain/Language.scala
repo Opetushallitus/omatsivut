@@ -2,7 +2,7 @@ package fi.vm.sade.omatsivut.domain
 
 import fi.vm.sade.omatsivut.Logging
 
-object Language extends Enumeration with Logging{
+object Language extends Enumeration {
    type Language = Value
    val fi, sv, en = Value
    def parse(lang: String): Option[Language] = {
@@ -10,10 +10,7 @@ object Language extends Enumeration with Logging{
        Some(this.withName(lang.trim()))
      }
      catch {
-       case e: Exception => {
-         logger.warn("Unsupported language '" + lang + "'. Using fi instead", e)
-         None
-       }
+       case e: Exception => None
      }
    }
 }

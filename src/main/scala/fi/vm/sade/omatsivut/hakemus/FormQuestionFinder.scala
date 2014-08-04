@@ -9,12 +9,12 @@ import scala.collection.JavaConversions._
 import fi.vm.sade.omatsivut.domain.Notification
 
 protected object FormQuestionFinder extends Logging {
-  def findQuestionsByElementIds(contextElement: ElementWrapper, ids: Seq[String]): Set[QuestionLeafNode] = {
+  def findQuestionsByElementIds(contextElement: ElementWrapper, ids: Seq[String])(implicit lang: Language.Language): Set[QuestionLeafNode] = {
     val elements = ids.flatMap(contextElement.findById(_).toList).toSet
     findQuestionsFromElements(elements)
   }
 
-  def findQuestionsFromElements(elementsToScan: Set[ElementWrapper]): Set[QuestionLeafNode] = {
+  def findQuestionsFromElements(elementsToScan: Set[ElementWrapper])(implicit lang: Language.Language): Set[QuestionLeafNode] = {
     elementsToScan.flatMap { element =>
       element.getElementsOfType[Titled].flatMap { titled =>
         titledElementToQuestions(titled)
@@ -29,7 +29,7 @@ protected object FormQuestionFinder extends Logging {
     }.toSet
   }
 
-  private def titledElementToQuestions(elementWrapper: ElementWrapper): List[QuestionLeafNode] = {
+  private def titledElementToQuestions(elementWrapper: ElementWrapper)(implicit lang: Language.Language): List[QuestionLeafNode] = {
     val element = elementWrapper.element
     def id = QuestionId(elementWrapper.phase.getId, elementWrapper.id)
     def isRequired = element.getValidators.filter(o => o.isInstanceOf[RequiredFieldValidator]).nonEmpty
@@ -59,7 +59,7 @@ protected object FormQuestionFinder extends Logging {
   }
 
 
-  private def dropDownOrRadioOptions(e: HakuOption): List[AnswerOption] = {
+  private def dropDownOrRadioOptions(e: HakuOption)(implicit lang: Language.Language): List[AnswerOption] = {
     e.getOptions.map(o => AnswerOption(title(o), o.getValue, o.isDefaultOption)).toList
   }
 
@@ -74,24 +74,24 @@ protected object FormQuestionFinder extends Logging {
     }
   }
 
-  private def title(wrapper: ElementWrapper): String = wrapper.element match {
+  private def title(wrapper: ElementWrapper)(implicit lang: Language.Language): String = wrapper.element match {
     case e: Titled => title(e)
     case _ => wrapper.id
   }
 
-  private def title[T <: Titled](e: T): String = {
+  private def title[T <: Titled](e: T)(implicit lang: Language.Language): String = {
     val i18ntext = e.getI18nText
     if (i18ntext == null)
       ""
     else
-      i18ntext.getTranslations.get("fi") // TODO: kieliversiot
+      i18ntext.getTranslations.get(lang.toString())
   }
-  private def helpText[T <: Titled](e: T): String = {
+  private def helpText[T <: Titled](e: T)(implicit lang: Language.Language): String = {
     val help = e.getHelp()
     if (help == null)
       ""
     else
-      help.getTranslations.get("fi") // TODO: kieliversiot
+      help.getTranslations.get(lang.toString())
   }
 
   private def maxLength(element: Element) = {

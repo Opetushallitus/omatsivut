@@ -6,8 +6,12 @@ import fi.vm.sade.omatsivut.domain.Hakemus._
 import fi.vm.sade.omatsivut.fixtures.TestFixture
 import TestFixture._
 import org.specs2.mutable.Specification
+import fi.vm.sade.omatsivut.domain.Language
 
 class AddedQuestionFinderSpec extends Specification {
+
+  implicit val lang = Language.fi
+
   "RelatedQuestionHelper" should {
     "Report zero additional questions when not adding any answers" in {
       val addedQuestions = findAddedQuestions(Hakemus.emptyAnswers, Hakemus.emptyAnswers)

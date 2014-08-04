@@ -4,7 +4,7 @@ require('angular-animate');
 _ = require("underscore");
 require("../lib/ui-bootstrap-custom-tpls-0.10.0.min.js");
 
-var listApp = angular.module('listApp', ["ngResource", "ngAnimate", "RecursionHelper", "ui.bootstrap.typeahead", "template/typeahead/typeahead-popup.html", "template/typeahead/typeahead-match.html", "debounce"], function($locationProvider) {
+var listApp = angular.module('listApp', ["ngResource", "ngAnimate", "RecursionHelper", "ui.bootstrap.typeahead", "template/typeahead/typeahead-popup.html", "template/typeahead/typeahead-match.html", "debounce", "exceptionOverride"], function($locationProvider) {
   $locationProvider.html5Mode(false);
 });
 
@@ -12,13 +12,20 @@ listApp.run(function ($rootScope, localization) {
   $rootScope.localization = localization
 })
 
+var staticResources = require('./staticResources')
 require('./hakutoiveController')(listApp)
 require('./listController')(listApp)
 require('./hakemusController')(listApp)
 require('./applicationValidator')(listApp)
-require('./localization')(listApp)
+require('./localization')(listApp, staticResources)
 require('./recursionHelper')
 require('../lib/angular-debounce')
+
+angular.element(document).ready(function() {
+  staticResources.init(function() {
+    angular.bootstrap(document, ['listApp'])
+  })
+})
 
 listApp.factory("applicationsResource", ["$resource", "$location", function($resource, $location) {
   return $resource("/omatsivut/api/applications", null, {
@@ -29,14 +36,19 @@ listApp.factory("applicationsResource", ["$resource", "$location", function($res
   });
 }]);
 
+angular.module("exceptionOverride", []).factory("$exceptionHandler", function () {
+  return function (exception) {
+    throw exception
+  };
+})
+
 listApp.factory("settings", ["$animate", function($animate) {
   var testMode = window.parent.location.href.indexOf("runner.html") > 0;
   if (testMode) $animate.enabled(false);
 
   return {
     uiTransitionTime: testMode ? 10 : 500,
-    modelDebounce: testMode? 0 : 300,
-    language: "fi"
+    modelDebounce: testMode? 0 : 300
   };
 }]);
 

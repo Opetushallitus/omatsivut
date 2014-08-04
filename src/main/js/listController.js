@@ -19,7 +19,7 @@ module.exports = function(listApp) {
 
     function error(err) {
       switch (err.status) {
-        case 401: $scope.applicationStatusMessage = localization("error.loadingFailed.notLoggedIn"); break;
+        case 401: $scope.applicationStatusMessage = localization("error.loadingFailed_notLoggedIn"); break;
         default: $scope.applicationStatusMessage = localization("error.loadingFailed");
       }
       $scope.applicationStatusMessageType = "error"

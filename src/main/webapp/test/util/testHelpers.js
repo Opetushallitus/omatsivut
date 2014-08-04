@@ -67,8 +67,12 @@ wait = {
 }
 
 session = {
-  init: function(hetu) {
-    return Q($.get("/omatsivut/util/fakesession?hetu=" + hetu));
+  init: function(hetu,lang) {
+    langParam = ""
+    if (lang) {
+      langParam = "&lang=" + lang
+    }
+    return Q($.get("/omatsivut/util/fakesession?hetu=" + hetu + langParam));
   }
 }
 
@@ -116,6 +120,22 @@ mockAjax = {
   }
 }
 
+util = {
+  flattenObject: function(obj) {
+    function flatten(obj, prefix, result) {
+      _.each(obj, function(val, id) {
+        if (_.isObject(val)) {
+          flatten(val, id + ".", result)
+        } else {
+          result[prefix + id] = val
+        }
+      })
+      return result
+    }
+    return flatten(obj, "", {})
+  }
+}
+
 db = {
   applyFixture: function(fixtureName) {
     return Q($.ajax("/omatsivut/util/fixtures/apply?fixturename=" + fixtureName, { type: "PUT" }))
@@ -137,6 +157,10 @@ db = {
         }).value()
     })
   }
+}
+
+function getJson(url) {
+  return Q($.ajax({url: url, dataType: "json" }))
 }
 
 function openPage(path, predicate) {

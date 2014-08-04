@@ -1,13 +1,13 @@
 package fi.vm.sade.omatsivut.servlet
 
 import javax.servlet._
+import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import fi.vm.sade.omatsivut.domain.Language
-import fi.vm.sade.omatsivut.domain.Language._
-import javax.servlet.http.Cookie
+import fi.vm.sade.omatsivut.Logging
 
-class LanguageFilter extends Filter{
+class LanguageFilter extends Filter with Logging{
 
   val cookieName = "i18next"
   val cookieMaxAge = 60 * 60 * 24 * 1800
@@ -20,22 +20,25 @@ class LanguageFilter extends Filter{
   }
 
   def checkLanguage(request: HttpServletRequest, response: HttpServletResponse) {
-    val (lang: Language, setCookie: Boolean) = chooseLanguage(Option(request.getParameter("lang")), Option(request.getCookies()))
+    val (lang: Language.Language, setCookie: Boolean) = chooseLanguage(Option(request.getParameter("lang")), Option(request.getCookies()))
     if(setCookie) {
       addCookie(response, lang)
     }
     request.setAttribute("lang", lang)
   }
 
-  def chooseLanguage(paramVal: Option[String], cookies: Option[Array[Cookie]]): (Language, Boolean) = {
+  def chooseLanguage(paramVal: Option[String], cookies: Option[Array[Cookie]]): (Language.Language, Boolean) = {
     paramVal match {
       case Some(langStr) => {
         Language.parse(langStr) match {
           case Some(lang) => (lang, true)
-          case None => (fi, false)
+          case None => {
+            logger.warn("Unsupported language '" + langStr + "' using 'fi' instead")
+            (Language.fi, false)
+          }
         }
       }
-      case None => (langCookie(cookies).getOrElse(fi), false)
+      case None => (langCookie(cookies).getOrElse(Language.fi), false)
     }
   }
 
@@ -51,7 +54,7 @@ class LanguageFilter extends Filter{
     } yield lang
   }
 
-  def addCookie(response: HttpServletResponse, lang: Language) {
+  def addCookie(response: HttpServletResponse, lang: Language.Language) {
     val cookie = new Cookie(cookieName, lang.toString())
     cookie.setMaxAge(cookieMaxAge)
     cookie.setPath("/")

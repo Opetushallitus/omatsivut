@@ -8,9 +8,20 @@
 </head>
 <body>
 <div class="container">
-    <h1>Henkilötunnuksellasi ei löytynyt hakemuksia</h1>
-    <p>Tunnistautumisesi onnistui, mutta emme löytäneet hakemuksia henkilötunnuksellasi.</p>
-    <p><a href="logout" target="_self">Kirjaudu ulos</a></p>
+
+    <h1 data-i18n="errorPage.noApplicationsFound.title"></h1>
+    <p data-i18n="errorPage.noApplicationsFound.text"></p>
+    <p><a href="logout" target="_self" data-i18n="button.logout"></a></p>
 </div>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="lib/i18next-1.7.3.min.js"></script>
+<script language="javascript">
+    i18n.init({
+        resGetPath: "translations/__lng__.json",
+        fallbackLng: "fi"
+    }, function() {
+        $("body").i18n()
+    })
+</script>
 </body>
 </html>
