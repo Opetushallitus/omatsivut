@@ -21,6 +21,7 @@ object HakemusConverter {
       application.getOid,
       application.getReceived.getTime,
       application.getUpdated.getTime,
+      application.getState.toString,
       convertHakuToiveet(application),
       haku,
       EducationBackground(koulutusTaustaAnswers.get(baseEducationKey), !Try {koulutusTaustaAnswers.get("ammatillinenTutkintoSuoritettu").toBoolean}.getOrElse(false)),
