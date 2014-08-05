@@ -21,9 +21,19 @@ require('./localization')(listApp, staticResources)
 require('./recursionHelper')
 require('../lib/angular-debounce')
 
+var raamitLoaded = $.Deferred()
+if (document.location.hash.indexOf("skipRaamit") > 0) {
+  raamitLoaded.resolve()
+}
+$("html").on("oppija-raamit-loaded", function() {
+  raamitLoaded.resolve()
+})
+
 angular.element(document).ready(function() {
   staticResources.init(function() {
-    angular.bootstrap(document, ['listApp'])
+    raamitLoaded.done(function() {
+      angular.bootstrap(document, ['listApp'])
+    })
   })
 })
 

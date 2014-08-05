@@ -22,6 +22,8 @@ object ApplicationSettings extends Logging {
 case class ApplicationSettings(config: Config) {
   val casTicketUrl = config.getString("omatsivut.cas.ticket.url")
 
+  val raamitUrl = config.getString("omatsivut.oppija-raamit.url")
+
   val authenticationServiceConfig = getRemoteApplicationConfig(config.getConfig("omatsivut.authentication-service"))
 
   val koulutusinformaatioAoUrl = config.getString("omatsivut.koulutusinformaatio.ao.url")

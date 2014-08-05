@@ -16,9 +16,6 @@
     mocha.ui('bdd')
     mocha.reporter('html')
     mocha.timeout(10000)
-    var parent$ = window.jQuery
-    var iframe = parent$('<iframe>').attr({src: '/omatsivut/test/empty.html', width: 1024, height: 800})
-    parent$('body').append(iframe)
 </script>
 <script src="util/testHelpers.js"></script>
 <script src="page/apiDocsPage.js"></script>
@@ -32,5 +29,6 @@
         mocha.run()
     }
 </script>
+<iframe id="testframe"></iframe>
 </body>
 </html>

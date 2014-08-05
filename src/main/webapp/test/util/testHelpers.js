@@ -1,14 +1,13 @@
 var expect = chai.expect
 chai.should()
 chai.config.truncateThreshold = 0; // disable truncating
-var testFrame = window.parent.frames[0]
 
 function S(selector) {
   try {
-    if (!testFrame.jQuery) {
+    if (!testFrame() || !testFrame().jQuery) {
       return $([])
     }
-    return testFrame.jQuery(selector)
+    return testFrame().jQuery(selector)
   } catch (e) {
     console.log("Premature access to testFrame.jQuery, printing stack trace.")
     console.log(new Error().stack);
@@ -44,7 +43,7 @@ wait = {
   forAngular: function() {
     var deferred = Q.defer()
     try {
-      var angular = testFrame.angular
+      var angular = testFrame().angular
       var el = angular.element(S("#appRoot"))
       var timeout = angular.element(el).injector().get('$timeout')
       angular.element(el).injector().get('$browser').notifyWhenNoOutstandingRequests(function() {
@@ -90,10 +89,10 @@ uiUtil = {
 mockAjax = {
   init: function() {
     var deferred = Q.defer()
-    if (testFrame.sinon)
+    if (testFrame().sinon)
       deferred.resolve()
     else
-      testFrame.$.getScript('test/lib/sinon-server-1.10.3.js', function() { deferred.resolve() } )
+      testFrame().$.getScript('test/lib/sinon-server-1.10.3.js', function() { deferred.resolve() } )
     return deferred.promise
   },
   respondOnce: function (method, url, responseCode, responseBody) {
@@ -115,8 +114,8 @@ mockAjax = {
       }
     }
 
-    testFrame._fakeAjaxParams = { method: method, url: url, responseCode: responseCode, responseBody: responseBody }
-    testFrame.eval("(" + fakeAjax.toString() + ")()")
+    testFrame()._fakeAjaxParams = { method: method, url: url, responseCode: responseCode, responseBody: responseBody }
+    testFrame().eval("(" + fakeAjax.toString() + ")()")
   }
 }
 
@@ -163,15 +162,19 @@ function getJson(url) {
   return Q($.ajax({url: url, dataType: "json" }))
 }
 
+function testFrame() {
+  return $("#testframe").get(0).contentWindow
+}
+
 function openPage(path, predicate) {
   if (!predicate) {
-    predicate = function() { return testFrame.jQuery }
+    predicate = function() { return testFrame().jQuery }
   }
   return function() {
-    S("body").attr("stale", "true")
-    testFrame.location.replace(path)
+    var newTestFrame = $('<iframe>').attr({src: path, width: 1024, height: 800, id: "testframe"})
+    $("#testframe").replaceWith(newTestFrame)
     return wait.until(function() {
-      return predicate() && !S("body").attr("stale")
+      return predicate()
     })()
   }
 }

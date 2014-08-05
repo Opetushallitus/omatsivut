@@ -6,7 +6,7 @@ function ApplicationListPage() {
       if (!pageLoadedCheck) {
         pageLoadedCheck = applicationPageVisible
       }
-      return openPage("/omatsivut/", pageLoadedCheck)
+      return openPage("/omatsivut/#skipRaamit", pageLoadedCheck)
     },
 
     resetDataAndOpen: function () {
@@ -141,7 +141,7 @@ function ApplicationListPage() {
       scope.$apply(function() { manipulationFunction(scope) })
 
       function getApplicationScope() {
-        return testFrame.angular.element(getApplicationElement()).scope()
+        return testFrame().angular.element(getApplicationElement()).scope()
       }
     }
 
@@ -161,7 +161,7 @@ function ApplicationListPage() {
           return {
             title: $(this).find(".title").text(),
             validationMessage: $(this).find(".validation-message").text(),
-            id: testFrame.angular.element($(this).parent()).scope().questionNode.question.id.questionId
+            id: testFrame().angular.element($(this).parent()).scope().questionNode.question.id.questionId
 
           }
         }).toArray()
