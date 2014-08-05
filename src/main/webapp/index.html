@@ -71,7 +71,7 @@
                                 </div>
 
                                 <div class="item-content">
-                                    <button ng-show="canRemovePreference($index)" class="delete-btn" disable-click-focus confirm confirm-text="{{localization('button.delete')}}" confirm-action="removeHakutoive($index)" aria-label="Poista hakutoive"></button>
+                                    <button ng-show="canRemovePreference($index)" class="delete-btn" disable-click-focus confirm confirm-text="{{localization('button.delete_confirm')}}" confirm-action="removeHakutoive($index)" aria-label="{{ localization('button.delete_ariaLabel') }}"></button>
                                 </div>
                             </div>
                         </div>

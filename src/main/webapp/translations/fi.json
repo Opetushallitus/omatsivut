@@ -15,7 +15,8 @@
 
   "button": {
     "save": "Tallenna muutokset",
-    "delete": "Poista",
+    "delete_confirm": "Poista",
+    "delete_ariaLabel": "Poista hakutoive valitsemalla tämä kaksi kertaa  ",
     "logout": "Kirjaudu ulos"
   },
 

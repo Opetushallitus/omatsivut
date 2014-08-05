@@ -15,7 +15,8 @@
 
   "button": {
     "save": "Spara förändringar",
-    "delete": "Töm",
+    "delete_confirm": "Ta bort",
+    "delete_ariaLabel": "Ta bort ansökningsönskemål med väljä det hät två gånger",
     "logout": "Logga ut"
   },
 

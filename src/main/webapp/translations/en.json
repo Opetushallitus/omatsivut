@@ -15,7 +15,8 @@
 
   "button": {
     "save": "Save changes",
-    "delete": "Delete",
+    "delete_confirm": "Delete",
+    "delete_ariaLabel": "Remove preference by clicking this twice",
     "logout": "Log out"
   },
 
