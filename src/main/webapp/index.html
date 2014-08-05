@@ -12,7 +12,7 @@
             <a href="login" target="_self">Kirjaudu sisään</a>
             <a href="logout" target="_self">Kirjaudu ulos</a>
 
-            <div class="application-list-status" ng-bind="applicationStatusMessage" ng-class="applicationStatusMessageType" ng-cloak ng-show="applicationStatusMessage.length > 0">
+            <div role="status" class="application-list-status" ng-bind="applicationStatusMessage" ng-class="applicationStatusMessageType" ng-cloak ng-show="applicationStatusMessage.length > 0">
             </div>
 
             <ul id="hakemus-list" ng-cloak>
@@ -28,7 +28,7 @@
                         <header class="application-section-heading">
                             {{ localization('label.preferences') }}
                             <button class="float-right save-btn" ng-disabled="!hasChanged || statusMessageType=='pending' || !isSaveable || isValidating" ng-click="saveApplication()">{{ localization('button.save') }}</button>
-                            <span class="status-message float-right" ng-class="{'ajax-spinner': statusMessageType=='pending', error: statusMessageType=='error'}" ng-bind="statusMessage"></span>
+                            <span role="status" class="status-message float-right" ng-class="{'ajax-spinner': statusMessageType=='pending', error: statusMessageType=='error'}" ng-bind="statusMessage"></span>
                         </header>
 
                         <div class="preference-list" ng-class="{validating: isValidating}" sortable sortable-item=".preference-list-item" sortable-moved="movePreference">
