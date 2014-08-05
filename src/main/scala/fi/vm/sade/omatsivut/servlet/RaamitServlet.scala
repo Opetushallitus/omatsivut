@@ -6,16 +6,14 @@ import fi.vm.sade.omatsivut.koulutusinformaatio.KoulutusInformaatioService
 import org.scalatra.json.JacksonJsonSupport
 import org.scalatra.swagger.{Swagger, SwaggerSupport}
 
-class NaviServlet(implicit val appConfig: AppConfig) extends OmatSivutServletBase {
+class RaamitServlet(implicit val appConfig: AppConfig) extends OmatSivutServletBase {
 
   before() {
     contentType ="application/javascript"
   }
 
   get("/*") {
-"""if (document.location.hash.indexOf("skipRaamit") > 0) {
-
-} else {
+"""if (document.location.hash.indexOf("skipRaamit") < 0) {
   var raamit = document.getElementById("apply-raamit");
   if(!raamit) {
       raamit = document.createElement("script");
