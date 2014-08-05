@@ -44,7 +44,7 @@ module.exports = function(listApp) {
       }
 
       function success(data) {
-        setStatusMessage("")
+        setStatusMessage(localization("message.validationOk"), "info")
         $scope.isSaveable = true
         setValidatingIndicator(false)
         $scope.application.importQuestions(data.questions)

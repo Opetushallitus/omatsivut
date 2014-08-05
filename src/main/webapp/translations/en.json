@@ -22,6 +22,7 @@
   "message": {
     "loadingApplications": "Loading applications...",
     "noApplications": "You don't have applications that can be edited.",
+    "validationOk": "Do not forget to save the changes",
     "changesSaved": "All changes saved."
   },
 

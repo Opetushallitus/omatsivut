@@ -22,6 +22,7 @@
   "message": {
     "loadingApplications": "Hakemuksia ladataan...",
     "noApplications": "Sinulla ei ole hakemuksia, joita on mahdollista muokata.",
+    "validationOk": "Muista tallentaa muutokset",
     "changesSaved": "Kaikki muutokset tallennettu"
   },
 
