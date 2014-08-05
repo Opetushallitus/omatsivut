@@ -37,7 +37,6 @@ module.exports = function(listApp) {
     }
 
     function validateHakutoiveet() {
-      $scope.isSaveable = false
       applicationValidator($scope.application, beforeBackendValidation, success, error)
 
       function beforeBackendValidation() {
@@ -55,6 +54,7 @@ module.exports = function(listApp) {
       function error(data) {
         setValidatingIndicator(false)
         if (!data.statusCode) { // validointi epäonnistui frontendissä
+          $scope.isSaveable = false
           setStatusMessage(localization("error.validationFailed"), "error")
         } else if (data.statusCode === 200) {
           $scope.isSaveable = !Hakutoive.hasHakutoiveErrors(data.errors)
@@ -66,6 +66,7 @@ module.exports = function(listApp) {
           $scope.isSaveable = true
           setStatusMessage(localization("error.serverError"), "error")
         } else {
+          $scope.isSaveable = false
           setStatusMessage(localization("error.validationFailed_httpError"), "error")
         }
 

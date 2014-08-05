@@ -27,7 +27,7 @@
                     <section class="application-section">
                         <header class="application-section-heading">
                             {{ localization('label.preferences') }}
-                            <button class="float-right save-btn" ng-disabled="!hasChanged || statusMessageType=='pending' || !isSaveable" ng-click="saveApplication()">{{ localization('button.save') }}</button>
+                            <button class="float-right save-btn" ng-disabled="!hasChanged || statusMessageType=='pending' || !isSaveable || isValidating" ng-click="saveApplication()">{{ localization('button.save') }}</button>
                             <span class="status-message float-right" ng-class="{'ajax-spinner': statusMessageType=='pending', error: statusMessageType=='error'}" ng-bind="statusMessage"></span>
                         </header>
 
