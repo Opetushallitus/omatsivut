@@ -15,6 +15,8 @@
 
   "button": {
     "save": "Save changes",
+    "sortUp_ariaLabel": "Lift up preference",
+    "sortDown_ariaLabel": "Bring down preference",
     "delete_confirm": "Delete",
     "delete_ariaLabel": "Remove preference by clicking this twice",
     "logout": "Log out"

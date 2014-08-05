@@ -35,8 +35,8 @@
                             <div class="overlay"></div>
                             <div class="preference-list-item" ng-repeat="hakutoive in application.hakutoiveet" ng-controller="hakutoiveController">
                                 <div class="item-content">
-                                    <button class="sort-arrow-up" ng-disabled="!application.canMoveTo($index, $index-1)" disable-click-focus></button>
-                                    <button class="sort-arrow-down" ng-disabled="!application.canMoveTo($index, $index+1)" disable-click-focus></button>
+                                    <button class="sort-arrow-up" aria-label="{{ localization('button.sortUp_ariaLabel') }}" ng-disabled="!application.canMoveTo($index, $index-1)" disable-click-focus></button>
+                                    <button class="sort-arrow-down" aria-label="{{ localization('button.sortDown_ariaLabel') }}" ng-disabled="!application.canMoveTo($index, $index+1)" disable-click-focus></button>
                                     <span class="row-number">{{$index+1}}.</span>
                                 </div>
 
