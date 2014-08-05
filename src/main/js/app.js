@@ -22,6 +22,9 @@ require('./recursionHelper')
 require('../lib/angular-debounce')
 
 var raamitLoaded = $.Deferred()
+if (document.location.hash.indexOf("skipRaamit") > 0) {
+  raamitLoaded.resolve()
+}
 $("html").on("oppija-raamit-loaded", function() {
   raamitLoaded.resolve()
 })

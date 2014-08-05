@@ -6,7 +6,7 @@ function ApplicationListPage() {
       if (!pageLoadedCheck) {
         pageLoadedCheck = applicationPageVisible
       }
-      return openPage("/omatsivut/", pageLoadedCheck)
+      return openPage("/omatsivut/#skipRaamit", pageLoadedCheck)
     },
 
     resetDataAndOpen: function () {
