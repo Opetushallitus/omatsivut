@@ -14,13 +14,14 @@ module.exports = function(listApp) {
         }
       }
 
-      return function(application, success, error) {
+      return function(application, beforeBackendValidation, success, error) {
         currentRequest = {}
         success = onlyIfCurrentRequest(currentRequest, success)
         error = onlyIfCurrentRequest(currentRequest, error)
 
         var preferencesValid = application.validatePreferences()
         if (preferencesValid) {
+          beforeBackendValidation()
           validateBackend(application, success, error)
         } else {
           error({

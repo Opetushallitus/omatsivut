@@ -31,8 +31,9 @@
                             <span class="status-message float-right" ng-class="{'ajax-spinner': statusMessageType=='pending', error: statusMessageType=='error'}" ng-bind="statusMessage"></span>
                         </header>
 
-                        <ul class="preference-list" sortable sortable-moved="movePreference">
-                            <li class="preference-list-item" ng-repeat="hakutoive in application.hakutoiveet" ng-controller="hakutoiveController">
+                        <div class="preference-list" ng-class="{validating: isValidating}" sortable sortable-item=".preference-list-item" sortable-moved="movePreference">
+                            <div class="overlay"></div>
+                            <div class="preference-list-item" ng-repeat="hakutoive in application.hakutoiveet" ng-controller="hakutoiveController">
                                 <div class="item-content">
                                     <button class="sort-arrow-up" ng-disabled="!application.canMoveTo($index, $index-1)" disable-click-focus></button>
                                     <button class="sort-arrow-down" ng-disabled="!application.canMoveTo($index, $index+1)" disable-click-focus></button>
@@ -72,8 +73,8 @@
                                 <div class="item-content">
                                     <button ng-show="canRemovePreference($index)" class="delete-btn" disable-click-focus confirm confirm-text="{{localization('button.delete')}}" confirm-action="removeHakutoive($index)" aria-label="Poista hakutoive"></button>
                                 </div>
-                            </li>
-                        </ul>
+                            </div>
+                        </div>
                     </section>
                     <section class="application-section additional-questions" ng-if="application.additionalQuestions.questionNodes.length > 0">
                         <question-template question-node="application.additionalQuestions" application="application" class="questions" level="-1">

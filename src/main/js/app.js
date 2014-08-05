@@ -76,27 +76,28 @@ listApp.directive('sortable', ["settings", function(settings) {
 
     var switchPlaces = function(element1, element2) {
       if (element1.index() < element2.index()) {
-        moveDown(element1);
-        moveUp(element2);
+        moveDown(element1)
+        moveUp(element2)
       } else {
-        moveUp(element1);
-        moveDown(element2);
+        moveUp(element1)
+        moveDown(element2)
       }
 
       setTimeout(function() {
         $scope.$apply(function(self) {
-          self[attrs.sortableMoved](element1.index(), element2.index());
-          resetSlide(element1);
-          resetSlide(element2);
+          var items = $element.find(attrs.sortableItem)
+          self[attrs.sortableMoved](items.index(element1), items.index(element2))
+          resetSlide(element1)
+          resetSlide(element2)
         });
-      }, settings.uiTransitionTime);
+      }, settings.uiTransitionTime)
     };
 
     var arrowClicked = function(elementF) {
       return function(evt) {
         var btn = $(evt.target);
         if (!btn.hasClass("disabled")) {
-          var element1 = btn.closest("li");
+          var element1 = btn.closest(attrs.sortableItem);
           var element2 = element1[elementF]();
           switchPlaces(element1, element2);
         }

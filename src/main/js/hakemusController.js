@@ -7,6 +7,7 @@ module.exports = function(listApp) {
 
     $scope.hasChanged = false
     $scope.isSaveable = true
+    $scope.isValidating = false
 
     $scope.timestampLabel = function() {
       if ($scope.application.received == $scope.application.updated)
@@ -36,18 +37,23 @@ module.exports = function(listApp) {
     }
 
     function validateHakutoiveet() {
-      setStatusMessage("", "pending")
       $scope.isSaveable = false
-      applicationValidator($scope.application, success, error)
+      applicationValidator($scope.application, beforeBackendValidation, success, error)
+
+      function beforeBackendValidation() {
+        setValidatingIndicator(true)
+      }
 
       function success(data) {
-        $scope.isSaveable = true
         setStatusMessage("")
+        $scope.isSaveable = true
+        setValidatingIndicator(false)
         $scope.application.importQuestions(data.questions)
         updateValidationMessages([], true)
       }
 
       function error(data) {
+        setValidatingIndicator(false)
         if (!data.statusCode) { // validointi epäonnistui frontendissä
           setStatusMessage(localization("error.validationFailed"), "error")
         } else if (data.statusCode === 200) {
@@ -74,6 +80,10 @@ module.exports = function(listApp) {
       $scope.statusMessage = msg
       $scope.statusMessageType = type || ""
     }
+
+    var setValidatingIndicator = debounce(function(isVisible) {
+      $scope.isValidating = isVisible
+    }, 500)
 
     $scope.movePreference = function(from, to) {
       if (to >= 0 && to < this.application.hakutoiveet.length) {
