@@ -33,6 +33,7 @@ angular.element(document).ready(function() {
   staticResources.init(function() {
     raamitLoaded.done(function() {
       angular.bootstrap(document, ['listApp'])
+      $("body").attr("aria-busy","false")
     })
   })
 })
