@@ -75,7 +75,7 @@ object OmatsivutBuild extends Build {
           ExclusionRule(organization = "org.json4s"),
           ExclusionRule(organization = "com.wordnik")
         ),
-        "fi.vm.sade.log" % "log-service" % "8.0-SNAPSHOT" % "test" classifier "classes" excludeAll(
+        "fi.vm.sade.log" % "log-service" % "8.0-SNAPSHOT" classifier "classes" excludeAll(
           ExclusionRule(organization = "org.springframework.data"),
           ExclusionRule(organization = "org.springframework"),
           ExclusionRule(organization = "fi.vm.sade.generic")
