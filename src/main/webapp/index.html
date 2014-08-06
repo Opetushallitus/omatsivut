@@ -43,7 +43,7 @@
 
                         <div class="preference-list" ng-class="{validating: isValidating}" sortable sortable-item=".preference-list-item" sortable-moved="movePreference">
                             <div class="overlay"></div>
-                            <div class="preference-list-item" aria-label="{{ hakutoive.data.Opetuspiste + ' - ' + hakutoive.data.Koulutus }}" ng-repeat="hakutoive in application.hakutoiveet" ng-controller="hakutoiveController">
+                            <div class="preference-list-item" aria-label="{{ ($index+1) + '. ' + hakutoive.data.Opetuspiste + ' - ' + hakutoive.data.Koulutus }}" ng-repeat="hakutoive in application.hakutoiveet" ng-controller="hakutoiveController">
                                 <div class="item-content">
                                     <button class="sort-arrow-up" aria-label="{{ localization('button.sortUp_ariaLabel') }}" ng-disabled="!application.canMoveTo($index, $index-1)" disable-click-focus></button>
                                     <button class="sort-arrow-down" aria-label="{{ localization('button.sortDown_ariaLabel') }}" ng-disabled="!application.canMoveTo($index, $index+1)" disable-click-focus></button>
