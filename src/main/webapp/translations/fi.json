@@ -16,6 +16,8 @@
   "button": {
     "save": "Tallenna muutokset",
     "preview": "Näytä",
+    "sortUp_ariaLabel": "Nosta hakutoivetta",
+    "sortDown_ariaLabel": "Laske hakutoivetta",
     "delete_confirm": "Poista",
     "delete_ariaLabel": "Poista hakutoive valitsemalla tämä kaksi kertaa  ",
     "logout": "Kirjaudu ulos"

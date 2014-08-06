@@ -15,8 +15,8 @@ class ValidateApplicationSpec extends HakemusApiSpecification {
     "validate application" in {
       withHakemus(TestFixture.hakemus1) { hakemus =>
         validate(hakemus) { (errors, structuredQuestions) =>
-          errors.size must_== 0
-          structuredQuestions.size must_== 0
+          errors must_== List()
+          structuredQuestions must_== List()
         }
       }
     }
@@ -26,8 +26,8 @@ class ValidateApplicationSpec extends HakemusApiSpecification {
       val extraQuestionTwo: (Hakemus) => Hakemus = answerExtraQuestion(preferencesPhaseKey, "hakutoive-tuntematon-kysymys", "osaaminen-testivastaus")
       modifyHakemus(hakemus1)(extraQuestionOne andThen extraQuestionTwo) { newHakemus =>
         validate(newHakemus) { (errors, structuredQuestions) =>
-          errors.size must_== 0
-          structuredQuestions.size must_== 0
+          errors must_== List()
+          structuredQuestions must_== List()
         }
       }
     }
