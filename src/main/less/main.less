@@ -1,6 +1,31 @@
 @import "typeahead.less";
 @import "common.less";
 
+body {
+  .body-font;
+}
+
+h1 {
+  .heading-font;
+  margin: 20px 0px;
+}
+
+h2 {
+  .sub-heading-font;
+  margin: 20px 0px;
+
+  &:first-child {
+    margin-top: 0;
+  }
+}
+
+a {
+  color: @link-color;
+  &:active { color: @link-active-color; }
+  &:hover { color: @link-hover-color; }
+  &:visited { color: @link-visited-color; }
+}
+
 .container {
   max-width: 1160px;
   margin: 50px auto 100px auto;
