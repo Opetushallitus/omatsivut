@@ -16,8 +16,8 @@ log4j.appender.FILE.layout.ConversionPattern=%d{ISO8601} %-5p {%X{user}} [%t] %-
 log4j.appender.FILE.MaxFileSize=10MB
 log4j.appender.FILE.MaxBackupIndex=20
 {% endraw %}
-# Log at least app config start
-log4j.logger.fi.vm.sade.omatsivut.AppConfig$=INFO
+# Log omatsivut with INFO
+log4j.logger.fi.vm.sade.omatsivut=INFO
 # By default hide these spammers by default
 log4j.logger.org.apache.cxf=ERROR
 log4j.logger.org.springframework=ERROR
