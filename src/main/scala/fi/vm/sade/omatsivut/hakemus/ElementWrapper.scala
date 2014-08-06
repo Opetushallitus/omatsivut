@@ -1,6 +1,7 @@
 package fi.vm.sade.omatsivut.hakemus
 
 import fi.vm.sade.haku.oppija.lomake.domain.elements._
+import fi.vm.sade.haku.oppija.lomake.domain.elements.custom.gradegrid.GradeGridOptionQuestion
 import fi.vm.sade.haku.oppija.lomake.domain.elements.questions.OptionQuestion
 import fi.vm.sade.omatsivut.domain.Hakemus.Answers
 import fi.vm.sade.omatsivut.domain.Language.Language
@@ -17,6 +18,7 @@ trait ElementWrapper {
   def children: List[ElementWrapper]
   lazy val options: List[OptionWrapper] = element match {
     case e: OptionQuestion => e.getOptions.toList.map{ option => new OptionWrapper(wrap(option)) }
+    case e: GradeGridOptionQuestion => e.getOptions.toList.map{ option => new OptionWrapper(wrap(option))}
   }
   def parent: Option[ElementWrapper]
   def id = element.getId
@@ -107,6 +109,9 @@ object ElementWrapper {
   def wrapFiltered(element: Element, answers: FlatAnswers) = {
     new FilteredElementWrapper(element, None, answers)
   }
+  def wrapUnfiltered(element: Element) = {
+    new UnfilteredElementWrapper(element, None)
+  }
 }
 
 
@@ -119,5 +124,17 @@ class FilteredElementWrapper(val element: Element, val parent: Option[ElementWra
 
   override protected def wrap(element: Element) = {
     new FilteredElementWrapper(element, Some(this), answers)
+  }
+}
+
+class UnfilteredElementWrapper(val element: Element, val parent: Option[ElementWrapper]) extends ElementWrapper {
+  import collection.JavaConversions._
+
+  override lazy val children = {
+    element.getChildren.toList.map(new UnfilteredElementWrapper(_, Some(this)))
+  }
+
+  override protected def wrap(element: Element) = {
+    new UnfilteredElementWrapper(element, Some(this))
   }
 }

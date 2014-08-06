@@ -6,6 +6,10 @@ import fi.vm.sade.omatsivut.AppConfig.AppConfig
 case class FixtureImporter(implicit val appConfig: AppConfig) {
   def applyFixtures(fixtureName: String = "") {
     MongoFixtureImporter.importJsonFixtures(appConfig.mongoTemplate, appConfig.springContext.applicationDAO)
+    applyOverrides(fixtureName)
+  }
+
+  def applyOverrides(fixtureName: String = "") {
     fixtureName match {
       case "peruskoulu" => PeruskouluFixture(appConfig).apply
       case _ =>

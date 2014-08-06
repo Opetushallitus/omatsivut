@@ -3,7 +3,7 @@ package fi.vm.sade.omatsivut.hakemus
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
 import fi.vm.sade.haku.oppija.lomake.domain.elements.custom.SocialSecurityNumber
-import fi.vm.sade.haku.oppija.lomake.domain.elements.custom.gradegrid.GradeGrid
+import fi.vm.sade.haku.oppija.lomake.domain.elements.custom.gradegrid.{GradeGridAddLang, GradeGridOptionQuestion, GradeGridTitle, GradeGrid}
 import fi.vm.sade.haku.oppija.lomake.domain.elements.questions.{CheckBox, OptionQuestion, TextQuestion, TextArea}
 import fi.vm.sade.haku.oppija.lomake.domain.elements.{TitledGroup, Text, Theme, Phase}
 import fi.vm.sade.haku.oppija.lomake.domain.rules.{AddElementRule, RelatedQuestionRule}
@@ -32,21 +32,19 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
     val answers: FlatAnswers = HakemusConverter.flattenAnswers(ApplicationUpdater.allAnswersFromApplication(application))
     val form = ElementWrapper.wrapFiltered(applicationSystem.getForm, answers)
 
-    def themePreview(phase: ElementWrapper): TypedTag[String] = {
-      div(`class` := "theme")(h2(phase.title), phase.children.flatMap(questionsPreview))
-    }
-
     def questionsPreview(element: ElementWrapper): List[TypedTag[String]] = {
       // TODO: GradeGrid, PrecerenceTable, DateQuestion, DiscretionaryAttachments
 
       element.element match {
-        case _: GradeGrid => List(div(`class` := "grid")) // <- todo test data missing (try peruskoulu fixture)
+        case _: GradeGrid => List(gradeGridPreview(element))
         case _: TextArea => List(textQuestionPreview(element))
         case _: SocialSecurityNumber => List(textQuestionPreview(element))
         case _: TextQuestion => List(textQuestionPreview(element))
         case _: OptionQuestion => List(optionQuestionPreview(element))
         case _: CheckBox => List(checkBoxPreview(element))
-        case _: RelatedQuestionRule => element.children.flatMap(questionsPreview)
+        case _: Theme => List(themePreview(element))
+        case _: Phase => flattenedPreview(element)
+        case _: RelatedQuestionRule => flattenedPreview(element)
         case _: Text => List(textPreview(element))
         case _: TitledGroup => List(titledGroupPreview(element))
         case _: AddElementRule => Nil
@@ -54,6 +52,14 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
           logger.warn("Ignoring element " + element.element.getType + ": " + element.id)
           Nil
       }
+    }
+
+    def themePreview(element: ElementWrapper): TypedTag[String] = {
+      div(`class` := "theme")(h2(element.title), flattenedPreview(element))
+    }
+
+    def flattenedPreview(element: ElementWrapper) = {
+      element.children.flatMap(questionsPreview)
     }
 
     def questionPreview(question: String, answer: String) = {
@@ -68,11 +74,15 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
     }
 
     def optionQuestionPreview(element: ElementWrapper) = {
-      val answer = element.options
-        .find { option => Some(option.value) == answers.get(element.id)}
+      val answer = answerFromOptions(element.options, element.id)
+      questionPreview(element.title, answer)
+    }
+
+    def answerFromOptions(options: List[OptionWrapper], key: String) = {
+      options
+        .find { option => Some(option.value) == answers.get(key)}
         .map { option => option.title }
         .getOrElse("")
-      questionPreview(element.title, answer)
     }
 
     def checkBoxPreview(element: ElementWrapper) = {
@@ -92,6 +102,45 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
       )
     }
 
+    def gradeGridPreview(gridElement: ElementWrapper) = {
+      table(`class` := "gradegrid")(
+        thead(
+          td("Oppiaine") :: td() :: (if (gridElement.element.asInstanceOf[GradeGrid].isExtraColumn) {
+            List(td("Yhteinen oppiaine"), td("Valinnainen aine"), td("Toinen valinnainen aine"))
+          } else {
+            List(td("Arvosana"))
+          })
+        ),
+        tbody(gridElement.children.map { row =>
+          tr(row.children.map { column =>
+            td(
+              column.children.map { dataElement =>
+                gradeGridElementPreview(answerFromOptions _, dataElement)
+              }
+            )
+          }
+          )
+        })
+      )
+    }
+
+    def gradeGridElementPreview(answerFromOptions: (List[OptionWrapper], String) => String, dataElement: ElementWrapper): List[String] = {
+      dataElement.element match {
+        case _: GradeGridTitle => List(dataElement.title)
+        case _: GradeGridOptionQuestion =>
+          val gradeValue = answerFromOptions(dataElement.options, dataElement.id)
+          val kymppiValue = answerFromOptions(dataElement.options, dataElement.id + "_10")
+          List(kymppiValue match {
+            case "" => gradeValue
+            case value => value + "(" + gradeValue + ")"
+          })
+        case _: GradeGridAddLang => Nil
+        case _ =>
+          logger.warn("Ignoring grade grid element " + dataElement.element.getType + ": " + dataElement.id)
+          Nil
+      }
+    }
+
     def textPreview(element: ElementWrapper) = {
       div(`class` := "text")(element.title)
     }
@@ -100,7 +149,7 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
       body(
         header(
           h1(applicationSystem.getName.getTranslations.get(language.toString))
-        ) :: form.getElementsOfType[Theme].map(themePreview)
+        ) :: form.getElementsOfType[Phase].flatMap(questionsPreview)
       )
     ).toString
   }
