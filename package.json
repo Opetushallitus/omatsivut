@@ -12,7 +12,8 @@
     "underscore": "^1.6.0",
     "angular": "~1.2",
     "ng-resource": "~1.2",
-    "angular-animate": "~1.2"
+    "angular-animate": "~1.2",
+    "moment": "^2.8.1"
   },
   "dependencies": {
     "node-static": "0.7.3",

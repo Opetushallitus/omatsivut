@@ -1,6 +1,8 @@
 var resources = {
   init: function(callback) {
-    loadTranslations(function(translations) {
+    var language = readLanguageCookie()
+    setTimeformat(language)
+    loadTranslations(language, function(translations) {
       resources.translations = translations
       callback()
     })
@@ -9,8 +11,14 @@ var resources = {
 
 module.exports = resources
 
-function loadTranslations(callback) {
-  var language = readLanguageCookie()
+function setTimeformat(language) {
+  if (language == "en")
+    moment.locale("en-gb")
+  else
+    moment.locale(language)
+}
+
+function loadTranslations(language, callback) {
   $('html').attr('lang', language)
   var self = this
   $.ajax({ url: "/omatsivut/translations/" + language + ".json", dataType: "json" }).done(function(data) {

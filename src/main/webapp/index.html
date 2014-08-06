@@ -19,12 +19,22 @@
 
                 <li ng-repeat="application in applications" class="application-list-item" ng-controller="hakemusController" highlight-save>
                     <h2>{{application.haku.name }}</h2>
-                    <p ng-repeat="period in application.haku.applicationPeriods">
-                      {{ localization('label.applicationPeriod') }}: <time datetime="{{ period.start | date:'yyyy-MM-ddTHH:mmZ' }}">{{period.start | date:'dd.MM.yyyy HH:mm'}}</time> - <time datetime="{{ period.end | date:'yyyy-MM-ddTHH:mmZ' }}">{{period.end | date:'dd.MM.yyyy HH:mm'}}</time></p>
+                    <p>
+                        <div ng-if="applicationPeriod.active">
+                            {{ localization('label.applicationPeriodEnds') }} <time datetime="{{ applicationPeriod.end | date:'yyyy-MM-ddTHH:mmZ' }}">{{ formatApplicationPeriod(applicationPeriod.end) }}</time>
+                        </div>
+                        <div ng-if="!applicationPeriod.active">
+                            <strong>{{ localization('label.applicationPeriodEnded') }}</strong>
+                        </div>
                     </p>
-                    <p class="timestamp">{{ timestampLabel() }} <time datetime="{{ application.updated | date:'yyyy-MM-ddTHH:mmZ' }}">{{ application.updated | date:'dd.MM.yyyy HH:mm:ss' }}</time></p>
+                    <p>
+                        <a href="#">{{ localization('button.showApplication') }}</a>
+                        <span class="timestamp">
+                            ({{ timestampLabel() }} <time datetime="{{ application.updated | date:'yyyy-MM-ddTHH:mmZ' }}">{{ formatTimestamp(application.updated) }}</time>)
+                        </span>
+                    </p>
 
-                    <section class="application-section">
+                    <section class="application-section" ng-if="applicationPeriod.active">
                         <header class="application-section-heading">
                             {{ localization('label.preferences') }}
                             <button class="float-right save-btn" ng-disabled="!hasChanged || statusMessageType=='pending' || !isSaveable || isValidating" ng-click="saveApplication()">{{ localization('button.save') }}</button>
