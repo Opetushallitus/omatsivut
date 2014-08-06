@@ -21,7 +21,10 @@ trait ElementWrapper {
   def parent: Option[ElementWrapper]
   def id = element.getId
   def title(implicit lang: Language) = {
-    element.asInstanceOf[Titled].getI18nText.getTranslations.get(lang.toString)
+    element.asInstanceOf[Titled].getI18nText match {
+      case null => ""
+      case i18n => i18n.getTranslations.get(lang.toString)
+    }
   }
   
   def findById(idToLookFor: String):Option[ElementWrapper] = {
