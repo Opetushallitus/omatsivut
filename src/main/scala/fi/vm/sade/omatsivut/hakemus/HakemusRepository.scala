@@ -6,12 +6,18 @@ import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
 import fi.vm.sade.omatsivut._
 import fi.vm.sade.omatsivut.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.auditlog.{ShowHakemus, UpdateHakemus, AuditLogger}
-import fi.vm.sade.omatsivut.domain.Hakemus
-import fi.vm.sade.omatsivut.domain.Language
+import fi.vm.sade.omatsivut.domain.{Hakemus, Language}
 
 case class HakemusRepository(implicit val appConfig: AppConfig) extends Logging {
   import collection.JavaConversions._
   private val dao = appConfig.springContext.applicationDAO
+
+  def canUpdate(applicationSystem: ApplicationSystem)(implicit lang: Language.Language) = {
+    val haku = HakuConverter.convertToHaku(applicationSystem)
+    haku.applicationPeriods.exists(hakuAika => {
+      hakuAika.active
+    })
+  }
 
   def updateHakemus(applicationSystem: ApplicationSystem)(hakemus: Hakemus, userOid: String)(implicit lang: Language.Language): Hakemus = {
     val updatedHakemus = hakemus.copy(updated = new Date().getTime)

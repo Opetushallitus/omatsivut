@@ -9,7 +9,7 @@ import org.json4s.jackson.{JsonMethods, Serialization}
 import org.scalatra.json._
 import org.scalatra.swagger.SwaggerSupportSyntax.OperationBuilder
 import org.scalatra.swagger._
-import org.scalatra.{BadRequest, Ok}
+import org.scalatra.{Forbidden, BadRequest, Ok}
 
 class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfig) extends OmatSivutServletBase with JacksonJsonSupport with JsonFormats with SwaggerSupport with Authentication {
   override def applicationName = Some("api")
@@ -40,6 +40,9 @@ class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfi
   put("/applications/:oid", operation(putApplicationsSwagger)) {
     val updated = Serialization.read[Hakemus](request.body)
     val applicationSystem = applicationSystemService.getApplicationSystem(updated.haku.get.oid)
+    if(!HakemusRepository().canUpdate(applicationSystem)) {
+      halt(Forbidden("Update of application is forbidden"))
+    }
     val errors = ApplicationValidator().validate(applicationSystem)(updated)
     if(errors.isEmpty) {
       val saved = HakemusRepository().updateHakemus(applicationSystem)(updated, oid())
