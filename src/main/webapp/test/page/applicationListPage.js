@@ -291,7 +291,7 @@ function ApplicationListPage() {
           return api.searchOpetusPiste(query)().then(function () {
             opetusPisteListView().find("li:contains('" + query + "')").eq(0).find("a").click()
           }).then(wait.until(function() {
-            return el().find(".koulutus select option").length > 1
+            return _(el().find(".koulutus select option")).any(function(el) { return $(el).text().length > 0 })
           })).then(wait.forAngular)
         }
       },

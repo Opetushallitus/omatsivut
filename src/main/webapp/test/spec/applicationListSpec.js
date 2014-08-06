@@ -282,7 +282,6 @@
           page.resetDataAndOpen,
           leaveOnlyOnePreference, // first two steps to undo previous test case
           hakemus1.getPreference(1).selectOpetusPiste("Ahl"),
-          hakemus1.getPreference(1).selectKoulutus(0),
           hakemus1.getPreference(2).selectOpetusPiste("Turun Kristillinen"),
           hakemus1.getPreference(1).selectOpetusPiste("Turun Kristillinen")
         )
