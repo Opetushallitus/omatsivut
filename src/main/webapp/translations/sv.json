@@ -15,6 +15,7 @@
 
   "button": {
     "save": "Spara förändringar",
+    "preview": "Visa ansökan",
     "sortUp_ariaLabel": "Lyft ansökningsönskemål",
     "sortDown_ariaLabel": "Sänk ansökningsönskemål",
     "delete_confirm": "Ta bort",

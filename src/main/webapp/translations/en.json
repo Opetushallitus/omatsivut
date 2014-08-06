@@ -15,6 +15,7 @@
 
   "button": {
     "save": "Save changes",
+    "preview": "Preview",
     "sortUp_ariaLabel": "Lift up preference",
     "sortDown_ariaLabel": "Bring down preference",
     "delete_confirm": "Delete",
