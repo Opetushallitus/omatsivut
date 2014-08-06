@@ -1,14 +1,28 @@
 package fi.vm.sade.omatsivut.hakemus
 
 import fi.vm.sade.haku.oppija.lomake.domain.elements._
+import fi.vm.sade.haku.oppija.lomake.domain.elements.questions.OptionQuestion
 import fi.vm.sade.omatsivut.domain.Hakemus.Answers
+import fi.vm.sade.omatsivut.domain.Language.Language
 import fi.vm.sade.omatsivut.hakemus.HakemusConverter.FlatAnswers
+import collection.JavaConversions._
+
+class OptionWrapper(element: ElementWrapper) {
+  def value: String = element.element.asInstanceOf[questions.Option].getValue
+  def title(implicit lang: Language) = element.title
+}
 
 trait ElementWrapper {
   def element: Element
   def children: List[ElementWrapper]
+  lazy val options: List[OptionWrapper] = element match {
+    case e: OptionQuestion => e.getOptions.toList.map{ option => new OptionWrapper(wrap(option)) }
+  }
   def parent: Option[ElementWrapper]
   def id = element.getId
+  def title(implicit lang: Language) = {
+    element.asInstanceOf[Titled].getI18nText.getTranslations.get(lang.toString)
+  }
   
   def findById(idToLookFor: String):Option[ElementWrapper] = {
     if (id == idToLookFor) {
@@ -76,6 +90,8 @@ trait ElementWrapper {
     }
   }
 
+  protected def wrap(element: Element): ElementWrapper
+
   private def byType[T](xs: List[AnyRef])(implicit mf: Manifest[T]): List[T] = {
     xs.flatMap {
       case p: T => List(p)
@@ -96,5 +112,9 @@ class FilteredElementWrapper(val element: Element, val parent: Option[ElementWra
 
   override lazy val children = {
     element.getChildren(answers).toList.map(new FilteredElementWrapper(_, Some(this), answers))
+  }
+
+  override protected def wrap(element: Element) = {
+    new FilteredElementWrapper(element, Some(this), answers)
   }
 }
