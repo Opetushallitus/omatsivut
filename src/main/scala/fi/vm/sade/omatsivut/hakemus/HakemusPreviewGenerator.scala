@@ -144,12 +144,14 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
     def textPreview(element: ElementWrapper) = {
       div(`class` := "text")(element.title)
     }
-
     html(
+      head(link(href := "/omatsivut/css/preview.css", rel:= "stylesheet", `type` := "text/css")),
       body(
         header(
           h1(applicationSystem.getName.getTranslations.get(language.toString))
-        ) :: form.getElementsOfType[Phase].flatMap(questionsPreview)
+        )
+        ::
+        form.getElementsOfType[Phase].flatMap(questionsPreview)
       )
     ).toString
   }
