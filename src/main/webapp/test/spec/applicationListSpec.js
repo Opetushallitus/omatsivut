@@ -6,6 +6,8 @@
   var hakemus2 = page.getApplication(hakemus2nimi)
   var hakemus3nimi = "Lisähaku kevään 2014 yhteishaussa vapaaksi jääneille paikoille"
   var hakemus3 = page.getApplication(hakemus3nimi)
+  var hakemus4nimi = "Ammatillisen koulutuksen ja lukiokoulutuksen kevään 2013 yhteishaku"
+  var hakemus4 = page.getApplication(hakemus4nimi)
 
   describe('Tyhjä hakemuslistaus', function () {
     var emptyPage = ApplicationListPage()
@@ -111,6 +113,11 @@
             "hakutoive.Koulutus": "Kymppiluokka"
           }
         ])
+      })
+
+      it("jos hakuaika on loppunut, hakemusta ei voi muokata", function() {
+        hakemus4.preferencesForApplication().length.should.equal(0)
+        hakemus4.applicationPeriod().should.equal("Hakuaika on päättynyt.")
       })
     })
 

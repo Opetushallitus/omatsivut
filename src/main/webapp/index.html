@@ -20,10 +20,10 @@
                 <li ng-repeat="application in applications" class="application-list-item" ng-controller="hakemusController" highlight-save>
                     <h2>{{application.haku.name }}</h2>
                     <p>
-                        <div ng-if="applicationPeriod.active">
+                        <div ng-if="applicationPeriod.active" class="application-period">
                             {{ localization('label.applicationPeriodEnds') }} <time datetime="{{ applicationPeriod.end | date:'yyyy-MM-ddTHH:mmZ' }}">{{ formatApplicationPeriod(applicationPeriod.end) }}</time>
                         </div>
-                        <div ng-if="!applicationPeriod.active">
+                        <div ng-if="!applicationPeriod.active" class="application-period">
                             <strong>{{ localization('label.applicationPeriodEnded') }}</strong>
                         </div>
                     </p>

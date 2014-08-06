@@ -119,6 +119,10 @@ function ApplicationListPage() {
 
       changesSavedTimestamp: function () {
         return getApplicationElement().find(".timestamp").text()
+      },
+
+      applicationPeriod: function() {
+        return getApplicationElement().find(".application-period").text().trim()
       }
     }
     return api
