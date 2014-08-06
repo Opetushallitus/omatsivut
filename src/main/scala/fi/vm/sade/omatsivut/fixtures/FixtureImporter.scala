@@ -8,6 +8,7 @@ case class FixtureImporter(implicit val appConfig: AppConfig) {
     MongoFixtureImporter.importJsonFixtures(appConfig.mongoTemplate, appConfig.springContext.applicationDAO)
     fixtureName match {
       case "peruskoulu" => PeruskouluFixture(appConfig).apply
+      case "passiveApplication" => PassiveApplicationFixtureFixture(appConfig).apply
       case _ =>
     }
   }

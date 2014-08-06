@@ -119,6 +119,13 @@
         hakemus4.preferencesForApplication().length.should.equal(0)
         hakemus4.applicationPeriod().should.equal("Hakuaika on päättynyt.")
       })
+
+      describe("virheellinen hakemus", function() {
+        before(page.applyFixtureAndOpen("passiveApplication"))
+        it("hakemusta ei muokata, jos hakemus ei ole aktiivinen", function() {
+          hakemus2.preferencesForApplication().length.should.equal(0)
+        })
+      })
     })
 
     describe("Virheidenkäsittely", function() {

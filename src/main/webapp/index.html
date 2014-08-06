@@ -34,7 +34,7 @@
                         </span>
                     </p>
 
-                    <section class="application-section" ng-if="applicationPeriod.active">
+                    <section class="application-section" ng-if="applicationPeriod.active && application.state == 'ACTIVE'">
                         <header class="application-section-heading">
                             {{ localization('label.preferences') }}
                             <button class="float-right save-btn" ng-disabled="!hasChanged || statusMessageType=='pending' || !isSaveable || isValidating" ng-click="saveApplication()">{{ localization('button.save') }}</button>
