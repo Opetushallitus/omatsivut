@@ -31,7 +31,7 @@ class RemoteAuthenticationInfoService(config: RemoteApplicationConfig)(implicit 
       case Some(ticket) => getHenkiloOID(hetu, ticket)
     }
   }
- 
+
   private def getHenkiloOID(hetu: String, serviceTicket: String): Option[String] = {
     val (responseCode, headersMap, resultString) = DefaultHttpClient.httpGet(config.url + "/" + config.config.getString("get_oid.path") + "/" + hetu)
          .param("ticket", serviceTicket)
@@ -41,6 +41,7 @@ class RemoteAuthenticationInfoService(config: RemoteApplicationConfig)(implicit 
       case 404 => None
       case _ => {
         val json = parse(resultString)
+        // TODO poistettava lokitus ennen tuotantokäyttöä
         logger.info("Got user info: " + json)
         val oids: List[String] = for {
           JObject(child) <- json
