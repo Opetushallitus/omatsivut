@@ -1,5 +1,6 @@
 package fi.vm.sade.omatsivut.hakemus
 
+import fi.vm.sade.haku.oppija.lomake.domain.I18nText
 import fi.vm.sade.haku.oppija.lomake.domain.elements._
 import fi.vm.sade.haku.oppija.lomake.domain.elements.custom.gradegrid.GradeGridOptionQuestion
 import fi.vm.sade.haku.oppija.lomake.domain.elements.questions.OptionQuestion
@@ -23,10 +24,7 @@ trait ElementWrapper {
   def parent: Option[ElementWrapper]
   def id = element.getId
   def title(implicit lang: Language) = {
-    element.asInstanceOf[Titled].getI18nText match {
-      case null => ""
-      case i18n => i18n.getTranslations.get(lang.toString)
-    }
+    ElementWrapper.t(element.asInstanceOf[Titled].getI18nText)
   }
   
   def findById(idToLookFor: String):Option[ElementWrapper] = {
@@ -111,6 +109,14 @@ object ElementWrapper {
   }
   def wrapUnfiltered(element: Element) = {
     new UnfilteredElementWrapper(element, None)
+  }
+
+  def t(text: I18nText)(implicit lang: Language) = text match {
+    case null => ""
+    case text => text.getTranslations.get(lang.toString) match {
+      case null => ""
+      case t => t
+    }
   }
 }
 

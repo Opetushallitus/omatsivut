@@ -2,6 +2,8 @@ package fi.vm.sade.omatsivut.hakemus
 
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.lomake.domain.elements.custom.SocialSecurityNumber
+import fi.vm.sade.haku.oppija.lomake.domain.{I18nText, ApplicationSystem}
+import fi.vm.sade.haku.oppija.lomake.domain.elements.custom.{PreferenceRow, PreferenceTable, SocialSecurityNumber}
 import fi.vm.sade.haku.oppija.lomake.domain.elements.custom.gradegrid.{GradeGridAddLang, GradeGridOptionQuestion, GradeGridTitle, GradeGrid}
 import fi.vm.sade.haku.oppija.lomake.domain.elements.questions.{CheckBox, OptionQuestion, TextQuestion, TextArea, DateQuestion}
 import fi.vm.sade.haku.oppija.lomake.domain.elements.{TitledGroup, Text, Theme, Phase}
@@ -36,6 +38,7 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
 
       element.element match {
         case _: GradeGrid => List(gradeGridPreview(element))
+        case _: PreferenceTable => List(preferenceTablePreview(element))
         case _: TextArea => List(textQuestionPreview(element))
         case _: SocialSecurityNumber => List(textQuestionPreview(element))
         case _: TextQuestion => List(textQuestionPreview(element))
@@ -102,6 +105,26 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
       )
     }
 
+    def preferenceTablePreview(tableElement: ElementWrapper) = {
+      div(`class` := "preference-table")(
+        tableElement.children.zipWithIndex.flatMap { case (childElement, index) =>
+          childElement.element match {
+            case row: PreferenceRow =>
+              List(div(`class` := "preference-row")(
+                span(`class` := "index")(index+1),
+                span(`class` := "opetuspiste")(
+                  label(ElementWrapper.t(row.getLearningInstitutionLabel)),
+                  span("TODO")
+                )
+              ))
+            case _ =>
+              logger.warn("Ignoring preference table element " + childElement.element.getType + ": " + childElement.id)
+              Nil
+          }
+        }
+      )
+    }
+
     def gradeGridPreview(gridElement: ElementWrapper) = {
       table(`class` := "gradegrid")(
         thead(
@@ -148,7 +171,7 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
       head(link(href := "/omatsivut/css/preview.css", rel:= "stylesheet", `type` := "text/css")),
       body(
         header(
-          h1(applicationSystem.getName.getTranslations.get(language.toString))
+          h1(ElementWrapper.t(applicationSystem.getName))
         )
         ::
         form.getElementsOfType[Phase].flatMap(questionsPreview)
