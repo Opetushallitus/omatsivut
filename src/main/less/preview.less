@@ -35,3 +35,28 @@ h2 {
     width: 20%;
   }
 }
+
+.preference-table .preference-row {
+  @index-col-width: 100px;
+  @col-width: 200px;
+  overflow: auto;
+  span, label {
+    display: inline-block;
+    float: left;
+  }
+  .index {
+    width: @index-col-width;
+  }
+  .education, .learning-institution {
+    label {
+      width: @col-width;
+    }
+    span {
+      font-weight: bold;
+    }
+  }
+  .education {
+    margin-left: @index-col-width;
+    clear: both;
+  }
+}

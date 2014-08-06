@@ -110,13 +110,21 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
         tableElement.children.zipWithIndex.flatMap { case (childElement, index) =>
           childElement.element match {
             case row: PreferenceRow =>
-              List(div(`class` := "preference-row")(
-                span(`class` := "index")(index+1),
-                span(`class` := "opetuspiste")(
-                  label(ElementWrapper.t(row.getLearningInstitutionLabel)),
-                  span("TODO")
-                )
-              ))
+              answers(row.getEducationOidInputId) match {
+                case null => Nil
+                case "" => Nil
+                case _ => List(div(`class` := "preference-row")(
+                  span(`class` := "index")(index+1),
+                  span(`class` := "learning-institution")(
+                    label(ElementWrapper.t(row.getLearningInstitutionLabel)),
+                    span(answers(row.getLearningInstitutionInputId))
+                  ),
+                  span(`class` := "education")(
+                    label(ElementWrapper.t(row.getEducationLabel)),
+                    span(answers(row.getEducationInputId))
+                  )
+                )) // TODO: lisäkysymykset
+              }
             case _ =>
               logger.warn("Ignoring preference table element " + childElement.element.getType + ": " + childElement.id)
               Nil
