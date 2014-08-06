@@ -29,6 +29,7 @@
                             {{ localization('label.preferences') }}
                             <button class="float-right save-btn" ng-disabled="!hasChanged || statusMessageType=='pending' || !isSaveable || isValidating" ng-click="saveApplication()">{{ localization('button.save') }}</button>
                             <span role="status" class="status-message float-right" ng-class="{'ajax-spinner': statusMessageType=='pending', error: statusMessageType=='error'}" ng-bind="statusMessage"></span>
+                            <a class="float-right preview-btn" ng-disabled="hasChanged || statusMessageType=='pending' || isValidating" ng-click="previewApplication()" ng-href="/omatsivut/api/applications/preview/{{application.oid}}" target="_blank">{{ localization('button.preview') }}</a>
                         </header>
 
                         <div class="preference-list" ng-class="{validating: isValidating}" sortable sortable-item=".preference-list-item" sortable-moved="movePreference">

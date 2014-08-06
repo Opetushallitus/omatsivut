@@ -2,14 +2,14 @@ package fi.vm.sade.omatsivut.servlet
 
 import fi.vm.sade.omatsivut.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.domain.{Hakemus, QuestionNode, ValidationError}
-import fi.vm.sade.omatsivut.hakemus.{ApplicationValidator, HakemusRepository}
+import fi.vm.sade.omatsivut.hakemus.{HakemusPreviewGenerator, ApplicationValidator, HakemusRepository}
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.security.Authentication
 import org.json4s.jackson.{JsonMethods, Serialization}
 import org.scalatra.json._
 import org.scalatra.swagger.SwaggerSupportSyntax.OperationBuilder
 import org.scalatra.swagger._
-import org.scalatra.{BadRequest, Ok}
+import org.scalatra.{NotFound, BadRequest, Ok}
 
 class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfig) extends OmatSivutServletBase with JacksonJsonSupport with JsonFormats with SwaggerSupport with Authentication {
   override def applicationName = Some("api")
@@ -29,12 +29,16 @@ class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfi
     summary "Tarkista hakemus ja palauta virheet sekä kysymykset joihin ei ole vastattu"
     )
 
+  val previewApplicationSwagger: OperationBuilder = (apiOperation[String]("previewApplication")
+    summary "Hakemuksen esikatselu HTML-muodossa"
+  )
+
   before() {
     contentType = formats("json")
   }
 
   get("/applications", operation(getApplicationsSwagger)) {
-    HakemusRepository().fetchHakemukset(oid())
+    HakemusRepository().fetchHakemukset(personOid())
   }
 
   put("/applications/:oid", operation(putApplicationsSwagger)) {
@@ -42,7 +46,7 @@ class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfi
     val applicationSystem = applicationSystemService.getApplicationSystem(updated.haku.get.oid)
     val errors = ApplicationValidator().validate(applicationSystem)(updated)
     if(errors.isEmpty) {
-      val saved = HakemusRepository().updateHakemus(applicationSystem)(updated, oid())
+      val saved = HakemusRepository().updateHakemus(applicationSystem)(updated, personOid())
       Ok(saved)
     } else {
       BadRequest(errors)
@@ -54,6 +58,16 @@ class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfi
     val applicationSystem = applicationSystemService.getApplicationSystem(validate.haku.get.oid)
     val (errors: List[ValidationError], questions: List[QuestionNode]) = ApplicationValidator().validateAndFindQuestions(applicationSystem)(validate)
     ValidationResult(errors, questions)
+  }
+
+  get("/applications/preview/:oid") {
+    HakemusPreviewGenerator().generatePreview(personOid(), params("oid")) match {
+      case Some(previewHtml) =>
+        contentType = formats("html")
+        Ok(previewHtml)
+      case None =>
+        NotFound()
+    }
   }
 
   case class ValidationResult(errors: List[ValidationError], questions: List[QuestionNode])
