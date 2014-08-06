@@ -6,7 +6,7 @@ import fi.vm.sade.omatsivut.domain.Language
 
 trait OmatSivutServletBase extends ScalatraServlet with Logging {
 
-  implicit def languae: Language.Language = {
+  implicit def language: Language.Language = {
     Option(request.getAttribute("lang").asInstanceOf[Language.Language]).getOrElse(Language.fi)
   }
 
