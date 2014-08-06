@@ -6,7 +6,6 @@ var gulp = require('gulp'),
     livereload = require('gulp-livereload');
 
 var jsFiles = 'src/main/js/**/*.js';
-var lessFiles = 'src/main/less/**/*.less';
 var isWatch
 
 function handleError(err) {
@@ -29,10 +28,14 @@ gulp.task('lint', function() {
 });
 
 gulp.task('less', function () {
-    gulp.src(lessFiles)
+    gulp.src('src/main/less/**/main.less')
         .pipe(less().on('error', handleError))
         .pipe(concat('main.css'))
         .pipe(gulp.dest('src/main/webapp/css'));
+    gulp.src('src/main/less/**/preview.less')
+      .pipe(less().on('error', handleError))
+      .pipe(concat('preview.css'))
+      .pipe(gulp.dest('src/main/webapp/css'));
 });
 
 gulp.task('browserify', function() {
@@ -50,7 +53,7 @@ gulp.task('watch', function() {
     livereload.listen();
     gulp.watch(['src/main/webapp/**/*.js', 'src/main/webapp/**/*.css', 'src/main/webapp/**/*.html'], livereload.changed);
     gulp.watch([jsFiles],['lint', 'browserify']);
-    gulp.watch([lessFiles],['less']);
+    gulp.watch(['src/main/less/**/*.less'],['less']);
 });
 
 gulp.task('compile', ['browserify', 'less']);
