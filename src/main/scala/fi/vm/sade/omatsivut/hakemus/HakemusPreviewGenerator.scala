@@ -1,10 +1,9 @@
 package fi.vm.sade.omatsivut.hakemus
 
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
-import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
 import fi.vm.sade.haku.oppija.lomake.domain.elements.custom.SocialSecurityNumber
 import fi.vm.sade.haku.oppija.lomake.domain.elements.custom.gradegrid.{GradeGridAddLang, GradeGridOptionQuestion, GradeGridTitle, GradeGrid}
-import fi.vm.sade.haku.oppija.lomake.domain.elements.questions.{CheckBox, OptionQuestion, TextQuestion, TextArea}
+import fi.vm.sade.haku.oppija.lomake.domain.elements.questions.{CheckBox, OptionQuestion, TextQuestion, TextArea, DateQuestion}
 import fi.vm.sade.haku.oppija.lomake.domain.elements.{TitledGroup, Text, Theme, Phase}
 import fi.vm.sade.haku.oppija.lomake.domain.rules.{AddElementRule, RelatedQuestionRule}
 import fi.vm.sade.omatsivut.AppConfig.AppConfig
@@ -47,6 +46,7 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
         case _: RelatedQuestionRule => flattenedPreview(element)
         case _: Text => List(textPreview(element))
         case _: TitledGroup => List(titledGroupPreview(element))
+        case _: DateQuestion => List(textPreview(element))
         case _: AddElementRule => Nil
         case _ =>
           logger.warn("Ignoring element " + element.element.getType + ": " + element.id)
