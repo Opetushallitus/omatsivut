@@ -6,7 +6,8 @@ import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
 import fi.vm.sade.omatsivut._
 import fi.vm.sade.omatsivut.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.auditlog.{ShowHakemus, UpdateHakemus, AuditLogger}
-import fi.vm.sade.omatsivut.domain.{Hakemus, Language}
+import fi.vm.sade.omatsivut.domain.{Tulokset, Hakemus, Language}
+import fi.vm.sade.omatsivut.ohjausparametrit.OhjausparametritService
 
 case class HakemusRepository(implicit val appConfig: AppConfig) extends Logging {
   import collection.JavaConversions._
@@ -36,7 +37,10 @@ case class HakemusRepository(implicit val appConfig: AppConfig) extends Logging 
   def fetchHakemukset(personOid: String)(implicit lang: Language.Language): List[Hakemus] = {
     val applicationJavaObjects: List[Application] = dao.find(new Application().setPersonOid(personOid)).toList
     applicationJavaObjects.map{ application => {
-      val hakemus = HakemusConverter.convertToHakemus(HakuRepository().getHakuById(application.getApplicationSystemId))(application)
+
+      val results = OhjausparametritService(appConfig).valintatulokset(application.getApplicationSystemId)
+      val haku = HakuRepository().getHakuById(application.getApplicationSystemId).map (_.copy(results = results))
+      val hakemus = HakemusConverter.convertToHakemus(haku)(application)
       AuditLogger.log(ShowHakemus(personOid, hakemus.oid))
       hakemus
     }}

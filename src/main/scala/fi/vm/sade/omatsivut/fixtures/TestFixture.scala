@@ -33,7 +33,7 @@ object TestFixture {
   def application: Application = app
   def hakemus(implicit lang: Language.Language) = HakemusConverter.convertToHakemus(Some(haku))(application)
 
-  val ammattistartti: Hakutoive = JsonFixtureMaps.find[Hakutoive]("/mockdata/hakutoiveet.json", "1.2.246.562.14.2014030415375012208392")
-  val ammattistarttiAhlman: Hakutoive = JsonFixtureMaps.find[Hakutoive]("/mockdata/hakutoiveet.json", "1.2.246.562.14.2014040912353139913320")
-  val hevostalous: Hakutoive = JsonFixtureMaps.find[Hakutoive]("/mockdata/hakutoiveet.json", "1.2.246.562.5.31982630126")
+  val ammattistartti: Hakutoive = JsonFixtureMaps.find[Hakutoive]("/mockdata/hakutoiveet.json", "1.2.246.562.14.2014030415375012208392").get
+  val ammattistarttiAhlman: Hakutoive = JsonFixtureMaps.find[Hakutoive]("/mockdata/hakutoiveet.json", "1.2.246.562.14.2014040912353139913320").get
+  val hevostalous: Hakutoive = JsonFixtureMaps.find[Hakutoive]("/mockdata/hakutoiveet.json", "1.2.246.562.5.31982630126").get
 }

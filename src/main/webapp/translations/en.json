@@ -13,7 +13,8 @@
     "location_university": "LOCATION",
     "education": "Education",
     "education_university": "Education",
-    "chooseLocation": "Choose a location first"
+    "chooseLocation": "Choose a location first",
+    "resultsPublishedDate": "Results will be published"
   },
 
   "button": {

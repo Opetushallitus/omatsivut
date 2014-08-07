@@ -33,6 +33,8 @@ omatsivut.authentication-service.get_oid.path=resources/s2s/byHetu
 omatsivut.koulutusinformaatio.ao.url=https\://{{host_haku}}/ao
 omatsivut.koulutusinformaatio.lop.url=https\://{{host_haku}}/lop
 
+omatsivut.ohjausparametrit.url=https\://{{host_virkailija}}/ohjausparametrit-service/api/v1/rest/parametri
+
 # for hakemus-api
 koulutusinformaatio.ao.resource.url=https\://{{host_haku}}/ao
 tarjonta.data.url=https\://{{host_virkailija}}/tarjonta-service/rest/

@@ -16,10 +16,10 @@ object KoulutusInformaatioService {
   def apply(implicit appConfig: AppConfig): KoulutusInformaatioService = appConfig match {
     case x: StubbedExternalDeps => new KoulutusInformaatioService {
       def opetuspisteet(asId: String, query: String) = {
-        JsonFixtureMaps.find[List[Opetuspiste]]("/mockdata/opetuspisteet.json", query.substring(0, 1).toLowerCase)
+        JsonFixtureMaps.find[List[Opetuspiste]]("/mockdata/opetuspisteet.json", query.substring(0, 1).toLowerCase).get
       }
       def koulutukset(asId: String, opetuspisteId: String, baseEducation: String, vocational: String, uiLang: String) = {
-        JsonFixtureMaps.find[List[Koulutus]]("/mockdata/koulutukset.json", opetuspisteId)
+        JsonFixtureMaps.find[List[Koulutus]]("/mockdata/koulutukset.json", opetuspisteId).get
       }
     }
     case _ => RemoteKoulutusService()

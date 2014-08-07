@@ -13,7 +13,8 @@
     "location_university": "Korkeakoulu",
     "education": "Koulutus",
     "education_university": "Hakukohde",
-    "chooseLocation": "Valitse ensin opetuspiste"
+    "chooseLocation": "Valitse ensin opetuspiste",
+    "resultsPublishedDate": "Haun tulokset julkaistaan"
   },
 
   "button": {
