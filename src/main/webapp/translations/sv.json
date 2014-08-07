@@ -16,13 +16,12 @@
 
   "button": {
     "save": "Spara förändringar",
-    "preview": "Visa ansökan",
     "sortUp_ariaLabel": "Lyft ansökningsönskemål",
     "sortDown_ariaLabel": "Sänk ansökningsönskemål",
     "delete_confirm": "Ta bort",
     "delete_ariaLabel": "Ta bort ansökningsönskemål med väljä det hät två gånger",
     "logout": "Logga ut",
-    "showApplication": "Show application"
+    "showApplication": "Visa ansökan"
   },
 
   "message": {
