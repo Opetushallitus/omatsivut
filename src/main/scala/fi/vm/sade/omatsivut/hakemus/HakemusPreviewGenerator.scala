@@ -34,7 +34,7 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
     val form = ElementWrapper.wrapFiltered(applicationSystem.getForm, answers)
 
     def questionsPreview(element: ElementWrapper): List[TypedTag[String]] = {
-      // TODO: PreferenceTable, DateQuestion, DiscretionaryAttachments
+      // TODO: DiscretionaryAttachments
 
       element.element match {
         case _: GradeGrid => List(gradeGridPreview(element))
