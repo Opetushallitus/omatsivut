@@ -1,10 +1,8 @@
 package fi.vm.sade.omatsivut
 
-import fi.vm.sade.omatsivut.domain.Hakemus
-import fi.vm.sade.omatsivut.fixtures.{FixtureImporter, TestFixture}
 import fi.vm.sade.omatsivut.fixtures.TestFixture._
+import fi.vm.sade.omatsivut.fixtures.{FixtureImporter, TestFixture}
 import fi.vm.sade.omatsivut.servlet.ApplicationsServlet
-import org.json4s.jackson.Serialization
 
 class ApplicationPreviewSpec extends HakemusApiSpecification {
   override implicit lazy val appConfig = new AppConfig.IT
