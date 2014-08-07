@@ -106,14 +106,14 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
     }
 
     def preferenceTablePreview(tableElement: ElementWrapper) = {
-      div(`class` := "preference-table")(
+      ul(`class` := "preference-table")(
         tableElement.children.zipWithIndex.flatMap { case (childElement, index) =>
           childElement.element match {
             case row: PreferenceRow =>
               answers(row.getEducationOidInputId) match {
                 case null => Nil
                 case "" => Nil
-                case _ => List(div(`class` := "preference-row")(
+                case _ => List(li(`class` := "preference-row")(
                   span(`class` := "index")(index+1),
                   span(`class` := "learning-institution")(
                     label(ElementWrapper.t(row.getLearningInstitutionLabel)),
