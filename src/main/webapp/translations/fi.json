@@ -4,9 +4,10 @@
   },
 
   "label": {
-    "applicationPeriod": "Hakukausi",
+    "applicationPeriodEnds": "Hakuaika päättyy",
+    "applicationPeriodEnded": "Hakuaika on päättynyt.",
     "applicationReceived": "Hakemus jätetty",
-    "applicationUpdated": "Hakemusta muokattu",
+    "applicationUpdated": "hakemusta muokattu",
     "preferences": "Hakutoiveet",
     "location": "Opetuspiste",
     "education": "Koulutus",
@@ -20,7 +21,8 @@
     "sortDown_ariaLabel": "Laske hakutoivetta",
     "delete_confirm": "Poista",
     "delete_ariaLabel": "Poista hakutoive valitsemalla tämä kaksi kertaa  ",
-    "logout": "Kirjaudu ulos"
+    "logout": "Kirjaudu ulos",
+    "showApplication": "Näytä hakemus"
   },
 
   "message": {

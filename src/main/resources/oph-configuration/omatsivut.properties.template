@@ -1,7 +1,7 @@
 #
 # TÄHÄN TIEDOSTOON EI SAA TALLENTAA YMPÄRISTÖKOHTAISIA ARVOJA MUUTOIN KUIN MUUTTUJINA!!!
 #
-# Tämä tiedosto toimii pohjana oph-configuration/common.properties tiedostolle,
+# Tämä tiedosto toimii pohjana oph-configuration/omatsivut.properties tiedostolle,
 # joka asettaa tomcatin ympäristökohtaiset arvot.
 #
 

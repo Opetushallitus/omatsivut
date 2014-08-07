@@ -5,9 +5,18 @@ module.exports = function(listApp) {
   listApp.controller("hakemusController", ["$scope", "$element", "$http", "applicationsResource", "applicationValidator", "settings", "debounce", "localization", function ($scope, $element, $http, applicationsResource, applicationValidator, settings, debounce, localization) {
     applicationValidator = debounce(applicationValidator(), settings.modelDebounce)
 
+    $scope.applicationPeriod = $scope.application.haku.applicationPeriods[0]
     $scope.hasChanged = false
     $scope.isSaveable = true
     $scope.isValidating = false
+
+    $scope.formatTimestamp = function(dt) {
+      return moment(dt).format('lll').replace(/,/g, "")
+    }
+
+    $scope.formatApplicationPeriod = function(dt) {
+      return moment(dt).format('llll').replace(/,/g, "")
+    }
 
     $scope.timestampLabel = function() {
       if ($scope.application.received == $scope.application.updated)

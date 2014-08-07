@@ -10,6 +10,7 @@ import scala.collection.JavaConverters._
 
 class SecuredSessionServlet(implicit val appConfig: AppConfig) extends OmatSivutServletBase with AuthCookieParsing with ShibbolethPaths {
   get("/initsession") {
+    // TODO poistettava lokitus ennen tuotantokäyttöä
     request.getHeaderNames.asScala.toList.map(h => logger.info(h + ": " + request.getHeader(h)))
     checkCredentials match {
       case (Some(oid), Some(cookie)) => {
@@ -29,7 +30,10 @@ class SecuredSessionServlet(implicit val appConfig: AppConfig) extends OmatSivut
     headerOption("Hetu") match {
       case Some(hetu) => Some(hetu)
       case None if appConfig.usesFakeAuthentication => paramOption("hetu")
-      case _ => None
+      case _ => {
+        logger.warn("No 'Hetu' header found.")
+        None
+      }
     }
   }
 

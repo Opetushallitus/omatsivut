@@ -4,7 +4,8 @@
   },
 
   "label": {
-    "applicationPeriod": "Application period",
+    "applicationPeriodEnds": "Application period ends",
+    "applicationPeriodEnded": "Application period has ended.",
     "applicationReceived": "Application created",
     "applicationUpdated": "Last edited",
     "preferences": "Preferences",
@@ -20,7 +21,8 @@
     "sortDown_ariaLabel": "Bring down preference",
     "delete_confirm": "Delete",
     "delete_ariaLabel": "Remove preference by clicking this twice",
-    "logout": "Log out"
+    "logout": "Log out",
+    "showApplication": "Show application"
   },
 
   "message": {

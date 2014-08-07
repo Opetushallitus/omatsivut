@@ -12,6 +12,7 @@ case class FixtureImporter(implicit val appConfig: AppConfig) {
   def applyOverrides(fixtureName: String = "") {
     fixtureName match {
       case "peruskoulu" => PeruskouluFixture(appConfig).apply
+      case "passiveApplication" => PassiveApplicationFixtureFixture(appConfig).apply
       case _ =>
     }
   }

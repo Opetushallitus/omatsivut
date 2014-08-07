@@ -48,8 +48,12 @@
   &:hover:before {
     color: @button-hover-background-color;
   }
-  &[disabled]:before {
-    color: #eee;
+
+  &[disabled] {
+    cursor: default;
+    &:before {
+      color: #eee;
+    }
   }
 }
 

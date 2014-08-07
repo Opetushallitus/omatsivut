@@ -12,7 +12,13 @@ module.exports = function(listApp) {
       this.hakutoive.setOpetuspiste($item.id, $item.name)
 
       findKoulutukset(this.application.haku.oid, $item.id, this.application.educationBackground)
-        .then(function(koulutukset) { $scope.koulutusList = koulutukset; })
+        .then(function(koulutukset) {
+          $scope.koulutusList = koulutukset
+          if (koulutukset.length === 1) {
+            $scope.valittuKoulutus = koulutukset[0]
+            $scope.hakutoive.setKoulutus(koulutukset[0])
+          }
+        })
     }
 
     $scope.opetuspisteModified = function() {

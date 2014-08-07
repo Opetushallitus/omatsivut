@@ -15,16 +15,26 @@
             <div role="status" class="application-list-status" ng-bind="applicationStatusMessage" ng-class="applicationStatusMessageType" ng-cloak ng-show="applicationStatusMessage.length > 0">
             </div>
 
-            <ul id="hakemus-list" ng-cloak>
+            <ul id="hakemus-list" aria-label="{{ localization('title.omatHakemukset') }}" ng-cloak>
 
                 <li ng-repeat="application in applications" class="application-list-item" ng-controller="hakemusController" highlight-save>
                     <h2>{{application.haku.name }}</h2>
-                    <p ng-repeat="period in application.haku.applicationPeriods">
-                      {{ localization('label.applicationPeriod') }}: <time datetime="{{ period.start | date:'yyyy-MM-ddTHH:mmZ' }}">{{period.start | date:'dd.MM.yyyy HH:mm'}}</time> - <time datetime="{{ period.end | date:'yyyy-MM-ddTHH:mmZ' }}">{{period.end | date:'dd.MM.yyyy HH:mm'}}</time></p>
+                    <p>
+                        <div ng-if="applicationPeriod.active" class="application-period">
+                            {{ localization('label.applicationPeriodEnds') }} <time datetime="{{ applicationPeriod.end | date:'yyyy-MM-ddTHH:mmZ' }}">{{ formatApplicationPeriod(applicationPeriod.end) }}</time>
+                        </div>
+                        <div ng-if="!applicationPeriod.active" class="application-period">
+                            <strong>{{ localization('label.applicationPeriodEnded') }}</strong>
+                        </div>
                     </p>
-                    <p class="timestamp">{{ timestampLabel() }} <time datetime="{{ application.updated | date:'yyyy-MM-ddTHH:mmZ' }}">{{ application.updated | date:'dd.MM.yyyy HH:mm:ss' }}</time></p>
+                    <p>
+                        <a href="#">{{ localization('button.showApplication') }}</a>
+                        <span class="timestamp">
+                            ({{ timestampLabel() }} <time datetime="{{ application.updated | date:'yyyy-MM-ddTHH:mmZ' }}">{{ formatTimestamp(application.updated) }}</time>)
+                        </span>
+                    </p>
 
-                    <section class="application-section">
+                    <section class="application-section" ng-if="applicationPeriod.active && application.state == 'ACTIVE'">
                         <header class="application-section-heading">
                             {{ localization('label.preferences') }}
                             <button class="float-right save-btn" ng-disabled="!hasChanged || statusMessageType=='pending' || !isSaveable || isValidating" ng-click="saveApplication()">{{ localization('button.save') }}</button>
@@ -34,7 +44,7 @@
 
                         <div class="preference-list" ng-class="{validating: isValidating}" sortable sortable-item=".preference-list-item" sortable-moved="movePreference">
                             <div class="overlay"></div>
-                            <div class="preference-list-item" ng-repeat="hakutoive in application.hakutoiveet" ng-controller="hakutoiveController">
+                            <div class="preference-list-item" aria-label="{{ ($index+1) + '. ' + hakutoive.data.Opetuspiste + ' - ' + hakutoive.data.Koulutus }}" ng-repeat="hakutoive in application.hakutoiveet" ng-controller="hakutoiveController">
                                 <div class="item-content">
                                     <button class="sort-arrow-up" aria-label="{{ localization('button.sortUp_ariaLabel') }}" ng-disabled="!application.canMoveTo($index, $index-1)" disable-click-focus></button>
                                     <button class="sort-arrow-down" aria-label="{{ localization('button.sortDown_ariaLabel') }}" ng-disabled="!application.canMoveTo($index, $index+1)" disable-click-focus></button>
