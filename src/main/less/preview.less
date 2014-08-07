@@ -14,8 +14,8 @@ h2 {
   .body-font;
   text-transform: uppercase;
   font-weight: normal;
-  padding-bottom: 10px;
-  margin-bottom: 10px;
+  padding-bottom: 5px;
+  margin-bottom: 15px;
   border-bottom: 1px solid @section-border-color;
 }
 
@@ -37,8 +37,8 @@ h2 {
 }
 
 .preference-table .preference-row {
-  @index-col-width: 100px;
-  @col-width: 200px;
+  @index-col-width: 70px;
+  @label-col-width: 120px;
   overflow: auto;
   span, label {
     display: inline-block;
@@ -49,7 +49,7 @@ h2 {
   }
   .education, .learning-institution {
     label {
-      width: @col-width;
+      width: @label-col-width;
     }
     span {
       font-weight: bold;
@@ -58,5 +58,13 @@ h2 {
   .education {
     margin-left: @index-col-width;
     clear: both;
+  }
+  .questions {
+    margin-left: @index-col-width;
+    padding: 10px 0;
+    clear: both;
+    .question {
+      overflow: auto;
+    }
   }
 }

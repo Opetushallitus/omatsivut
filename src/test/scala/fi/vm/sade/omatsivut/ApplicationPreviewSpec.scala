@@ -22,7 +22,7 @@ class ApplicationPreviewSpec extends HakemusApiSpecification {
         // koulutustausta
         body must contain("""<div class="question"><label>Valitse tutkinto, jolla haet koulutukseen</label><span class="answer">Perusopetuksen oppimäärä</span>""")
         // hakutoiveet
-        body must contain("""<li class="preference-row"><span class="index">1</span><span class="learning-institution"><label>Opetuspiste</label><span>Kallion lukio</span></span><span class="education"><label>Koulutus</label><span>Lukion ilmaisutaitolinja</span></span><div class="questions"></div></li>""")
+        body must contain("""<li class="preference-row"><span class="index">1</span><span class="learning-institution"><label>Opetuspiste</label><span>Kallion lukio</span></span><span class="education"><label>Koulutus</label><span>Lukion ilmaisutaitolinja</span></span></li>""")
         // arvosanat
         body must contain("""<tr><td>Äidinkieli ja kirjallisuus</td><td>Suomi äidinkielenä</td><td>9</td><td></td><td></td></tr>""")
         // lupatiedot

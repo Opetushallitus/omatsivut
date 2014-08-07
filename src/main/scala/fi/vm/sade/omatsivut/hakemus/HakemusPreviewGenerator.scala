@@ -13,7 +13,7 @@ import fi.vm.sade.omatsivut.Logging
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.hakemus.HakemusConverter.FlatAnswers
 
-import scalatags.Text.TypedTag
+import scalatags.Text.{all, TypedTag}
 
 case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val language: Language.Language) extends Logging {
   import scalatags.Text.all._
@@ -114,18 +114,17 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
                 case null => Nil
                 case "" => Nil
                 case _ => List(li(`class` := "preference-row")(
-                  span(`class` := "index")(index+1),
-                  span(`class` := "learning-institution")(
-                    label(ElementWrapper.t(row.getLearningInstitutionLabel)),
-                    span(answers(row.getLearningInstitutionInputId))
-                  ),
-                  span(`class` := "education")(
-                    label(ElementWrapper.t(row.getEducationLabel)),
-                    span(answers(row.getEducationInputId))
-                  ),
-                  div(`class` := "questions")(
-                    childrenPreview(childElement)
-                  )
+                  List(
+                    span(`class` := "index")(index+1),
+                    span(`class` := "learning-institution")(
+                      label(ElementWrapper.t(row.getLearningInstitutionLabel)),
+                      span(answers(row.getLearningInstitutionInputId))
+                    ),
+                    span(`class` := "education")(
+                      label(ElementWrapper.t(row.getEducationLabel)),
+                      span(answers(row.getEducationInputId))
+                    )
+                  ) ++ preferenceQuestionsPreview(childElement)
                 ))
               }
             case _ =>
@@ -134,6 +133,15 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
           }
         }
       )
+    }
+
+    def preferenceQuestionsPreview(element: ElementWrapper) = {
+      childrenPreview(element).toList match {
+        case Nil =>
+          Nil
+        case children =>
+          List(div(`class` := "questions")( children))
+      }
     }
 
     def gradeGridPreview(gridElement: ElementWrapper) = {
