@@ -16,8 +16,20 @@ class ApplicationPreviewSpec extends HakemusApiSpecification {
       FixtureImporter().applyOverrides("peruskoulu")
       authGet("/applications/preview/" + TestFixture.hakemus2, personOid) {
         val prettier = new scala.xml.PrettyPrinter(80, 4)
-        println(prettier.format(scala.xml.XML.loadString(body)))
-        success
+        val content = body
+        println(prettier.format(scala.xml.XML.loadString(content)))
+        response.getContentType() must_== "text/html; charset=UTF-8"
+        // henkilötiedot
+        content must contain("""<div class="question"><label>Sukunimi</label><span class="answer">Testaaja</span>""")
+        content must contain("""<div class="question"><label>Äidinkieli</label><span class="answer">suomi</span>""")
+        // koulutustausta
+        content must contain("""<div class="question"><label>Valitse tutkinto, jolla haet koulutukseen</label><span class="answer">Perusopetuksen oppimäärä</span>""")
+        // hakutoiveet
+        content must contain("""<li class="preference-row"><span class="index">1</span><span class="learning-institution"><label>Opetuspiste</label><span>Kallion lukio</span></span><span class="education"><label>Koulutus</label><span>Lukion ilmaisutaitolinja</span></span></li>""")
+        // arvosanat
+        content must contain("""<tr><td>Äidinkieli ja kirjallisuus</td><td>Suomi äidinkielenä</td><td>9</td><td></td><td></td></tr>""")
+        // lupatiedot
+        content must contain("""<label>Minulle saa lähettää postia ja sähköpostia vapaista opiskelupaikoista ja muuta koulutusmarkkinointia.</label><span class="answer">Ei</span>""")
       }
     }
   }
