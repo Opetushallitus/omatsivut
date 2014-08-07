@@ -120,6 +120,16 @@
         hakemus4.applicationPeriod().should.equal("Hakuaika on päättynyt.")
       })
 
+      describe("haun tyyppi", function() {
+        before(hakemus1.convertToKorkeakouluhaku)
+        it ("korkeakouluhaussa käytetään eri tekstejä", function() {
+          hakemus1.labels()[0].should.equal("Korkeakoulu")
+          hakemus1.labels()[1].should.equal("Hakukohde")
+          hakemus2.labels()[0].should.equal("Opetuspiste")
+          hakemus2.labels()[1].should.equal("Koulutus")
+        })
+      })
+
       describe("virheellinen hakemus", function() {
         before(page.applyFixtureAndOpen("passiveApplication"))
         it("hakemusta ei muokata, jos hakemus ei ole aktiivinen", function() {

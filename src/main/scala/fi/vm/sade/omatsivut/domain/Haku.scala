@@ -2,7 +2,7 @@ package fi.vm.sade.omatsivut.domain
 
 import org.joda.time.{Interval, DateTime}
 
-case class Haku(oid: String, name: String, applicationPeriods: List[HakuAika])
+case class Haku(oid: String, name: String, applicationPeriods: List[HakuAika], korkeakouluhaku: Boolean)
 case class HakuAika(start: DateTime, end: DateTime, active: Boolean)
 
 object HakuAika {

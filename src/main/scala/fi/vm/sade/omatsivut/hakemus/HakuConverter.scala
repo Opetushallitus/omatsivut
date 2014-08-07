@@ -9,7 +9,8 @@ import fi.vm.sade.omatsivut.domain.Language
 object HakuConverter {
   def convertToHaku(applicationSystem: ApplicationSystem)(implicit lang: Language.Language) = {
     val hakuAjat = applicationSystem.getApplicationPeriods.toList.map(applicationPeriod => convertToHakuAika(applicationPeriod))
-    Haku(applicationSystem.getId, convertTranslations(applicationSystem), hakuAjat)
+    val korkeakouluhaku = applicationSystem.getKohdejoukkoUri == "haunkohdejoukko_12"
+    Haku(applicationSystem.getId, convertTranslations(applicationSystem), hakuAjat, korkeakouluhaku)
   }
 
   private def convertTranslations(applicationSystem: ApplicationSystem)(implicit lang: Language.Language): String = {

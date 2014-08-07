@@ -123,6 +123,18 @@ function ApplicationListPage() {
 
       applicationPeriod: function() {
         return getApplicationElement().find(".application-period").text().trim()
+      },
+
+      convertToKorkeakouluhaku: function() {
+        modifyApplicationScope(function(scope) {
+          scope.application.haku.korkeakouluhaku = true
+        })
+      },
+
+      labels: function() {
+        return getApplicationElement().find("label").map(function() {
+          return $(this).text().split(":")[0].trim() }
+        )
       }
     }
     return api

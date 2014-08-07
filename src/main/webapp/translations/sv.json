@@ -10,7 +10,9 @@
     "applicationUpdated": "Ansökan förändrats",
     "preferences": "Ansökningsönskemål",
     "location": "Undervisnigsställe",
+    "location_university": "Undervisnigsställe",
     "education": "Utbildning",
+    "education_university": "Utbildning",
     "chooseLocation": "Välja först undervisnigsställe"
   },
 

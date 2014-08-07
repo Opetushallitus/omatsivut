@@ -10,7 +10,9 @@
     "applicationUpdated": "Last edited",
     "preferences": "Preferences",
     "location": "LOCATION",
+    "location_university": "LOCATION",
     "education": "Education",
+    "education_university": "Education",
     "chooseLocation": "Choose a location first"
   },
 
