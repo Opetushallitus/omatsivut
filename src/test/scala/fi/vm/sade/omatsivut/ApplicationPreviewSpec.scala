@@ -30,6 +30,8 @@ class ApplicationPreviewSpec extends HakemusApiSpecification {
 
         // TODO: kymppi
         // TODO: ei arvosanaa
+        // TODO: header-osuus vielä lähes tyhjä
+        // TODO: ehkä jokin footer myös
       }
     }
 
