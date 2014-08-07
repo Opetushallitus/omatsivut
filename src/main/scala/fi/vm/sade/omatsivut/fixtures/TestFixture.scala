@@ -12,6 +12,7 @@ import fi.vm.sade.omatsivut.hakemus.{HakemusConverter, HakuConverter}
 object TestFixture {
   val hakemus1 = "1.2.246.562.11.00000877107"
   val hakemus2 = "1.2.246.562.11.00000441368"
+  val hakemus3 = "1.2.246.562.11.00000441371"
   val applicationSystemOid = "1.2.246.562.5.2014022711042555034240"
   val testHetu =  "010101-123N"
   val personOid =   "1.2.246.562.24.14229104472"
