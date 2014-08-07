@@ -10,4 +10,7 @@ object Translations extends JsonFormats {
     val text = io.Source.fromInputStream(getClass.getResourceAsStream(fileName)).mkString
     parse(text)
   }
+  def getTranslation(path: String*)(implicit lang: Language) = {
+    path.foldLeft(getTranslations){ case (json, pathElem) => json \ pathElem }.extract[String]
+  }
 }

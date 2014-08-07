@@ -12,6 +12,7 @@ import fi.vm.sade.omatsivut.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.Logging
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.hakemus.HakemusConverter.FlatAnswers
+import fi.vm.sade.omatsivut.localization.Translations
 
 import scalatags.Text.{all, TypedTag}
 
@@ -93,8 +94,8 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
       val checkBoxValue = element.element.asInstanceOf[CheckBox].getValue
       val checked = (answer == Some(checkBoxValue))
       val translatedAnswer = checked match {
-        case true => "Kyllä" // TODO: kielistys
-        case false => "Ei"
+        case true => Translations.getTranslation("message", "yes")
+        case false => Translations.getTranslation("message", "no")
       }
       questionPreview(element.title, translatedAnswer)
     }
