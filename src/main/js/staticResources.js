@@ -35,7 +35,7 @@ function readLanguageCookie() {
             .find(function (val) { return val[0] == cname })
             .value()
         if (cookie) {
-            return decodeURIComponent(cookie[1])
+            return decodeURIComponent(cookie[1].split("-")[0])
         }
     }
     return "fi"
