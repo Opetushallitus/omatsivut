@@ -45,8 +45,8 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
         case _: OptionQuestion => List(optionQuestionPreview(element))
         case _: CheckBox => List(checkBoxPreview(element))
         case _: Theme => List(themePreview(element))
-        case _: Phase => flattenedPreview(element)
-        case _: RelatedQuestionRule => flattenedPreview(element)
+        case _: Phase => childrenPreview(element)
+        case _: RelatedQuestionRule => childrenPreview(element)
         case _: Text => List(textPreview(element))
         case _: TitledGroup => List(titledGroupPreview(element))
         case _: DateQuestion => List(textPreview(element))
@@ -58,10 +58,10 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
     }
 
     def themePreview(element: ElementWrapper): TypedTag[String] = {
-      div(`class` := "theme")(h2(element.title), flattenedPreview(element))
+      div(`class` := "theme")(h2(element.title), childrenPreview(element))
     }
 
-    def flattenedPreview(element: ElementWrapper) = {
+    def childrenPreview(element: ElementWrapper) = {
       element.children.flatMap(questionsPreview)
     }
 
@@ -122,8 +122,11 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
                   span(`class` := "education")(
                     label(ElementWrapper.t(row.getEducationLabel)),
                     span(answers(row.getEducationInputId))
+                  ),
+                  div(`class` := "questions")(
+                    childrenPreview(childElement)
                   )
-                )) // TODO: lisäkysymykset
+                ))
               }
             case _ =>
               logger.warn("Ignoring preference table element " + childElement.element.getType + ": " + childElement.id)
