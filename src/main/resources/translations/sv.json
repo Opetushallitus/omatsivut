@@ -28,7 +28,9 @@
     "loadingApplications": "Ansökningar laddats...",
     "noApplications": "Det finns inga ansöka at förändra.",
     "validationOk": "Kom ihåg att spar ansökan",
-    "changesSaved": "Alla förändrangar har sparats."
+    "changesSaved": "Alla förändrangar har sparats.",
+    "yes": "Ja",
+    "no": "Nej"
   },
 
   "error": {

@@ -21,7 +21,7 @@ function setTimeformat(language) {
 function loadTranslations(language, callback) {
   $('html').attr('lang', language)
   var self = this
-  $.ajax({ url: "/omatsivut/translations/" + language + ".json", dataType: "json" }).done(function(data) {
+  $.ajax({ url: "/omatsivut/translations", dataType: "json" }).done(function(data) {
     callback(data)
   })
 }

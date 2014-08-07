@@ -16,6 +16,7 @@ class ScalatraBootstrap extends LifeCycle {
     config.start
 
     context.mount(new ApplicationsServlet, "/api")
+    context.mount(new TranslationServlet(), "/translations")
     context.mount(new KoulutusServlet, "/koulutusinformaatio")
     context.mount(new SwaggerServlet, "/swagger/*")
     context.mount(new SecuredSessionServlet, "/secure")
