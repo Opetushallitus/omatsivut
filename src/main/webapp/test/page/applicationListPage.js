@@ -122,9 +122,8 @@ function ApplicationListPage() {
       },
 
       applicationPeriod: function() {
-        return getApplicationElement().find(".application-period").children().map(function() {
-          return $(this).text().trim() }
-        ).toArray().join(" ")      },
+        return getApplicationElement().find(".application-period").text().trim()
+        },
 
       previewLink: function() {
         return getApplicationElement().find(".preview")
