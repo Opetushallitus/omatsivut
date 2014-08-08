@@ -19,6 +19,8 @@ import fi.vm.sade.omatsivut.localization.Translations
 
 import scalatags.Text.all._
 import scalatags.Text.{all, TypedTag}
+import scalatags.generic.AttrPair
+import scalatags.text.Builder
 
 case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val language: Language.Language) extends Logging {
   import scalatags.Text.all._
@@ -149,10 +151,16 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
       }
     }
 
+    def attrs(el: ElementWrapper): List[Modifier] = {
+      el.element.getAttributes.toMap.map { case (key, value) =>
+        key.attr := value
+      }.toList
+    }
+
     def gradeGridPreview(gridElement: ElementWrapper) = {
       table(`class` := "gradegrid")(
         thead(
-          td("Oppiaine") :: td() :: (if (gridElement.element.asInstanceOf[GradeGrid].isExtraColumn) {
+          td("colspan".attr := 2)("Oppiaine") :: (if (gridElement.element.asInstanceOf[GradeGrid].isExtraColumn) {
             List(td("Yhteinen oppiaine"), td("Valinnainen aine"), td("Toinen valinnainen aine"))
           } else {
             List(td("Arvosana"))
@@ -160,7 +168,7 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
         ),
         tbody(gridElement.children.map { row =>
           tr(row.children.map { column =>
-            td(
+            td(attrs(column))( // <- practically there's a colspan attribute that needs to be set
               column.children.map { dataElement =>
                 gradeGridElementPreview(answerFromOptions _, dataElement)
               }
