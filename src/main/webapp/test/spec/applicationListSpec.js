@@ -691,9 +691,18 @@
       })
     })
 
-    describe("Hakemuksen katselu", function() {
-      it("linkki avaa esikatselusivun", function() {
-        hakemus2.previewLink().text().should.equal("Näytä hakemus")
+    describe("Näytä hakemus -linkki", function() {
+      describe("Kun hakemusta ei ole muokattu", function() {
+        it("linkki avaa esikatselusivun", function() {
+          hakemus2.previewLink().text().should.equal("Näytä hakemus")
+          hakemus2.previewLink().hasClass("disabled").should.equal(false)
+        })
+      })
+      describe("Kun hakemusta on muokattu", function() {
+        before(hakemus2.getPreference(0).remove)
+        it("linkki on disabloitu", function() {
+          hakemus2.previewLink().hasClass("disabled").should.equal(true)
+        })
       })
     })
   })

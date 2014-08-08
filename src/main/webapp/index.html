@@ -28,7 +28,7 @@
                         </div>
                     </p>
                     <p>
-                        <a class="preview" ng-href="/omatsivut/api/applications/preview/{{application.oid}}" ng-disabled="hasChanged || statusMessageType=='pending' || isValidating" target="_blank">{{ localization('button.showApplication') }}</a>
+                        <a class="preview" ng-href="/omatsivut/api/applications/preview/{{application.oid}}" ng-class="{disabled: hasChanged || statusMessageType=='pending' || isValidating}" target="_blank">{{ localization('button.showApplication') }}</a>
                         <span class="timestamp">
                             ({{ timestampLabel() }} <time datetime="{{ application.updated | date:'yyyy-MM-ddTHH:mmZ' }}">{{ formatTimestamp(application.updated) }}</time>)
                         </span>
