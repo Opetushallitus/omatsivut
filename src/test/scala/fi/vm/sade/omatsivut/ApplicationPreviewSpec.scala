@@ -16,6 +16,10 @@ class ApplicationPreviewSpec extends HakemusApiSpecification {
       FixtureImporter().applyOverrides("peruskoulu")
       authGet("/applications/preview/" + TestFixture.hakemus2, personOid) {
         response.getContentType() must_== "text/html; charset=UTF-8"
+
+        body must contain("""<label>Vastaanotettu</label><span>25.6.2014 15:52</span>""")
+        body must contain("""<label>Hakemusnumero</label><span>00000441368</span>""")
+
         // henkilötiedot
         body must contain("""<div class="question"><label>Sukunimi</label><span class="answer">Testaaja</span>""")
         body must contain("""<div class="question"><label>Äidinkieli</label><span class="answer">suomi</span>""")

@@ -1,5 +1,8 @@
 package fi.vm.sade.omatsivut.hakemus
 
+import java.text.SimpleDateFormat
+import java.util.Date
+
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.lomake.domain.elements.custom.SocialSecurityNumber
 import fi.vm.sade.haku.oppija.lomake.domain.{I18nText, ApplicationSystem}
@@ -14,6 +17,7 @@ import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.hakemus.HakemusConverter.FlatAnswers
 import fi.vm.sade.omatsivut.localization.Translations
 
+import scalatags.Text.all._
 import scalatags.Text.{all, TypedTag}
 
 case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val language: Language.Language) extends Logging {
@@ -187,11 +191,27 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
     def textPreview(element: ElementWrapper) = {
       div(`class` := "text")(element.title)
     }
+
+    def formatOid(oid: String): String = {
+      val split = oid.split("\\.").toList
+      split match {
+        case Nil => ""
+        case parts => parts.last
+      }
+    }
+
+    def formatDate(date: Date) = {
+      new SimpleDateFormat("d.M.yyyy HH:mm").format(date)
+    }
+
     html(
       head(link(href := "/omatsivut/css/preview.css", rel:= "stylesheet", `type` := "text/css")),
       body(
         header(
-          h1(ElementWrapper.t(applicationSystem.getName))
+          h1(ElementWrapper.t(applicationSystem.getName)),
+          h2(answers.get("Etunimet").getOrElse("") + " " + answers.get("Sukunimi").getOrElse("")),
+          div(`class` := "detail application-received")(label(Translations.getTranslation("applicationPreview", "received")), span(formatDate(application.getReceived))),
+          div(`class` := "detail application-id")(label(Translations.getTranslation("applicationPreview", "applicationId")), span(formatOid(application.getOid)))
         )
         ::
         form.getElementsOfType[Phase].flatMap(questionsPreview)

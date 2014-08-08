@@ -50,5 +50,10 @@
       "title": "Henkilötunnuksellasi ei löytynyt hakemuksia",
       "text": "Tunnistautumisesi onnistui, mutta emme löytäneet hakemuksia henkilötunnuksellasi."
     }
+  },
+
+  "applicationPreview": {
+    "received": "Vastaanotettu",
+    "applicationId": "Hakemusnumero"
   }
 }

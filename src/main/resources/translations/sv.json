@@ -50,5 +50,10 @@
       "title": "Inga ansöka finns med din personbeteckningen",
       "text": "Identifiering lyckades men inga ansöka finns med din personbeteckningen."
     }
+  },
+
+  "applicationPreview": {
+    "received": "Mottagits",
+    "applicationId": "Ansökans nummer"
   }
 }

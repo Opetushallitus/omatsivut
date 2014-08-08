@@ -50,5 +50,10 @@
       "title": "No applications found",
       "text": "You have logged in successfully, but there are no applications for your social security number."
     }
+  },
+
+  "applicationPreview": {
+    "received": "Received",
+    "applicationId": "Application id"
   }
 }
