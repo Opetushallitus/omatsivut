@@ -63,7 +63,8 @@ listApp.factory("settings", ["$animate", function($animate) {
 
   return {
     uiTransitionTime: testMode ? 10 : 500,
-    modelDebounce: testMode? 0 : 300
+    modelDebounce: testMode ? 0 : 300,
+    uiIndicatorDebounce: testMode ? 0: 500
   };
 }]);
 
