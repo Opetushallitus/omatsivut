@@ -1,13 +1,13 @@
 (function () {
   var page = ApplicationListPage()
-  var hakemus1nimi = "Perusopetuksen jälkeisen valmistavan koulutuksen kesän 2014 haku MUOKATTU"
-  var hakemus1 = page.getApplication(hakemus1nimi)
-  var hakemus2nimi = "Ammatillisen koulutuksen ja lukiokoulutuksen kevään 2014 yhteishaku"
-  var hakemus2 = page.getApplication(hakemus2nimi)
-  var hakemus3nimi = "Lisähaku kevään 2014 yhteishaussa vapaaksi jääneille paikoille"
-  var hakemus3 = page.getApplication(hakemus3nimi)
-  var hakemus4nimi = "Ammatillisen koulutuksen ja lukiokoulutuksen kevään 2013 yhteishaku"
-  var hakemus4 = page.getApplication(hakemus4nimi)
+  var hakemusId1 = "1.2.246.562.11.00000877107"
+  var hakemus1 = page.getApplication(hakemusId1)
+  var hakemusId2 = "1.2.246.562.11.00000441368"
+  var hakemus2 = page.getApplication(hakemusId2)
+  var hakemusId3 = "1.2.246.562.11.00000441371"
+  var hakemus3 = page.getApplication(hakemusId3)
+  var hakemusId4 = "1.2.246.562.11.00000441369"
+  var hakemus4 = page.getApplication(hakemusId4)
 
   describe('Tyhjä hakemuslistaus', function () {
     var emptyPage = ApplicationListPage()
@@ -47,7 +47,7 @@
       })
 
       it("henkilön 010101-123N hakutoiveet ovat näkyvissä", function () {
-        expect(page.getApplication("Perusopetuksen jälkeisen valmistavan koulutuksen kesän 2014 haku EDIT").preferencesForApplication()).to.deep.equal([
+        expect(page.getApplication(hakemusId1).preferencesForApplication()).to.deep.equal([
           {
             "hakutoive.Opetuspiste": "Amiedu, Valimotie 8",
             "hakutoive.Koulutus": "Maahanmuuttajien ammatilliseen peruskoulutukseen valmistava koulutus"
@@ -526,7 +526,7 @@
           describe("Tietokanta", function() {
             it("sisältää tallennetut tiedot", function() {
               return db.getApplications().then(function(data) {
-                var answers = findByHaku(data, hakemus1nimi).answers
+                var answers = findApplicationById(data, hakemusId1).answers
                 var questions = hakemus1.questionsForApplication().data()
 
                 answers.hakutoiveet[questions[0].id].should.equal("tekstivastaus 1")
@@ -726,12 +726,12 @@
         }
       )
       it(testName, function() {
-        dbCheckFunction(findByHaku(applicationsBefore, hakemus1nimi), findByHaku(applicationsAfter, hakemus1nimi))
+        dbCheckFunction(findApplicationById(applicationsBefore, hakemusId1), findApplicationById(applicationsAfter, hakemusId1))
       })
     })
   }
 
-  function findByHaku(applications, haku) {
-    return _.find(applications, function(a) { return a.haku.name == haku })
+  function findApplicationById(applications, id) {
+    return _.find(applications, function(a) { return a.oid == id })
   }
 })()

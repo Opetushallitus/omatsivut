@@ -17,7 +17,7 @@
 
             <ul id="hakemus-list" aria-label="{{ localization('title.omatHakemukset') }}" ng-cloak>
 
-                <li ng-repeat="application in applications" class="application-list-item" ng-controller="hakemusController" highlight-save>
+                <li ng-repeat="application in applications" class="application-list-item" ng-controller="hakemusController" data-oid="{{application.oid}}" highlight-save>
                     <h2>{{application.haku.name }}</h2>
                     <p>
                         <div ng-if="applicationPeriod.active" class="application-period">
@@ -28,7 +28,7 @@
                         </div>
                     </p>
                     <p>
-                        <a ng-href="/omatsivut/api/applications/preview/{{application.oid}}" ng-disabled="hasChanged || statusMessageType=='pending' || isValidating" target="_blank">{{ localization('button.showApplication') }}</a>
+                        <a class="preview" ng-href="/omatsivut/api/applications/preview/{{application.oid}}" ng-disabled="hasChanged || statusMessageType=='pending' || isValidating" target="_blank">{{ localization('button.showApplication') }}</a>
                         <span class="timestamp">
                             ({{ timestampLabel() }} <time datetime="{{ application.updated | date:'yyyy-MM-ddTHH:mmZ' }}">{{ formatTimestamp(application.updated) }}</time>)
                         </span>
