@@ -123,6 +123,10 @@ function ApplicationListPage() {
 
       applicationPeriod: function() {
         return getApplicationElement().find(".application-period").text().trim()
+      },
+
+      previewLink: function() {
+        return getApplicationElement().find(".preview")
       }
     }
     return api

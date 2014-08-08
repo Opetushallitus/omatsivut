@@ -690,6 +690,12 @@
         dbEnd.hakutoiveet.should.deep.equal(dbStart.hakutoiveet.slice(0, 2).concat(newOne))
       })
     })
+
+    describe("Hakemuksen katselu", function() {
+      it("linkki avaa esikatselusivun", function() {
+        hakemus2.previewLink().text().should.equal("Näytä hakemus")
+      })
+    })
   })
 
   function replacePreference(hakemus, index, searchString) {
