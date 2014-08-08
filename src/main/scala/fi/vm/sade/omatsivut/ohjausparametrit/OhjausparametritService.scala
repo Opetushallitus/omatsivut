@@ -13,7 +13,7 @@ trait OhjausparametritService {
   def valintatulokset(asId: String): Option[Tulokset]
 }
 
-object OhjausparametritParser extends JsonFormats {
+private object OhjausparametritParser extends JsonFormats {
   def parseValintatulokset(json: JValue) = {
     for {
       obj <- (json \ "PH_VTJH").toOption

@@ -37,9 +37,7 @@ case class HakemusRepository(implicit val appConfig: AppConfig) extends Logging 
   def fetchHakemukset(personOid: String)(implicit lang: Language.Language): List[Hakemus] = {
     val applicationJavaObjects: List[Application] = dao.find(new Application().setPersonOid(personOid)).toList
     applicationJavaObjects.map{ application => {
-
-      val results = OhjausparametritService(appConfig).valintatulokset(application.getApplicationSystemId)
-      val haku = HakuRepository().getHakuById(application.getApplicationSystemId).map (_.copy(results = results))
+      val haku = HakuRepository().getHakuById(application.getApplicationSystemId)
       val hakemus = HakemusConverter.convertToHakemus(haku)(application)
       AuditLogger.log(ShowHakemus(personOid, hakemus.oid))
       hakemus
