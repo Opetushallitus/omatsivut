@@ -21,8 +21,7 @@ object KoulutusInformaatioService {
         JsonFixtureMaps.findByKey[List[Opetuspiste]]("/mockdata/opetuspisteet.json", query.substring(0, 1).toLowerCase).getOrElse(List())
       }
       def koulutukset(asId: String, opetuspisteId: String, baseEducation: String, vocational: String, uiLang: String) = {
-        val option: Option[List[Koulutus]] = JsonFixtureMaps.findByKey[List[Koulutus]]("/mockdata/koulutukset.json", opetuspisteId)
-        option.getOrElse(List())
+        JsonFixtureMaps.findByKey[List[Koulutus]]("/mockdata/koulutukset.json", opetuspisteId).getOrElse(List())
       }
       def koulutus(aoId: String) = {
         JsonFixtureMaps.findByFieldValue[List[Koulutus]]("/mockdata/koulutukset.json", "_id", aoId).getOrElse(List()).headOption
