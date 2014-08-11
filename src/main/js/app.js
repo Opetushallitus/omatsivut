@@ -12,10 +12,6 @@ var listApp = angular.module('listApp', ["ngResource", "ngAnimate", "RecursionHe
   $locationProvider.html5Mode(false);
 });
 
-listApp.run(function ($rootScope, localization) {
-  $rootScope.localization = localization
-})
-
 var staticResources = require('./staticResources')
 require('./hakutoiveController')(listApp)
 require('./listController')(listApp)
@@ -23,8 +19,13 @@ require('./hakemusController')(listApp)
 require('./applicationValidator')(listApp)
 require('./localization')(listApp, staticResources)
 require('./directives')(listApp)
+require('./restResources')(listApp)
 require('./recursionHelper')
 require('../lib/angular-debounce')
+
+listApp.run(function ($rootScope, localization) {
+  $rootScope.localization = localization
+})
 
 var raamitLoaded = $.Deferred()
 if (document.location.hash.indexOf("skipRaamit") > 0) {
@@ -42,15 +43,6 @@ angular.element(document).ready(function() {
     })
   })
 })
-
-listApp.factory("applicationsResource", ["$resource", "$location", function($resource, $location) {
-  return $resource("/omatsivut/api/applications", null, {
-    "update": {
-      method: "PUT",
-      url: "/omatsivut/api/applications/:id"
-    }
-  });
-}]);
 
 function testMode() {
   return window.parent.location.href.indexOf("runner.html") > 0

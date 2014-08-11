@@ -1,9 +1,9 @@
 var Hakemus = require('./hakemus')
 module.exports = function(listApp) {
-  listApp.controller("listController", ["$scope", "applicationsResource", "localization", function ($scope, applicationsResource, localization) {
+  listApp.controller("listController", ["$scope", "restResources", "localization", function ($scope, restResources, localization) {
     $scope.applicationStatusMessage = localization("message.loadingApplications")
     $scope.applicationStatusMessageType = "ajax-spinner";
-    applicationsResource.query(success, error)
+    restResources.applications.query(success, error)
 
     function success(data) {
       $scope.applications = _.map(data, function(json) { return new Hakemus(json) })
