@@ -68,9 +68,9 @@
   describe("Monikielisyys", function () {
     it("kaikkien kielitiedostojen rakenne on sama", function() {
       return Q.all([
-        getJson("/omatsivut/translations/fi.json"),
-        getJson("/omatsivut/translations/en.json"),
-        getJson("/omatsivut/translations/sv.json")
+        getJson("/omatsivut/translations?lang=fi"),
+        getJson("/omatsivut/translations?lang=en"),
+        getJson("/omatsivut/translations?lang=sv")
       ]).then(function(translations) {
           var translations = _(translations).map(function(translation) { return _.keys(util.flattenObject(translation)).sort() })
           translations[0].should.deep.equal(translations[1])
