@@ -2,12 +2,12 @@ package fi.vm.sade.omatsivut.hakemus
 
 import java.text.SimpleDateFormat
 import java.util.Date
-
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.lomake.domain.elements.{TitledGroup, Text, Theme, Phase}
 import fi.vm.sade.haku.oppija.lomake.domain.elements.HiddenValue
 import fi.vm.sade.haku.oppija.lomake.domain.elements.custom.{PreferenceTable, SocialSecurityNumber}
 import fi.vm.sade.haku.oppija.lomake.domain.elements.custom.SocialSecurityNumber
+import fi.vm.sade.haku.oppija.lomake.domain.elements.custom.PreferenceRow
 import fi.vm.sade.haku.oppija.lomake.domain.elements.custom.gradegrid.{GradeGridAddLang, GradeGridOptionQuestion, GradeGridTitle, GradeGrid}
 import fi.vm.sade.haku.oppija.lomake.domain.elements.questions.{CheckBox, OptionQuestion, TextQuestion, TextArea, DateQuestion}
 import fi.vm.sade.haku.oppija.lomake.domain.rules.{AddElementRule, RelatedQuestionRule}

@@ -1,5 +1,7 @@
 package fi.vm.sade.omatsivut.koulutusinformaatio
 
+import org.joda.time.DateTime
+
 case class Koulutus(  id: String,
                       name: String,
                       aoIdentifier: String,
@@ -10,4 +12,11 @@ case class Koulutus(  id: String,
                       athleteEducation: Boolean,
                       kaksoistutkinto: Boolean,
                       vocational: Boolean,
-                      educationCodeUri: String)
+                      educationCodeUri: String,
+                      attachmentDeliveryDeadline: Long,
+                      attachmentDeliveryAddress: Address)
+
+case class Address(  streetAddress: String,
+                     streetAddress2: String,
+                     postalCode: String,
+                     postOffice: String)
