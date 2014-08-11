@@ -60,6 +60,14 @@
     "applicationId": "Hakemusnumero",
     "discretionary": "Harkintaan perustava valinta",
     "discretionary_info": "Hait harkintaan perustuvassa valinnassa. Sinun tulee toimittaa oppilaitokseen seuraavat tiedot: tulostettu hakemus sekä perustelut ja todistukset, joihin vetoat. Toimita ne alla oleviin osoitteisiin hakuajan päättymiseen mennessä.",
-    "attachments_deadline": "Liitteiden viimeinen palautuspäivä"
+    "attachments_deadline": "Liitteiden viimeinen palautuspäivä",
+    "attachments": "Todistusliitteet",
+    "attachments_info_yo": "Toimita todistuskopiot ylioppilastutkintotodistuksestasi seuraaviin kouluihin",
+    "attachments_info_am": "Toimita todistuskopiot ammatillisesta perustutkinnostasi seuraaviin kouluihin",
+    "attachments_info_amt": "Toimita todistuskopiot ammattitutkinnostasi seuraaviin kouluihin",
+    "attachments_info_kk": "Toimita todistuskopiot korkeakoulututkinnostasi seuraaviin kouluihin",
+    "attachments_info_ulk": "Toimita todistuskopiot ulkomailla suoritetusta tutkinnostasi seuraaviin kouluihin",
+    "attachments_info_avoin": "Toimita todistuskopiot avoimen yliopiston opinnoistasi seuraaviin kouluihin",
+    "attachments_info_muu": "Toimita todistuskopiot muista perusteistasi seuraaviin kouluihin"
   }
 }

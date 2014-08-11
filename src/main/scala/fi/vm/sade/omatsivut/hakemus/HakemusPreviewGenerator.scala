@@ -21,6 +21,7 @@ import fi.vm.sade.omatsivut.koulutusinformaatio.Address
 import fi.vm.sade.haku.oppija.hakemus.domain.util.ApplicationUtil
 import fi.vm.sade.omatsivut.koulutusinformaatio.Opetuspiste
 import org.joda.time.format.DateTimeFormat
+import fi.vm.sade.omatsivut.koulutusinformaatio.Opetuspiste
 
 case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val language: Language.Language) extends Logging {
   import scala.collection.JavaConversions._
@@ -65,7 +66,7 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
       }
     }
 
-    def discretionaryAttachmentsPreview(): List[TypedTag[String]] = {
+    def discretionaryAttachmentsInfoPreview(): List[TypedTag[String]] = {
       val aoInfo = ApplicationUtil.getDiscretionaryAttachmentAOIds(application).map(koulutusInformaatio.koulutus(_)).flatten
       if (aoInfo.isEmpty) {
         Nil
@@ -74,16 +75,32 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
         List(div(`class` := "theme")(
           h2(Translations.getTranslation("applicationPreview", "discretionary")),
           p(Translations.getTranslation("applicationPreview", "discretionary_info")),
-          for (info <- aoInfo) yield discretionaryAttachmentPreview(info)
+          for (info <- aoInfo) yield attachmentInfoPreview(info)
         ))
       }
     }
 
-    def discretionaryAttachmentPreview(info: Koulutus): List[TypedTag[String]] = {
+    def attachmentsInfoPreview(): List[TypedTag[String]] = {
+      val aoInfos = ApplicationUtil.getHigherEdAttachmentAOIds(application).mapValues(_.map(koulutusInformaatio.koulutus(_)).flatten)
+      if (aoInfos.isEmpty) {
+        Nil
+      }
+      else {
+        for (baseEducation <- aoInfos.keySet.toList) yield
+          div(`class` := "theme")(
+            h2(Translations.getTranslation("applicationPreview", "attachments")),
+            p(Translations.getTranslation("applicationPreview", "attachments_info_" + baseEducation)),
+            for (info <- aoInfos(baseEducation)) yield attachmentInfoPreview(info)
+          )
+      }
+    }
+
+    def attachmentInfoPreview(info: Koulutus): List[TypedTag[String]] = {
+      val address = info.attachmentDeliveryAddress.getOrElse(info.provider flatMap(_.applicationOffice) map(_.postalAddress ))
       if(info.attachmentDeliveryAddress.isDefined) {
         List(div(`class` := "group")(
           elemIfNotEmpty[Opetuspiste](h3(_), info.provider, _.name),
-          attachmentInfoPreview(info.attachmentDeliveryAddress.get, info.attachmentDeliveryDeadline )
+          attachmentAddressInfoPreview(info.attachmentDeliveryAddress.get, info.attachmentDeliveryDeadline )
         ))
       }
       else {
@@ -91,7 +108,7 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
       }
     }
 
-    def attachmentInfoPreview(address: Address, deliveryDeadline: Option[Long]): List[TypedTag[String]] = {
+    def attachmentAddressInfoPreview(address: Address, deliveryDeadline: Option[Long]): List[TypedTag[String]] = {
       List(
         elemIfNotEmptyString(div(_), address.streetAddress),
         elemIfNotEmptyString(div(_), address.streetAddress2),
@@ -117,7 +134,6 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
         None
       }
     }
-
 
     def themePreview(element: ElementWrapper): TypedTag[String] = {
       div(`class` := "theme")(h2(element.title), childrenPreview(element))
@@ -280,7 +296,9 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
         ::
         form.getElementsOfType[Phase].flatMap(questionsPreview)
         :::
-        discretionaryAttachmentsPreview()
+        discretionaryAttachmentsInfoPreview()
+        :::
+        attachmentsInfoPreview()
       )
     ).toString
   }
