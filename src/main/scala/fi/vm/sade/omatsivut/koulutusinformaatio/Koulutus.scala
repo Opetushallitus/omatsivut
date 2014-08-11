@@ -1,7 +1,5 @@
 package fi.vm.sade.omatsivut.koulutusinformaatio
 
-import org.joda.time.DateTime
-
 case class Koulutus(  id: String,
                       name: String,
                       aoIdentifier: String,

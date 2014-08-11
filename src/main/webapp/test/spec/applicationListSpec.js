@@ -236,8 +236,7 @@
 
       describe("kun lisätään hakukohde", function() {
         before(
-          hakemus1.getPreference(1).selectOpetusPiste("Ahl"),
-          hakemus1.getPreference(1).selectKoulutus(0)
+          hakemus1.getPreference(1).selectOpetusPiste("Ahl")
         )
 
         it("seuraava hakukohde tulee muokattavaksi", function() {
