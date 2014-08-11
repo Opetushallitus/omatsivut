@@ -117,7 +117,7 @@
 
       it("jos hakuaika on loppunut, hakemusta ei voi muokata", function() {
         hakemus4.preferencesForApplication().length.should.equal(0)
-        hakemus4.applicationPeriod().should.equal("Hakuaika on päättynyt. Haun tulokset julkaistaan 11. kesä 2014 klo 10.52.")
+        hakemus4.applicationPeriod().should.equal("Hakuaika on päättynyt. Haun tulokset julkaistaan 11. kesä 2014.")
       })
 
       describe("haun tyyppi", function() {
