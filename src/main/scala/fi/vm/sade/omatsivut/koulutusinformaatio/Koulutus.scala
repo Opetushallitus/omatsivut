@@ -11,8 +11,8 @@ case class Koulutus(  id: String,
                       kaksoistutkinto: Boolean,
                       vocational: Boolean,
                       educationCodeUri: String,
-                      attachmentDeliveryDeadline: Long,
-                      attachmentDeliveryAddress: Address)
+                      attachmentDeliveryDeadline: Option[Long],
+                      attachmentDeliveryAddress: Option[Address])
 
 case class Address(  streetAddress: String,
                      streetAddress2: String,
