@@ -9,6 +9,10 @@
   var hakemus4nimi = "Ammatillisen koulutuksen ja lukiokoulutuksen kevään 2013 yhteishaku"
   var hakemus4 = page.getApplication(hakemus4nimi)
 
+  afterEach(function() {
+    expect(window.uiError).to.be.null
+  })
+
   describe('Tyhjä hakemuslistaus', function () {
     var emptyPage = ApplicationListPage()
     function emptyApplicationPageVisible() {

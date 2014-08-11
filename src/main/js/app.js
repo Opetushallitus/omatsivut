@@ -52,20 +52,25 @@ listApp.factory("applicationsResource", ["$resource", "$location", function($res
   });
 }]);
 
-angular.module("exceptionOverride", []).factory("$exceptionHandler", function () {
+function testMode() {
+  return window.parent.location.href.indexOf("runner.html") > 0
+}
+
+angular.module("exceptionOverride", []).factory("$exceptionHandler", function() {
   return function (exception) {
-    throw exception
+    if (testMode())
+      throw exception
+    else
+      console.error(exception.stack)
   };
 })
 
 listApp.factory("settings", ["$animate", function($animate) {
-  var testMode = window.parent.location.href.indexOf("runner.html") > 0
-  if (testMode) $animate.enabled(false)
-
+  if (testMode()) $animate.enabled(false)
   return {
-    uiTransitionTime: testMode ? 10 : 500,
-    modelDebounce: testMode ? 0 : 300,
-    uiIndicatorDebounce: testMode ? 0: 500
+    uiTransitionTime: testMode() ? 10 : 500,
+    modelDebounce: testMode() ? 0 : 300,
+    uiIndicatorDebounce: testMode() ? 0: 500
   };
 }]);
 

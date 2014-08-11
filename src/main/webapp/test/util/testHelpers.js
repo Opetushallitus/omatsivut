@@ -175,7 +175,10 @@ function openPage(path, predicate) {
     $("#testframe").replaceWith(newTestFrame)
     return wait.until(function() {
       return predicate()
-    })()
+    })().then(function() {
+        window.uiError = null
+        testFrame().onerror = function(err) { window.uiError = err; } // Hack: force mocha to fail on unhandled exceptions
+    })
   }
 }
 
