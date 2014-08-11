@@ -57,8 +57,8 @@ case class RemoteKoulutusService(implicit appConfig: AppConfig) extends Koulutus
   def koulutus(aoId: String): Option[Koulutus] = {
     val (responseCode, headersMap, resultString) = DefaultHttpClient.httpGet(appConfig.settings.koulutusinformaatioAoUrl + "/" + aoId)
       .responseWithHeaders
-    withErrorLogging{
+    withWarnLogging{
       parse(resultString).extract[Option[Koulutus]]
-    }("Parsing response failed:\n" + resultString)
+    }("Parsing response failed:\n" + resultString, None)
   }
 }

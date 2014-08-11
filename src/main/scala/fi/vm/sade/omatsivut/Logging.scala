@@ -14,4 +14,14 @@ trait Logging {
       }
     }
   }
+  protected def withWarnLogging[T](f: => T)(errorMsg: String, defaultValue: T): T = {
+    try {
+      f
+    } catch {
+      case e: Exception => {
+        logger.warn(errorMsg, e)
+        defaultValue
+      }
+    }
+  }
 }
