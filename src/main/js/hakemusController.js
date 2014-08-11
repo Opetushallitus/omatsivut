@@ -18,6 +18,12 @@ module.exports = function(listApp) {
       return moment(dt).format('llll').replace(/,/g, "")
     }
 
+    $scope.formatDateRange = function(range) {
+      var start = moment(range.start).format('ll').replace(/,/g, "")
+      var end = moment(range.end).format('ll').replace(/,/g, "")
+      return _.unique([start, end]).join(" - ")
+    }
+
     $scope.timestampLabel = function() {
       if ($scope.application.received == $scope.application.updated)
         return localization("label.applicationReceived")
