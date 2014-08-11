@@ -1,7 +1,7 @@
 var Hakutoive = require('./hakutoive')
 
 module.exports = function(listApp) {
-  listApp.controller("hakutoiveController", ["$scope", "$http", "$timeout", "settings", function($scope, $http, $timeout, settings) {
+  listApp.controller("hakutoiveController", ["$scope", "$http", "$timeout", "settings", "restResources", function($scope, $http, $timeout, settings, restResources) {
     $scope.isEditingDisabled = function() { return !$scope.hakutoive.isNew || !$scope.application.isEditable($scope.$index) }
 
     $scope.isKoulutusSelectable = function() { return !$scope.isEditingDisabled() && this.hakutoive.hasOpetuspiste() && !_.isEmpty($scope.koulutusList) }
@@ -11,14 +11,19 @@ module.exports = function(listApp) {
     $scope.opetuspisteValittu = function($item, $model, $label) {
       this.hakutoive.setOpetuspiste($item.id, $item.name)
 
-      findKoulutukset(this.application.haku.oid, $item.id, this.application.educationBackground)
-        .then(function(koulutukset) {
-          $scope.koulutusList = koulutukset
-          if (koulutukset.length === 1) {
-            $scope.valittuKoulutus = koulutukset[0]
-            $scope.hakutoive.setKoulutus(koulutukset[0])
-          }
-        })
+      restResources.koulutukset.query({
+        asId: this.application.haku.oid,
+        opetuspisteId: $item.id,
+        baseEducation: this.application.educationBackground.baseEducation,
+        vocational: this.application.educationBackground.vocational,
+        uiLang: "fi" // TODO: kieliversio
+      }, function(koulutukset) {
+        $scope.koulutusList = koulutukset
+        if (koulutukset.length === 1) {
+          $scope.valittuKoulutus = koulutukset[0]
+          $scope.hakutoive.setKoulutus(koulutukset[0])
+        }
+      })
     }
 
     $scope.opetuspisteModified = function() {
@@ -41,26 +46,8 @@ module.exports = function(listApp) {
       this.hakutoive.setKoulutus(this["valittuKoulutus"])
     }
 
-    function findKoulutukset(asId, opetuspisteId, educationBackground) {
-      return $http.get("koulutusinformaatio/koulutukset/" + asId + "/" + opetuspisteId, {
-        params: {
-          baseEducation: educationBackground.baseEducation,
-          vocational: educationBackground.vocational,
-          uiLang: "fi" // TODO: kieliversio
-        }
-      }).then(function(res){
-        return res.data;
-      });
-    }
-
     $scope.findOpetuspiste = function(val) {
-      return $http.get('koulutusinformaatio/opetuspisteet/' + val, {
-        params: {
-          asId: $scope.application.haku.oid
-        }
-      }).then(function(res){
-        return res.data;
-      });
+      return restResources.opetuspisteet.query({query: val, asId: $scope.application.haku.oid }).$promise
     };
   }])
 }

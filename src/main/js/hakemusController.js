@@ -2,7 +2,7 @@ var Hakemus = require("./hakemus")
 var Hakutoive = require("./hakutoive")
 
 module.exports = function(listApp) {
-  listApp.controller("hakemusController", ["$scope", "$element", "$http", "applicationsResource", "applicationValidator", "settings", "debounce", "localization", function ($scope, $element, $http, applicationsResource, applicationValidator, settings, debounce, localization) {
+  listApp.controller("hakemusController", ["$scope", "$element", "$http", "restResources", "applicationValidator", "settings", "debounce", "localization", function ($scope, $element, $http, restResources, applicationValidator, settings, debounce, localization) {
     applicationValidator = debounce(applicationValidator(), settings.modelDebounce)
 
     $scope.applicationPeriod = $scope.application.haku.applicationPeriods[0]
@@ -109,7 +109,7 @@ module.exports = function(listApp) {
     }
 
     $scope.saveApplication = function() {
-      applicationsResource.update({id: $scope.application.oid }, $scope.application.toJson(), onSuccess, onError)
+      restResources.applications.update({id: $scope.application.oid }, $scope.application.toJson(), onSuccess, onError)
       setStatusMessage("", "pending")
 
       function onSuccess(savedApplication) {
