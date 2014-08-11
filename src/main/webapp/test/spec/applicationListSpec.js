@@ -9,6 +9,10 @@
   var hakemusId4 = "1.2.246.562.11.00000441369"
   var hakemus4 = page.getApplication(hakemusId4)
 
+  afterEach(function() {
+    expect(window.uiError).to.be.null
+  })
+
   describe('Tyhjä hakemuslistaus', function () {
     var emptyPage = ApplicationListPage()
     function emptyApplicationPageVisible() {
