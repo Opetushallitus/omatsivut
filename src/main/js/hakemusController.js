@@ -93,7 +93,7 @@ module.exports = function(listApp) {
 
     var setValidatingIndicator = debounce(function(isVisible) {
       $scope.isValidating = isVisible
-    }, 500)
+    }, settings.uiIndicatorDebounce)
 
     $scope.movePreference = function(from, to) {
       if (to >= 0 && to < this.application.hakutoiveet.length) {

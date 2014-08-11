@@ -32,7 +32,6 @@ object KoulutusInformaatioService {
 }
 
 case class RemoteKoulutusService(implicit appConfig: AppConfig) extends KoulutusInformaatioService with JsonFormats with Logging {
-  import fi.vm.sade.omatsivut.http.HttpClient
   import org.json4s.jackson.JsonMethods._
 
   def opetuspisteet(asId: String, query: String): List[Opetuspiste] = {

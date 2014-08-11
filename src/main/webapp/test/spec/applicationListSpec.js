@@ -117,7 +117,17 @@
 
       it("jos hakuaika on loppunut, hakemusta ei voi muokata", function() {
         hakemus4.preferencesForApplication().length.should.equal(0)
-        hakemus4.applicationPeriod().should.equal("Hakuaika on päättynyt.")
+        hakemus4.applicationPeriod().should.equal("Hakuaika on päättynyt. Haun tulokset julkaistaan 11. kesä 2014 klo 10.52.")
+      })
+
+      describe("haun tyyppi", function() {
+        before(hakemus1.convertToKorkeakouluhaku)
+        it ("korkeakouluhaussa käytetään eri tekstejä", function() {
+          hakemus1.labels()[0].should.equal("Korkeakoulu")
+          hakemus1.labels()[1].should.equal("Hakukohde")
+          hakemus2.labels()[0].should.equal("Opetuspiste")
+          hakemus2.labels()[1].should.equal("Koulutus")
+        })
       })
 
       describe("virheellinen hakemus", function() {

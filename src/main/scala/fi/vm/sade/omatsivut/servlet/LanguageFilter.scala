@@ -34,11 +34,11 @@ class LanguageFilter extends Filter with Logging{
           case Some(lang) => (lang, true)
           case None => {
             logger.warn("Unsupported language '" + langStr + "' using 'fi' instead")
-            (Language.fi, false)
+            (Language.fi, true)
           }
         }
       }
-      case None => (langCookie(cookies).getOrElse(Language.fi), false)
+      case None => (langCookie(cookies).getOrElse(Language.fi), true)
     }
   }
 

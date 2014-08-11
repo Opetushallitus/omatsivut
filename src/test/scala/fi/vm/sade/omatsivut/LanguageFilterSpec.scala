@@ -27,17 +27,18 @@ class LanguageFilterSpec extends MutableScalatraSpec {
   }
 
   "GET / with unknown lang" should {
-    "does not set lang cookie" in {
+    "set default language fi" in {
       get("/?lang=no") {
         status must_== 200
-        response.headers.contains("Set-Cookie") must beFalse
+        val setCookie = response.headers("Set-Cookie")(0)
+        setCookie.indexOf(filter.cookieName + "=fi") >= 0 must beTrue
       }
     }
   }
 
   "choose with unknown lang param value" should {
     "use fi language" in {
-      filter.chooseLanguage(Some("fr"), None)  must_== ((Language.fi, false))
+      filter.chooseLanguage(Some("fr"), None)  must_== ((Language.fi, true))
    }
   }
 
@@ -49,7 +50,7 @@ class LanguageFilterSpec extends MutableScalatraSpec {
 
   "choose with sv lang cookie" should {
     "use sv language" in {
-      filter.chooseLanguage(None, Some(Array(new Cookie(filter.cookieName,"sv"))))  must_== ((Language.sv, false)) 
+      filter.chooseLanguage(None, Some(Array(new Cookie(filter.cookieName,"sv"))))  must_== ((Language.sv, true))
    }
   }
 

@@ -10,8 +10,11 @@
     "applicationUpdated": "hakemusta muokattu",
     "preferences": "Hakutoiveet",
     "location": "Opetuspiste",
+    "location_university": "Korkeakoulu",
     "education": "Koulutus",
-    "chooseLocation": "Valitse ensin opetuspiste"
+    "education_university": "Hakukohde",
+    "chooseLocation": "Valitse ensin opetuspiste",
+    "resultsPublishedDate": "Haun tulokset julkaistaan"
   },
 
   "button": {

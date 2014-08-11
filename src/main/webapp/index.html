@@ -24,7 +24,13 @@
                             {{ localization('label.applicationPeriodEnds') }} <time datetime="{{ applicationPeriod.end | date:'yyyy-MM-ddTHH:mmZ' }}">{{ formatApplicationPeriod(applicationPeriod.end) }}</time>
                         </div>
                         <div ng-if="!applicationPeriod.active" class="application-period">
-                            <strong>{{ localization('label.applicationPeriodEnded') }}</strong>
+                            <strong>
+                                {{ localization('label.applicationPeriodEnded') }}
+                            </strong>
+
+                            <strong ng-if="application.haku.results">
+                                {{ localization('label.resultsPublishedDate') }} {{ formatTimestamp(application.haku.results.start) }}.
+                            </strong>
                         </div>
                     </p>
                     <p>
@@ -52,7 +58,7 @@
 
                                 <div class="item-content">
                                     <div class="row opetuspiste">
-                                        <label><span class="label">{{localization('label.location')}}:</span>
+                                        <label><span class="label">{{localization('label.location' + (application.haku.korkeakouluhaku ? '_university' : ''))}}:</span>
 
                                             <span ng-bind="hakutoive.data.Opetuspiste" ng-show="isEditingDisabled()"></span>
 
@@ -66,7 +72,7 @@
 
                                     </div>
                                     <div class="row koulutus">
-                                        <label><span class="label">{{ localization('label.education') }}:</span>
+                                        <label><span class="label">{{ localization('label.education' + (application.haku.korkeakouluhaku ? '_university' : '')) }}:</span>
                                             <span ng-bind="hakutoive.data.Koulutus" ng-show="isEditingDisabled()"></span>
 
                                             <select ng-model="valittuKoulutus"

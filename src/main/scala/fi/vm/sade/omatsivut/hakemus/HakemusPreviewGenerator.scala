@@ -2,14 +2,12 @@ package fi.vm.sade.omatsivut.hakemus
 
 import java.text.SimpleDateFormat
 import java.util.Date
+
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
-import fi.vm.sade.haku.oppija.lomake.domain.elements.{TitledGroup, Text, Theme, Phase}
-import fi.vm.sade.haku.oppija.lomake.domain.elements.HiddenValue
-import fi.vm.sade.haku.oppija.lomake.domain.elements.custom.{PreferenceTable, SocialSecurityNumber}
-import fi.vm.sade.haku.oppija.lomake.domain.elements.custom.SocialSecurityNumber
-import fi.vm.sade.haku.oppija.lomake.domain.elements.custom.PreferenceRow
-import fi.vm.sade.haku.oppija.lomake.domain.elements.custom.gradegrid.{GradeGridAddLang, GradeGridOptionQuestion, GradeGridTitle, GradeGrid}
-import fi.vm.sade.haku.oppija.lomake.domain.elements.questions.{CheckBox, OptionQuestion, TextQuestion, TextArea, DateQuestion}
+import fi.vm.sade.haku.oppija.lomake.domain.elements.custom.gradegrid.{GradeGrid, GradeGridAddLang, GradeGridOptionQuestion, GradeGridTitle}
+import fi.vm.sade.haku.oppija.lomake.domain.elements.custom.{PreferenceRow, PreferenceTable, SocialSecurityNumber}
+import fi.vm.sade.haku.oppija.lomake.domain.elements.questions.{CheckBox, DateQuestion, OptionQuestion, TextArea, TextQuestion}
+import fi.vm.sade.haku.oppija.lomake.domain.elements.{HiddenValue, Phase, Text, Theme, TitledGroup}
 import fi.vm.sade.haku.oppija.lomake.domain.rules.{AddElementRule, RelatedQuestionRule}
 import fi.vm.sade.omatsivut.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.Logging
@@ -17,12 +15,12 @@ import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.hakemus.HakemusConverter.FlatAnswers
 import fi.vm.sade.omatsivut.koulutusinformaatio.KoulutusInformaatioService
 import fi.vm.sade.omatsivut.localization.Translations
+
 import scalatags.Text.TypedTag
-import scalatags.Text.all._
 
 case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val language: Language.Language) extends Logging {
+  import scala.collection.JavaConversions._
   import scalatags.Text.all._
-  import collection.JavaConversions._
   private val applicationDao = appConfig.springContext.applicationDAO
   private val applicationSystemService = appConfig.springContext.applicationSystemService
   val koulutusInformaatio = KoulutusInformaatioService.apply
