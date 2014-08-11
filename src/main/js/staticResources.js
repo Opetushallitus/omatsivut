@@ -4,6 +4,7 @@ var resources = {
     setTimeformat(language)
     loadTranslations(language, function(translations) {
       resources.translations = translations
+      resources.translations.languageId = language
       callback()
     })
   }

@@ -16,7 +16,7 @@ module.exports = function(listApp) {
         opetuspisteId: $item.id,
         baseEducation: this.application.educationBackground.baseEducation,
         vocational: this.application.educationBackground.vocational,
-        uiLang: "fi" // TODO: kieliversio
+        uiLang: $scope.localization("languageId")
       }, function(koulutukset) {
         $scope.koulutusList = koulutukset
         if (koulutukset.length === 1) {
