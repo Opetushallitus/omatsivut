@@ -4,29 +4,29 @@ import java.text.SimpleDateFormat
 import java.util.Date
 
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
+import fi.vm.sade.haku.oppija.lomake.domain.elements.{TitledGroup, Text, Theme, Phase}
+import fi.vm.sade.haku.oppija.lomake.domain.elements.HiddenValue
+import fi.vm.sade.haku.oppija.lomake.domain.elements.custom.{PreferenceTable, SocialSecurityNumber}
 import fi.vm.sade.haku.oppija.lomake.domain.elements.custom.SocialSecurityNumber
-import fi.vm.sade.haku.oppija.lomake.domain.{I18nText, ApplicationSystem}
-import fi.vm.sade.haku.oppija.lomake.domain.elements.custom.{PreferenceRow, PreferenceTable, SocialSecurityNumber}
 import fi.vm.sade.haku.oppija.lomake.domain.elements.custom.gradegrid.{GradeGridAddLang, GradeGridOptionQuestion, GradeGridTitle, GradeGrid}
 import fi.vm.sade.haku.oppija.lomake.domain.elements.questions.{CheckBox, OptionQuestion, TextQuestion, TextArea, DateQuestion}
-import fi.vm.sade.haku.oppija.lomake.domain.elements.{TitledGroup, Text, Theme, Phase}
 import fi.vm.sade.haku.oppija.lomake.domain.rules.{AddElementRule, RelatedQuestionRule}
 import fi.vm.sade.omatsivut.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.Logging
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.hakemus.HakemusConverter.FlatAnswers
+import fi.vm.sade.omatsivut.koulutusinformaatio.KoulutusInformaatioService
 import fi.vm.sade.omatsivut.localization.Translations
-
+import scalatags.Text.TypedTag
 import scalatags.Text.all._
-import scalatags.Text.{all, TypedTag}
-import scalatags.generic.AttrPair
-import scalatags.text.Builder
 
 case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val language: Language.Language) extends Logging {
   import scalatags.Text.all._
   import collection.JavaConversions._
   private val applicationDao = appConfig.springContext.applicationDAO
   private val applicationSystemService = appConfig.springContext.applicationSystemService
+  val koulutusInformaatio = KoulutusInformaatioService.apply
+  val discretionary = "discretionary"
 
   def generatePreview(personOid: String, applicationOid: String): Option[String] = {
     val applicationQuery: Application = new Application().setOid(applicationOid).setPersonOid(personOid)
@@ -41,8 +41,6 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
     val form = ElementWrapper.wrapFiltered(applicationSystem.getForm, answers)
 
     def questionsPreview(element: ElementWrapper): List[TypedTag[String]] = {
-      // TODO: DiscretionaryAttachments
-
       element.element match {
         case _: GradeGrid => List(gradeGridPreview(element))
         case _: PreferenceTable => List(preferenceTablePreview(element))
@@ -58,9 +56,46 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
         case _: TitledGroup => List(titledGroupPreview(element))
         case _: DateQuestion => List(textPreview(element))
         case _: AddElementRule => Nil
+        case value: HiddenValue => hiddenValuePreview(value)
         case _ =>
           logger.warn("Ignoring element " + element.element.getType + ": " + element.id)
           Nil
+      }
+    }
+
+    def hiddenValuePreview(value: HiddenValue): List[TypedTag[String]] = {
+      val preferenceNamePattern = """(preference\d)-(.+)""".r
+      preferenceNamePattern.findFirstMatchIn(value.getId) match {
+          case Some(matched) => (matched.group(1), matched.group(2)) match {
+              case (preference, discretionary) => discretionaryAttachmentsPreview(preference, value)
+              case _ => {
+                logger.warn("Ignoring element " + value.getType + ": " + value.getId)
+                Nil
+              }
+          }
+          case None => {
+            logger.warn("Ignoring element " + value.getType + ": " + value.getId)
+            Nil
+          }
+      }
+    }
+
+    def discretionaryAttachmentsPreview(preference: String, value: HiddenValue): List[TypedTag[String]] = {
+      answers.get(value.getId()) match {
+        case Some("true") => {
+          val key = preference + "-Koulutus-id"
+          answers.get(key) match {
+            case Some(oid) => {
+              logger.info("Koulutus info for " + oid + ": " +koulutusInformaatio.koulutus(oid))
+              Nil
+            }
+            case None => {
+              logger.warn("Attachment info not found for for " + value.getType + ": " + value.getId + " for key " + key)
+              Nil
+            }
+          }
+        }
+        case _ => Nil
       }
     }
 
