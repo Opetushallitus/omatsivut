@@ -2,7 +2,6 @@ package fi.vm.sade.omatsivut.hakemus
 
 import java.text.SimpleDateFormat
 import java.util.Date
-
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.lomake.domain.elements.custom.gradegrid.{GradeGrid, GradeGridAddLang, GradeGridOptionQuestion, GradeGridTitle}
 import fi.vm.sade.haku.oppija.lomake.domain.elements.custom.{PreferenceRow, PreferenceTable, SocialSecurityNumber}
@@ -15,8 +14,13 @@ import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.hakemus.HakemusConverter.FlatAnswers
 import fi.vm.sade.omatsivut.koulutusinformaatio.KoulutusInformaatioService
 import fi.vm.sade.omatsivut.localization.Translations
-
 import scalatags.Text.TypedTag
+import fi.vm.sade.omatsivut.koulutusinformaatio.Koulutus
+import org.joda.time.DateTime
+import fi.vm.sade.omatsivut.koulutusinformaatio.Address
+import fi.vm.sade.haku.oppija.hakemus.domain.util.ApplicationUtil
+import fi.vm.sade.omatsivut.koulutusinformaatio.Opetuspiste
+import org.joda.time.format.DateTimeFormat
 
 case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val language: Language.Language) extends Logging {
   import scala.collection.JavaConversions._
@@ -24,7 +28,7 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
   private val applicationDao = appConfig.springContext.applicationDAO
   private val applicationSystemService = appConfig.springContext.applicationSystemService
   val koulutusInformaatio = KoulutusInformaatioService.apply
-  val discretionary = "discretionary"
+  val dateFormat = DateTimeFormat.forPattern("dd.M.yyyy")
 
   def generatePreview(personOid: String, applicationOid: String): Option[String] = {
     val applicationQuery: Application = new Application().setOid(applicationOid).setPersonOid(personOid)
@@ -54,48 +58,66 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
         case _: TitledGroup => List(titledGroupPreview(element))
         case _: DateQuestion => List(textPreview(element))
         case _: AddElementRule => Nil
-        case value: HiddenValue => hiddenValuePreview(value)
+        case _: HiddenValue => Nil // info about attachments are added separately in the end of the document
         case _ =>
           logger.warn("Ignoring element " + element.element.getType + ": " + element.id)
           Nil
       }
     }
 
-    def hiddenValuePreview(value: HiddenValue): List[TypedTag[String]] = {
-      val preferenceNamePattern = """(preference\d)-(.+)""".r
-      preferenceNamePattern.findFirstMatchIn(value.getId) match {
-          case Some(matched) => (matched.group(1), matched.group(2)) match {
-              case (preference, discretionary) => discretionaryAttachmentsPreview(preference, value)
-              case _ => {
-                logger.warn("Ignoring element " + value.getType + ": " + value.getId)
-                Nil
-              }
-          }
-          case None => {
-            logger.warn("Ignoring element " + value.getType + ": " + value.getId)
-            Nil
-          }
+    def discretionaryAttachmentsPreview(): List[TypedTag[String]] = {
+      val aoInfo = ApplicationUtil.getDiscretionaryAttachmentAOIds(application).map(koulutusInformaatio.koulutus(_)).flatten
+      if (aoInfo.isEmpty) {
+        Nil
+      }
+      else {
+        List(div(`class` := "theme")(
+          h2(Translations.getTranslation("applicationPreview", "discretionary")),
+          p(Translations.getTranslation("applicationPreview", "discretionary_info")),
+          for (info <- aoInfo) yield discretionaryAttachmentPreview(info)
+        ))
       }
     }
 
-    def discretionaryAttachmentsPreview(preference: String, value: HiddenValue): List[TypedTag[String]] = {
-      answers.get(value.getId()) match {
-        case Some("true") => {
-          val key = preference + "-Koulutus-id"
-          answers.get(key) match {
-            case Some(oid) => {
-              logger.info("Koulutus info for " + oid + ": " +koulutusInformaatio.koulutus(oid))
-              Nil
-            }
-            case None => {
-              logger.warn("Attachment info not found for for " + value.getType + ": " + value.getId + " for key " + key)
-              Nil
-            }
-          }
-        }
-        case _ => Nil
+    def discretionaryAttachmentPreview(info: Koulutus): List[TypedTag[String]] = {
+      if(info.attachmentDeliveryAddress.isDefined) {
+        List(div(`class` := "group")(
+          elemIfNotEmpty[Opetuspiste](h3(_), info.provider, _.name),
+          attachmentInfoPreview(info.attachmentDeliveryAddress.get, info.attachmentDeliveryDeadline )
+        ))
+      }
+      else {
+        Nil
       }
     }
+
+    def attachmentInfoPreview(address: Address, deliveryDeadline: Option[Long]): List[TypedTag[String]] = {
+      List(
+        elemIfNotEmptyString(div(_), address.streetAddress),
+        elemIfNotEmptyString(div(_), address.streetAddress2),
+        elemIfNotEmptyString(div(_), address.postalCode),
+        elemIfNotEmptyString(div(_), address.postOffice ),
+        elemIfNotEmpty[Long](div(_), deliveryDeadline, formatDeadlinePreview)
+      ).flatten
+    }
+
+    def formatDeadlinePreview(date: Long): String = {
+      Translations.getTranslation("applicationPreview", "attachments_deadline") + " " + (new DateTime(date)).toString(dateFormat)
+    }
+
+    def elemIfNotEmptyString(elem: String => TypedTag[String], value: Option[String]): Option[TypedTag[String]] = {
+      elemIfNotEmpty[String](elem, value, _.toString())
+    }
+
+    def elemIfNotEmpty[T](elem: String => TypedTag[String], value: Option[T], format: T => String): Option[TypedTag[String]] = {
+      if(value.isDefined && format(value.get).trim().length() > 0 ) {
+        Some(elem(format(value.get).trim()))
+      }
+      else {
+        None
+      }
+    }
+
 
     def themePreview(element: ElementWrapper): TypedTag[String] = {
       div(`class` := "theme")(h2(element.title), childrenPreview(element))
@@ -190,6 +212,7 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
       }.toList
     }
 
+    // TODO kielistys
     def gradeGridPreview(gridElement: ElementWrapper) = {
       table(`class` := "gradegrid")(
         thead(
@@ -256,6 +279,8 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
         )
         ::
         form.getElementsOfType[Phase].flatMap(questionsPreview)
+        :::
+        discretionaryAttachmentsPreview()
       )
     ).toString
   }

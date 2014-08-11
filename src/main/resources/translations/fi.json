@@ -57,6 +57,9 @@
 
   "applicationPreview": {
     "received": "Vastaanotettu",
-    "applicationId": "Hakemusnumero"
+    "applicationId": "Hakemusnumero",
+    "discretionary": "Harkintaan perustava valinta",
+    "discretionary_info": "Hait harkintaan perustuvassa valinnassa. Sinun tulee toimittaa oppilaitokseen seuraavat tiedot: tulostettu hakemus sekä perustelut ja todistukset, joihin vetoat. Toimita ne alla oleviin osoitteisiin hakuajan päättymiseen mennessä.",
+    "attachments_deadline": "Liitteiden viimeinen palautuspäivä"
   }
 }

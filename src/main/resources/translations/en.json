@@ -57,6 +57,9 @@
 
   "applicationPreview": {
     "received": "Received",
-    "applicationId": "Application id"
+    "applicationId": "Application id",
+    "discretionary": "Discretionary application",
+    "discretionary_info": "You have applied discretionarily. Send the print out of the application with attachments to addresses given below.",
+    "attachments_deadline": "Attachment sending deadline"
   }
 }

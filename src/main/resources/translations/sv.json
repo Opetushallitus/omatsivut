@@ -57,6 +57,9 @@
 
   "applicationPreview": {
     "received": "Mottagits",
-    "applicationId": "Ansökans nummer"
+    "applicationId": "Ansökans nummer",
+    "discretionary": "Antagning på basis av utbildningsanordnarens prövning",
+    "discretionary_info": "Du har sökt genom antagning på basis av utbildningsanordnarens prövning. Skicka en utskrift av din ansökan samt de bilagor och/eller betyg mm. som du hänvisar till inom ansökningstiden  till adresserna nedan.",
+    "attachments_deadline": "Sista dagen för att returnera bilagorna"
   }
 }
