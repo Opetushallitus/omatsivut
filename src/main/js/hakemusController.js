@@ -11,16 +11,17 @@ module.exports = function(listApp) {
     $scope.isValidating = false
 
     $scope.formatTimestamp = function(dt) {
-      return moment(dt).format('lll').replace(/,/g, "")
+      return moment(dt).format('LLL').replace(/,/g, "")
     }
 
     $scope.formatApplicationPeriod = function(dt) {
-      return moment(dt).format('llll').replace(/,/g, "")
+      return moment(dt).format('LLLL').replace(/,/g, "")
     }
 
     $scope.formatDateRange = function(range) {
-      var start = moment(range.start).format('ll').replace(/,/g, "")
-      var end = moment(range.end).format('ll').replace(/,/g, "")
+      function formatDate(dt) { return moment(dt).format('LL').replace(/,/g, "") }
+      var start = formatDate(range.start)
+      var end = formatDate(range.end)
       return _.unique([start, end]).join(" - ")
     }
 
