@@ -5,8 +5,7 @@ Oppijan henkilökohtainen palvelu
 ## Asetukset
 
 Sovellus tukee eri profiileita. Profiili määritellään `omatsivut.profile` system propertyllä, esim `-Domatsivut.profile=it`.
-Profiili määrittää lähinnä, mistä propertyt haetaan (huom! reference.conf ladataan aina), mutta sen avulla myös
-voidaan mockata palveluita. Ks `AppConfig.scala`.
+Profiili määrittää lähinnä, mistä propertyt haetaan, mutta sen avulla myös voidaan mockata palveluita. Ks `AppConfig.scala`.
 
 ### dev-profiili
 
@@ -19,10 +18,13 @@ It-profiililla käytetään embedded mongo-kantaa, joka käynnistetään serveri
 ### default-profiili
 
 Oletusasetuksilla käytetään ulkoista konfiguraatiotiedostoa `omatsivut.properties`. `omatsivut.properties` tiedoston etsintäjärjestys:
-`omatsivut.confiFile` system property  - kehityksessä IDE:stä käytettävä tapa, jos haluaa ajaa eri asetuksilla serveriä
+`omatsivut.configFile` system property  - kehityksessä IDE:stä käytettävä tapa, jos haluaa ajaa eri asetuksilla serveriä
 `~/oph-configuration/omatsivut.properties` - sovelluspalvelimilla  käytettävä tapa
-`../module-install-parent/config/common/omatsivut/omatsivut.properties` - kehityksessä käytettävä oletustapa, joten sinun tulee hakea `module-install-parent` tämän projektin rinnalle.
-`./module-install-parent/config/common/omatsivut/omatsivut.properties` - CI palvelimella käytettävä tapa
+
+### templated-profiili
+
+Templated profiililla voi käyttää konfiguraatiota, jossa template-konfiguraatioon asettaan arvot ulkoisesta konfiguraatiosta. Käytä system propertyä `-Domatsivut.profile=templated`
+ja aseta muuttujat sisältävän tiedoston sijainti system propertyssä, esim. `-Domatsivut.vars={HAKEMISTO}/oph_vars.yml` - mallia vars-tiedostoon voi ottaa tiedostosta `src/main/resources/oph-configuration/dev-vars.yml`
 
 ## SBT-buildi
 
