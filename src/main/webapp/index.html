@@ -35,7 +35,7 @@
                     </p>
                     <p>
                         <a href="#">{{ localization('button.showApplication') }}</a>
-                        <span class="timestamp">
+                        <span class="timestamp" ng-show="applicationPeriod.active">
                             ({{ timestampLabel() }} <time datetime="{{ application.updated | date:'yyyy-MM-ddTHH:mmZ' }}">{{ formatTimestamp(application.updated) }}</time>)
                         </span>
                     </p>
