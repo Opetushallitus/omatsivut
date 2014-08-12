@@ -86,25 +86,35 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
         Nil
       }
       else {
-        for (baseEducation <- aoInfos.keySet.toList) yield
-          div(`class` := "theme")(
+          List(div(`class` := "theme")(
             h2(Translations.getTranslation("applicationPreview", "attachments")),
-            p(Translations.getTranslation("applicationPreview", "attachments_info_" + baseEducation)),
-            for (info <- aoInfos(baseEducation)) yield attachmentInfoPreview(info)
-          )
+            for (baseEducation <- aoInfos.keySet.toList) yield div(
+                p(Translations.getTranslation("applicationPreview", "attachments_info_" + baseEducation)),
+                for (info <- aoInfos(baseEducation)) yield attachmentInfoPreview(info)
+            )
+          ))
       }
     }
 
     def attachmentInfoPreview(info: Koulutus): List[TypedTag[String]] = {
-      val address = info.attachmentDeliveryAddress.getOrElse(info.provider flatMap(_.applicationOffice) map(_.postalAddress ))
-      if(info.attachmentDeliveryAddress.isDefined) {
+      val address = getAttachmentAddress(info)
+      if(address.isDefined) {
         List(div(`class` := "group")(
           elemIfNotEmpty[Opetuspiste](h3(_), info.provider, _.name),
-          attachmentAddressInfoPreview(info.attachmentDeliveryAddress.get, info.attachmentDeliveryDeadline )
+          attachmentAddressInfoPreview(address.get, info.attachmentDeliveryDeadline )
         ))
       }
       else {
         Nil
+      }
+    }
+
+    def getAttachmentAddress(info: Koulutus): Option[Address] = {
+      if(info.attachmentDeliveryAddress.isDefined) {
+        info.attachmentDeliveryAddress
+      }
+      else {
+        info.provider flatMap(_.applicationOffice) flatMap(_.postalAddress )
       }
     }
 
