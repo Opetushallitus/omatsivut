@@ -23,6 +23,12 @@ class KoulutusServlet(implicit val swagger: Swagger, val appConfig: AppConfig) e
   }
 
   get("/koulutus/:aoId") {
-    koulutusInformaatio.koulutus(params("aoId"))
+    val koulutus = koulutusInformaatio.koulutus(params("aoId"))
+    if(koulutus.isDefined) {
+      koulutus
+    }
+    else {
+      resourceNotFound()
+    }
   }
 }

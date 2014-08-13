@@ -24,7 +24,7 @@ object KoulutusInformaatioService {
         JsonFixtureMaps.findByKey[List[Koulutus]]("/mockdata/koulutukset.json", opetuspisteId).getOrElse(List())
       }
       def koulutus(aoId: String) = {
-        JsonFixtureMaps.findByFieldValue[List[Koulutus]]("/mockdata/koulutukset.json", "_id", aoId).getOrElse(List()).headOption
+        JsonFixtureMaps.findByFieldValue[List[Koulutus]]("/mockdata/koulutukset.json", "id", aoId).getOrElse(List()).headOption
       }
     }
     case _ => RemoteKoulutusService()

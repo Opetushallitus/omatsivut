@@ -11,7 +11,8 @@ object JsonFixtureMaps extends JsonFormats {
   def findByFieldValue[T](dataFile: String, key: String, value: String)(implicit mf: Manifest[T]): Option[T] = find(dataFile, matchByFieldValue(_, key, value))
 
   def matchByFieldValue(parsed: JObject, key: String, value: String): JArray = {
-    JArray(parsed.children.filter(hasFieldValue(_, key, value)))
+    val results: List[List[JValue]] = for (child <- parsed.children) yield child.children.filter(hasFieldValue(_, key, value))
+    JArray(results.flatten)
   }
 
   private def hasFieldValue(child: JValue, key: String, value: String): Boolean = {
