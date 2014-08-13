@@ -67,7 +67,6 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
     }
 
     def discretionaryAttachmentsInfoPreview(): List[TypedTag[String]] = {
-      println(application.getVastauksetMerged())
       val aoInfo = ApplicationUtil.getDiscretionaryAttachmentAOIds(application)
       if (aoInfo.isEmpty) {
         Nil
