@@ -31,10 +31,10 @@ object HakemusConverter {
     )
   }
 
-  private def getPostProcessingState(application: Application): String = {
+  private def getPostProcessingState(application: Application): Option[String] = {
     Option(application.getRedoPostProcess) match {
-      case Some(state) => state.toString
-      case _ => ""
+      case Some(state) => Some(state.toString)
+      case _ => None
     }
   }
 
