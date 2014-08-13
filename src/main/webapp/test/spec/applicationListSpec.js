@@ -43,7 +43,7 @@
 
     describe("Hakemuksen tietojen näyttäminen", function() {
       it("otsikko on ruotsiksi", function() {
-        expect(S("h1:first").text().trim()).to.equal('Mina ansöka' )
+        expect(S("h1:first").text().trim()).to.equal('Mina ansökningsblanketter')
       })
       it('hakemuslistassa on hakemus henkilölle 010101-123N', function () {
         expect(ApplicationListPage().applications()).to.contain(
