@@ -32,8 +32,9 @@ class ApplicationPreviewSpec extends HakemusApiSpecification {
 
     "support additional questions per preference" in {
       authGet("/applications/preview/" + TestFixture.hakemus3, personOid) {
+        println(prettyPrintHtml(body))
         // hakutoiveet
-        body must contain("""<div class="questions"><div class="question"><label>Haetko urheilijan ammatilliseen koulutukseen?</label><span class="answer">Kyllä</span></div><div class="question"><label>Haluaisitko suorittaa lukion ja/tai ylioppilastutkinnon samaan aikaan kuin ammatillisen perustutkinnon?</label><span class="answer">Kyllä</span></div></div>""")
+        body must contain("""<div class="question"><label>Haetko urheilijan ammatilliseen koulutukseen?</label><span class="answer">Kyllä</span></div><div class="question"><label>Haluaisitko suorittaa lukion ja/tai ylioppilastutkinnon samaan aikaan kuin ammatillisen perustutkinnon?</label><span class="answer">Kyllä</span></div>""")
       }
     }
 
