@@ -53,9 +53,20 @@ case class ApplicationValidator(implicit val appConfig: AppConfig) extends Loggi
 
   private def validateHakutoiveetAndAnswers(hakemus: Hakemus, applicationSystem: ApplicationSystem)(implicit lang: Language.Language): List[ValidationError] = {
     val application: Application = findStoredApplication(hakemus) // <- needs to be fetched here because is mutated below
-    ApplicationUpdater.update(applicationSystem)(application, hakemus)
-    val validationResult = validator.validate(convertToValidationInput(applicationSystem, application))
-    convertoToValidationErrors(validationResult)
+
+    def validate(appSystem: ApplicationSystem) = {
+      val result = validator.validate(convertToValidationInput(appSystem, application))
+      convertoToValidationErrors(result)
+    }
+
+    if (application.getState() == Application.State.INCOMPLETE) {
+      val errorsBefore = validate(applicationSystem)
+      ApplicationUpdater.update(applicationSystem)(application, hakemus)
+      validate(applicationSystem).filter(!errorsBefore.contains(_))
+    } else {
+      ApplicationUpdater.update(applicationSystem)(application, hakemus)
+      validate(applicationSystem)
+    }
   }
 
   private def errorsForUnknownAnswers(applicationSystem: ApplicationSystem, hakemus: Hakemus)(implicit lang: Language.Language): List[ValidationError] = {

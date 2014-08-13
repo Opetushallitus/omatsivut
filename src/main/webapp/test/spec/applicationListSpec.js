@@ -178,11 +178,15 @@
           hakemusIncomplete.preferencesForApplication().length.should.not.equal(0)
         })
 
-        it.skip("muokkaus ei aiheuta validaatiovirhettä", function() {
+        it("muokkaus ei aiheuta validaatiovirhettä", function() {
           return hakemusIncomplete.getPreference(0).moveDown()
             .then(function() {
-              hakemusIncomplete.statusMessage().should.equal("")
+              hakemusIncomplete.statusMessage().should.equal("Muista tallentaa muutokset")
             })
+        })
+
+        it("tallennus ei aiheuta virhettä", function() {
+          return hakemusIncomplete.saveWaitSuccess()
         })
       })
     })
