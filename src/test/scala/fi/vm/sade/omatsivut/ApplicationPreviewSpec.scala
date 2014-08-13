@@ -27,8 +27,6 @@ class ApplicationPreviewSpec extends HakemusApiSpecification {
         body must contain("""<li class="preference-row"><span class="index">1</span><span class="learning-institution"><label>Opetuspiste</label><span>Kallion lukio</span></span><span class="education"><label>Koulutus</label><span>Lukion ilmaisutaitolinja</span></span></li>""")
         // lupatiedot
         body must contain("""<label>Minulle saa lähettää postia ja sähköpostia vapaista opiskelupaikoista ja muuta koulutusmarkkinointia.</label><span class="answer">Ei</span>""")
-
-        // TODO: kymppi
       }
     }
 
@@ -41,10 +39,18 @@ class ApplicationPreviewSpec extends HakemusApiSpecification {
 
     "support grade grid" in {
       authGet("/applications/preview/" + TestFixture.hakemusWithGradeGrid, personOid) {
-        println(prettyPrintHtml(body))
         // hakutoiveet
         body must contain("""<tr><td id="PK_A1_column1">A1-kieli</td><td id="PK_A1_column2">englanti</td><td id="PK_A1_column3">9</td><td id="PK_A1_column4">Ei arvosanaa</td><td id="PK_A1_column5">Ei arvosanaa</td></tr>""")
         body must contain("""<tr><td id="PK_MA_column1" colspan="2">Matematiikka</td><td id="PK_MA_column3">9</td><td id="PK_MA_column4">Ei arvosanaa</td><td id="PK_MA_column5">Ei arvosanaa</td></tr>""")
+      }
+    }
+
+    "support grade grid from grade 10" in {
+      FixtureImporter().applyOverrides("kymppiluokka")
+      authGet("/applications/preview/" + TestFixture.hakemus2, personOid) {
+        // hakutoiveet
+        body must contain("""<tr><td id="PK_B1_column1">B1-kieli</td><td id="PK_B1_column2">englanti</td><td id="PK_B1_column3">10(9)</td><td id="PK_B1_column4">Ei arvosanaa</td><td id="PK_B1_column5">Ei arvosanaa</td></tr>""")
+        body must contain("""<tr><td id="PK_MA_column1" colspan="2">Matematiikka</td><td id="PK_MA_column3">10(9)</td><td id="PK_MA_column4">Ei arvosanaa</td><td id="PK_MA_column5">Ei arvosanaa</td></tr>""")
       }
     }
   }

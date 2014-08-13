@@ -16,6 +16,7 @@ case class FixtureImporter(implicit val appConfig: AppConfig) {
       case "passiveApplication" => ApplicationStateFixture(appConfig).apply(Application.State.PASSIVE)
       case "incompleteApplication" => ApplicationStateFixture(appConfig).apply(Application.State.INCOMPLETE)
       case "submittedApplication" => ApplicationStateFixture(appConfig).apply(Application.State.SUBMITTED)
+      case "kymppiluokka" => KymppiluokkaFixture(appConfig).apply
       case _ =>
     }
   }
