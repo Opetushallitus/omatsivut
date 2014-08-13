@@ -38,6 +38,10 @@
                         <span class="timestamp" ng-if="applicationPeriod.active">
                             ({{ timestampLabel() }} <time datetime="{{ application.updated | date:'yyyy-MM-ddTHH:mmZ' }}">{{ formatTimestamp(application.updated) }}</time>)
                         </span>
+
+                        <div class="application-state-message" ng-if="application.state == 'SUBMITTED'">
+                            Hakemuksesi on vielä käsiteltävänä. Jos haluat muuttaa hakutoiveitasi, yritä myöhemmin uudelleen.
+                        </div>
                     </p>
 
                     <section class="application-section" ng-if="applicationPeriod.active && application.state == 'ACTIVE'">

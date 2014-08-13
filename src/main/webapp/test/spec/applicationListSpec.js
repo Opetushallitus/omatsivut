@@ -8,6 +8,8 @@
   var hakemus3 = page.getApplication(hakemusId3)
   var hakemusId4 = "1.2.246.562.11.00000441369"
   var hakemus4 = page.getApplication(hakemusId4)
+  var hakemusIncompleteId = "1.2.246.562.11.00000855417"
+  var hakemusIncomplete = page.getApplication(hakemusIncompleteId)
 
   afterEach(function() {
     expect(window.uiError).to.be.null
@@ -154,8 +156,8 @@
           hakemus2.preferencesForApplication().length.should.equal(0)
         })
 
-        it.skip("seliteteksti näkyy oikein", function() {
-          // TODO
+        it("seliteteksti näkyy oikein", function() {
+          hakemus2.applicationState().should.equal("Hakemuksesi on vielä käsiteltävänä. Jos haluat muuttaa hakutoiveitasi, yritä myöhemmin uudelleen.")
         })
       })
 
