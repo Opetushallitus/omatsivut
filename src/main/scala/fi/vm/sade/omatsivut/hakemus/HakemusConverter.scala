@@ -17,11 +17,16 @@ object HakemusConverter {
 
   def convertToHakemus(haku: Option[Haku])(application: Application) = {
     val koulutusTaustaAnswers: util.Map[String, String] = application.getAnswers.get(educationPhaseKey)
+    val postProcessState = Option(application.getRedoPostProcess) match {
+      case Some(state) => state.toString
+      case _ => ""
+    }
     Hakemus(
       application.getOid,
       application.getReceived.getTime,
       application.getUpdated.getTime,
       application.getState.toString,
+      postProcessState,
       convertHakuToiveet(application),
       haku,
       EducationBackground(koulutusTaustaAnswers.get(baseEducationKey), !Try {koulutusTaustaAnswers.get("ammatillinenTutkintoSuoritettu").toBoolean}.getOrElse(false)),

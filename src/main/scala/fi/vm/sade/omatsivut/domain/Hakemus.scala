@@ -13,6 +13,7 @@ case class Hakemus(
                     received: Long,
                     updated: Long,
                     state: String,
+                    postProcessingState: String,
                     hakutoiveet: List[Hakutoive] = Nil,
                     haku: Option[Haku] = None,
                     educationBackground: EducationBackground,
