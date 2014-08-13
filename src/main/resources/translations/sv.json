@@ -69,6 +69,11 @@
     "attachments_info_ulk": "Skicka ulk bilagorna till adresserna nedan.",
     "attachments_info_avoin": "Skicka avoin bilagorna till adresserna nedan.",
     "attachments_info_muu": "Skicka övriga bilagorna till adresserna nedan.",
-    "preferences_questions": "Frågor"
+    "preferences_questions": "Frågor",
+    "subject": "Ämne",
+    "grade": "Betyg",
+    "mutual_subject": "Gemensam ämne",
+    "optional_subject": "Valfritt ämne",
+    "second_optional_subject": "Andra valfritt ämne"
   }
 }

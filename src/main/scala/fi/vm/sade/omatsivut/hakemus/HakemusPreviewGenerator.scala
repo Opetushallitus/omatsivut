@@ -243,10 +243,10 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
     def gradeGridPreview(gridElement: ElementWrapper) = {
       table(`class` := "gradegrid")(
         thead(
-          td("colspan".attr := 2)("Oppiaine") :: (if (gridElement.element.asInstanceOf[GradeGrid].isExtraColumn) {
-            List(td("Yhteinen oppiaine"), td("Valinnainen aine"), td("Toinen valinnainen aine"))
+          td("colspan".attr := 2)(Translations.getTranslation("applicationPreview", "subject")) :: (if (gridElement.element.asInstanceOf[GradeGrid].isExtraColumn) {
+            List(td(Translations.getTranslation("applicationPreview", "mutual_subject")), td(Translations.getTranslation("applicationPreview", "optional_subject")), td(Translations.getTranslation("applicationPreview", "second_optional_subject")))
           } else {
-            List(td("Arvosana"))
+            List(td(Translations.getTranslation("applicationPreview", "grade")))
           })
         ),
         tbody(gridElement.children.map { row =>

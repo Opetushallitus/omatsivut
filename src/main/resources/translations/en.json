@@ -69,6 +69,11 @@
     "attachments_info_ulk": "Send ulk attachments to addresses given below.",
     "attachments_info_avoin": "Send avoin attachments to addresses given below.",
     "attachments_info_muu": "Send other attachments to addresses given below.",
-    "preferences_questions": "Questions"
+    "preferences_questions": "Questions",
+    "subject": "Subject",
+    "grade": "Grade",
+    "mutual_subject": "Mutual subject",
+    "optional_subject": "Optional suject",
+    "second_optional_subject": "Second optional subject"
   }
 }
