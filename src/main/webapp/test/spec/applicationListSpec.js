@@ -143,7 +143,7 @@
     describe("hakemuksen tila", function() {
       describe("passiivinen hakemus", function() {
         before(page.applyFixtureAndOpen("passiveApplication"))
-        it.skip("hakemus ei näy", function() {
+        it("hakemus ei näy", function() {
           hakemus2.found().should.be.false
         })
       })
