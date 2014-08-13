@@ -89,7 +89,7 @@ function ApplicationListPage() {
 
       preferencesForApplication: function () {
         return preferencesForApplication(function (item) {
-          return item.data()["hakutoive.Koulutus"].length > 0
+          return (item.data()["hakutoive.Koulutus"] || []).length > 0
         }).map(function (item) {
           return item.data()
         })
@@ -145,6 +145,10 @@ function ApplicationListPage() {
 
       found: function() {
         return getApplicationElement().length > 0
+      },
+
+      applicationState: function() {
+        return getApplicationElement().find(".application-state-message").text().trim()
       }
     }
     return api

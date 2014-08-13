@@ -173,13 +173,16 @@
       })
 
       describe("incomplete-tilassa oleva hakemus", function() {
-        before(page.applyFixtureAndOpen("incompleteApplication"))
+        before(ApplicationListPage().resetDataAndOpen)
         it("hakemusta voi muokata", function() {
-          hakemus2.preferencesForApplication().length.should.equal(0)
+          hakemusIncomplete.preferencesForApplication().length.should.not.equal(0)
         })
 
-        it.skip("tallennus ei aiheuta validaatiovirhettä", function() {
-          // TODO
+        it.skip("muokkaus ei aiheuta validaatiovirhettä", function() {
+          return hakemusIncomplete.getPreference(0).moveDown()
+            .then(function() {
+              hakemusIncomplete.statusMessage().should.equal("")
+            })
         })
       })
     })

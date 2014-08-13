@@ -18,7 +18,7 @@
             <ul id="hakemus-list" aria-label="{{ localization('title.omatHakemukset') }}" ng-cloak>
 
                 <li ng-repeat="application in applications" class="application-list-item" ng-controller="hakemusController" data-oid="{{application.oid}}" highlight-save>
-                    <h2>{{application.haku.name }}</h2>
+                    <h2>{{application.haku.name }} {{ application.state }}</h2>
                     <p>
                         <div ng-if="applicationPeriod.active" class="application-period">
                             {{ localization('label.applicationPeriodEnds') }} <time datetime="{{ applicationPeriod.end | date:'yyyy-MM-ddTHH:mmZ' }}">{{ formatApplicationPeriod(applicationPeriod.end) }}</time>
@@ -44,7 +44,7 @@
                         </div>
                     </p>
 
-                    <section class="application-section" ng-if="applicationPeriod.active && application.state == 'ACTIVE'">
+                    <section class="application-section" ng-if="applicationPeriod.active && (application.state == 'ACTIVE' || application.state == 'INCOMPLETE')">
                         <header class="application-section-heading">
                             {{ localization('label.preferences') }}
                             <button class="float-right save-btn" ng-disabled="!hasChanged || statusMessageType=='pending' || !isSaveable || isValidating" ng-click="saveApplication()">{{ localization('button.save') }}</button>
