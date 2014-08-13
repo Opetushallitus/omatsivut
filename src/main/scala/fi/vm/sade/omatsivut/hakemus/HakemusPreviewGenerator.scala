@@ -67,7 +67,8 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
     }
 
     def discretionaryAttachmentsInfoPreview(): List[TypedTag[String]] = {
-      val aoInfo = ApplicationUtil.getDiscretionaryAttachmentAOIds(application).map(koulutusInformaatio.koulutus(_)).flatten
+      println(application.getVastauksetMerged())
+      val aoInfo = ApplicationUtil.getDiscretionaryAttachmentAOIds(application)
       if (aoInfo.isEmpty) {
         Nil
       }
@@ -75,7 +76,7 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
         List(div(`class` := "theme")(
           h2(Translations.getTranslation("applicationPreview", "discretionary")),
           p(Translations.getTranslation("applicationPreview", "discretionary_info")),
-          for (info <- aoInfo) yield attachmentInfoPreview(info)
+          for (info <- aoInfo.map(koulutusInformaatio.koulutus(_)).flatten) yield attachmentInfoPreview(info)
         ))
       }
     }
