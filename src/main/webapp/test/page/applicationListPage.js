@@ -141,10 +141,13 @@ function ApplicationListPage() {
         return getApplicationElement().find("label").map(function() {
           return $(this).text().split(":")[0].trim() }
         )
+      },
+
+      found: function() {
+        return getApplicationElement().length > 0
       }
     }
     return api
-
 
     function preferencesForApplication(filter) {
       var application = getApplicationElement(applicationIndex)

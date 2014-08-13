@@ -138,11 +138,46 @@
           hakemus2.labels()[1].should.equal("Koulutus")
         })
       })
+    })
 
-      describe("virheellinen hakemus", function() {
+    describe("hakemuksen tila", function() {
+      describe("passiivinen hakemus", function() {
         before(page.applyFixtureAndOpen("passiveApplication"))
-        it("hakemusta ei muokata, jos hakemus ei ole aktiivinen", function() {
+        it.skip("hakemus ei näy", function() {
+          hakemus2.found().should.be.false
+        })
+      })
+
+      describe("submitted-tilassa oleva hakemus", function() {
+        before(page.applyFixtureAndOpen("submittedApplication"))
+        it("hakemusta ei voi muokata", function() {
           hakemus2.preferencesForApplication().length.should.equal(0)
+        })
+
+        it.skip("seliteteksti näkyy oikein", function() {
+          // TODO
+        })
+      })
+
+      describe("post processing -tilassa oleva hakemus", function() {
+        //TODO before(page.applyFixtureAndOpen("submittedApplication"))
+        it("hakemusta ei voi muokata", function() {
+          hakemus2.preferencesForApplication().length.should.equal(0)
+        })
+
+        it.skip("seliteteksti näkyy oikein", function() {
+          // TODO
+        })
+      })
+
+      describe("incomplete-tilassa oleva hakemus", function() {
+        before(page.applyFixtureAndOpen("incompleteApplication"))
+        it("hakemusta voi muokata", function() {
+          hakemus2.preferencesForApplication().length.should.equal(0)
+        })
+
+        it.skip("tallennus ei aiheuta validaatiovirhettä", function() {
+          // TODO
         })
       })
     })
