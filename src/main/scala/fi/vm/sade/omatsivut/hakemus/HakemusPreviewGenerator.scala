@@ -229,7 +229,7 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
         case Nil =>
           Nil
         case children =>
-          List(div(`class` := "questions")( children))
+          List(div(`class` := "questions")(h3(Translations.getTranslation("applicationPreview", "preferences_questions")), children))
       }
     }
 

@@ -68,6 +68,7 @@
     "attachments_info_kk": "Send kk attachments to addresses given below.",
     "attachments_info_ulk": "Send ulk attachments to addresses given below.",
     "attachments_info_avoin": "Send avoin attachments to addresses given below.",
-    "attachments_info_muu": "Send other attachments to addresses given below."
+    "attachments_info_muu": "Send other attachments to addresses given below.",
+    "preferences_questions": "Questions"
   }
 }
