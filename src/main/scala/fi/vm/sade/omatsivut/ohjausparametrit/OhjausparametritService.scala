@@ -32,7 +32,7 @@ object OhjausparametritService {
 
 case class StubbedOhjausparametritService() extends OhjausparametritService with JsonFormats {
   def valintatulokset(asId: String) = {
-    JsonFixtureMaps.find[JValue]("/mockdata/ohjausparametrit.json", asId).flatMap(OhjausparametritParser.parseValintatulokset(_))
+    JsonFixtureMaps.findByKey[JValue]("/mockdata/ohjausparametrit.json", asId).flatMap(OhjausparametritParser.parseValintatulokset(_))
   }
 }
 

@@ -127,6 +127,10 @@ function ApplicationListPage() {
         ).toArray().join(" ")
       },
 
+      previewLink: function() {
+        return getApplicationElement().find(".preview")
+      },
+
       convertToKorkeakouluhaku: function() {
         modifyApplicationScope(function(scope) {
           scope.application.haku.korkeakouluhaku = true
@@ -167,7 +171,7 @@ function ApplicationListPage() {
       if (typeof applicationIndex == "number") {
         return S("#hakemus-list>li").eq(applicationIndex)
       } else {
-        return S("#hakemus-list>li:contains('"+ applicationIndex+ "')")
+        return S('#hakemus-list>li[data-oid="' + applicationIndex + '"]')
       }
     }
   }

@@ -1,13 +1,17 @@
 (function () {
   var page = ApplicationListPage()
-  var hakemus1nimi = "Perusopetuksen jälkeisen valmistavan koulutuksen kesän 2014 haku MUOKATTU"
-  var hakemus1 = page.getApplication(hakemus1nimi)
-  var hakemus2nimi = "Ammatillisen koulutuksen ja lukiokoulutuksen kevään 2014 yhteishaku"
-  var hakemus2 = page.getApplication(hakemus2nimi)
-  var hakemus3nimi = "Lisähaku kevään 2014 yhteishaussa vapaaksi jääneille paikoille"
-  var hakemus3 = page.getApplication(hakemus3nimi)
-  var hakemus4nimi = "Ammatillisen koulutuksen ja lukiokoulutuksen kevään 2013 yhteishaku"
-  var hakemus4 = page.getApplication(hakemus4nimi)
+  var hakemusId1 = "1.2.246.562.11.00000877107"
+  var hakemus1 = page.getApplication(hakemusId1)
+  var hakemusId2 = "1.2.246.562.11.00000441368"
+  var hakemus2 = page.getApplication(hakemusId2)
+  var hakemusId3 = "1.2.246.562.11.00000441371"
+  var hakemus3 = page.getApplication(hakemusId3)
+  var hakemusId4 = "1.2.246.562.11.00000441369"
+  var hakemus4 = page.getApplication(hakemusId4)
+
+  afterEach(function() {
+    expect(window.uiError).to.be.null
+  })
 
   afterEach(function() {
     expect(window.uiError).to.be.null
@@ -51,7 +55,7 @@
       })
 
       it("henkilön 010101-123N hakutoiveet ovat näkyvissä", function () {
-        expect(page.getApplication("Perusopetuksen jälkeisen valmistavan koulutuksen kesän 2014 haku EDIT").preferencesForApplication()).to.deep.equal([
+        expect(page.getApplication(hakemusId1).preferencesForApplication()).to.deep.equal([
           {
             "hakutoive.Opetuspiste": "Amiedu, Valimotie 8",
             "hakutoive.Koulutus": "Maahanmuuttajien ammatilliseen peruskoulutukseen valmistava koulutus"
@@ -72,9 +76,9 @@
   describe("Monikielisyys", function () {
     it("kaikkien kielitiedostojen rakenne on sama", function() {
       return Q.all([
-        getJson("/omatsivut/translations/fi.json"),
-        getJson("/omatsivut/translations/en.json"),
-        getJson("/omatsivut/translations/sv.json")
+        getJson("/omatsivut/translations?lang=fi"),
+        getJson("/omatsivut/translations?lang=en"),
+        getJson("/omatsivut/translations?lang=sv")
       ]).then(function(translations) {
           var translations = _(translations).map(function(translation) { return _.keys(util.flattenObject(translation)).sort() })
           translations[0].should.deep.equal(translations[1])
@@ -121,7 +125,7 @@
 
       it("jos hakuaika on loppunut, hakemusta ei voi muokata", function() {
         hakemus4.preferencesForApplication().length.should.equal(0)
-        hakemus4.applicationPeriod().should.equal("Hakuaika on päättynyt. Haun tulokset julkaistaan 11. kesäkuuta 2014.")
+        hakemus4.applicationPeriod().should.equal("Hakuaika on päättynyt. Haun tulokset julkaistaan 11. kesä 2014.")
         hakemus4.changesSavedTimestamp().should.equal("")
       })
 
@@ -541,7 +545,7 @@
           describe("Tietokanta", function() {
             it("sisältää tallennetut tiedot", function() {
               return db.getApplications().then(function(data) {
-                var answers = findByHaku(data, hakemus1nimi).answers
+                var answers = findApplicationById(data, hakemusId1).answers
                 var questions = hakemus1.questionsForApplication().data()
 
                 answers.hakutoiveet[questions[0].id].should.equal("tekstivastaus 1")
@@ -705,6 +709,22 @@
         dbEnd.hakutoiveet.should.deep.equal(dbStart.hakutoiveet.slice(0, 2).concat(newOne))
       })
     })
+
+    describe("Näytä hakemus -linkki", function() {
+      describe("Kun hakemusta ei ole muokattu", function() {
+        it("linkki avaa esikatselusivun", function() {
+          hakemus2.previewLink().text().should.equal("Näytä hakemus")
+          hakemus2.previewLink().hasClass("disabled").should.equal(false)
+          hakemus2.previewLink().attr("href").should.equal("/omatsivut/api/applications/preview/1.2.246.562.11.00000441368")
+        })
+      })
+      describe("Kun hakemusta on muokattu", function() {
+        before(hakemus2.getPreference(0).remove)
+        it("linkki on disabloitu", function() {
+          hakemus2.previewLink().hasClass("disabled").should.equal(true)
+        })
+      })
+    })
   })
 
   function replacePreference(hakemus, index, searchString) {
@@ -741,12 +761,12 @@
         }
       )
       it(testName, function() {
-        dbCheckFunction(findByHaku(applicationsBefore, hakemus1nimi), findByHaku(applicationsAfter, hakemus1nimi))
+        dbCheckFunction(findApplicationById(applicationsBefore, hakemusId1), findApplicationById(applicationsAfter, hakemusId1))
       })
     })
   }
 
-  function findByHaku(applications, haku) {
-    return _.find(applications, function(a) { return a.haku.name == haku })
+  function findApplicationById(applications, id) {
+    return _.find(applications, function(a) { return a.oid == id })
   }
 })()

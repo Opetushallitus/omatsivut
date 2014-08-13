@@ -31,7 +31,9 @@
     "loadingApplications": "Loading applications...",
     "noApplications": "You don't have applications that can be edited.",
     "validationOk": "Do not forget to save the changes",
-    "changesSaved": "All changes saved."
+    "changesSaved": "All changes saved.",
+    "yes": "Yes",
+    "no": "No"
   },
 
   "error": {
@@ -51,5 +53,21 @@
       "title": "No applications found",
       "text": "You have logged in successfully, but there are no applications for your social security number."
     }
+  },
+
+  "applicationPreview": {
+    "received": "Received",
+    "applicationId": "Application id",
+    "discretionary": "Discretionary application",
+    "discretionary_info": "You have applied discretionarily. Send the print out of the application with attachments to addresses given below.",
+    "attachments_deadline": "Attachment sending deadline",
+    "attachments": "Attachements",
+    "attachments_info_yo": "Send yo attachments to addresses given below.",
+    "attachments_info_am": "Send am attachments to addresses given below.",
+    "attachments_info_amt": "Send amt attachments to addresses given below.",
+    "attachments_info_kk": "Send kk attachments to addresses given below.",
+    "attachments_info_ulk": "Send ulk attachments to addresses given below.",
+    "attachments_info_avoin": "Send avoin attachments to addresses given below.",
+    "attachments_info_muu": "Send other attachments to addresses given below."
   }
 }

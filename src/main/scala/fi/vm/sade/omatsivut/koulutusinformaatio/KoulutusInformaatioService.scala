@@ -5,29 +5,33 @@ import fi.vm.sade.omatsivut.fixtures.JsonFixtureMaps
 import fi.vm.sade.omatsivut.json.JsonFormats
 import scalaj.http.Http
 import fi.vm.sade.omatsivut.http.DefaultHttpClient
+import fi.vm.sade.omatsivut.Logging
 
 
 trait KoulutusInformaatioService {
   def opetuspisteet(asId: String, query: String): List[Opetuspiste]
   def koulutukset(asId: String, opetuspisteId: String, baseEducation: String, vocational: String, uiLang: String): List[Koulutus]
+  def koulutus(aoId: String): Option[Koulutus]
 }
 
 object KoulutusInformaatioService {
   def apply(implicit appConfig: AppConfig): KoulutusInformaatioService = appConfig match {
     case x: StubbedExternalDeps => new KoulutusInformaatioService {
       def opetuspisteet(asId: String, query: String) = {
-        JsonFixtureMaps.find[List[Opetuspiste]]("/mockdata/opetuspisteet.json", query.substring(0, 1).toLowerCase).get
+        JsonFixtureMaps.findByKey[List[Opetuspiste]]("/mockdata/opetuspisteet.json", query.substring(0, 1).toLowerCase).getOrElse(List())
       }
       def koulutukset(asId: String, opetuspisteId: String, baseEducation: String, vocational: String, uiLang: String) = {
-        JsonFixtureMaps.find[List[Koulutus]]("/mockdata/koulutukset.json", opetuspisteId).get
+        JsonFixtureMaps.findByKey[List[Koulutus]]("/mockdata/koulutukset.json", opetuspisteId).getOrElse(List())
+      }
+      def koulutus(aoId: String) = {
+        JsonFixtureMaps.findByFieldValue[List[Koulutus]]("/mockdata/koulutukset.json", "_id", aoId).getOrElse(List()).headOption
       }
     }
     case _ => RemoteKoulutusService()
   }
 }
 
-case class RemoteKoulutusService(implicit appConfig: AppConfig) extends KoulutusInformaatioService with JsonFormats {
-  import fi.vm.sade.omatsivut.http.HttpClient
+case class RemoteKoulutusService(implicit appConfig: AppConfig) extends KoulutusInformaatioService with JsonFormats with Logging {
   import org.json4s.jackson.JsonMethods._
 
   def opetuspisteet(asId: String, query: String): List[Opetuspiste] = {
@@ -47,5 +51,13 @@ case class RemoteKoulutusService(implicit appConfig: AppConfig) extends Koulutus
       .responseWithHeaders
 
     parse(resultString).extract[List[Koulutus]]
+  }
+
+  def koulutus(aoId: String): Option[Koulutus] = {
+    val (responseCode, headersMap, resultString) = DefaultHttpClient.httpGet(appConfig.settings.koulutusinformaatioAoUrl + "/" + aoId)
+      .responseWithHeaders
+    withWarnLogging{
+      parse(resultString).extract[Option[Koulutus]]
+    }("Parsing response failed:\n" + resultString, None)
   }
 }

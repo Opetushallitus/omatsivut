@@ -75,7 +75,7 @@ object ApplicationUpdater {
     allAnswersFromApplication(application) ++ updatedAnswersForHakuToiveet(applicationSystem, application, hakemus) ++ updatedAnswersForOtherPhases(application, hakemus)
   }
 
-  private def allAnswersFromApplication(application: Application) = {
+  def allAnswersFromApplication(application: Application) = {
     application.getAnswers.toMap.mapValues(_.toMap)
   }
 

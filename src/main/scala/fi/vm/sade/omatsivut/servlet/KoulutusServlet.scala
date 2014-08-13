@@ -21,4 +21,8 @@ class KoulutusServlet(implicit val swagger: Swagger, val appConfig: AppConfig) e
   get("/koulutukset/:asId/:opetuspisteId") {
     koulutusInformaatio.koulutukset(params("asId"), params("opetuspisteId"), params("baseEducation"), params("vocational"), params("uiLang"))
   }
+
+  get("/koulutus/:aoId") {
+    koulutusInformaatio.koulutus(params("aoId"))
+  }
 }

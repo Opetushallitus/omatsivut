@@ -1,0 +1,110 @@
+// Fonts
+
+@body-font-size: 13px;
+
+.heading-font() {
+  font-family: 'PT Sans Narrow', 'Helvetica Neue', helvetica, arial, sans-serif;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.sub-heading-font(@color: @font-color) {
+  font-family: 'PT Sans Narrow', 'Helvetica Neue', helvetica, arial, sans-serif;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.section-heading-font(@color: @font-color) {
+  font-family: 'Helvetica Neue', helvetica, arial, sans-serif;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.body-font(@color: @font-color) {
+  font-family: helvetica, arial, sans-serif;
+  font-size: @body-font-size;
+  color: @color;
+  line-height: 20px;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+// Symbols
+
+@arrow-down: "\25bc";
+@arrow-up: "\25b2";
+
+.arrow-button(@symbol) {
+  font-size: 25px;
+  color: @button-background;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+
+  &:before {
+    content: @symbol;
+  }
+  &:hover:before {
+    color: @button-hover-background-color;
+  }
+
+  &[disabled] {
+    cursor: default;
+    &:before {
+      color: #eee;
+    }
+  }
+}
+
+// Colors
+
+@font-color: #333;
+@font-color-light: #777;
+@font-color-disabled: #ccc;
+@status-text-color: #555;
+@error-color: #c9302c;
+@border-color: #dcdcdc;
+@section-border-color: #feba00;
+@input-background: white;
+@input-focus-background: white;
+@input-hover-background: #fff5da;
+@input-border: #ccc;
+@input-focus-border: rgba(82, 168, 236, 0.8);
+
+@link-color: #06526b;
+@link-visited-color: #707070;
+@link-active-color: #06526b;
+@link-hover-color: #062B37;
+
+@button-color: #333;
+@button-background: #feba00;
+@button-border-color: #dea300;
+@button-inset-shadow: #fdedc1;
+
+@button-hover-background-color: #e99f00;
+@button-hover-border-color: #c69100;
+
+@button-confirm-color: white;
+@button-confirm-background: @error-color;
+@button-confirm-hover-color: lighten(@button-confirm-background, 10);
+@button-confirm-border-color: darken(@button-confirm-background, 20);
+
+@button-disabled-color: #333;
+@button-disabled-background: url(../img/disabled-pat.png);
+@button-disabled-border-color: #ababab;
+
+@save-highlight-question-color: #f0fff2;
+@save-highlight-timestamp-color: #d9ffdd;
+
+// Reset
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+ul {
+  list-style-type: none;
+}

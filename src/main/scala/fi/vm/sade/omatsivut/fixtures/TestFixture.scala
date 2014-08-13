@@ -12,6 +12,8 @@ import fi.vm.sade.omatsivut.hakemus.{HakemusConverter, HakuConverter}
 object TestFixture {
   val hakemus1 = "1.2.246.562.11.00000877107"
   val hakemus2 = "1.2.246.562.11.00000441368"
+  val hakemus3 = "1.2.246.562.11.00000441371"
+  val hakemusWithGradeGrid = "1.2.246.562.11.00000855417"
   val inactiveHakemus = "1.2.246.562.11.00000441369"
   val applicationSystemOid = "1.2.246.562.5.2014022711042555034240"
   val testHetu =  "010101-123N"
@@ -33,7 +35,7 @@ object TestFixture {
   def application: Application = app
   def hakemus(implicit lang: Language.Language) = HakemusConverter.convertToHakemus(Some(haku))(application)
 
-  val ammattistartti: Hakutoive = JsonFixtureMaps.find[Hakutoive]("/mockdata/hakutoiveet.json", "1.2.246.562.14.2014030415375012208392").get
-  val ammattistarttiAhlman: Hakutoive = JsonFixtureMaps.find[Hakutoive]("/mockdata/hakutoiveet.json", "1.2.246.562.14.2014040912353139913320").get
-  val hevostalous: Hakutoive = JsonFixtureMaps.find[Hakutoive]("/mockdata/hakutoiveet.json", "1.2.246.562.5.31982630126").get
+  val ammattistartti: Hakutoive = JsonFixtureMaps.findByKey[Hakutoive]("/mockdata/hakutoiveet.json", "1.2.246.562.14.2014030415375012208392").get
+  val ammattistarttiAhlman: Hakutoive = JsonFixtureMaps.findByKey[Hakutoive]("/mockdata/hakutoiveet.json", "1.2.246.562.14.2014040912353139913320").get
+  val hevostalous: Hakutoive = JsonFixtureMaps.findByKey[Hakutoive]("/mockdata/hakutoiveet.json", "1.2.246.562.5.31982630126").get
 }

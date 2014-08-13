@@ -69,6 +69,7 @@ object OmatsivutBuild extends Build {
         "com.typesafe" % "config" % "1.2.1",
         "com.novus" %% "salat-core" % "1.9.8",
         "org.scalatra.scalate" %% "scalate-core" % "1.7.0",
+        "com.scalatags" %% "scalatags" % "0.3.9",
         "com.fasterxml.jackson.dataformat" % "jackson-dataformat-yaml" % "2.4.1",
         "commons-codec" % "commons-codec" % "1.9",
         "fi.vm.sade.haku" % "hakemus-api" % "10.0-SNAPSHOT" excludeAll(

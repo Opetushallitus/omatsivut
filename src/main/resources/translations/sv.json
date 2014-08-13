@@ -24,14 +24,16 @@
     "delete_confirm": "Ta bort",
     "delete_ariaLabel": "Ta bort ansökningsönskemål med väljä det hät två gånger",
     "logout": "Logga ut",
-    "showApplication": "Show application"
+    "showApplication": "Visa ansökan"
   },
 
   "message": {
     "loadingApplications": "Ansökningar laddats...",
     "noApplications": "Det finns inga ansöka at förändra.",
     "validationOk": "Kom ihåg att spar ansökan",
-    "changesSaved": "Alla förändrangar har sparats."
+    "changesSaved": "Alla förändrangar har sparats.",
+    "yes": "Ja",
+    "no": "Nej"
   },
 
   "error": {
@@ -51,5 +53,21 @@
       "title": "Inga ansöka finns med din personbeteckningen",
       "text": "Identifiering lyckades men inga ansöka finns med din personbeteckningen."
     }
+  },
+
+  "applicationPreview": {
+    "received": "Mottagits",
+    "applicationId": "Ansökans nummer",
+    "discretionary": "Antagning på basis av utbildningsanordnarens prövning",
+    "discretionary_info": "Du har sökt genom antagning på basis av utbildningsanordnarens prövning. Skicka en utskrift av din ansökan samt de bilagor och/eller betyg mm. som du hänvisar till inom ansökningstiden till adresserna nedan.",
+    "attachments_deadline": "Sista dagen för att returnera bilagorna",
+    "attachments": "Bilagorna",
+    "attachments_info_yo": "Skicka yo bilagorna till adresserna nedan.",
+    "attachments_info_am": "Skicka am bilagorna till adresserna nedan.",
+    "attachments_info_amt": "Skicka amt bilagorna till adresserna nedan.",
+    "attachments_info_kk": "Skicka kk bilagorna till adresserna nedan.",
+    "attachments_info_ulk": "Skicka ulk bilagorna till adresserna nedan.",
+    "attachments_info_avoin": "Skicka avoin bilagorna till adresserna nedan.",
+    "attachments_info_muu": "Skicka övriga bilagorna till adresserna nedan."
   }
 }
