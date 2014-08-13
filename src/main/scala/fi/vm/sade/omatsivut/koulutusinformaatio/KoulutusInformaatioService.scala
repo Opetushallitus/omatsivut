@@ -10,7 +10,7 @@ import fi.vm.sade.omatsivut.Logging
 
 trait KoulutusInformaatioService {
   def opetuspisteet(asId: String, query: String): List[Opetuspiste]
-  def koulutukset(asId: String, opetuspisteId: String, baseEducation: String, vocational: String, uiLang: String): List[Koulutus]
+  def koulutukset(asId: String, opetuspisteId: String, baseEducation: Option[String], vocational: String, uiLang: String): List[Koulutus]
   def koulutus(aoId: String): Option[Koulutus]
 }
 
@@ -20,7 +20,7 @@ object KoulutusInformaatioService {
       def opetuspisteet(asId: String, query: String) = {
         JsonFixtureMaps.findByKey[List[Opetuspiste]]("/mockdata/opetuspisteet.json", query.substring(0, 1).toLowerCase).getOrElse(List())
       }
-      def koulutukset(asId: String, opetuspisteId: String, baseEducation: String, vocational: String, uiLang: String) = {
+      def koulutukset(asId: String, opetuspisteId: String, baseEducation: Option[String], vocational: String, uiLang: String) = {
         JsonFixtureMaps.findByKey[List[Koulutus]]("/mockdata/koulutukset.json", opetuspisteId).getOrElse(List())
       }
       def koulutus(aoId: String) = {
@@ -43,12 +43,14 @@ case class RemoteKoulutusService(implicit appConfig: AppConfig) extends Koulutus
   }
 
 
-  def koulutukset(asId: String, opetuspisteId: String, baseEducation: String, vocational: String, uiLang: String): List[Koulutus] = {
-    val (responseCode, headersMap, resultString) = DefaultHttpClient.httpGet(appConfig.settings.koulutusinformaatioAoUrl + "/search/" + asId + "/" + opetuspisteId)
-      .param("baseEducation", baseEducation)
+  def koulutukset(asId: String, opetuspisteId: String, baseEducation: Option[String], vocational: String, uiLang: String): List[Koulutus] = {
+    var request = DefaultHttpClient.httpGet(appConfig.settings.koulutusinformaatioAoUrl + "/search/" + asId + "/" + opetuspisteId)
       .param("vocational", vocational)
       .param("uiLang", uiLang)
-      .responseWithHeaders
+    if(baseEducation.isDefined) {
+      request = request.param("baseEducation", baseEducation.get)
+    }
+    val (responseCode, headersMap, resultString) = request.responseWithHeaders
 
     parse(resultString).extract[List[Koulutus]]
   }
