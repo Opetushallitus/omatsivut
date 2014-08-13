@@ -184,5 +184,23 @@
       "vocational": true,
       "educationCodeUri": "koulutus_361401"
     }
+  ],
+  "1.2.246.562.10.455978782510": [
+    {
+      "id":"1.2.246.562.5.16303028779",
+      "name":"Lukio",
+      "aoIdentifier":"000",
+      "educationDegree":null,
+      "childLONames":[],
+      "sora":false,
+      "teachingLanguages":["FI"],
+      "athleteEducation":false,
+      "kaksoistutkinto":false,
+      "vocational":false,
+      "educationCodeUri":"koulutus_301101",
+      "attachmentDeliveryDeadline":1394802000000,
+      "provider":{"id":"1.2.246.562.10.455978782510","name":"Salon Lukio"},
+      "attachmentDeliveryAddress":{"streetAddress":"Kaherinkatu 2","postalCode":"24130","postOffice":"SALO"}
+    }
   ]
 }
