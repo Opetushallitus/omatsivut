@@ -108,7 +108,7 @@
         )
       })
       
-      it('ensimmäisenä on uusimman haun hakemus', function () {
+      it('ensimmäisenä on uusin hakemus', function () {
         expect(ApplicationListPage().applications()[0]).to.deep.equal(
           { applicationSystemName: 'Korkeakoulujen yhteishaku syksy 2014' }
         )

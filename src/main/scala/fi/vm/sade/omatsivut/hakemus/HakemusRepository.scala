@@ -8,8 +8,6 @@ import fi.vm.sade.omatsivut.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.auditlog.{ShowHakemus, UpdateHakemus, AuditLogger}
 import fi.vm.sade.omatsivut.domain.{Tulokset, Hakemus, Language}
 import fi.vm.sade.omatsivut.ohjausparametrit.OhjausparametritService
-import fi.vm.sade.omatsivut.domain.HakuAika
-import org.joda.time.DateTime
 
 case class HakemusRepository(implicit val appConfig: AppConfig) extends Logging {
   import collection.JavaConversions._
@@ -50,6 +48,6 @@ case class HakemusRepository(implicit val appConfig: AppConfig) extends Logging 
           AuditLogger.log(ShowHakemus(personOid, hakemus.oid))
           hakemus
         }
-      )).flatten.toList.sortBy[Date](_.haku.applicationPeriods.headOption.getOrElse(HakuAika(new DateTime(), new DateTime(), false)).start.toDate).reverse
+      )).flatten.toList.sortBy[Long](_.received).reverse
   }
 }
