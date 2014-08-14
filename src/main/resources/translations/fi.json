@@ -7,7 +7,7 @@
     "applicationPeriodEnds": "Hakuaika päättyy",
     "applicationPeriodEnded": "Hakuaika on päättynyt.",
     "applicationReceived": "Hakemus jätetty",
-    "applicationUpdated": "hakemusta muokattu",
+    "applicationUpdated": "Hakemusta muokattu",
     "preferences": "Hakutoiveet",
     "location": "Opetuspiste",
     "location_university": "Korkeakoulu",
@@ -19,8 +19,8 @@
 
   "button": {
     "save": "Tallenna muutokset",
-    "sortUp_ariaLabel": "Nosta hakutoivetta",
-    "sortDown_ariaLabel": "Laske hakutoivetta",
+    "sortUp_ariaLabel": "Siirrä hakutoivetta mieluisuusjärjestyksessä ylöspäin ",
+    "sortDown_ariaLabel": "Siirrä hakutoivetta mieluisuusjärjestyksessä alaspäin",
     "delete_confirm": "Poista",
     "delete_ariaLabel": "Poista hakutoive valitsemalla tämä kaksi kertaa  ",
     "logout": "Kirjaudu ulos",
