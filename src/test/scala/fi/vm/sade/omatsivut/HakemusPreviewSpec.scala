@@ -31,25 +31,23 @@ class HakemusPreviewSpec extends HakemusApiSpecification {
         body must contain("""<div>SALO</div><div>Liitteiden viimeinen palautuspäivä 14.3.2014</div>""")
       }
     }
+
     "support higher grade attachements" in {
       authGet("/applications/preview/" + TestFixture.hakemusWithHigherGradeAttachments, personOid) {
         println(prettyPrintHtml(body))
-        // hakutoiveet
         body must contain("""<p>Toimita todistuskopiot muista perusteistasi seuraaviin kouluihin</p><div class="group"><h3>Diakonia-ammattikorkeakoulu, Helsingin toimipiste</h3><div>Sturenkatu 2</div>""")
       }
     }
 
     "support additional questions per preference" in {
-      authGet("/applications/preview/" + TestFixture.hakemus3, personOid) {
+      authGet("/applications/preview/" + TestFixture.hakemusWithAtheleteQuestions, personOid) {
         println(prettyPrintHtml(body))
-        // hakutoiveet
         body must contain("""<div class="question"><label>Haetko urheilijan ammatilliseen koulutukseen?</label><span class="answer">Kyllä</span></div><div class="question"><label>Haluaisitko suorittaa lukion ja/tai ylioppilastutkinnon samaan aikaan kuin ammatillisen perustutkinnon?</label><span class="answer">Kyllä</span></div>""")
       }
     }
 
     "support grade grid" in {
-      authGet("/applications/preview/" + TestFixture.hakemusWithGradeGrid, personOid) {
-        // hakutoiveet
+      authGet("/applications/preview/" + TestFixture.hakemusWithGradeGridAndDancePreference, personOid) {
         body must contain("""<tr><td id="PK_A1_column1">A1-kieli</td><td id="PK_A1_column2">englanti</td><td id="PK_A1_column3">9</td><td id="PK_A1_column4">Ei arvosanaa</td><td id="PK_A1_column5">Ei arvosanaa</td></tr>""")
         body must contain("""<tr><td id="PK_MA_column1" colspan="2">Matematiikka</td><td id="PK_MA_column3">9</td><td id="PK_MA_column4">Ei arvosanaa</td><td id="PK_MA_column5">Ei arvosanaa</td></tr>""")
       }
@@ -58,11 +56,24 @@ class HakemusPreviewSpec extends HakemusApiSpecification {
     "support grade grid from grade 10" in {
       FixtureImporter().applyOverrides("kymppiluokka")
       authGet("/applications/preview/" + TestFixture.hakemus2, personOid) {
-        // hakutoiveet
         body must contain("""<tr><td id="PK_B1_column1">B1-kieli</td><td id="PK_B1_column2">englanti</td><td id="PK_B1_column3">10(9)</td><td id="PK_B1_column4">Ei arvosanaa</td><td id="PK_B1_column5">Ei arvosanaa</td></tr>""")
         body must contain("""<tr><td id="PK_MA_column1" colspan="2">Matematiikka</td><td id="PK_MA_column3">10(9)</td><td id="PK_MA_column4">Ei arvosanaa</td><td id="PK_MA_column5">Ei arvosanaa</td></tr>""")
       }
     }
+
+    "support athlete additional information" in {
+      authGet("/applications/preview/" + TestFixture.hakemusWithAtheleteQuestions, personOid) {
+        println(prettyPrintHtml(body))
+        body must contain("""Muistathan täyttää myös urheilijan lisätietolomakkeen ja palauttaa sen oppilaitokseen, johon haet.""")
+      }
+    }
+
+    "support dance additional information" in {
+      authGet("/applications/preview/" + TestFixture.hakemusWithGradeGridAndDancePreference, personOid) {
+        body must contain("""Hait musiikki-, tanssi- tai liikunta-alan koulutukseen. Muista tarkistaa oppilaitoksen nettisivuilta, pitääkö sinun täyttää myös oppilaitoksen oma lisätietolomake.""")
+      }
+    }
+
   }
 
   private def prettyPrintHtml(content: String) = {
