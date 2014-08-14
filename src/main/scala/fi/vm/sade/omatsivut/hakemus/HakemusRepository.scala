@@ -16,7 +16,7 @@ case class HakemusRepository(implicit val appConfig: AppConfig) extends Logging 
   def canUpdate(applicationSystem: ApplicationSystem, application: Application)(implicit lang: Language.Language) = {
     val haku = HakuConverter.convertToHaku(applicationSystem)
     val isActiveHakuPeriod = haku.applicationPeriods.exists(hakuAika => hakuAika.active)
-    val stateUpdateable = application.getState() == Application.State.ACTIVE || application.getState() == Application.State.INCOMPLETE
+    val stateUpdateable = application.getState == Application.State.ACTIVE || application.getState == Application.State.INCOMPLETE
     isActiveHakuPeriod && stateUpdateable
   }
 
@@ -28,10 +28,10 @@ case class HakemusRepository(implicit val appConfig: AppConfig) extends Logging 
     applicationJavaObject
     .filter(application => canUpdate(applicationSystem, application))
     .map { application =>
-      val originalAnswers: Hakemus.Answers = application.getAnswers().toMap.mapValues(_.toMap)
+      val originalAnswers: Hakemus.Answers = application.getAnswers.toMap.mapValues(_.toMap)
       ApplicationUpdater.update(applicationSystem)(application, updatedHakemus)
       dao.update(applicationQuery, application)
-      AuditLogger.log(UpdateHakemus(userOid, updatedHakemus.oid, originalAnswers, application.getAnswers().toMap.mapValues(_.toMap)))
+      AuditLogger.log(UpdateHakemus(userOid, updatedHakemus.oid, originalAnswers, application.getAnswers.toMap.mapValues(_.toMap)))
       updatedHakemus
     }
   }
