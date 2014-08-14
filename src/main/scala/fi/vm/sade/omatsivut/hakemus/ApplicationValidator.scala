@@ -54,19 +54,27 @@ case class ApplicationValidator(implicit val appConfig: AppConfig) extends Loggi
   private def validateHakutoiveetAndAnswers(hakemus: Hakemus, applicationSystem: ApplicationSystem)(implicit lang: Language.Language): List[ValidationError] = {
     val application: Application = findStoredApplication(hakemus) // <- needs to be fetched here because is mutated below
 
-    def validate(appSystem: ApplicationSystem) = {
-      val result = validator.validate(convertToValidationInput(appSystem, application))
-      convertoToValidationErrors(result)
-    }
-
-    if (application.getState() == Application.State.INCOMPLETE) {
-      val errorsBefore = validate(applicationSystem)
-      ApplicationUpdater.update(applicationSystem)(application, hakemus)
-      validate(applicationSystem).filter(!errorsBefore.contains(_))
+    if (isIncomplete(application)) {
+      val errorsBeforeUpdate = validateAndConvertErrors(application, applicationSystem)
+      val errorsAfterUpdate: List[ValidationError] = updateAndValidate(hakemus, applicationSystem, application)
+      errorsAfterUpdate.filter(!errorsBeforeUpdate.contains(_))
     } else {
-      ApplicationUpdater.update(applicationSystem)(application, hakemus)
-      validate(applicationSystem)
+      updateAndValidate(hakemus, applicationSystem, application)
     }
+  }
+
+  private def isIncomplete(application: Application): Boolean = {
+    application.getState == Application.State.INCOMPLETE
+  }
+
+  private def updateAndValidate(hakemus: Hakemus, applicationSystem: ApplicationSystem, application: Application)(implicit lang: Language.Language): List[ValidationError] = {
+    ApplicationUpdater.update(applicationSystem)(application, hakemus) // application is mutated
+    validateAndConvertErrors(application, applicationSystem)
+  }
+
+  private def validateAndConvertErrors(application: Application, appSystem: ApplicationSystem)(implicit lang: Language.Language) = {
+    val result = validator.validate(convertToValidationInput(appSystem, application))
+    convertoToValidationErrors(result)
   }
 
   private def errorsForUnknownAnswers(applicationSystem: ApplicationSystem, hakemus: Hakemus)(implicit lang: Language.Language): List[ValidationError] = {
@@ -98,7 +106,7 @@ case class ApplicationValidator(implicit val appConfig: AppConfig) extends Loggi
 
   private def convertoToValidationErrors(validationResult: ValidationResult)(implicit lang: Language.Language) : List[ValidationError] = {
     validationResult.getErrorMessages.map { case (key, translations) =>
-      ValidationError(key, translations.getTranslations.get(lang.toString()))
+      ValidationError(key, translations.getTranslations.get(lang.toString))
     }.toList
   }
 
