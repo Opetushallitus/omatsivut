@@ -4,7 +4,7 @@ import fi.vm.sade.omatsivut.fixtures.TestFixture._
 import fi.vm.sade.omatsivut.fixtures.{FixtureImporter, TestFixture}
 import fi.vm.sade.omatsivut.servlet.ApplicationsServlet
 
-class ApplicationPreviewSpec extends HakemusApiSpecification {
+class HakemusPreviewSpec extends HakemusApiSpecification {
   override implicit lazy val appConfig = new AppConfig.IT
 
   sequential
