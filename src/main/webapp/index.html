@@ -21,16 +21,17 @@
                     <h2>{{application.haku.name }}</h2>
                     <p>
                         <div ng-if="applicationPeriod.active" class="application-period">
-                            {{ localization('label.applicationPeriodEnds') }} <time datetime="{{ applicationPeriod.end | date:'yyyy-MM-ddTHH:mmZ' }}">{{ formatApplicationPeriod(applicationPeriod.end) }}</time>
+                            <span class="label label-info">
+                                {{ localization('label.applicationPeriodEnds') }} <time datetime="{{ applicationPeriod.end | date:'yyyy-MM-ddTHH:mmZ' }}">{{ formatApplicationPeriod(applicationPeriod.end) }}</time>
+                            </span>
                         </div>
                         <div ng-if="!applicationPeriod.active" class="application-period">
-                            <strong>
+                            <span class="label label-info">
                                 {{ localization('label.applicationPeriodEnded') }}
-                            </strong>
-
-                            <strong ng-if="application.haku.results">
-                                {{ localization('label.resultsPublishedDate') }} {{ formatDateRange(application.haku.results) }}.
-                            </strong>
+                                <span ng-if="application.haku.results">
+                                    {{ localization('label.resultsPublishedDate') }} {{ formatDateRange(application.haku.results) }}.
+                                </span>
+                            </span>
                         </div>
                     </p>
                     <p>
