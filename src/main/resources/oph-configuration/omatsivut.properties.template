@@ -40,6 +40,7 @@ koulutusinformaatio.ao.resource.url=https\://{{host_haku}}/ao
 tarjonta.data.url=https\://{{host_virkailija}}/tarjonta-service/rest/
 tarjonta.haku.resource.url=https\://{{host_virkailija}}/tarjonta-service/rest/haku
 tarjonta.hakukohde.resource.url=https\://{{host_virkailija}}/tarjonta-service/rest/hakukohde
+tarjonta.v1.hakukohde.resource.url=https\://{{host_virkailija}}/tarjonta-service/rest/v1/hakukohde
 authentication.app.username.to.organisaatioservice={{authentication_app_username_to_organisaatioservice}}
 authentication.app.password.to.organisaatioservice={{authentication_app_password_to_organisaatioservice}}
 email.from={{email_from}}
