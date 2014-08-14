@@ -43,11 +43,11 @@ case class HakemusRepository(implicit val appConfig: AppConfig) extends Logging 
         application => {
           !application.getState.equals(Application.State.PASSIVE)
         }
-    }.map{ application => {
-      val haku = HakuRepository().getHakuById(application.getApplicationSystemId)
-      val hakemus = HakemusConverter.convertToHakemus(haku)(application)
-      AuditLogger.log(ShowHakemus(personOid, hakemus.oid))
-      hakemus
-    }}
+    }.map(application => HakuRepository().getHakuById(application.getApplicationSystemId).map(haku => {
+          val hakemus = HakemusConverter.convertToHakemus(haku)(application)
+          AuditLogger.log(ShowHakemus(personOid, hakemus.oid))
+          hakemus
+        }
+      )).flatten
   }
 }

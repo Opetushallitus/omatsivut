@@ -34,7 +34,7 @@ object TestFixture {
   def applicationSystem: ApplicationSystem = as
   def haku(implicit lang: Language.Language) = HakuConverter.convertToHaku(applicationSystem)
   def application: Application = app
-  def hakemus(implicit lang: Language.Language) = HakemusConverter.convertToHakemus(Some(haku))(application)
+  def hakemus(implicit lang: Language.Language) = HakemusConverter.convertToHakemus(haku)(application)
 
   val ammattistartti: Hakutoive = JsonFixtureMaps.findByKey[Hakutoive]("/mockdata/hakutoiveet.json", "1.2.246.562.14.2014030415375012208392").get
   val ammattistarttiAhlman: Hakutoive = JsonFixtureMaps.findByKey[Hakutoive]("/mockdata/hakutoiveet.json", "1.2.246.562.14.2014040912353139913320").get

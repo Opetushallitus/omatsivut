@@ -15,7 +15,7 @@ case class Hakemus(
                     state: String,
                     postProcessing: Boolean,
                     hakutoiveet: List[Hakutoive] = Nil,
-                    haku: Option[Haku] = None,
+                    haku: Haku,
                     educationBackground: EducationBackground,
                     answers: Answers
                   )

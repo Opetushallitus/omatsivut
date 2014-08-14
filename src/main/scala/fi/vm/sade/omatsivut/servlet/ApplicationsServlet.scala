@@ -43,7 +43,7 @@ class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfi
 
   put("/applications/:oid", operation(putApplicationsSwagger)) {
     val updated = Serialization.read[Hakemus](request.body)
-    val applicationSystem = applicationSystemService.getApplicationSystem(updated.haku.get.oid)
+    val applicationSystem = applicationSystemService.getApplicationSystem(updated.haku.oid)
     val errors = ApplicationValidator().validate(applicationSystem)(updated)
     if(errors.isEmpty) {
       HakemusRepository().updateHakemus(applicationSystem)(updated, personOid()) match {
@@ -57,7 +57,7 @@ class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfi
 
   post("/applications/validate/:oid", operation(validateApplicationsSwagger)) {
     val validate = Serialization.read[Hakemus](request.body)
-    val applicationSystem = applicationSystemService.getApplicationSystem(validate.haku.get.oid)
+    val applicationSystem = applicationSystemService.getApplicationSystem(validate.haku.oid)
     val (errors: List[ValidationError], questions: List[QuestionNode]) = ApplicationValidator().validateAndFindQuestions(applicationSystem)(validate)
     ValidationResult(errors, questions)
   }

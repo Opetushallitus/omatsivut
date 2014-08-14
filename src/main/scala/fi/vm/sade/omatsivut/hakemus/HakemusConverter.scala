@@ -15,7 +15,7 @@ object HakemusConverter {
   val baseEducationKey = OppijaConstants.ELEMENT_ID_BASE_EDUCATION
   val preferencePhaseKey = OppijaConstants.PHASE_APPLICATION_OPTIONS
 
-  def convertToHakemus(haku: Option[Haku])(application: Application) = {
+  def convertToHakemus(haku: Haku)(application: Application) = {
     val koulutusTaustaAnswers: util.Map[String, String] = application.getAnswers.get(educationPhaseKey)
     Hakemus(
       application.getOid,
