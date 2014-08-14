@@ -199,8 +199,40 @@
       "vocational":false,
       "educationCodeUri":"koulutus_301101",
       "attachmentDeliveryDeadline":1394802000000,
-      "provider":{"id":"1.2.246.562.10.455978782510","name":"Salon Lukio"},
-      "attachmentDeliveryAddress":{"streetAddress":"Kaherinkatu 2","postalCode":"24130","postOffice":"SALO"}
+      "provider":{
+        "id":"1.2.246.562.10.455978782510",
+        "name":"Salon Lukio"
+      },
+      "attachmentDeliveryAddress":{
+        "streetAddress":"Kaherinkatu 2",
+        "postalCode":"24130",
+        "postOffice":"SALO"
+      }
+    }
+  ],
+  "1.2.246.562.10.64213824028": [
+    {
+      "id":"1.2.246.562.20.656632485510",
+      "name":"Terveydenhoitaja (AMK), monimuotototeutus",
+      "aoIdentifier":null,"educationDegree":"koulutusasteoph2002_62",
+      "provider":{
+        "id":"1.2.246.562.10.64213824028",
+        "name":"Diakonia-ammattikorkeakoulu, Helsingin toimipiste",
+        "applicationOffice":{
+          "postalAddress":{
+            "streetAddress":"Sturenkatu 2",
+            "postalCode":"00510",
+            "postOffice":"HELSINKI"
+          }
+        }
+      },
+      "childLONames":[],
+      "sora":false,
+      "teachingLanguages":["FI"],
+      "athleteEducation":false,
+      "kaksoistutkinto":false,
+      "vocational":false,
+      "educationCodeUri":"koulutus_671103"
     }
   ]
 }

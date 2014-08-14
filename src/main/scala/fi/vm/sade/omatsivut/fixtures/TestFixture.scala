@@ -14,6 +14,7 @@ object TestFixture {
   val hakemus2 = "1.2.246.562.11.00000441368"
   val hakemus3 = "1.2.246.562.11.00000441371"
   val hakemusWithGradeGrid = "1.2.246.562.11.00000855417"
+  val hakemusWithHigherGradeAttachments = "1.2.246.562.11.00000877699"
   val inactiveHakemus = "1.2.246.562.11.00000441369"
   val applicationSystemOid = "1.2.246.562.5.2014022711042555034240"
   val testHetu =  "010101-123N"

@@ -31,6 +31,13 @@ class ApplicationPreviewSpec extends HakemusApiSpecification {
         body must contain("""<div>SALO</div><div>Liitteiden viimeinen palautuspäivä 14.3.2014</div>""")
       }
     }
+    "support higher grade attachements" in {
+      authGet("/applications/preview/" + TestFixture.hakemusWithHigherGradeAttachments, personOid) {
+        println(prettyPrintHtml(body))
+        // hakutoiveet
+        body must contain("""<p>Toimita todistuskopiot muista perusteistasi seuraaviin kouluihin</p><div class="group"><h3>Diakonia-ammattikorkeakoulu, Helsingin toimipiste</h3><div>Sturenkatu 2</div>""")
+      }
+    }
 
     "support additional questions per preference" in {
       authGet("/applications/preview/" + TestFixture.hakemus3, personOid) {
