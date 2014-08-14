@@ -4,10 +4,11 @@ import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 import fi.vm.sade.omatsivut.domain.Hakemus
 import fi.vm.sade.omatsivut.domain.Hakemus.{Hakutoive, Answers}
-import fi.vm.sade.omatsivut.fixtures.TestFixture
+import fi.vm.sade.omatsivut.fixtures.{FixtureImporter, TestFixture}
 import fi.vm.sade.omatsivut.json.JsonFormats
 import org.json4s.jackson.Serialization
 import fi.vm.sade.omatsivut.fixtures.TestFixture._
+import fi.vm.sade.omatsivut.AppConfig.AppConfig
 
 trait HakemusApiSpecification extends JsonFormats with ScalatraTestSupport {
   val personalInfoPhaseKey: String = OppijaConstants.PHASE_PERSONAL
@@ -33,6 +34,10 @@ trait HakemusApiSpecification extends JsonFormats with ScalatraTestSupport {
     authPut("/applications/" + hakemus.oid, personOid, Serialization.write(hakemus)) {
       f
     }
+  }
+
+  def setupFixture(fixtureName: String)(implicit appConfig: AppConfig) = {
+    FixtureImporter.apply().applyFixtures(fixtureName)
   }
 
   def modifyHakemus[T](oid: String)(modification: (Hakemus => Hakemus))(f: Hakemus => T): T = {

@@ -44,13 +44,12 @@ class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfi
   put("/applications/:oid", operation(putApplicationsSwagger)) {
     val updated = Serialization.read[Hakemus](request.body)
     val applicationSystem = applicationSystemService.getApplicationSystem(updated.haku.get.oid)
-    if(!HakemusRepository().canUpdate(applicationSystem)) {
-      halt(Forbidden("Update of application is forbidden"))
-    }
     val errors = ApplicationValidator().validate(applicationSystem)(updated)
     if(errors.isEmpty) {
-      val saved = HakemusRepository().updateHakemus(applicationSystem)(updated, personOid())
-      Ok(saved)
+      HakemusRepository().updateHakemus(applicationSystem)(updated, personOid()) match {
+        case Some(saved) => Ok(saved)
+        case None => Forbidden()
+      }
     } else {
       BadRequest(errors)
     }

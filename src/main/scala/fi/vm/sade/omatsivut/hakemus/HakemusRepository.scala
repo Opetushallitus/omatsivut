@@ -13,25 +13,27 @@ case class HakemusRepository(implicit val appConfig: AppConfig) extends Logging 
   import collection.JavaConversions._
   private val dao = appConfig.springContext.applicationDAO
 
-  def canUpdate(applicationSystem: ApplicationSystem)(implicit lang: Language.Language) = {
+  def canUpdate(applicationSystem: ApplicationSystem, application: Application)(implicit lang: Language.Language) = {
     val haku = HakuConverter.convertToHaku(applicationSystem)
-    haku.applicationPeriods.exists(hakuAika => {
-      hakuAika.active
-    })
+    val isActiveHakuPeriod = haku.applicationPeriods.exists(hakuAika => hakuAika.active)
+    val stateUpdateable = application.getState() == Application.State.ACTIVE || application.getState() == Application.State.INCOMPLETE
+    isActiveHakuPeriod && stateUpdateable
   }
 
-  def updateHakemus(applicationSystem: ApplicationSystem)(hakemus: Hakemus, userOid: String)(implicit lang: Language.Language): Hakemus = {
+  def updateHakemus(applicationSystem: ApplicationSystem)(hakemus: Hakemus, userOid: String)(implicit lang: Language.Language): Option[Hakemus] = {
     val updatedHakemus = hakemus.copy(updated = new Date().getTime)
     val applicationQuery: Application = new Application().setOid(updatedHakemus.oid)
-    val applicationJavaObjects: List[Application] = dao.find(applicationQuery).toList
+    val applicationJavaObject: Option[Application] = dao.find(applicationQuery).toList.headOption
 
-    applicationJavaObjects.foreach { application =>
+    applicationJavaObject
+    .filter(application => canUpdate(applicationSystem, application))
+    .map { application =>
       val originalAnswers: Hakemus.Answers = application.getAnswers().toMap.mapValues(_.toMap)
       ApplicationUpdater.update(applicationSystem)(application, updatedHakemus)
       dao.update(applicationQuery, application)
       AuditLogger.log(UpdateHakemus(userOid, updatedHakemus.oid, originalAnswers, application.getAnswers().toMap.mapValues(_.toMap)))
+      updatedHakemus
     }
-    updatedHakemus
   }
 
   def fetchHakemukset(personOid: String)(implicit lang: Language.Language): List[Hakemus] = {

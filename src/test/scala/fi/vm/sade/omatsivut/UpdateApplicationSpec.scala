@@ -59,8 +59,15 @@ class UpdateApplicationSpec extends HakemusApiSpecification {
     }
 
     "reject update of application with invalid application period" in {
-      modifyHakemus(inactiveHakemus)(answerExtraQuestion(preferencesPhaseKey, "unknown", "hacking")) { hakemus =>
+      modifyHakemus(inactiveHakemus)((hakemus) => hakemus) { hakemus =>
           status must_== 403
+      }
+    }
+
+    "reject update of application that is not ACTIVE or INCOMPLETE" in {
+      setupFixture("submittedApplication")
+      modifyHakemus(hakemus2)((hakemus) => hakemus) { hakemus =>
+        status must_== 403
       }
     }
   }
