@@ -107,6 +107,12 @@
           { applicationSystemName: "Perusopetuksen jälkeisen valmistavan koulutuksen kesän 2014 haku MUOKATTU" }
         )
       })
+      
+      it('ensimmäisenä on uusimman haun hakemus', function () {
+        expect(ApplicationListPage().applications()[0]).to.deep.equal(
+          { applicationSystemName: 'Korkeakoulujen yhteishaku syksy 2014' }
+        )
+      })
 
       it("henkilön 010101-123N hakutoiveet ovat näkyvissä", function () {
         expect(hakemus1.preferencesForApplication()).to.deep.equal([
