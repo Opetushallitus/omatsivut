@@ -3,6 +3,7 @@
 <head>
     <link href='//fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700' rel='stylesheet' type='text/css'>
     <link href="css/main.css" media="all" rel="stylesheet" type="text/css"/>
+    <link href="fontello/css/fontello.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body aria-busy="true">
@@ -35,6 +36,7 @@
                         </div>
                     </p>
                     <p>
+                        <i class="icon-doc-text"></i>
                         <a class="preview" ng-href="/omatsivut/api/applications/preview/{{application.oid}}" ng-class="{disabled: hasChanged || statusMessageType=='pending' || isValidating}" target="_blank">{{ localization('button.showApplication') }}</a>
                         <span class="timestamp" ng-if="applicationPeriod.active" ng-class="{disabled: hasChanged || statusMessageType=='pending' || isValidating}">
                             ({{ timestampLabel() }} <time datetime="{{ application.updated | date:'yyyy-MM-ddTHH:mmZ' }}">{{ formatTimestamp(application.updated) }}</time>)
