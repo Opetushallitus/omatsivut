@@ -1,14 +1,10 @@
 package fi.vm.sade.omatsivut.fixtures
 
-import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.omatsivut.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.domain.Hakemus._
 
-case class PeruskouluFixture(appConfig: AppConfig) {
-  private val dao = appConfig.springContext.applicationDAO
+case class PeruskouluFixture(appConfig: AppConfig) extends Hakemus2WithDifferentAnswersFixture(appConfig: AppConfig) {
   def apply {
-    val application: Application = dao.find(new Application().setOid(TestFixture.hakemus2)).get(0)
-
     val answers: Answers = Map(
       "koulutustausta" ->
         Map("POHJAKOULUTUS" -> "1", "PK_PAATTOTODISTUSVUOSI" -> "2012", "KOULUTUSPAIKKA_AMMATILLISEEN_TUTKINTOON" -> "false"),
@@ -68,16 +64,6 @@ case class PeruskouluFixture(appConfig: AppConfig) {
           "PK_KO_VAL1" -> "0",
           "PK_KO_VAL2" -> "0",
           "perusopetuksen_kieli" -> "FI"))
-
-    updateAnswers(application, answers)
-
-    dao.save(application)
-  }
-
-  private def updateAnswers(application: Application, answers: Answers) {
-    import collection.JavaConverters._
-    answers.foreach { case (phaseId, phaseAnswers) =>
-      application.addVaiheenVastaukset(phaseId, phaseAnswers.asJava)
-    }
+    apply(answers)
   }
 }
