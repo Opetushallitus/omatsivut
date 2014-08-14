@@ -6,6 +6,8 @@ import com.earldouglas.xsbtwebplugin.WebPlugin
 import com.earldouglas.xsbtwebplugin.WebPlugin.container
 import com.earldouglas.xsbtwebplugin.PluginKeys._
 
+class MochaException extends RuntimeException("mocha tests failed", null, false, false)
+
 object OmatsivutBuild extends Build {
   val Organization = "fi.vm.sade"
   val Name = "omatsivut"
@@ -23,7 +25,7 @@ object OmatsivutBuild extends Build {
       val pb = Seq("node_modules/mocha-phantomjs/bin/mocha-phantomjs" ,"-R", "spec", "http://localhost:8080/omatsivut/test/runner.html")
       val res = pb.!
       if(res != 0){
-        sys.error("mocha tests failed")
+        throw new MochaException()
       }
       res
     }
