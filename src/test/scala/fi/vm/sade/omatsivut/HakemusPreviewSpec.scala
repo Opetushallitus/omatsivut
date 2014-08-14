@@ -65,6 +65,7 @@ class HakemusPreviewSpec extends HakemusApiSpecification {
       authGet("/applications/preview/" + TestFixture.hakemusWithAtheleteQuestions, personOid) {
         println(prettyPrintHtml(body))
         body must contain("""Muistathan täyttää myös urheilijan lisätietolomakkeen ja palauttaa sen oppilaitokseen, johon haet.""")
+        body must contain("""<a href="http://www.sport.fi/urheiluoppilaitoshaku" target="_blank">http://www.sport.fi/urheiluoppilaitoshaku (pdf-tiedosto, avautuu uuteen välilehteen)</a>""")
       }
     }
 

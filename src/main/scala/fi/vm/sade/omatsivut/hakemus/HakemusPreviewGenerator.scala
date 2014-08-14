@@ -22,6 +22,7 @@ import fi.vm.sade.haku.oppija.hakemus.domain.util.ApplicationUtil
 import fi.vm.sade.omatsivut.koulutusinformaatio.Opetuspiste
 import org.joda.time.format.DateTimeFormat
 import fi.vm.sade.omatsivut.koulutusinformaatio.Opetuspiste
+import fi.vm.sade.haku.oppija.lomake.domain.elements.Link
 
 case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val language: Language.Language) extends Logging {
   import scala.collection.JavaConversions._
@@ -57,6 +58,7 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
         case _: Phase => childrenPreview(element)
         case _: RelatedQuestionRule => childrenPreview(element)
         case _: Text => List(textPreview(element))
+        case link: Link => List(linkPreview(element, link))
         case _: TitledGroup => List(titledGroupPreview(element))
         case _: DateQuestion => List(textPreview(element))
         case _: AddElementRule => Nil
@@ -303,6 +305,10 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
 
     def textPreview(element: ElementWrapper) = {
       div(`class` := "text")(element.title)
+    }
+
+    def linkPreview(element: ElementWrapper, link: Link) = {
+      a(`href` := ElementWrapper.t(link.getUrl()), `target` := "_blank")(element.title)
     }
 
     def formatOid(oid: String): String = {
