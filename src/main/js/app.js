@@ -28,7 +28,7 @@ listApp.run(function ($rootScope, localization) {
 })
 
 var raamitLoaded = $.Deferred()
-if (document.location.hash.indexOf("skipRaamit") > 0) {
+if (document.location.hash.indexOf("skipRaamit") > 0 || $("#siteheader").length > 0) {
   raamitLoaded.resolve()
 }
 $("html").on("oppija-raamit-loaded", function() {
