@@ -42,6 +42,7 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
     val applicationSystem = applicationSystemService.getApplicationSystem(application.getApplicationSystemId)
     val answers: FlatAnswers = HakemusConverter.flattenAnswers(ApplicationUpdater.allAnswersFromApplication(application))
     val form = ElementWrapper.wrapFiltered(applicationSystem.getForm, answers)
+    val addInfos = for(addInfo <- applicationSystem.getAdditionalInformationElements()) yield ElementWrapper.wrapFiltered(addInfo, answers)
 
     def questionsPreview(element: ElementWrapper): List[TypedTag[String]] = {
       element.element match {
@@ -63,6 +64,23 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
         case _ =>
           logger.warn("Ignoring element " + element.element.getType + ": " + element.id)
           Nil
+      }
+    }
+
+    def additionalInformationElementsPreview(): List[TypedTag[String]] = {
+      (for(addInfo <- addInfos) yield additionalInformationElementPreview(addInfo)
+      ).flatten.toList
+    }
+
+    def additionalInformationElementPreview(element: ElementWrapper): List[TypedTag[String]] = {
+      if(element.children.isEmpty) {
+        Nil
+      }
+      else {
+        List(div(`class` := "theme")(
+            hr(),
+            questionsPreview(element)
+        ))
       }
     }
 
@@ -310,6 +328,8 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
         )
         ::
         form.getElementsOfType[Phase].flatMap(questionsPreview)
+        :::
+        additionalInformationElementsPreview()
         :::
         discretionaryAttachmentsInfoPreview()
         :::
