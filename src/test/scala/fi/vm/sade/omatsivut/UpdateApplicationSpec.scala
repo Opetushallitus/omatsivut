@@ -70,5 +70,12 @@ class UpdateApplicationSpec extends HakemusApiSpecification {
         status must_== 403
       }
     }
+
+    "reject update of application that is in post processing" in {
+      setupFixture("postProcessingFailed")
+      modifyHakemus(hakemus2)((hakemus) => hakemus) { hakemus =>
+        status must_== 403
+      }
+    }
   }
 }

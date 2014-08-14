@@ -17,13 +17,12 @@ object HakemusConverter {
 
   def convertToHakemus(haku: Option[Haku])(application: Application) = {
     val koulutusTaustaAnswers: util.Map[String, String] = application.getAnswers.get(educationPhaseKey)
-    val postProcessState = getPostProcessingState(application)
     Hakemus(
       application.getOid,
       application.getReceived.getTime,
       application.getUpdated.getTime,
       application.getState.toString,
-      postProcessState,
+      isPostProcessing(application),
       convertHakuToiveet(application),
       haku,
       EducationBackground(koulutusTaustaAnswers.get(baseEducationKey), !Try {koulutusTaustaAnswers.get("ammatillinenTutkintoSuoritettu").toBoolean}.getOrElse(false)),
@@ -31,11 +30,9 @@ object HakemusConverter {
     )
   }
 
-  private def getPostProcessingState(application: Application): Option[String] = {
-    Option(application.getRedoPostProcess) match {
-      case Some(state) => Some(state.toString)
-      case _ => None
-    }
+  private def isPostProcessing(application: Application): Boolean = {
+    val state = application.getRedoPostProcess
+    !(state == Application.PostProcessingState.DONE || state == null)
   }
 
   private def convertHakuToiveet(application: Application): List[Hakutoive] = {

@@ -162,13 +162,13 @@
       })
 
       describe("post processing -tilassa oleva hakemus", function() {
-        //TODO before(page.applyFixtureAndOpen("submittedApplication"))
+        before(page.applyFixtureAndOpen("postProcessingFailed"))
         it("hakemusta ei voi muokata", function() {
           hakemus2.preferencesForApplication().length.should.equal(0)
         })
 
-        it.skip("seliteteksti näkyy oikein", function() {
-          // TODO
+        it("seliteteksti näkyy oikein", function() {
+          hakemus2.applicationState().should.equal("Hakemuksesi on vielä käsiteltävänä. Jos haluat muuttaa hakutoiveitasi, yritä myöhemmin uudelleen.")
         })
       })
 

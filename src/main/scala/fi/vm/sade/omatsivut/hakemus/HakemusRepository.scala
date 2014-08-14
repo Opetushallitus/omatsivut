@@ -17,7 +17,8 @@ case class HakemusRepository(implicit val appConfig: AppConfig) extends Logging 
     val haku = HakuConverter.convertToHaku(applicationSystem)
     val isActiveHakuPeriod = haku.applicationPeriods.exists(hakuAika => hakuAika.active)
     val stateUpdateable = application.getState == Application.State.ACTIVE || application.getState == Application.State.INCOMPLETE
-    isActiveHakuPeriod && stateUpdateable
+    val inPostProcessing = !(application.getRedoPostProcess() == Application.PostProcessingState.DONE || application.getRedoPostProcess() == null)
+    isActiveHakuPeriod && stateUpdateable && !inPostProcessing
   }
 
   def updateHakemus(applicationSystem: ApplicationSystem)(hakemus: Hakemus, userOid: String)(implicit lang: Language.Language): Option[Hakemus] = {

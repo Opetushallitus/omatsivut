@@ -13,10 +13,12 @@ case class FixtureImporter(implicit val appConfig: AppConfig) {
   def applyOverrides(fixtureName: String = "") {
     fixtureName match {
       case "peruskoulu" => PeruskouluFixture(appConfig).apply
-      case "passiveApplication" => ApplicationStateFixture(appConfig).apply(Application.State.PASSIVE)
-      case "incompleteApplication" => ApplicationStateFixture(appConfig).apply(Application.State.INCOMPLETE)
-      case "submittedApplication" => ApplicationStateFixture(appConfig).apply(Application.State.SUBMITTED)
+      case "passiveApplication" => ApplicationStateFixture(appConfig).setState(Application.State.PASSIVE)
+      case "incompleteApplication" => ApplicationStateFixture(appConfig).setState(Application.State.INCOMPLETE)
+      case "submittedApplication" => ApplicationStateFixture(appConfig).setState(Application.State.SUBMITTED)
       case "kymppiluokka" => KymppiluokkaFixture(appConfig).apply
+      case "postProcessingFailed" => ApplicationStateFixture(appConfig).setPostProcessingState(Application.PostProcessingState.FAILED)
+      case "postProcessingDone" => ApplicationStateFixture(appConfig).setPostProcessingState(Application.PostProcessingState.DONE)
       case _ =>
     }
   }

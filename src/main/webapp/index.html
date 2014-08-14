@@ -39,12 +39,12 @@
                             ({{ timestampLabel() }} <time datetime="{{ application.updated | date:'yyyy-MM-ddTHH:mmZ' }}">{{ formatTimestamp(application.updated) }}</time>)
                         </span>
 
-                        <div class="application-state-message" ng-if="application.state == 'SUBMITTED'">
+                        <div class="application-state-message" ng-if="application.postProcessing || application.state == 'SUBMITTED'">
                             Hakemuksesi on vielä käsiteltävänä. Jos haluat muuttaa hakutoiveitasi, yritä myöhemmin uudelleen.
                         </div>
                     </p>
 
-                    <section class="application-section" ng-if="applicationPeriod.active && (application.state == 'ACTIVE' || application.state == 'INCOMPLETE')">
+                    <section class="application-section" ng-if="applicationPeriod.active && (application.state == 'ACTIVE' || application.state == 'INCOMPLETE') && !application.postProcessing">
                         <header class="application-section-heading">
                             {{ localization('label.preferences') }}
                             <button class="float-right save-btn" ng-disabled="!hasChanged || statusMessageType=='pending' || !isSaveable || isValidating" ng-click="saveApplication()">{{ localization('button.save') }}</button>
