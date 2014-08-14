@@ -52,7 +52,7 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
         case _: TextQuestion => List(textQuestionPreview(element))
         case _: OptionQuestion => List(optionQuestionPreview(element))
         case _: CheckBox => List(checkBoxPreview(element))
-        case _: Theme => List(themePreview(element))
+        case _: Theme => themePreview(element)
         case _: Phase => childrenPreview(element)
         case _: RelatedQuestionRule => childrenPreview(element)
         case _: Text => List(textPreview(element))
@@ -145,8 +145,13 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
       }
     }
 
-    def themePreview(element: ElementWrapper): TypedTag[String] = {
-      div(`class` := "theme")(h2(element.title), childrenPreview(element))
+    def themePreview(element: ElementWrapper): List[TypedTag[String]] = {
+      if(element.children.isEmpty) {
+        Nil
+      }
+      else {
+        List(div(`class` := "theme")(h2(element.title), childrenPreview(element)))
+      }
     }
 
     def childrenPreview(element: ElementWrapper) = {
