@@ -123,7 +123,7 @@ function ApplicationListPage() {
 
       applicationPeriod: function() {
         return getApplicationElement().find(".application-period").children().map(function() {
-          return $(this).text().trim() }
+          return $(this).text().replace(/(\r\n|\n|\r)/gm,"").replace(/\s+/g," ").trim() }
         ).toArray().join(" ")
       },
 
