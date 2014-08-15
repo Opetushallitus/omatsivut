@@ -31,6 +31,37 @@ a {
   margin: 50px auto 100px auto;
 }
 
+.sidebar-column {
+  width: 275px;
+  position: absolute;
+}
+
+.sidebar-menu {
+  font-weight: bold;
+  li {
+    height: 40px;
+    line-height: 40px;
+    background: @menu-background;
+    padding-left: 55px;
+  }
+
+  li.sidebar-menu-top-level {
+    background: white;
+    border-top: 2px solid @menu-background;
+    padding-left: 35px;
+    position: relative;
+    &:before {
+      content: url(../img/arrow-down.png);
+      position: absolute;
+      left: 10px;
+    }
+  }
+}
+
+.content-column {
+  margin-left: 310px;
+}
+
 [ng\:cloak], [ng-cloak], .ng-cloak {
   display: none !important;
 }
