@@ -1,7 +1,6 @@
 package fi.vm.sade.omatsivut.hakemus
 
 import scala.collection.JavaConversions._
-
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
 import fi.vm.sade.haku.oppija.lomake.validation.{ValidationInput, ValidationResult}
@@ -10,6 +9,7 @@ import fi.vm.sade.omatsivut.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.Logging
 import fi.vm.sade.omatsivut.domain._
 import fi.vm.sade.omatsivut.domain.Hakemus._
+import fi.vm.sade.omatsivut.koulutusinformaatio.Liitepyynto
 
 case class ApplicationValidator(implicit val appConfig: AppConfig) extends Logging {
   private val dao = appConfig.springContext.applicationDAO
@@ -20,7 +20,7 @@ case class ApplicationValidator(implicit val appConfig: AppConfig) extends Loggi
     validateHakutoiveetAndAnswers(hakemus, applicationSystem) ++ errorsForUnknownAnswers(applicationSystem, hakemus)
   }
 
-  def validateAndFindQuestions(applicationSystem: ApplicationSystem)(hakemus: Hakemus)(implicit lang: Language.Language): (List[ValidationError], List[QuestionNode]) = {
+  def validateAndFindQuestionsAndAttachments(applicationSystem: ApplicationSystem)(hakemus: Hakemus)(implicit lang: Language.Language): (List[ValidationError], List[QuestionNode], List[Liitepyynto]) = {
     withErrorLogging {
       val validationErrors: List[ValidationError] = validateHakutoiveetAndAnswers(hakemus, applicationSystem)
       val storedApplication = findStoredApplication(hakemus)
@@ -43,7 +43,7 @@ case class ApplicationValidator(implicit val appConfig: AppConfig) extends Loggi
           Nil
         }
       }
-      (validationErrors, questionsPerHakutoive)
+      (validationErrors, questionsPerHakutoive, List())
     } ("Error validating application: " + hakemus.oid)
   }
 

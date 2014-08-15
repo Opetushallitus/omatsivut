@@ -6,12 +6,30 @@ import fi.vm.sade.omatsivut.json.JsonFormats
 import scalaj.http.Http
 import fi.vm.sade.omatsivut.http.DefaultHttpClient
 import fi.vm.sade.omatsivut.Logging
-
+import fi.vm.sade.omatsivut.domain.Language
 
 trait KoulutusInformaatioService {
   def opetuspisteet(asId: String, query: String): List[Opetuspiste]
   def koulutukset(asId: String, opetuspisteId: String, baseEducation: Option[String], vocational: String, uiLang: String): List[Koulutus]
   def koulutus(aoId: String): Option[Koulutus]
+
+  def liitepyynto(aoId: String)(implicit lang: Language.Language): Option[Liitepyynto] = {
+    koulutus(aoId).map(koulutus => Liitepyynto(
+              aoId,
+              koulutus.provider.map(_.name),
+              getAttachmentAddress(koulutus),
+              koulutus.attachmentDeliveryDeadline
+        ))
+  }
+
+  private def getAttachmentAddress(info: Koulutus): Option[Address] = {
+    if(info.attachmentDeliveryAddress.isDefined) {
+      info.attachmentDeliveryAddress
+    }
+    else {
+      info.provider flatMap(_.applicationOffice) flatMap(_.postalAddress )
+    }
+  }
 }
 
 object KoulutusInformaatioService {
@@ -62,4 +80,5 @@ case class RemoteKoulutusService(implicit appConfig: AppConfig) extends Koulutus
       parse(resultString).extract[Option[Koulutus]]
     }("Parsing response failed:\n" + resultString, None)
   }
+
 }

@@ -10,6 +10,7 @@ import org.scalatra.json._
 import org.scalatra.swagger.SwaggerSupportSyntax.OperationBuilder
 import org.scalatra.swagger._
 import org.scalatra.{NotFound, BadRequest, Ok, Forbidden}
+import fi.vm.sade.omatsivut.koulutusinformaatio.Liitepyynto
 
 class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfig) extends OmatSivutServletBase with JacksonJsonSupport with JsonFormats with SwaggerSupport with Authentication {
   override def applicationName = Some("api")
@@ -58,8 +59,8 @@ class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfi
   post("/applications/validate/:oid", operation(validateApplicationsSwagger)) {
     val validate = Serialization.read[Hakemus](request.body)
     val applicationSystem = applicationSystemService.getApplicationSystem(validate.haku.oid)
-    val (errors: List[ValidationError], questions: List[QuestionNode]) = ApplicationValidator().validateAndFindQuestions(applicationSystem)(validate)
-    ValidationResult(errors, questions)
+    val (errors: List[ValidationError], questions: List[QuestionNode], attachments: List[Liitepyynto]) = ApplicationValidator().validateAndFindQuestionsAndAttachments(applicationSystem)(validate)
+    ValidationResult(errors, questions, attachments)
   }
 
   get("/applications/preview/:oid") {
@@ -72,5 +73,5 @@ class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfi
     }
   }
 
-  case class ValidationResult(errors: List[ValidationError], questions: List[QuestionNode])
+  case class ValidationResult(errors: List[ValidationError], questions: List[QuestionNode], attachments: List[Liitepyynto])
 }

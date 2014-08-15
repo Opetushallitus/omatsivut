@@ -17,12 +17,13 @@ import fi.vm.sade.omatsivut.localization.Translations
 import scalatags.Text.TypedTag
 import fi.vm.sade.omatsivut.koulutusinformaatio.Koulutus
 import org.joda.time.DateTime
-import fi.vm.sade.omatsivut.koulutusinformaatio.Address
 import fi.vm.sade.haku.oppija.hakemus.domain.util.ApplicationUtil
 import fi.vm.sade.omatsivut.koulutusinformaatio.Opetuspiste
 import org.joda.time.format.DateTimeFormat
 import fi.vm.sade.omatsivut.koulutusinformaatio.Opetuspiste
 import fi.vm.sade.haku.oppija.lomake.domain.elements.Link
+import fi.vm.sade.omatsivut.koulutusinformaatio.Address
+import fi.vm.sade.omatsivut.koulutusinformaatio.Liitepyynto
 
 case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val language: Language.Language) extends Logging {
   import scala.collection.JavaConversions._
@@ -95,13 +96,13 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
         List(div(`class` := "theme")(
           h2(Translations.getTranslation("applicationPreview", "discretionary")),
           p(Translations.getTranslation("applicationPreview", "discretionary_info")),
-          for (info <- aoInfo.map(koulutusInformaatio.koulutus(_)).flatten) yield attachmentInfoPreview(info)
+          for (info <- aoInfo.map(koulutusInformaatio.liitepyynto(_)).flatten) yield attachmentInfoPreview(info)
         ))
       }
     }
 
     def attachmentsInfoPreview(): List[TypedTag[String]] = {
-      val aoInfos = ApplicationUtil.getHigherEdAttachmentAOIds(application).mapValues(_.map(koulutusInformaatio.koulutus(_)).flatten)
+      val aoInfos = ApplicationUtil.getHigherEdAttachmentAOIds(application).mapValues(_.map(koulutusInformaatio.liitepyynto(_)).flatten)
       if (aoInfos.isEmpty) {
         Nil
       }
@@ -116,25 +117,15 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
       }
     }
 
-    def attachmentInfoPreview(info: Koulutus): List[TypedTag[String]] = {
-      val address = getAttachmentAddress(info)
-      if(address.isDefined) {
+    def attachmentInfoPreview(info: Liitepyynto): List[TypedTag[String]] = {
+      if(info.address.isDefined) {
         List(div(`class` := "group")(
-          elemIfNotEmpty[Opetuspiste](h3(_), info.provider, _.name),
-          attachmentAddressInfoPreview(address.get, info.attachmentDeliveryDeadline )
+          elemIfNotEmptyString(h3(_), info.name),
+          attachmentAddressInfoPreview(info.address.get, info.deadline)
         ))
       }
       else {
         Nil
-      }
-    }
-
-    def getAttachmentAddress(info: Koulutus): Option[Address] = {
-      if(info.attachmentDeliveryAddress.isDefined) {
-        info.attachmentDeliveryAddress
-      }
-      else {
-        info.provider flatMap(_.applicationOffice) flatMap(_.postalAddress )
       }
     }
 
