@@ -382,6 +382,34 @@ button.delete-btn:not(.confirm) {
     margin-top: -17px;
     padding-left: 10px;
   }
+
+  &:last-child.inactive {
+    border-bottom: 1px dashed @border-color;
+  }
+
+  &.inactive {
+    opacity: 0.5;
+    height: 40px;
+    padding-top: 0;
+    padding-bottom: 0;
+    border-bottom: 1px dashed @border-color;
+
+    .item-content:first-child {
+      display: inline-block;
+    }
+
+    button, .item-content {
+      display: none;
+      height: 40px;
+      line-height: 40px;
+    }
+
+    .row-number {
+      font-size: 18px;
+      padding-left: 7px;
+      display: block;
+    }
+  }
 }
 
 .question-group-indent {
