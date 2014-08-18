@@ -753,6 +753,7 @@
           'Koulutus-id-aoIdentifier': '028',
           'Koulutus-id-athlete': 'false',
           'Koulutus-educationDegree': '32',
+          'Koulutus-id-attachmentgroups': '',
           'Koulutus-id': '1.2.246.562.14.2014040912353139913320',
           'Opetuspiste-id-parents': '',
           'Koulutus-id-educationcode': 'koulutus_039996' }

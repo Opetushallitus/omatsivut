@@ -40,11 +40,39 @@ Hakutoive.prototype = {
     this.data["Koulutus-id-vocational"] = toString(koulutus.vocational)
     this.data["Koulutus-id-educationcode"] = toString(koulutus.educationCodeUri)
     this.data["Koulutus-id-athlete"] = toString(koulutus.athleteEducation)
+    this.data["Koulutus-id-attachmentgroups"] = this.getAttachmentGroups(koulutus)
     this.isModified = true
     this.setErrors([])
     function toString(x) {
       return (x==null) ? "" : x.toString()
     }
+  },
+
+  getAttachmentGroups: function(koulutus) {
+    var attachmentGroups = [];
+    for (var i = 0; i < koulutus.organizationGroups.length; i++) {
+      var group = organizationGroups[i];
+      var groupTypes = group.groupTypes;
+      var isAoGroup = false;
+      for (var g = 0; g < groupTypes.length; j++) {
+        if (groupTypes[g] === 'hakukohde') {
+            isAoGroup = true;
+            break;
+        }
+      }
+      if (!isAoGroup) { continue; }
+      var usages = group.usageGroups;
+      var isAttachmentGroup = false;
+      for (var u = 0; u < usages.length; j++) {
+        if (usages[u] == 'hakukohde_liiteosoite') {
+          isAttachmentGroup = true;
+          break;
+        }
+      }
+      if (!isAttachmentGroup) { continue; }
+      attachmentGroups.push(group.oid);
+    }
+    return attachmentGroups.join(",")
   },
 
   hasOpetuspiste: function() {

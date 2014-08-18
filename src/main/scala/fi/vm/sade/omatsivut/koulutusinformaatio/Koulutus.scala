@@ -13,6 +13,11 @@ case class Koulutus(  id: String,
                       vocational: Boolean,
                       educationCodeUri: String,
                       attachmentDeliveryDeadline: Option[Long],
-                      attachmentDeliveryAddress: Option[Address])
+                      attachmentDeliveryAddress: Option[Address],
+                      organizationGroups: List[OrganizationGroup]
+)
 
-
+case class OrganizationGroup(  oid: String,
+                               usageGroups: List[String],
+                               groupTypes: List[String]
+)
