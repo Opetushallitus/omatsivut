@@ -254,7 +254,6 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
       }.toList
     }
 
-    // TODO kielistys
     def gradeGridPreview(gridElement: ElementWrapper) = {
       table(`class` := "gradegrid")(
         thead(
