@@ -1,10 +1,13 @@
 package fi.vm.sade.omatsivut
 
+import java.util.concurrent.Executors
+
+import com.typesafe.config.Config
+import fi.vm.sade.omatsivut.auditlog.RunnableLogger
 import fi.vm.sade.omatsivut.fixtures.FixtureImporter
 import fi.vm.sade.omatsivut.mongo.{EmbeddedMongo, MongoServer}
 import fi.vm.sade.omatsivut.security.{AuthenticationContext, ProductionAuthenticationContext, TestAuthenticationContext}
 import org.apache.activemq.broker.BrokerService
-import com.typesafe.config.Config
 
 object AppConfig extends Logging {
   def fromSystemProperty: AppConfig = {
@@ -41,14 +44,14 @@ object AppConfig extends Logging {
 
     private var activemqOpt: Option[BrokerService] = None
 
-    override def start {
+    override def onStart {
       val activemq = new BrokerService()
       activemq.addConnector("tcp://localhost:61616")
       activemq.start()
       activemqOpt = Some(activemq)
     }
 
-    override def stop {
+    override def onStop {
       activemqOpt.foreach(_.stop)
       activemqOpt = None
     }
@@ -65,7 +68,7 @@ object AppConfig extends Logging {
 
     private var mongo: Option[MongoServer] = None
 
-    override def start {
+    override def onStart {
       mongo = EmbeddedMongo.start
       try {
         FixtureImporter()(this).applyFixtures()
@@ -75,7 +78,7 @@ object AppConfig extends Logging {
           throw e
       }
     }
-    override def stop {
+    override def onStop {
       mongo.foreach(_.stop)
       mongo = None
     }
@@ -114,11 +117,21 @@ object AppConfig extends Logging {
     def springConfiguration: OmatSivutConfiguration
     lazy val springContext = new OmatSivutSpringContext(OmatSivutSpringContext.createApplicationContext(this))
     lazy val authContext: AuthenticationContext = if (usesFakeAuthentication) new TestAuthenticationContext else new ProductionAuthenticationContext
+    lazy val auditLogger = new RunnableLogger(this)
+    private lazy val pool = Executors.newSingleThreadExecutor()
 
     def usesFakeAuthentication: Boolean = false
     def usesLocalDatabase = false
-    def start {}
-    def stop {}
+    final def start {
+      pool.execute(auditLogger)
+      onStart
+    }
+    final def stop {
+      pool.shutdown()
+      onStop
+    }
+    def onStart {}
+    def onStop {}
     def withConfig[T](f: (AppConfig => T)): T = {
       start
       try {
