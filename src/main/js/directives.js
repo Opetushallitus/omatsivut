@@ -65,11 +65,11 @@ module.exports = function(listApp) {
           items.eq(index).addClass("saved")
         })
 
-        $element.find(".timestamp").addClass("saved")
+        $element.find(".timestamp-row").addClass("saved")
 
         window.setTimeout(function() {
           items.removeClass("saved")
-          $(".timestamp").removeClass("saved")
+          $(".timestamp-row").removeClass("saved")
         }, 3000)
       })
     }

@@ -44,11 +44,13 @@
                         </div>
                     </p>
                     <p>
-                        <i class="icon-doc-text"></i>
-                        <a class="preview" ng-href="/omatsivut/api/applications/preview/{{application.oid}}" ng-class="{disabled: hasChanged || statusMessageType=='pending' || isValidating}" target="_blank">{{ localization('button.showApplication') }}</a>
-                        <span class="timestamp" ng-if="applicationPeriod.active" ng-class="{disabled: hasChanged || statusMessageType=='pending' || isValidating}">
-                            ({{ timestampLabel() }} <time datetime="{{ application.updated | date:'yyyy-MM-ddTHH:mmZ' }}">{{ formatTimestamp(application.updated) }}</time>)
-                        </span>
+                        <div class="timestamp-row">
+                            <i class="icon-doc-text"></i>
+                            <a class="preview" ng-href="/omatsivut/api/applications/preview/{{application.oid}}" ng-class="{disabled: hasChanged || statusMessageType=='pending' || isValidating}" target="_blank">{{ localization('button.showApplication') }}</a>
+                            <span class="timestamp" ng-if="applicationPeriod.active" ng-class="{disabled: hasChanged || statusMessageType=='pending' || isValidating}">
+                                ({{ timestampLabel() }} <time datetime="{{ application.updated | date:'yyyy-MM-ddTHH:mmZ' }}">{{ formatTimestamp(application.updated) }}</time>)
+                            </span>
+                        </div>
 
                         <div class="application-state-message" ng-if="application.postProcessing || application.state == 'SUBMITTED'">
                             Hakemuksesi on vielä käsiteltävänä. Jos haluat muuttaa hakutoiveitasi, yritä myöhemmin uudelleen.
