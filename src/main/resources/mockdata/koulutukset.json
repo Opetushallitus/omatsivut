@@ -234,5 +234,32 @@
       "vocational":false,
       "educationCodeUri":"koulutus_671103"
     }
+  ],
+  "1.2.246.562.10.14842710486": [
+    {
+      "id":"1.2.246.562.20.42250016427",
+      "name":"Sosionomi (AMK), monimuotototeutus",
+      "aoIdentifier":null,
+      "educationDegree":"koulutusasteoph2002_62",
+      "provider":{
+        "id":"1.2.246.562.10.14842710486",
+        "name":"Diakonia-ammattikorkeakoulu, Järvenpään toimipiste",
+        "applicationOffice":{
+          "postalAddress":{
+            "streetAddress":"Järvenpääntie 640",
+            "postalCode":"04400",
+            "postOffice":"JÄRVENPÄÄ"
+          }
+        }
+      },
+      "childLONames":[],
+      "sora":false,
+      "teachingLanguages":["FI"],
+      "athleteEducation":false,
+      "kaksoistutkinto":false,
+      "vocational":false,
+      "educationCodeUri":"koulutus_671201",
+      "organizationGroups":[{"oid":"1.2.246.562.28.90373737623","usageGroups":["hakukohde_liiteosoite"],"groupTypes":["hakukohde"]}]
+    }
   ]
 }
