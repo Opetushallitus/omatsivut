@@ -4,7 +4,7 @@ require('angular-animate');
 _ = require("underscore");
 require("../lib/ui-bootstrap-custom-tpls-0.10.0.min.js");
 window.moment = require("moment");
-require("moment/locale/fi.js");
+require("../lib/moment-locale-fi.js");
 require("moment/locale/sv.js");
 require("moment/locale/en-gb.js");
 
