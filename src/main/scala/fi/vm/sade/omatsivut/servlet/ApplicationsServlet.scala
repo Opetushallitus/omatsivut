@@ -59,8 +59,8 @@ class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfi
   post("/applications/validate/:oid", operation(validateApplicationsSwagger)) {
     val validate = Serialization.read[Hakemus](request.body)
     val applicationSystem = applicationSystemService.getApplicationSystem(validate.haku.oid)
-    val (errors: List[ValidationError], questions: List[QuestionNode], attachments: List[Liitepyynto]) = ApplicationValidator().validateAndFindQuestionsAndAttachments(applicationSystem)(validate)
-    ValidationResult(errors, questions, attachments)
+    val (errors: List[ValidationError], questions: List[QuestionNode], discretionaryAttachments: List[Liitepyynto], higherEducationAttachments: Map[String, List[Liitepyynto]]) = ApplicationValidator().validateAndFindQuestionsAndAttachments(applicationSystem)(validate)
+    ValidationResult(errors, questions, discretionaryAttachments, higherEducationAttachments)
   }
 
   get("/applications/preview/:oid") {
@@ -73,5 +73,5 @@ class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfi
     }
   }
 
-  case class ValidationResult(errors: List[ValidationError], questions: List[QuestionNode], attachments: List[Liitepyynto])
+  case class ValidationResult(errors: List[ValidationError], questions: List[QuestionNode], discretionaryAttachments: List[Liitepyynto], higherEducationAttachments: Map[String, List[Liitepyynto]])
 }
