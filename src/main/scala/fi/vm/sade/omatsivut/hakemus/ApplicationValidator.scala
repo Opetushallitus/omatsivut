@@ -17,13 +17,14 @@ case class ApplicationValidator(implicit val appConfig: AppConfig) extends Loggi
   val preferencePhaseKey = OppijaConstants.PHASE_APPLICATION_OPTIONS
 
   def validate(applicationSystem: ApplicationSystem)(hakemus: Hakemus)(implicit lang: Language.Language): List[ValidationError] = {
-    validateHakutoiveetAndAnswers(hakemus, applicationSystem) ++ errorsForUnknownAnswers(applicationSystem, hakemus)
+    val storedApplication = HakemusRepository().findStoredApplication(hakemus)
+    validateHakutoiveetAndAnswers(hakemus, storedApplication, applicationSystem) ++ errorsForUnknownAnswers(applicationSystem, hakemus)
   }
 
   def validateAndFindQuestionsAndAttachments(applicationSystem: ApplicationSystem)(hakemus: Hakemus)(implicit lang: Language.Language): (List[ValidationError], List[QuestionNode], List[Liitepyynto]) = {
     withErrorLogging {
-      val validationErrors: List[ValidationError] = validateHakutoiveetAndAnswers(hakemus, applicationSystem)
       val storedApplication = HakemusRepository().findStoredApplication(hakemus)
+      val validationErrors: List[ValidationError] = validateHakutoiveetAndAnswers(hakemus, storedApplication, applicationSystem)
       val filteredForm: ElementWrapper = ElementWrapper.wrapFiltered(applicationSystem.getForm, HakemusConverter.flattenAnswers(ApplicationUpdater.getAllAnswersForApplication(applicationSystem, storedApplication, hakemus)))
 
       val questionsPerHakutoive: List[QuestionNode] = hakemus.hakutoiveet.zipWithIndex.flatMap { case (hakutoive, index) =>
@@ -51,15 +52,13 @@ case class ApplicationValidator(implicit val appConfig: AppConfig) extends Loggi
     HakutoiveetConverter.answersContainHakutoive(application.getAnswers.get(preferencePhaseKey).toMap, hakutoive)
   }
 
-  private def validateHakutoiveetAndAnswers(hakemus: Hakemus, applicationSystem: ApplicationSystem)(implicit lang: Language.Language): List[ValidationError] = {
-    val application: Application = findStoredApplication(hakemus) // <- needs to be fetched here because is mutated below
-
-    if (isIncomplete(application)) {
-      val errorsBeforeUpdate = validateAndConvertErrors(application, applicationSystem)
-      val errorsAfterUpdate: List[ValidationError] = updateAndValidate(hakemus, applicationSystem, application)
+  private def validateHakutoiveetAndAnswers(hakemus: Hakemus, storedApplication: Application, applicationSystem: ApplicationSystem)(implicit lang: Language.Language): List[ValidationError] = {
+    if (isIncomplete(storedApplication)) {
+      val errorsBeforeUpdate = validateAndConvertErrors(storedApplication, applicationSystem)
+      val errorsAfterUpdate: List[ValidationError] = updateAndValidate(hakemus, applicationSystem, storedApplication.clone())
       errorsAfterUpdate.filter(!errorsBeforeUpdate.contains(_))
     } else {
-      updateAndValidate(hakemus, applicationSystem, application)
+      updateAndValidate(hakemus, applicationSystem, storedApplication.clone())
     }
   }
 
