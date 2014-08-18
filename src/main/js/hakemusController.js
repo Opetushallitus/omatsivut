@@ -26,8 +26,8 @@ module.exports = function(listApp) {
     }
 
     $scope.formatDateRange = function(range) {
-      var start = moment(range.start).format('ll').replace(/,/g, "")
-      var end = moment(range.end).format('ll').replace(/,/g, "")
+      var start = moment(range.start).format('LL').replace(/,/g, "")
+      var end = moment(range.end).format('LL').replace(/,/g, "")
       return _.unique([start, end]).join(" - ")
     }
 
