@@ -20,8 +20,6 @@
         </div>
         <div id="appRoot" ng-controller="listController" class="content-column">
             <h1>{{ localization('title.omatHakemukset') }}</h1>
-            <a href="login" target="_self">Kirjaudu sisään</a>
-            <a href="logout" target="_self">Kirjaudu ulos</a>
 
             <div role="status" class="application-list-status" ng-bind="applicationStatusMessage" ng-class="applicationStatusMessageType" ng-cloak ng-show="applicationStatusMessage.length > 0">
             </div>
