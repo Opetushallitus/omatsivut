@@ -37,6 +37,14 @@ case class HakemusRepository(implicit val appConfig: AppConfig) extends Logging 
     }
   }
 
+  def findStoredApplication(hakemus: Hakemus): Application = {
+    val applications = dao.find(new Application().setOid(hakemus.oid)).toList
+    if (applications.size > 1) throw new RuntimeException("Too many applications for oid " + hakemus.oid)
+    if (applications.size == 0) throw new RuntimeException("Application not found for oid " + hakemus.oid)
+    val application = applications.head
+    application
+  }
+
   def fetchHakemukset(personOid: String)(implicit lang: Language.Language): List[Hakemus] = {
     val applicationJavaObjects: List[Application] = dao.find(new Application().setPersonOid(personOid)).toList
     applicationJavaObjects.filter{

@@ -23,7 +23,7 @@ case class ApplicationValidator(implicit val appConfig: AppConfig) extends Loggi
   def validateAndFindQuestionsAndAttachments(applicationSystem: ApplicationSystem)(hakemus: Hakemus)(implicit lang: Language.Language): (List[ValidationError], List[QuestionNode], List[Liitepyynto]) = {
     withErrorLogging {
       val validationErrors: List[ValidationError] = validateHakutoiveetAndAnswers(hakemus, applicationSystem)
-      val storedApplication = findStoredApplication(hakemus)
+      val storedApplication = HakemusRepository().findStoredApplication(hakemus)
       val filteredForm: ElementWrapper = ElementWrapper.wrapFiltered(applicationSystem.getForm, HakemusConverter.flattenAnswers(ApplicationUpdater.getAllAnswersForApplication(applicationSystem, storedApplication, hakemus)))
 
       val questionsPerHakutoive: List[QuestionNode] = hakemus.hakutoiveet.zipWithIndex.flatMap { case (hakutoive, index) =>
@@ -78,7 +78,7 @@ case class ApplicationValidator(implicit val appConfig: AppConfig) extends Loggi
   }
 
   private def errorsForUnknownAnswers(applicationSystem: ApplicationSystem, hakemus: Hakemus)(implicit lang: Language.Language): List[ValidationError] = {
-    val application = findStoredApplication(hakemus)
+    val application = HakemusRepository().findStoredApplication(hakemus)
     val allAnswers: Answers = ApplicationUpdater.getAllAnswersForApplication(applicationSystem, application, hakemus)
     val acceptedAnswerIds: Seq[AnswerId] = AddedQuestionFinder.findAddedQuestions(applicationSystem, allAnswers, Hakemus.emptyAnswers).flatMap(_.answerIds).toList
 
@@ -94,14 +94,6 @@ case class ApplicationValidator(implicit val appConfig: AppConfig) extends Loggi
       .map{ case (phaseId, questionId, answer) =>
         ValidationError(questionId, "unknown answer id")
       }
-  }
-
-  private def findStoredApplication(hakemus: Hakemus): Application = {
-    val applications = dao.find(new Application().setOid(hakemus.oid)).toList
-    if (applications.size > 1) throw new RuntimeException("Too many applications for oid " + hakemus.oid)
-    if (applications.size == 0) throw new RuntimeException("Application not found for oid " + hakemus.oid)
-    val application = applications.head
-    application
   }
 
   private def convertoToValidationErrors(validationResult: ValidationResult)(implicit lang: Language.Language) : List[ValidationError] = {
