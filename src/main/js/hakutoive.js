@@ -50,27 +50,29 @@ Hakutoive.prototype = {
 
   getAttachmentGroups: function(koulutus) {
     var attachmentGroups = [];
-    for (var i = 0; i < koulutus.organizationGroups.length; i++) {
-      var group = organizationGroups[i];
-      var groupTypes = group.groupTypes;
-      var isAoGroup = false;
-      for (var g = 0; g < groupTypes.length; j++) {
-        if (groupTypes[g] === 'hakukohde') {
-            isAoGroup = true;
+    if (koulutus.organizationGroups instanceof Array) {
+      for (var i = 0; i < koulutus.organizationGroups.length; i++) {
+        var group = koulutus.organizationGroups[i];
+        var groupTypes = group.groupTypes;
+        var isAoGroup = false;
+        for (var g = 0; g < groupTypes.length; j++) {
+          if (groupTypes[g] === 'hakukohde') {
+              isAoGroup = true;
+              break;
+          }
+        }
+        if (!isAoGroup) { continue; }
+        var usages = group.usageGroups;
+        var isAttachmentGroup = false;
+        for (var u = 0; u < usages.length; j++) {
+          if (usages[u] == 'hakukohde_liiteosoite') {
+            isAttachmentGroup = true;
             break;
+          }
         }
+        if (!isAttachmentGroup) { continue; }
+        attachmentGroups.push(group.oid);
       }
-      if (!isAoGroup) { continue; }
-      var usages = group.usageGroups;
-      var isAttachmentGroup = false;
-      for (var u = 0; u < usages.length; j++) {
-        if (usages[u] == 'hakukohde_liiteosoite') {
-          isAttachmentGroup = true;
-          break;
-        }
-      }
-      if (!isAttachmentGroup) { continue; }
-      attachmentGroups.push(group.oid);
     }
     return attachmentGroups.join(",")
   },
