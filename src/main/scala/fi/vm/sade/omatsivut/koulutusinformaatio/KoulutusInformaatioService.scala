@@ -13,13 +13,14 @@ trait KoulutusInformaatioService {
   def koulutukset(asId: String, opetuspisteId: String, baseEducation: Option[String], vocational: String, uiLang: String): List[Koulutus]
   def koulutus(aoId: String): Option[Koulutus]
 
-  def liitepyynto(aoId: String)(implicit lang: Language.Language): Option[Liitepyynto] = {
-    koulutus(aoId).map(koulutus => Liitepyynto(
+  def liitepyynto(aoId: String)(implicit lang: Language.Language): Liitepyynto = {
+    val liitepyynto = koulutus(aoId).map(koulutus => Liitepyynto(
               aoId,
               koulutus.provider.map(_.name),
               getAttachmentAddress(koulutus),
               koulutus.attachmentDeliveryDeadline
         ))
+    liitepyynto.getOrElse(Liitepyynto(aoId))
   }
 
   private def getAttachmentAddress(info: Koulutus): Option[Address] = {

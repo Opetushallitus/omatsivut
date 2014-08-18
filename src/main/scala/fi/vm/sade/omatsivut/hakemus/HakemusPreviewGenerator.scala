@@ -96,13 +96,13 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
         List(div(`class` := "theme")(
           h2(Translations.getTranslation("applicationPreview", "discretionary")),
           p(Translations.getTranslation("applicationPreview", "discretionary_info")),
-          for (info <- aoInfo.map(koulutusInformaatio.liitepyynto(_)).flatten) yield attachmentInfoPreview(info)
+          for (info <- aoInfo.map(koulutusInformaatio.liitepyynto(_))) yield attachmentInfoPreview(info)
         ))
       }
     }
 
     def attachmentsInfoPreview(): List[TypedTag[String]] = {
-      val aoInfos = ApplicationUtil.getHigherEdAttachmentAOIds(application).mapValues(_.map(koulutusInformaatio.liitepyynto(_)).flatten)
+      val aoInfos = ApplicationUtil.getHigherEdAttachmentAOIds(application).mapValues(_.map(koulutusInformaatio.liitepyynto(_)))
       if (aoInfos.isEmpty) {
         Nil
       }
