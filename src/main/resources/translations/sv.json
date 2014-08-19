@@ -4,33 +4,33 @@
   },
 
   "label": {
-    "applicationPeriodEnds": "Slutan av ansökperioden",
-    "applicationPeriodEnded": "Ansökperioden har slutats.",
+    "applicationPeriodEnds": "Ansökningstiden slutar",
+    "applicationPeriodEnded": "Ansökan har avslutats",
     "applicationReceived": "Ansökningsblankett inlämnad",
-    "applicationUpdated": "Senast bearbetads",
+    "applicationUpdated": "Senast bearbetad",
     "preferences": "Ansökningsönskemål",
     "location": "Undervisningsställe",
     "location_university": "Undervisningsställe",
     "education": "Utbildning",
     "education_university": "Utbildning",
-    "chooseLocation": "Välja först undervisnigsställe",
-    "resultsPublishedDate": "Haun tulokset julkaistaan"
+    "chooseLocation": "Välj först undervisnigsställe",
+    "resultsPublishedDate": "Resultatet av antagningen publiceras"
   },
 
   "button": {
     "save": "Spara ändringar",
-    "sortUp_ariaLabel": "Lyft ansökningsönskemål",
-    "sortDown_ariaLabel": "Sänk ansökningsönskemål",
+    "sortUp_ariaLabel": "Flytta ansökningsönskemålet uppåt",
+    "sortDown_ariaLabel": "Flytta ansökningsönskemålet neråt",
     "delete_confirm": "Ta bort",
-    "delete_ariaLabel": "Ta bort ansökningsönskemål med väljä det hät två gånger",
+    "delete_ariaLabel": "Ta bort ansökningsönskemålet genom att dubbelklicka",
     "logout": "Logga ut",
     "showApplication": "Visa ansökningsblankett"
   },
 
   "message": {
     "loadingApplications": "Laddar ansökningsblanketter…",
-    "noApplications": "Du har inga ansökningsblanketter att bearbeta.",
-    "validationOk": "Kom ihåg att spar ansökan.",
+    "noApplications": "Du har inga ansökningsblanketter att bearbeta. Sök utbildningar med ordsökningen och fyll i ansökningblanketten. Som identifierad användare kan du bearbeta din ansökan på denna sida under ansökningtiden.",
+    "validationOk": "Kom ihåg att spara ansökan.",
     "changesSaved": "Alla ändringar sparade.",
     "yes": "Ja",
     "no": "Nej"
@@ -40,7 +40,7 @@
     "sessionExpired": "Sessionen har föråldrats. Var vänlig och logga in på nytt.",
     "loadingFailed": "Laddning av uppgifter misslyckades. Försök på nytt senare.",
     "loadingFailed_notLoggedIn": "Kunde inte ladda informationen: du har inte loggat in.",
-    "validationFailed": "Fylla in alla fält.",
+    "validationFailed": "Fyll i alla fält.",
     "validationFailed_httpError": "Kunde inte ladda informationen. Var vänlig och försök igen senare.",
     "saveFailed": "Sparandet misslyckades. Försök på nytt senare.",
     "saveFailed_sessionExpired": "Sparandet misslyckades för att sessionen har föråldrats. Logga in på nytt.",
@@ -50,13 +50,13 @@
 
   "errorPage": {
     "noApplicationsFound": {
-      "title": "Inga ansökningsblanketter finns med din personbeteckningen",
-      "text": "Identifiering lyckades men inga ansöka finns med din personbeteckningen."
+      "title": "Inga ansökningsblanketter hittades med din personbeteckning.",
+      "text": "Identifiering lyckades men inga ansöka finns med din personbeteckning. Sök utbildningar med ordsökningen och fyll i ansökningblanketten. Som identifierad användare kan du bearbeta din ansökan på denna sida under ansökningtiden."
     }
   },
 
   "applicationPreview": {
-    "received": "Mottagits",
+    "received": "Ansökan har mottagits",
     "applicationId": "Ansökans nummer",
     "discretionary": "Antagning på basis av utbildningsanordnarens prövning",
     "discretionary_info": "Du har sökt genom antagning på basis av utbildningsanordnarens prövning. Skicka en utskrift av din ansökan samt de bilagor och/eller betyg mm. som du hänvisar till inom ansökningstiden till adresserna nedan.",
@@ -72,8 +72,8 @@
     "preferences_questions": "Frågor",
     "subject": "Ämne",
     "grade": "Betyg",
-    "mutual_subject": "Gemensam ämne",
+    "mutual_subject": "Gemensamt ämne",
     "optional_subject": "Valfritt ämne",
-    "second_optional_subject": "Andra valfritt ämne"
+    "second_optional_subject": "Det andra valfria ämnet"
   }
 }
