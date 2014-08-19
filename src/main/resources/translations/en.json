@@ -11,25 +11,25 @@
     "preferences": "Study programme choices",
     "location": "Location",
     "location_university": "Location",
-    "education": "Education",
-    "education_university": "Education",
+    "education": "Study programme",
+    "education_university": "Study programme",
     "chooseLocation": "First choose location",
     "resultsPublishedDate": "Results will be published"
   },
 
   "button": {
     "save": "Save changes",
-    "sortUp_ariaLabel": "Move your choice up",
-    "sortDown_ariaLabel": "Move your choice down",
+    "sortUp_ariaLabel": "Move your study program choice to a higher priority",
+    "sortDown_ariaLabel": "Move your study program choice to a lower priority",
     "delete_confirm": "Delete",
-    "delete_ariaLabel": "Remove your choice by doubleclick",
+    "delete_ariaLabel": "Remove your choice by doubleclicking",
     "logout": "Log out",
-    "showApplication": "Show application"
+    "showApplication": "Show application form"
   },
 
   "message": {
-    "loadingApplications": "Loading applications...",
-    "noApplications": "You don't have any applications that can be edited.",
+    "loadingApplications": "Loading application forms...",
+    "noApplications": "You don't have any applications that can be edited. Find study options with the search engine and fill in the application form. As an identified user you can edit your application form on this page during the application period.",
     "validationOk": "Do not forget to save the changes",
     "changesSaved": "All changes saved.",
     "yes": "Yes",
@@ -51,29 +51,29 @@
   "errorPage": {
     "noApplicationsFound": {
       "title": "No applications found",
-      "text": "You have logged in successfully, but there are no applications for your social security number."
+      "text": "You have logged in successfully, but there are no application forms found with your personal identity code. Find study options with the search engine and fill in the application form. As an identified user you can edit your application form on this page during the application period.",
     }
   },
 
   "applicationPreview": {
     "received": "Received",
-    "applicationId": "Application id",
-    "discretionary": "Discretionary application",
-    "discretionary_info": "You have applied discretionarily. Send the print out of the application with attachments to addresses given below.",
-    "attachments_deadline": "Attachment sending deadline",
-    "attachments": "Attachements",
-    "attachments_info_yo": "Send yo attachments to addresses given below.",
-    "attachments_info_am": "Send am attachments to addresses given below.",
-    "attachments_info_amt": "Send amt attachments to addresses given below.",
-    "attachments_info_kk": "Send kk attachments to addresses given below.",
-    "attachments_info_ulk": "Send ulk attachments to addresses given below.",
-    "attachments_info_avoin": "Send avoin attachments to addresses given below.",
-    "attachments_info_muu": "Send other attachments to addresses given below.",
+    "applicationId": "Application number",
+    "discretionary": "Discretionary admission",
+    "discretionary_info": "You have applied through discretionary admission. Send a printed copy of the application form with attachments to the addresses given below during the application period.",
+    "attachments_deadline": "Deadline for submitting the attachments",
+    "attachments": "Attachments",
+    "attachments_info_yo": "Send a copy of your matriculation examination certificate to the addresses given below.",
+    "attachments_info_am": "Send a copy of your vocational upper secondary qualification certificate to the addresses given below.",
+    "attachments_info_amt": "Send a copy of your further vocational qualification certificate to the addresses given below.",
+    "attachments_info_kk": "Send a copy of your bachelor's or master's degree certificate to the addresses given below.",
+    "attachments_info_ulk": "Send a copy of your foreign qualification certificate to the addresses given below.",
+    "attachments_info_avoin": "Send a copy of your open university certificates to the addresses given below.",
+    "attachments_info_muu": "Send a copy of your other certificates to the addresses given below.",
     "preferences_questions": "Questions",
     "subject": "Subject",
     "grade": "Grade",
-    "mutual_subject": "Mutual subject",
-    "optional_subject": "Optional suject",
-    "second_optional_subject": "Second optional subject"
+    "mutual_subject": "A subject common to all students",
+    "optional_subject": "An optional subject",
+    "second_optional_subject": "Another optional subject"
   }
 }
