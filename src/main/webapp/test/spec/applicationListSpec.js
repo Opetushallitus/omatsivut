@@ -32,7 +32,7 @@
     describe("jos käyttäjällä ei ole hakemuksia", function() {
 
       it("näytetään ilmoitus", function() {
-        expect(page.listStatusInfo()).to.equal('Sinulla ei ole hakemuksia, joita on mahdollista muokata.' )
+        expect(page.listStatusInfo()).to.equal('Sinulla ei ole hakemuksia, joita on mahdollista muokata. Etsi koulutukset sanahaulla, ja täytä hakulomake. Tunnistautuneena voit tällä sivulla muokata hakemustasi hakuaikana.' )
       })
     })
   })
