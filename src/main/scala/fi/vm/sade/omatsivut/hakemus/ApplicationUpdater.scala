@@ -14,22 +14,26 @@ import fi.vm.sade.omatsivut.domain.Language
 object ApplicationUpdater {
   val preferencePhaseKey = OppijaConstants.PHASE_APPLICATION_OPTIONS
 
-  def update(applicationSystem: ApplicationSystem)(application: Application, hakemus: Hakemus)(implicit lang: Language.Language) {
+  /**
+   * NOTE this method mutates the application, so call with application.clone(), if it is not wanted.
+   */
+  def update(applicationSystem: ApplicationSystem)(application: Application, hakemus: Hakemus)(implicit lang: Language.Language) = {
     val updatedAnswers = getUpdatedAnswersForApplication(applicationSystem)(application, hakemus)
     updatedAnswers.foreach { case (phaseId, phaseAnswers) =>
       application.addVaiheenVastaukset(phaseId, phaseAnswers)
     }
     application.setUpdated(new Date(hakemus.updated))
+    application
   }
 
-  def getUpdatedAnswersForApplication(applicationSystem: ApplicationSystem)(application: Application, hakemus: Hakemus)(implicit lang: Language.Language): Answers = {
+  private def getUpdatedAnswersForApplication(applicationSystem: ApplicationSystem)(application: Application, hakemus: Hakemus)(implicit lang: Language.Language): Answers = {
     val allAnswers = getAllUpdatedAnswersForApplication(applicationSystem)(application, hakemus)
     val removedAnswerIds = getRemovedAnswerIds(applicationSystem, application, hakemus)
 
     applyHiddenValues(applicationSystem)(pruneOrphanedAnswers(removedAnswerIds, allAnswers))
   }
 
-  def applyHiddenValues(applicationSystem: ApplicationSystem)(allAnswers: Answers): Answers = {
+  private def applyHiddenValues(applicationSystem: ApplicationSystem)(allAnswers: Answers): Answers = {
     val vals: Set[(QuestionId, String)] = FormQuestionFinder.findHiddenValues(ElementWrapper.wrapFiltered(applicationSystem.getForm, HakemusConverter.flattenAnswers(allAnswers)))
     vals.foldLeft(allAnswers) { case (answers: Answers, (question: QuestionId, answer: String)) =>
         updateSingleAnswer(answers, question, answer)

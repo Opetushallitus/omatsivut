@@ -25,7 +25,7 @@ case class ApplicationValidator(implicit val appConfig: AppConfig) extends Loggi
     withErrorLogging {
       val storedApplication = HakemusRepository().findStoredApplication(hakemus)
       val validationErrors: List[ValidationError] = validateHakutoiveetAndAnswers(hakemus, storedApplication, applicationSystem)
-      val filteredForm: ElementWrapper = ElementWrapper.wrapFiltered(applicationSystem.getForm, HakemusConverter.flattenAnswers(ApplicationUpdater.getAllAnswersForApplication(applicationSystem, storedApplication, hakemus)))
+      val filteredForm: ElementWrapper = ElementWrapper.wrapFiltered(applicationSystem.getForm, HakemusConverter.flattenAnswers(ApplicationUpdater.getAllAnswersForApplication(applicationSystem, storedApplication.clone(), hakemus)))
 
       val questionsPerHakutoive: List[QuestionNode] = hakemus.hakutoiveet.zipWithIndex.flatMap { case (hakutoive, index) =>
         if (!applicationContains(storedApplication)(hakutoive)) {
