@@ -21,7 +21,7 @@ case class ApplicationValidator(implicit val appConfig: AppConfig) extends Loggi
     validateHakutoiveetAndAnswers(hakemus, storedApplication, applicationSystem) ++ errorsForUnknownAnswers(applicationSystem, hakemus)
   }
 
-  def validateAndFindQuestionsAndAttachments(applicationSystem: ApplicationSystem)(hakemus: Hakemus)(implicit lang: Language.Language): (List[ValidationError], List[QuestionNode], List[Liitepyynto], Map[String, List[Liitepyynto]]) = {
+  def validateAndFindQuestionsAndAttachments(applicationSystem: ApplicationSystem)(hakemus: Hakemus)(implicit lang: Language.Language): (List[ValidationError], List[QuestionNode]) = {
     withErrorLogging {
       val storedApplication = HakemusRepository().findStoredApplication(hakemus)
       val validationErrors: List[ValidationError] = validateHakutoiveetAndAnswers(hakemus, storedApplication, applicationSystem)
@@ -45,10 +45,7 @@ case class ApplicationValidator(implicit val appConfig: AppConfig) extends Loggi
         }
       }
 
-      val discretionaryLiitepyynnot = AddedLiitepyyntoFinder.findDiscretionaryLiitepyynnot(applicationSystem, storedApplication, hakemus)
-      val higherDegreeLiitepyynnot = AddedLiitepyyntoFinder.findHigherDegreeLiitepyynnot(applicationSystem, storedApplication, hakemus)
-
-      (validationErrors, questionsPerHakutoive, discretionaryLiitepyynnot, higherDegreeLiitepyynnot)
+      (validationErrors, questionsPerHakutoive)
     } ("Error validating application: " + hakemus.oid)
   }
 
