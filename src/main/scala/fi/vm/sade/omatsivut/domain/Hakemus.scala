@@ -17,7 +17,8 @@ case class Hakemus(
                     hakutoiveet: List[Hakutoive] = Nil,
                     haku: Haku,
                     educationBackground: EducationBackground,
-                    answers: Answers
+                    answers: Answers,
+                    requiresAdditionalInfo: Boolean
                   )
 
 case class EducationBackground(baseEducation: String, vocational: Boolean)

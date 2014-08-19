@@ -45,7 +45,7 @@ object ApplicationUpdater {
   }
 
   def getAllUpdatedAnswersForApplicationWithHakutoiveet(applicationSystem: ApplicationSystem)(application: Application, hakutoiveet: List[Hakutoive])(implicit lang: Language.Language) = {
-    val originalHakemus = HakemusConverter.convertToHakemus(HakuConverter.convertToHaku(applicationSystem))(application).copy(answers = emptyAnswers)
+    val originalHakemus = HakemusConverter.convertToHakemus(applicationSystem, HakuConverter.convertToHaku(applicationSystem))(application).copy(answers = emptyAnswers)
     val hakemus = originalHakemus.copy(hakutoiveet = hakutoiveet)
     getAllUpdatedAnswersForApplication(applicationSystem)(application, hakemus)
   }

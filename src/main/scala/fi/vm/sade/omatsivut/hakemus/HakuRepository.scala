@@ -10,13 +10,15 @@ import fi.vm.sade.omatsivut.Logging
 case class HakuRepository(implicit val appConfig: AppConfig) extends Logging {
   private val repository = appConfig.springContext.applicationSystemService
 
-  def getHakuById(id: String)(implicit lang: Language.Language): Option[Haku] = id match {
+  def getHakuById(id: String)(implicit lang: Language.Language): Option[(ApplicationSystem, Haku)] = id match {
     case "" => None
     case applicationSystemId =>
-      tryFind(applicationSystemId).map(HakuConverter.convertToHaku).map { haku =>
-        val results = OhjausparametritService(appConfig).valintatulokset(applicationSystemId)
-        haku.copy(results = results)
-      }
+      tryFind(applicationSystemId).map(appSystem => (appSystem, HakuConverter.convertToHaku(appSystem)) match {
+        case (appSystem, haku) => {
+          val results = OhjausparametritService(appConfig).valintatulokset(applicationSystemId)
+          (appSystem, haku.copy(results = results))
+        }
+      })
   }
 
   private def tryFind(applicationSystemOid: String): Option[ApplicationSystem] = {

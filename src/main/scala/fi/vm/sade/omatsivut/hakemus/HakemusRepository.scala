@@ -33,7 +33,7 @@ case class HakemusRepository(implicit val appConfig: AppConfig) extends Logging 
       ApplicationUpdater.update(applicationSystem)(application, updatedHakemus)
       dao.update(applicationQuery, application)
       AuditLogger.log(UpdateHakemus(userOid, updatedHakemus.oid, originalAnswers, application.getAnswers.toMap.mapValues(_.toMap)))
-      updatedHakemus
+      HakemusConverter.convertToHakemus(applicationSystem, HakuConverter.convertToHaku(applicationSystem))(application)
     }
   }
 
@@ -52,7 +52,7 @@ case class HakemusRepository(implicit val appConfig: AppConfig) extends Logging 
           !application.getState.equals(Application.State.PASSIVE)
         }
     }.map(application => HakuRepository().getHakuById(application.getApplicationSystemId).map(haku => {
-          val hakemus = HakemusConverter.convertToHakemus(haku)(application)
+          val hakemus = HakemusConverter.convertToHakemus(haku._1, haku._2)(application)
           AuditLogger.log(ShowHakemus(personOid, hakemus.oid))
           hakemus
         }

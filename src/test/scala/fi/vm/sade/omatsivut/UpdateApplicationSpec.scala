@@ -23,7 +23,7 @@ class UpdateApplicationSpec extends HakemusApiSpecification {
       modifyHakemus (hakemus1){ hakemus => hakemus} { hakemus =>
         val result: JValue = JsonMethods.parse(body)
         status must_== 200
-        compareWithoutTimestamp(hakemus, result.extract[Hakemus]) must_== true
+        hasSameHakuToiveet(hakemus, result.extract[Hakemus]) must_== true
       }
     }
 
@@ -31,7 +31,7 @@ class UpdateApplicationSpec extends HakemusApiSpecification {
       modifyHakemus(hakemus1)(answerExtraQuestion(preferencesPhaseKey, "539158b8e4b0b56e67d2c74b", "yes sir")) { newHakemus =>
         status must_== 200
         val result: JValue = JsonMethods.parse(body)
-        compareWithoutTimestamp(newHakemus, result.extract[Hakemus]) must_== true
+        hasSameHakuToiveet(newHakemus, result.extract[Hakemus]) must_== true
         // verify saved application
         withSavedApplication(newHakemus) { application =>
           application.getPhaseAnswers(personalInfoPhaseKey).get(ssnKey) must_== testHetu

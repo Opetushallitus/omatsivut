@@ -68,7 +68,7 @@ trait HakemusApiSpecification extends JsonFormats with ScalatraTestSupport {
     f(application)
   }
 
-  def compareWithoutTimestamp(hakemus1: Hakemus, hakemus2: Hakemus) = {
-    hakemus1.copy(updated = hakemus2.updated) == hakemus2
+  def hasSameHakuToiveet(hakemus1: Hakemus, hakemus2: Hakemus) = {
+    hakemus1.hakutoiveet.equals(hakemus2.hakutoiveet)
   }
 }
