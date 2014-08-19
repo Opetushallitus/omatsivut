@@ -29,7 +29,7 @@
 
   "message": {
     "loadingApplications": "Hakemuksia ladataan...",
-    "noApplications": "Sinulla ei ole hakemuksia, joita on mahdollista muokata.",
+    "noApplications": "Sinulla ei ole hakemuksia, joita on mahdollista muokata. Etsi koulutukset sanahaulla, ja täytä hakulomake. Tunnistautuneena voit tällä sivulla muokata hakemustasi hakuaikana.",
     "validationOk": "Muista tallentaa muutokset",
     "changesSaved": "Kaikki muutokset tallennettu",
     "yes": "Kyllä",
