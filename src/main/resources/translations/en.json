@@ -3,6 +3,11 @@
     "omatHakemukset": "My applications"
   },
 
+  "sidebar": {
+    "opintopolku": "Studyinfo",
+    "applications": "My applications"
+  },
+
   "label": {
     "applicationPeriodEnds": "Application period ends",
     "applicationPeriodEnded": "Application period has ended.",

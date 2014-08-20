@@ -3,6 +3,11 @@
     "omatHakemukset": "Omat hakemukseni"
   },
 
+  "sidebar": {
+    "opintopolku": "Oma opintopolku",
+    "applications": "Omat hakemukset"
+  },
+
   "label": {
     "applicationPeriodEnds": "Hakuaika päättyy",
     "applicationPeriodEnded": "Hakuaika on päättynyt.",

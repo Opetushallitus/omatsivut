@@ -3,6 +3,11 @@
     "omatHakemukset": "Mina ansökningsblanketter"
   },
 
+  "sidebar": {
+    "opintopolku": "Studieinfo",
+    "applications": "Mina ansökningsblanketter"
+  },
+
   "label": {
     "applicationPeriodEnds": "Ansökningstiden slutar",
     "applicationPeriodEnded": "Ansökan har avslutats",
