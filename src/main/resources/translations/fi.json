@@ -23,7 +23,7 @@
     "sortDown_ariaLabel": "Siirrä hakutoivetta mieluisuusjärjestyksessä alaspäin",
     "delete_confirm": "Poista",
     "delete_ariaLabel": "Poista hakutoive valitsemalla tämä kaksi kertaa  ",
-    "logout": "Kirjaudu ulos",
+    "logout": "Peru tunnistautuminen",
     "showApplication": "Näytä koko hakemus"
   },
 
