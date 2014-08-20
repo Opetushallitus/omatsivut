@@ -23,7 +23,7 @@ omatsivut.crypto.aes.key={{omatsivut_crypto_aes_key}}
 omatsivut.crypto.hmac.key={{omatsivut_crypto_hmac_key}}
 
 omatsivut.cas.ticket.url={{omatsivut_cas_ticket_url}}
-omatsivut.oppija-raamit.url={{omatsivut_oppija_raamit_url}}
+omatsivut.oppija-raamit.url={{host_oppija}}
 omatsivut.authentication-service.url=https://{{host_virkailija}}/authentication-service
 omatsivut.authentication-service.username={{omatsivut_authentication_service_username}}
 omatsivut.authentication-service.password={{omatsivut_authentication_service_password}}
