@@ -10,6 +10,8 @@
   var hakemus4 = page.getApplication(hakemusId4)
   var hakemusIncompleteId = "1.2.246.562.11.00000855417"
   var hakemusIncomplete = page.getApplication(hakemusIncompleteId)
+  var hakemusKorkeakouluId = "1.2.246.562.11.00000877699"
+  var hakemusKorkeakoulu = page.getApplication(hakemusKorkeakouluId)
 
   afterEach(function() {
     expect(window.uiError).to.be.null
@@ -773,6 +775,22 @@
         before(hakemus2.getPreference(0).remove)
         it("linkki on disabloitu", function() {
           hakemus2.previewLink().hasClass("disabled").should.equal(true)
+        })
+      })
+    })
+
+    describe("Liitepyyntölinkki", function() {
+      describe("Jos tallennettuun hakemukseen liittyy lisätietopyyntöjä", function() {
+        before(replacePreference(hakemusKorkeakoulu, 1, "Diakonia-ammattikorkeakoulu, Järvenpää"), hakemusKorkeakoulu.saveWaitSuccess)
+        it("liitepyyntö näytetään", function() {
+          hakemusKorkeakoulu.calloutText().should.equal("Muista lähettää hakemuksen liitteet.")
+        })
+      })
+
+      describe("Jos tallennettuun hakemukseen ei liity lisätietopyyntöjä", function() {
+        before(hakemus1.getPreference(0).moveDown, hakemus1.saveWaitSuccess)
+        it("liitepyyntöjä ei näytetä", function() {
+          hakemus1.calloutText().should.equal("")
         })
       })
     })

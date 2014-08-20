@@ -33,7 +33,8 @@
     "validationOk": "Do not forget to save the changes",
     "changesSaved": "All changes saved.",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "rememberSendAttachments": "Remember to send the <a>attachments</a>."
   },
 
   "error": {

@@ -33,7 +33,8 @@
     "validationOk": "Muista tallentaa muutokset",
     "changesSaved": "Kaikki muutokset tallennettu",
     "yes": "Kyllä",
-    "no": "Ei"
+    "no": "Ei",
+    "rememberSendAttachments": "Muista lähettää hakemuksen <a>liitteet</a>."
   },
 
   "error": {

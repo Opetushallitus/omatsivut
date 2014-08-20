@@ -1,5 +1,6 @@
 @import "typeahead.less";
 @import "common.less";
+@import "components.less";
 
 body {
   .body-font;
@@ -220,6 +221,7 @@ button.delete-btn:not(.confirm) {
   padding-bottom: 0px;
   line-height: 40px;
   letter-spacing: 0.12em;
+  position: relative;
 }
 
 .application-list-status {
@@ -487,10 +489,7 @@ label.title {
   border-radius: 3px;
   box-sizing: border-box;
   -webkit-box-sizing: border-box;
-}
-
-.label-info {
-  background-color: rgba(20,158,203,1);
+  background-color: @badge-background;
 }
 
 .disabled {

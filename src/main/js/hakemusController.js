@@ -2,7 +2,7 @@ var Hakemus = require("./hakemus")
 var Hakutoive = require("./hakutoive")
 
 module.exports = function(listApp) {
-  listApp.controller("hakemusController", ["$scope", "$element", "$http", "restResources", "applicationValidator", "settings", "debounce", "localization", function ($scope, $element, $http, restResources, applicationValidator, settings, debounce, localization) {
+  listApp.controller("hakemusController", ["$scope", "$element", "$http", "$sce", "restResources", "applicationValidator", "settings", "debounce", "localization", function ($scope, $element, $http, $sce, restResources, applicationValidator, settings, debounce, localization) {
     applicationValidator = debounce(applicationValidator(), settings.modelDebounce)
 
     $scope.applicationPeriod = $scope.application.haku.applicationPeriods[0]
@@ -36,6 +36,14 @@ module.exports = function(listApp) {
         return localization("label.applicationReceived")
       else
         return localization("label.applicationUpdated")
+    }
+
+    $scope.attachmentLink = function(linkString) {
+      link = $("<span>" + linkString + "</span>")
+      link.find("a")
+        .attr("href", "/omatsivut/api/applications/preview/" + $scope.application.oid + "#liitteet")
+        .attr("target", "_blank")
+      return $sce.trustAsHtml(link.html())
     }
 
     $scope.$watch("application.getHakutoiveWatchCollection()", function(hakutoiveet, oldHakutoiveet) {
@@ -125,6 +133,8 @@ module.exports = function(listApp) {
         $scope.hasChanged = false
         setStatusMessage(localization("message.changesSaved"), "success")
         updateValidationMessages([])
+
+        $scope.$broadcast("show-callout", "attachments", savedApplication.requiresAdditionalInfo === true)
       }
 
       function onError(err) {

@@ -101,6 +101,10 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
       }
     }
 
+    def attachmentsAnchor(): List[TypedTag[String]] = {
+      List(a(name := "liitteet"))
+    }
+
     def attachmentsInfoPreview(): List[TypedTag[String]] = {
       val aoInfos = ApplicationUtil.getHigherEdAttachmentAOIds(application).mapValues(_.filterNot(_.isEmpty()).map(koulutusInformaatio.liitepyynto(_)))
       if (aoInfos.isEmpty) {
@@ -326,6 +330,8 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
         form.getElementsOfType[Phase].flatMap(questionsPreview)
         :::
         additionalInformationElementsPreview()
+        :::
+        attachmentsAnchor()
         :::
         discretionaryAttachmentsInfoPreview()
         :::

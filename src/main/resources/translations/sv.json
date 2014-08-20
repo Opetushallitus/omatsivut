@@ -33,7 +33,8 @@
     "validationOk": "Kom ihåg att spara ansökan.",
     "changesSaved": "Alla ändringar sparade.",
     "yes": "Ja",
-    "no": "Nej"
+    "no": "Nej",
+    "rememberSendAttachments": "Kom ihåg <a>bilagorna</a>."
   },
 
   "error": {
