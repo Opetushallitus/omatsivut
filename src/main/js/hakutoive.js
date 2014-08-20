@@ -55,7 +55,7 @@ Hakutoive.prototype = {
         var group = koulutus.organizationGroups[i];
         var groupTypes = group.groupTypes;
         var isAoGroup = false;
-        for (var g = 0; g < groupTypes.length; j++) {
+        for (var g = 0; g < groupTypes.length; g++) {
           if (groupTypes[g] === 'hakukohde') {
               isAoGroup = true;
               break;
@@ -64,7 +64,7 @@ Hakutoive.prototype = {
         if (!isAoGroup) { continue; }
         var usages = group.usageGroups;
         var isAttachmentGroup = false;
-        for (var u = 0; u < usages.length; j++) {
+        for (var u = 0; u < usages.length; u++) {
           if (usages[u] == 'hakukohde_liiteosoite') {
             isAttachmentGroup = true;
             break;
