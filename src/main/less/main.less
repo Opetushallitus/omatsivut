@@ -88,7 +88,6 @@ a {
 }
 
 .validation-message {
-  margin-left: 10px;
   &.error {
     color: @error-color;
   }
@@ -284,7 +283,7 @@ button.delete-btn:not(.confirm) {
 .preference-list-item {
   height: 120px;
   width: 100%;
-  padding: 20px 0px 20px 20px;
+  padding: 0px 0px 0px 20px;
   transition: background-color 1000ms;
 
   border-bottom: 1px solid @border-color;
@@ -303,16 +302,51 @@ button.delete-btn:not(.confirm) {
     width: 10%;
     float: left;
     position: relative;
+    margin-top: 20px;
+  }
+
+  &.inactive > .item-content:first-child {
+    margin-top: 0;
   }
 
   & > .item-content:nth-child(2) {
-    width: 70%;
+    width: 80%;
     float: left;
+    position: relative;
+    height: 100%;
+
+    .row {
+      width: 100%;
+      position: absolute;
+      &.opetuspiste {
+        top: 30px;
+      }
+
+      &.koulutus {
+        top: 70px;
+      }
+    }
+
+    .label-column {
+      width: 25%;
+      display: inline-block;
+      font-weight: bold;
+    }
+
+    .value-column {
+      display: inline-block;
+      vertical-align: top;
+      width: 74%;
+    }
+
+    input, select {
+      width: 100%;
+    }
   }
 
   & > .item-content:last-child {
-    width: 20%;
-    float: left;
+    width: 10%;
+    float: right;
     line-height: 80px;
     text-align: right;
   }
@@ -321,14 +355,6 @@ button.delete-btn:not(.confirm) {
     width: 20%;
     display: inline-block;
     font-weight: bold;
-  }
-
-  input, select {
-    width: 70%;
-  }
-
-  .row {
-    line-height: 40px;
   }
 
   .sort-arrow-down {
@@ -376,13 +402,6 @@ button.delete-btn:not(.confirm) {
   input[disabled] {
     background: transparent;
     box-shadow: none;
-  }
-
-  .error {
-    display: block;
-    margin-left: 20%;
-    margin-top: -17px;
-    padding-left: 10px;
   }
 
   &:last-child.inactive {
@@ -468,6 +487,10 @@ button.delete-btn:not(.confirm) {
 
   .application-section-heading {
     margin-top: 20px;
+  }
+
+  .validation-message {
+    margin-left: 10px;
   }
 }
 
