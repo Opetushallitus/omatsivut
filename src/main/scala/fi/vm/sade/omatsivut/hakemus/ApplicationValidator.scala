@@ -21,7 +21,7 @@ case class ApplicationValidator(implicit val appConfig: AppConfig) extends Loggi
     validateHakutoiveetAndAnswers(hakemus, storedApplication, applicationSystem) ++ errorsForUnknownAnswers(applicationSystem, hakemus)
   }
 
-  def validateAndFindQuestionsAndAttachments(applicationSystem: ApplicationSystem)(hakemus: Hakemus)(implicit lang: Language.Language): (List[ValidationError], List[QuestionNode]) = {
+  def validateAndFindQuestions(applicationSystem: ApplicationSystem)(hakemus: Hakemus)(implicit lang: Language.Language): (List[ValidationError], List[QuestionNode]) = {
     withErrorLogging {
       val storedApplication = HakemusRepository().findStoredApplication(hakemus)
       val validationErrors: List[ValidationError] = validateHakutoiveetAndAnswers(hakemus, storedApplication, applicationSystem)

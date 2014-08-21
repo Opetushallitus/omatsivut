@@ -59,7 +59,7 @@ class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfi
   post("/applications/validate/:oid", operation(validateApplicationsSwagger)) {
     val validate = Serialization.read[Hakemus](request.body)
     val applicationSystem = applicationSystemService.getApplicationSystem(validate.haku.oid)
-    val (errors: List[ValidationError], questions: List[QuestionNode]) = ApplicationValidator().validateAndFindQuestionsAndAttachments(applicationSystem)(validate)
+    val (errors: List[ValidationError], questions: List[QuestionNode]) = ApplicationValidator().validateAndFindQuestions(applicationSystem)(validate)
     ValidationResult(errors, questions)
   }
 
