@@ -62,8 +62,8 @@ module.exports = function(listApp) {
 
     $scope.$watch("application.getOptionAnswerWatchCollection()", function(answers, oldAnswers) {
       if (!_.isEqual(oldAnswers, [])) {
-        validateHakutoiveet(false)
         applicationChanged()
+        validateHakutoiveet(false)
       }
     }, true)
 
