@@ -94,6 +94,10 @@ Hakemus.prototype = {
     return _(AdditionalQuestion.questionMap(this.additionalQuestions)).map(function(item, key) { return item.answer })
   },
 
+  getOptionAnswerWatchCollection: function() {
+    return _(AdditionalQuestion.questionMap(this.additionalQuestions)).filter(function(item) {return item.question.options != null}).map(function(item, key) { return item.answer })
+  },
+
   moveHakutoive: function(from, to) {
     this.hakutoiveet[from].setAsModified()
     this.hakutoiveet[to].setAsModified()

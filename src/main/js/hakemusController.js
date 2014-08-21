@@ -60,6 +60,13 @@ module.exports = function(listApp) {
       }
     }, true)
 
+    $scope.$watch("application.getOptionAnswerWatchCollection()", function(answers, oldAnswers) {
+      if (!_.isEqual(oldAnswers, [])) {
+        validateHakutoiveet()
+        applicationChanged()
+      }
+    }, true)
+
     function applicationChanged() {
       $scope.hasChanged = true
       if ($scope.statusMessageType == "success")
