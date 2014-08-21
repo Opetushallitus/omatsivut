@@ -728,6 +728,7 @@
           hakemus1.questionsForApplication().enterAnswer(8, "tekstivastaus 3")
           hakemus1.questionsForApplication().enterAnswer(9, "Vaihtoehto zzzz 1")
           hakemus1.questionsForApplication().enterAnswer(10, "Vaihttoehto yksi")
+          return hakemus1.waitValidationOk()
         }
       })
     })

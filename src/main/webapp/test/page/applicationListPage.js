@@ -71,6 +71,10 @@ function ApplicationListPage() {
         return wait.until(function() { return api.saveError() == "Tietojen haku epäonnistui. Yritä myöhemmin uudelleen." })()
       },
 
+      waitValidationOk: function() {
+        return wait.until(function() { return api.statusMessage() == "Muista tallentaa muutokset" })()
+      },
+
       isSavingState: function (isSaving) {
         return function () {
           return (getApplicationElement().find(".ajax-spinner").length > 0) === isSaving
