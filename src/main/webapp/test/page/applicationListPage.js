@@ -67,8 +67,8 @@ function ApplicationListPage() {
         return wait.until(function() { return api.statusMessage() != status && api.saveError().length > 0 })()
       },
 
-      waitValidationError: function() {
-        return wait.until(function() { return api.saveError() == "Tietojen haku epäonnistui. Yritä myöhemmin uudelleen." })()
+      waitValidationErrorForRequiredQuestion: function() {
+        return wait.until(function() { return getApplicationElement().find(".validation-message.error").text() == "Pakollinen tieto." })()
       },
 
       waitValidationOk: function() {

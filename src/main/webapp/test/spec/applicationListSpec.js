@@ -430,6 +430,45 @@
           'Työkokemus kuukausina' ])
       })
 
+      describe("Vastaaminen kun haetaan harkintaan perustuvassa valinnassa ja kun ei vastata lisäkysymykseen", function() {
+        before(
+          answerQuestions
+        )
+
+        it("epäonnistuu", function() {
+
+        })
+
+        function answerQuestions() {
+          hakemus2.questionsForApplication().enterAnswer(0, "Kyllä")
+          hakemus2.questionsForApplication().enterAnswer(1, "24")
+          return hakemus2.waitValidationErrorForRequiredQuestion()
+        }
+      })
+
+      describe("Vastaaminen kun haetaan harkintaan perustuvassa valinnassa ja kun vastataan lisäkysymykseen", function() {
+        before(
+          answerQuestions,
+          answerQuestions2,
+          hakemus2.saveWaitSuccess
+        )
+
+        it("onnistuu", function() {
+
+        })
+
+        function answerQuestions() {
+          hakemus2.questionsForApplication().enterAnswer(0, "Kyllä")
+          hakemus2.questionsForApplication().enterAnswer(1, "24")
+          return hakemus2.waitValidationErrorForRequiredQuestion()
+        }
+
+        function answerQuestions2() {
+          hakemus2.questionsForApplication().enterAnswer(1, "Oppimisvaikeudet")
+          return hakemus2.waitValidationOk()
+        }
+      })
+
       describe("Vastaaminen kun ei haeta harkintaan perustuvassa valinnassa", function() {
         before(
           answerQuestions,
@@ -443,22 +482,7 @@
         function answerQuestions() {
           hakemus2.questionsForApplication().enterAnswer(0, "Ei")
           hakemus2.questionsForApplication().enterAnswer(1, "24")
-        }
-      })
-
-      describe("Vastaaminen kun haetaan harkintaan perustuvassa valinnassa", function() {
-        before(
-          answerQuestions,
-          hakemus2.saveWaitError
-        )
-
-        it("epäonnistuu", function() {
-          //TODO: vastaaminen epäonnistuu, koska follow-up -kysymystä ei osata näyttää
-        })
-
-        function answerQuestions() {
-          hakemus2.questionsForApplication().enterAnswer(0, "Kyllä")
-          hakemus2.questionsForApplication().enterAnswer(1, "24")
+          return hakemus2.waitValidationOk()
         }
       })
 
