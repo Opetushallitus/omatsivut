@@ -7,7 +7,9 @@ import fi.vm.sade.omatsivut.domain.Language
 object QuestionGrouper {
   def groupQuestionsByStructure(contextElement: ElementWrapper, foundQuestions: Set[(QuestionLeafNode)])(implicit lang: Language.Language): List[QuestionGroup] = {
     foundQuestions
-      .map { question => (question, contextElement.findById(question.id.questionId).get) }
+      .map { question => (question, contextElement.findById(question.id.questionId)) }
+      .filter(_._2.isDefined)
+      .map(tuple => (tuple._1, tuple._2.get))
       .groupBy { case (question, elementContext) => elementContext.namedParents}
       .toList
       .sortBy { case (path, questions) => path.asInstanceOf[List[Element]]}(ParentPathOrdering)
