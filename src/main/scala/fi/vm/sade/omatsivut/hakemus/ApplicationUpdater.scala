@@ -92,10 +92,10 @@ object ApplicationUpdater {
   }
 
   private def updatedAnswersForHakuToiveet(applicationSystem: ApplicationSystem, application: Application, hakemus: Hakemus): Answers = {
-    val hakutoiveetAnswers: Map[String, String] = hakemus.answers.getOrElse(preferencePhaseKey, Map())
-    val previousHakutoiveetAnswers: Map[String, String] = application.getPhaseAnswers(preferencePhaseKey).toMap
+    val newAnswers = hakemus.answers
+    val previousAnswers = allAnswersFromApplication(application)
 
-    val updatedAnswersForHakutoiveetPhase = HakutoiveetConverter.updateAnswers(hakemus.hakutoiveet, hakutoiveetAnswers, previousHakutoiveetAnswers)
+    val updatedAnswersForHakutoiveetPhase = HakutoiveetConverter.updateAnswers(hakemus.hakutoiveet, newAnswers, previousAnswers)
     Map(preferencePhaseKey -> updatedAnswersForHakutoiveetPhase)
   }
 }

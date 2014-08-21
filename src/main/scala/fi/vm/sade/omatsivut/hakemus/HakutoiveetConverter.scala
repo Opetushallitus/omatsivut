@@ -7,8 +7,8 @@ object HakutoiveetConverter {
   val preferenceKeyPrefix: String = "preference"
   val hakutoiveetPhase: String = OppijaConstants.PHASE_APPLICATION_OPTIONS
 
-  def convertFromAnswers(answers: Map[String, String]): List[Hakutoive] = {
-    groupPreferences(answers)
+  def convertFromAnswers(answers: Answers): List[Hakutoive] = {
+    groupPreferences(answers.getOrElse(hakutoiveetPhase , Map()))
       .toList
       .map(shortenNames)
       .map(convertEmptyPreferences)
@@ -16,18 +16,23 @@ object HakutoiveetConverter {
       .map((m) => m.filterKeys { Set("priority").contains(_) == false})
   }
 
-  def convertToAnswers(hakutoiveet: List[Hakutoive]): Map[String, String] = {
+  def convertToAnswers(hakutoiveet: List[Hakutoive], answers: Answers): Map[String, String] = {
+    val hakutoiveetAnswers = answers.getOrElse(hakutoiveetPhase, Map())
+    hakutoiveetAnswers ++
     hakutoiveet.zipWithIndex.flatMap {
-      case (hakutoive, index) => hakutoive.map {
-        case (key, value) => (preferenceKeyPrefix + (index + 1) + getDelimiter(key) + key, value)
+      case (hakutoive, index) => {
+        hakutoive.map {
+          case (key, value) => (preferenceKeyPrefix + (index + 1) + getDelimiter(key) + key, value)
+        } ++ hakutoiveetAnswers.filterKeys(_.startsWith((preferenceKeyPrefix + (index + 1))))
       }
     }.toMap[String, String]
   }
 
-  def updateAnswers(hakutoiveet: List[Hakutoive], hakutoiveetAnswers: Map[String, String], previousHakutoiveetAnswers: Map[String, String]): Map[String, String] = {
+  def updateAnswers(hakutoiveet: List[Hakutoive], answers: Answers, previousAnswers: Answers): Map[String, String] = {
+    val previousHakutoiveetAnswers = previousAnswers.getOrElse(hakutoiveetPhase, Map())
     val hakuToiveetWithEmptyValues = previousHakutoiveetAnswers.filterKeys(s => s.startsWith(HakutoiveetConverter.preferenceKeyPrefix)).mapValues(s => "")
     val hakutoiveetWithoutOldPreferences = previousHakutoiveetAnswers.filterKeys(s => !s.startsWith(HakutoiveetConverter.preferenceKeyPrefix))
-    val updatedHakutoiveet = hakutoiveetWithoutOldPreferences ++ hakuToiveetWithEmptyValues ++ HakutoiveetConverter.convertToAnswers(hakutoiveet) ++ hakutoiveetAnswers
+    val updatedHakutoiveet = hakutoiveetWithoutOldPreferences ++ hakuToiveetWithEmptyValues ++ convertToAnswers(hakutoiveet, answers)
     updatedHakutoiveet
   }
 

@@ -45,9 +45,7 @@ object HakemusConverter {
   }
 
   private def convertHakuToiveet(application: Application): List[Hakutoive] = {
-    val answers: util.Map[String, util.Map[String, String]] = application.getAnswers
-    val hakuToiveetData: Map[String, String] = answers.get(preferencePhaseKey).toMap
-    HakutoiveetConverter.convertFromAnswers(hakuToiveetData)
+    HakutoiveetConverter.convertFromAnswers(application.getAnswers.toMap.mapValues(_.toMap))
   }
 
   type FlatAnswers = Map[String, String]
