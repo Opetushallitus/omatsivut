@@ -22,7 +22,7 @@ class AddedQuestionFinderSpec extends Specification {
       var addedQuestions = findAddedQuestions(answersWithNewHakutoive, Hakemus.emptyAnswers)
       addedQuestions.length must_== 11
       addedQuestions = AddedQuestionFinder.findQuestionsByHakutoive(as, TestFixture.application, hakemus, Nil, ammattistartti).toList
-      addedQuestions.length must_== 15
+      addedQuestions.length must_== 11
     }
 
     "Report zero additional questions when keeping same answers" in {

@@ -18,7 +18,7 @@ object HakutoiveetConverter {
 
   def convertToAnswers(hakutoiveet: List[Hakutoive], answers: Answers): Map[String, String] = {
     val hakutoiveetAnswers = answers.getOrElse(hakutoiveetPhase, Map())
-    hakutoiveetAnswers ++
+    hakutoiveetAnswers.filterKeys(s => !s.startsWith(HakutoiveetConverter.preferenceKeyPrefix)) ++
     hakutoiveet.zipWithIndex.flatMap {
       case (hakutoive, index) => {
         hakutoive.map {
