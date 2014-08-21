@@ -33,7 +33,7 @@ case class ApplicationValidator(implicit val appConfig: AppConfig) extends Loggi
 
           val questionsFromErrors: Set[QuestionLeafNode] = FormQuestionFinder.findQuestionsByElementIds(filteredForm, errorKeys)
 
-          val addedByHakutoive: Set[QuestionLeafNode] = AddedQuestionFinder.findQuestionsByHakutoive(applicationSystem, storedApplication, hakemus.hakutoiveet.take(index), hakutoive)
+          val addedByHakutoive: Set[QuestionLeafNode] = AddedQuestionFinder.findQuestionsByHakutoive(applicationSystem, storedApplication, hakemus, hakemus.hakutoiveet.take(index), hakutoive)
           val groupedQuestions: Seq[QuestionNode] = QuestionGrouper.groupQuestionsByStructure(filteredForm, addedByHakutoive ++ questionsFromErrors)
 
           groupedQuestions match {

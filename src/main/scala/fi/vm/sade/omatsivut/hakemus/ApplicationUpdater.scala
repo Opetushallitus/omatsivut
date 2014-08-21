@@ -44,9 +44,9 @@ object ApplicationUpdater {
     allAnswersFromApplication(application) ++ updatedAnswersForHakuToiveet(applicationSystem, application, hakemus) ++ updatedAnswersForOtherPhases(application, hakemus)
   }
 
-  def getAllUpdatedAnswersForApplicationWithHakutoiveet(applicationSystem: ApplicationSystem)(application: Application, hakutoiveet: List[Hakutoive])(implicit lang: Language.Language) = {
-    val originalHakemus = HakemusConverter.convertToHakemus(applicationSystem, HakuConverter.convertToHaku(applicationSystem))(application).copy(answers = emptyAnswers)
-    val hakemus = originalHakemus.copy(hakutoiveet = hakutoiveet)
+  def getAllUpdatedAnswersForApplicationWithHakutoiveet(applicationSystem: ApplicationSystem)(application: Application, hakutoiveet: List[Hakutoive], baseAnswers: Answers)(implicit lang: Language.Language) = {
+    val originalHakemus = HakemusConverter.convertToHakemus(applicationSystem, HakuConverter.convertToHaku(applicationSystem))(application)
+    val hakemus = originalHakemus.copy(hakutoiveet = hakutoiveet).copy(answers = baseAnswers)
     getAllUpdatedAnswersForApplication(applicationSystem)(application, hakemus)
   }
 

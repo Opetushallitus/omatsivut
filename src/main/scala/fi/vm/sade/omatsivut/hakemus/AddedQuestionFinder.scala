@@ -6,11 +6,17 @@ import fi.vm.sade.omatsivut.domain.Hakemus._
 import fi.vm.sade.omatsivut.domain._
 
 protected object AddedQuestionFinder {
-  def findQuestionsByHakutoive(applicationSystem: ApplicationSystem, application: Application, existingHakutoiveet: List[Hakutoive], hakutoive: Hakutoive)(implicit lang: Language.Language): Set[QuestionLeafNode] = {
-    def answersWith(hakutoiveet: List[Hakutoive]) = {
-      ApplicationUpdater.getAllUpdatedAnswersForApplicationWithHakutoiveet(applicationSystem)(application, hakutoiveet)
+  def findQuestionsByHakutoive(applicationSystem: ApplicationSystem, storedApplication: Application, newHakemus: Hakemus, existingHakutoiveet: List[Hakutoive], hakutoive: Hakutoive)(implicit lang: Language.Language): Set[QuestionLeafNode] = {
+    def answersWithNewHakutoive(hakutoiveet: List[Hakutoive]) = {
+      ApplicationUpdater.getAllUpdatedAnswersForApplicationWithHakutoiveet(applicationSystem)(storedApplication, hakutoiveet, Hakemus.emptyAnswers )
     }
-    findAddedQuestions(applicationSystem, answersWith(existingHakutoiveet ++ List(hakutoive)), answersWith(existingHakutoiveet))
+    def answersWithCurrentAnswers(hakutoiveet: List[Hakutoive]) = {
+      ApplicationUpdater.getAllUpdatedAnswersForApplicationWithHakutoiveet(applicationSystem)(storedApplication, hakutoiveet,
+            Map(ApplicationUpdater.preferencePhaseKey  -> HakutoiveetConverter.convertToAnswers(hakutoiveet, newHakemus.answers)))
+    }
+
+    findAddedQuestions(applicationSystem, answersWithNewHakutoive(existingHakutoiveet ++ List(hakutoive)), answersWithNewHakutoive(existingHakutoiveet)) ++
+    findAddedQuestions(applicationSystem, answersWithCurrentAnswers(existingHakutoiveet ++ List(hakutoive)), answersWithNewHakutoive(existingHakutoiveet ++ List(hakutoive)))
   }
 
   def findAddedQuestions(applicationSystem: ApplicationSystem, newAnswers: Answers, oldAnswers: Answers)(implicit lang: Language.Language): Set[QuestionLeafNode] = {
