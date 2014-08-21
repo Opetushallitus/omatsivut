@@ -126,9 +126,8 @@ Hakemus.prototype = {
     this.additionalQuestions = (function mergeOldAnswers(old, questions) {
       var oldQuestions = AdditionalQuestion.questionMap(old)
       _(AdditionalQuestion.questionMap(questions)).each(function(newQuestion, id) {
-        if (oldQuestions[id]) {
+        if (oldQuestions[id] != null)
           newQuestion.answer = oldQuestions[id].answer
-        }
       })
       return questions
     })(this.additionalQuestions, questions)
