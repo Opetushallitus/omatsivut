@@ -26,7 +26,7 @@ object HakemusConverter {
       convertHakuToiveet(application),
       haku,
       EducationBackground(koulutusTaustaAnswers.get(baseEducationKey), !Try {koulutusTaustaAnswers.get("ammatillinenTutkintoSuoritettu").toBoolean}.getOrElse(false)),
-      application.getAnswers.toMap.mapValues { phaseAnswers => phaseAnswers.toMap },
+      application.clone().getAnswers.toMap.mapValues { phaseAnswers => phaseAnswers.toMap },
       requiresAdditionalInfo(applicationSystem, application)
     )
   }
