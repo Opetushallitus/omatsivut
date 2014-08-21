@@ -50,7 +50,7 @@ module.exports = function(listApp) {
       // Skip initial values angular style
       if (!_.isEqual(hakutoiveet, oldHakutoiveet)) {
         applicationChanged()
-        validateHakutoiveet()
+        validateHakutoiveet(true)
       }
     }, true)
 
@@ -62,7 +62,7 @@ module.exports = function(listApp) {
 
     $scope.$watch("application.getOptionAnswerWatchCollection()", function(answers, oldAnswers) {
       if (!_.isEqual(oldAnswers, [])) {
-        validateHakutoiveet()
+        validateHakutoiveet(false)
         applicationChanged()
       }
     }, true)
@@ -73,7 +73,7 @@ module.exports = function(listApp) {
         setStatusMessage("")
     }
 
-    function validateHakutoiveet() {
+    function validateHakutoiveet(skipQuestions) {
       applicationValidator($scope.application, beforeBackendValidation, success, error)
 
       function beforeBackendValidation() {
@@ -85,7 +85,7 @@ module.exports = function(listApp) {
         $scope.isSaveable = true
         setValidatingIndicator(false)
         $scope.application.importQuestions(data.questions)
-        updateValidationMessages([], true)
+        updateValidationMessages([], skipQuestions)
       }
 
       function error(data) {
@@ -110,7 +110,12 @@ module.exports = function(listApp) {
         if (data.questions) // frontside validation does not include questions -> don't update // TODO: testikeissi tälle (vastaa kysymykseen, aiheuta fronttivalidaatiovirhe)
           $scope.application.importQuestions(data.questions)
 
-        updateValidationMessages(data.errors, true)
+        if(skipQuestions) {
+          updateValidationMessages(data.errors, true)
+        }
+        else {
+          updateValidationMessages(data.errors, false)
+        }
       }
     }
 
