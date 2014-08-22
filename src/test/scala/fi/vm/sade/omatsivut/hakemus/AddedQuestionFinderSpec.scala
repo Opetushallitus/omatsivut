@@ -21,7 +21,10 @@ class AddedQuestionFinderSpec extends Specification {
     "Find related questions when adding Hakutoive" in {
       var addedQuestions = findAddedQuestions(answersWithNewHakutoive, Hakemus.emptyAnswers)
       addedQuestions.length must_== 11
-      addedQuestions = AddedQuestionFinder.findQuestionsByHakutoive(as, TestFixture.application, hakemus, Nil, ammattistartti).toList
+      val emptyOldApplication = TestFixture.application.clone()
+      emptyOldApplication.getAnswers().get(ApplicationUpdater.preferencePhaseKey).clear()
+      val newHakemus = hakemus.copy(hakutoiveet = ammattistartti :: Nil)
+      addedQuestions = AddedQuestionFinder.findQuestionsByNewHakutoive(as, emptyOldApplication, newHakemus, ammattistartti).toList
       addedQuestions.length must_== 11
     }
 
