@@ -41,13 +41,7 @@ object ApplicationUpdater {
   }
 
   def getAllUpdatedAnswersForApplication(applicationSystem: ApplicationSystem)(application: Application, hakemus: Hakemus): Answers = {
-    allAnswersFromApplication(application) ++ updatedAnswersForHakuToiveet(applicationSystem, application, hakemus) ++ updatedAnswersForOtherPhases(application, hakemus)
-  }
-
-  def getAllUpdatedAnswersForApplicationWithHakutoiveet(applicationSystem: ApplicationSystem)(application: Application, hakutoiveet: List[Hakutoive], baseAnswers: Answers)(implicit lang: Language.Language) = {
-    val originalHakemus = HakemusConverter.convertToHakemus(applicationSystem, HakuConverter.convertToHaku(applicationSystem))(application)
-    val hakemus = originalHakemus.copy(hakutoiveet = hakutoiveet).copy(answers = baseAnswers)
-    getAllUpdatedAnswersForApplication(applicationSystem)(application, hakemus)
+    allAnswersFromApplication(application).filterKeys(_ != preferencePhaseKey) ++ updatedAnswersForHakuToiveet(applicationSystem, application, hakemus) ++ updatedAnswersForOtherPhases(application, hakemus)
   }
 
   private def updateSingleAnswer(answers: Answers, question: QuestionId, answer: String) = {

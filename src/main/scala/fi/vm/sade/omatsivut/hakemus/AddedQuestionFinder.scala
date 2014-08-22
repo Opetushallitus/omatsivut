@@ -8,13 +8,12 @@ import scala.collection.JavaConversions._
 
 protected object AddedQuestionFinder {
 
-  private def answersWithHakutoive(applicationSystem: ApplicationSystem, storedApplication: Application, newHakemus: Hakemus)(hakutoiveet: List[Hakutoive])(implicit lang: Language.Language) = {
-    ApplicationUpdater.getAllUpdatedAnswersForApplicationWithHakutoiveet(applicationSystem)(storedApplication, hakutoiveet, newHakemus.answers)
-  }
-
   def findQuestionsByHakutoive(applicationSystem: ApplicationSystem, storedApplication: Application, newHakemus: Hakemus, hakutoive: Hakutoive)(implicit lang: Language.Language): Set[QuestionLeafNode] = {
-    val hakutoiveet = getOnlyAskedHakutoiveAsList(newHakemus, hakutoive)
-    findAddedQuestions(applicationSystem, answersWithHakutoive(applicationSystem, storedApplication, newHakemus)(hakutoiveet), answersWithHakutoive(applicationSystem, storedApplication, newHakemus)(getOnlyAskedHakutoiveAsList(newHakemus, Map())))
+    val onlyOneHakutoive = getOnlyAskedHakutoiveAsList(newHakemus, hakutoive)
+    val currentAnswersWithOneHakutoive = ApplicationUpdater.getAllUpdatedAnswersForApplication(applicationSystem)(storedApplication, newHakemus.copy(hakutoiveet = onlyOneHakutoive))
+    val noHakutoive = getOnlyAskedHakutoiveAsList(newHakemus, Map())
+    val currentAnswersWithNoHakutoive = ApplicationUpdater.getAllUpdatedAnswersForApplication(applicationSystem)(storedApplication, newHakemus.copy(hakutoiveet = noHakutoive))
+    findAddedQuestions(applicationSystem, currentAnswersWithOneHakutoive, currentAnswersWithNoHakutoive)
   }
 
   def findAddedQuestions(applicationSystem: ApplicationSystem, newAnswers: Answers, oldAnswers: Answers)(implicit lang: Language.Language): Set[QuestionLeafNode] = {
