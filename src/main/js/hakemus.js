@@ -99,12 +99,15 @@ Hakemus.prototype = {
     }
   },
 
-  setAsSaved: function(savedApplication) {
+  mergeSavedApplication: function(savedApplication) {
     this.updated = savedApplication.updated
 
-    _(this.hakutoiveet).each(function(hakutoive) {
-        if (hakutoive.hasData()) hakutoive.setAsSaved() }
-    )
+    for (var i=0; i<this.hakutoiveet.length && i<savedApplication.hakutoiveet.length; i++) {
+      hakutoive = this.hakutoiveet[i]
+      hakutoive.importJson(savedApplication.hakutoiveet[i])
+      if (hakutoive.hasData())
+        hakutoive.setAsSaved()
+    }
   },
 
   validatePreferences: function() {
@@ -118,7 +121,12 @@ Hakemus.prototype = {
 
   getHakutoiveWatchCollection: function() {
     return _(this.hakutoiveet).map(function(hakutoive) {
-      return hakutoive.data
+      return {
+        "Koulutus": hakutoive.data["Koulutus"],
+        "Koulutus-id": hakutoive.data["Koulutus-id"],
+        "Opetuspiste": hakutoive.data["Opetuspiste"],
+        "Opetuspiste-id": hakutoive.data["Opetuspiste-id"]
+      }
     })
   },
 

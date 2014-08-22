@@ -133,7 +133,7 @@ module.exports = function(listApp) {
 
       function onSuccess(savedApplication) {
         $scope.$emit("highlight-save", $scope.application.getChangedItems())
-        $scope.application.setAsSaved(savedApplication)
+        $scope.application.mergeSavedApplication(savedApplication)
         $scope.hasChanged = false
         setStatusMessage(localization("message.changesSaved"), "success")
         updateValidationMessages([])

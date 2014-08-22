@@ -12,6 +12,10 @@ Hakutoive.prototype = {
     return this.data
   },
 
+  importJson: function(json) {
+    this.data = json
+  },
+
   clear: function() {
     this.data = {}
     this.isNew = true

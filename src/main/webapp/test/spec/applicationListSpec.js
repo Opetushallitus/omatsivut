@@ -32,7 +32,6 @@
     })
 
     describe("jos käyttäjällä ei ole hakemuksia", function() {
-
       it("näytetään ilmoitus", function() {
         expect(page.listStatusInfo()).to.equal('Sinulla ei ole hakemuksia, joita on mahdollista muokata. Etsi koulutukset sanahaulla, ja täytä hakulomake. Tunnistautuneena voit tällä sivulla muokata hakemustasi hakuaikana.' )
       })
@@ -457,7 +456,7 @@
             return hakemus2.saveWaitSuccess()
           })
 
-          it.skip("tallennetun rivin siirtäminen onnistuu", function() {
+          it("tallennetun rivin siirtäminen onnistuu", function() {
             return hakemus2.getPreference(0).moveDown().then(function() {
               hakemus2.getPreference(0).moveDown()
             }).then(function() {
