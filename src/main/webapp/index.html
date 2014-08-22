@@ -125,7 +125,7 @@
                         </question-template>
 
                         <script type="text/ng-template" id="questionTemplate.html">
-                            <div ng-switch="isGroup()">
+                            <div ng-switch="isGroup()" ng-controller="additionalQuestionController">
                                 <div ng-switch-when="true" class="question-group">
                                     <div ng-if="level == 0" class="application-section-heading">Lisäkysymykset: {{ questionNode.title }}</div>
                                     <label ng-if="level > 0" class="question-group-title">{{ questionNode.title }}:</label>
@@ -153,13 +153,15 @@
                                         />
                                         <select ng-switch-when="Dropdown"
                                                 ng-model="questionNode.answer"
-                                                ng-options="option.value as option.title for option in questionNode.question.options">
+                                                ng-options="option.value as option.title for option in questionNode.question.options"
+                                                ng-change="questionAnswered()">
                                         </select>
 
                                         <div ng-switch-when="Radio">
                                             <label class="radio-button-item" ng-repeat="option in questionNode.question.options">
                                                 <input name="{{questionNode.question.id.questionId}}" type="radio"
                                                        ng-model="questionNode.answer"
+                                                       ng-change="questionAnswered()"
                                                        value={{option.value}} /> {{option.title }}
                                             </label>
                                         </div>

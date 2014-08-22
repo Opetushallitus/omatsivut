@@ -60,12 +60,9 @@ module.exports = function(listApp) {
       }
     }, true)
 
-    $scope.$watch("application.getOptionAnswerWatchCollection()", function(answers, oldAnswers) {
-      if (!_.isEqual(oldAnswers, [])) {
-        applicationChanged()
+    $scope.$on("questionAnswered", function() {
         validateHakutoiveet(false)
-      }
-    }, true)
+    })
 
     function applicationChanged() {
       $scope.hasChanged = true
@@ -110,12 +107,7 @@ module.exports = function(listApp) {
         if (data.questions) // frontside validation does not include questions -> don't update // TODO: testikeissi tälle (vastaa kysymykseen, aiheuta fronttivalidaatiovirhe)
           $scope.application.importQuestions(data.questions)
 
-        if(skipQuestions) {
-          updateValidationMessages(data.errors, true)
-        }
-        else {
-          updateValidationMessages(data.errors, false)
-        }
+        updateValidationMessages(data.errors, skipQuestions)
       }
     }
 

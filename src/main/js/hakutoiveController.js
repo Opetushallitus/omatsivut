@@ -1,6 +1,12 @@
 var Hakutoive = require('./hakutoive')
 
 module.exports = function(listApp) {
+  listApp.controller("additionalQuestionController", ["$scope", function($scope) {
+    $scope.questionAnswered = function() {
+      $scope.$emit("questionAnswered")
+    }
+  }])
+
   listApp.controller("hakutoiveController", ["$scope", "$http", "$timeout", "settings", "restResources", function($scope, $http, $timeout, settings, restResources) {
     $scope.isEditingDisabled = function() { return !$scope.hakutoive.isNew || !$scope.application.isEditable($scope.$index) }
 
