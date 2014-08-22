@@ -423,6 +423,15 @@
         replacePreference(hakemus2, 1, "Ahlman")
       )
 
+      function answerDiscretionaryQuestions() {
+        return wait.until(function() { return hakemus2.questionsForApplication().count() == 2})()
+          .then(function() { hakemus2.questionsForApplication().enterAnswer(0, "Kyllä") })
+          .then(wait.until(function() { return hakemus2.questionsForApplication().count() == 3})).then(function() {
+            hakemus2.questionsForApplication().enterAnswer(1, "Oppimisvaikeudet")
+          })
+          .then(wait.until(function() { return hakemus2.saveError() == "" }))
+      }
+
       it("kysymykset näytetään", function() {
         var questionTitles = hakemus2.questionsForApplication().titles()
         expect(questionTitles).to.deep.equal([
@@ -430,70 +439,35 @@
           'Työkokemus kuukausina' ])
       })
 
-      describe("Vastaaminen kun haetaan harkintaan perustuvassa valinnassa ja kun ei vastata lisäkysymykseen", function() {
+      describe("Vastaaminen kun haetaan harkintaan perustuvassa valinnassa", function() {
         before(
-          answerQuestions
-        )
-
-        it("epäonnistuu", function() {
-
-        })
-
-        function answerQuestions() {
-          hakemus2.questionsForApplication().enterAnswer(0, "Kyllä")
-          hakemus2.questionsForApplication().enterAnswer(1, "24")
-          return hakemus2.waitValidationErrorForRequiredQuestion()
-        }
-      })
-
-      describe("Vastaaminen kun haetaan harkintaan perustuvassa valinnassa ja kun vastataan lisäkysymykseen", function() {
-        before(
-          answerQuestions,
-          answerQuestions2,
-          hakemus2.saveWaitSuccess
+          answerDiscretionaryQuestions
         )
 
         it("onnistuu", function() {
-
         })
 
-        function answerQuestions() {
-          hakemus2.questionsForApplication().enterAnswer(0, "Kyllä")
-          hakemus2.questionsForApplication().enterAnswer(1, "24")
-          return hakemus2.waitValidationErrorForRequiredQuestion()
-        }
+        describe("Tallentamattoman harkinnanvaraisuustietoja sisältävän rivin siirto", function() {
+          before(hakemus2.getPreference(1).moveUp)
+          it("onnistuu", function() {
+            hakemus2.saveError().should.equal("")
+          })
 
-        function answerQuestions2() {
-          hakemus2.questionsForApplication().enterAnswer(1, "Oppimisvaikeudet")
-          return hakemus2.waitValidationOk()
-        }
-      })
+          it("siirretyn rivin tallentaminen onnistuu", function() {
+            return hakemus2.saveWaitSuccess()
+          })
 
-      describe("Vastaaminen kun ei haeta harkintaan perustuvassa valinnassa", function() {
-        before(
-          answerQuestions,
-          hakemus2.saveWaitSuccess
-        )
-
-        it("onnistuu", function() {
-
+          it.skip("tallennetun rivin siirtäminen onnistuu", function() {
+            return hakemus2.getPreference(0).moveDown().then(function() {
+              hakemus2.getPreference(0).moveDown()
+            }).then(function() {
+              return hakemus2.saveWaitSuccess()
+            })
+          })
         })
 
-        function answerQuestions() {
-          hakemus2.questionsForApplication().enterAnswer(0, "Ei")
-          hakemus2.questionsForApplication().enterAnswer(1, "24")
-          return hakemus2.waitValidationOk()
-        }
-      })
-
-      describe("Hakutoiveen korvaaminen harkinnanvaraisuuteen perustuvalla valinnalla", function() {
-        before(
-          hakemus2.getPreference(0).remove,
-          wait.forAngular
-        )
-
-        it("edellyttää lisäkysymyksiin vastausta", function() { // TODO
-          hakemus2.isValidationErrorVisible().should.be.true
+        it.skip("poiston jälkeen discretionary-tiedot siirtyvät oikein", function() {
+          // TODO
         })
       })
     })

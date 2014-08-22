@@ -102,6 +102,21 @@ Hakemus.prototype = {
     this.hakutoiveet[from].setAsModified()
     this.hakutoiveet[to].setAsModified()
     this.hakutoiveet.splice(to, 0, this.hakutoiveet.splice(from, 1)[0])
+
+    var newIndexes = (function getNewIndexes() {
+      var fromArr = _.range(1, this.hakutoiveet.length+1)
+      var toArr = _.range(1, this.hakutoiveet.length+1)
+      toArr.splice(to, 0, toArr.splice(from, 1)[0])
+      return _.object(_.zip(fromArr, toArr))
+    }).call(this)
+
+    _(AdditionalQuestion.questionMap(this.additionalQuestions)).each(function(question, id) {
+      var questionIdParts = /^(preference)(\d+)(-.+)/.exec(id)
+      if (questionIdParts != null) {
+        var newId = questionIdParts[1] + newIndexes[questionIdParts[2]] + questionIdParts[3]
+        question.question.id.questionId = newId
+      }
+    })
   },
 
   getChangedItems: function() {

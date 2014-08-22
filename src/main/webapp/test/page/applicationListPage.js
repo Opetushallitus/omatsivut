@@ -56,6 +56,7 @@ function ApplicationListPage() {
           .then(api.saveButton().click)
           .then(wait.untilFalse(api.saveButton().isEnabled)) // Tallennus on joko alkanut tai valmis
           .then(wait.until(api.isSavingState(false))) // Tallennus ei ole kesken
+          .then(wait.until(function() { return api.saveError() == "" }))
           .then(wait.until(function() { return timestamp().text() != "01.01.1970 02:00:00" })) // tallennus-aikaleima päivittyy
 
         function timestamp() { return getApplicationElement().find(".timestamp time") }
