@@ -45,28 +45,30 @@ class ValidateApplicationSpec extends HakemusApiSpecification {
       }
     }
 
-    /*
-
-    // TODO: find fixture data for this case
-
-    "get additional question indices correctly" in {
-      withHakemus(TestFixture.hakemus2) { hakemus =>
-        val modified = addHakutoive(hevostalous)(hakemus)
-        validate(modified) { (errors, structuredQuestions) =>
+    "get additional question correctly for old questions" in {
+      withHakemus(TestFixture.hakemusWithGradeGridAndDancePreference) { hakemus =>
+        validate(hakemus, Some("1.2.246.562.5.31982630126,1.2.246.562.5.68672543292,1.2.246.562.14.2013102812460331191879" )) { (errors, structuredQuestions) =>
           QuestionNode.flatten(structuredQuestions).map(_.id) must_== List(
-            QuestionId("hakutoiveet","preference3-discretionary"),
-            QuestionId("hakutoiveet","preference3-discretionary-follow-up"),
-            QuestionId("hakutoiveet","preference3_kaksoistutkinnon_lisakysymys")
+             QuestionId("hakutoiveet","preference1-discretionary"),
+             QuestionId("hakutoiveet","preference1_kaksoistutkinnon_lisakysymys"),
+             QuestionId("lisatiedot","TYOKOKEMUSKUUKAUDET"),
+             QuestionId("hakutoiveet","preference2-discretionary"),
+             QuestionId("hakutoiveet","preference2_urheilijan_ammatillisen_koulutuksen_lisakysymys"),
+             QuestionId("hakutoiveet","preference2_kaksoistutkinnon_lisakysymys"),
+             QuestionId("lisatiedot","TYOKOKEMUSKUUKAUDET"),
+             QuestionId("hakutoiveet","preference3-discretionary"),
+             QuestionId("lisatiedot","TYOKOKEMUSKUUKAUDET")
           )
         }
       }
     }
-
-    */
   }
 
-  def validate[T](hakemus:Hakemus)(f: (List[ValidationError], List[QuestionNode]) => T) = {
-    authPost("/applications/validate/" + hakemus.oid, TestFixture.personOid, Serialization.write(hakemus)) {
+  def validate[T](hakemus:Hakemus, questionsOf: Option[String] = None)(f: (List[ValidationError], List[QuestionNode]) => T) = {
+    authPost("/applications/validate/" + hakemus.oid + (questionsOf match {
+        case Some(value) =>  "?questionsOf=" + value
+        case None => ""}),
+        TestFixture.personOid, Serialization.write(hakemus)) {
       status must_== 200
       val result: JValue = JsonMethods.parse(body)
       val errors: List[ValidationError] = (result \ "errors").extract[List[ValidationError]]
