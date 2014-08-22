@@ -122,7 +122,7 @@ module.exports = function(listApp) {
 
     $scope.movePreference = function(from, to) {
       if (to >= 0 && to < this.application.hakutoiveet.length) {
-        this.application.moveHakutoive(from, to)
+        this.application.movePreference(from, to)
         setStatusMessage()
       }
     }

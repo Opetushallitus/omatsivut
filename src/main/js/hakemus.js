@@ -8,9 +8,29 @@ function Hakemus(json) {
   this.additionalQuestions = null
 }
 
+function updatePreferenceQuestionIds(manipulationF) {
+  var newIndexes = (function getNewIndexes() {
+    var fromArr = _.range(1, this.hakutoiveet.length+1)
+    var toArr = _.range(1, this.hakutoiveet.length+1)
+    manipulationF(toArr)
+    return _.object(_.zip(fromArr, toArr))
+  }).call(this)
+
+  _(AdditionalQuestion.questionMap(this.additionalQuestions)).each(function(question, id) {
+    var questionIdParts = /^(preference)(\d+)(-.+)/.exec(id)
+    if (questionIdParts != null) {
+      var newId = questionIdParts[1] + newIndexes[questionIdParts[2]] + questionIdParts[3]
+      question.question.id.questionId = newId
+    }
+  })
+}
+
 Hakemus.prototype = {
   removePreference: function(index) {
-    var row = this.hakutoiveet.splice(index, 1)[0]
+    this.hakutoiveet.splice(index, 1)
+    updatePreferenceQuestionIds.call(this, function(arr) {
+      arr.splice(index, 1)
+    })
   },
 
   addPreference: function(hakutoive) {
@@ -19,6 +39,18 @@ Hakemus.prototype = {
 
   hasPreference: function(index) {
     return index >= 0 && index <= this.hakutoiveet.length-1 && this.hakutoiveet[index].hasData()
+  },
+
+  movePreference: function(from, to) {
+    this.hakutoiveet[from].setAsModified()
+    this.hakutoiveet[to].setAsModified()
+    this.hakutoiveet.splice(to, 0, this.hakutoiveet.splice(from, 1)[0])
+
+    updatePreferenceQuestionIds.call(this,
+      function(arr) {
+        arr.splice(to, 0, arr.splice(from, 1)[0])
+      }
+    )
   },
 
   canMoveTo: function(from, to) {
@@ -96,27 +128,6 @@ Hakemus.prototype = {
 
   getOptionAnswerWatchCollection: function() {
     return _(AdditionalQuestion.questionMap(this.additionalQuestions)).filter(function(item) {return item.question.options != null}).map(function(item, key) { return item.answer })
-  },
-
-  moveHakutoive: function(from, to) {
-    this.hakutoiveet[from].setAsModified()
-    this.hakutoiveet[to].setAsModified()
-    this.hakutoiveet.splice(to, 0, this.hakutoiveet.splice(from, 1)[0])
-
-    var newIndexes = (function getNewIndexes() {
-      var fromArr = _.range(1, this.hakutoiveet.length+1)
-      var toArr = _.range(1, this.hakutoiveet.length+1)
-      toArr.splice(to, 0, toArr.splice(from, 1)[0])
-      return _.object(_.zip(fromArr, toArr))
-    }).call(this)
-
-    _(AdditionalQuestion.questionMap(this.additionalQuestions)).each(function(question, id) {
-      var questionIdParts = /^(preference)(\d+)(-.+)/.exec(id)
-      if (questionIdParts != null) {
-        var newId = questionIdParts[1] + newIndexes[questionIdParts[2]] + questionIdParts[3]
-        question.question.id.questionId = newId
-      }
-    })
   },
 
   getChangedItems: function() {
