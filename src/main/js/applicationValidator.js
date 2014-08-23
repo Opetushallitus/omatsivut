@@ -47,7 +47,14 @@ module.exports = function(listApp) {
     }
 
     function validateBackend(application, success, error) {
-      var responsePromise = $http.post("/omatsivut/api/applications/validate/" + application.oid, application.toJson())
+      var newHakutoiveet = _(application.hakutoiveet).chain()
+        .filter(function(hakutoive) { return hakutoive.addedDuringCurrentSession })
+        .map(function(hakutoive) { return hakutoive.data["Koulutus-id"] })
+        .compact().value().join(",")
+
+      var questionQueryParam = newHakutoiveet.length > 0 ? "?questionsOf=" + newHakutoiveet : ""
+
+      var responsePromise = $http.post("/omatsivut/api/applications/validate/" + application.oid + questionQueryParam, application.toJson())
       responsePromise.success(function(data, status, headers, config) {
         if (data.errors.length === 0) {
           success({

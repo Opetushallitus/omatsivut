@@ -4,6 +4,7 @@ function Hakutoive(json) {
   this.data = json
   this.isModified = false
   this.isNew = _.isEmpty(json)
+  this.addedDuringCurrentSession = _.isEmpty(json)
   this.errors = []
 }
 
