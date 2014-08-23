@@ -1,8 +1,7 @@
 package fi.vm.sade.omatsivut.hakemus
 
 import fi.vm.sade.haku.oppija.lomake.domain.elements.{Titled, Element}
-import fi.vm.sade.omatsivut.domain.{QuestionGroup, QuestionLeafNode}
-import fi.vm.sade.omatsivut.domain.Language
+import fi.vm.sade.omatsivut.domain.{QuestionNode, QuestionGroup, QuestionLeafNode, Language}
 
 object QuestionGrouper {
   def groupQuestionsByStructure(contextElement: ElementWrapper, foundQuestions: Set[(QuestionLeafNode)])(implicit lang: Language.Language): List[QuestionGroup] = {
@@ -26,6 +25,27 @@ object QuestionGrouper {
 
         QuestionGroup(groupName, sortedQuestions)
     }
+  }
+
+  def avoidDoubles(contextElement: ElementWrapper, questions: List[QuestionNode])(implicit lang: Language.Language) : List[QuestionNode] = {
+    def getDuplicates = {
+      val n:List[QuestionLeafNode] = questions.flatMap(_.flatten)
+      val groups = n.groupBy { node => node.id }
+      groups.filter { case (_, nodes) => nodes.length > 1 }.map(_._2.head)
+    }
+
+    val duplicates = getDuplicates
+    val duplicateIds = duplicates.map(_.id).toSet
+
+    val withoutDuplicates = questions.map { item => item match {
+        case group: QuestionGroup =>
+          group.filter { (question) => !duplicateIds.contains(question.id) }
+        case _ =>
+          item
+      }
+    }
+
+    withoutDuplicates ::: QuestionGrouper.groupQuestionsByStructure(contextElement, duplicates.toSet)
   }
 }
 

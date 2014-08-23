@@ -42,7 +42,7 @@ case class ApplicationValidator(implicit val appConfig: AppConfig) extends Loggi
         }
       }
 
-      (validationErrors, questionsPerHakutoive)
+      (validationErrors, QuestionGrouper.avoidDoubles(filteredForm, questionsPerHakutoive))
     } ("Error validating application: " + hakemus.oid)
   }
 
