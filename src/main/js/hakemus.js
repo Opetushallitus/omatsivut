@@ -10,10 +10,10 @@ function Hakemus(json) {
 
 function updatePreferenceQuestionIds(manipulationF) {
   var newIndexes = (function getNewIndexes() {
-    var fromArr = _.range(1, this.hakutoiveet.length+1)
-    var toArr = _.range(1, this.hakutoiveet.length+1)
-    manipulationF(toArr)
-    return _.object(_.zip(fromArr, toArr))
+    var arr = _.range(1, this.hakutoiveet.length+1)
+    manipulationF(arr)
+    var indexes = _(arr).map(function(val, index) { return [val, index+1] })
+    return _.object(indexes)
   }).call(this)
 
   _(AdditionalQuestion.questionMap(this.additionalQuestions)).each(function(question, id) {
