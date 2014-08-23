@@ -215,12 +215,6 @@ function ApplicationListPage() {
         return _(this.validationMessages()).filter(function(msg) { return msg.length > 0 }).length
       },
       enterAnswer: function(index, answer) {
-        function inputType(el) {
-          if (el.prop("tagName") == "SELECT" || el.prop("tagName") == "TEXTAREA")
-            return el.prop("tagName")
-          else
-            return el.prop("type").toUpperCase()
-        }
         var input = el().find(".question").eq(index).find("input, textarea, select")
         switch (inputType(input)) {
           case "TEXT":
@@ -240,14 +234,37 @@ function ApplicationListPage() {
             break;
 
         }
-        //input.val(answer).change()
       },
       getAnswer: function(index) {
-        return el().find(".question").eq(index).find("input").val()
+        var input = el().find(".question").eq(index).find("input, textarea, select")
+        switch (inputType(input)) {
+          case "TEXT":
+          case "TEXTAREA":
+            return input.val(); break;
+          case "CHECKBOX":
+            throw new Error("todo")
+            break;
+          case "RADIO":
+            return _(input).chain()
+              .filter(function(item) { return $(item).val() == "true" })
+              .map(function(item) { return $(item) })
+              .first().value().closest("label").text().trim()
+          case "SELECT":
+            return $(_(input.children()).find(function(opt) { return opt.value == input.val() })).text()
+          default:
+            throw new Error("todo")
+        }
       },
       count: function() {
         return this.data().length
       }
+    }
+
+    function inputType(el) {
+      if (el.prop("tagName") == "SELECT" || el.prop("tagName") == "TEXTAREA")
+        return el.prop("tagName")
+      else
+        return el.prop("type").toUpperCase()
     }
   }
 

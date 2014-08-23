@@ -427,7 +427,7 @@
       )
 
       function answerDiscretionaryQuestions() {
-        return wait.until(function() { return hakemus2.questionsForApplication().count() == 2})()
+        return wait.until(function() { return hakemus2.questionsForApplication().count() >= 2})()
           .then(function() { hakemus2.questionsForApplication().enterAnswer(0, "Kyllä") })
           .then(wait.until(function() { return hakemus2.questionsForApplication().count() == 3})).then(function() {
             hakemus2.questionsForApplication().enterAnswer(1, "Oppimisvaikeudet")
@@ -443,9 +443,7 @@
       })
 
       describe("Vastaaminen kun haetaan harkintaan perustuvassa valinnassa", function() {
-        before(
-          answerDiscretionaryQuestions
-        )
+        before(answerDiscretionaryQuestions)
 
         it("onnistuu", function() {
         })
@@ -462,15 +460,27 @@
 
           it("tallennetun rivin siirtäminen onnistuu", function() {
             return hakemus2.getPreference(0).moveDown().then(function() {
-              hakemus2.getPreference(0).moveDown()
-            }).then(function() {
-              return hakemus2.saveWaitSuccess()
+              hakemus2.saveWaitSuccess()
             })
+          })
+
+          it("vastaukset siirtyvät listan muokkauksen mukana", function() {
+            hakemus2.questionsForApplication().getAnswer(0).should.equal("Kyllä")
+            hakemus2.questionsForApplication().getAnswer(1).should.equal("Oppimisvaikeudet")
           })
         })
 
-        it.skip("poiston jälkeen discretionary-tiedot siirtyvät oikein", function() {
-          // TODO
+        //after(hakemus2.getPreference(1).moveUp)
+      })
+
+      describe("Hakutoiveen poiston jälkeen", function() {
+        before(
+          answerDiscretionaryQuestions,
+          hakemus2.getPreference(0).remove
+        )
+        it("harkinnanvaraisuustietoja sisältävät vastaukset näkyvät oikein", function() {
+          hakemus2.questionsForApplication().getAnswer(0).should.equal("Kyllä")
+          hakemus2.questionsForApplication().getAnswer(1).should.equal("Oppimisvaikeudet")
         })
       })
     })
