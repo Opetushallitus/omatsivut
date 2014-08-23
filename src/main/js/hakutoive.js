@@ -105,6 +105,14 @@ Hakutoive.isHakutoiveError = function(questionId) {
   return hakutoiveErrorRegexp.test(questionId)
 }
 
+Hakutoive.parseHakutoiveIndex = function(questionId) {
+  var result = /^preference(\d+)/.exec(questionId)
+  if (result)
+    return Number(result[1])
+  else
+    return null
+}
+
 Hakutoive.hasHakutoiveErrors = function(errorsJson) {
   var errorMap = util.mapArray(errorsJson, "key", "message");
   var self = this

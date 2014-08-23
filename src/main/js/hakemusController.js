@@ -104,7 +104,9 @@ module.exports = function(listApp) {
           setStatusMessage(localization("error.validationFailed_httpError"), "error")
         }
 
-        if (data.questions) // frontside validation does not include questions -> don't update // TODO: testikeissi tälle (vastaa kysymykseen, aiheuta fronttivalidaatiovirhe)
+        var updateQuestions = data.questions != null && !Hakutoive.hasHakutoiveErrors(data.errors)
+
+        if (updateQuestions) // frontside validation does not include questions -> don't update // TODO: testikeissi tälle (vastaa kysymykseen, aiheuta fronttivalidaatiovirhe)
           $scope.application.importQuestions(data.questions)
 
         updateValidationMessages(data.errors, skipQuestions)
@@ -163,12 +165,24 @@ module.exports = function(listApp) {
 
     function updateValidationMessages(errors, skipQuestions) {
       var unhandledMessages = $scope.application.updateValidationMessages(errors, skipQuestions)
+      unhandledMessages = hideErrorIfAlreadyShowsKoulutusError(unhandledMessages)
+
       if (unhandledMessages.length > 0) {
         _(unhandledMessages).each(function(item) {
           console.log("Validaatiovirhettä ei käsitelty:", item.questionId, item.errors)
         })
 
         setStatusMessage(localization("error.serverError"), "error")
+      }
+
+      function hideErrorIfAlreadyShowsKoulutusError(messages) {
+        return _(messages).filter(function(message) {
+          var index = Hakutoive.parseHakutoiveIndex(message.questionId)
+          var relatedErrorShown = _(errors).any(function(error) {
+            return Hakutoive.isHakutoiveError(error.key) && Hakutoive.parseHakutoiveIndex(error.key) == index
+          })
+          return !relatedErrorShown
+        })
       }
     }
   }])
