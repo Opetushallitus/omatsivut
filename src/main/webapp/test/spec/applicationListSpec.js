@@ -374,6 +374,10 @@
           it("lomaketta ei voi tallentaa", function() {
             hakemus1.saveButton(0).isEnabled().should.be.false
           })
+
+          it("sovellus ei ole virhetilassa", function() {
+            hakemus1.saveError().should.equal("Täytä kaikki tiedot")
+          })
         })
 
         describe("kun ensimmäinen hakukohde poistetaan", function() {
