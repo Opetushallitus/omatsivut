@@ -433,6 +433,7 @@
             hakemus2.questionsForApplication().enterAnswer(1, "Oppimisvaikeudet")
           })
           .then(wait.until(function() { return hakemus2.saveError() == "" }))
+          .then(wait.forAngular)
       }
 
       it("kysymykset näytetään", function() {
@@ -469,8 +470,6 @@
             hakemus2.questionsForApplication().getAnswer(1).should.equal("Oppimisvaikeudet")
           })
         })
-
-        //after(hakemus2.getPreference(1).moveUp)
       })
 
       describe("Hakutoiveen poiston jälkeen", function() {
