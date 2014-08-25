@@ -51,11 +51,9 @@ class ValidateApplicationSpec extends HakemusApiSpecification {
           QuestionNode.flatten(structuredQuestions).map(_.id) must_== List(
              QuestionId("hakutoiveet","preference1-discretionary"),
              QuestionId("hakutoiveet","preference1_kaksoistutkinnon_lisakysymys"),
-             QuestionId("lisatiedot","TYOKOKEMUSKUUKAUDET"),
              QuestionId("hakutoiveet","preference2-discretionary"),
              QuestionId("hakutoiveet","preference2_urheilijan_ammatillisen_koulutuksen_lisakysymys"),
              QuestionId("hakutoiveet","preference2_kaksoistutkinnon_lisakysymys"),
-             QuestionId("lisatiedot","TYOKOKEMUSKUUKAUDET"),
              QuestionId("hakutoiveet","preference3-discretionary"),
              QuestionId("lisatiedot","TYOKOKEMUSKUUKAUDET")
           )
