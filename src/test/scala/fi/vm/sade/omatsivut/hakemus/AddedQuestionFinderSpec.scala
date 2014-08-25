@@ -18,14 +18,6 @@ class AddedQuestionFinderSpec extends Specification {
       addedQuestions.length must_== 0
     }
 
-    "Find related questions when adding Hakutoive" in {
-      var addedQuestions = findAddedQuestions(answersWithNewHakutoive, Hakemus.emptyAnswers)
-      addedQuestions.length must_== 11
-      val newHakemus = hakemus.copy(hakutoiveet = ammattistartti :: Nil).copy(answers = Hakemus.emptyAnswers )
-      addedQuestions = AddedQuestionFinder.findQuestionsByHakutoive(as, TestFixture.application, newHakemus, ammattistartti).toList
-      addedQuestions.length must_== 11
-    }
-
     "Report zero additional questions when keeping same answers" in {
       val addedQuestions = findAddedQuestions(answersWithNewHakutoive, answersWithNewHakutoive)
       addedQuestions.length must_== 0

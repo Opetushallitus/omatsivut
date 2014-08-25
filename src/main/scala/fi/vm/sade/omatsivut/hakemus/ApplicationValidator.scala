@@ -14,47 +14,19 @@ import fi.vm.sade.omatsivut.koulutusinformaatio.Liitepyynto
 case class ApplicationValidator(implicit val appConfig: AppConfig) extends Logging {
   private val dao = appConfig.springContext.applicationDAO
   private val validator = appConfig.springContext.validator
-  val preferencePhaseKey = OppijaConstants.PHASE_APPLICATION_OPTIONS
 
   def validate(applicationSystem: ApplicationSystem)(hakemus: Hakemus)(implicit lang: Language.Language): List[ValidationError] = {
     val storedApplication = HakemusRepository().findStoredApplication(hakemus)
     validateHakutoiveetAndAnswers(hakemus, storedApplication, applicationSystem) ++ errorsForUnknownAnswers(applicationSystem, hakemus)
   }
 
-  def validateAndFindQuestions(applicationSystem: ApplicationSystem)(hakemus: Hakemus, questionsOf: List[String])(implicit lang: Language.Language): (List[ValidationError], List[QuestionNode]) = {
+  def validateAndFindQuestions(applicationSystem: ApplicationSystem)(hakemus: Hakemus, newKoulutusIds: List[String])(implicit lang: Language.Language): (List[ValidationError], List[QuestionNode]) = {
     withErrorLogging {
       val storedApplication = HakemusRepository().findStoredApplication(hakemus)
       val validationErrors: List[ValidationError] = validateHakutoiveetAndAnswers(hakemus, storedApplication, applicationSystem)
-      val filteredForm: ElementWrapper = ElementWrapper.wrapFiltered(applicationSystem.getForm, HakemusConverter.flattenAnswers(ApplicationUpdater.getAllAnswersForApplication(applicationSystem, storedApplication.clone(), hakemus)))
-
-      val questionsPerHakutoive: List[QuestionNode] = hakemus.hakutoiveet.zipWithIndex.flatMap { case (hakutoive, index) =>
-        if (shouldAddQuestionsInfo(storedApplication, hakutoive, questionsOf)) {
-
-          val addedByHakutoive: Set[QuestionLeafNode] = AddedQuestionFinder.findQuestionsByHakutoive(applicationSystem, storedApplication, hakemus, hakutoive)
-          val groupedQuestions: Seq[QuestionNode] = QuestionGrouper.groupQuestionsByStructure(filteredForm, addedByHakutoive)
-
-          groupedQuestions match {
-            case Nil => Nil
-            case _ => List(QuestionGroup(HakutoiveetConverter.describe(hakutoive), groupedQuestions.toList))
-          }
-        } else {
-          Nil
-        }
-      }
-
-      (validationErrors, QuestionGrouper.avoidDoubles(filteredForm, questionsPerHakutoive))
+      val questions = AddedQuestionFinder.findQuestions(applicationSystem)(storedApplication, hakemus, newKoulutusIds)
+      (validationErrors, questions)
     } ("Error validating application: " + hakemus.oid)
-  }
-
-  private def shouldAddQuestionsInfo(storedApplication: Application, hakutoive: Hakutoive, questionsOf: List[String]) = {
-    hakutoive.size > 0 && (questionsOf.filter(!_.isEmpty()) match {
-      case Nil => !applicationContains(storedApplication)(hakutoive)
-      case list => list.contains(hakutoive.getOrElse("Koulutus-id", "noId"))
-    })
-  }
-
-  private def applicationContains(application: Application)(hakutoive: Hakutoive) = {
-    HakutoiveetConverter.answersContainHakutoive(application.getAnswers.get(preferencePhaseKey).toMap, hakutoive)
   }
 
   private def validateHakutoiveetAndAnswers(hakemus: Hakemus, storedApplication: Application, applicationSystem: ApplicationSystem)(implicit lang: Language.Language): List[ValidationError] = {

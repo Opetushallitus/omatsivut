@@ -32,19 +32,6 @@ class ValidateApplicationSpec extends HakemusApiSpecification {
       }
     }
 
-    "add additional questions related to added preference" in {
-      FixtureImporter().applyFixtures("peruskoulu")
-      withHakemus(TestFixture.hakemus2) { hakemus =>
-        val modified = addHakutoive(ammattistarttiAhlman)(hakemus)
-        validate(modified) { (errors, structuredQuestions) =>
-          QuestionNode.flatten(structuredQuestions).map(_.id) must_== List(
-            QuestionId("hakutoiveet","preference3-discretionary"),
-            QuestionId("lisatiedot","TYOKOKEMUSKUUKAUDET")
-          )
-        }
-      }
-    }
-
     "get additional question correctly for old questions" in {
       withHakemus(TestFixture.hakemusWithGradeGridAndDancePreference) { hakemus =>
         validate(hakemus, Some("1.2.246.562.5.31982630126,1.2.246.562.5.68672543292,1.2.246.562.14.2013102812460331191879" )) { (errors, structuredQuestions) =>
