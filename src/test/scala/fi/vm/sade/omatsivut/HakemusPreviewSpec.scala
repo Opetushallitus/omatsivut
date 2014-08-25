@@ -21,6 +21,7 @@ class HakemusPreviewSpec extends HakemusApiSpecification {
         // henkilötiedot
         body must contain("""<div class="question"><label>Sukunimi</label><span class="answer">Testaaja</span>""")
         body must contain("""<div class="question"><label>Äidinkieli</label><span class="answer">suomi</span>""")
+        body must contain("""<div class="question"><label>Lähiosoite</label><span class="answer">foobartie 1</span></div>""")
         // koulutustausta
         body must contain("""<div class="question"><label>Valitse tutkinto, jolla haet koulutukseen</label><span class="answer">Perusopetuksen oppimäärä</span>""")
         // hakutoiveet

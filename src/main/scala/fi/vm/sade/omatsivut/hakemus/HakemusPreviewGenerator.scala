@@ -53,8 +53,8 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
         case _: TextArea => List(textQuestionPreview(element))
         case _: SocialSecurityNumber => List(textQuestionPreview(element))
         case _: TextQuestion => List(textQuestionPreview(element))
-        case _: OptionQuestion => List(optionQuestionPreview(element))
-        case _: CheckBox => List(checkBoxPreview(element))
+        case _: OptionQuestion => optionQuestionPreview(element)
+        case _: CheckBox => checkBoxPreview(element)
         case _: Theme => themePreview(element)
         case _: Phase => childrenPreview(element)
         case _: RelatedQuestionRule => childrenPreview(element)
@@ -186,7 +186,7 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
 
     def optionQuestionPreview(element: ElementWrapper) = {
       val answer = answerFromOptions(element.options, element.id)
-      questionPreview(element.title, answer)
+      questionPreview(element.title, answer) :: childrenPreview(element)
     }
 
     def answerFromOptions(options: List[OptionWrapper], key: String) = {
@@ -204,7 +204,7 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
         case true => Translations.getTranslation("message", "yes")
         case false => Translations.getTranslation("message", "no")
       }
-      questionPreview(element.title, translatedAnswer)
+      questionPreview(element.title, translatedAnswer) :: childrenPreview(element)
     }
 
     def titledGroupPreview(element: ElementWrapper) = {
