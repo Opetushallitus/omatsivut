@@ -53,7 +53,7 @@
                         </div>
 
                         <div class="application-state-message" ng-if="application.postProcessing || application.state == 'SUBMITTED'">
-                            Hakemuksesi on vielä käsiteltävänä. Jos haluat muuttaa hakutoiveitasi, yritä myöhemmin uudelleen.
+                            {{ localization("message.applicationIsInPostProcessing") }}
                         </div>
                     </p>
 
@@ -108,7 +108,7 @@
                                                 </select>
                                                 <span class="instruction" ng-hide="isEditingDisabled() || hakutoive.hasOpetuspiste()">{{localization('label.chooseLocation')}}</span>
                                                 <span class="validation-message error" ng-if="hakutoive.errors.length">{{hakutoive.errors.join(', ')}}</span>
-                                                <span class="instruction ajax-spinner-small" ng-show="isLoadingKoulutusList()">Lataa tietoja...</span>
+                                                <span class="instruction ajax-spinner-small" ng-show="isLoadingKoulutusList()">{{ localization("message.loadingData") }}</span>
                                             </div>
                                         </label>
                                     </div>

@@ -36,12 +36,14 @@
 
   "message": {
     "loadingApplications": "Hakemuksia ladataan...",
+    "loadingData": "Lataa tietoja...",
     "noApplications": "Sinulla ei ole hakemuksia, joita on mahdollista muokata. Etsi koulutukset sanahaulla, ja täytä hakulomake. Tunnistautuneena voit tällä sivulla muokata hakemustasi hakuaikana.",
     "validationOk": "Muista tallentaa muutokset",
     "changesSaved": "Kaikki muutokset tallennettu",
     "yes": "Kyllä",
     "no": "Ei",
-    "rememberSendAttachments": "Muista lähettää hakemuksen <a>liitteet</a>."
+    "rememberSendAttachments": "Muista lähettää hakemuksen <a>liitteet</a>.",
+    "applicationIsInPostProcessing": "Hakemuksesi on vielä käsiteltävänä. Jos haluat muuttaa hakutoiveitasi, yritä myöhemmin uudelleen."
   },
 
   "error": {

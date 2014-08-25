@@ -36,12 +36,14 @@
 
   "message": {
     "loadingApplications": "Loading application forms...",
+    "loadingData": "Loading...",
     "noApplications": "You don't have any applications that can be edited. Find study options with the search engine and fill in the application form. As an identified user you can edit your application form on this page during the application period.",
     "validationOk": "Do not forget to save the changes",
     "changesSaved": "All changes saved.",
     "yes": "Yes",
     "no": "No",
-    "rememberSendAttachments": "Remember to send the <a>attachments</a>."
+    "rememberSendAttachments": "Remember to send the <a>attachments</a>.",
+    "applicationIsInPostProcessing": "We are processing your application. If you want to make any changes, please try again later."
   },
 
   "error": {
