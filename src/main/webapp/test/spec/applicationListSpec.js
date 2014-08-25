@@ -14,11 +14,7 @@
   var hakemusKorkeakoulu = page.getApplication(hakemusKorkeakouluId)
 
   afterEach(function() {
-    expect(window.uiError).to.be.null
-  })
-
-  afterEach(function() {
-    expect(window.uiError).to.be.null
+    expect(window.uiError || null).to.be.null
   })
 
   describe('Tyhjä hakemuslistaus', function () {
@@ -38,8 +34,15 @@
     })
   })
 
-  describe('Hakemuslistaus ruotsiksi', function () {
+  describe("Sivupohjan lokalisointi", function() {
+    it("kaikki tekstit on lokalisoitu", function() {
+      return ApplicationListPage().getNonLocalizedText().then(function(text) {
+        expect(text).to.equal("")
+      })
+    })
+  })
 
+  describe('Hakemuslistaus ruotsiksi', function () {
     before(function (done) {
       session.init("010101-123N","sv").then(page.resetDataAndOpen).done(done)
     })

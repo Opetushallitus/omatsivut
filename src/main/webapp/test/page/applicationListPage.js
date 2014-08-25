@@ -39,12 +39,34 @@ function ApplicationListPage() {
 
     getApplication: function(applicationIndex) {
       return Application(applicationIndex)
+    },
+
+    getNonLocalizedText: function() {
+      return getTemplates().then(function(templates) {
+        function nonLocalizedText(text) {
+          text = text.replace(/\{\{.*?\}\}/g, "")
+          return text.match(/\w+/)
+        }
+
+        var texts = _(templates).map(function(template) { return nonLocalizedText(template) })
+        return _(texts).chain().compact().flatten().value().join("")
+      })
+
     }
   }
 
   function applicationPageVisible() {
     return S("#hakemus-list").attr("ng-cloak") == null && api.applications().length > 0
   }
+
+  function getTemplates() {
+    return Q($.get("/omatsivut/index.html")).then(function(data) {
+      var dom = $(data)
+      var template = $(dom.find("script").detach().text())
+      return [dom.text(), template.text()]
+    })
+  }
+
   return api
 
   function Application(applicationIndex) {
