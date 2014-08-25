@@ -7,7 +7,6 @@ import com.earldouglas.xsbtwebplugin.WebPlugin.container
 import com.earldouglas.xsbtwebplugin.PluginKeys._
 
 class MochaException extends RuntimeException("mocha tests failed", null, false, false)
-
 object OmatsivutBuild extends Build {
   val Organization = "fi.vm.sade"
   val Name = "omatsivut"
@@ -74,7 +73,7 @@ object OmatsivutBuild extends Build {
         "com.scalatags" %% "scalatags" % "0.3.9",
         "com.fasterxml.jackson.dataformat" % "jackson-dataformat-yaml" % "2.4.1",
         "commons-codec" % "commons-codec" % "1.9",
-        "fi.vm.sade.haku" % "hakemus-api" % "10.0-SNAPSHOT" excludeAll(
+        "fi.vm.sade.haku" % "hakemus-api" % "11.0-SNAPSHOT" excludeAll(
           ExclusionRule(organization = "org.json4s"),
           ExclusionRule(organization = "com.wordnik")
         ),
