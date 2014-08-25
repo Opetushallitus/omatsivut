@@ -48,7 +48,12 @@ protected object AddedQuestionFinder {
       }
     }
 
-    withoutDuplicates(questionsPerHakutoive) ::: QuestionGrouper.groupQuestionsByStructure(filteredForm, getDuplicateQuestions(questionsPerHakutoive).toSet)
+    val duplicates = getDuplicateQuestions(questionsPerHakutoive) match {
+      case questions: List[QuestionNode] if questions.nonEmpty => List(QuestionGroup("", QuestionGrouper.groupQuestionsByStructure(filteredForm, questions.toSet)))
+      case _ => Nil
+    }
+
+    withoutDuplicates(questionsPerHakutoive) ::: duplicates
   }
 
   private def findQuestionsByHakutoive(applicationSystem: ApplicationSystem, storedApplication: Application, newHakemus: Hakemus, hakutoive: Hakutoive)(implicit lang: Language.Language): Set[QuestionLeafNode] = {

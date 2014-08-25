@@ -19,7 +19,9 @@
     "education": "Study programme",
     "education_university": "Study programme",
     "chooseLocation": "First choose location",
-    "resultsPublishedDate": "Results will be published"
+    "resultsPublishedDate": "Results will be published",
+    "questionGroupWithTitle": "Additional questions",
+    "questionGroupWithoutTitle": "Additional questions"
   },
 
   "button": {

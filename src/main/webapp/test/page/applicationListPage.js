@@ -208,6 +208,10 @@ function ApplicationListPage() {
       titles: function() {
         return _.pluck(this.data(), "title")
       },
+      groupTitles: function() {
+        var titles = _(el().find(".application-section-heading")).map(function(el) { return $(el).text().replace(/\s+/g, " ").trim() })
+        return titles
+      },
       validationMessages: function() {
         return _.pluck(this.data(), "validationMessage")
       },

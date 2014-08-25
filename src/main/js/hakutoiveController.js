@@ -1,7 +1,8 @@
 var Hakutoive = require('./hakutoive')
 
 module.exports = function(listApp) {
-  listApp.controller("additionalQuestionController", ["$scope", function($scope) {
+  listApp.controller("additionalQuestionController", ["$scope", "localization", function($scope, localization) {
+    $scope.localization = localization
     $scope.questionAnswered = function() {
       $scope.$emit("questionAnswered")
     }

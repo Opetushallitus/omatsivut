@@ -423,7 +423,7 @@
         page.applyFixtureAndOpen("peruskoulu"),
         hakemus2.getPreference(0).remove,
         hakemus2.saveWaitSuccess,
-        replacePreference(hakemus2, 1, "Ahlman")
+        replacePreference(hakemus2, 1, "Ahlman", 0)
       )
 
       function answerDiscretionaryQuestions() {
@@ -480,6 +480,17 @@
         it("harkinnanvaraisuustietoja sisältävät vastaukset näkyvät oikein", function() {
           hakemus2.questionsForApplication().getAnswer(0).should.equal("Kyllä")
           hakemus2.questionsForApplication().getAnswer(1).should.equal("Oppimisvaikeudet")
+        })
+      })
+
+      describe("kysymysten ryhmittely", function() {
+        before(replacePreference(hakemus2, 1, "Ahlman", 1))
+        it("kysymykset ryhmitellään oikein", function() {
+          var groupTitles = hakemus2.questionsForApplication().groupTitles()
+          expect(groupTitles).to.deep.equal([
+            'Lisäkysymykset: Muut lisäkysymykset: Ahlmanin ammattiopisto - Ammattistartti',
+            'Lisäkysymykset: Muut lisäkysymykset: Ahlmanin ammattiopisto - Maatalousalan perustutkinto, pk',
+            'Lisäkysymykset: Muut lisäkysymykset:' ])
         })
       })
     })
@@ -807,12 +818,13 @@
     })
   })
 
-  function replacePreference(hakemus, index, searchString) {
+  function replacePreference(hakemus, index, searchString, koulutusIndex) {
+    koulutusIndex = koulutusIndex || 0
     return function() {
       var pref = hakemus.getPreference(index)
       return pref.remove()
         .then(pref.selectOpetusPiste(searchString))
-        .then(pref.selectKoulutus(0))
+        .then(pref.selectKoulutus(koulutusIndex))
     }
   }
 

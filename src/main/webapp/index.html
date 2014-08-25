@@ -127,7 +127,11 @@
                         <script type="text/ng-template" id="questionTemplate.html">
                             <div ng-switch="isGroup()" ng-controller="additionalQuestionController">
                                 <div ng-switch-when="true" class="question-group">
-                                    <div ng-if="level == 0" class="application-section-heading">Lisäkysymykset: {{ questionNode.title }}</div>
+                                    <div ng-if="level == 0" class="application-section-heading">
+                                        <span ng-show="questionNode.title.length > 0">{{localization("label.questionGroupWithTitle")}}:</span>
+                                        <span ng-show="questionNode.title.length == 0">{{localization("label.questionGroupWithoutTitle")}}:</span>
+                                        {{ questionNode.title }}
+                                    </div>
                                     <label ng-if="level > 0" class="question-group-title">{{ questionNode.title }}:</label>
 
                                     <div ng-class="{ 'question-group-indent': level > 0, 'question-group-section': level == 0 }" ng-repeat="subItem in questionNode.questionNodes">

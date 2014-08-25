@@ -65,4 +65,3 @@ listApp.factory("settings", ["$animate", function($animate) {
     uiIndicatorDebounce: testMode() ? 0: 500
   };
 }]);
-
