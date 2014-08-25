@@ -165,7 +165,7 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
         Nil
       }
       else {
-        List(div(`class` := "theme")(h2(element.title), childrenPreview(element)))
+        List(div(`class` := "theme")(h2(raw(element.title)), childrenPreview(element)))
       }
     }
 
@@ -179,7 +179,7 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
       }
       else {
         div(`class` := "question")(
-          label(question),
+          label(raw(question)),
           span(`class` := "answer")(answer)
         ) :: Nil
       }
@@ -214,7 +214,7 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
 
     def titledGroupPreview(element: ElementWrapper) = {
       div(`class` := "group")(
-        h3(element.title) :: childrenPreview(element)
+        h3(raw(element.title)) :: childrenPreview(element)
       )
     }
 
