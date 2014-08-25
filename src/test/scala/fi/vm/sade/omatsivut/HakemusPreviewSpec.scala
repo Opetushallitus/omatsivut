@@ -22,6 +22,7 @@ class HakemusPreviewSpec extends HakemusApiSpecification {
         body must contain("""<div class="question"><label>Sukunimi</label><span class="answer">Testaaja</span>""")
         body must contain("""<div class="question"><label>Äidinkieli</label><span class="answer">suomi</span>""")
         body must contain("""<div class="question"><label>Lähiosoite</label><span class="answer">foobartie 1</span></div>""")
+        body.split("div").toList.count(_.contains("<label>Puhelinnumero</label>")) must_== 2
         // koulutustausta
         body must contain("""<div class="question"><label>Valitse tutkinto, jolla haet koulutukseen</label><span class="answer">Perusopetuksen oppimäärä</span>""")
         // hakutoiveet

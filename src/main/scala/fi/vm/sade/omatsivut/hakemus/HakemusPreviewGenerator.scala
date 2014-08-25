@@ -46,13 +46,13 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
     val form = ElementWrapper.wrapFiltered(applicationSystem.getForm, answers)
     val addInfos = for(addInfo <- applicationSystem.getAdditionalInformationElements()) yield ElementWrapper.wrapFiltered(addInfo, answers)
 
-    def questionsPreview(element: ElementWrapper): List[TypedTag[String]] = {
+    def questionsPreview(element: ElementWrapper, showEmptyValues: Boolean): List[TypedTag[String]] = {
       element.element match {
         case _: GradeGrid => List(gradeGridPreview(element))
         case _: PreferenceTable => List(preferenceTablePreview(element))
-        case _: TextArea => List(textQuestionPreview(element))
-        case _: SocialSecurityNumber => List(textQuestionPreview(element))
-        case _: TextQuestion => List(textQuestionPreview(element))
+        case _: TextArea => textQuestionPreview(element)
+        case _: SocialSecurityNumber => textQuestionPreview(element)
+        case _: TextQuestion => textQuestionPreview(element, showEmptyValues)
         case _: OptionQuestion => optionQuestionPreview(element)
         case _: CheckBox => checkBoxPreview(element)
         case _: Theme => themePreview(element)
@@ -62,7 +62,7 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
         case link: Link => List(linkPreview(element, link))
         case _: TitledGroup => List(titledGroupPreview(element))
         case _: DateQuestion => List(textPreview(element))
-        case _: AddElementRule => Nil
+        case _: AddElementRule => childrenPreview(element, false)
         case _: HiddenValue => Nil // info about attachments are added separately in the end of the document
         case _ =>
           logger.warn("Ignoring element " + element.element.getType + ": " + element.id)
@@ -82,7 +82,7 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
       else {
         List(div(`class` := "theme")(
             hr(),
-            questionsPreview(element)
+            questionsPreview(element, true)
         ))
       }
     }
@@ -169,24 +169,29 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
       }
     }
 
-    def childrenPreview(element: ElementWrapper) = {
-      element.children.flatMap(questionsPreview)
+    def childrenPreview(element: ElementWrapper, showEmptyValues: Boolean = true) = {
+      element.children.flatMap(questionsPreview(_, showEmptyValues))
     }
 
-    def questionPreview(question: String, answer: String) = {
-      div(`class` := "question")(
-        label(question),
-        span(`class` := "answer")(answer)
-      )
+    def questionPreview(question: String, answer: String, showEmptyValues: Boolean = true) = {
+      if(answer.trim().isEmpty() && !showEmptyValues) {
+        Nil
+      }
+      else {
+        div(`class` := "question")(
+          label(question),
+          span(`class` := "answer")(answer)
+        ) :: Nil
+      }
     }
 
-    def textQuestionPreview(element: ElementWrapper) = {
-      questionPreview(element.title, answers.get(element.id).getOrElse("").asInstanceOf[String])
+    def textQuestionPreview(element: ElementWrapper, showEmptyValues: Boolean = true) = {
+      questionPreview(element.title, answers.get(element.id).getOrElse("").asInstanceOf[String], showEmptyValues)
     }
 
     def optionQuestionPreview(element: ElementWrapper) = {
       val answer = answerFromOptions(element.options, element.id)
-      questionPreview(element.title, answer) :: childrenPreview(element)
+      questionPreview(element.title, answer) ::: childrenPreview(element)
     }
 
     def answerFromOptions(options: List[OptionWrapper], key: String) = {
@@ -204,12 +209,12 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
         case true => Translations.getTranslation("message", "yes")
         case false => Translations.getTranslation("message", "no")
       }
-      questionPreview(element.title, translatedAnswer) :: childrenPreview(element)
+      questionPreview(element.title, translatedAnswer) ::: childrenPreview(element)
     }
 
     def titledGroupPreview(element: ElementWrapper) = {
       div(`class` := "group")(
-        h3(element.title) :: element.children.flatMap(questionsPreview)
+        h3(element.title) :: childrenPreview(element)
       )
     }
 
@@ -327,7 +332,7 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
           div(`class` := "detail application-id")(label(Translations.getTranslation("applicationPreview", "applicationId")), span(formatOid(application.getOid)))
         )
         ::
-        form.getElementsOfType[Phase].flatMap(questionsPreview)
+        form.getElementsOfType[Phase].flatMap(questionsPreview(_, true))
         :::
         additionalInformationElementsPreview()
         :::
