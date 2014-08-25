@@ -86,3 +86,6 @@ src/main/webapp/css/
 
 # active mq
 activemq-data
+
+#gatling
+gatling/
