@@ -71,10 +71,8 @@
                             {{ localization('label.preferences') }}
                             <button class="float-right save-btn" ng-disabled="!hasChanged || statusMessageType=='pending' || !isSaveable || isValidating" ng-click="saveApplication()">{{ localization('button.save') }}</button>
                             <span role="status" class="status-message float-right" ng-class="{'ajax-spinner': statusMessageType=='pending', error: statusMessageType=='error'}" ng-bind="statusMessage"></span>
-
                             <div callout="attachments">
-                                <span ng-bind-html="attachmentLink(localization('message.rememberSendAttachments'))">
-                                </span>
+                                <localized-link key="message.rememberSendAttachments" href="{{ '/omatsivut/api/applications/preview/' + application.oid + '#liitteet'}}" target="_blank"></localized-link>
                             </div>
                         </header>
 

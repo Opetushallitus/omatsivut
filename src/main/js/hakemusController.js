@@ -38,14 +38,6 @@ module.exports = function(listApp) {
         return localization("label.applicationUpdated")
     }
 
-    $scope.attachmentLink = function(linkString) {
-      link = $("<span>" + linkString + "</span>")
-      link.find("a")
-        .attr("href", "/omatsivut/api/applications/preview/" + $scope.application.oid + "#liitteet")
-        .attr("target", "_blank")
-      return $sce.trustAsHtml(link.html())
-    }
-
     $scope.$watch("application.getHakutoiveWatchCollection()", function(hakutoiveet, oldHakutoiveet) {
       // Skip initial values angular style
       if (!_.isEqual(hakutoiveet, oldHakutoiveet)) {
