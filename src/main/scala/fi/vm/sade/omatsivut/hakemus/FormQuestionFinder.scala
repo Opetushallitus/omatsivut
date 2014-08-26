@@ -24,14 +24,14 @@ protected object FormQuestionFinder extends Logging {
 
   def findHiddenValues(contextElement: ElementWrapper): Set[(QuestionId, String)] = {
     contextElement.getElementsOfType[HiddenValue].map { hiddenValue =>
-      val id = QuestionId(hiddenValue.phase.getId, hiddenValue.id)
+      val id = QuestionId(hiddenValue.phase.map(_.getId).getOrElse(""), hiddenValue.id)
       (id, hiddenValue.element.asInstanceOf[HiddenValue].getValue)
     }.toSet
   }
 
   private def titledElementToQuestions(elementWrapper: ElementWrapper)(implicit lang: Language.Language): List[QuestionLeafNode] = {
     val element = elementWrapper.element
-    def id = QuestionId(elementWrapper.phase.getId, elementWrapper.id)
+    def id = QuestionId(elementWrapper.phase.map(_.getId()).getOrElse(""), elementWrapper.id)
     def isRequired = element.getValidators.filter(o => o.isInstanceOf[RequiredFieldValidator]).nonEmpty
 
     element match {

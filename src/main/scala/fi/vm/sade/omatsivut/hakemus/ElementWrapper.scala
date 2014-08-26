@@ -26,7 +26,7 @@ trait ElementWrapper {
   def title(implicit lang: Language) = {
     ElementWrapper.t(element.asInstanceOf[Titled].getI18nText)
   }
-  
+
   def findById(idToLookFor: String):Option[ElementWrapper] = {
     if (id == idToLookFor) {
       Some(this)
@@ -62,7 +62,7 @@ trait ElementWrapper {
     findParents(this).map(_.element)
   }
 
-  lazy val phase: Phase = byType[Phase](parentsFromRootDown).head
+  lazy val phase: Option[Phase] = byType[Phase](parentsFromRootDown).headOption
 
   lazy val namedParents: List[Titled] = {
     parentsFromRootDown.flatMap {
