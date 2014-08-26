@@ -49,7 +49,6 @@
   "error": {
     "sessionExpired": "Sessionen har föråldrats. Var vänlig och logga in på nytt.",
     "loadingFailed": "Laddning av uppgifter misslyckades. Försök på nytt senare.",
-    "loadingFailed_notLoggedIn": "<a>Logga in</a>.",
     "validationFailed": "Fyll i alla fält.",
     "validationFailed_httpError": "Kunde inte ladda informationen. Var vänlig och försök igen senare.",
     "saveFailed": "Sparandet misslyckades. Försök på nytt senare.",

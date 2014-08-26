@@ -49,7 +49,6 @@
   "error": {
     "sessionExpired": "Your session has expired. Please log in.",
     "loadingFailed": "Loading data failed. Try again later.",
-    "loadingFailed_notLoggedIn": "<a>Log in</a> to see your applications.",
     "validationFailed": "Please fill in all required information",
     "validationFailed_httpError": "Connection error. Try again later.",
     "saveFailed": "Save failed. Try again later.",

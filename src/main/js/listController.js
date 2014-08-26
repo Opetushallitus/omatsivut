@@ -20,8 +20,7 @@ module.exports = function(listApp) {
     function error(err) {
       switch (err.status) {
         case 401:
-          $scope.applicationStatusMessage = "error.loadingFailed_notLoggedIn"
-          $scope.applicationStatusMessageType = "info"
+          document.location.replace("/omatsivut/login")
           break;
         default:
           $scope.applicationStatusMessage = "error.loadingFailed"

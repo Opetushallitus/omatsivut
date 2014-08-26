@@ -25,9 +25,6 @@
                 ng-if="applicationStatusMessage.length > 0"
                 ng-class="applicationStatusMessageType" ng-cloak
                 ng-switch="applicationStatusMessage" role="status">
-                <span ng-switch-when="error.loadingFailed_notLoggedIn">
-                    <localized-link key="error.loadingFailed_notLoggedIn" href="login"></localized-link>
-                </span>
                 <span ng-switch-default>
                     {{ localization(applicationStatusMessage) }}
                 </span>
