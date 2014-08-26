@@ -3,6 +3,7 @@ package fi.vm.sade.omatsivut.servlet
 import fi.vm.sade.omatsivut.Logging
 import org.scalatra._
 import fi.vm.sade.omatsivut.domain.Language
+import fi.vm.sade.omatsivut.AppConfig
 
 trait OmatSivutServletBase extends ScalatraServlet with Logging {
 
@@ -36,4 +37,6 @@ trait OmatSivutServletBase extends ScalatraServlet with Logging {
       case e: Exception => None
     }
   }
+
+  override def environment = AppConfig.getProfileProperty()
 }

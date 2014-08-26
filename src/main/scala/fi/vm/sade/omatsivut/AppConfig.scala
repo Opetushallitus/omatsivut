@@ -10,8 +10,11 @@ import fi.vm.sade.omatsivut.security.{AuthenticationContext, ProductionAuthentic
 import org.apache.activemq.broker.BrokerService
 
 object AppConfig extends Logging {
+
+  def getProfileProperty() = System.getProperty("omatsivut.profile", "default")
+
   def fromSystemProperty: AppConfig = {
-    val profile: String = System.getProperty("omatsivut.profile", "default")
+    val profile: String = getProfileProperty
     logger.info("Using omatsivut.profile=" + profile)
     profile match {
       case "default" => new Default
