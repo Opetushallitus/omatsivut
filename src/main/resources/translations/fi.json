@@ -49,7 +49,7 @@
   "error": {
     "sessionExpired": "Istunto on vanhentunut. Kirjaudu uudestaan sisään",
     "loadingFailed": "Tietojen lataus epäonnistui. Yritä myöhemmin uudelleen.",
-    "loadingFailed_notLoggedIn": "Tietojen lataus epäonnistui: et ole kirjautunut sisään.",
+    "loadingFailed_notLoggedIn": "<a>Kirjaudu sisään</a> nähdäksesi hakemuksesi.",
     "validationFailed": "Täytä kaikki tiedot",
     "validationFailed_httpError": "Tietojen haku epäonnistui. Yritä myöhemmin uudelleen.",
     "saveFailed": "Tallentaminen epäonnistui. Yritä myöhemmin uudelleen.",

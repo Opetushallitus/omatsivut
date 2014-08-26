@@ -21,7 +21,16 @@
         <div id="appRoot" ng-controller="listController" class="content-column">
             <h1>{{ localization('title.omatHakemukset') }}</h1>
 
-            <div role="status" class="application-list-status" ng-bind="applicationStatusMessage" ng-class="applicationStatusMessageType" ng-cloak ng-show="applicationStatusMessage.length > 0">
+            <div class="application-list-status"
+                ng-if="applicationStatusMessage.length > 0"
+                ng-class="applicationStatusMessageType" ng-cloak
+                ng-switch="applicationStatusMessage" role="status">
+                <span ng-switch-when="error.loadingFailed_notLoggedIn">
+                    <localized-link key="error.loadingFailed_notLoggedIn" href="login"></localized-link>
+                </span>
+                <span ng-switch-default>
+                    {{ localization(applicationStatusMessage) }}
+                </span>
             </div>
 
             <ul id="hakemus-list" aria-label="{{ localization('title.omatHakemukset') }}" ng-cloak>
