@@ -260,11 +260,35 @@
       "vocational":false,
       "educationCodeUri":"koulutus_671201",
       "organizationGroups":[
-        {"oid":"1.2.246.562.28.90373737623","usageGroups":["hakukohde_liiteosoite"],"groupTypes":["hakukohde"]},
-        {"oid":"1.2.246.562.28.90373737624","usageGroups":["testi","hakukohde_liiteosoite"],"groupTypes":["testi","hakukohde"]},
-        {"oid":"1.2.246.562.28.90373737625","usageGroups":["testi"],"groupTypes":["testi","hakukohde"]},
-        {"oid":"1.2.246.562.28.90373737626","usageGroups":["testi","hakukohde_liiteosoite"],"groupTypes":["testi"]}
+        {"oid":"1.2.246.562.28.90373737623",
+         "usageGroups":["hakukohde_liiteosoite"],
+         "groupTypes":["hakukohde"]},
+        {"oid":"1.2.246.562.28.90373737624",
+         "usageGroups":["testi",
+         "hakukohde_liiteosoite"],
+         "groupTypes":["testi","hakukohde"]},
+        {"oid":"1.2.246.562.28.90373737625",
+         "usageGroups":["testi"],
+         "groupTypes":["testi","hakukohde"]},
+        {"oid":"1.2.246.562.28.90373737626",
+         "usageGroups":["testi","hakukohde_liiteosoite"],
+         "groupTypes":["testi"]}
       ]
+    }
+  ],
+  "1.2.246.562.10.22242122111": [
+    {
+      "id": "1.2.246.562.20.78030966705",
+      "name": "Kalatalouden perustutkinto, pk",
+      "aoIdentifier": "852",
+      "educationDegree": "32",
+      "childLONames": [],
+      "sora": false,
+      "teachingLanguages": ["FI"],
+      "athleteEducation": true,
+      "kaksoistutkinto": true,
+      "vocational": true,
+      "educationCodeUri": "koulutus_361401"
     }
   ]
 }
