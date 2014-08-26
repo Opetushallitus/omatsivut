@@ -5,6 +5,7 @@ import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.koulutusinformaatio.KoulutusInformaatioService
 import org.scalatra.json.JacksonJsonSupport
 import org.scalatra.swagger.{Swagger, SwaggerSupport}
+import scala.collection.TraversableOnce
 
 class KoulutusServlet(implicit val swagger: Swagger, val appConfig: AppConfig) extends OmatSivutServletBase with JacksonJsonSupport with JsonFormats with SwaggerSupport {
   protected val applicationDescription = "Oppijan henkilökohtaisen palvelun REST API, jolla etsitään opetuspisteitä ja koulutuksia"
@@ -15,20 +16,21 @@ class KoulutusServlet(implicit val swagger: Swagger, val appConfig: AppConfig) e
   }
 
   get("/opetuspisteet/:query") {
-    koulutusInformaatio.opetuspisteet(params("asId"), params("query"))
+    checkNotFound(koulutusInformaatio.opetuspisteet(params("asId"), params("query")))
   }
 
   get("/koulutukset/:asId/:opetuspisteId") {
-    koulutusInformaatio.koulutukset(params("asId"), params("opetuspisteId"), paramOption("baseEducation"), params("vocational"), params("uiLang"))
+    checkNotFound(koulutusInformaatio.koulutukset(params("asId"), params("opetuspisteId"), paramOption("baseEducation"), params("vocational"), params("uiLang")))
   }
 
   get("/koulutus/:aoId") {
-    val koulutus = koulutusInformaatio.koulutus(params("aoId"))
-    if(koulutus.isDefined) {
-      koulutus
+    checkNotFound(koulutusInformaatio.koulutus(params("aoId")))
+  }
+
+  private def checkNotFound(result: TraversableOnce[Any]) = {
+    if(result.isEmpty) {
+      response.setStatus(404)
     }
-    else {
-      resourceNotFound()
-    }
+    result
   }
 }
