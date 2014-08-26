@@ -72,6 +72,9 @@ session = {
       langParam = "&lang=" + lang
     }
     return Q($.get("/omatsivut/util/fakesession?hetu=" + hetu + langParam));
+  },
+  logout: function() {
+    return Q($.get("/omatsivut/logout"));
   }
 }
 

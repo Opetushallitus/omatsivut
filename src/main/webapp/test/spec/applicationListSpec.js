@@ -17,6 +17,21 @@
     expect(window.uiError || null).to.be.null
   })
 
+  describe("Kun käyttäjä ei ole kirjautunut sisään", function() {
+    before(
+      session.logout,
+      page.openPage(loginVisible)
+    )
+
+    it("näytetään sisäänkirjautumissivu", function() {
+
+    })
+
+    function loginVisible() {
+      return $(testFrame().document).find(".fake-vetuma").is(":visible")
+    }
+  })
+
   describe('Tyhjä hakemuslistaus', function () {
     var emptyPage = ApplicationListPage()
     function emptyApplicationPageVisible() {
