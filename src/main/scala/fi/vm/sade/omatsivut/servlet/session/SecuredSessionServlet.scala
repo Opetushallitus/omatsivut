@@ -20,7 +20,7 @@ class SecuredSessionServlet(implicit val appConfig: AppConfig) extends OmatSivut
       }
       case (None, Some(cookie)) => {
         logger.warn("No user OID found. Cookie: " + cookie)
-        response.redirect(request.getContextPath + "/userError.html")
+        response.redirect(request.getContextPath + "/no-applications.html")
       }
       case _ => redirectToShibbolethLogin(response)
     }

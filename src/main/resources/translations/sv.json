@@ -30,7 +30,7 @@
     "sortDown_ariaLabel": "Flytta ansökningsönskemålet neråt",
     "delete_confirm": "Ta bort",
     "delete_ariaLabel": "Ta bort ansökningsönskemålet genom att dubbelklicka",
-    "logout": "Avbryta identifiering",
+    "logout": "Logga ut",
     "showApplication": "Visa ansökningsblankett"
   },
 

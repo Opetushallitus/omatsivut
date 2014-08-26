@@ -30,7 +30,7 @@
     "sortDown_ariaLabel": "Siirrä hakutoivetta mieluisuusjärjestyksessä alaspäin",
     "delete_confirm": "Poista",
     "delete_ariaLabel": "Poista hakutoive valitsemalla tämä kaksi kertaa  ",
-    "logout": "Peru tunnistautuminen",
+    "logout": "Kirjaudu ulos",
     "showApplication": "Näytä koko hakemus"
   },
 
@@ -60,7 +60,7 @@
   "errorPage": {
     "noApplicationsFound": {
       "title": "Henkilötunnuksellasi ei löytynyt hakemuksia",
-      "text": "Tunnistautumisesi onnistui, mutta emme löytäneet hakemuksia henkilötunnuksellasi."
+      "text": "Tunnistautumisesi onnistui, mutta emme löytäneet hakemuksia henkilötunnuksellasi. Etsi koulutukset sanahaulla, ja täytä hakulomake. Tunnistautuneena voit tällä sivulla muokata hakemustasi hakuaikana."
     }
   },
 
