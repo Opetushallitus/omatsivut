@@ -13,8 +13,8 @@ protected object AddedQuestionFinder {
   def findAddedQuestions(applicationSystem: ApplicationSystem, newAnswers: Answers, oldAnswers: Answers)(implicit lang: Language.Language): Set[QuestionLeafNode] = {
     val form = applicationSystem.getForm
     val oldAnswersFlat: Map[String, String] = HakemusConverter.flattenAnswers(oldAnswers)
-    val newAnswersFlat: Map[String, String] = HakemusConverter.flattenAnswers(newAnswers)
     val oldQuestions = FormQuestionFinder.findQuestionsFromElements(Set(ElementWrapper.wrapFiltered(form, oldAnswersFlat)))
+    val newAnswersFlat: Map[String, String] = HakemusConverter.flattenAnswers(newAnswers)
     val newQuestions = FormQuestionFinder.findQuestionsFromElements(Set(ElementWrapper.wrapFiltered(form, newAnswersFlat)))
     newQuestions.diff(oldQuestions)
   }
@@ -60,8 +60,8 @@ protected object AddedQuestionFinder {
     val onlyOneHakutoive = getOnlyAskedHakutoiveAsList(newHakemus, hakutoive)
     val currentAnswersWithOneHakutoive = ApplicationUpdater.getAllUpdatedAnswersForApplication(applicationSystem)(storedApplication, newHakemus.copy(hakutoiveet = onlyOneHakutoive))
     val noHakutoive = getOnlyAskedHakutoiveAsList(newHakemus, Map())
-    val currentAnswersWithNoHakutoive = ApplicationUpdater.getAllUpdatedAnswersForApplication(applicationSystem)(storedApplication, newHakemus.copy(hakutoiveet = noHakutoive))
-    findAddedQuestions(applicationSystem, currentAnswersWithOneHakutoive, currentAnswersWithNoHakutoive)
+    val emptyAnswersWithNoHakutoive = ApplicationUpdater.getAllUpdatedAnswersForApplication(applicationSystem)(storedApplication, newHakemus.copy(hakutoiveet = noHakutoive).copy(answers = Hakemus.emptyAnswers))
+    findAddedQuestions(applicationSystem, currentAnswersWithOneHakutoive, emptyAnswersWithNoHakutoive)
   }
 
   private def getDuplicateQuestions(questions: List[QuestionNode]) = {
