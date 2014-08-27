@@ -45,7 +45,7 @@ Hakutoive.prototype = {
     this.data["Koulutus-id-vocational"] = toString(koulutus.vocational)
     this.data["Koulutus-id-educationcode"] = toString(koulutus.educationCodeUri)
     this.data["Koulutus-id-athlete"] = toString(koulutus.athleteEducation)
-    this.data["Koulutus-id-attachmentgroups"] = this.getAttachmentGroups(koulutus)
+    this.addAttachmentGroups(koulutus)
     this.isModified = true
     this.setErrors([])
     function toString(x) {
@@ -53,7 +53,7 @@ Hakutoive.prototype = {
     }
   },
 
-  getAttachmentGroups: function(koulutus) {
+  addAttachmentGroups: function(koulutus) {
     var attachmentGroups = [];
     if (koulutus.organizationGroups instanceof Array) {
       for (var i = 0; i < koulutus.organizationGroups.length; i++) {
@@ -63,7 +63,9 @@ Hakutoive.prototype = {
         }
       }
     }
-    return attachmentGroups.join(",")
+    if(attachmentGroups.length > 0) {
+      this.data["Koulutus-id-attachmentgroups"] = attachmentGroups.join(",")
+    }
   },
 
   hasOpetuspiste: function() {
