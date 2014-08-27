@@ -17,7 +17,7 @@ function updatePreferenceQuestionIds(manipulationF) {
   }).call(this)
 
   _(AdditionalQuestion.questionMap(this.additionalQuestions)).each(function(question, id) {
-    var questionIdParts = /^(preference)(\d+)(-.+)/.exec(id)
+    var questionIdParts = /^(preference)(\d+)([-_].+)/.exec(id)
     if (questionIdParts != null) {
       var newId = questionIdParts[1] + newIndexes[questionIdParts[2]] + questionIdParts[3]
       question.question.id.questionId = newId

@@ -548,7 +548,7 @@
         it("onnistuu", function() {
         })
   
-        describe.skip("Tallentamattoman urheilijatietoja sisältävän rivin siirto", function() {
+        describe("Tallentamattoman urheilijatietoja sisältävän rivin siirto", function() {
           before(hakemus2.getPreference(1).moveUp)
           it("onnistuu", function() {
             hakemus2.saveError().should.equal("")
