@@ -516,8 +516,8 @@
           .then(function() { hakemus2.questionsForApplication().enterAnswer(0, "Ei") })
           .then(function() { hakemus2.questionsForApplication().enterAnswer(1, "Kyllä") })
           .then(function() { hakemus2.questionsForApplication().enterAnswer(2, "Ei") })
-          .then(wait.until(function() { return hakemus2.questionsForApplication().count() == 18})).then(function() {
-            hakemus2.questionsForApplication().enterAnswer(7, "Suunnistus")
+          .then(wait.until(function() { return hakemus2.questionsForApplication().count() == 23})).then(function() {
+            hakemus2.questionsForApplication().enterAnswer(9, "Suunnistus")
           })
           .then(wait.until(function() { return hakemus2.saveError() == "" }))
           .then(wait.forAngular)
@@ -536,6 +536,7 @@
         before(answerAthleteQuestions)
   
         it("onnistuu", function() {
+          hakemus2.questionsForApplication().titles()[19].should.equal("Valmennusryhmä")
         })
   
         describe("Tallentamattoman urheilijatietoja sisältävän rivin siirto", function() {
@@ -556,7 +557,7 @@
   
           it("vastaukset siirtyvät listan muokkauksen mukana", function() {
             hakemus2.questionsForApplication().getAnswer(1).should.equal("Kyllä")
-            hakemus2.questionsForApplication().getAnswer(7).should.equal("Suunnistus")
+            hakemus2.questionsForApplication().getAnswer(9).should.equal("Suunnistus")
           })
         })
       })
@@ -568,7 +569,7 @@
         )
         it("urheilijatietoja sisältävät vastaukset näkyvät oikein", function() {
           hakemus2.questionsForApplication().getAnswer(1).should.equal("Kyllä")
-          hakemus2.questionsForApplication().getAnswer(7).should.equal("Suunnistus")
+          hakemus2.questionsForApplication().getAnswer(9).should.equal("Suunnistus")
         })
       })
     })
@@ -599,11 +600,13 @@
         'Testikysymys, avaoin vastaus kenttä (pakollinen)?',
         'Valitse kahdesta vaihtoehdosta paremmin itsellesi sopiva?',
         'Mikä tai mitkä ovat mielestäsi parhaiten soveltuvat vastausket?',
+        'Etelä-Savon ammattiopisto,  Otavankatu 4',
         'Kotikunta',
         'Minkä koulutuksen olet suorittanut ulkomailla?',
         'Valitse parhaat vaihtoehdot valittavista vaihtoehdoista?',
         'Testivalintakysymys arvosanat',
         'Testikysymys arvosanat, avoin vastaus',
+        'Etelä-Savon ammattiopisto,  Otavankatu 4',
         'Testikysymys lupatiedot-kohta avoin vastaus',
         'Testikysymys valitse vaihtoehdoista paras tai parhaat',
         'Testikysymys valitse toinen vaihtoehdoista' ]
@@ -611,6 +614,7 @@
       var questions2 = [
         'Miksi haet kymppiluokalle?',
         'Haen ensisijaisesti kielitukikympille?',
+        'Turun Kristillinen opisto',
         'Päättötodistuksen kaikkien oppiaineiden keskiarvo?',
         'Päättötodistukseni on' ]
 
@@ -663,7 +667,7 @@
 
         describe("Aluksi", function() {
           it("kysymykset näytetään", function() {
-            hakemus1.questionsForApplication().count().should.equal(11)
+            hakemus1.questionsForApplication().count().should.equal(13)
             hakemus1.questionsForApplication().getAnswer(0).should.equal("")
           })
           it("pakolliset kentät korostetaan", function() {
@@ -703,22 +707,22 @@
                 answers.hakutoiveet[questions[1].id].should.equal("option_0")
                 answers.hakutoiveet[questions[2].id + "-option_0"].should.equal("true")
                 answers.hakutoiveet[questions[2].id + "-option_1"].should.equal("true")
-                answers.osaaminen[questions[3].id].should.equal("152")
-                answers.osaaminen[questions[4].id].should.equal("textarea-vastaus")
-                answers.osaaminen[questions[5].id + "-option_0"].should.equal("true")
-                answers.osaaminen[questions[5].id + "-option_1"].should.equal("true")
-                answers.osaaminen[questions[6].id].should.equal("option_0")
-                answers.osaaminen[questions[7].id].should.equal("tekstivastaus 2")
-                answers.lisatiedot[questions[8].id].should.equal("tekstivastaus 3")
-                answers.lisatiedot[questions[9].id + "-option_0"].should.equal("true")
-                answers.lisatiedot[questions[10].id].should.equal("option_0")
+                answers.osaaminen[questions[4].id].should.equal("152")
+                answers.osaaminen[questions[5].id].should.equal("textarea-vastaus")
+                answers.osaaminen[questions[6].id + "-option_0"].should.equal("true")
+                answers.osaaminen[questions[6].id + "-option_1"].should.equal("true")
+                answers.osaaminen[questions[7].id].should.equal("option_0")
+                answers.osaaminen[questions[8].id].should.equal("tekstivastaus 2")
+                answers.lisatiedot[questions[10].id].should.equal("tekstivastaus 3")
+                answers.lisatiedot[questions[11].id + "-option_0"].should.equal("true")
+                answers.lisatiedot[questions[12].id].should.equal("option_0")
               })
             })
           })
 
           describe("Käyttöliittymän tila", function() {
             it("kysymykset näytetään edelleen", function() {
-              hakemus1.questionsForApplication().count().should.equal(11)
+              hakemus1.questionsForApplication().count().should.equal(13)
             })
 
             it("validaatiovirheitä ei ole", function() {
@@ -761,7 +765,7 @@
               replacePreference(hakemus1, 2, "Etelä-Savon ammattiopisto")
             )
             it("hakutoiveeseen liittyvien lisäkysymysten aiemmat vastaukset hävitetään", function() {
-              hakemus1.questionsForApplication().count().should.equal(11)
+              hakemus1.questionsForApplication().count().should.equal(13)
               hakemus1.questionsForApplication().getAnswer(0).should.equal("")
             })
           })
@@ -820,15 +824,15 @@
           hakemus1.questionsForApplication().enterAnswer(1, "Vaihtoehto x 1")
           hakemus1.questionsForApplication().enterAnswer(2, "Vaihtoehto 1")
           hakemus1.questionsForApplication().enterAnswer(2, "Vaihtoehto 2")
-          hakemus1.questionsForApplication().enterAnswer(3, "Isokyrö")
-          hakemus1.questionsForApplication().enterAnswer(4, "textarea-vastaus")
-          hakemus1.questionsForApplication().enterAnswer(5, "Vaihtoehto yyy 1")
-          hakemus1.questionsForApplication().enterAnswer(5, "Vaihtoehto yyy 2")
-          hakemus1.questionsForApplication().enterAnswer(6, "Vaihtoehto arvosanat 1")
-          hakemus1.questionsForApplication().enterAnswer(7, "tekstivastaus 2")
-          hakemus1.questionsForApplication().enterAnswer(8, "tekstivastaus 3")
-          hakemus1.questionsForApplication().enterAnswer(9, "Vaihtoehto zzzz 1")
-          hakemus1.questionsForApplication().enterAnswer(10, "Vaihttoehto yksi")
+          hakemus1.questionsForApplication().enterAnswer(4, "Isokyrö")
+          hakemus1.questionsForApplication().enterAnswer(5, "textarea-vastaus")
+          hakemus1.questionsForApplication().enterAnswer(6, "Vaihtoehto yyy 1")
+          hakemus1.questionsForApplication().enterAnswer(6, "Vaihtoehto yyy 2")
+          hakemus1.questionsForApplication().enterAnswer(7, "Vaihtoehto arvosanat 1")
+          hakemus1.questionsForApplication().enterAnswer(8, "tekstivastaus 2")
+          hakemus1.questionsForApplication().enterAnswer(10, "tekstivastaus 3")
+          hakemus1.questionsForApplication().enterAnswer(11, "Vaihtoehto zzzz 1")
+          hakemus1.questionsForApplication().enterAnswer(12, "Vaihttoehto yksi")
           return hakemus1.waitValidationOk()
         }
       })

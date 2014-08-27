@@ -48,9 +48,10 @@ protected object FormQuestionFinder extends Logging {
       case e: TitledGroup if containsCheckBoxes(e) =>
         val checkboxOptions = elementWrapper.getChildElementsOfType[HakuCheckBox].map(o => AnswerOption(title(o), o.id))
         List(Checkbox(id, title(e), helpText(e), checkboxOptions, isRequired))
+      case e: TitledGroup => List(Label(id, title(e)))
       case e: HakuNotification => List(Notification(id, title(e), e.getNotificationType()))
       case e: HakuText => List(Label(id, title(e)))
-      case _ => Nil
+      case e => Nil
     }
   }
 

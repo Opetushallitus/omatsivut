@@ -23,7 +23,7 @@ case class QuestionGroup(title: String, questions: List[QuestionNode]) extends Q
   def flatten = questions.flatMap(_.flatten)
   def filter (f: (Question => Boolean)): QuestionGroup = {
     QuestionGroup(title, questions.flatMap {
-      case q: TextNode => Nil
+      case q: TextNode => List(q)
       case q: Question => List(q).filter(f)
       case q: QuestionGroup => q.filter(f) match {
         case QuestionGroup(_, Nil) => Nil

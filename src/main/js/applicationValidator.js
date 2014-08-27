@@ -36,10 +36,10 @@ module.exports = function(listApp) {
 
       function convertToItems(questions, results) {
         _(questions).each(function (questionNode) {
-          if (questionNode.id) {
-            results.questionNodes.push(new QuestionItem(questionNode, questionNode.required ? ["*"] : []))
-          } else {
+          if (questionNode.questions != null) {
             results.questionNodes.push(convertToItems(questionNode.questions, new QuestionGroup(questionNode.title)))
+          } else {
+            results.questionNodes.push(new QuestionItem(questionNode, questionNode.required ? ["*"] : []))
           }
         })
         return results
