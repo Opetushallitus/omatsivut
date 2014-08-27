@@ -6,6 +6,7 @@ import fi.vm.sade.omatsivut.domain.Hakemus._
 object HakutoiveetConverter {
   val preferenceKeyPrefix: String = "preference"
   val hakutoiveetPhase: String = OppijaConstants.PHASE_APPLICATION_OPTIONS
+  val koulutusId: String = "Koulutus-id"
 
   def convertFromAnswers(answers: Answers): List[Hakutoive] = {
     groupPreferences(answers.getOrElse(hakutoiveetPhase , Map()))
@@ -21,8 +22,9 @@ object HakutoiveetConverter {
     hakutoiveetAnswers.filterKeys(s => !s.startsWith(HakutoiveetConverter.preferenceKeyPrefix)) ++
     hakutoiveet.zipWithIndex.flatMap {
       case (hakutoive, index) => {
+        Map((longKey(koulutusId, index), "")) ++
         hakutoive.map {
-          case (key, value) => (preferenceKeyPrefix + (index + 1) + getDelimiter(key) + key, value)
+          case (key, value) => (longKey(key, index), value)
         } ++ hakutoiveetAnswers.filterKeys(_.startsWith((preferenceKeyPrefix + (index + 1))))
       }
     }.toMap[String, String]
@@ -30,14 +32,13 @@ object HakutoiveetConverter {
 
   def updateAnswers(hakutoiveet: List[Hakutoive], answers: Answers, previousAnswers: Answers): Map[String, String] = {
     val previousHakutoiveetAnswers = previousAnswers.getOrElse(hakutoiveetPhase, Map())
-    val hakuToiveetWithEmptyValues = previousHakutoiveetAnswers.filterKeys(s => s.startsWith(HakutoiveetConverter.preferenceKeyPrefix)).mapValues(s => "")
     val hakutoiveetWithoutOldPreferences = previousHakutoiveetAnswers.filterKeys(s => !s.startsWith(HakutoiveetConverter.preferenceKeyPrefix))
-    val updatedHakutoiveet = hakutoiveetWithoutOldPreferences ++ hakuToiveetWithEmptyValues ++ convertToAnswers(hakutoiveet, answers)
+    val updatedHakutoiveet = hakutoiveetWithoutOldPreferences ++ convertToAnswers(hakutoiveet, answers)
     updatedHakutoiveet
   }
 
   def answersContainHakutoive(answers: Map[String, String], hakutoive: Hakutoive) = {
-    (hakutoive.get("Opetuspiste-id"), hakutoive.get("Koulutus-id")) match {
+    (hakutoive.get("Opetuspiste-id"), hakutoive.get(koulutusId)) match {
       case (Some(opetusPiste), Some(koulutus)) =>
         val flatAnswers = answers.toList.map {
           case (key, value) => (shortenKey(key), value)
@@ -53,6 +54,10 @@ object HakutoiveetConverter {
 
   private def shortenKey(key: String): String = {
     key.substring(key.indexOf(getDelimiter(key)) + 1)
+  }
+
+  private def longKey(key: String, index: Int): String = {
+    preferenceKeyPrefix + (index + 1) + getDelimiter(key) + key
   }
 
   private def getDelimiter(s: String) = if(s.contains("_")) "_" else "-"

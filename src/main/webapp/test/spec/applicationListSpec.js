@@ -844,39 +844,34 @@
         hakemus2.saveWaitSuccess
       )
 
-      // TODO Fix this first
-      /*
+      /* TODO fix removed questions
       endToEndTest("järjestys", "järjestys muuttuu nuolta klikkaamalla", function () {
         return hakemus2.getPreference(1).moveDown()
       }, function (dbStart, dbEnd) {
         dbStart.hakutoiveet[1].should.deep.equal(dbEnd.hakutoiveet[2])
         dbStart.hakutoiveet[2].should.deep.equal(dbEnd.hakutoiveet[1])
-      })
-      */
+      })*/
 
-      /*
       endToEndTest("poisto", "hakutoiveen voi poistaa", function () {
         return hakemus2.getPreference(0).remove()
       }, function (dbStart, dbEnd) {
         dbEnd.hakutoiveet.should.deep.equal(_.flatten([_.rest(dbStart.hakutoiveet), {}]))
-      })*/
-      /*endToEndTest("lisäys", "hakutoiveen voi lisätä", replacePreference(hakemus2, 2, "Ahl"), function(dbStart, dbEnd) {
-        var newOne = { 'Opetuspiste-id': '1.2.246.562.10.60222091211',
-          Opetuspiste: 'Ahlmanin ammattiopisto',
-          Koulutus: 'Ammattistartti',
-          'Koulutus-id-kaksoistutkinto': 'false',
-          'Koulutus-id-sora': 'false',
-          'Koulutus-id-vocational': 'true',
-          'Koulutus-id-lang': 'FI',
-          'Koulutus-id-aoIdentifier': '028',
-          'Koulutus-id-athlete': 'false',
-          'Koulutus-educationDegree': '32',
-          'Koulutus-id-attachmentgroups': '',
-          'Koulutus-id': '1.2.246.562.14.2014040912353139913320',
-          'Opetuspiste-id-parents': '',
-          'Koulutus-id-educationcode': 'koulutus_039996' }
-        dbEnd.hakutoiveet.should.deep.equal(dbStart.hakutoiveet.slice(0, 2).concat(newOne))
-      })*/
+      })
+      endToEndTest("lisäys", "hakutoiveen voi lisätä", replacePreference(hakemus2, 2, "Turun"), function(dbStart, dbEnd) {
+        var newOne = { 'Opetuspiste-id': '1.2.246.562.10.49832689993',
+            Opetuspiste: 'Turun Kristillinen opisto',
+            Koulutus: 'Kymppiluokka',
+            'Koulutus-id-kaksoistutkinto': 'false',
+            'Koulutus-id-sora': 'false',
+            'Koulutus-id-vocational': 'true',
+            'Koulutus-id-lang': 'FI',
+            'Koulutus-id-aoIdentifier': '019',
+            'Koulutus-id-athlete': 'false',
+            'Koulutus-educationDegree': '22',
+            'Koulutus-id': '1.2.246.562.14.2014032812530780195965',
+            'Koulutus-id-educationcode': 'koulutus_020075' }
+        dbEnd.hakutoiveet.should.deep.equal(dbStart.hakutoiveet.slice(0, 2).concat(newOne).concat({}).concat({}))
+      })
     })
 
     describe("Näytä hakemus -linkki", function() {
