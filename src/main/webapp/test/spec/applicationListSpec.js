@@ -513,6 +513,76 @@
       })
     })
 
+    describe("Kun hakijalla on koulutus, joka edellyttää urheilijakysymyksiin vastausta", function() {
+      before(
+        page.applyFixtureAndOpen("peruskoulu"),
+        hakemus2.getPreference(0).remove,
+        hakemus2.saveWaitSuccess,
+        replacePreference(hakemus2, 1, "Tampere", 0)
+      )
+
+      function answerAthleteQuestions() {
+        return wait.until(function() { return hakemus2.questionsForApplication().count() >= 4})()
+          .then(function() { hakemus2.questionsForApplication().enterAnswer(0, "Ei") })
+          .then(function() { hakemus2.questionsForApplication().enterAnswer(1, "Kyllä") })
+          .then(function() { hakemus2.questionsForApplication().enterAnswer(2, "Ei") })
+          .then(wait.until(function() { return hakemus2.questionsForApplication().count() == 18})).then(function() {
+            hakemus2.questionsForApplication().enterAnswer(7, "Suunnistus")
+          })
+          .then(wait.until(function() { return hakemus2.saveError() == "" }))
+          .then(wait.forAngular)
+      }
+
+      it("kysymykset näytetään", function() {
+        var questionTitles = hakemus2.questionsForApplication().titles()
+        expect(questionTitles).to.deep.equal([
+          'Haetko koulutukseen harkintaan perustuvassa valinnassa?',
+          'Haetko urheilijan ammatilliseen koulutukseen?',
+          'Haluaisitko suorittaa lukion ja/tai ylioppilastutkinnon samaan aikaan kuin ammatillisen perustutkinnon?',
+          'Työkokemus kuukausina' ])
+      })
+
+      describe("Vastaaminen kun haetaan urheilijana", function() {
+        before(answerAthleteQuestions)
+  
+        it("onnistuu", function() {
+        })
+  
+        describe.skip("Tallentamattoman urheilijatietoja sisältävän rivin siirto", function() {
+          before(hakemus2.getPreference(1).moveUp)
+          it("onnistuu", function() {
+            hakemus2.saveError().should.equal("")
+          })
+  
+          it("siirretyn rivin tallentaminen onnistuu", function() {
+            return hakemus2.saveWaitSuccess()
+          })
+  
+          it("tallennetun rivin siirtäminen onnistuu", function() {
+            return hakemus2.getPreference(0).moveDown().then(function() {
+              hakemus2.saveWaitSuccess()
+            })
+          })
+  
+          it("vastaukset siirtyvät listan muokkauksen mukana", function() {
+            hakemus2.questionsForApplication().getAnswer(1).should.equal("Kyllä")
+            hakemus2.questionsForApplication().getAnswer(7).should.equal("Suunnistus")
+          })
+        })
+      })
+  
+      describe("Hakutoiveen poiston jälkeen", function() {
+        before(
+          answerAthleteQuestions,
+          hakemus2.getPreference(0).remove
+        )
+        it("urheilijatietoja sisältävät vastaukset näkyvät oikein", function() {
+          hakemus2.questionsForApplication().getAnswer(1).should.equal("Kyllä")
+          hakemus2.questionsForApplication().getAnswer(7).should.equal("Suunnistus")
+        })
+      })
+    })
+  
     describe("Lisäkysymykset", function() {
       describe("Kysymysten suodatus koulutuksen kielen perusteella", function() {
         before(
