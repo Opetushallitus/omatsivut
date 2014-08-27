@@ -444,16 +444,6 @@
         replacePreference(hakemus2, 1, "Ahlman", 0)
       )
 
-      function answerDiscretionaryQuestions() {
-        return wait.until(function() { return hakemus2.questionsForApplication().count() >= 2})()
-          .then(function() { hakemus2.questionsForApplication().enterAnswer(0, "Kyllä") })
-          .then(wait.until(function() { return hakemus2.questionsForApplication().count() == 3})).then(function() {
-            hakemus2.questionsForApplication().enterAnswer(1, "Oppimisvaikeudet")
-          })
-          .then(wait.until(function() { return hakemus2.saveError() == "" }))
-          .then(wait.forAngular)
-      }
-
       it("kysymykset näytetään", function() {
         var questionTitles = hakemus2.questionsForApplication().titles()
         expect(questionTitles).to.deep.equal([
@@ -813,6 +803,8 @@
             hakemus1.getPreference(2).searchOpetusPiste("qwer")
           )
 
+          after(page.resetDataAndOpen)
+
           it("kysymykset pysyvät näkyvillä, jos muutoksilla ei vaikutusta kysymyksiin", function() {
             var questionTitles = hakemus1.questionsForApplication().titles()
             expect(questionTitles).to.deep.equal(questions1)
@@ -843,18 +835,30 @@
     })
 
     describe("Hakemuslistauksen muokkaus", function () {
+      before(
+        page.applyFixtureAndOpen("peruskoulu"),
+        replacePreference(hakemus2, 2, "Ahlman", 1),
+        answerDiscretionaryQuestions,
+        hakemus2.saveWaitSuccess
+      )
+
+      // TODO Fix this first
+      /*
       endToEndTest("järjestys", "järjestys muuttuu nuolta klikkaamalla", function () {
-        return hakemus1.getPreference(1).moveDown()
+        return hakemus2.getPreference(1).moveDown()
       }, function (dbStart, dbEnd) {
         dbStart.hakutoiveet[1].should.deep.equal(dbEnd.hakutoiveet[2])
         dbStart.hakutoiveet[2].should.deep.equal(dbEnd.hakutoiveet[1])
       })
+      */
+
+      /*
       endToEndTest("poisto", "hakutoiveen voi poistaa", function () {
-        return hakemus1.getPreference(0).remove()
+        return hakemus2.getPreference(0).remove()
       }, function (dbStart, dbEnd) {
         dbEnd.hakutoiveet.should.deep.equal(_.flatten([_.rest(dbStart.hakutoiveet), {}]))
-      })
-      endToEndTest("lisäys", "hakutoiveen voi lisätä", replacePreference(hakemus1, 2, "Ahl"), function(dbStart, dbEnd) {
+      })*/
+      /*endToEndTest("lisäys", "hakutoiveen voi lisätä", replacePreference(hakemus2, 2, "Ahl"), function(dbStart, dbEnd) {
         var newOne = { 'Opetuspiste-id': '1.2.246.562.10.60222091211',
           Opetuspiste: 'Ahlmanin ammattiopisto',
           Koulutus: 'Ammattistartti',
@@ -870,7 +874,7 @@
           'Opetuspiste-id-parents': '',
           'Koulutus-id-educationcode': 'koulutus_039996' }
         dbEnd.hakutoiveet.should.deep.equal(dbStart.hakutoiveet.slice(0, 2).concat(newOne))
-      })
+      })*/
     })
 
     describe("Näytä hakemus -linkki", function() {
@@ -925,14 +929,13 @@
     describe(descName, function() {
       var applicationsBefore, applicationsAfter;
       before(
-        page.resetDataAndOpen,
         function() {
           return db.getApplications().then(function(apps) {
             applicationsBefore = apps
           })
         },
         manipulationFunction,
-        hakemus1.saveWaitSuccess,
+        hakemus2.saveWaitSuccess,
         function(done) {
           db.getApplications().then(function(apps) {
             applicationsAfter = apps
@@ -941,9 +944,19 @@
         }
       )
       it(testName, function() {
-        dbCheckFunction(findApplicationById(applicationsBefore, hakemusId1), findApplicationById(applicationsAfter, hakemusId1))
+        dbCheckFunction(findApplicationById(applicationsBefore, hakemusId2), findApplicationById(applicationsAfter, hakemusId2))
       })
     })
+  }
+
+  function answerDiscretionaryQuestions() {
+    return wait.until(function() { return hakemus2.questionsForApplication().count() >= 2})()
+      .then(function() { hakemus2.questionsForApplication().enterAnswer(0, "Kyllä") })
+      .then(wait.until(function() { return hakemus2.questionsForApplication().count() == 3})).then(function() {
+        hakemus2.questionsForApplication().enterAnswer(1, "Oppimisvaikeudet")
+      })
+      .then(wait.until(function() { return hakemus2.saveError() == "" }))
+      .then(wait.forAngular)
   }
 
   function findApplicationById(applications, id) {
