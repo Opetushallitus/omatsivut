@@ -19,7 +19,7 @@ protected object AddedQuestionFinder {
     newQuestions.diff(oldQuestions)
   }
 
-  def getOnlyAskedHakutoiveAsList(newHakemus: Hakemus, hakutoive: Hakutoive): List[Hakutoive] = {
+  private def getOnlyAskedHakutoiveAsList(newHakemus: Hakemus, hakutoive: Hakutoive): List[Hakutoive] = {
     def getHakutoive(listItem: Hakutoive): Hakutoive = {
       if(listItem == hakutoive) {
         hakutoive
