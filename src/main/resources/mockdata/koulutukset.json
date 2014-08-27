@@ -167,7 +167,17 @@
       "athleteEducation": false,
       "kaksoistutkinto": false,
       "vocational": false,
-      "educationCodeUri": "koulutus_301101"
+      "educationCodeUri": "koulutus_301101",
+      "attachmentDeliveryDeadline": 1394802000000,
+      "provider":{
+        "id":"1.2.246.562.10.591352080610",
+        "name":"Kallion lukio"
+      },
+      "attachmentDeliveryAddress":{
+        "streetAddress": "PL 3805",
+        "postalCode": "00099",
+        "postOffice": "HELSINGIN KAUPUNKI"
+      }
     }
   ],
   "1.2.246.562.10.72927552934": [

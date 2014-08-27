@@ -30,6 +30,7 @@ class HakemusPreviewSpec extends HakemusApiSpecification {
         // lupatiedot
         body must contain("""<label>Minulle saa lähettää postia ja sähköpostia vapaista opiskelupaikoista ja muuta koulutusmarkkinointia.</label><span class="answer">Ei</span>""")
         // harkinnanvarainen haku liitepyynnöt
+        body must contain("""<div>HELSINGIN KAUPUNKI</div><div>Liitteiden viimeinen palautuspäivä 14.3.2014</div>""")
         body must contain("""<div>SALO</div><div>Liitteiden viimeinen palautuspäivä 14.3.2014</div>""")
       }
     }
