@@ -58,9 +58,7 @@
   })
 
   describe('Hakemuslistaus ruotsiksi', function () {
-    before(function (done) {
-      session.init("010101-123N","sv").then(page.resetDataAndOpen).done(done)
-    })
+    before(page.resetDataAndOpenWithLang("sv"))
 
     describe("Hakemuksen tietojen näyttäminen", function() {
       it("otsikko on ruotsiksi", function() {

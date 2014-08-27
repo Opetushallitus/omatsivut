@@ -1,6 +1,10 @@
 function ApplicationListPage() {
   var testHetu = "010101-123N"
 
+  function resetDataAndOpen(lang) {
+    return db.applyFixture().then(function() { return session.init(testHetu, lang)} ).then(api.openPage())
+  }
+
   var api = {
     openPage: function(pageLoadedCheck) {
       if (!pageLoadedCheck) {
@@ -9,8 +13,14 @@ function ApplicationListPage() {
       return openPage("/omatsivut/#skipRaamit", pageLoadedCheck)
     },
 
-    resetDataAndOpen: function () {
-      return db.applyFixture().then(function() { return session.init(testHetu)} ).then(api.openPage())
+    resetDataAndOpen: function() {
+      return resetDataAndOpen()
+    },
+
+    resetDataAndOpenWithLang: function(lang) {
+      return function() {
+        return resetDataAndOpen(lang)
+      }
     },
 
     applyFixtureAndOpen: function(fixtureName) {
