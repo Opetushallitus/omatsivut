@@ -9,10 +9,6 @@ import scala.collection.JavaConversions._
 import fi.vm.sade.omatsivut.domain.Notification
 
 protected object FormQuestionFinder extends Logging {
-  def findQuestionsByElementIds(contextElement: ElementWrapper, ids: Seq[String])(implicit lang: Language.Language): Set[QuestionLeafNode] = {
-    val elements = ids.flatMap(contextElement.findById(_).toList).toSet
-    findQuestionsFromElements(elements)
-  }
 
   def findQuestionsFromElements(elementsToScan: Set[ElementWrapper])(implicit lang: Language.Language): Set[QuestionLeafNode] = {
     elementsToScan.flatMap { element =>
@@ -33,7 +29,6 @@ protected object FormQuestionFinder extends Logging {
     val element = elementWrapper.element
     def id = QuestionId(elementWrapper.phase.map(_.getId()).getOrElse(""), elementWrapper.id)
     def isRequired = element.getValidators.filter(o => o.isInstanceOf[RequiredFieldValidator]).nonEmpty
-
     element match {
       case e: TextQuestion =>
         List(Text(id, title(e), helpText(e), isRequired, maxLength(e)))
