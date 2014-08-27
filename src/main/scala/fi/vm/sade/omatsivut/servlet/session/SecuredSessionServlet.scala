@@ -10,8 +10,6 @@ import scala.collection.JavaConverters._
 
 class SecuredSessionServlet(implicit val appConfig: AppConfig) extends OmatSivutServletBase with AuthCookieParsing with ShibbolethPaths {
   get("/initsession") {
-    // TODO poistettava lokitus ennen tuotantokäyttöä
-    request.getHeaderNames.asScala.toList.map(h => logger.info(h + ": " + request.getHeader(h)))
     checkCredentials match {
       case (Some(oid), Some(cookie)) => {
         val credentials: CookieCredentials = CookieCredentials(oid, cookie)
@@ -48,7 +46,6 @@ class SecuredSessionServlet(implicit val appConfig: AppConfig) extends OmatSivut
   private def createAuthCookieResponse(credentials: CookieCredentials) {
     val encryptedCredentials = AuthenticationCipher().encrypt(credentials.toString)
     response.addCookie(Cookie("auth", encryptedCredentials)(appConfig.authContext.cookieOptions))
-    logger.info("Redirecting to " + redirectUri)
     response.redirect(redirectUri)
   }
 

@@ -41,8 +41,6 @@ class RemoteAuthenticationInfoService(config: RemoteApplicationConfig)(implicit 
       case 404 => None
       case _ => {
         val json = parse(resultString)
-        // TODO poistettava lokitus ennen tuotantokäyttöä
-        logger.info("Got user info: " + json)
         val oids: List[String] = for {
           JObject(child) <- json
           JField("oidHenkilo", JString(oid)) <- child
