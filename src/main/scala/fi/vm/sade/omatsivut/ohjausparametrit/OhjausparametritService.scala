@@ -19,7 +19,7 @@ private object OhjausparametritParser extends JsonFormats {
       obj <- (json \ "PH_VTJH").toOption
       start <- (obj \ "dateStart").extractOpt[Long]
       end <- (obj \ "dateEnd").extractOpt[Long]
-    } yield Tulokset(new DateTime(start), new DateTime(end))
+    } yield Tulokset(start, end)
   }
 }
 

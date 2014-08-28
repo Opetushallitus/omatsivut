@@ -18,6 +18,6 @@ object HakuConverter {
   }
 
   private def convertToHakuAika(applicationPeriod: ApplicationPeriod): HakuAika = {
-    HakuAika(new DateTime(applicationPeriod.getStart), new DateTime(applicationPeriod.getEnd))
+    HakuAika(applicationPeriod.getStart.getTime, applicationPeriod.getEnd.getTime)
   }
 }
