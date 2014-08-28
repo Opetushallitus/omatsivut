@@ -3,7 +3,8 @@ package fi.vm.sade.omatsivut.security
 import javax.crypto.spec.{IvParameterSpec, SecretKeySpec}
 import javax.crypto.{Cipher, Mac}
 
-import fi.vm.sade.omatsivut.AppConfig.AppConfig
+import fi.vm.sade.omatsivut.config.AppConfig
+import AppConfig.AppConfig
 import org.apache.commons.codec.binary.{Base64, Hex}
 
 trait HmacSHA256 {

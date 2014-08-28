@@ -1,6 +1,7 @@
 package fi.vm.sade.omatsivut
 
-import fi.vm.sade.omatsivut.AppConfig.{ExampleTemplatedProps, AppConfig, TemplatedProps}
+import fi.vm.sade.omatsivut.config.{OmatSivutSpringContext, AppConfig}
+import AppConfig.{ExampleTemplatedProps, AppConfig, TemplatedProps}
 import fi.vm.sade.omatsivut.mongo.EmbeddedMongo
 import fi.vm.sade.omatsivut.security.AuthenticationInfoService
 import org.specs2.mutable.Specification

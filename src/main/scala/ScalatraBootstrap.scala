@@ -1,6 +1,7 @@
 import javax.servlet.ServletContext
 
-import fi.vm.sade.omatsivut.AppConfig.AppConfig
+import fi.vm.sade.omatsivut.config.{OmatSivutSpringContext, AppConfig}
+import AppConfig.AppConfig
 import fi.vm.sade.omatsivut._
 import fi.vm.sade.omatsivut.servlet._
 import fi.vm.sade.omatsivut.servlet.session.{SecuredSessionServlet, SessionServlet, LogoutServlet, LoginServlet}

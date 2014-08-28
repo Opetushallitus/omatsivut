@@ -8,7 +8,8 @@ import fi.vm.sade.haku.oppija.lomake.domain.elements.custom.{PreferenceRow, Pref
 import fi.vm.sade.haku.oppija.lomake.domain.elements.questions.{CheckBox, DateQuestion, OptionQuestion, TextArea, TextQuestion}
 import fi.vm.sade.haku.oppija.lomake.domain.elements.{HiddenValue, Phase, Text, Theme, TitledGroup}
 import fi.vm.sade.haku.oppija.lomake.domain.rules.{AddElementRule, RelatedQuestionRule}
-import fi.vm.sade.omatsivut.AppConfig.AppConfig
+import fi.vm.sade.omatsivut.config.AppConfig
+import AppConfig.AppConfig
 import fi.vm.sade.omatsivut.Logging
 import fi.vm.sade.omatsivut.domain.{Address, Language}
 import fi.vm.sade.omatsivut.hakemus.HakemusConverter.FlatAnswers

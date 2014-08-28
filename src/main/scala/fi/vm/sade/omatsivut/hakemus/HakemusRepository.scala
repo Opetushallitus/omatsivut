@@ -4,7 +4,8 @@ import java.util.Date
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
 import fi.vm.sade.omatsivut._
-import fi.vm.sade.omatsivut.AppConfig.AppConfig
+import fi.vm.sade.omatsivut.config.AppConfig
+import AppConfig.AppConfig
 import fi.vm.sade.omatsivut.auditlog.{ShowHakemus, UpdateHakemus, AuditLogger}
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.hakemus.domain.{Tulokset, Hakemus}

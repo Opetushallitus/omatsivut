@@ -1,4 +1,4 @@
-package fi.vm.sade.omatsivut
+package fi.vm.sade.omatsivut.config
 
 import fi.vm.sade.haku.oppija.hakemus.it.dao.ApplicationDAO
 import fi.vm.sade.haku.oppija.hakemus.service.HakuPermissionService
@@ -7,15 +7,16 @@ import fi.vm.sade.haku.oppija.lomake.service.ApplicationSystemService
 import fi.vm.sade.haku.oppija.lomake.validation.ElementTreeValidator
 import fi.vm.sade.haku.virkailija.authentication.AuthenticationService
 import fi.vm.sade.haku.virkailija.authentication.impl.AuthenticationServiceMockImpl
-import fi.vm.sade.omatsivut.AppConfig.AppConfig
+import fi.vm.sade.log.client.Logger
+import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.mongo.OmatSivutMongoConfiguration
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation._
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer
 import org.springframework.core.env.{MapPropertySource, MutablePropertySources}
 import org.springframework.data.mongodb.core.MongoTemplate
+
 import scala.collection.JavaConversions._
-import fi.vm.sade.log.client.Logger
 
 class OmatSivutSpringContext(context: ApplicationContext) {
   def applicationSystemService = context.getBean(classOf[ApplicationSystemService])

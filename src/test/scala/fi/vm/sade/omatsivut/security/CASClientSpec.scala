@@ -1,7 +1,7 @@
 package fi.vm.sade.omatsivut.security
 
+import fi.vm.sade.omatsivut.config.AppConfig
 import org.specs2.mutable.Specification
-import fi.vm.sade.omatsivut.AppConfig
 import fi.vm.sade.omatsivut.http.HttpClient
 import fi.vm.sade.omatsivut.http.FakeHttpRequest
 import fi.vm.sade.omatsivut.http.FakeHttpClient

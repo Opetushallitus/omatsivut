@@ -1,8 +1,7 @@
-package fi.vm.sade.omatsivut
+package fi.vm.sade.omatsivut.config
 
-import java.io.{StringReader, File, FileInputStream}
-import java.util.HashMap
-import java.util.Properties
+import java.io.{File, FileInputStream, StringReader}
+import java.util.{HashMap, Properties}
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.`type`.MapType

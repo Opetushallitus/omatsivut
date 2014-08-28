@@ -1,6 +1,7 @@
 package fi.vm.sade.omatsivut.servlet.testing
 
-import fi.vm.sade.omatsivut.AppConfig.AppConfig
+import fi.vm.sade.omatsivut.config.AppConfig
+import AppConfig.AppConfig
 import fi.vm.sade.omatsivut.fixtures.FixtureImporter
 import fi.vm.sade.omatsivut.security.{AuthenticationCipher, ShibbolethCookie}
 import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase

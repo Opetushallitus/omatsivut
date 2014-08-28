@@ -1,6 +1,7 @@
 package fi.vm.sade.omatsivut.ohjausparametrit
 
-import fi.vm.sade.omatsivut.AppConfig.{StubbedExternalDeps, AppConfig}
+import fi.vm.sade.omatsivut.config.AppConfig
+import AppConfig.{StubbedExternalDeps, AppConfig}
 import fi.vm.sade.omatsivut.fixtures.JsonFixtureMaps
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.http.DefaultHttpClient

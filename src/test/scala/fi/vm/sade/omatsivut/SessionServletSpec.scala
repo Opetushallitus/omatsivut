@@ -1,5 +1,6 @@
 package fi.vm.sade.omatsivut
 
+import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.omatsivut.security.ShibbolethCookie
 import fi.vm.sade.omatsivut.servlet.session.SecuredSessionServlet
