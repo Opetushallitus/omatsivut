@@ -7,7 +7,7 @@ import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.ohjausparametrit.OhjausparametritService
 import fi.vm.sade.omatsivut.Logging
 
-case class HakuRepository(implicit val appConfig: AppConfig) extends Logging {
+case class HakuRepository(implicit val appConfig: AppConfig) extends Timer {
   private val repository = appConfig.springContext.applicationSystemService
 
   def getHakuById(id: String)(implicit lang: Language.Language): Option[(ApplicationSystem, Haku)] = id match {
@@ -15,7 +15,9 @@ case class HakuRepository(implicit val appConfig: AppConfig) extends Logging {
     case applicationSystemId =>
       tryFind(applicationSystemId).map(appSystem => (appSystem, HakuConverter.convertToHaku(appSystem)) match {
         case (appSystem, haku) => {
-          val results = OhjausparametritService(appConfig).valintatulokset(applicationSystemId)
+          val results = timed({
+            OhjausparametritService(appConfig).valintatulokset(applicationSystemId)
+          }, 1000, "Ohjausparametrit valintatulokset")
           (appSystem, haku.copy(results = results))
         }
       })
