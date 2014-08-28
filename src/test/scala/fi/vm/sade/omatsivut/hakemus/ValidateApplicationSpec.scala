@@ -1,9 +1,9 @@
-package fi.vm.sade.omatsivut
+package fi.vm.sade.omatsivut.hakemus
 
 import fi.vm.sade.omatsivut.config.AppConfig
-import fi.vm.sade.omatsivut.hakemus.domain._
-import fi.vm.sade.omatsivut.fixtures.{FixtureImporter, TestFixture}
+import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.omatsivut.fixtures.TestFixture._
+import fi.vm.sade.omatsivut.hakemus.domain._
 import fi.vm.sade.omatsivut.servlet.ApplicationsServlet
 import org.json4s._
 import org.json4s.jackson.{JsonMethods, Serialization}

@@ -1,15 +1,16 @@
-package fi.vm.sade.omatsivut
+package fi.vm.sade.omatsivut.hakemus
 
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
+import fi.vm.sade.omatsivut.ScalatraTestSupport
 import fi.vm.sade.omatsivut.config.AppConfig
+import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
+import fi.vm.sade.omatsivut.fixtures.FixtureImporter
+import fi.vm.sade.omatsivut.fixtures.TestFixture._
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus
-import fi.vm.sade.omatsivut.hakemus.domain.Hakemus.{Hakutoive, Answers}
-import fi.vm.sade.omatsivut.fixtures.{FixtureImporter, TestFixture}
+import fi.vm.sade.omatsivut.hakemus.domain.Hakemus.{Answers, Hakutoive}
 import fi.vm.sade.omatsivut.json.JsonFormats
 import org.json4s.jackson.Serialization
-import fi.vm.sade.omatsivut.fixtures.TestFixture._
-import AppConfig.AppConfig
 
 trait HakemusApiSpecification extends JsonFormats with ScalatraTestSupport {
   val personalInfoPhaseKey: String = OppijaConstants.PHASE_PERSONAL
