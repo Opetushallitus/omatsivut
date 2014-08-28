@@ -4,8 +4,8 @@ import javax.servlet._
 import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
-import fi.vm.sade.omatsivut.Logging
 import fi.vm.sade.omatsivut.domain.Language
+import fi.vm.sade.omatsivut.util.Logging
 
 class LanguageFilter extends Filter with Logging{
 

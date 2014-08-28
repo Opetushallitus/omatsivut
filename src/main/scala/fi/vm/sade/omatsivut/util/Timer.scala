@@ -1,7 +1,5 @@
 package fi.vm.sade.omatsivut.util
 
-import fi.vm.sade.omatsivut.Logging
-
 trait Timer extends Logging {
   def timed[R](block: => R, thresholdMs: Int = 0, blockname: String = ""): R = {
     val t0 = System.nanoTime()

@@ -3,7 +3,7 @@ package fi.vm.sade.omatsivut.security
 import fi.vm.sade.omatsivut.config.{RemoteApplicationConfig, AppConfig}
 import AppConfig.AppConfig
 import fi.vm.sade.omatsivut.http.HttpClient
-import fi.vm.sade.omatsivut.Logging
+import fi.vm.sade.omatsivut.util.Logging
 
 case class CASClient(val httpClient: HttpClient)(implicit val appConfig: AppConfig) extends Logging {
   

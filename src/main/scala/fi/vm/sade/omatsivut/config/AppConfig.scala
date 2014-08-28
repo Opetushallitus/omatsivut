@@ -8,6 +8,7 @@ import fi.vm.sade.omatsivut.auditlog.RunnableLogger
 import fi.vm.sade.omatsivut.fixtures.FixtureImporter
 import fi.vm.sade.omatsivut.mongo.{EmbeddedMongo, MongoServer}
 import fi.vm.sade.omatsivut.security.{AuthenticationContext, ProductionAuthenticationContext, TestAuthenticationContext}
+import fi.vm.sade.omatsivut.util.Logging
 import org.apache.activemq.broker.BrokerService
 
 object AppConfig extends Logging {

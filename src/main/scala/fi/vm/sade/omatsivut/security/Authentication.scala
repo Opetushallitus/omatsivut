@@ -4,8 +4,8 @@ import javax.servlet.http.{Cookie, HttpServletRequest, HttpServletResponse}
 
 import fi.vm.sade.omatsivut.config.AppConfig
 import AppConfig.AppConfig
-import fi.vm.sade.omatsivut.Logging
 import fi.vm.sade.omatsivut.auditlog.{SessionTimeout, AuditLogger}
+import fi.vm.sade.omatsivut.util.Logging
 import org.joda.time.DateTime
 import org.scalatra.ScalatraBase
 

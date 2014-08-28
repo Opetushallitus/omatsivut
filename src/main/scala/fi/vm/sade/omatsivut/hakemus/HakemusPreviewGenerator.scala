@@ -10,12 +10,12 @@ import fi.vm.sade.haku.oppija.lomake.domain.elements.{HiddenValue, Phase, Text, 
 import fi.vm.sade.haku.oppija.lomake.domain.rules.{AddElementRule, RelatedQuestionRule}
 import fi.vm.sade.omatsivut.config.AppConfig
 import AppConfig.AppConfig
-import fi.vm.sade.omatsivut.Logging
 import fi.vm.sade.omatsivut.domain.{Address, Language}
 import fi.vm.sade.omatsivut.hakemus.HakemusConverter.FlatAnswers
 import fi.vm.sade.omatsivut.koulutusinformaatio.KoulutusInformaatioService
 import fi.vm.sade.omatsivut.koulutusinformaatio.domain.{Liitepyynto, Koulutus, Opetuspiste}
 import fi.vm.sade.omatsivut.localization.Translations
+import fi.vm.sade.omatsivut.util.Logging
 import scalatags.Text.TypedTag
 import org.joda.time.DateTime
 import fi.vm.sade.haku.oppija.hakemus.domain.util.ApplicationUtil

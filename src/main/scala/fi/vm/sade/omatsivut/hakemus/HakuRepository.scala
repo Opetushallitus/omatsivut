@@ -6,8 +6,7 @@ import AppConfig.AppConfig
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.hakemus.domain.Haku
 import fi.vm.sade.omatsivut.ohjausparametrit.OhjausparametritService
-import fi.vm.sade.omatsivut.Logging
-import fi.vm.sade.omatsivut.util.Timer
+import fi.vm.sade.omatsivut.util.{Logging, Timer}
 
 case class HakuRepository(implicit val appConfig: AppConfig) extends Timer {
   private val repository = appConfig.springContext.applicationSystemService
