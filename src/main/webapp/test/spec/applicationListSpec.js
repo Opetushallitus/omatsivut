@@ -839,18 +839,19 @@
     describe("Hakemuslistauksen muokkaus", function () {
       before(
         page.applyFixtureAndOpen("peruskoulu"),
+        replacePreference(hakemus2, 1, "Diakonia-ammattikorkeakoulu, Helsingin toimipiste"),
         replacePreference(hakemus2, 2, "Ahlman", 1),
         answerDiscretionaryQuestions,
         hakemus2.saveWaitSuccess
       )
 
-      /* TODO fix removed questions
       endToEndTest("järjestys", "järjestys muuttuu nuolta klikkaamalla", function () {
         return hakemus2.getPreference(1).moveDown()
       }, function (dbStart, dbEnd) {
+        dbStart.hakutoiveet[0].should.deep.equal(dbEnd.hakutoiveet[0])
         dbStart.hakutoiveet[1].should.deep.equal(dbEnd.hakutoiveet[2])
         dbStart.hakutoiveet[2].should.deep.equal(dbEnd.hakutoiveet[1])
-      })*/
+      })
 
       endToEndTest("poisto", "hakutoiveen voi poistaa", function () {
         return hakemus2.getPreference(0).remove()
