@@ -570,6 +570,73 @@
       })
     })
 
+    describe("Kun hakijalla on koulutus, joka edellyttää sora kysymyksiin vastausta", function() {
+      before(
+        page.resetDataAndOpen,
+        replacePreference(hakemusKorkeakoulu, 1, "Etelä-Savon ammattiopisto,  Otavankatu 4", 1)
+      )
+
+      function answerSoraQuestions() {
+        return wait.until(function() { return hakemusKorkeakoulu.questionsForApplication().count() >= 2})()
+          .then(function() { hakemusKorkeakoulu.questionsForApplication().enterAnswer(0, "Kyllä") })
+          .then(function() { hakemusKorkeakoulu.questionsForApplication().enterAnswer(1, "Ei") })
+          .then(function() { hakemusKorkeakoulu.questionsForApplication().enterAnswer(2, "Kyllä") })
+          .then(wait.until(function() { return hakemusKorkeakoulu.saveError() == "" }))
+          .then(wait.forAngular)
+      }
+
+      it("kysymykset näytetään", function() {
+        var questionTitles = hakemusKorkeakoulu.questionsForApplication().titles()
+        expect(questionTitles).to.deep.equal([
+          'Tällä alalla on terveydentilavaatimuksia, jotka voivat olla opiskelijaksi ottamisen esteenä. Onko sinulla terveydellisiä tekijöitä, jotka voivat olla opiskelijaksi ottamisen esteenä?',
+          'Tässä koulutuksessa opiskelijaksi ottamisen esteenä voi olla aiempi päätös opiskeluoikeuden peruuttamisessa. Onko opiskeluoikeutesi aiemmin peruutettu terveydentilasi tai muiden henkilöiden turvallisuuden vaarantamisen takia?',
+          'Haluaisitko suorittaa lukion ja/tai ylioppilastutkinnon samaan aikaan kuin ammatillisen perustutkinnon?'
+          ])
+      })
+
+      describe("Vastaaminen kun haetaan sora kohteeseen", function() {
+        before(answerSoraQuestions)
+
+        it("onnistuu", function() {
+        })
+
+        describe("Tallentamattoman soratietoja sisältävän rivin siirto", function() {
+          before(hakemusKorkeakoulu.getPreference(1).moveUp)
+          it("onnistuu", function() {
+            hakemusKorkeakoulu.saveError().should.equal("")
+          })
+
+          it("siirretyn rivin tallentaminen onnistuu", function() {
+            return hakemusKorkeakoulu.saveWaitSuccess()
+          })
+
+          it("tallennetun rivin siirtäminen onnistuu", function() {
+            return hakemusKorkeakoulu.getPreference(0).moveDown().then(function() {
+              hakemusKorkeakoulu.saveWaitSuccess()
+            })
+          })
+
+          it("vastaukset siirtyvät listan muokkauksen mukana", function() {
+            hakemusKorkeakoulu.questionsForApplication().getAnswer(0).should.equal("Kyllä")
+            hakemusKorkeakoulu.questionsForApplication().getAnswer(1).should.equal("Ei")
+            hakemusKorkeakoulu.questionsForApplication().getAnswer(2).should.equal("Kyllä")
+          })
+        })
+      })
+
+      describe("Hakutoiveen poiston jälkeen", function() {
+        before(
+            answerSoraQuestions,
+            hakemusKorkeakoulu.getPreference(0).remove
+        )
+        it("soratietoja sisältävät vastaukset näkyvät oikein", function() {
+          hakemusKorkeakoulu.questionsForApplication().getAnswer(0).should.equal("Kyllä")
+          hakemusKorkeakoulu.questionsForApplication().getAnswer(1).should.equal("Ei")
+          hakemusKorkeakoulu.questionsForApplication().getAnswer(2).should.equal("Kyllä")
+        })
+      })
+    })
+
     describe("Lisäkysymykset", function() {
       describe("Kysymysten suodatus koulutuksen kielen perusteella", function() {
         before(
