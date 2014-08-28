@@ -287,7 +287,9 @@ function ApplicationListPage() {
             break;
           case "RADIO":
             return _(input).chain()
-              .filter(function(item) { return $(item).val() == "true" })
+              .filter(function(item) {
+                return $(item).val() == $(item).filter(':checked').val()
+              })
               .map(function(item) { return $(item) })
               .first().value().closest("label").text().trim()
           case "SELECT":
