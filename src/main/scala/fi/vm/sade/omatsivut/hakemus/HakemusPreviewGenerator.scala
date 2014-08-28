@@ -10,20 +10,16 @@ import fi.vm.sade.haku.oppija.lomake.domain.elements.{HiddenValue, Phase, Text, 
 import fi.vm.sade.haku.oppija.lomake.domain.rules.{AddElementRule, RelatedQuestionRule}
 import fi.vm.sade.omatsivut.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.Logging
-import fi.vm.sade.omatsivut.domain.Language
+import fi.vm.sade.omatsivut.domain.{Address, Language}
 import fi.vm.sade.omatsivut.hakemus.HakemusConverter.FlatAnswers
 import fi.vm.sade.omatsivut.koulutusinformaatio.KoulutusInformaatioService
+import fi.vm.sade.omatsivut.koulutusinformaatio.domain.{Liitepyynto, Koulutus, Opetuspiste}
 import fi.vm.sade.omatsivut.localization.Translations
 import scalatags.Text.TypedTag
-import fi.vm.sade.omatsivut.koulutusinformaatio.Koulutus
 import org.joda.time.DateTime
 import fi.vm.sade.haku.oppija.hakemus.domain.util.ApplicationUtil
-import fi.vm.sade.omatsivut.koulutusinformaatio.Opetuspiste
 import org.joda.time.format.DateTimeFormat
-import fi.vm.sade.omatsivut.koulutusinformaatio.Opetuspiste
 import fi.vm.sade.haku.oppija.lomake.domain.elements.Link
-import fi.vm.sade.omatsivut.koulutusinformaatio.Address
-import fi.vm.sade.omatsivut.koulutusinformaatio.Liitepyynto
 
 case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val language: Language.Language) extends Logging {
   import scala.collection.JavaConversions._
