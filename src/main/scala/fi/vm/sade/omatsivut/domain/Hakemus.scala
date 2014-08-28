@@ -39,7 +39,7 @@ sealed trait HakemuksenTila {
 
 case class Submitted(id: String = "SUBMITTED") extends HakemuksenTila // Alkutila, ei editoitatissa
 case class PostProcessing(id: String = "POSTPROCESSING") extends HakemuksenTila // Taustaprosessointi kesken, ei editoitavissa
-case class Active(id: String = "ACTIVE") extends HakemuksenTila // Aktiivinen, editoitavissa
+case class Active(id: String = "ACTIVE", valintaTulos: Option[ValintaTulos]) extends HakemuksenTila // Aktiivinen, editoitavissa
 case class Passive(id: String = "PASSIVE") extends HakemuksenTila // Passiivinen/poistettu
 case class Incomplete(id: String = "INCOMPLETE") extends HakemuksenTila // Tietoja puuttuu
 

@@ -21,7 +21,7 @@ object HakemusConverter {
       application.getOid,
       application.getReceived.getTime,
       application.getUpdated.getTime,
-      tila(application),
+      tila(applicationSystem, application),
       convertHakuToiveet(application),
       haku,
       EducationBackground(koulutusTaustaAnswers.get(baseEducationKey), !Try {koulutusTaustaAnswers.get("ammatillinenTutkintoSuoritettu").toBoolean}.getOrElse(false)),
@@ -30,12 +30,12 @@ object HakemusConverter {
     )
   }
 
-  def tila(application: Application): HakemuksenTila = {
+  def tila(applicationSystem: ApplicationSystem, application: Application): HakemuksenTila = {
     if (isPostProcessing(application)) {
       PostProcessing()
     } else {
       application.getState.toString match {
-        case "ACTIVE" => Active()
+        case "ACTIVE" => Active(valintaTulos = getValintaTulos(application, applicationSystem))
         case "PASSIVE" => Passive()
         case "INCOMPLETE" => Incomplete()
         case "SUBMITTED" => Submitted()
@@ -44,6 +44,10 @@ object HakemusConverter {
         }
       }
     }
+  }
+
+  def getValintaTulos(application: Application, system: ApplicationSystem) = {
+    None
   }
 
   private def requiresAdditionalInfo(applicationSystem: ApplicationSystem, application: Application): Boolean = {
