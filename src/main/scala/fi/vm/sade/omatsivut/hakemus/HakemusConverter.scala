@@ -30,11 +30,19 @@ object HakemusConverter {
     )
   }
 
-  def tila(application: Application): String = {
+  def tila(application: Application): HakemuksenTila = {
     if (isPostProcessing(application)) {
-      "POSTPROCESSING"
+      PostProcessing()
     } else {
-      application.getState.toString
+      application.getState.toString match {
+        case "ACTIVE" => Active()
+        case "PASSIVE" => Passive()
+        case "INCOMPLETE" => Incomplete()
+        case "SUBMITTED" => Submitted()
+        case x => {
+          throw new RuntimeException("Unexpected state for application " + application.getOid + ": " + x)
+        }
+      }
     }
   }
 
