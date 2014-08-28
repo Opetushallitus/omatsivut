@@ -4,7 +4,7 @@ import java.util
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 import fi.vm.sade.omatsivut.domain.Hakemus._
-import fi.vm.sade.omatsivut.domain.{EducationBackground, Hakemus, Haku}
+import fi.vm.sade.omatsivut.domain._
 import scala.collection.JavaConversions._
 import scala.util.Try
 import fi.vm.sade.haku.oppija.hakemus.domain.util.ApplicationUtil
@@ -21,14 +21,21 @@ object HakemusConverter {
       application.getOid,
       application.getReceived.getTime,
       application.getUpdated.getTime,
-      application.getState.toString,
-      isPostProcessing(application),
+      tila(application),
       convertHakuToiveet(application),
       haku,
       EducationBackground(koulutusTaustaAnswers.get(baseEducationKey), !Try {koulutusTaustaAnswers.get("ammatillinenTutkintoSuoritettu").toBoolean}.getOrElse(false)),
       application.clone().getAnswers.toMap.mapValues { phaseAnswers => phaseAnswers.toMap },
       requiresAdditionalInfo(applicationSystem, application)
     )
+  }
+
+  def tila(application: Application): String = {
+    if (isPostProcessing(application)) {
+      "POSTPROCESSING"
+    } else {
+      application.getState.toString
+    }
   }
 
   private def requiresAdditionalInfo(applicationSystem: ApplicationSystem, application: Application): Boolean = {

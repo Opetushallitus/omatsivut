@@ -13,7 +13,6 @@ case class Hakemus(
                     received: Long,
                     updated: Long,
                     state: String,
-                    postProcessing: Boolean,
                     hakutoiveet: List[Hakutoive] = Nil,
                     haku: Haku,
                     educationBackground: EducationBackground,
@@ -22,3 +21,5 @@ case class Hakemus(
                   )
 
 case class EducationBackground(baseEducation: String, vocational: Boolean)
+
+case class ValintaTulos()
