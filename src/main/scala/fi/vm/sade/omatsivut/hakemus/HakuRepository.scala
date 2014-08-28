@@ -26,7 +26,9 @@ case class HakuRepository(implicit val appConfig: AppConfig) extends Timer {
 
   private def tryFind(applicationSystemOid: String): Option[ApplicationSystem] = {
     try {
-      Some(repository.getApplicationSystem(applicationSystemOid))
+      Some(timed({
+        repository.getApplicationSystem(applicationSystemOid)
+      }, 1000, "Application system service"))
     } catch {
       case e: Exception =>
         logger.error("applicationSystem loading failed", e)
