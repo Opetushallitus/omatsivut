@@ -66,10 +66,13 @@ Hakemus.prototype = {
 
   toJson: function() {
     var self = this
-    return _.extend({}, this, {
+
+    return {
+      oid: self.oid,
+      hakuOid: self.haku.oid,
       hakutoiveet: _(this.hakutoiveet).map(function(hakutoive) { return hakutoive.toJson() }),
       answers: removeFalseBooleans(getAnswers())
-    })
+    }
 
     function getAnswers() {
       var answers = {};

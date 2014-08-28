@@ -7,9 +7,8 @@ import scala.collection.JavaConversions._
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
-import fi.vm.sade.omatsivut.domain.{QuestionId, AnswerId, Hakemus}
+import fi.vm.sade.omatsivut.domain._
 import fi.vm.sade.omatsivut.domain.Hakemus._
-import fi.vm.sade.omatsivut.domain.Language
 
 object ApplicationUpdater {
   val preferencePhaseKey = OppijaConstants.PHASE_APPLICATION_OPTIONS
@@ -17,16 +16,16 @@ object ApplicationUpdater {
   /**
    * NOTE this method mutates the application, so call with application.clone(), if it is not wanted.
    */
-  def update(applicationSystem: ApplicationSystem)(application: Application, hakemus: Hakemus)(implicit lang: Language.Language) = {
+  def update(applicationSystem: ApplicationSystem)(application: Application, hakemus: HakemusMuutos)(implicit lang: Language.Language) = {
     val updatedAnswers = getUpdatedAnswersForApplication(applicationSystem)(application, hakemus)
     updatedAnswers.foreach { case (phaseId, phaseAnswers) =>
       application.addVaiheenVastaukset(phaseId, phaseAnswers)
     }
-    application.setUpdated(new Date(hakemus.updated))
+    application.setUpdated(new Date())
     application
   }
 
-  private def getUpdatedAnswersForApplication(applicationSystem: ApplicationSystem)(application: Application, hakemus: Hakemus)(implicit lang: Language.Language): Answers = {
+  private def getUpdatedAnswersForApplication(applicationSystem: ApplicationSystem)(application: Application, hakemus: HakemusMuutos)(implicit lang: Language.Language): Answers = {
     val allAnswers = getAllUpdatedAnswersForApplication(applicationSystem)(application, hakemus)
     val removedAnswerIds = getRemovedAnswerIds(applicationSystem, application, hakemus)
 
@@ -40,7 +39,7 @@ object ApplicationUpdater {
     }
   }
 
-  def getAllUpdatedAnswersForApplication(applicationSystem: ApplicationSystem)(application: Application, hakemus: Hakemus): Answers = {
+  def getAllUpdatedAnswersForApplication(applicationSystem: ApplicationSystem)(application: Application, hakemus: HakemusMuutos): Answers = {
     allAnswersFromApplication(application).filterKeys(_ != preferencePhaseKey) ++ updatedAnswersForHakuToiveet(applicationSystem, application, hakemus) ++ updatedAnswersForOtherPhases(application, hakemus)
   }
 
@@ -61,7 +60,7 @@ object ApplicationUpdater {
     }
   }
 
-  private def getRemovedAnswerIds(applicationSystem: ApplicationSystem, application: Application, hakemus: Hakemus)(implicit lang: Language.Language): Seq[AnswerId] = {
+  private def getRemovedAnswerIds(applicationSystem: ApplicationSystem, application: Application, hakemus: HakemusMuutos)(implicit lang: Language.Language): Seq[AnswerId] = {
     val allOldAnswers = allAnswersFromApplication(application)
     val allNewAnswers = getAllAnswersForApplication(applicationSystem, application, hakemus)
 
@@ -69,7 +68,7 @@ object ApplicationUpdater {
     removedQuestions.flatMap(_.answerIds)
   }
 
-  def getAllAnswersForApplication(applicationSystem: ApplicationSystem, application: Application, hakemus: Hakemus): Answers = {
+  def getAllAnswersForApplication(applicationSystem: ApplicationSystem, application: Application, hakemus: HakemusMuutos): Answers = {
     allAnswersFromApplication(application) ++ updatedAnswersForHakuToiveet(applicationSystem, application, hakemus) ++ updatedAnswersForOtherPhases(application, hakemus)
   }
 
@@ -77,7 +76,7 @@ object ApplicationUpdater {
     application.getAnswers.toMap.mapValues(_.toMap)
   }
 
-  private def updatedAnswersForOtherPhases(application: Application, hakemus: Hakemus): Answers = {
+  private def updatedAnswersForOtherPhases(application: Application, hakemus: HakemusMuutos): Answers = {
     val allOtherPhaseAnswers = hakemus.answers.filterKeys(phase => phase != preferencePhaseKey)
     allOtherPhaseAnswers.map { case (phase, answers) =>
       val existingAnswers = application.getPhaseAnswers(phase).toMap
@@ -85,7 +84,7 @@ object ApplicationUpdater {
     }.toMap
   }
 
-  private def updatedAnswersForHakuToiveet(applicationSystem: ApplicationSystem, application: Application, hakemus: Hakemus): Answers = {
+  private def updatedAnswersForHakuToiveet(applicationSystem: ApplicationSystem, application: Application, hakemus: HakemusMuutos): Answers = {
     val newAnswers = hakemus.answers
     val previousAnswers = allAnswersFromApplication(application)
 

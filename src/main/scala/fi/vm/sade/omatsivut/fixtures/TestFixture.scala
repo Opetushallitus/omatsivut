@@ -6,7 +6,7 @@ import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
 import fi.vm.sade.omatsivut.AppConfig
 import fi.vm.sade.omatsivut.domain.Hakemus._
-import fi.vm.sade.omatsivut.domain.Language
+import fi.vm.sade.omatsivut.domain.{HakemusMuutos, Language}
 import fi.vm.sade.omatsivut.hakemus.{HakemusConverter, HakuConverter}
 
 object TestFixture {
@@ -34,7 +34,10 @@ object TestFixture {
   def applicationSystem: ApplicationSystem = as
   def haku(implicit lang: Language.Language) = HakuConverter.convertToHaku(applicationSystem)
   def application: Application = app
-  def hakemus(implicit lang: Language.Language) = HakemusConverter.convertToHakemus(applicationSystem, haku)(application)
+  def hakemusMuutos(implicit lang: Language.Language) = {
+    val h = HakemusConverter.convertToHakemus(applicationSystem, haku)(application)
+    HakemusMuutos(h.oid, h.haku.oid, h.hakutoiveet, h.answers)
+  }
 
   val ammattistartti: Hakutoive = JsonFixtureMaps.findByKey[Hakutoive]("/mockdata/hakutoiveet.json", "1.2.246.562.14.2014030415375012208392").get
   val ammattistarttiAhlman: Hakutoive = JsonFixtureMaps.findByKey[Hakutoive]("/mockdata/hakutoiveet.json", "1.2.246.562.14.2014040912353139913320").get

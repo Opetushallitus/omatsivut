@@ -6,7 +6,7 @@ import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
 import fi.vm.sade.omatsivut._
 import fi.vm.sade.omatsivut.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.auditlog.{ShowHakemus, UpdateHakemus, AuditLogger}
-import fi.vm.sade.omatsivut.domain.{Tulokset, Hakemus, Language}
+import fi.vm.sade.omatsivut.domain._
 import fi.vm.sade.omatsivut.ohjausparametrit.OhjausparametritService
 
 case class HakemusRepository(implicit val appConfig: AppConfig) extends Logging {
@@ -21,23 +21,22 @@ case class HakemusRepository(implicit val appConfig: AppConfig) extends Logging 
     isActiveHakuPeriod && stateUpdateable && !inPostProcessing
   }
 
-  def updateHakemus(applicationSystem: ApplicationSystem)(hakemus: Hakemus, userOid: String)(implicit lang: Language.Language): Option[Hakemus] = {
-    val updatedHakemus = hakemus.copy(updated = new Date().getTime)
-    val applicationQuery: Application = new Application().setOid(updatedHakemus.oid)
+  def updateHakemus(applicationSystem: ApplicationSystem)(hakemus: HakemusMuutos, userOid: String)(implicit lang: Language.Language): Option[Hakemus] = {
+    val applicationQuery: Application = new Application().setOid(hakemus.oid)
     val applicationJavaObject: Option[Application] = dao.find(applicationQuery).toList.headOption
 
     applicationJavaObject
     .filter(application => canUpdate(applicationSystem, application))
     .map { application =>
       val originalAnswers: Hakemus.Answers = application.getAnswers.toMap.mapValues(_.toMap)
-      ApplicationUpdater.update(applicationSystem)(application, updatedHakemus)
+      ApplicationUpdater.update(applicationSystem)(application, hakemus)
       dao.update(applicationQuery, application)
-      AuditLogger.log(UpdateHakemus(userOid, updatedHakemus.oid, originalAnswers, application.getAnswers.toMap.mapValues(_.toMap)))
+      AuditLogger.log(UpdateHakemus(userOid, hakemus.oid, originalAnswers, application.getAnswers.toMap.mapValues(_.toMap)))
       HakemusConverter.convertToHakemus(applicationSystem, HakuConverter.convertToHaku(applicationSystem))(application)
     }
   }
 
-  def findStoredApplication(hakemus: Hakemus): Application = {
+  def findStoredApplication(hakemus: HakemuksenTunniste): Application = {
     val applications = dao.find(new Application().setOid(hakemus.oid)).toList
     if (applications.size > 1) throw new RuntimeException("Too many applications for oid " + hakemus.oid)
     if (applications.size == 0) throw new RuntimeException("Application not found for oid " + hakemus.oid)

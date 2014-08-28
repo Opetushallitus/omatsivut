@@ -18,7 +18,18 @@ case class Hakemus(
                     educationBackground: EducationBackground,
                     answers: Answers,
                     requiresAdditionalInfo: Boolean
-                  )
+                  ) extends HakemuksenTunniste
+
+case class HakemusMuutos (
+                    oid: String,
+                    hakuOid: String,
+                    hakutoiveet: List[Hakutoive] = Nil,
+                    answers: Answers
+                    ) extends HakemuksenTunniste
+
+trait HakemuksenTunniste {
+  def oid: String
+}
 
 case class EducationBackground(baseEducation: String, vocational: Boolean)
 

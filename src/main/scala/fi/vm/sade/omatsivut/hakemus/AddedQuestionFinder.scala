@@ -19,7 +19,7 @@ protected object AddedQuestionFinder {
     newQuestions.diff(oldQuestions)
   }
 
-  private def getOnlyAskedHakutoiveAsList(newHakemus: Hakemus, hakutoive: Hakutoive): List[Hakutoive] = {
+  private def getOnlyAskedHakutoiveAsList(newHakemus: HakemusMuutos, hakutoive: Hakutoive): List[Hakutoive] = {
     def getHakutoive(listItem: Hakutoive): Hakutoive = {
       if(listItem == hakutoive) {
         hakutoive
@@ -31,7 +31,7 @@ protected object AddedQuestionFinder {
     newHakemus.hakutoiveet.map(getHakutoive)
   }
 
-  def findQuestions(applicationSystem: ApplicationSystem)(storedApplication: Application, hakemus: Hakemus, newKoulutusIds: List[String])(implicit lang: Language.Language) = {
+  def findQuestions(applicationSystem: ApplicationSystem)(storedApplication: Application, hakemus: HakemusMuutos, newKoulutusIds: List[String])(implicit lang: Language.Language) = {
     val filteredForm: ElementWrapper = ElementWrapper.wrapFiltered(applicationSystem.getForm, HakemusConverter.flattenAnswers(ApplicationUpdater.getAllAnswersForApplication(applicationSystem, storedApplication.clone(), hakemus)))
 
     val questionsPerHakutoive: List[QuestionNode] = hakemus.hakutoiveet.zipWithIndex.flatMap { case (hakutoive, index) =>
@@ -56,7 +56,7 @@ protected object AddedQuestionFinder {
     withoutDuplicates(questionsPerHakutoive) ::: duplicates
   }
 
-  private def findQuestionsByHakutoive(applicationSystem: ApplicationSystem, storedApplication: Application, newHakemus: Hakemus, hakutoive: Hakutoive)(implicit lang: Language.Language): Set[QuestionLeafNode] = {
+  private def findQuestionsByHakutoive(applicationSystem: ApplicationSystem, storedApplication: Application, newHakemus: HakemusMuutos, hakutoive: Hakutoive)(implicit lang: Language.Language): Set[QuestionLeafNode] = {
     val onlyOneHakutoive = getOnlyAskedHakutoiveAsList(newHakemus, hakutoive)
     val currentAnswersWithOneHakutoive = ApplicationUpdater.getAllUpdatedAnswersForApplication(applicationSystem)(storedApplication, newHakemus.copy(hakutoiveet = onlyOneHakutoive))
     val noHakutoive = getOnlyAskedHakutoiveAsList(newHakemus, Map())

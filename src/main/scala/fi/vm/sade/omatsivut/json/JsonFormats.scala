@@ -9,7 +9,7 @@ object JsonFormats {
 }
 
 trait JsonFormats {
-  protected implicit val jsonFormats: Formats = JsonFormats.genericFormats ++ List(new QuestionNodeSerializer, new HakemusSerializer)
+  protected implicit val jsonFormats: Formats = JsonFormats.genericFormats ++ List(new QuestionNodeSerializer, new HakemusMuutosSerializer)
 }
 
 class QuestionNodeSerializer extends Serializer[QuestionNode] {
@@ -38,16 +38,16 @@ class QuestionNodeSerializer extends Serializer[QuestionNode] {
   }
 }
 
-class HakemusSerializer extends Serializer[Hakemus] {
-  private val HakemusClass = classOf[Hakemus]
+class HakemusMuutosSerializer extends Serializer[HakemusMuutos] {
+  private val HakemusMuutosClass = classOf[HakemusMuutos]
 
-  override def deserialize(implicit format: Formats): PartialFunction[(TypeInfo, JValue), Hakemus] = {
-    case (TypeInfo(HakemusClass, _), JObject(fields: List[JField])) =>
-      JObject(fields.map(stringyfiedAnswers)).extract[Hakemus](JsonFormats.genericFormats, Manifest.classType(HakemusClass))
+  override def deserialize(implicit format: Formats): PartialFunction[(TypeInfo, JValue), HakemusMuutos] = {
+    case (TypeInfo(HakemusMuutosClass, _), JObject(fields: List[JField])) =>
+      JObject(fields.map(stringyfiedAnswers)).extract[HakemusMuutos](JsonFormats.genericFormats, Manifest.classType(HakemusMuutosClass))
   }
 
   override def serialize(implicit format: Formats): PartialFunction[Any, JValue] = {
-    case any: Hakemus => Extraction.decompose(any)(JsonFormats.genericFormats)
+    case any: HakemusMuutos => Extraction.decompose(any)(JsonFormats.genericFormats)
   }
 
   private def stringyfiedAnswers(field: JField): JField  = field match {

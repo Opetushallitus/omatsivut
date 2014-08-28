@@ -1,7 +1,7 @@
 package fi.vm.sade.omatsivut.servlet
 
 import fi.vm.sade.omatsivut.AppConfig.AppConfig
-import fi.vm.sade.omatsivut.domain.{Hakemus, QuestionNode, ValidationError}
+import fi.vm.sade.omatsivut.domain.{HakemusMuutos, Hakemus, QuestionNode, ValidationError}
 import fi.vm.sade.omatsivut.hakemus.{HakemusPreviewGenerator, ApplicationValidator, HakemusRepository}
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.security.Authentication
@@ -43,8 +43,8 @@ class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfi
   }
 
   put("/applications/:oid", operation(putApplicationsSwagger)) {
-    val updated = Serialization.read[Hakemus](request.body)
-    val applicationSystem = applicationSystemService.getApplicationSystem(updated.haku.oid)
+    val updated = Serialization.read[HakemusMuutos](request.body)
+    val applicationSystem = applicationSystemService.getApplicationSystem(updated.hakuOid)
     val errors = ApplicationValidator().validate(applicationSystem)(updated)
     if(errors.isEmpty) {
       HakemusRepository().updateHakemus(applicationSystem)(updated, personOid()) match {
@@ -57,8 +57,8 @@ class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfi
   }
 
   post("/applications/validate/:oid", operation(validateApplicationsSwagger)) {
-    val validate = Serialization.read[Hakemus](request.body)
-    val applicationSystem = applicationSystemService.getApplicationSystem(validate.haku.oid)
+    val validate = Serialization.read[HakemusMuutos](request.body)
+    val applicationSystem = applicationSystemService.getApplicationSystem(validate.hakuOid)
     val (errors: List[ValidationError], questions: List[QuestionNode]) = ApplicationValidator().validateAndFindQuestions(applicationSystem)(validate, paramOption("questionsOf").getOrElse("").split(',').toList)
     ValidationResult(errors, questions)
   }
