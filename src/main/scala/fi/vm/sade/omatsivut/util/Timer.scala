@@ -1,4 +1,4 @@
-package fi.vm.sade.omatsivut.hakemus
+package fi.vm.sade.omatsivut.util
 
 import fi.vm.sade.omatsivut.Logging
 
