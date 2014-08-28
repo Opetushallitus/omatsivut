@@ -2,7 +2,12 @@ function ApplicationListPage() {
   var testHetu = "010101-123N"
 
   function resetDataAndOpen(lang) {
-    return db.applyFixture().then(function() { return session.init(testHetu, lang)} ).then(api.openPage())
+    console.log("resetDataAndOpen(): apply fixtures")
+    return db.applyFixture()
+      .then(function() {
+        console.log("resetDataAndOpen(): init session")
+        return session.init(testHetu, lang)} )
+      .then(api.openPage())
   }
 
   var api = {
