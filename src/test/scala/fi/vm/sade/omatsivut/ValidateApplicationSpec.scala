@@ -53,7 +53,7 @@ class ValidateApplicationSpec extends HakemusApiSpecification {
     authPost("/applications/validate/" + hakemus.oid + (questionsOf match {
         case Some(value) =>  "?questionsOf=" + value
         case None => ""}),
-        TestFixture.personOid, Serialization.write(hakemus)) {
+        TestFixture.personOid, Serialization.write(hakemus.toHakemusMuutos)) {
       status must_== 200
       val result: JValue = JsonMethods.parse(body)
       val errors: List[ValidationError] = (result \ "errors").extract[List[ValidationError]]

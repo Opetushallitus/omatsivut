@@ -6,10 +6,11 @@ import org.json4s._
 
 object JsonFormats {
   val genericFormats = DefaultFormats ++ org.json4s.ext.JodaTimeSerializers.all
+  val jsonFormats: Formats = JsonFormats.genericFormats ++ List(new QuestionNodeSerializer, new HakemusMuutosSerializer)
 }
 
 trait JsonFormats {
-  protected implicit val jsonFormats: Formats = JsonFormats.genericFormats ++ List(new QuestionNodeSerializer, new HakemusMuutosSerializer)
+  implicit val jsonFormats: Formats = JsonFormats.jsonFormats
 }
 
 class QuestionNodeSerializer extends Serializer[QuestionNode] {
@@ -38,19 +39,8 @@ class QuestionNodeSerializer extends Serializer[QuestionNode] {
   }
 }
 
-class HakemusMuutosSerializer extends Serializer[HakemusMuutos] {
-  private val HakemusMuutosClass = classOf[HakemusMuutos]
-
-  override def deserialize(implicit format: Formats): PartialFunction[(TypeInfo, JValue), HakemusMuutos] = {
-    case (TypeInfo(HakemusMuutosClass, _), JObject(fields: List[JField])) =>
-      JObject(fields.map(stringyfiedAnswers)).extract[HakemusMuutos](JsonFormats.genericFormats, Manifest.classType(HakemusMuutosClass))
-  }
-
-  override def serialize(implicit format: Formats): PartialFunction[Any, JValue] = {
-    case any: HakemusMuutos => Extraction.decompose(any)(JsonFormats.genericFormats)
-  }
-
-  private def stringyfiedAnswers(field: JField): JField  = field match {
+object AnswerSerializer {
+  def stringyfiedAnswers(field: JField): JField  = field match {
     case ("answers", value) =>
       ("answers", value.map { field =>
         def toJString(v: Any) = JString(v.toString)
@@ -64,5 +54,18 @@ class HakemusMuutosSerializer extends Serializer[HakemusMuutos] {
         rec(field)
       })
     case field => field
+  }
+}
+
+class HakemusMuutosSerializer extends Serializer[HakemusMuutos] {
+  private val HakemusMuutosClass = classOf[HakemusMuutos]
+
+  override def deserialize(implicit format: Formats): PartialFunction[(TypeInfo, JValue), HakemusMuutos] = {
+    case (TypeInfo(HakemusMuutosClass, _), JObject(fields: List[JField])) =>
+      JObject(fields.map(AnswerSerializer.stringyfiedAnswers)).extract[HakemusMuutos](JsonFormats.genericFormats, Manifest.classType(HakemusMuutosClass))
+  }
+
+  override def serialize(implicit format: Formats): PartialFunction[Any, JValue] = {
+    case any: HakemusMuutos => Extraction.decompose(any)(JsonFormats.genericFormats)
   }
 }
