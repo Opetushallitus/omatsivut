@@ -1,7 +1,7 @@
 package fi.vm.sade.omatsivut
 
 import java.io.{StringReader, File, FileInputStream}
-import java.util
+import java.util.HashMap
 import java.util.Properties
 
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -24,8 +24,8 @@ object ConfigTemplateProcessor {
 
   def processTemplate(from: String, attributesFile: String): String = {
     val mapper: ObjectMapper = new ObjectMapper(new YAMLFactory())
-    val mapType: MapType = mapper.getTypeFactory.constructMapType(classOf[util.HashMap[String, String]], classOf[String], classOf[String])
-    val rawValue = mapper.readValue(new FileInputStream(attributesFile), mapType).asInstanceOf[util.HashMap[String, String]]
+    val mapType: MapType = mapper.getTypeFactory.constructMapType(classOf[HashMap[String, String]], classOf[String], classOf[String])
+    val rawValue = mapper.readValue(new FileInputStream(attributesFile), mapType).asInstanceOf[HashMap[String, String]]
     val attributes: Map[String, Any] = rawValue.asScala.toMap.asInstanceOf[Map[String, Any]]
     val engine = new TemplateEngine
 

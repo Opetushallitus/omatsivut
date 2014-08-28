@@ -6,7 +6,7 @@ import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.http.DefaultHttpClient
 import org.joda.time.DateTime
 import org.json4s.JsonAST.JValue
-import fi.vm.sade.omatsivut.domain.Tulokset
+import fi.vm.sade.omatsivut.hakemus.domain.Tulokset
 
 
 trait OhjausparametritService {

@@ -1,6 +1,6 @@
 package fi.vm.sade.omatsivut
 
-import fi.vm.sade.omatsivut.domain.Hakemus
+import fi.vm.sade.omatsivut.hakemus.domain.Hakemus
 import fi.vm.sade.omatsivut.fixtures.TestFixture._
 import fi.vm.sade.omatsivut.servlet.ApplicationsServlet
 import org.json4s._

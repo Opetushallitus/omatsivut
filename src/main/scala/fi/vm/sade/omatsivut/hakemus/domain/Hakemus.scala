@@ -1,6 +1,6 @@
-package fi.vm.sade.omatsivut.domain
+package fi.vm.sade.omatsivut.hakemus.domain
 
-import fi.vm.sade.omatsivut.domain.Hakemus._
+import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
 
 object Hakemus {
   type Answers = Map[String, Map[String, String]]

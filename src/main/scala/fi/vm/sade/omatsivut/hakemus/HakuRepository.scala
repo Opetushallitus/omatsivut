@@ -2,8 +2,8 @@ package fi.vm.sade.omatsivut.hakemus
 
 import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
 import fi.vm.sade.omatsivut.AppConfig.AppConfig
-import fi.vm.sade.omatsivut.domain.Haku
 import fi.vm.sade.omatsivut.domain.Language
+import fi.vm.sade.omatsivut.hakemus.domain.Haku
 import fi.vm.sade.omatsivut.ohjausparametrit.OhjausparametritService
 import fi.vm.sade.omatsivut.Logging
 import fi.vm.sade.omatsivut.util.Timer

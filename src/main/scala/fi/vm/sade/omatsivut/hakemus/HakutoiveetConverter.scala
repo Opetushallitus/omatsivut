@@ -1,7 +1,7 @@
 package fi.vm.sade.omatsivut.hakemus
 
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
-import fi.vm.sade.omatsivut.domain.Hakemus._
+import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
 
 object HakutoiveetConverter {
   val preferenceKeyPrefix: String = "preference"

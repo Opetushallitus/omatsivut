@@ -1,12 +1,12 @@
 package fi.vm.sade.omatsivut.koulutusinformaatio
 
 import fi.vm.sade.omatsivut.AppConfig.{AppConfig, StubbedExternalDeps}
+import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.fixtures.JsonFixtureMaps
 import fi.vm.sade.omatsivut.json.JsonFormats
 import scalaj.http.Http
 import fi.vm.sade.omatsivut.http.DefaultHttpClient
 import fi.vm.sade.omatsivut.Logging
-import fi.vm.sade.omatsivut.domain.Language
 
 trait KoulutusInformaatioService {
   def opetuspisteet(asId: String, query: String): List[Opetuspiste]

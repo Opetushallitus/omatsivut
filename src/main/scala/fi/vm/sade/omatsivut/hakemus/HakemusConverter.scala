@@ -3,8 +3,8 @@ package fi.vm.sade.omatsivut.hakemus
 import java.util
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
-import fi.vm.sade.omatsivut.domain.Hakemus._
-import fi.vm.sade.omatsivut.domain.{EducationBackground, Hakemus, Haku}
+import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
+import fi.vm.sade.omatsivut.hakemus.domain.{EducationBackground, Hakemus, Haku}
 import scala.collection.JavaConversions._
 import scala.util.Try
 import fi.vm.sade.haku.oppija.hakemus.domain.util.ApplicationUtil

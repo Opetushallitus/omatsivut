@@ -1,7 +1,7 @@
 package fi.vm.sade.omatsivut.fixtures
 
 import fi.vm.sade.omatsivut.AppConfig.AppConfig
-import fi.vm.sade.omatsivut.domain.Hakemus._
+import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
 
 case class PeruskouluFixture(appConfig: AppConfig) extends Hakemus2WithDifferentAnswersFixture(appConfig: AppConfig) {
   def apply {

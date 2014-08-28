@@ -2,14 +2,15 @@ package fi.vm.sade.omatsivut.hakemus
 
 import java.util.Date
 
+import fi.vm.sade.omatsivut.domain.Language
+
 import scala.collection.JavaConversions._
 
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
-import fi.vm.sade.omatsivut.domain.{QuestionId, AnswerId, Hakemus}
-import fi.vm.sade.omatsivut.domain.Hakemus._
-import fi.vm.sade.omatsivut.domain.Language
+import fi.vm.sade.omatsivut.hakemus.domain.{QuestionId, AnswerId, Hakemus}
+import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
 
 object ApplicationUpdater {
   val preferencePhaseKey = OppijaConstants.PHASE_APPLICATION_OPTIONS

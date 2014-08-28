@@ -4,8 +4,9 @@ import fi.vm.sade.haku.oppija.lomake.domain.I18nText
 import fi.vm.sade.haku.oppija.lomake.domain.elements._
 import fi.vm.sade.haku.oppija.lomake.domain.elements.custom.gradegrid.GradeGridOptionQuestion
 import fi.vm.sade.haku.oppija.lomake.domain.elements.questions.OptionQuestion
-import fi.vm.sade.omatsivut.domain.Hakemus.Answers
-import fi.vm.sade.omatsivut.domain.Language.Language
+import fi.vm.sade.omatsivut.domain.Language
+import fi.vm.sade.omatsivut.hakemus.domain.Hakemus.Answers
+import Language.Language
 import fi.vm.sade.omatsivut.hakemus.HakemusConverter.FlatAnswers
 import collection.JavaConversions._
 

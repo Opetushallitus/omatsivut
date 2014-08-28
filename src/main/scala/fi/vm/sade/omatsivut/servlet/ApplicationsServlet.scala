@@ -1,7 +1,7 @@
 package fi.vm.sade.omatsivut.servlet
 
 import fi.vm.sade.omatsivut.AppConfig.AppConfig
-import fi.vm.sade.omatsivut.domain.{Hakemus, QuestionNode, ValidationError}
+import fi.vm.sade.omatsivut.hakemus.domain.{Hakemus, QuestionNode, ValidationError}
 import fi.vm.sade.omatsivut.hakemus.{HakemusPreviewGenerator, ApplicationValidator, HakemusRepository}
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.security.Authentication

@@ -1,4 +1,4 @@
-package fi.vm.sade.omatsivut.domain
+package fi.vm.sade.omatsivut.hakemus.domain
 
 import org.joda.time.{Interval, DateTime}
 
