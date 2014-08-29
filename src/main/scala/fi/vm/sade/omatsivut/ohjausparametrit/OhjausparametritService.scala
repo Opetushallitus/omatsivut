@@ -5,9 +5,9 @@ import AppConfig.{StubbedExternalDeps, AppConfig}
 import fi.vm.sade.omatsivut.fixtures.JsonFixtureMaps
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.http.DefaultHttpClient
-import org.joda.time.DateTime
 import org.json4s.JsonAST.JValue
 import fi.vm.sade.omatsivut.hakemus.domain.Tulokset
+import scala.collection.mutable
 
 
 trait OhjausparametritService {
@@ -25,9 +25,11 @@ private object OhjausparametritParser extends JsonFormats {
 }
 
 object OhjausparametritService {
+  private val cache = mutable.Map.empty[String, Tulokset]
+
   def apply(implicit appConfig: AppConfig): OhjausparametritService = appConfig match {
     case _ : StubbedExternalDeps => StubbedOhjausparametritService()
-    case _ => RemoteOhjausparametritService()
+    case _ => new RemoteOhjausparametritService(cache)
   }
 }
 
@@ -37,17 +39,34 @@ case class StubbedOhjausparametritService() extends OhjausparametritService with
   }
 }
 
-case class RemoteOhjausparametritService(implicit appConfig: AppConfig) extends OhjausparametritService with JsonFormats {
+class RemoteOhjausparametritService(cache: mutable.Map[String, Tulokset])(implicit appConfig: AppConfig) extends OhjausparametritService with JsonFormats {
   import org.json4s.jackson.JsonMethods._
 
   def valintatulokset(asId: String) = {
-    val (responseCode, _, resultString) = DefaultHttpClient.httpGet(appConfig.settings.ohjausparametritUrl + "/" + asId)
-      .responseWithHeaders
-
-    responseCode match {
-      case 200 =>
-        parse(resultString).extractOpt[JValue].flatMap(OhjausparametritParser.parseValintatulokset(_))
-      case _ => None
+    def storeIntoCache(result: Option[Tulokset]) = {
+      result.map { value =>
+        cache + (asId -> value)
+      }
+      result
     }
+    def httpGet: (Int, Map[String, List[String]], String) = {
+      DefaultHttpClient.httpGet(appConfig.settings.ohjausparametritUrl + "/" + asId).responseWithHeaders()
+    }
+    def updateCache: Option[Tulokset] = {
+      val (responseCode, _, resultString) = httpGet
+      responseCode match {
+        case 200 => storeIntoCache(parseTulokset(resultString))
+        case _ => None
+      }
+    }
+    val cacheHit = cache.get(asId)
+    cacheHit match {
+      case Some(x) => Some(x)
+      case _ => updateCache
+    }
+  }
+
+  private def parseTulokset(resultString: String): Option[Tulokset] = {
+    parse(resultString).extractOpt[JValue].flatMap(OhjausparametritParser.parseValintatulokset(_))
   }
 }
