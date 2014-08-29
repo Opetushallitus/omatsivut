@@ -310,7 +310,9 @@
       "athleteEducation": true,
       "kaksoistutkinto": true,
       "vocational": true,
-      "educationCodeUri": "koulutus_361401"
+      "educationCodeUri": "koulutus_361401",
+      "applicationStartDate": 1409224751000,
+      "applicationEndDate": 2671528751000
     }
   ]
 }

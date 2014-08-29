@@ -8,13 +8,15 @@ import fi.vm.sade.omatsivut.config.AppConfig
 import AppConfig.AppConfig
 import fi.vm.sade.omatsivut.auditlog.{ShowHakemus, UpdateHakemus, AuditLogger}
 import fi.vm.sade.omatsivut.domain.Language
-import fi.vm.sade.omatsivut.hakemus.domain.{Tulokset, Hakemus}
-import fi.vm.sade.omatsivut.ohjausparametrit.OhjausparametritService
+import fi.vm.sade.omatsivut.hakemus.domain.{Haku, HakuAika, Hakemus}
 import fi.vm.sade.omatsivut.util.Timer
+import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
+import fi.vm.sade.omatsivut.koulutusinformaatio.KoulutusInformaatioService
 
 case class HakemusRepository(implicit val appConfig: AppConfig) extends Timer {
   import collection.JavaConversions._
   private val dao = appConfig.springContext.applicationDAO
+  private val koulutusinformaatioService = KoulutusInformaatioService(appConfig)
 
   def canUpdate(applicationSystem: ApplicationSystem, application: Application)(implicit lang: Language.Language) = {
     val haku = HakuConverter.convertToHaku(applicationSystem)
@@ -69,12 +71,32 @@ case class HakemusRepository(implicit val appConfig: AppConfig) extends Timer {
         val hakuOption = timed({
           HakuRepository().getHakuById(application.getApplicationSystemId)
         }, 1000, "HakuRepository get haku")
-        hakuOption.map(haku => {
-          val hakemus = HakemusConverter.convertToHakemus(haku._1, haku._2)(application)
+        hakuOption.map { case (applicationSystem: ApplicationSystem, haku: Haku) => {
+          val hakemus = HakemusConverter.convertToHakemus(applicationSystem, haku)(application)
           AuditLogger.log(ShowHakemus(personOid, hakemus.oid))
-          hakemus
-        })
+          hakemus.withApplicationPeriods(getApplicationPeriods(hakemus, applicationSystem))
+        }}
       }).flatten.toList.sortBy[Long](_.received).reverse
     }, 1000, "Application fetch")
+  }
+
+  private def getApplicationPeriods(hakemus: Hakemus, applicationSystem: ApplicationSystem) = {
+    if (applicationSystem.getApplicationSystemType == OppijaConstants.LISA_HAKU)
+      getHakutoiveApplicationPeriods(hakemus, applicationSystem)
+    else
+      hakemus.haku.applicationPeriods
+  }
+
+  private def getHakutoiveApplicationPeriods(hakemus: Hakemus, applicationSystem: ApplicationSystem) : List[HakuAika] = {
+    val hakutoiveApplicationPeriods = hakemus.hakutoiveet.headOption
+      .flatMap(_.get("Koulutus-id"))
+      .flatMap(koulutusinformaatioService.koulutus(_))
+      .flatMap { koulutus => (koulutus.applicationStartDate, koulutus.applicationEndDate) match {
+        case (Some(start), Some(end)) =>
+          Some(List(HakuAika(start, end)))
+        case _ =>
+          None
+      }}
+    hakutoiveApplicationPeriods.getOrElse(hakemus.haku.applicationPeriods)
   }
 }

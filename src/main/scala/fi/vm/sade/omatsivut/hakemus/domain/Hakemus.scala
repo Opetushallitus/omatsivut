@@ -19,6 +19,10 @@ case class Hakemus(
                     educationBackground: EducationBackground,
                     answers: Answers,
                     requiresAdditionalInfo: Boolean
-                  )
+                    ) {
+  def withApplicationPeriods(periods: List[HakuAika]) = {
+    copy(haku = haku.copy(applicationPeriods = periods))
+  }
+}
 
 case class EducationBackground(baseEducation: String, vocational: Boolean)
