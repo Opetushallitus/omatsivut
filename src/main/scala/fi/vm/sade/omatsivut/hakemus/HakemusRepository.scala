@@ -11,12 +11,12 @@ import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.hakemus.domain.{Haku, HakuAika, Hakemus}
 import fi.vm.sade.omatsivut.util.Timer
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
-import fi.vm.sade.omatsivut.koulutusinformaatio.KoulutusInformaatioService
+import fi.vm.sade.omatsivut.koulutusinformaatio.CachedKoulutusInformaatioService
 
 case class HakemusRepository(implicit val appConfig: AppConfig) extends Timer {
   import collection.JavaConversions._
   private val dao = appConfig.springContext.applicationDAO
-  private val koulutusinformaatioService = KoulutusInformaatioService(appConfig)
+  private val koulutusinformaatioService = CachedKoulutusInformaatioService(appConfig)
 
   def canUpdate(applicationSystem: ApplicationSystem, application: Application)(implicit lang: Language.Language) = {
     val haku = HakuConverter.convertToHaku(applicationSystem)

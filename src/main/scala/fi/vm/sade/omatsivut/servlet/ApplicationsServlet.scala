@@ -15,6 +15,7 @@ import org.scalatra.{NotFound, BadRequest, Ok, Forbidden}
 class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfig) extends OmatSivutServletBase with JacksonJsonSupport with JsonFormats with SwaggerSupport with Authentication {
   override def applicationName = Some("api")
   private val applicationSystemService = appConfig.springContext.applicationSystemService
+  private val hakemusRepository = HakemusRepository()
 
   protected val applicationDescription = "Oppijan henkilökohtaisen palvelun REST API, jolla voi hakea ja muokata hakemuksia ja omia tietoja"
 
@@ -39,7 +40,7 @@ class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfi
   }
 
   get("/applications", operation(getApplicationsSwagger)) {
-    HakemusRepository().fetchHakemukset(personOid())
+    hakemusRepository.fetchHakemukset(personOid())
   }
 
   put("/applications/:oid", operation(putApplicationsSwagger)) {
@@ -47,7 +48,7 @@ class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfi
     val applicationSystem = applicationSystemService.getApplicationSystem(updated.haku.oid)
     val errors = ApplicationValidator().validate(applicationSystem)(updated)
     if(errors.isEmpty) {
-      HakemusRepository().updateHakemus(applicationSystem)(updated, personOid()) match {
+      hakemusRepository.updateHakemus(applicationSystem)(updated, personOid()) match {
         case Some(saved) => Ok(saved)
         case None => Forbidden()
       }

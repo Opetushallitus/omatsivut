@@ -9,6 +9,7 @@ import fi.vm.sade.omatsivut.koulutusinformaatio.domain.{Liitepyynto, Koulutus, O
 import fi.vm.sade.omatsivut.util.Logging
 import scalaj.http.Http
 import fi.vm.sade.omatsivut.http.DefaultHttpClient
+import fi.vm.sade.omatsivut.memoize.Memoize
 
 trait KoulutusInformaatioService {
   def opetuspisteet(asId: String, query: String): List[Opetuspiste]
@@ -49,6 +50,22 @@ object KoulutusInformaatioService {
       }
     }
     case _ => RemoteKoulutusService()
+  }
+}
+
+object CachedKoulutusInformaatioService {
+  def apply(implicit appConfig: AppConfig): KoulutusInformaatioService = {
+    val service = KoulutusInformaatioService.apply(appConfig)
+    val cacheTimeSec = 60*15
+    val opetuspisteetMemo = Memoize.memoize(service.opetuspisteet _, cacheTimeSec)
+    val koulutusMemo = Memoize.memoize(service.koulutus _, cacheTimeSec)
+    val koulutuksetMemo = Memoize.memoize(service.koulutukset _, cacheTimeSec)
+
+    new KoulutusInformaatioService {
+      def opetuspisteet(asId: String, query: String): List[Opetuspiste] = opetuspisteetMemo(asId, query)
+      def koulutus(aoId: String): Option[Koulutus] = koulutusMemo(aoId)
+      def koulutukset(asId: String, opetuspisteId: String, baseEducation: Option[String], vocational: String, uiLang: String): List[Koulutus] = koulutuksetMemo(asId, opetuspisteId, baseEducation, vocational, uiLang)
+    }
   }
 }
 
