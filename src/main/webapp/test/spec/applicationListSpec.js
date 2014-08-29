@@ -165,6 +165,25 @@
       })
     })
 
+    describe("lisähaku", function() {
+      before(page.resetDataAndOpen)
+
+      it("hakuaika haetaan hakukohteelta", function() {
+        hakemusLisaKevat2014WithForeignBaseEducation.applicationPeriod().should.equal("Hakuaika päättyy perjantaina 28. elokuuta 2054 klo 14.19")
+      })
+
+      describe("hakuajan päivittyminen", function() {
+        before(
+          replacePreference(hakemusLisaKevat2014WithForeignBaseEducation, 0, "Ahlman"),
+          hakemusLisaKevat2014WithForeignBaseEducation.saveWaitSuccess
+        )
+
+        it("hakuaika päivittyy tallennuksen yhteydessä", function() {
+          hakemusLisaKevat2014WithForeignBaseEducation.applicationPeriod().should.equal("Hakuaika päättyy keskiviikkona 1. joulukuuta 2100 klo 07.00")
+        })
+      })
+    })
+
     describe("hakemuksen tila", function() {
       describe("passiivinen hakemus", function() {
         before(page.applyFixtureAndOpen("passiveApplication"))
