@@ -42,8 +42,19 @@ sealed trait HakemuksenTila {
 case class Submitted(id: String = "SUBMITTED") extends HakemuksenTila // Alkutila, ei editoitatissa
 case class PostProcessing(id: String = "POSTPROCESSING") extends HakemuksenTila // Taustaprosessointi kesken, ei editoitavissa
 case class Active(id: String = "ACTIVE") extends HakemuksenTila // Aktiivinen, editoitavissa
-case class HakuPaattynyt(id: String = "HAKUPAATTYNYT", valintaTulos: Option[ValintaTulos] = None) extends HakemuksenTila // Haku päättynyt
+case class HakuPaattynyt(id: String = "HAKUPAATTYNYT", valintaTulos: Option[Valintatulos] = None) extends HakemuksenTila // Haku päättynyt
 case class Passive(id: String = "PASSIVE") extends HakemuksenTila // Passiivinen/poistettu
 case class Incomplete(id: String = "INCOMPLETE") extends HakemuksenTila // Tietoja puuttuu
 
-case class ValintaTulos()
+case class Valintatulos(hakutoiveet: List[HakutoiveenValintatulos])
+case class HakutoiveenValintatulos(
+                                    koulutus: Koulutus,
+                                    opetuspiste: Opetuspiste,
+                                    tila: String,
+                                    vastaanottotieto: String,
+                                    ilmoittautumisTila: String,
+                                    jonosija: Option[Int],
+                                    varasijaNumero: Option[Int])
+
+case class Koulutus(oid: String, name: String)
+case class Opetuspiste(oid: String, name: String)

@@ -7,6 +7,7 @@ import fi.vm.sade.omatsivut.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.domain.Hakemus._
 import fi.vm.sade.omatsivut.domain._
 import fi.vm.sade.omatsivut.valintatulokset.ValintatulosService
+import org.json4s.jackson.JsonMethods._
 import scala.collection.JavaConversions._
 import scala.util.Try
 import fi.vm.sade.haku.oppija.hakemus.domain.util.ApplicationUtil
@@ -23,7 +24,7 @@ object HakemusConverter {
       application.getOid,
       application.getReceived.getTime,
       application.getUpdated.getTime,
-      tila(applicationSystem, application),
+      tila(applicationSystem, haku, application),
       convertHakuToiveet(application),
       haku,
       EducationBackground(koulutusTaustaAnswers.get(baseEducationKey), !Try {koulutusTaustaAnswers.get("ammatillinenTutkintoSuoritettu").toBoolean}.getOrElse(false)),
@@ -32,13 +33,13 @@ object HakemusConverter {
     )
   }
 
-  def tila(applicationSystem: ApplicationSystem, application: Application)(implicit appConfig: AppConfig): HakemuksenTila = {
+  def tila(applicationSystem: ApplicationSystem, haku: Haku, application: Application)(implicit appConfig: AppConfig): HakemuksenTila = {
     if (isPostProcessing(application)) {
       PostProcessing()
     } else {
       application.getState.toString match {
-        case "ACTIVE" => if (false) {// TODO: jos hakuaika päättynyt
-          HakuPaattynyt(valintaTulos = ValintatulosService.apply.getValintatulos(application, applicationSystem))
+        case "ACTIVE" => if (!haku.applicationPeriods.head.active) {
+          HakuPaattynyt(valintaTulos = valintaTulos(applicationSystem, application))
         } else {
           Active()
         }
@@ -49,6 +50,31 @@ object HakemusConverter {
           throw new RuntimeException("Unexpected state for application " + application.getOid + ": " + x)
         }
       }
+    }
+  }
+
+  def valintaTulos(applicationSystem: ApplicationSystem, application: Application)(implicit appConfig: AppConfig) = {
+    val hakutoiveet = convertHakuToiveet(application)
+
+    def findKoulutus(oid: String): Koulutus = {
+      hakutoiveet.find(_.get("Koulutus-id") == Some(oid)).map{ hakutoive => Koulutus(oid, hakutoive("Koulutus"))}.getOrElse(Koulutus(oid, oid))
+    }
+
+    def findOpetuspiste(oid: String): Opetuspiste = {
+      hakutoiveet.find(_.get("Opetuspiste-id") == Some(oid)).map{ hakutoive => Opetuspiste(oid, hakutoive("Opetuspiste"))}.getOrElse(Opetuspiste(oid, oid))
+    }
+    ValintatulosService.apply.getValintatulos(application.getOid, applicationSystem.getId).map { valintaTulos =>
+      Valintatulos(valintaTulos.hakutoiveet.map { hakutoiveenTulos =>
+        HakutoiveenValintatulos(
+          findKoulutus(hakutoiveenTulos.hakukohdeOid),
+          findOpetuspiste(hakutoiveenTulos.tarjoajaOid),
+          hakutoiveenTulos.tila,
+          hakutoiveenTulos.vastaanottotieto,
+          hakutoiveenTulos.ilmoittautumisTila,
+          hakutoiveenTulos.jonosija,
+          hakutoiveenTulos.varasijaNumero
+        )
+      })
     }
   }
 
