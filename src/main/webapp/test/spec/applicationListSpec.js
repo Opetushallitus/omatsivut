@@ -4,10 +4,10 @@
   var hakemusNivelKesa2013WithPeruskouluBaseEducation = page.getApplication(hakemusNivelKesa2013WithPeruskouluBaseEducationId)
   var hakemusYhteishakuKevat2014WithForeignBaseEducationId = "1.2.246.562.11.00000441368"
   var hakemusYhteishakuKevat2014WithForeignBaseEducation = page.getApplication(hakemusYhteishakuKevat2014WithForeignBaseEducationId)
-  var hakemusLisaKevat2014WithOtherBaseEducationId = "1.2.246.562.11.00000441371"
-  var hakemusLisaKevat2014WithOtherBaseEducation = page.getApplication(hakemusLisaKevat2014WithOtherBaseEducationId)
-  var hakemusYhteishakuKevat2013WithOtherBaseEducationId = "1.2.246.562.11.00000441369"
-  var hakemusYhteishakuKevat2013WithOtherBaseEducation = page.getApplication(hakemusYhteishakuKevat2013WithOtherBaseEducationId)
+  var hakemusLisaKevat2014WithForeignBaseEducationId = "1.2.246.562.11.00000441371"
+  var hakemusLisaKevat2014WithForeignBaseEducation = page.getApplication(hakemusLisaKevat2014WithForeignBaseEducationId)
+  var hakemusYhteishakuKevat2013WithForeignBaseEducationId = "1.2.246.562.11.00000441369"
+  var hakemusYhteishakuKevat2013WithForeignBaseEducation = page.getApplication(hakemusYhteishakuKevat2013WithForeignBaseEducationId)
   var hakemusIncompleteId = "1.2.246.562.11.00000855417"
   var hakemusIncomplete = page.getApplication(hakemusIncompleteId)
   var hakemusKorkeakouluId = "1.2.246.562.11.00000877699"
@@ -149,9 +149,9 @@
       })
 
       it("jos hakuaika on loppunut, hakemusta ei voi muokata", function() {
-        hakemusYhteishakuKevat2013WithOtherBaseEducation.preferencesForApplication().length.should.equal(0)
-        hakemusYhteishakuKevat2013WithOtherBaseEducation.applicationPeriod().should.equal("Hakuaika on päättynyt. Haun tulokset julkaistaan 11. kesäkuuta 2014.")
-        hakemusYhteishakuKevat2013WithOtherBaseEducation.changesSavedTimestamp().should.equal("")
+        hakemusYhteishakuKevat2013WithForeignBaseEducation.preferencesForApplication().length.should.equal(0)
+        hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationPeriod().should.equal("Hakuaika on päättynyt. Haun tulokset julkaistaan 11. kesäkuuta 2014.")
+        hakemusYhteishakuKevat2013WithForeignBaseEducation.changesSavedTimestamp().should.equal("")
       })
 
       describe("haun tyyppi", function() {
@@ -641,21 +641,21 @@
       describe("Kysymysten suodatus koulutuksen kielen perusteella", function() {
         before(
           page.resetDataAndOpen,
-          hakemusLisaKevat2014WithOtherBaseEducation.getPreference(0).remove,
-          replacePreference(hakemusLisaKevat2014WithOtherBaseEducation, 0, "Ammattiopisto Livia, fiskeri")
+          hakemusLisaKevat2014WithForeignBaseEducation.getPreference(0).remove,
+          replacePreference(hakemusLisaKevat2014WithForeignBaseEducation, 0, "Ammattiopisto Livia, fiskeri")
         )
 
         it("epäoleellisia kysymyksiä ei näytetä", function() {
-          var questionTitles = hakemusLisaKevat2014WithOtherBaseEducation.questionsForApplication().titles()
+          var questionTitles = hakemusLisaKevat2014WithForeignBaseEducation.questionsForApplication().titles()
           expect(questionTitles).to.deep.equal([
             'Oletko suorittanut yleisten kielitutkintojen ruotsin kielen tutkinnon kaikki osakokeet vähintään taitotasolla 3?',
             'Oletko suorittanut Valtionhallinnon kielitutkintojen ruotsin kielen suullisen ja kirjallisen tutkinnon vähintään taitotasolla tyydyttävä?' ])
         })
 
         it("suodatetun vastausjoukon tallentaminen onnistuu", function() {
-          hakemusLisaKevat2014WithOtherBaseEducation.questionsForApplication().enterAnswer(0, "Kyllä")
-          hakemusLisaKevat2014WithOtherBaseEducation.questionsForApplication().enterAnswer(1, "Ei")
-          return hakemusLisaKevat2014WithOtherBaseEducation.saveWaitSuccess()
+          hakemusLisaKevat2014WithForeignBaseEducation.questionsForApplication().enterAnswer(0, "Kyllä")
+          hakemusLisaKevat2014WithForeignBaseEducation.questionsForApplication().enterAnswer(1, "Ei")
+          return hakemusLisaKevat2014WithForeignBaseEducation.saveWaitSuccess()
         })
       })
 
