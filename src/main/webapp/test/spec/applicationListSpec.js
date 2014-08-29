@@ -169,7 +169,7 @@
 
         it("valintatulokset näytetään", function() {
           expect(hakemus4.valintatulokset()[0].hakukohde).to.equal('Kallion lukio Lukion ilmaisutaitolinja')
-          expect(hakemus4.valintatulokset()[0].tila).to.equal('HYVÄKSYTTY')
+          expect(hakemus4.valintatulokset()[0].tila).to.equal('HYVAKSYTTY')
         })
       })
 
