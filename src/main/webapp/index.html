@@ -63,7 +63,7 @@
                         </div>
                     </p>
 
-                    <section class="application-section" ng-if="applicationPeriod.active && (application.state.id == 'ACTIVE' || application.state.id == 'INCOMPLETE')">
+                    <section class="application-section" ng-if="application.state.id == 'ACTIVE' || application.state.id == 'INCOMPLETE'">
                         <header class="application-section-heading">
                             {{ localization('label.preferences') }}
                             <button class="float-right save-btn" ng-disabled="!hasChanged || statusMessageType=='pending' || !isSaveable || isValidating" ng-click="saveApplication()">{{ localization('button.save') }}</button>
