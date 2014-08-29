@@ -1,10 +1,12 @@
 package fi.vm.sade.omatsivut.valintatulokset
 
-import fi.vm.sade.omatsivut.AppConfig.{AppConfig, StubbedExternalDeps}
-import fi.vm.sade.omatsivut.http.DefaultHttpClient
+import fi.vm.sade.omatsivut.AppConfig.{ITWithSijoitteluService, AppConfig, StubbedExternalDeps}
+import fi.vm.sade.omatsivut.Logging
+import fi.vm.sade.omatsivut.http.{HttpRequest, DefaultHttpClient}
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.security.CASClient
 import org.json4s.JsonAST.JValue
+import org.json4s.jackson.JsonMethods._
 
 trait ValintatulosService {
   def getValintatulos(hakemusOid: String, hakuOid: String): Option[Valintatulos]
@@ -12,8 +14,16 @@ trait ValintatulosService {
 
 object ValintatulosService {
   def apply(implicit appConfig: AppConfig): ValintatulosService = appConfig match {
-    case x: StubbedExternalDeps => MockValintatulosService()
-    case _ => RemoteValintatulosService()
+    case x: ITWithSijoitteluService =>
+      new RemoteValintatulosService("http://localhost:8180/resources/sijoittelu") {
+        override def makeRequest(url: String) =  {
+          super.makeRequest(url).map(_.header("Authorization", "Basic " + System.getProperty("omatsivut.sijoittelu.auth")))
+        }
+      }
+    case x: StubbedExternalDeps =>
+      new MockValintatulosService()
+    case _ =>
+      new RemoteValintatulosServiceWithCAS()
   }
 }
 
@@ -26,20 +36,33 @@ case class MockValintatulosService() extends ValintatulosService with JsonFormat
   }
 }
 
-case class RemoteValintatulosService(implicit appConfig: AppConfig) extends ValintatulosService with JsonFormats {
+class RemoteValintatulosService(sijoitteluServiceUrl: String) extends ValintatulosService with JsonFormats with Logging {
   import org.json4s.jackson.JsonMethods._
 
   override def getValintatulos(hakemusOid: String, hakuOid: String) = {
-    val t  = CASClient(DefaultHttpClient).getServiceTicket(appConfig.settings.authenticationServiceConfig)
-    CASClient(DefaultHttpClient).getServiceTicket(appConfig.settings.sijoitteluServiceConfig).flatMap { ticket =>
-      val (responseCode, _, resultString) = DefaultHttpClient.httpGet(appConfig.settings.sijoitteluServiceConfig.url + "/resources/sijoittelu/1.2.246.562.29.92478804245/sijoitteluajo/latest/hakemus/yhteenveto/1.2.246.562.11.00000878229")
-        .param("ticket", ticket)
-        .responseWithHeaders
-
-      responseCode match {
-        case 200 =>
+    val url = sijoitteluServiceUrl + "/"+hakuOid+"/sijoitteluajo/latest/hakemus/yhteenveto/"+hakemusOid
+    makeRequest(url).flatMap{ request =>
+      request.responseWithHeaders match {
+        case (200, _, resultString) =>
           parse(resultString).extractOpt[JValue].map(_.extract[Valintatulos])
-        case _ => None
+        case (errorCode, _, resultString) =>
+          logger.error("Response code " + errorCode + " fetching data from sijoittelu-service at " + url)
+          None
+      }
+    }
+  }
+
+  def makeRequest(url: String): Option[HttpRequest] = {
+    Some(DefaultHttpClient.httpGet(url))
+  }
+}
+
+class RemoteValintatulosServiceWithCAS(implicit appConfig: AppConfig) extends RemoteValintatulosService(appConfig.settings.sijoitteluServiceConfig.url) with JsonFormats {
+  override def makeRequest(url: String) = {
+    super.makeRequest(url).flatMap{ request =>
+      val t  = CASClient(DefaultHttpClient).getServiceTicket(appConfig.settings.authenticationServiceConfig)
+      CASClient(DefaultHttpClient).getServiceTicket(appConfig.settings.sijoitteluServiceConfig).map { ticket =>
+        request.param("ticket", ticket)
       }
     }
   }

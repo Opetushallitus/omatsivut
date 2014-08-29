@@ -22,6 +22,7 @@ object AppConfig extends Logging {
       case "dev" => new Dev
       case "dev-audit-log" => new DevWithAuditLog
       case "it" => new IT
+      case "it-with-sijoittelu" => new ITWithSijoitteluService
       case name => throw new IllegalArgumentException("Unknown value for omatsivut.profile: " + name);
     }
   }
@@ -88,6 +89,10 @@ object AppConfig extends Logging {
     override def properties = super.properties +
       ("mongo.db.name" -> "hakulomake") +
       ("mongodb.oppija.uri" -> "mongodb://localhost:28018")
+  }
+
+  class ITWithSijoitteluService extends IT {
+
   }
 
   trait ExternalProps {

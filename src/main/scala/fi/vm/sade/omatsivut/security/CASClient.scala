@@ -36,13 +36,10 @@ case class CASClient(val httpClient: HttpClient)(implicit val appConfig: AppConf
   }
   
   private def getServiceTicket(appTicketConsumerUrl: String, username: String, password: String): Option[String] = {
-    getTicketGrantingTicket(username, password) match {
-      case Some(ticket) => {
-        httpClient.httpPost(appConfig.settings.casTicketUrl + "/" + ticket, None)
-    		.param("service", appTicketConsumerUrl)
-    		.response        
-      } 
-      case None => None
+    getTicketGrantingTicket(username, password).flatMap { ticket =>
+      httpClient.httpPost(appConfig.settings.casTicketUrl + "/" + ticket, None)
+        .param("service", appTicketConsumerUrl)
+        .response
     }
   }
 }
