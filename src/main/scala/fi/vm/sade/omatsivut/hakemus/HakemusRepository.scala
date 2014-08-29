@@ -43,7 +43,8 @@ case class HakemusRepository(implicit val appConfig: AppConfig) extends Timer {
           dao.update(applicationQuery, application)
         }, 1000, "Application update DAO")
         AuditLogger.log(UpdateHakemus(userOid, updatedHakemus.oid, originalAnswers, application.getAnswers.toMap.mapValues(_.toMap)))
-        HakemusConverter.convertToHakemus(applicationSystem, HakuConverter.convertToHaku(applicationSystem))(application)
+        val resultHakemus = HakemusConverter.convertToHakemus(applicationSystem, HakuConverter.convertToHaku(applicationSystem))(application)
+        resultHakemus.withApplicationPeriods(getApplicationPeriods(resultHakemus, applicationSystem))
       }
     }, 1000, "Application update")
   }

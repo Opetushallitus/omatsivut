@@ -101,6 +101,7 @@ Hakemus.prototype = {
 
   mergeSavedApplication: function(savedApplication) {
     this.updated = savedApplication.updated
+    this.haku.applicationPeriods = savedApplication.haku.applicationPeriods
 
     for (var i=0; i<this.hakutoiveet.length && i<savedApplication.hakutoiveet.length; i++) {
       hakutoive = this.hakutoiveet[i]
