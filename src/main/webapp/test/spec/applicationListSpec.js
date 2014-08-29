@@ -148,12 +148,6 @@
         ])
       })
 
-      it("jos hakuaika on loppunut, hakemusta ei voi muokata", function() {
-        hakemus4.preferencesForApplication().length.should.equal(0)
-        hakemus4.applicationPeriod().should.equal("Hakuaika on päättynyt. Haun tulokset julkaistaan 11. kesäkuuta 2014.")
-        hakemus4.changesSavedTimestamp().should.equal("")
-      })
-
       describe("haun tyyppi", function() {
         before(hakemus1.convertToKorkeakouluhaku)
         it ("korkeakouluhaussa käytetään eri tekstejä", function() {
@@ -166,6 +160,14 @@
     })
 
     describe("hakemuksen tila", function() {
+      describe("hakuaika päättynyt", function() {
+        it("hakemusta ei voi muokata", function() {
+          hakemus4.preferencesForApplication().length.should.equal(0)
+          hakemus4.applicationPeriod().should.equal("Hakuaika on päättynyt. Haun tulokset julkaistaan 11. kesäkuuta 2014.")
+          hakemus4.changesSavedTimestamp().should.equal("")
+        })
+      })
+
       describe("passiivinen hakemus", function() {
         before(page.applyFixtureAndOpen("passiveApplication"))
         it("hakemus ei näy", function() {
