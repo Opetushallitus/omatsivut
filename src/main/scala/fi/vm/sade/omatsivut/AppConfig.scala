@@ -31,9 +31,8 @@ object AppConfig extends Logging {
     override def usesFakeAuthentication = if (settings.environment == "ophitest") true else false
   }
 
-  class LocalTestingWithTemplatedVars extends AppConfig with TemplatedProps with TestMode {
+  class LocalTestingWithTemplatedVars(val templateAttributesFile: String = System.getProperty("omatsivut.vars")) extends AppConfig with TemplatedProps with TestMode {
     def springConfiguration = new OmatSivutSpringContext.Default()
-    def templateAttributesFile = System.getProperty("omatsivut.vars")
   }
 
   class Dev extends AppConfig with ExampleTemplatedProps with MockAuthentication {
@@ -102,6 +101,7 @@ object AppConfig extends Logging {
   }
 
   trait TemplatedProps {
+    logger.info("Using template variables from " + templateAttributesFile)
     lazy val settings = ConfigTemplateProcessor.createSettings(templateAttributesFile)
     def templateAttributesFile: String
   }
