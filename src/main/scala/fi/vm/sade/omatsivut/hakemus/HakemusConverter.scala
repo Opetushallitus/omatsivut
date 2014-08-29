@@ -3,8 +3,10 @@ package fi.vm.sade.omatsivut.hakemus
 import java.util
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
+import fi.vm.sade.omatsivut.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.domain.Hakemus._
 import fi.vm.sade.omatsivut.domain._
+import fi.vm.sade.omatsivut.valintatulokset.ValintatulosService
 import scala.collection.JavaConversions._
 import scala.util.Try
 import fi.vm.sade.haku.oppija.hakemus.domain.util.ApplicationUtil
@@ -15,7 +17,7 @@ object HakemusConverter {
   val baseEducationKey = OppijaConstants.ELEMENT_ID_BASE_EDUCATION
   val preferencePhaseKey = OppijaConstants.PHASE_APPLICATION_OPTIONS
 
-  def convertToHakemus(applicationSystem: ApplicationSystem, haku: Haku)(application: Application) = {
+  def convertToHakemus(applicationSystem: ApplicationSystem, haku: Haku, application: Application)(implicit appConfig: AppConfig) = {
     val koulutusTaustaAnswers: util.Map[String, String] = application.getAnswers.get(educationPhaseKey)
     Hakemus(
       application.getOid,
@@ -30,12 +32,16 @@ object HakemusConverter {
     )
   }
 
-  def tila(applicationSystem: ApplicationSystem, application: Application): HakemuksenTila = {
+  def tila(applicationSystem: ApplicationSystem, application: Application)(implicit appConfig: AppConfig): HakemuksenTila = {
     if (isPostProcessing(application)) {
       PostProcessing()
     } else {
       application.getState.toString match {
-        case "ACTIVE" => Active(valintaTulos = getValintaTulos(application, applicationSystem))
+        case "ACTIVE" => if (false) {// TODO: jos hakuaika päättynyt
+          HakuPaattynyt(valintaTulos = ValintatulosService.apply.getValintatulos(application, applicationSystem))
+        } else {
+          Active()
+        }
         case "PASSIVE" => Passive()
         case "INCOMPLETE" => Incomplete()
         case "SUBMITTED" => Submitted()
@@ -44,10 +50,6 @@ object HakemusConverter {
         }
       }
     }
-  }
-
-  def getValintaTulos(application: Application, system: ApplicationSystem) = {
-    None
   }
 
   private def requiresAdditionalInfo(applicationSystem: ApplicationSystem, application: Application): Boolean = {

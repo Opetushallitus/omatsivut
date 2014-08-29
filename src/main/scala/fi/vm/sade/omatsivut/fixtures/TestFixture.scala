@@ -22,6 +22,7 @@ object TestFixture {
   val testHetuWithNoApplications = "300794-937F"
   val persons = Map((testHetu, personOid),
                     (testHetuWithNoApplications, "1.2.246.562.24.79213463339"))
+  implicit val appConfig = new AppConfig.IT
 
   lazy val (as, app) = {
     (new AppConfig.IT).withConfig { appConfig =>
@@ -35,7 +36,7 @@ object TestFixture {
   def haku(implicit lang: Language.Language) = HakuConverter.convertToHaku(applicationSystem)
   def application: Application = app
   def hakemusMuutos(implicit lang: Language.Language) = {
-    HakemusConverter.convertToHakemus(applicationSystem, haku)(application).toHakemusMuutos
+    HakemusConverter.convertToHakemus(applicationSystem, haku, application).toHakemusMuutos
   }
 
   val ammattistartti: Hakutoive = JsonFixtureMaps.findByKey[Hakutoive]("/mockdata/hakutoiveet.json", "1.2.246.562.14.2014030415375012208392").get
