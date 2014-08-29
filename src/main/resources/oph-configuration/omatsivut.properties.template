@@ -30,6 +30,11 @@ omatsivut.authentication-service.password={{omatsivut_authentication_service_pas
 omatsivut.authentication-service.ticket_consumer_path=j_spring_cas_security_check
 omatsivut.authentication-service.get_oid.path=resources/s2s/byHetu
 
+omatsivut.sijoittelu-service.url=https://{{host_virkailija}}/sijoittelu-service
+omatsivut.sijoittelu-service.username={{omatsivut_authentication_service_username}}
+omatsivut.sijoittelu-service.password={{omatsivut_authentication_service_password}}
+omatsivut.sijoittelu-service.ticket_consumer_path=j_spring_cas_security_check
+
 omatsivut.koulutusinformaatio.ao.url=https\://{{host_haku}}/ao
 omatsivut.koulutusinformaatio.lop.url=https\://{{host_haku}}/lop
 

@@ -25,6 +25,7 @@ case class ApplicationSettings(config: Config) {
   val raamitUrl = config.getString("omatsivut.oppija-raamit.url")
 
   val authenticationServiceConfig = getRemoteApplicationConfig(config.getConfig("omatsivut.authentication-service"))
+  val sijoitteluServiceConfig = getRemoteApplicationConfig(config.getConfig("omatsivut.sijoittelu-service"))
 
   val koulutusinformaatioAoUrl = config.getString("omatsivut.koulutusinformaatio.ao.url")
   val koulutusinformaatioLopUrl = config.getString("omatsivut.koulutusinformaatio.lop.url")
