@@ -166,6 +166,11 @@
           hakemus4.applicationPeriod().should.equal("Hakuaika on päättynyt. Haun tulokset julkaistaan 11. kesäkuuta 2014.")
           hakemus4.changesSavedTimestamp().should.equal("")
         })
+
+        it("valintatulokset näytetään", function() {
+          expect(hakemus4.valintatulokset()[0].hakukohde).to.equal('Kallion lukio Lukion ilmaisutaitolinja')
+          expect(hakemus4.valintatulokset()[0].tila).to.equal('HYVÄKSYTTY')
+        })
       })
 
       describe("passiivinen hakemus", function() {

@@ -39,7 +39,7 @@ object HakemusConverter {
     } else {
       application.getState.toString match {
         case "ACTIVE" => if (!haku.applicationPeriods.head.active) {
-          HakuPaattynyt(valintaTulos = valintaTulos(applicationSystem, application))
+          HakuPaattynyt(valintatulos = valintatulos(applicationSystem, application))
         } else {
           Active()
         }
@@ -53,7 +53,7 @@ object HakemusConverter {
     }
   }
 
-  def valintaTulos(applicationSystem: ApplicationSystem, application: Application)(implicit appConfig: AppConfig) = {
+  def valintatulos(applicationSystem: ApplicationSystem, application: Application)(implicit appConfig: AppConfig) = {
     val hakutoiveet = convertHakuToiveet(application)
 
     def findKoulutus(oid: String): Koulutus = {

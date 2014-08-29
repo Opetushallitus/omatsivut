@@ -132,6 +132,18 @@ function ApplicationListPage() {
         })
       },
 
+      valintatulokset: function () {
+        var application = getApplicationElement(applicationIndex)
+        return application.find(".hakukohteen-valintatulos")
+          .map(function () {
+            var el = $(this)
+            return {
+              hakukohde: el.find(".opetuspiste").text() + " " + el.find(".koulutus").text(),
+              tila: el.find(".tila").text()
+            }
+          }).toArray()
+      },
+
       isValidationErrorVisible: function() {
         return getApplicationElement().find(".status-message.error").is(":visible")
       },
