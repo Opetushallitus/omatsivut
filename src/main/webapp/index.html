@@ -64,7 +64,6 @@
                     </p>
 
                     <section class="application-valintatulos" ng-if="application.state.valintatulos">
-                        <h3>Tulokset</h3>
                         <ul>
                             <li class="hakukohteen-valintatulos" ng-repeat="tulos in application.state.valintatulos.hakutoiveet">
                                 <span class="opetuspiste">{{ tulos.opetuspiste.name }}</span> <span class="koulutus">{{ tulos.koulutus.name }}</span> : <span class="tila">{{ tulos.tila }}</span>
