@@ -1,8 +1,9 @@
 package fi.vm.sade.omatsivut.fixtures
 
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
-import fi.vm.sade.omatsivut.AppConfig.AppConfig
-import fi.vm.sade.omatsivut.domain.Hakemus.Answers
+import fi.vm.sade.omatsivut.config.AppConfig
+import AppConfig.AppConfig
+import fi.vm.sade.omatsivut.hakemus.domain.Hakemus.Answers
 
 class Hakemus2WithDifferentAnswersFixture(appConfig: AppConfig) {
   private val dao = appConfig.springContext.applicationDAO

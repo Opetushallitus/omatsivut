@@ -1,4 +1,4 @@
-package fi.vm.sade.omatsivut.koulutusinformaatio
+package fi.vm.sade.omatsivut.domain
 
 case class Address(  streetAddress: Option[String],
                      streetAddress2: Option[String],

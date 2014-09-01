@@ -1,17 +1,9 @@
-package fi.vm.sade.omatsivut
+package fi.vm.sade.omatsivut.servlet
 
-import fi.vm.sade.haku.oppija.hakemus.domain.Application
-import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
-import fi.vm.sade.omatsivut.domain.Hakemus
-import fi.vm.sade.omatsivut.domain.Hakemus.{Hakutoive, Answers}
-import fi.vm.sade.omatsivut.fixtures.TestFixture
-import fi.vm.sade.omatsivut.json.JsonFormats
-import org.json4s.jackson.Serialization
-import fi.vm.sade.omatsivut.fixtures.TestFixture._
-import org.scalatra.test.specs2.MutableScalatraSpec
-import fi.vm.sade.omatsivut.servlet.LanguageFilter
-import fi.vm.sade.omatsivut.domain.Language
 import javax.servlet.http.Cookie
+
+import fi.vm.sade.omatsivut.domain.Language
+import org.scalatra.test.specs2.MutableScalatraSpec
 
 class LanguageFilterSpec extends MutableScalatraSpec {
   val filter = new LanguageFilter()

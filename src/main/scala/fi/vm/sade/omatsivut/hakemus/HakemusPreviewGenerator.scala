@@ -8,22 +8,21 @@ import fi.vm.sade.haku.oppija.lomake.domain.elements.custom.{PreferenceRow, Pref
 import fi.vm.sade.haku.oppija.lomake.domain.elements.questions.{CheckBox, DateQuestion, OptionQuestion, TextArea, TextQuestion}
 import fi.vm.sade.haku.oppija.lomake.domain.elements.{HiddenValue, Phase, Text, Theme, TitledGroup}
 import fi.vm.sade.haku.oppija.lomake.domain.rules.{AddElementRule, RelatedQuestionRule}
-import fi.vm.sade.omatsivut.AppConfig.AppConfig
-import fi.vm.sade.omatsivut.Logging
-import fi.vm.sade.omatsivut.domain.Language
+import fi.vm.sade.omatsivut.config.AppConfig
+import AppConfig.AppConfig
+import fi.vm.sade.omatsivut.domain.{Address, Language}
 import fi.vm.sade.omatsivut.hakemus.HakemusConverter.FlatAnswers
 import fi.vm.sade.omatsivut.koulutusinformaatio.KoulutusInformaatioService
+import fi.vm.sade.omatsivut.koulutusinformaatio.domain.{Liitepyynto, Koulutus, Opetuspiste}
 import fi.vm.sade.omatsivut.localization.Translations
+import fi.vm.sade.omatsivut.util.Logging
 import scalatags.Text.TypedTag
-import fi.vm.sade.omatsivut.koulutusinformaatio.Koulutus
 import org.joda.time.DateTime
 import fi.vm.sade.haku.oppija.hakemus.domain.util.ApplicationUtil
-import fi.vm.sade.omatsivut.koulutusinformaatio.Opetuspiste
 import org.joda.time.format.DateTimeFormat
-import fi.vm.sade.omatsivut.koulutusinformaatio.Opetuspiste
 import fi.vm.sade.haku.oppija.lomake.domain.elements.Link
-import fi.vm.sade.omatsivut.koulutusinformaatio.Address
-import fi.vm.sade.omatsivut.koulutusinformaatio.Liitepyynto
+import fi.vm.sade.haku.oppija.lomake.domain.elements.custom.PostalCode
+import fi.vm.sade.haku.oppija.lomake.domain.elements.Notification
 
 case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val language: Language.Language) extends Logging {
   import scala.collection.JavaConversions._
@@ -53,12 +52,14 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
         case _: TextArea => textQuestionPreview(element)
         case _: SocialSecurityNumber => textQuestionPreview(element)
         case _: TextQuestion => textQuestionPreview(element, showEmptyValues)
+        case _: PostalCode => postalCodePreview(element)
         case _: OptionQuestion => optionQuestionPreview(element)
         case _: CheckBox => checkBoxPreview(element)
         case _: Theme => themePreview(element)
         case _: Phase => childrenPreview(element)
         case _: RelatedQuestionRule => childrenPreview(element)
         case _: Text => List(textPreview(element))
+        case _: Notification => List(textPreview(element))
         case link: Link => List(linkPreview(element, link))
         case _: TitledGroup => List(titledGroupPreview(element))
         case _: DateQuestion => List(textPreview(element))
@@ -189,14 +190,25 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
       questionPreview(element.title, answers.get(element.id).getOrElse("").asInstanceOf[String], showEmptyValues)
     }
 
+    def postalCodePreview(element: ElementWrapper) = {
+      val answer = selectedOption(element.options, element.id)
+        .map { option => option.value + " " + option.title }
+        .getOrElse("")
+      questionPreview("", answer) ::: childrenPreview(element)
+    }
+
     def optionQuestionPreview(element: ElementWrapper) = {
       val answer = answerFromOptions(element.options, element.id)
       questionPreview(element.title, answer) ::: childrenPreview(element)
     }
 
-    def answerFromOptions(options: List[OptionWrapper], key: String) = {
+    def selectedOption(options: List[OptionWrapper], key: String) = {
       options
         .find { option => Some(option.value) == answers.get(key)}
+    }
+
+    def answerFromOptions(options: List[OptionWrapper], key: String) = {
+      selectedOption(options, key)
         .map { option => option.title }
         .getOrElse("")
     }

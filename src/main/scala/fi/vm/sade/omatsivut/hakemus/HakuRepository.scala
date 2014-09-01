@@ -1,13 +1,14 @@
 package fi.vm.sade.omatsivut.hakemus
 
 import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
-import fi.vm.sade.omatsivut.AppConfig.AppConfig
-import fi.vm.sade.omatsivut.domain.Haku
+import fi.vm.sade.omatsivut.config.AppConfig
+import AppConfig.AppConfig
 import fi.vm.sade.omatsivut.domain.Language
+import fi.vm.sade.omatsivut.hakemus.domain.Haku
 import fi.vm.sade.omatsivut.ohjausparametrit.OhjausparametritService
-import fi.vm.sade.omatsivut.Logging
+import fi.vm.sade.omatsivut.util.{Logging, Timer}
 
-case class HakuRepository(implicit val appConfig: AppConfig) extends Logging {
+case class HakuRepository(implicit val appConfig: AppConfig) extends Timer {
   private val repository = appConfig.springContext.applicationSystemService
 
   def getHakuById(id: String)(implicit lang: Language.Language): Option[(ApplicationSystem, Haku)] = id match {
@@ -15,7 +16,9 @@ case class HakuRepository(implicit val appConfig: AppConfig) extends Logging {
     case applicationSystemId =>
       tryFind(applicationSystemId).map(appSystem => (appSystem, HakuConverter.convertToHaku(appSystem)) match {
         case (appSystem, haku) => {
-          val results = OhjausparametritService(appConfig).valintatulokset(applicationSystemId)
+          val results = timed({
+            OhjausparametritService(appConfig).valintatulokset(applicationSystemId)
+          }, 1000, "Ohjausparametrit valintatulokset")
           (appSystem, haku.copy(results = results))
         }
       })
@@ -23,7 +26,9 @@ case class HakuRepository(implicit val appConfig: AppConfig) extends Logging {
 
   private def tryFind(applicationSystemOid: String): Option[ApplicationSystem] = {
     try {
-      Some(repository.getApplicationSystem(applicationSystemOid))
+      Some(timed({
+        repository.getApplicationSystem(applicationSystemOid)
+      }, 1000, "Application system service"))
     } catch {
       case e: Exception =>
         logger.error("applicationSystem loading failed", e)

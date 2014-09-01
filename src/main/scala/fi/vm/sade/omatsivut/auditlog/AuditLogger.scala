@@ -2,8 +2,9 @@ package fi.vm.sade.omatsivut.auditlog
 
 import java.util.concurrent.ArrayBlockingQueue
 
-import fi.vm.sade.omatsivut.AppConfig.AppConfig
-import fi.vm.sade.omatsivut.Logging
+import fi.vm.sade.omatsivut.config.AppConfig
+import AppConfig.AppConfig
+import fi.vm.sade.omatsivut.util.Logging
 
 object AuditLogger extends Logging {
   def logger(appConfig: AppConfig) = appConfig.auditLogger

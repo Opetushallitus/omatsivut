@@ -1,12 +1,15 @@
 package fi.vm.sade.omatsivut.fixtures
 
+import fi.vm.sade.omatsivut.config.AppConfig
+import fi.vm.sade.omatsivut.domain.Language
+
 import scala.collection.JavaConversions._
 
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
-import fi.vm.sade.omatsivut.AppConfig
-import fi.vm.sade.omatsivut.domain.Hakemus._
-import fi.vm.sade.omatsivut.domain.{HakemusMuutos, Language}
+
+import fi.vm.sade.omatsivut.domain.Language
+import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
 import fi.vm.sade.omatsivut.hakemus.{HakemusConverter, HakuConverter}
 
 object TestFixture {

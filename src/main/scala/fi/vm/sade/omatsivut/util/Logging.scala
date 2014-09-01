@@ -1,4 +1,4 @@
-package fi.vm.sade.omatsivut
+package fi.vm.sade.omatsivut.util
 
 import org.slf4j.LoggerFactory
 

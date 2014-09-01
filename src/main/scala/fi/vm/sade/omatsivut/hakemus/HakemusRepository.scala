@@ -4,14 +4,21 @@ import java.util.Date
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
 import fi.vm.sade.omatsivut._
-import fi.vm.sade.omatsivut.AppConfig.AppConfig
+import fi.vm.sade.omatsivut.config.AppConfig
+import AppConfig.AppConfig
 import fi.vm.sade.omatsivut.auditlog.{ShowHakemus, UpdateHakemus, AuditLogger}
 import fi.vm.sade.omatsivut.domain._
 import fi.vm.sade.omatsivut.ohjausparametrit.OhjausparametritService
+import fi.vm.sade.omatsivut.domain.Language
+import fi.vm.sade.omatsivut.hakemus.domain._
+import fi.vm.sade.omatsivut.util.Timer
+import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
+import fi.vm.sade.omatsivut.koulutusinformaatio.CachedKoulutusInformaatioService
 
-case class HakemusRepository(implicit val appConfig: AppConfig) extends Logging {
+case class HakemusRepository(implicit val appConfig: AppConfig) extends Timer {
   import collection.JavaConversions._
   private val dao = appConfig.springContext.applicationDAO
+  private val koulutusinformaatioService = CachedKoulutusInformaatioService(appConfig)
 
   def canUpdate(applicationSystem: ApplicationSystem, application: Application)(implicit lang: Language.Language) = {
     val haku = HakuConverter.convertToHaku(applicationSystem)
@@ -23,21 +30,30 @@ case class HakemusRepository(implicit val appConfig: AppConfig) extends Logging 
 
   def updateHakemus(applicationSystem: ApplicationSystem)(hakemus: HakemusMuutos, userOid: String)(implicit lang: Language.Language): Option[Hakemus] = {
     val applicationQuery: Application = new Application().setOid(hakemus.oid)
-    val applicationJavaObject: Option[Application] = dao.find(applicationQuery).toList.headOption
+    val applicationJavaObject: Option[Application] = timed({
+      dao.find(applicationQuery).toList.headOption
+    }, 1000, "Application fetch DAO")
 
-    applicationJavaObject
-    .filter(application => canUpdate(applicationSystem, application))
-    .map { application =>
-      val originalAnswers: Hakemus.Answers = application.getAnswers.toMap.mapValues(_.toMap)
-      ApplicationUpdater.update(applicationSystem)(application, hakemus)
-      dao.update(applicationQuery, application)
-      AuditLogger.log(UpdateHakemus(userOid, hakemus.oid, originalAnswers, application.getAnswers.toMap.mapValues(_.toMap)))
-      HakemusConverter.convertToHakemus(applicationSystem, HakuConverter.convertToHaku(applicationSystem), application)
-    }
+    timed({
+      applicationJavaObject
+        .filter(application => canUpdate(applicationSystem, application))
+        .map { application =>
+        val originalAnswers: Hakemus.Answers = application.getAnswers.toMap.mapValues(_.toMap)
+        ApplicationUpdater.update(applicationSystem)(application, hakemus)
+        timed({
+          dao.update(applicationQuery, application)
+        }, 1000, "Application update DAO")
+        AuditLogger.log(UpdateHakemus(userOid, hakemus.oid, originalAnswers, application.getAnswers.toMap.mapValues(_.toMap)))
+        val resultHakemus = HakemusConverter.convertToHakemus(applicationSystem, HakuConverter.convertToHaku(applicationSystem), application)
+        resultHakemus.withApplicationPeriods(getApplicationPeriods(resultHakemus, applicationSystem))
+      }
+    }, 1000, "Application update")
   }
 
   def findStoredApplication(hakemus: HakemuksenTunniste): Application = {
-    val applications = dao.find(new Application().setOid(hakemus.oid)).toList
+    val applications = timed({
+      dao.find(new Application().setOid(hakemus.oid)).toList
+    }, 1000, "Application fetch DAO")
     if (applications.size > 1) throw new RuntimeException("Too many applications for oid " + hakemus.oid)
     if (applications.size == 0) throw new RuntimeException("Application not found for oid " + hakemus.oid)
     val application = applications.head
@@ -45,16 +61,44 @@ case class HakemusRepository(implicit val appConfig: AppConfig) extends Logging 
   }
 
   def fetchHakemukset(personOid: String)(implicit lang: Language.Language): List[Hakemus] = {
-    val applicationJavaObjects: List[Application] = dao.find(new Application().setPersonOid(personOid)).toList
-    applicationJavaObjects.filter{
-        application => {
-          !application.getState.equals(Application.State.PASSIVE)
-        }
-    }.map(application => HakuRepository().getHakuById(application.getApplicationSystemId).map(haku => {
-          val hakemus = HakemusConverter.convertToHakemus(haku._1, haku._2, application)
+    timed({
+      val applicationJavaObjects: List[Application] = timed({
+        dao.find(new Application().setPersonOid(personOid)).toList
+      }, 1000, "Application fetch DAO")
+      applicationJavaObjects.filter{
+          application => {
+            !application.getState.equals(Application.State.PASSIVE)
+          }
+      }.map(application => {
+        val hakuOption = timed({
+          HakuRepository().getHakuById(application.getApplicationSystemId)
+        }, 1000, "HakuRepository get haku")
+        hakuOption.map { case (applicationSystem: ApplicationSystem, haku: Haku) => {
+          val hakemus = HakemusConverter.convertToHakemus(applicationSystem, haku, application)
           AuditLogger.log(ShowHakemus(personOid, hakemus.oid))
-          hakemus
-        }
-      )).flatten.toList.sortBy[Long](_.received).reverse
+          hakemus.withApplicationPeriods(getApplicationPeriods(hakemus, applicationSystem))
+        }}
+      }).flatten.toList.sortBy[Long](_.received).reverse
+    }, 1000, "Application fetch")
+  }
+
+  private def getApplicationPeriods(hakemus: Hakemus, applicationSystem: ApplicationSystem) = {
+    if (applicationSystem.getApplicationSystemType == OppijaConstants.LISA_HAKU)
+      getHakutoiveApplicationPeriods(hakemus, applicationSystem)
+    else
+      hakemus.haku.applicationPeriods
+  }
+
+  private def getHakutoiveApplicationPeriods(hakemus: Hakemus, applicationSystem: ApplicationSystem) : List[HakuAika] = {
+    val hakutoiveApplicationPeriods = hakemus.hakutoiveet.headOption
+      .flatMap(_.get("Koulutus-id"))
+      .flatMap(koulutusinformaatioService.koulutus(_))
+      .flatMap { koulutus => (koulutus.applicationStartDate, koulutus.applicationEndDate) match {
+        case (Some(start), Some(end)) =>
+          Some(List(HakuAika(start, end)))
+        case _ =>
+          None
+      }}
+    hakutoiveApplicationPeriods.getOrElse(hakemus.haku.applicationPeriods)
   }
 }

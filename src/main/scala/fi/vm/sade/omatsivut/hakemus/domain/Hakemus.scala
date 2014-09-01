@@ -1,6 +1,6 @@
-package fi.vm.sade.omatsivut.domain
+package fi.vm.sade.omatsivut.hakemus.domain
 
-import fi.vm.sade.omatsivut.domain.Hakemus._
+import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
 
 object Hakemus {
   type Answers = Map[String, Map[String, String]]
@@ -20,6 +20,9 @@ case class Hakemus(
                     requiresAdditionalInfo: Boolean
                   ) extends HakemuksenTunniste {
   def toHakemusMuutos = HakemusMuutos(oid, haku.oid, hakutoiveet, answers)
+  def withApplicationPeriods(periods: List[HakuAika]) = {
+    copy(haku = haku.copy(applicationPeriods = periods))
+  }
 }
 
 case class HakemusMuutos (

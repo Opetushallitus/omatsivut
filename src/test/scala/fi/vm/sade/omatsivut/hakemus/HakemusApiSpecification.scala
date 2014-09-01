@@ -1,16 +1,23 @@
-package fi.vm.sade.omatsivut
+package fi.vm.sade.omatsivut.hakemus
 
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
-import fi.vm.sade.omatsivut.domain.{Active, HakemuksenTila, Hakemus}
-import fi.vm.sade.omatsivut.domain.Hakemus.{Hakutoive, Answers}
 import fi.vm.sade.omatsivut.fixtures.{FixtureImporter, TestFixture}
 import fi.vm.sade.omatsivut.json.{QuestionNodeSerializer, JsonFormats}
 import org.json4s.JsonAST.JObject
 import org.json4s._
+import fi.vm.sade.omatsivut.fixtures.{FixtureImporter, TestFixture}
+import fi.vm.sade.omatsivut.json.JsonFormats
+import fi.vm.sade.omatsivut.ScalatraTestSupport
+import fi.vm.sade.omatsivut.config.AppConfig
+import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
+import fi.vm.sade.omatsivut.fixtures.FixtureImporter
+import fi.vm.sade.omatsivut.fixtures.TestFixture._
+import fi.vm.sade.omatsivut.hakemus.domain.{Active, HakemuksenTila, Hakemus}
+import fi.vm.sade.omatsivut.hakemus.domain.Hakemus.{Answers, Hakutoive}
+import fi.vm.sade.omatsivut.json.JsonFormats
 import org.json4s.jackson.Serialization
 import fi.vm.sade.omatsivut.fixtures.TestFixture._
-import fi.vm.sade.omatsivut.AppConfig.AppConfig
 import org.json4s.reflect.TypeInfo
 
 trait HakemusApiSpecification extends ScalatraTestSupport {

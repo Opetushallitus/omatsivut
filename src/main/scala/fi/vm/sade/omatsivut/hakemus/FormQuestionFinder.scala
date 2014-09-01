@@ -3,10 +3,11 @@ package fi.vm.sade.omatsivut.hakemus
 import fi.vm.sade.haku.oppija.lomake.domain.elements.questions.{DropdownSelect, TextQuestion, CheckBox => HakuCheckBox, OptionQuestion => HakuOption, Radio => HakuRadio, TextArea => HakuTextArea}
 import fi.vm.sade.haku.oppija.lomake.domain.elements.{Titled, HiddenValue, TitledGroup, Element, Notification => HakuNotification, Text => HakuText}
 import fi.vm.sade.haku.oppija.lomake.validation.validators.RequiredFieldValidator
-import fi.vm.sade.omatsivut.Logging
-import fi.vm.sade.omatsivut.domain._
+import fi.vm.sade.omatsivut.domain.Language
+import fi.vm.sade.omatsivut.hakemus.domain._
+import fi.vm.sade.omatsivut.util.Logging
 import scala.collection.JavaConversions._
-import fi.vm.sade.omatsivut.domain.Notification
+import fi.vm.sade.omatsivut.hakemus.domain.Notification
 
 protected object FormQuestionFinder extends Logging {
 

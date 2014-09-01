@@ -25,12 +25,6 @@ module.exports = function(listApp) {
       return _.unique([start, end]).join(" - ")
     }
 
-    $scope.formatDateRange = function(range) {
-      var start = moment(range.start).format('LL').replace(/,/g, "")
-      var end = moment(range.end).format('LL').replace(/,/g, "")
-      return _.unique([start, end]).join(" - ")
-    }
-
     $scope.timestampLabel = function() {
       if ($scope.application.received == $scope.application.updated)
         return localization("label.applicationReceived")

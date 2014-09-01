@@ -1,10 +1,10 @@
 package fi.vm.sade.omatsivut.valintatulokset
 
-import fi.vm.sade.omatsivut.AppConfig.{ITWithSijoitteluService, AppConfig, StubbedExternalDeps}
-import fi.vm.sade.omatsivut.Logging
+import fi.vm.sade.omatsivut.config.AppConfig.{StubbedExternalDeps, ITWithSijoitteluService, AppConfig}
 import fi.vm.sade.omatsivut.http.{HttpRequest, DefaultHttpClient}
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.security.CASClient
+import fi.vm.sade.omatsivut.util.Logging
 import org.json4s.JsonAST.JValue
 import org.json4s.jackson.JsonMethods._
 

@@ -1,4 +1,4 @@
-package fi.vm.sade.omatsivut
+package fi.vm.sade.omatsivut.util
 
 import java.io.IOException
 import java.net.Socket

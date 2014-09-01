@@ -1,7 +1,5 @@
 package fi.vm.sade.omatsivut.domain
 
-import fi.vm.sade.omatsivut.Logging
-
 object Language extends Enumeration {
    type Language = Value
    val fi, sv, en = Value

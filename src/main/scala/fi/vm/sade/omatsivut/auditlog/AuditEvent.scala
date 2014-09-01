@@ -1,7 +1,7 @@
 package fi.vm.sade.omatsivut.auditlog
 
 import fi.vm.sade.log.model.Tapahtuma
-import fi.vm.sade.omatsivut.domain.Hakemus.Answers
+import fi.vm.sade.omatsivut.hakemus.domain.Hakemus.Answers
 import fi.vm.sade.omatsivut.security.CookieCredentials
 
 sealed trait AuditEvent {

@@ -5,7 +5,7 @@ import de.flapdoodle.embed.mongo.distribution.Version
 import de.flapdoodle.embed.mongo.{Command, MongodStarter}
 import de.flapdoodle.embed.process.config.io.ProcessOutput
 import de.flapdoodle.embed.process.runtime.Network
-import fi.vm.sade.omatsivut.PortChecker
+import fi.vm.sade.omatsivut.util.PortChecker
 
 object EmbeddedMongo {
   val port = 28018

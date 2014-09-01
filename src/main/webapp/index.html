@@ -35,12 +35,12 @@
                 <li ng-repeat="application in applications" class="application-list-item" ng-controller="hakemusController" data-oid="{{application.oid}}" highlight-save>
                     <h2>{{application.haku.name }}</h2>
                     <p>
-                        <div ng-if="applicationPeriod.active" class="application-period">
+                        <div ng-if="application.haku.applicationPeriods[0].active" class="application-period">
                             <span class="label-info">
-                                {{ localization('label.applicationPeriodEnds') }} <time datetime="{{ applicationPeriod.end | date:'yyyy-MM-ddTHH:mmZ' }}">{{ formatApplicationPeriod(applicationPeriod.end) }}</time>
+                                {{ localization('label.applicationPeriodEnds') }} <time datetime="{{ application.haku.applicationPeriods[0].end | date:'yyyy-MM-ddTHH:mmZ' }}">{{ formatApplicationPeriod(application.haku.applicationPeriods[0].end) }}</time>
                             </span>
                         </div>
-                        <div ng-if="!applicationPeriod.active" class="application-period">
+                        <div ng-if="!application.haku.applicationPeriods[0].active" class="application-period">
                             <span class="badge label-info">
                                 {{ localization('label.applicationPeriodEnded') }}
                                 <span ng-if="application.haku.results">
@@ -53,7 +53,7 @@
                         <div class="timestamp-row">
                             <i class="icon-doc-text"></i>
                             <a class="preview" ng-href="/omatsivut/api/applications/preview/{{application.oid}}" ng-class="{disabled: hasChanged || statusMessageType=='pending' || isValidating}" target="_blank">{{ localization('button.showApplication') }}</a>
-                            <span class="timestamp" ng-if="applicationPeriod.active" ng-class="{disabled: hasChanged || statusMessageType=='pending' || isValidating}">
+                            <span class="timestamp" ng-if="application.haku.applicationPeriods[0].active" ng-class="{disabled: hasChanged || statusMessageType=='pending' || isValidating}">
                                 ({{ timestampLabel() }} <time datetime="{{ application.updated | date:'yyyy-MM-ddTHH:mmZ' }}">{{ formatTimestamp(application.updated) }}</time>)
                             </span>
                         </div>
@@ -63,6 +63,7 @@
                         </div>
                     </p>
 
+<<<<<<< HEAD
                     <section class="application-valintatulos" ng-if="application.state.valintatulos">
                         <h3>Tulokset</h3>
                         <ul>
@@ -73,6 +74,11 @@
                     </section>
 
                     <section class="application-section" ng-if="application.state.id == 'ACTIVE' || application.state.id == 'INCOMPLETE'">
+||||||| merged common ancestors
+                    <section class="application-section" ng-if="applicationPeriod.active && (application.state == 'ACTIVE' || application.state == 'INCOMPLETE') && !application.postProcessing">
+=======
+                    <section class="application-section" ng-if="application.haku.applicationPeriods[0].active && (application.state == 'ACTIVE' || application.state == 'INCOMPLETE') && !application.postProcessing">
+>>>>>>> master
                         <header class="application-section-heading">
                             {{ localization('label.preferences') }}
                             <button class="float-right save-btn" ng-disabled="!hasChanged || statusMessageType=='pending' || !isSaveable || isValidating" ng-click="saveApplication()">{{ localization('button.save') }}</button>

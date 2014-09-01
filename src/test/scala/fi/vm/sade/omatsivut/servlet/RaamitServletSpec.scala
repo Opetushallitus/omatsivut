@@ -1,6 +1,6 @@
-package fi.vm.sade.omatsivut
+package fi.vm.sade.omatsivut.servlet
 
-import fi.vm.sade.omatsivut.servlet.RaamitServlet
+import fi.vm.sade.omatsivut.ScalatraTestSupport
 
 class RaamitServletSpec extends ScalatraTestSupport  {
   "GET /raamit" should {

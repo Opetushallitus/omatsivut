@@ -1,4 +1,6 @@
-package fi.vm.sade.omatsivut.koulutusinformaatio
+package fi.vm.sade.omatsivut.koulutusinformaatio.domain
+
+import fi.vm.sade.omatsivut.domain.Address
 
 case class Koulutus(  id: String,
                       name: String,
@@ -14,7 +16,9 @@ case class Koulutus(  id: String,
                       educationCodeUri: String,
                       attachmentDeliveryDeadline: Option[Long],
                       attachmentDeliveryAddress: Option[Address],
-                      organizationGroups: List[OrganizationGroup]
+                      organizationGroups: List[OrganizationGroup],
+                      applicationStartDate: Option[Long],
+                      applicationEndDate: Option[Long]
 )
 
 case class OrganizationGroup(  oid: String,

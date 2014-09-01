@@ -1,5 +1,7 @@
 package fi.vm.sade.omatsivut.localization
-import fi.vm.sade.omatsivut.domain.Language.Language
+
+import fi.vm.sade.omatsivut.domain.Language
+import Language.Language
 import fi.vm.sade.omatsivut.json.JsonFormats
 import org.json4s._
 import org.json4s.jackson.JsonMethods._

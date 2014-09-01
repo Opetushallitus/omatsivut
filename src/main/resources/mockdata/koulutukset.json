@@ -110,6 +110,18 @@
       "kaksoistutkinto": false,
       "vocational": true,
       "educationCodeUri": "koulutus_039996"
+    },
+    {
+      "id":"1.2.246.562.20.97520172236",
+      "name":"Sosiaali- ja terveysalan perustutkinto, pk",
+      "aoIdentifier":"873",
+      "sora":true,
+      "educationDegree":"32",
+      "teachingLanguages":["FI"],
+      "kaksoistutkinto":true,
+      "athleteEducation":false,
+      "vocational":true,
+      "educationCodeUri":"koulutus_371101"
     }
   ],
   "1.2.246.562.10.74355268397": [
@@ -298,7 +310,9 @@
       "athleteEducation": true,
       "kaksoistutkinto": true,
       "vocational": true,
-      "educationCodeUri": "koulutus_361401"
+      "educationCodeUri": "koulutus_361401",
+      "applicationStartDate": 1409224751000,
+      "applicationEndDate": 2671528751000
     }
   ]
 }

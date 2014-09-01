@@ -1,7 +1,8 @@
 package fi.vm.sade.omatsivut.servlet
 
-import fi.vm.sade.omatsivut.AppConfig.AppConfig
-import fi.vm.sade.omatsivut.domain.{HakemusMuutos, Hakemus, QuestionNode, ValidationError}
+import fi.vm.sade.omatsivut.config.AppConfig
+import AppConfig.AppConfig
+import fi.vm.sade.omatsivut.hakemus.domain.{HakemusMuutos, Hakemus, QuestionNode, ValidationError}
 import fi.vm.sade.omatsivut.hakemus.{HakemusPreviewGenerator, ApplicationValidator, HakemusRepository}
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.security.Authentication
@@ -10,11 +11,11 @@ import org.scalatra.json._
 import org.scalatra.swagger.SwaggerSupportSyntax.OperationBuilder
 import org.scalatra.swagger._
 import org.scalatra.{NotFound, BadRequest, Ok, Forbidden}
-import fi.vm.sade.omatsivut.koulutusinformaatio.Liitepyynto
 
 class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfig) extends OmatSivutServletBase with JacksonJsonSupport with JsonFormats with SwaggerSupport with Authentication {
   override def applicationName = Some("api")
   private val applicationSystemService = appConfig.springContext.applicationSystemService
+  private val hakemusRepository = HakemusRepository()
 
   protected val applicationDescription = "Oppijan henkilökohtaisen palvelun REST API, jolla voi hakea ja muokata hakemuksia ja omia tietoja"
 
@@ -39,7 +40,7 @@ class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfi
   }
 
   get("/applications", operation(getApplicationsSwagger)) {
-    HakemusRepository().fetchHakemukset(personOid())
+    hakemusRepository.fetchHakemukset(personOid())
   }
 
   put("/applications/:oid", operation(putApplicationsSwagger)) {
@@ -47,7 +48,7 @@ class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfi
     val applicationSystem = applicationSystemService.getApplicationSystem(updated.hakuOid)
     val errors = ApplicationValidator().validate(applicationSystem)(updated)
     if(errors.isEmpty) {
-      HakemusRepository().updateHakemus(applicationSystem)(updated, personOid()) match {
+      hakemusRepository.updateHakemus(applicationSystem)(updated, personOid()) match {
         case Some(saved) => Ok(saved)
         case None => Forbidden()
       }

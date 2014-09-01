@@ -1,6 +1,6 @@
 package fi.vm.sade.omatsivut.http
 
-import fi.vm.sade.omatsivut.Logging
+import fi.vm.sade.omatsivut.util.Logging
 
 import scala.collection.immutable.HashMap
 import scalaj.http.Http.Request

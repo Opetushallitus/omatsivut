@@ -1,5 +1,6 @@
 package fi.vm.sade.omatsivut
 
+import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.valintatulokset.ValintatulosService
 

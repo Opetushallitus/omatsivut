@@ -1,8 +1,9 @@
-package fi.vm.sade.omatsivut
+package fi.vm.sade.omatsivut.config
 
 import java.io.File
 
-import com.typesafe.config.{ConfigException, Config, ConfigFactory}
+import com.typesafe.config.{Config, ConfigException, ConfigFactory}
+import fi.vm.sade.omatsivut.util.Logging
 
 import scala.collection.JavaConversions._
 
