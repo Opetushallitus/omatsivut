@@ -1,6 +1,6 @@
 package fi.vm.sade.omatsivut.memoize
 
-class Memoize1[-T, +R](f: T => R, lifetimeSeconds: Long) extends (T => R) {
+class TTLMemoize[-T, +R](f: T => R, lifetimeSeconds: Long) extends (T => R) {
   case class MemoizeItem[A](item: A, validUntil: Long)
   import scala.collection.mutable
   private[this] val vals = mutable.Map.empty[T, MemoizeItem[R]]
@@ -16,8 +16,8 @@ class Memoize1[-T, +R](f: T => R, lifetimeSeconds: Long) extends (T => R) {
   }
 }
 
-object Memoize {
-  def memoize[T, R](f: T => R, lifetime: Long): (T => R) = new Memoize1(f, lifetime)
+object TTLMemoize {
+  def memoize[T, R](f: T => R, lifetime: Long): (T => R) = new TTLMemoize(f, lifetime)
 
   def memoize[T1, T2, R](f: (T1, T2) => R, lifetime: Long): ((T1, T2) => R) =
     Function.untupled(memoize(f.tupled, lifetime))
