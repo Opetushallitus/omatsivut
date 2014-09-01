@@ -27,3 +27,14 @@ log4j.logger.org.apache.activemq=INFO
 log4j.logger.org.apache.activemq.spring={{env_loglevel}}
 # cas session + singlelogout tracing
 log4j.logger.org.jasig.cas.client.session=INFO
+# Audit logging
+log4j.logger.audit=INFO, Audit
+log4j.additivity.audit=false
+log4j.appender.Audit.Threshold=INFO
+log4j.appender.Audit.File=${user.home}/tomcat/logs/oph-omatsivut-audit.log
+log4j.appender.Audit=org.apache.log4j.RollingFileAppender
+log4j.appender.Audit.Append=true
+log4j.appender.Audit.layout=org.apache.log4j.PatternLayout
+log4j.appender.Audit.layout.ConversionPattern=%d{ISO8601} %-5p {%X{user}} [%t] %-5p %c: %m%n
+log4j.appender.Audit.MaxFileSize=10MB
+log4j.appender.Audit.MaxBackupIndex=20

@@ -5,12 +5,16 @@ import java.util.concurrent.ArrayBlockingQueue
 import fi.vm.sade.omatsivut.config.AppConfig
 import AppConfig.AppConfig
 import fi.vm.sade.omatsivut.util.Logging
+import org.slf4j.LoggerFactory
 
 object AuditLogger extends Logging {
+  protected val auditLog4jLogger = LoggerFactory.getLogger("audit")
+
   def logger(appConfig: AppConfig) = appConfig.auditLogger
 
   def log(event: AuditEvent)(implicit appConfig: AppConfig) {
     logger(appConfig).log(event)
+    auditLog4jLogger.info(event.toLogMessage)
   }
 }
 
