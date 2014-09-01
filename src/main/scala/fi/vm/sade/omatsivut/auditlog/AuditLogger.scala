@@ -31,7 +31,7 @@ class RunnableLogger(val appConfig: AppConfig) extends Runnable with Logging {
       val event = queue.take()
       withErrorLogging {
         auditLogger.log(event.toTapahtuma)
-      }(event.toLogMessage)
+      }("Could not write Logout to auditlog, message was: " + event.toLogMessage)
     }
   }
 }

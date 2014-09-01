@@ -6,36 +6,30 @@ import fi.vm.sade.omatsivut.security.CookieCredentials
 
 sealed trait AuditEvent {
   def target: String
-  def targetType: String
   def systemName = "omatsivut"
   def toTapahtuma: Tapahtuma
   def toLogMessage: String
 }
 
 case class Login(credentials: CookieCredentials, target: String = "Session") extends AuditEvent {
-  def targetType = "Luotu eväste sisällöllä: " + credentials.toString
-  def toTapahtuma = Tapahtuma.createTRACE(systemName, target, targetType, System.currentTimeMillis())
-  def toLogMessage = "Could not write Logout to auditlog, message was: " + targetType
+  def toTapahtuma = Tapahtuma.createTRACE(systemName, target, toLogMessage, System.currentTimeMillis())
+  def toLogMessage = "Luotu eväste sisällöllä: " + credentials.toString
 }
 case class Logout(credentials: CookieCredentials, target: String = "Session") extends AuditEvent {
-  def targetType = "Käyttäjä kirjautui ulos: " + credentials.toString
-  def toTapahtuma = Tapahtuma.createTRACE(systemName, target, targetType, System.currentTimeMillis())
-  def toLogMessage = "Could not write Logout to auditlog, message was: " + targetType
+  def toTapahtuma = Tapahtuma.createTRACE(systemName, target, toLogMessage, System.currentTimeMillis())
+  def toLogMessage = "Käyttäjä kirjautui ulos: " + credentials.toString
 }
 case class SessionTimeout(credentials: CookieCredentials, target: String = "Session") extends AuditEvent {
-  def targetType = "Poistettu eväste sisällöllä: " + credentials.toString
-  def toTapahtuma = Tapahtuma.createTRACE(systemName, target, targetType, System.currentTimeMillis())
-  def toLogMessage = "Could not write SessionTimeout to auditlog, message was: " + targetType
+  def toTapahtuma = Tapahtuma.createTRACE(systemName, target, toLogMessage, System.currentTimeMillis())
+  def toLogMessage = "Poistettu eväste sisällöllä: " + credentials.toString
 }
 case class ShowHakemus(userOid: String, hakemusOid: String, target: String = "Hakemus") extends AuditEvent {
-  def targetType = "Haettu hakemus: " + hakemusOid
-  def toTapahtuma = Tapahtuma.createREAD(systemName, userOid, target, targetType)
-  def toLogMessage = "Could not write ShowApplication to auditlog, message was: " + targetType + " with " + userOid
+  def toTapahtuma = Tapahtuma.createREAD(systemName, userOid, target, toLogMessage)
+  def toLogMessage = "Haettu hakemus: " + hakemusOid + " with " + userOid
 }
 case class UpdateHakemus(userOid: String, hakemusOid: String, originalAnswers: Answers, updatedAnswers: Answers, target: String = "Hakemus") extends AuditEvent {
-  def targetType = "Tallennettu päivitetty hakemus: " + hakemusOid
   def toTapahtuma = {
-    val tapahtuma = Tapahtuma.createUPDATE(systemName, userOid, target, targetType)
+    val tapahtuma = Tapahtuma.createUPDATE(systemName, userOid, target, toLogMessage)
     val phaseIds = originalAnswers.keySet ++ updatedAnswers.keySet
     phaseIds foreach {
       phaseId => addPhaseAnswersDiff(tapahtuma, phaseId, originalAnswers.getOrElse(phaseId, Map()), updatedAnswers.getOrElse(phaseId, Map()))
@@ -56,5 +50,5 @@ case class UpdateHakemus(userOid: String, hakemusOid: String, originalAnswers: A
     }
   }
 
-  def toLogMessage = "Could not write UpdateHakemus to auditlog, message was: " + targetType + " with " + userOid
+  def toLogMessage = "Tallennettu päivitetty hakemus: " + hakemusOid + " with " + userOid
 }
