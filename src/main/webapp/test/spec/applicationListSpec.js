@@ -148,22 +148,6 @@
         ])
       })
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-      it("jos hakuaika on loppunut, hakemusta ei voi muokata", function() {
-        hakemus4.preferencesForApplication().length.should.equal(0)
-        hakemus4.applicationPeriod().should.equal("Hakuaika on päättynyt. Haun tulokset julkaistaan 11. kesäkuuta 2014.")
-        hakemus4.changesSavedTimestamp().should.equal("")
-      })
-
-=======
-      it("jos hakuaika on loppunut, hakemusta ei voi muokata", function() {
-        hakemusYhteishakuKevat2013WithForeignBaseEducation.preferencesForApplication().length.should.equal(0)
-        hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationPeriod().should.equal("Hakuaika on päättynyt. Haun tulokset julkaistaan 11. kesäkuuta 2014.")
-        hakemusYhteishakuKevat2013WithForeignBaseEducation.changesSavedTimestamp().should.equal("")
-      })
-
->>>>>>> master
       describe("haun tyyppi", function() {
         before(hakemusNivelKesa2013WithPeruskouluBaseEducation.convertToKorkeakouluhaku)
         it ("korkeakouluhaussa käytetään eri tekstejä", function() {
@@ -197,14 +181,14 @@
     describe("hakemuksen tila", function() {
       describe("hakuaika päättynyt", function() {
         it("hakemusta ei voi muokata", function() {
-          hakemus4.preferencesForApplication().length.should.equal(0)
-          hakemus4.applicationPeriod().should.equal("Hakuaika on päättynyt. Haun tulokset julkaistaan 11. kesäkuuta 2014.")
-          hakemus4.changesSavedTimestamp().should.equal("")
+          hakemusYhteishakuKevat2013WithForeignBaseEducation.preferencesForApplication().length.should.equal(0)
+          hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationPeriod().should.equal("Hakuaika on päättynyt. Haun tulokset julkaistaan 11. kesäkuuta 2014.")
+          hakemusYhteishakuKevat2013WithForeignBaseEducation.changesSavedTimestamp().should.equal("")
         })
 
         it("valintatulokset näytetään", function() {
-          expect(hakemus4.valintatulokset()[0].hakukohde).to.equal('Kallion lukio Lukion ilmaisutaitolinja')
-          expect(hakemus4.valintatulokset()[0].tila).to.equal('HYVAKSYTTY')
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].hakukohde).to.equal('Kallion lukio Lukion ilmaisutaitolinja')
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].tila).to.equal('HYVAKSYTTY')
         })
       })
 

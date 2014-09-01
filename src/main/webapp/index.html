@@ -63,7 +63,6 @@
                         </div>
                     </p>
 
-<<<<<<< HEAD
                     <section class="application-valintatulos" ng-if="application.state.valintatulos">
                         <h3>Tulokset</h3>
                         <ul>
@@ -74,11 +73,6 @@
                     </section>
 
                     <section class="application-section" ng-if="application.state.id == 'ACTIVE' || application.state.id == 'INCOMPLETE'">
-||||||| merged common ancestors
-                    <section class="application-section" ng-if="applicationPeriod.active && (application.state == 'ACTIVE' || application.state == 'INCOMPLETE') && !application.postProcessing">
-=======
-                    <section class="application-section" ng-if="application.haku.applicationPeriods[0].active && (application.state == 'ACTIVE' || application.state == 'INCOMPLETE') && !application.postProcessing">
->>>>>>> master
                         <header class="application-section-heading">
                             {{ localization('label.preferences') }}
                             <button class="float-right save-btn" ng-disabled="!hasChanged || statusMessageType=='pending' || !isSaveable || isValidating" ng-click="saveApplication()">{{ localization('button.save') }}</button>
