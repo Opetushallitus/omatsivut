@@ -1,22 +1,17 @@
 package fi.vm.sade.omatsivut.hakemus
 
-import java.util.Date
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
-import fi.vm.sade.omatsivut._
-import fi.vm.sade.omatsivut.config.AppConfig
-import AppConfig.AppConfig
-import fi.vm.sade.omatsivut.auditlog.{ShowHakemus, UpdateHakemus, AuditLogger}
-import fi.vm.sade.omatsivut.domain._
-import fi.vm.sade.omatsivut.ohjausparametrit.OhjausparametritService
+import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
+import fi.vm.sade.omatsivut.auditlog.{AuditLogger, ShowHakemus, UpdateHakemus}
+import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.hakemus.domain._
-import fi.vm.sade.omatsivut.util.Timer
-import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 import fi.vm.sade.omatsivut.koulutusinformaatio.CachedKoulutusInformaatioService
+import fi.vm.sade.omatsivut.util.Timer
 
 case class HakemusRepository(implicit val appConfig: AppConfig) extends Timer {
-  import collection.JavaConversions._
+  import scala.collection.JavaConversions._
   private val dao = appConfig.springContext.applicationDAO
   private val koulutusinformaatioService = CachedKoulutusInformaatioService(appConfig)
 
