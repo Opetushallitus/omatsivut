@@ -25,18 +25,18 @@ private object OhjausparametritParser extends JsonFormats {
 
 object OhjausparametritService {
   def apply(implicit appConfig: AppConfig): OhjausparametritService = appConfig match {
-    case _ : StubbedExternalDeps => StubbedOhjausparametritService()
+    case _ : StubbedExternalDeps => new StubbedOhjausparametritService()
     case _ => CachedRemoteOhjausparametritService(appConfig)
   }
 }
 
-case class StubbedOhjausparametritService() extends OhjausparametritService with JsonFormats {
+class StubbedOhjausparametritService extends OhjausparametritService with JsonFormats {
   def valintatulokset(asId: String) = {
     JsonFixtureMaps.findByKey[JValue]("/mockdata/ohjausparametrit.json", asId).flatMap(OhjausparametritParser.parseValintatulokset(_))
   }
 }
 
-case class RemoteOhjausparametritService(implicit appConfig: AppConfig) extends OhjausparametritService with JsonFormats {
+class RemoteOhjausparametritService(implicit appConfig: AppConfig) extends OhjausparametritService with JsonFormats {
   import org.json4s.jackson.JsonMethods._
 
   def valintatulokset(asId: String) = {
