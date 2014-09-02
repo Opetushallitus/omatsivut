@@ -114,6 +114,11 @@ Hakemus.prototype = {
     }
   },
 
+  mergeValidationResult: function(validationResult) {
+    this.importQuestions(validationResult.questions)
+    this.haku.applicationPeriods = validationResult.applicationPeriods
+  },
+
   validatePreferences: function() {
     return (this.hakutoiveet.length > 0 && this.hakutoiveet[0].hasData()) &&
       _(this.hakutoiveet).every(function(hakutoive) {

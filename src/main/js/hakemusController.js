@@ -67,7 +67,7 @@ module.exports = function(listApp) {
         setStatusMessage(localization("message.validationOk"), "info")
         $scope.isSaveable = true
         setValidatingIndicator(false)
-        $scope.application.importQuestions(data.questions)
+        $scope.application.mergeValidationResult(data)
         updateValidationMessages([], skipQuestions)
       }
 
@@ -93,7 +93,7 @@ module.exports = function(listApp) {
         var updateQuestions = data.questions != null && !Hakutoive.hasHakutoiveErrors(data.errors)
 
         if (updateQuestions) // frontside validation does not include questions -> don't update // TODO: testikeissi tälle (vastaa kysymykseen, aiheuta fronttivalidaatiovirhe)
-          $scope.application.importQuestions(data.questions)
+          $scope.application.mergeValidationResult(data)
 
         updateValidationMessages(data.errors, skipQuestions)
       }

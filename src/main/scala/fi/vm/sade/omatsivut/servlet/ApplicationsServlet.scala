@@ -2,15 +2,20 @@ package fi.vm.sade.omatsivut.servlet
 
 import fi.vm.sade.omatsivut.config.AppConfig
 import AppConfig.AppConfig
-import fi.vm.sade.omatsivut.hakemus.domain.{HakemusMuutos, Hakemus, QuestionNode, ValidationError}
-import fi.vm.sade.omatsivut.hakemus.{HakemusPreviewGenerator, ApplicationValidator, HakemusRepository}
+import fi.vm.sade.omatsivut.hakemus.domain._
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.security.Authentication
-import org.json4s.jackson.{JsonMethods, Serialization}
+import org.json4s.jackson.Serialization
 import org.scalatra.json._
 import org.scalatra.swagger.SwaggerSupportSyntax.OperationBuilder
 import org.scalatra.swagger._
 import org.scalatra.{NotFound, BadRequest, Ok, Forbidden}
+import fi.vm.sade.omatsivut.hakemus.domain.HakemusMuutos
+import fi.vm.sade.omatsivut.hakemus.HakemusPreviewGenerator
+import fi.vm.sade.omatsivut.hakemus.ApplicationValidator
+import fi.vm.sade.omatsivut.hakemus.HakemusRepository
+import scala.Some
+import fi.vm.sade.omatsivut.hakemus.domain.ValidationError
 
 class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfig) extends OmatSivutServletBase with JacksonJsonSupport with JsonFormats with SwaggerSupport with Authentication {
   override def applicationName = Some("api")
@@ -60,8 +65,9 @@ class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfi
   post("/applications/validate/:oid", operation(validateApplicationsSwagger)) {
     val validate = Serialization.read[HakemusMuutos](request.body)
     val applicationSystem = applicationSystemService.getApplicationSystem(validate.hakuOid)
-    val (errors: List[ValidationError], questions: List[QuestionNode]) = ApplicationValidator().validateAndFindQuestions(applicationSystem)(validate, paramOption("questionsOf").getOrElse("").split(',').toList)
-    ValidationResult(errors, questions)
+    val (errors: List[ValidationError], questions: List[QuestionNode], updatedHakemus: Hakemus) = ApplicationValidator().validateAndFindQuestions(applicationSystem)(validate, paramOption("questionsOf").getOrElse("").split(',').toList)
+    val applicationPeriods = hakemusRepository.getApplicationPeriods(updatedHakemus, applicationSystem)
+    ValidationResult(errors, questions, applicationPeriods)
   }
 
   get("/applications/preview/:oid") {
@@ -74,5 +80,5 @@ class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfi
     }
   }
 
-  case class ValidationResult(errors: List[ValidationError], questions: List[QuestionNode])
+  case class ValidationResult(errors: List[ValidationError], questions: List[QuestionNode], applicationPeriods: List[HakuAika])
 }

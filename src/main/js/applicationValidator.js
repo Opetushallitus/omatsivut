@@ -58,13 +58,15 @@ module.exports = function(listApp) {
       responsePromise.success(function(data, status, headers, config) {
         if (data.errors.length === 0) {
           success({
-            questions: getQuestions(data)
+            questions: getQuestions(data),
+            applicationPeriods: data.applicationPeriods
           })
         } else {
           error({
             statusCode: 200,
             errors: data.errors,
-            questions: getQuestions(data)
+            questions: getQuestions(data),
+            applicationPeriods: data.applicationPeriods
           })
         }
       })

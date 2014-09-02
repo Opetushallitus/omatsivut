@@ -77,7 +77,7 @@ case class HakemusRepository(implicit val appConfig: AppConfig) extends Timer {
     }, 1000, "Application fetch")
   }
 
-  private def getApplicationPeriods(hakemus: Hakemus, applicationSystem: ApplicationSystem) = {
+  def getApplicationPeriods(hakemus: Hakemus, applicationSystem: ApplicationSystem) = {
     if (applicationSystem.getApplicationSystemType == OppijaConstants.LISA_HAKU)
       getHakutoiveApplicationPeriods(hakemus, applicationSystem)
     else

@@ -18,25 +18,28 @@ case class ApplicationValidator(implicit val appConfig: AppConfig) extends Loggi
 
   def validate(applicationSystem: ApplicationSystem)(hakemus: HakemusMuutos)(implicit lang: Language.Language): List[ValidationError] = {
     val storedApplication = HakemusRepository().findStoredApplication(hakemus)
-    validateHakutoiveetAndAnswers(hakemus, storedApplication, applicationSystem) ++ errorsForUnknownAnswers(applicationSystem, hakemus)
+    val updatedApplication = update(hakemus, applicationSystem, storedApplication)
+    validateHakutoiveetAndAnswers(updatedApplication, storedApplication, applicationSystem) ++ errorsForUnknownAnswers(applicationSystem, hakemus)
   }
 
-  def validateAndFindQuestions(applicationSystem: ApplicationSystem)(hakemus: HakemusMuutos, newKoulutusIds: List[String])(implicit lang: Language.Language): (List[ValidationError], List[QuestionNode]) = {
+  def validateAndFindQuestions(applicationSystem: ApplicationSystem)(hakemus: HakemusMuutos, newKoulutusIds: List[String])(implicit lang: Language.Language): (List[ValidationError], List[QuestionNode], Hakemus) = {
     withErrorLogging {
       val storedApplication = HakemusRepository().findStoredApplication(hakemus)
-      val validationErrors: List[ValidationError] = validateHakutoiveetAndAnswers(hakemus, storedApplication, applicationSystem)
+      val updatedApplication = update(hakemus, applicationSystem, storedApplication)
+      val validationErrors: List[ValidationError] = validateHakutoiveetAndAnswers(updatedApplication, storedApplication, applicationSystem)
       val questions = AddedQuestionFinder.findQuestions(applicationSystem)(storedApplication, hakemus, newKoulutusIds)
-      (validationErrors, questions)
+      val updatedHakemus = HakemusConverter.convertToHakemus(applicationSystem, HakuConverter.convertToHaku(applicationSystem), updatedApplication)
+      (validationErrors, questions, updatedHakemus)
     } ("Error validating application: " + hakemus.oid)
   }
 
-  private def validateHakutoiveetAndAnswers(hakemus: HakemusMuutos, storedApplication: Application, applicationSystem: ApplicationSystem)(implicit lang: Language.Language): List[ValidationError] = {
+  private def validateHakutoiveetAndAnswers(updatedApplication: Application, storedApplication: Application, applicationSystem: ApplicationSystem)(implicit lang: Language.Language): List[ValidationError] = {
     if (isIncomplete(storedApplication)) {
       val errorsBeforeUpdate = validateAndConvertErrors(storedApplication, applicationSystem)
-      val errorsAfterUpdate: List[ValidationError] = updateAndValidate(hakemus, applicationSystem, storedApplication.clone())
+      val errorsAfterUpdate: List[ValidationError] = validateAndConvertErrors(updatedApplication, applicationSystem)
       errorsAfterUpdate.filter(!errorsBeforeUpdate.contains(_))
     } else {
-      updateAndValidate(hakemus, applicationSystem, storedApplication.clone())
+      validateAndConvertErrors(updatedApplication, applicationSystem)
     }
   }
 
@@ -44,9 +47,8 @@ case class ApplicationValidator(implicit val appConfig: AppConfig) extends Loggi
     application.getState == Application.State.INCOMPLETE
   }
 
-  private def updateAndValidate(hakemus: HakemusMuutos, applicationSystem: ApplicationSystem, application: Application)(implicit lang: Language.Language): List[ValidationError] = {
-    ApplicationUpdater.update(applicationSystem)(application, hakemus) // application is mutated
-    validateAndConvertErrors(application, applicationSystem)
+  private def update(hakemus: HakemusMuutos, applicationSystem: ApplicationSystem, application: Application)(implicit lang: Language.Language) = {
+    ApplicationUpdater.update(applicationSystem)(application.clone(), hakemus) // application is mutated
   }
 
   private def validateAndConvertErrors(application: Application, appSystem: ApplicationSystem)(implicit lang: Language.Language) = {
