@@ -168,11 +168,10 @@
 
       describe("hakuajan päivittyminen", function() {
         before(
-          replacePreference(hakemusLisaKevat2014WithForeignBaseEducation, 0, "Ahlman"),
-          hakemusLisaKevat2014WithForeignBaseEducation.saveWaitSuccess
+          replacePreference(hakemusLisaKevat2014WithForeignBaseEducation, 0, "Ahlman")
         )
 
-        it("hakuaika päivittyy tallennuksen yhteydessä", function() {
+        it("hakuaika päivittyy kun hakutoive muuttuu", function() {
           hakemusLisaKevat2014WithForeignBaseEducation.applicationPeriod().should.equal("Hakuaika päättyy keskiviikkona 1. joulukuuta 2100 klo 07.00")
         })
       })
