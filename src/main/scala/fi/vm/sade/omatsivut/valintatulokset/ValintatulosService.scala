@@ -23,8 +23,12 @@ object ValintatulosService {
     case x: StubbedExternalDeps =>
       new MockValintatulosService()
     case _ =>
-      new RemoteValintatulosServiceWithCAS()
+      new NoOpValintatulosService
   }
+}
+
+class NoOpValintatulosService extends ValintatulosService {
+  override def getValintatulos(hakemusOid: String, hakuOid: String) = None
 }
 
 case class MockValintatulosService() extends ValintatulosService with JsonFormats {
