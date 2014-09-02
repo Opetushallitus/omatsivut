@@ -1,14 +1,12 @@
 package fi.vm.sade.omatsivut.ohjausparametrit
 
-import fi.vm.sade.omatsivut.config.AppConfig
-import AppConfig.{StubbedExternalDeps, AppConfig}
+import fi.vm.sade.omatsivut.config.AppConfig.{AppConfig, StubbedExternalDeps}
 import fi.vm.sade.omatsivut.fixtures.JsonFixtureMaps
-import fi.vm.sade.omatsivut.json.JsonFormats
-import fi.vm.sade.omatsivut.http.DefaultHttpClient
-import fi.vm.sade.omatsivut.memoize.OptionalMemoize
-import org.joda.time.DateTime
-import org.json4s.JsonAST.JValue
 import fi.vm.sade.omatsivut.hakemus.domain.Tulokset
+import fi.vm.sade.omatsivut.http.DefaultHttpClient
+import fi.vm.sade.omatsivut.json.JsonFormats
+import fi.vm.sade.omatsivut.memoize.TTLOptionalMemoize
+import org.json4s.JsonAST.JValue
 
 
 trait OhjausparametritService {
@@ -56,7 +54,7 @@ case class RemoteOhjausparametritService(implicit appConfig: AppConfig) extends 
 object CachedRemoteOhjausparametritService {
   def apply(implicit appConfig: AppConfig): OhjausparametritService = {
     val service = new RemoteOhjausparametritService()
-    val valintatuloksetMemo = OptionalMemoize.memoize(service.valintatulokset _)
+    val valintatuloksetMemo = TTLOptionalMemoize.memoize(service.valintatulokset _, 60 * 60)
 
     new OhjausparametritService() {
       override def valintatulokset(asId: String) = valintatuloksetMemo(asId)

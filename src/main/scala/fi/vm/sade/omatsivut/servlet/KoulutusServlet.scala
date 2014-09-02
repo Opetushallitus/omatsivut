@@ -28,10 +28,10 @@ class KoulutusServlet(implicit val swagger: Swagger, val appConfig: AppConfig) e
     checkNotFound(koulutusInformaatio.koulutus(params("aoId")))
   }
 
-  private def checkNotFound(result: TraversableOnce[Any]) = {
-    if(result.isEmpty) {
-      response.setStatus(404)
+  private def checkNotFound[A](result: Option[A]) = {
+    result match {
+      case Some(x) => x
+      case _ => response.setStatus(404)
     }
-    result
   }
 }
