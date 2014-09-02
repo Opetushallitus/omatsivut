@@ -72,15 +72,12 @@ class RemoteValintatulosServiceWithCAS(implicit appConfig: AppConfig) extends Re
   }
 }
 
-case class Valintatulos(
-                                             hakemusOid: String,
-                                             hakutoiveet: List[HakutoiveenValintatulos])
+case class Valintatulos(hakemusOid: String, hakutoiveet: List[HakutoiveenValintatulos])
 
-case class HakutoiveenValintatulos(
-                                              hakukohdeOid: String,
-                                              tarjoajaOid: String,
-                                              tila: String,
-                                              vastaanottotieto: String,
-                                              ilmoittautumisTila: String,
-                                              jonosija: Option[Int],
-                                              varasijaNumero: Option[Int])
+case class HakutoiveenValintatulos(hakukohdeOid: String,
+                                   tarjoajaOid: String,
+                                   tila: String,
+                                   vastaanottotieto: String,
+                                   ilmoittautumisTila: String,
+                                   jonosija: Option[Int],
+                                   varasijaNumero: Option[Int])
