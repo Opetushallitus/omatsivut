@@ -11,11 +11,13 @@ import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
 import fi.vm.sade.omatsivut.hakemus.{HakemusConverter, HakuConverter}
+import fi.vm.sade.omatsivut.hakemus.domain.HakuAika
 
 object TestFixture {
   val hakemus1 = "1.2.246.562.11.00000877107"
   val hakemus2 = "1.2.246.562.11.00000441368"
   val hakemusWithAtheleteQuestions = "1.2.246.562.11.00000441371"
+  val hakemusLisahaku = hakemusWithAtheleteQuestions
   val hakemusWithGradeGridAndDancePreference = "1.2.246.562.11.00000855417"
   val hakemusWithHigherGradeAttachments = "1.2.246.562.11.00000877699"
   val inactiveHakemus = "1.2.246.562.11.00000441369"
@@ -45,4 +47,8 @@ object TestFixture {
   val ammattistartti: Hakutoive = JsonFixtureMaps.findByKey[Hakutoive]("/mockdata/hakutoiveet.json", "1.2.246.562.14.2014030415375012208392").get
   val ammattistarttiAhlman: Hakutoive = JsonFixtureMaps.findByKey[Hakutoive]("/mockdata/hakutoiveet.json", "1.2.246.562.14.2014040912353139913320").get
   val hevostalous: Hakutoive = JsonFixtureMaps.findByKey[Hakutoive]("/mockdata/hakutoiveet.json", "1.2.246.562.5.31982630126").get
+
+  val hakemus2_hakuaika = HakuAika(1404190831839L,4131320431839L)
+  val hakemusLisahaku_hakuaikaForPreference = HakuAika(1409224751000L,2671528751000L)
+  val hakemusLisahaku_hakuaikaDefault = hakemus2_hakuaika
 }
