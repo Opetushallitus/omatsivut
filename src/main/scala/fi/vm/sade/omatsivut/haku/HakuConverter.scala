@@ -1,9 +1,9 @@
-package fi.vm.sade.omatsivut.hakemus
+package fi.vm.sade.omatsivut.haku
 
 import fi.vm.sade.haku.oppija.lomake.domain.{ApplicationPeriod, ApplicationSystem}
 import fi.vm.sade.omatsivut.domain.Language
-import fi.vm.sade.omatsivut.hakemus.domain.{Haku, HakuAika}
-import org.joda.time.DateTime
+import fi.vm.sade.omatsivut.haku.domain.{HakuAika, Haku}
+
 import scala.collection.JavaConversions._
 
 object HakuConverter {

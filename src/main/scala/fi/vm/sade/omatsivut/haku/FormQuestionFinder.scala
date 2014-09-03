@@ -1,15 +1,15 @@
-package fi.vm.sade.omatsivut.hakemus
+package fi.vm.sade.omatsivut.haku
 
 import fi.vm.sade.haku.oppija.lomake.domain.elements.questions.{DropdownSelect, TextQuestion, CheckBox => HakuCheckBox, OptionQuestion => HakuOption, Radio => HakuRadio, TextArea => HakuTextArea}
-import fi.vm.sade.haku.oppija.lomake.domain.elements.{Titled, HiddenValue, TitledGroup, Element, Notification => HakuNotification, Text => HakuText}
+import fi.vm.sade.haku.oppija.lomake.domain.elements.{Element, HiddenValue, Titled, TitledGroup, Notification => HakuNotification, Text => HakuText}
 import fi.vm.sade.haku.oppija.lomake.validation.validators.RequiredFieldValidator
 import fi.vm.sade.omatsivut.domain.Language
-import fi.vm.sade.omatsivut.hakemus.domain._
+import fi.vm.sade.omatsivut.haku.domain._
 import fi.vm.sade.omatsivut.util.Logging
-import scala.collection.JavaConversions._
-import fi.vm.sade.omatsivut.hakemus.domain.Notification
 
-protected object FormQuestionFinder extends Logging {
+import scala.collection.JavaConversions._
+
+object FormQuestionFinder extends Logging {
 
   def findQuestionsFromElements(elementsToScan: Set[ElementWrapper])(implicit lang: Language.Language): Set[QuestionLeafNode] = {
     elementsToScan.flatMap { element =>

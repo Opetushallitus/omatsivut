@@ -1,11 +1,12 @@
-package fi.vm.sade.omatsivut.hakemus
+package fi.vm.sade.omatsivut.haku
 
 import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
 import fi.vm.sade.omatsivut.domain.Language
+import fi.vm.sade.omatsivut.fixtures.TestFixture
+import fi.vm.sade.omatsivut.fixtures.TestFixture._
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
-import fi.vm.sade.omatsivut.fixtures.TestFixture
-import TestFixture._
+import fi.vm.sade.omatsivut.hakemus.{ApplicationUpdater, HakutoiveetConverter}
 import org.specs2.mutable.Specification
 
 class AddedQuestionFinderSpec extends Specification {

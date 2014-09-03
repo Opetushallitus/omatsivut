@@ -1,8 +1,8 @@
-package fi.vm.sade.omatsivut.hakemus
+package fi.vm.sade.omatsivut.haku
 
-import fi.vm.sade.haku.oppija.lomake.domain.elements.{Titled, Element}
+import fi.vm.sade.haku.oppija.lomake.domain.elements.{Element, Titled}
 import fi.vm.sade.omatsivut.domain.Language
-import fi.vm.sade.omatsivut.hakemus.domain.{QuestionNode, QuestionGroup, QuestionLeafNode}
+import fi.vm.sade.omatsivut.haku.domain.{QuestionGroup, QuestionLeafNode}
 
 object QuestionGrouper {
   def groupQuestionsByStructure(contextElement: ElementWrapper, foundQuestions: Set[(QuestionLeafNode)])(implicit lang: Language.Language): List[QuestionGroup] = {

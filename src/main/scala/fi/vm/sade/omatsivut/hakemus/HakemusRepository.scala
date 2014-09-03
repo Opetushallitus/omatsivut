@@ -7,6 +7,8 @@ import fi.vm.sade.omatsivut.auditlog.{AuditLogger, ShowHakemus, UpdateHakemus}
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.hakemus.domain._
+import fi.vm.sade.omatsivut.haku.domain.{HakuAika, Haku}
+import fi.vm.sade.omatsivut.haku.{HakuRepository, HakuConverter}
 import fi.vm.sade.omatsivut.koulutusinformaatio.CachedKoulutusInformaatioService
 import fi.vm.sade.omatsivut.util.Timer
 

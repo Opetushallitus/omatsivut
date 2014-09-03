@@ -1,14 +1,13 @@
-package fi.vm.sade.omatsivut.hakemus
+package fi.vm.sade.omatsivut.haku
 
 import fi.vm.sade.haku.oppija.lomake.domain.I18nText
 import fi.vm.sade.haku.oppija.lomake.domain.elements._
 import fi.vm.sade.haku.oppija.lomake.domain.elements.custom.gradegrid.GradeGridOptionQuestion
 import fi.vm.sade.haku.oppija.lomake.domain.elements.questions.OptionQuestion
-import fi.vm.sade.omatsivut.domain.Language
-import fi.vm.sade.omatsivut.hakemus.domain.Hakemus.Answers
-import Language.Language
+import fi.vm.sade.omatsivut.domain.Language.Language
 import fi.vm.sade.omatsivut.hakemus.HakemusConverter.FlatAnswers
-import collection.JavaConversions._
+
+import scala.collection.JavaConversions._
 
 class OptionWrapper(element: ElementWrapper) {
   def value: String = element.element.asInstanceOf[questions.Option].getValue
@@ -123,7 +122,7 @@ object ElementWrapper {
 
 
 class FilteredElementWrapper(val element: Element, val parent: Option[ElementWrapper], answers: FlatAnswers) extends ElementWrapper {
-  import collection.JavaConversions._
+  import scala.collection.JavaConversions._
 
   override lazy val children = {
     element.getChildren(answers).toList.map(new FilteredElementWrapper(_, Some(this), answers))
@@ -135,7 +134,7 @@ class FilteredElementWrapper(val element: Element, val parent: Option[ElementWra
 }
 
 class UnfilteredElementWrapper(val element: Element, val parent: Option[ElementWrapper]) extends ElementWrapper {
-  import collection.JavaConversions._
+  import scala.collection.JavaConversions._
 
   override lazy val children = {
     element.getChildren.toList.map(new UnfilteredElementWrapper(_, Some(this)))

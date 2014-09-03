@@ -4,6 +4,7 @@ import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.omatsivut.config.AppConfig
 import AppConfig.AppConfig
 import fi.vm.sade.omatsivut.hakemus.domain._
+import fi.vm.sade.omatsivut.haku.domain.{QuestionNode, HakuAika}
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.security.Authentication
 import org.json4s.jackson.Serialization

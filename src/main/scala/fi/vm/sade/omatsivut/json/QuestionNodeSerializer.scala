@@ -1,6 +1,7 @@
 package fi.vm.sade.omatsivut.json
 
 import fi.vm.sade.omatsivut.hakemus.domain._
+import fi.vm.sade.omatsivut.haku.domain._
 import org.json4s._
 
 class QuestionNodeSerializer extends Serializer[QuestionNode] {

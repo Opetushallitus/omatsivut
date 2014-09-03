@@ -5,6 +5,8 @@ import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.domain._
+import fi.vm.sade.omatsivut.haku.ElementWrapper
+import fi.vm.sade.omatsivut.haku.domain.Haku
 import fi.vm.sade.omatsivut.valintatulokset.ValintatulosService
 import org.json4s.jackson.JsonMethods._
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._

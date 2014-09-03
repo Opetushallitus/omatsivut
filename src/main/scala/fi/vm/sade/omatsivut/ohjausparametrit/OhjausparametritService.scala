@@ -2,7 +2,7 @@ package fi.vm.sade.omatsivut.ohjausparametrit
 
 import fi.vm.sade.omatsivut.config.AppConfig.{AppConfig, StubbedExternalDeps}
 import fi.vm.sade.omatsivut.fixtures.JsonFixtureMaps
-import fi.vm.sade.omatsivut.hakemus.domain.Tulokset
+import fi.vm.sade.omatsivut.haku.domain.Tulokset
 import fi.vm.sade.omatsivut.http.DefaultHttpClient
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.memoize.TTLOptionalMemoize

@@ -2,6 +2,8 @@ package fi.vm.sade.omatsivut.hakemus
 
 import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.domain.Language
+import fi.vm.sade.omatsivut.haku.{AddedQuestionFinder, HakuConverter}
+import fi.vm.sade.omatsivut.haku.domain.{AnswerId, QuestionNode}
 import fi.vm.sade.omatsivut.util.Logging
 
 import scala.collection.JavaConversions._

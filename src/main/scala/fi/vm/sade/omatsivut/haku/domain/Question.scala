@@ -1,4 +1,4 @@
-package fi.vm.sade.omatsivut.hakemus.domain
+package fi.vm.sade.omatsivut.haku.domain
 
 import fi.vm.sade.haku.oppija.lomake.domain.elements.Notification.NotificationType
 

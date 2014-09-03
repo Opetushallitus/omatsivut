@@ -12,6 +12,7 @@ import fi.vm.sade.omatsivut.config.AppConfig
 import AppConfig.AppConfig
 import fi.vm.sade.omatsivut.domain.{Address, Language}
 import fi.vm.sade.omatsivut.hakemus.HakemusConverter.FlatAnswers
+import fi.vm.sade.omatsivut.haku.{OptionWrapper, ElementWrapper}
 import fi.vm.sade.omatsivut.koulutusinformaatio.KoulutusInformaatioService
 import fi.vm.sade.omatsivut.koulutusinformaatio.domain.{Liitepyynto, Koulutus, Opetuspiste}
 import fi.vm.sade.omatsivut.localization.Translations

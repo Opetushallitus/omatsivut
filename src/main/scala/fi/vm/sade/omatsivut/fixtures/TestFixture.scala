@@ -2,6 +2,8 @@ package fi.vm.sade.omatsivut.fixtures
 
 import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.domain.Language
+import fi.vm.sade.omatsivut.haku.HakuConverter
+import fi.vm.sade.omatsivut.haku.domain.HakuAika
 
 import scala.collection.JavaConversions._
 
@@ -10,8 +12,7 @@ import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
 
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
-import fi.vm.sade.omatsivut.hakemus.{HakemusConverter, HakuConverter}
-import fi.vm.sade.omatsivut.hakemus.domain.HakuAika
+import fi.vm.sade.omatsivut.hakemus.HakemusConverter
 
 object TestFixture {
   val hakemus1 = "1.2.246.562.11.00000877107"
