@@ -8,6 +8,7 @@ import fi.vm.sade.haku.oppija.lomake.domain.elements.custom.{PreferenceRow, Pref
 import fi.vm.sade.haku.oppija.lomake.domain.elements.questions.{CheckBox, DateQuestion, OptionQuestion, TextArea, TextQuestion}
 import fi.vm.sade.haku.oppija.lomake.domain.elements.{HiddenValue, Phase, Text, Theme, TitledGroup}
 import fi.vm.sade.haku.oppija.lomake.domain.rules.{AddElementRule, RelatedQuestionRule}
+import fi.vm.sade.omatsivut.ComponentRegistry
 import fi.vm.sade.omatsivut.config.AppConfig
 import AppConfig.AppConfig
 import fi.vm.sade.omatsivut.domain.{Address, Language}
@@ -30,7 +31,7 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
   import scalatags.Text.all._
   private val applicationDao = appConfig.springContext.applicationDAO
   private val applicationSystemService = appConfig.springContext.applicationSystemService
-  val koulutusInformaatio = KoulutusInformaatioService.apply
+  val koulutusInformaatio = ComponentRegistry.koulutusInformaatioService
   val dateFormat = DateTimeFormat.forPattern("dd.M.yyyy")
 
   def generatePreview(personOid: String, applicationOid: String): Option[String] = {

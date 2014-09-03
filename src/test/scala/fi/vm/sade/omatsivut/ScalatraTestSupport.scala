@@ -1,10 +1,9 @@
 package fi.vm.sade.omatsivut
 
-import fi.vm.sade.omatsivut.config.AppConfig
-import fi.vm.sade.omatsivut.security.{ShibbolethCookie, AuthenticationCipher, CookieCredentials}
+import fi.vm.sade.omatsivut.security.{AuthenticationCipher, CookieCredentials, ShibbolethCookie}
 import fi.vm.sade.omatsivut.servlet.OmatSivutSwagger
 import org.scalatra.test.specs2.MutableScalatraSpec
-import org.specs2.specification.{Step, Fragments}
+import org.specs2.specification.{Fragments, Step}
 
 trait ScalatraTestSupport extends MutableScalatraSpec {
   implicit lazy val appConfig = AppConfigSetup.create
@@ -31,5 +30,5 @@ trait ScalatraTestSupport extends MutableScalatraSpec {
 }
 
 object AppConfigSetup {
-  lazy val create = AppConfig.fromSystemProperty
+  lazy val create = ComponentRegistry.config
 }

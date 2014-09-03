@@ -2,14 +2,12 @@ package fi.vm.sade.omatsivut.hakemus
 
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
-import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 import fi.vm.sade.omatsivut.auditlog.{AuditLogger, ShowHakemus, UpdateHakemus}
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.hakemus.domain._
-import fi.vm.sade.omatsivut.haku.domain.{HakuAika, Haku}
-import fi.vm.sade.omatsivut.haku.{HakuRepository, HakuConverter}
-import fi.vm.sade.omatsivut.koulutusinformaatio.CachedKoulutusInformaatioService
+import fi.vm.sade.omatsivut.haku.domain.Haku
+import fi.vm.sade.omatsivut.haku.{HakuConverter, HakuRepository}
 import fi.vm.sade.omatsivut.util.Timer
 
 case class HakemusRepository(hakuRepository: HakuRepository)(implicit val appConfig: AppConfig) extends Timer {

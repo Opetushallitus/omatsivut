@@ -10,7 +10,7 @@ import org.scalatra._
 
 class ScalatraBootstrap extends LifeCycle {
   implicit val swagger = new OmatSivutSwagger
-  implicit val config: AppConfig = AppConfig.fromSystemProperty
+  implicit val config: AppConfig = ComponentRegistry.config
   OmatSivutSpringContext.check
 
   override def init(context: ServletContext) {

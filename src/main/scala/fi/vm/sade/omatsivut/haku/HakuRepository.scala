@@ -3,10 +3,10 @@ package fi.vm.sade.omatsivut.haku
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
+import fi.vm.sade.omatsivut.ComponentRegistry
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.haku.domain.{Haku, HakuAika}
-import fi.vm.sade.omatsivut.koulutusinformaatio.KoulutusInformaatioService
 import fi.vm.sade.omatsivut.ohjausparametrit.OhjausparametritService
 import fi.vm.sade.omatsivut.util.Timer
 
@@ -14,8 +14,8 @@ import scala.collection.JavaConversions._
 
 case class HakuRepository(implicit val appConfig: AppConfig) extends Timer {
   private val repository = appConfig.springContext.applicationSystemService
-  private val ohjausparametrit: OhjausparametritService = OhjausparametritService(appConfig)
-  private val koulutusinformaatioService = KoulutusInformaatioService(appConfig)
+  private val ohjausparametrit: OhjausparametritService = ComponentRegistry.ohjausparametritService
+  private val koulutusinformaatioService = ComponentRegistry.koulutusInformaatioService
 
   def getHakuByApplication(application: Application)(implicit lang: Language.Language): Option[(ApplicationSystem, Haku)] = {
     application.getApplicationSystemId match {

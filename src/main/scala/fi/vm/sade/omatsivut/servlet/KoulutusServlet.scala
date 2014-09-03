@@ -1,16 +1,14 @@
 package fi.vm.sade.omatsivut.servlet
 
-import fi.vm.sade.omatsivut.config.AppConfig
-import AppConfig.AppConfig
+import fi.vm.sade.omatsivut.ComponentRegistry
+import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.json.JsonFormats
-import fi.vm.sade.omatsivut.koulutusinformaatio.KoulutusInformaatioService
 import org.scalatra.json.JacksonJsonSupport
 import org.scalatra.swagger.{Swagger, SwaggerSupport}
-import scala.collection.TraversableOnce
 
 class KoulutusServlet(implicit val swagger: Swagger, val appConfig: AppConfig) extends OmatSivutServletBase with JacksonJsonSupport with JsonFormats with SwaggerSupport {
   protected val applicationDescription = "Oppijan henkilökohtaisen palvelun REST API, jolla etsitään opetuspisteitä ja koulutuksia"
-  val koulutusInformaatio = KoulutusInformaatioService.apply
+  val koulutusInformaatio = ComponentRegistry.koulutusInformaatioService
 
   before() {
     contentType = formats("json")
