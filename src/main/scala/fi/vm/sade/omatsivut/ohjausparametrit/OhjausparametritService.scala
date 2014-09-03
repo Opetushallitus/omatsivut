@@ -51,7 +51,7 @@ class RemoteOhjausparametritService(implicit appConfig: AppConfig) extends Ohjau
   }
 }
 
-object CachedRemoteOhjausparametritService {
+private object CachedRemoteOhjausparametritService {
   def apply(implicit appConfig: AppConfig): OhjausparametritService = {
     val service = new RemoteOhjausparametritService()
     val valintatuloksetMemo = TTLOptionalMemoize.memoize(service.valintatulokset _, 60 * 60)

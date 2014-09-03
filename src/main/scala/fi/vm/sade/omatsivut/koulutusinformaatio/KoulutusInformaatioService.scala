@@ -41,7 +41,6 @@ object KoulutusInformaatioService {
     case x: StubbedExternalDeps => new KoulutusInformaatioService {
       def opetuspisteet(asId: String, query: String) = {
         JsonFixtureMaps.findByKey[List[Opetuspiste]]("/mockdata/opetuspisteet.json", query.substring(0, 1).toLowerCase)
-
       }
       def koulutukset(asId: String, opetuspisteId: String, baseEducation: Option[String], vocational: String, uiLang: String) = {
         JsonFixtureMaps.findByKey[List[Koulutus]]("/mockdata/koulutukset.json", opetuspisteId)
@@ -50,13 +49,13 @@ object KoulutusInformaatioService {
         JsonFixtureMaps.findByFieldValue[List[Koulutus]]("/mockdata/koulutukset.json", "id", aoId).getOrElse(List()).headOption
       }
     }
-    case _ => RemoteKoulutusService()
+    case _ => CachedKoulutusInformaatioService(appConfig)
   }
 }
 
-object CachedKoulutusInformaatioService {
+private object CachedKoulutusInformaatioService {
   def apply(implicit appConfig: AppConfig): KoulutusInformaatioService = {
-    val service = KoulutusInformaatioService.apply(appConfig)
+    val service = new RemoteKoulutusService()
     val cacheTimeSec = 60*15
     val opetuspisteetMemo = TTLOptionalMemoize.memoize(service.opetuspisteet _, cacheTimeSec)
     val koulutusMemo = TTLOptionalMemoize.memoize(service.koulutus _, cacheTimeSec)
@@ -70,7 +69,7 @@ object CachedKoulutusInformaatioService {
   }
 }
 
-case class RemoteKoulutusService(implicit appConfig: AppConfig) extends KoulutusInformaatioService with JsonFormats with Logging {
+class RemoteKoulutusService(implicit appConfig: AppConfig) extends KoulutusInformaatioService with JsonFormats with Logging {
   import org.json4s.jackson.JsonMethods._
 
   private def wrapAsOption[A](l: List[A]): Option[List[A]] = if (!l.isEmpty) Some(l) else None
