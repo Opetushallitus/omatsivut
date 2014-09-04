@@ -175,6 +175,17 @@
           hakemusLisaKevat2014WithForeignBaseEducation.applicationPeriod().should.equal("Hakuaika päättyy keskiviikkona 1. joulukuuta 2100 klo 07.00")
         })
       })
+
+      describe("lisähaun muokkaus hakuajan jälkeen", function() {
+        before(page.applyFixtureAndOpen("lisahakuEnded"))
+        it("ei ole mahdollista", function() {
+          hakemusLisaKevat2014WithForeignBaseEducation.preferencesForApplication().length.should.equal(0)
+        })
+
+        it("ohjeteksti päivittyy", function() {
+          hakemusLisaKevat2014WithForeignBaseEducation.applicationPeriod().should.equal("Hakuaika on päättynyt.")
+        })
+      })
     })
 
     describe("hakemuksen tila", function() {
