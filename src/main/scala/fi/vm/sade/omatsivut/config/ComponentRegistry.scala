@@ -1,4 +1,4 @@
-package fi.vm.sade.omatsivut
+package fi.vm.sade.omatsivut.config
 
 import fi.vm.sade.omatsivut.config.AppConfig.{AppConfig, ITWithSijoitteluService, StubbedExternalDeps}
 import fi.vm.sade.omatsivut.hakemus.{HakemusRepository, HakemusRepositoryComponent}
@@ -7,11 +7,12 @@ import fi.vm.sade.omatsivut.koulutusinformaatio.{KoulutusInformaatioComponent, K
 import fi.vm.sade.omatsivut.ohjausparametrit.{OhjausparametritComponent, OhjausparametritService}
 import fi.vm.sade.omatsivut.valintatulokset.{ValintatulosService, ValintatulosServiceComponent}
 
-class ComponentRegistry(implicit val config: AppConfig) extends KoulutusInformaatioComponent with
-                                OhjausparametritComponent with
-                                HakuRepositoryComponent with
-                                HakemusRepositoryComponent with
-                                ValintatulosServiceComponent {
+protected class ComponentRegistry(implicit val config: AppConfig)
+  extends KoulutusInformaatioComponent with
+          OhjausparametritComponent with
+          HakuRepositoryComponent with
+          HakemusRepositoryComponent with
+          ValintatulosServiceComponent {
 
   private def configureOhjausparametritService: OhjausparametritService = config match {
     case _ : StubbedExternalDeps => new StubbedOhjausparametritService()

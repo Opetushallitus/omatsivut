@@ -1,8 +1,7 @@
 package fi.vm.sade.omatsivut.servlet
 
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
-import fi.vm.sade.omatsivut.ComponentRegistry
-import fi.vm.sade.omatsivut.config.AppConfig
+import fi.vm.sade.omatsivut.config.{ComponentRegistry, AppConfig}
 import AppConfig.AppConfig
 import fi.vm.sade.omatsivut.hakemus.domain._
 import fi.vm.sade.omatsivut.haku.HakuRepository

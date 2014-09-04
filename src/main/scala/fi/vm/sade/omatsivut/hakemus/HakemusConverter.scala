@@ -6,8 +6,8 @@ import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.hakemus.domain.util.ApplicationUtil
 import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
-import fi.vm.sade.omatsivut.ComponentRegistry
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
+import fi.vm.sade.omatsivut.config.ComponentRegistry
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
 import fi.vm.sade.omatsivut.hakemus.domain._
 import fi.vm.sade.omatsivut.haku.ElementWrapper
