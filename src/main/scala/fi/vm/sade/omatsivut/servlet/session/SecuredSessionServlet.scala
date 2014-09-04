@@ -45,7 +45,7 @@ class SecuredSessionServlet(implicit val appConfig: AppConfig) extends OmatSivut
   }
 
   private def createAuthCookieResponse(credentials: CookieCredentials) {
-    val encryptedCredentials = AuthenticationCipher().encrypt(credentials.toString)
+    val encryptedCredentials = AuthenticationCipher(appConfig).encrypt(credentials.toString)
     response.addCookie(Cookie("auth", encryptedCredentials)(appConfig.authContext.cookieOptions))
     response.redirect(redirectUri)
   }

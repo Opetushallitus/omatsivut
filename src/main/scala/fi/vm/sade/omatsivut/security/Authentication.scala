@@ -70,7 +70,7 @@ trait AuthCookieParsing extends Logging {
     authCookie(req) match {
       case Some(c) => {
         try {
-          val decrypt: String = AuthenticationCipher().decrypt(c.getValue)
+          val decrypt: String = AuthenticationCipher(appConfig).decrypt(c.getValue)
           Some(CookieCredentials.fromString(decrypt))
         } catch {
           case e: Exception => {
