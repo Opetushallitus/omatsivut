@@ -6,7 +6,7 @@ import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.localization.Translations
 import org.scalatra.json.JacksonJsonSupport
 
-class TranslationServlet(implicit val appConfig: AppConfig) extends OmatSivutServletBase with JacksonJsonSupport with JsonFormats {
+class TranslationServlet extends OmatSivutServletBase with JacksonJsonSupport with JsonFormats {
 
   before() {
     contentType = formats("json")
