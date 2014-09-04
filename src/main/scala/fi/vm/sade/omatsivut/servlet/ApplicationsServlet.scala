@@ -22,7 +22,7 @@ class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfi
   override def applicationName = Some("api")
   private val applicationSystemService = appConfig.springContext.applicationSystemService
   private val hakuRepository = ComponentRegistry.hakuRepository
-  private val hakemusRepository: HakemusRepository = new RemoteHakemusRepository()
+  private val hakemusRepository = ComponentRegistry.hakemusRepository
 
   protected val applicationDescription = "Oppijan henkilökohtaisen palvelun REST API, jolla voi hakea ja muokata hakemuksia ja omia tietoja"
 
@@ -53,7 +53,7 @@ class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfi
   put("/applications/:oid", operation(putApplicationsSwagger)) {
     val updated = Serialization.read[HakemusMuutos](request.body)
     val applicationSystem = applicationSystemService.getApplicationSystem(updated.hakuOid)
-    val errors = ApplicationValidator(hakemusRepository).validate(applicationSystem)(updated)
+    val errors = ApplicationValidator().validate(applicationSystem)(updated)
     if(errors.isEmpty) {
       hakemusRepository.updateHakemus(applicationSystem)(updated, personOid()) match {
         case Some(saved) => Ok(saved)
@@ -67,7 +67,7 @@ class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfi
   post("/applications/validate/:oid", operation(validateApplicationsSwagger)) {
     val validate = Serialization.read[HakemusMuutos](request.body)
     val applicationSystem = applicationSystemService.getApplicationSystem(validate.hakuOid)
-    val (errors: List[ValidationError], questions: List[QuestionNode], updatedApplication: Application) = ApplicationValidator(hakemusRepository).validateAndFindQuestions(applicationSystem)(validate, paramOption("questionsOf").getOrElse("").split(',').toList)
+    val (errors: List[ValidationError], questions: List[QuestionNode], updatedApplication: Application) = ApplicationValidator().validateAndFindQuestions(applicationSystem)(validate, paramOption("questionsOf").getOrElse("").split(',').toList)
     ValidationResult(errors, questions, hakuRepository.getApplicationPeriods(updatedApplication, applicationSystem))
   }
 
