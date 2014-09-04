@@ -39,7 +39,7 @@ class SecuredSessionServlet(implicit val appConfig: AppConfig) extends OmatSivut
   private def checkCredentials: (Option[String], Option[ShibbolethCookie]) = {
     val oid = for {
       hetu <- findHetuFromParams
-      oid <- AuthenticationInfoService.apply.getHenkiloOID(hetu)
+      oid <- appConfig.componentRegistry.authenticationInfoService.getHenkiloOID(hetu)
     } yield oid
     (oid, shibbolethCookieInRequest(request))
   }

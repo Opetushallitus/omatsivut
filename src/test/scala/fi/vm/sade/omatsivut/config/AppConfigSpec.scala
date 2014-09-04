@@ -29,7 +29,6 @@ class AppConfigSpec extends Specification {
   }
 
   def validateConfig(config: AppConfig) = {
-    AuthenticationInfoService.apply(config)
     config.springContext.applicationDAO
     config.springContext.applicationSystemService
     config.springContext.mongoTemplate
