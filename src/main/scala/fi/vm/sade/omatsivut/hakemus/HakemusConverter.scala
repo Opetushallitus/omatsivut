@@ -1,20 +1,20 @@
 package fi.vm.sade.omatsivut.hakemus
 
 import java.util
+
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
+import fi.vm.sade.haku.oppija.hakemus.domain.util.ApplicationUtil
+import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
-import fi.vm.sade.omatsivut.domain._
+import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
+import fi.vm.sade.omatsivut.hakemus.domain._
 import fi.vm.sade.omatsivut.haku.ElementWrapper
 import fi.vm.sade.omatsivut.haku.domain.Haku
 import fi.vm.sade.omatsivut.valintatulokset.ValintatulosService
-import org.json4s.jackson.JsonMethods._
-import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
-import fi.vm.sade.omatsivut.hakemus.domain._
+
 import scala.collection.JavaConversions._
 import scala.util.Try
-import fi.vm.sade.haku.oppija.hakemus.domain.util.ApplicationUtil
-import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
 
 object HakemusConverter {
   val educationPhaseKey = OppijaConstants.PHASE_EDUCATION

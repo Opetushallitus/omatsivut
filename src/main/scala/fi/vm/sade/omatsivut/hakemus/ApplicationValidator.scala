@@ -1,19 +1,18 @@
 package fi.vm.sade.omatsivut.hakemus
 
+import fi.vm.sade.haku.oppija.hakemus.domain.Application
+import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
+import fi.vm.sade.haku.oppija.lomake.validation.{ValidationInput, ValidationResult}
 import fi.vm.sade.omatsivut.ComponentRegistry
-import fi.vm.sade.omatsivut.config.AppConfig
+import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.domain.Language
-import fi.vm.sade.omatsivut.haku.{AddedQuestionFinder, HakuConverter}
+import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
+import fi.vm.sade.omatsivut.hakemus.domain._
+import fi.vm.sade.omatsivut.haku.AddedQuestionFinder
 import fi.vm.sade.omatsivut.haku.domain.{AnswerId, QuestionNode}
 import fi.vm.sade.omatsivut.util.Logging
 
 import scala.collection.JavaConversions._
-import fi.vm.sade.haku.oppija.hakemus.domain.Application
-import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
-import fi.vm.sade.haku.oppija.lomake.validation.{ValidationInput, ValidationResult}
-import AppConfig.AppConfig
-import fi.vm.sade.omatsivut.hakemus.domain._
-import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
 
 case class ApplicationValidator(implicit val appConfig: AppConfig) extends Logging {
   private val dao = appConfig.springContext.applicationDAO
