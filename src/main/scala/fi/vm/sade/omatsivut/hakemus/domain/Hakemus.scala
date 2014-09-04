@@ -20,9 +20,6 @@ case class Hakemus(
                     requiresAdditionalInfo: Boolean
                   ) extends HakemuksenTunniste {
   def toHakemusMuutos = HakemusMuutos(oid, haku.oid, hakutoiveet, answers)
-  def withApplicationPeriods(periods: List[HakuAika]) = {
-    copy(haku = haku.copy(applicationPeriods = periods))
-  }
 }
 
 case class HakemusMuutos (

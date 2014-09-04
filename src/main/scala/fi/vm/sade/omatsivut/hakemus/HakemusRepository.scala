@@ -10,14 +10,13 @@ import fi.vm.sade.omatsivut.hakemus.domain._
 import fi.vm.sade.omatsivut.koulutusinformaatio.CachedKoulutusInformaatioService
 import fi.vm.sade.omatsivut.util.Timer
 
-case class HakemusRepository(implicit val appConfig: AppConfig) extends Timer {
+case class HakemusRepository(hakuRepository: HakuRepository)(implicit val appConfig: AppConfig) extends Timer {
   import scala.collection.JavaConversions._
   private val dao = appConfig.springContext.applicationDAO
-  private val koulutusinformaatioService = CachedKoulutusInformaatioService(appConfig)
 
   def canUpdate(applicationSystem: ApplicationSystem, application: Application)(implicit lang: Language.Language) = {
-    val haku = HakuConverter.convertToHaku(applicationSystem)
-    val isActiveHakuPeriod = haku.applicationPeriods.exists(hakuAika => hakuAika.active)
+    val applicationPeriods = hakuRepository.getApplicationPeriods(application, applicationSystem)
+    val isActiveHakuPeriod = applicationPeriods.exists(_.active)
     val stateUpdateable = application.getState == Application.State.ACTIVE || application.getState == Application.State.INCOMPLETE
     val inPostProcessing = !(application.getRedoPostProcess() == Application.PostProcessingState.DONE || application.getRedoPostProcess() == null)
     isActiveHakuPeriod && stateUpdateable && !inPostProcessing
@@ -39,8 +38,7 @@ case class HakemusRepository(implicit val appConfig: AppConfig) extends Timer {
           dao.update(applicationQuery, application)
         }, 1000, "Application update DAO")
         AuditLogger.log(UpdateHakemus(userOid, hakemus.oid, originalAnswers, application.getAnswers.toMap.mapValues(_.toMap)))
-        val resultHakemus = HakemusConverter.convertToHakemus(applicationSystem, HakuConverter.convertToHaku(applicationSystem), application)
-        resultHakemus.withApplicationPeriods(getApplicationPeriods(resultHakemus, applicationSystem))
+        HakemusConverter.convertToHakemus(applicationSystem, HakuConverter.convertToHaku(applicationSystem), application)
       }
     }, 1000, "Application update")
   }
@@ -66,34 +64,14 @@ case class HakemusRepository(implicit val appConfig: AppConfig) extends Timer {
           }
       }.map(application => {
         val hakuOption = timed({
-          HakuRepository().getHakuById(application.getApplicationSystemId)
+          hakuRepository.getHakuByApplication(application)
         }, 1000, "HakuRepository get haku")
         hakuOption.map { case (applicationSystem: ApplicationSystem, haku: Haku) => {
           val hakemus = HakemusConverter.convertToHakemus(applicationSystem, haku, application)
           AuditLogger.log(ShowHakemus(personOid, hakemus.oid))
-          hakemus.withApplicationPeriods(getApplicationPeriods(hakemus, applicationSystem))
+          hakemus
         }}
       }).flatten.toList.sortBy[Long](_.received).reverse
     }, 1000, "Application fetch")
-  }
-
-  def getApplicationPeriods(hakemus: Hakemus, applicationSystem: ApplicationSystem) = {
-    if (applicationSystem.getApplicationSystemType == OppijaConstants.LISA_HAKU)
-      getHakutoiveApplicationPeriods(hakemus, applicationSystem)
-    else
-      hakemus.haku.applicationPeriods
-  }
-
-  private def getHakutoiveApplicationPeriods(hakemus: Hakemus, applicationSystem: ApplicationSystem) : List[HakuAika] = {
-    val hakutoiveApplicationPeriods = hakemus.hakutoiveet.headOption
-      .flatMap(_.get("Koulutus-id"))
-      .flatMap(koulutusinformaatioService.koulutus(_))
-      .flatMap { koulutus => (koulutus.applicationStartDate, koulutus.applicationEndDate) match {
-        case (Some(start), Some(end)) =>
-          Some(List(HakuAika(start, end)))
-        case _ =>
-          None
-      }}
-    hakutoiveApplicationPeriods.getOrElse(hakemus.haku.applicationPeriods)
   }
 }

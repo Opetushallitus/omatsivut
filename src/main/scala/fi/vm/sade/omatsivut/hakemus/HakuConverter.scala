@@ -8,9 +8,13 @@ import scala.collection.JavaConversions._
 
 object HakuConverter {
   def convertToHaku(applicationSystem: ApplicationSystem)(implicit lang: Language.Language) = {
-    val hakuAjat = applicationSystem.getApplicationPeriods.toList.map(applicationPeriod => convertToHakuAika(applicationPeriod))
+    val hakuAjat = convertToHakuajat(applicationSystem)
     val korkeakouluhaku = applicationSystem.getKohdejoukkoUri == "haunkohdejoukko_12"
     Haku(applicationSystem.getId, convertTranslations(applicationSystem), hakuAjat, korkeakouluhaku)
+  }
+
+  def convertToHakuajat(applicationSystem: ApplicationSystem) = {
+    applicationSystem.getApplicationPeriods.toList.map(applicationPeriod => convertToHakuAika(applicationPeriod))
   }
 
   private def convertTranslations(applicationSystem: ApplicationSystem)(implicit lang: Language.Language): String = {

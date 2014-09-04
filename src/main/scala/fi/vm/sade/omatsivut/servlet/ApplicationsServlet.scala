@@ -1,5 +1,6 @@
 package fi.vm.sade.omatsivut.servlet
 
+import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.omatsivut.config.AppConfig
 import AppConfig.AppConfig
 import fi.vm.sade.omatsivut.hakemus.domain._
@@ -11,16 +12,14 @@ import org.scalatra.swagger.SwaggerSupportSyntax.OperationBuilder
 import org.scalatra.swagger._
 import org.scalatra.{NotFound, BadRequest, Ok, Forbidden}
 import fi.vm.sade.omatsivut.hakemus.domain.HakemusMuutos
-import fi.vm.sade.omatsivut.hakemus.HakemusPreviewGenerator
-import fi.vm.sade.omatsivut.hakemus.ApplicationValidator
-import fi.vm.sade.omatsivut.hakemus.HakemusRepository
-import scala.Some
+import fi.vm.sade.omatsivut.hakemus._
 import fi.vm.sade.omatsivut.hakemus.domain.ValidationError
 
 class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfig) extends OmatSivutServletBase with JacksonJsonSupport with JsonFormats with SwaggerSupport with Authentication {
   override def applicationName = Some("api")
   private val applicationSystemService = appConfig.springContext.applicationSystemService
-  private val hakemusRepository = HakemusRepository()
+  private val hakuRepository = HakuRepository()
+  private val hakemusRepository = HakemusRepository(hakuRepository)
 
   protected val applicationDescription = "Oppijan henkilökohtaisen palvelun REST API, jolla voi hakea ja muokata hakemuksia ja omia tietoja"
 
@@ -51,7 +50,7 @@ class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfi
   put("/applications/:oid", operation(putApplicationsSwagger)) {
     val updated = Serialization.read[HakemusMuutos](request.body)
     val applicationSystem = applicationSystemService.getApplicationSystem(updated.hakuOid)
-    val errors = ApplicationValidator().validate(applicationSystem)(updated)
+    val errors = ApplicationValidator(hakemusRepository).validate(applicationSystem)(updated)
     if(errors.isEmpty) {
       hakemusRepository.updateHakemus(applicationSystem)(updated, personOid()) match {
         case Some(saved) => Ok(saved)
@@ -65,9 +64,8 @@ class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfi
   post("/applications/validate/:oid", operation(validateApplicationsSwagger)) {
     val validate = Serialization.read[HakemusMuutos](request.body)
     val applicationSystem = applicationSystemService.getApplicationSystem(validate.hakuOid)
-    val (errors: List[ValidationError], questions: List[QuestionNode], updatedHakemus: Hakemus) = ApplicationValidator().validateAndFindQuestions(applicationSystem)(validate, paramOption("questionsOf").getOrElse("").split(',').toList)
-    val applicationPeriods = hakemusRepository.getApplicationPeriods(updatedHakemus, applicationSystem)
-    ValidationResult(errors, questions, applicationPeriods)
+    val (errors: List[ValidationError], questions: List[QuestionNode], updatedApplication: Application) = ApplicationValidator(hakemusRepository).validateAndFindQuestions(applicationSystem)(validate, paramOption("questionsOf").getOrElse("").split(',').toList)
+    ValidationResult(errors, questions, hakuRepository.getApplicationPeriods(updatedApplication, applicationSystem))
   }
 
   get("/applications/preview/:oid") {
