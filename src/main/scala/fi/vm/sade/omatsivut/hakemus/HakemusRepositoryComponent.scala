@@ -2,7 +2,7 @@ package fi.vm.sade.omatsivut.hakemus
 
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
-import fi.vm.sade.omatsivut.auditlog.{AuditLogger, ShowHakemus, UpdateHakemus}
+import fi.vm.sade.omatsivut.auditlog._
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.hakemus.domain._
@@ -11,7 +11,7 @@ import fi.vm.sade.omatsivut.haku.{HakuConverter, HakuRepository, HakuRepositoryC
 import fi.vm.sade.omatsivut.util.Timer
 
 trait HakemusRepositoryComponent {
-  this: HakuRepositoryComponent =>
+  this: HakuRepositoryComponent with AuditLoggerComponent =>
 
   val hakuRepository: HakuRepository
 
@@ -42,7 +42,7 @@ trait HakemusRepositoryComponent {
           timed({
             dao.update(applicationQuery, application)
           }, 1000, "Application update DAO")
-          AuditLogger.log(UpdateHakemus(userOid, hakemus.oid, originalAnswers, application.getAnswers.toMap.mapValues(_.toMap)))
+          auditLogger.log(UpdateHakemus(userOid, hakemus.oid, originalAnswers, application.getAnswers.toMap.mapValues(_.toMap)))
           HakemusConverter.convertToHakemus(applicationSystem, HakuConverter.convertToHaku(applicationSystem), application)
         }
       }, 1000, "Application update")
@@ -73,7 +73,7 @@ trait HakemusRepositoryComponent {
           }, 1000, "HakuRepository get haku")
           hakuOption.map { case (applicationSystem: ApplicationSystem, haku: Haku) => {
             val hakemus = HakemusConverter.convertToHakemus(applicationSystem, haku, application)
-            AuditLogger.log(ShowHakemus(personOid, hakemus.oid))
+            auditLogger.log(ShowHakemus(personOid, hakemus.oid))
             hakemus
           }}
         }).flatten.toList.sortBy[Long](_.received).reverse

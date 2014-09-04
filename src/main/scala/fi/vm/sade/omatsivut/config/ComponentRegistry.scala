@@ -1,5 +1,6 @@
 package fi.vm.sade.omatsivut.config
 
+import fi.vm.sade.omatsivut.auditlog.{AuditLogger, AuditLoggerComponent}
 import fi.vm.sade.omatsivut.config.AppConfig.{AppConfig, ITWithSijoitteluService, StubbedExternalDeps}
 import fi.vm.sade.omatsivut.hakemus.{HakemusRepository, HakemusRepositoryComponent}
 import fi.vm.sade.omatsivut.haku.{HakuRepository, HakuRepositoryComponent}
@@ -12,7 +13,8 @@ protected class ComponentRegistry(implicit val config: AppConfig)
           OhjausparametritComponent with
           HakuRepositoryComponent with
           HakemusRepositoryComponent with
-          ValintatulosServiceComponent {
+          ValintatulosServiceComponent with
+          AuditLoggerComponent {
 
   private def configureOhjausparametritService: OhjausparametritService = config match {
     case _ : StubbedExternalDeps => new StubbedOhjausparametritService()
@@ -40,6 +42,7 @@ protected class ComponentRegistry(implicit val config: AppConfig)
   override val koulutusInformaatioService: KoulutusInformaatioService = configureKoulutusInformaatioService
   override val ohjausparametritService: OhjausparametritService = configureOhjausparametritService
   override val valintatulosService: ValintatulosService = configureValintatulosService
+  override val auditLogger: AuditLogger = new AuditLoggerFacade(config.auditLogger)
   val hakuRepository: HakuRepository = new RemoteHakuRepository()
   val hakemusRepository: HakemusRepository = new RemoteHakemusRepository()
 }

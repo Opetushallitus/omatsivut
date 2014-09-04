@@ -15,7 +15,7 @@ class LogoutServlet(implicit val appConfig: AppConfig) extends OmatSivutServletB
   }
 
   def sendLogOut(credentials: CookieCredentials) {
-    AuditLogger.log(Logout(credentials))
+    appConfig.componentRegistry.auditLogger.log(Logout(credentials))
     tellBrowserToDeleteAuthCookie(request, response)
     redirectToShibbolethLogout(request, response)
   }

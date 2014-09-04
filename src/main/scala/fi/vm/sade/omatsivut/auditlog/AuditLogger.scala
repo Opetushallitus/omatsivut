@@ -7,15 +7,21 @@ import AppConfig.AppConfig
 import fi.vm.sade.omatsivut.util.Logging
 import org.slf4j.LoggerFactory
 
-object AuditLogger extends Logging {
-  protected val auditLog4jLogger = LoggerFactory.getLogger("audit")
+trait AuditLoggerComponent {
+  val auditLogger: AuditLogger
 
-  def logger(appConfig: AppConfig) = appConfig.auditLogger
+  class AuditLoggerFacade(runningLogger: RunnableLogger) extends AuditLogger {
+    protected val auditLog4jLogger = LoggerFactory.getLogger("audit")
 
-  def log(event: AuditEvent)(implicit appConfig: AppConfig) {
-    logger(appConfig).log(event)
-    auditLog4jLogger.info(event.toLogMessage)
+    def log(event: AuditEvent) {
+      runningLogger.log(event)
+      auditLog4jLogger.info(event.toLogMessage)
+    }
   }
+}
+
+trait AuditLogger extends Logging {
+  def log(event: AuditEvent)
 }
 
 class RunnableLogger(val appConfig: AppConfig) extends Runnable with Logging {

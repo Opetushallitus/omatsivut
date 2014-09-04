@@ -14,7 +14,7 @@ class SecuredSessionServlet(implicit val appConfig: AppConfig) extends OmatSivut
     checkCredentials match {
       case (Some(oid), Some(cookie)) => {
         val credentials: CookieCredentials = CookieCredentials(oid, cookie)
-        AuditLogger.log(Login(credentials))
+        appConfig.componentRegistry.auditLogger.log(Login(credentials))
         createAuthCookieResponse(credentials)
       }
       case (None, Some(cookie)) => {
