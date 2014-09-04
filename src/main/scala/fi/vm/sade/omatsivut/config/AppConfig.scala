@@ -129,6 +129,7 @@ object AppConfig extends Logging {
     lazy val authContext: AuthenticationContext = if (usesFakeAuthentication) new TestAuthenticationContext else new ProductionAuthenticationContext
     lazy val auditLogger = new RunnableLogger(this)
     private lazy val pool = Executors.newSingleThreadExecutor()
+    lazy val componentRegistry: ComponentRegistry = new ComponentRegistry()(this)
 
     def usesFakeAuthentication: Boolean = false
     def usesLocalDatabase = false

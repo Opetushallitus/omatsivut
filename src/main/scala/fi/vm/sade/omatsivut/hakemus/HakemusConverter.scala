@@ -6,6 +6,7 @@ import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.hakemus.domain.util.ApplicationUtil
 import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
+import fi.vm.sade.omatsivut.ComponentRegistry
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
 import fi.vm.sade.omatsivut.hakemus.domain._
@@ -58,6 +59,7 @@ object HakemusConverter {
 
   def valintatulos(applicationSystem: ApplicationSystem, application: Application)(implicit appConfig: AppConfig) = {
     val hakutoiveet = convertHakuToiveet(application)
+    val valintatulosService: ValintatulosService = appConfig.componentRegistry.valintatulosService
 
     def findKoulutus(oid: String): Koulutus = {
       hakutoiveet.find(_.get("Koulutus-id") == Some(oid)).map{ hakutoive => Koulutus(oid, hakutoive("Koulutus"))}.getOrElse(Koulutus(oid, oid))
@@ -66,7 +68,7 @@ object HakemusConverter {
     def findOpetuspiste(oid: String): Opetuspiste = {
       hakutoiveet.find(_.get("Opetuspiste-id") == Some(oid)).map{ hakutoive => Opetuspiste(oid, hakutoive("Opetuspiste"))}.getOrElse(Opetuspiste(oid, oid))
     }
-    ValintatulosService.apply.getValintatulos(application.getOid, applicationSystem.getId).map { valintaTulos =>
+    valintatulosService.getValintatulos(application.getOid, applicationSystem.getId).map { valintaTulos =>
       Valintatulos(valintaTulos.hakutoiveet.map { hakutoiveenTulos =>
         HakutoiveenValintatulos(
           findKoulutus(hakutoiveenTulos.hakukohdeOid),

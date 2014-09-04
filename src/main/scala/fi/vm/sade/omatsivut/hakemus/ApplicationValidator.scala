@@ -3,7 +3,6 @@ package fi.vm.sade.omatsivut.hakemus
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
 import fi.vm.sade.haku.oppija.lomake.validation.{ValidationInput, ValidationResult}
-import fi.vm.sade.omatsivut.ComponentRegistry
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
@@ -17,7 +16,7 @@ import scala.collection.JavaConversions._
 case class ApplicationValidator(implicit val appConfig: AppConfig) extends Logging {
   private val dao = appConfig.springContext.applicationDAO
   private val validator = appConfig.springContext.validator
-  private val hakemusRepository = ComponentRegistry.hakemusRepository
+  private val hakemusRepository = appConfig.componentRegistry.hakemusRepository
 
   def validate(applicationSystem: ApplicationSystem)(hakemus: HakemusMuutos)(implicit lang: Language.Language): List[ValidationError] = {
     val storedApplication = hakemusRepository.findStoredApplication(hakemus)
