@@ -4,7 +4,7 @@ import fi.vm.sade.omatsivut.config.AppConfig
 import AppConfig.AppConfig
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
 
-case class KymppiluokkaFixture(appConfig: AppConfig) extends Hakemus2WithDifferentAnswersFixture(appConfig: AppConfig) {
+case class KymppiluokkaFixture(appConfig: AppConfig) extends HakemusWithDifferentAnswersFixture(TestFixture.hakemus2)(appConfig: AppConfig) {
   def apply {
   val answers: Answers = Map(
     "koulutustausta" ->
@@ -110,6 +110,6 @@ case class KymppiluokkaFixture(appConfig: AppConfig) extends Hakemus2WithDiffere
       "PK_A12_VAL1" -> "Ei arvosanaa",
       "PK_TE_VAL1" -> "Ei arvosanaa",
       "PK_TE_VAL2" -> "Ei arvosanaa"))
-    apply(answers)
+    replaceAnswers(answers)
   }
 }

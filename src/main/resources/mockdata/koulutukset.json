@@ -314,5 +314,22 @@
       "applicationStartDate": 1409224751000,
       "applicationEndDate": 2671528751000
     }
+  ],
+  "1.2.246.562.10.22242122111-excludefromresults": [
+    {
+      "id": "1.2.246.562.20.78030966706",
+      "name": "Kalatalouden perustutkinto, pk (loppunut)",
+      "aoIdentifier": "852",
+      "educationDegree": "32",
+      "childLONames": [],
+      "sora": false,
+      "teachingLanguages": ["FI"],
+      "athleteEducation": true,
+      "kaksoistutkinto": true,
+      "vocational": true,
+      "educationCodeUri": "koulutus_361401",
+      "applicationStartDate": 1409224751000,
+      "applicationEndDate": 1409224751000
+    }
   ]
 }

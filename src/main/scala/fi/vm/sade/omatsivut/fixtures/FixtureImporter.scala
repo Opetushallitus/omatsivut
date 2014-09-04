@@ -14,6 +14,7 @@ case class FixtureImporter(implicit val appConfig: AppConfig) {
   def applyOverrides(fixtureName: String = "") {
     fixtureName match {
       case "peruskoulu" => PeruskouluFixture(appConfig).apply
+      case "lisahakuEnded" => LisahakuEndedFixture(appConfig).apply
       case "passiveApplication" => ApplicationStateFixture(appConfig).setState(Application.State.PASSIVE)
       case "incompleteApplication" => ApplicationStateFixture(appConfig).setState(Application.State.INCOMPLETE)
       case "submittedApplication" => ApplicationStateFixture(appConfig).setState(Application.State.SUBMITTED)
