@@ -45,7 +45,7 @@ Hakutoive.prototype = {
     this.data["Koulutus-id-vocational"] = toString(koulutus.vocational)
     this.data["Koulutus-id-educationcode"] = toString(koulutus.educationCodeUri)
     this.data["Koulutus-id-athlete"] = toString(koulutus.athleteEducation)
-    this.addAttachmentGroups(koulutus)
+    this.addGroupInfo(koulutus)
     this.isModified = true
     this.setErrors([])
     function toString(x) {
@@ -53,15 +53,22 @@ Hakutoive.prototype = {
     }
   },
 
-  addAttachmentGroups: function(koulutus) {
+  addGroupInfo: function(koulutus) {
     var attachmentGroups = [];
+    var aoGroups = [];
     if (koulutus.organizationGroups instanceof Array) {
       for (var i = 0; i < koulutus.organizationGroups.length; i++) {
         var group = koulutus.organizationGroups[i];
-        if(group.groupTypes.indexOf("hakukohde") >= 0 && group.usageGroups.indexOf("hakukohde_liiteosoite") >= 0) {
-          attachmentGroups.push(group.oid);
+        if(group.groupTypes.indexOf("hakukohde") >= 0) {
+          aoGroups.push(group.oid);
+          if(group.usageGroups.indexOf("hakukohde_liiteosoite") >= 0) {
+            attachmentGroups.push(group.oid);
+          }
         }
       }
+    }
+    if(aoGroups.length > 0) {
+      this.data["Koulutus-id-ao-groups"] = aoGroups.join(",")
     }
     if(attachmentGroups.length > 0) {
       this.data["Koulutus-id-attachmentgroups"] = attachmentGroups.join(",")
