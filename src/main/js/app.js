@@ -1,5 +1,6 @@
 require("angular");
 require('ng-resource')(window, angular);
+require('angular-module-sanitize');
 require('angular-animate');
 _ = require("underscore");
 require("../lib/ui-bootstrap-custom-tpls-0.10.0.min.js");
@@ -7,8 +8,7 @@ window.moment = require("moment");
 require("../lib/moment-locale-fi.js");
 require("moment/locale/sv.js");
 require("moment/locale/en-gb.js");
-
-var listApp = angular.module('listApp', ["ngResource", "ngAnimate", "RecursionHelper", "ui.bootstrap.typeahead", "template/typeahead/typeahead-popup.html", "template/typeahead/typeahead-match.html", "debounce", "exceptionOverride"], function($locationProvider) {
+var listApp = angular.module('listApp', ["ngResource", "ngSanitize", "ngAnimate", "RecursionHelper", "ui.bootstrap.typeahead", "template/typeahead/typeahead-popup.html", "template/typeahead/typeahead-match.html", "debounce", "exceptionOverride"], function($locationProvider) {
   $locationProvider.html5Mode(false);
 });
 
