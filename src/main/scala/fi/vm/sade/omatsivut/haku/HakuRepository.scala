@@ -12,7 +12,7 @@ import fi.vm.sade.omatsivut.util.Timer
 
 import scala.collection.JavaConversions._
 
-trait HakuRepositoryComponent extends OhjausparametritComponent with KoulutusInformaatioComponent {
+trait HakuRepositoryComponent {
   this: OhjausparametritComponent with KoulutusInformaatioComponent =>
 
   val ohjausparametritService: OhjausparametritService
