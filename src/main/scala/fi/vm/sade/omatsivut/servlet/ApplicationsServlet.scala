@@ -1,6 +1,7 @@
 package fi.vm.sade.omatsivut.servlet
 
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
+import fi.vm.sade.omatsivut.ComponentRegistry
 import fi.vm.sade.omatsivut.config.AppConfig
 import AppConfig.AppConfig
 import fi.vm.sade.omatsivut.hakemus.domain._
@@ -20,8 +21,8 @@ import fi.vm.sade.omatsivut.hakemus.domain.ValidationError
 class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfig) extends OmatSivutServletBase with JacksonJsonSupport with JsonFormats with SwaggerSupport with Authentication {
   override def applicationName = Some("api")
   private val applicationSystemService = appConfig.springContext.applicationSystemService
-  private val hakuRepository = HakuRepository()
   private val hakemusRepository = HakemusRepository(hakuRepository)
+  private val hakuRepository = ComponentRegistry.hakuRepository
 
   protected val applicationDescription = "Oppijan henkilökohtaisen palvelun REST API, jolla voi hakea ja muokata hakemuksia ja omia tietoja"
 
