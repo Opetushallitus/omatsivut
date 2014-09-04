@@ -31,7 +31,7 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
   import scalatags.Text.all._
   private val applicationDao = appConfig.springContext.applicationDAO
   private val applicationSystemService = appConfig.springContext.applicationSystemService
-  val koulutusInformaatio = ComponentRegistry.koulutusInformaatioService
+  private val koulutusInformaatio = ComponentRegistry.koulutusInformaatioService
   val dateFormat = DateTimeFormat.forPattern("dd.M.yyyy")
 
   def generatePreview(personOid: String, applicationOid: String): Option[String] = {
