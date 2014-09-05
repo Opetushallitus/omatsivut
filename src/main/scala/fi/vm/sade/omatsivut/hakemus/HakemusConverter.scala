@@ -86,9 +86,20 @@ object HakemusConverter {
   private def requiresAdditionalInfo(applicationSystem: ApplicationSystem, application: Application): Boolean = {
     !ApplicationUtil.getDiscretionaryAttachmentAOIds(application).isEmpty() ||
     !ApplicationUtil.getHigherEdAttachmentAOIds(application).isEmpty() ||
+    !ApplicationUtil.getApplicationOptionAttachmentAOIds(application).isEmpty() ||
     !(for(addInfo <- applicationSystem.getAdditionalInformationElements())
       yield ElementWrapper.wrapFiltered(addInfo, flattenAnswers(application.getAnswers().toMap.mapValues(_.toMap)))
-    ).filterNot(_.children.isEmpty).isEmpty
+    ).filterNot(_.children.isEmpty).isEmpty ||
+    hasApplicationOptionAttachmentRequests(applicationSystem, application)
+  }
+
+  private def hasApplicationOptionAttachmentRequests(applicationSystem: ApplicationSystem, application: Application): Boolean = {
+    if(applicationSystem.getApplicationOptionAttachmentRequests() == null) {
+      false;
+    }
+    else {
+      !applicationSystem.getApplicationOptionAttachmentRequests().filter(_.include(application.getVastauksetMerged())).isEmpty
+    }
   }
 
   private def isPostProcessing(application: Application): Boolean = {
