@@ -30,8 +30,10 @@
         fallbackLng: "fi"
     }, function() {
         $("body").i18n()
+        var raamit = document.createElement("script");
+        raamit.src = "raamit/load";
+        document.getElementsByTagName("head")[0].appendChild(raamit);
     })
 </script>
-<script type="text/javascript" src="raamit/load"></script>
 </body>
 </html>
