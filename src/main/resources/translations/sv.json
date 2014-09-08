@@ -20,8 +20,8 @@
     "education_university": "Utbildning",
     "chooseLocation": "Välj först undervisnigsställe",
     "resultsPublishedDate": "Resultatet av antagningen publiceras",
-    "questionGroupWithTitle": "Additional questions",
-    "questionGroupWithoutTitle": "Additional questions"
+    "questionGroupWithTitle": "Tillägsfrågor",
+    "questionGroupWithoutTitle": "Andra tillägsfrågor"
   },
 
   "button": {
@@ -42,8 +42,8 @@
     "changesSaved": "Alla ändringar sparade.",
     "yes": "Ja",
     "no": "Nej",
-    "rememberSendAttachments": "Kom ihåg <a>bilagorna</a>.",
-    "applicationIsInPostProcessing": "Hakemuksesi on vielä käsiteltävänä. Jos haluat muuttaa hakutoiveitasi, yritä myöhemmin uudelleen."
+    "rememberSendAttachments": "Kom ihåg att skicka ansökningsblankettens <a>bilagor</a>.",
+    "applicationIsInPostProcessing": "Din ansökan bearbetas fortfarande. Om du vill ändra dina ansökningsmäl, var god försök igen senare."
   },
 
   "error": {
