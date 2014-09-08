@@ -32,15 +32,15 @@ class HakemusPreviewSpec extends HakemusApiSpecification {
         // lupatiedot
         body must contain("""<label>Minulle saa lähettää postia ja sähköpostia vapaista opiskelupaikoista ja muuta koulutusmarkkinointia.</label><span class="answer">Ei</span>""")
         // harkinnanvarainen haku liitepyynnöt
-        body must contain("""<div>HELSINGIN KAUPUNKI</div><div>Liitteiden viimeinen palautuspäivä 14.3.2014</div>""")
-        body must contain("""<div>SALO</div><div>Liitteiden viimeinen palautuspäivä 14.3.2014</div>""")
+        body must contain("""<td><div>Kallion lukio</div><div>PL 3805</div><div>00099</div><div>HELSINGIN KAUPUNKI</div></td><td><div>Liitteiden viimeinen palautuspäivä 14.3.2014</div></td>""")
+        body must contain("""<td><div>Salon Lukio</div><div>Kaherinkatu 2</div><div>24130</div><div>SALO</div></td><td><div>Liitteiden viimeinen palautuspäivä 14.3.2014</div></td>""")
       }
     }
 
     "support higher grade attachements" in {
       authGet("/applications/preview/" + TestFixture.hakemusWithHigherGradeAttachments, personOid) {
         println(prettyPrintHtml(body))
-        body must contain("""<p>Toimita todistuskopiot muista perusteistasi seuraaviin kouluihin</p><div class="group"><h3>Diakonia-ammattikorkeakoulu, Helsingin toimipiste</h3><div>Sturenkatu 2</div>""")
+        body must contain("""<td><div>Diakonia-ammattikorkeakoulu, Helsingin toimipiste</div><div>Sturenkatu 2</div><div>00510</div><div>HELSINKI</div></td>""")
       }
     }
 

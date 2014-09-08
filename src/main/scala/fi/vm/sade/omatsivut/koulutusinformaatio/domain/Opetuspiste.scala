@@ -8,4 +8,4 @@ case class Opetuspiste(
   applicationOffice: Option[ApplicationOffice]
 )
 
-case class ApplicationOffice(postalAddress: Option[Address])
+case class ApplicationOffice(name: Option[String], postalAddress: Option[Address])
