@@ -32,7 +32,6 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
   import scalatags.Text.all._
   private val applicationDao = appConfig.springContext.applicationDAO
   private val applicationSystemService = appConfig.springContext.applicationSystemService
-  val dateFormat = DateTimeFormat.forPattern("dd.M.yyyy")
 
   def generatePreview(serverPath: ServerContaxtPath, personOid: String, applicationOid: String): Option[String] = {
     val applicationQuery: Application = new Application().setOid(applicationOid).setPersonOid(personOid)
@@ -105,9 +104,9 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
             h2(Translations.getTranslation("applicationPreview", "attachments")),
             table(`class` := "striped") (
               tr(
-                th("liite"),
-                th("toimitusosoite"),
-                th("deadline")
+                th(Translations.getTranslation("applicationPreview", "attachment")),
+                th(Translations.getTranslation("applicationPreview", "attachmentAddress")),
+                th(Translations.getTranslation("applicationPreview", "attachmentDeadline"))
               ),
               for (info <- aoInfos) yield attachmentInfoPreview(info))
             )
@@ -117,8 +116,11 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
 
     def attachmentInfoPreview(info: Attachment): List[TypedTag[String]] = {
       List(tr(
-        td(p(info.heading),
-          p(info.description)),
+        td(
+          elemIfNotEmptyString(p(_), info.name),
+          elemIfNotEmptyString(p(_), info.heading),
+          elemIfNotEmptyString(p(_), info.description)
+        ),
         td(elemIfNotEmptyString(div(_), info.recipientName ),
            attachmentAddressInfoPreview(info.address)),
         td(elemIfNotEmpty[Long](div(_), info.deadline, formatDeadlinePreview))
@@ -141,7 +143,7 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
     }
 
     def formatDeadlinePreview(date: Long): String = {
-      Translations.getTranslation("applicationPreview", "attachments_deadline") + " " + (new DateTime(date)).toString(dateFormat)
+      formatDate(new Date(date))
     }
 
     def elemIfNotEmptyString(elem: String => TypedTag[String], value: Option[String]): Option[TypedTag[String]] = {
@@ -327,9 +329,10 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
     }
 
     def formatDate(date: Date) = {
-      new SimpleDateFormat("d.M.yyyy HH:mm").format(date)
+      new SimpleDateFormat("dd.MM.yyyy HH:mm").format(date)
     }
 
+    """<!DOCTYPE html>""" +
     html(
       head(link(href := "/omatsivut/css/preview.css", rel:= "stylesheet", `type` := "text/css")),
       body(
@@ -348,6 +351,6 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
         :::
         attachmentsInfoPreview()
       )
-    ).toString
+    )
   }
 }

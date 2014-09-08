@@ -49,6 +49,34 @@ header {
   }
 }
 
+table {
+  width: 100%;
+  border: none;
+  border-spacing: 0;
+  line-height: 1.25em;
+  text-align: left;
+}
+table.striped {
+  thead tr {
+    background-color: #DFF2F8;
+  }
+  tbody tr:nth-child(even) {
+    background-color: #DFF2F8;
+  }
+  tbody tr:nth-child(odd) {
+    background-color: #FFFFFF;
+  }
+}
+
+th, td {
+  padding: 2px 10px;;
+  vertical-align: top;
+}
+
+th {
+  font-weight: bold;
+}
+
 .question {
   label {
     display: inline-block;

@@ -17,7 +17,7 @@ class HakemusPreviewSpec extends HakemusApiSpecification {
       authGet("/api/applications/preview/" + TestFixture.hakemus2, personOid) {
         response.getContentType() must_== "text/html; charset=UTF-8"
 
-        body must contain("""<label>Vastaanotettu</label><span>25.6.2014 15:52</span>""")
+        body must contain("""<label>Vastaanotettu</label><span>25.06.2014 15:52</span>""")
         body must contain("""<label>Hakemusnumero</label><span>00000441368</span>""")
 
         // henkilötiedot
