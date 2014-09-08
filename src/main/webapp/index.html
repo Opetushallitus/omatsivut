@@ -40,7 +40,7 @@
                                 {{ localization('label.applicationPeriodEnds') }} <time datetime="{{ application.haku.applicationPeriods[0].end | date:'yyyy-MM-ddTHH:mmZ' }}">{{ formatApplicationPeriod(application.haku.applicationPeriods[0].end) }}</time>
                             </span>
                         </div>
-                        <div role="presentation" ng-if="!application.haku.applicationPeriods[0].active" class="application-period">
+                        <div role="presentation" ng-if="!application.haku.applicationPeriods[0].active && !application.state.valintatulos" class="application-period">
                             <span class="badge label-info">
                                 {{ localization('label.applicationPeriodEnded') }}
                                 <span ng-if="application.haku.results">
@@ -63,10 +63,35 @@
                         </div>
                     </p>
 
-                    <section class="application-valintatulos" ng-if="application.state.valintatulos">
-                        <ul>
-                            <li class="hakukohteen-valintatulos" ng-repeat="tulos in application.state.valintatulos.hakutoiveet">
-                                <span class="opetuspiste">{{ tulos.opetuspiste.name }}</span> <span class="koulutus">{{ tulos.koulutus.name }}</span> : <span class="tila">{{ tulos.tila }}</span>
+                    <section class="application-section application-valintatulos" ng-if="application.state.valintatulos">
+                        <header class="application-section-heading">
+                            {{ localization('label.results') }}
+                        </header>
+                        <ul class="result-list">
+                            <li class="result-list-item" ng-repeat="tulos in application.state.valintatulos.hakutoiveet">
+                                <div class="item-content">
+                                    <span class="row-number">{{$index+1}}.</span>
+                                </div>
+                                <div class="item-content">
+                                    <div class="row opetuspiste">
+                                        <div class="label-column">{{localization('label.location' + (application.haku.korkeakouluhaku ? '_university' : ''))}}:</div>
+
+                                        <div class="value-column">
+                                            <span ng-bind="tulos.opetuspiste.name"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row koulutus">
+                                        <div class="label-column">{{ localization('label.education' + (application.haku.korkeakouluhaku ? '_university' : '')) }}:</div>
+
+                                        <div class="value-column">
+                                            <span ng-bind="tulos.koulutus.name"></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="item-content">
+                                    {{ tulos.tila }}
+                                </div>
                             </li>
                         </ul>
                     </section>
