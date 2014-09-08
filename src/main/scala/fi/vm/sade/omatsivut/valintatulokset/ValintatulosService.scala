@@ -17,10 +17,14 @@ trait ValintatulosServiceComponent {
 
   class MockValintatulosService() extends ValintatulosService with JsonFormats {
     import org.json4s.jackson.JsonMethods._
-    val json = """{"hakemusOid":"1.2.246.562.11.00000878229","hakutoiveet":[{"hakukohdeOid":"1.2.246.562.5.72607738902","tarjoajaOid":"1.2.246.562.10.591352080610","tila":"HYVAKSYTTY","vastaanottotieto":"ILMOITETTU","ilmoittautumisTila":null,"jonosija":1,"varasijanNumero":null}]}"""
+    val json = """{"hakemusOid":"1.2.246.562.11.00000441369","hakutoiveet":[{"hakukohdeOid":"1.2.246.562.5.72607738902","tarjoajaOid":"1.2.246.562.10.591352080610","tila":"HYVAKSYTTY","vastaanottotieto":"ILMOITETTU","ilmoittautumisTila":null,"jonosija":1,"varasijanNumero":null}]}"""
 
     override def getValintatulos(hakemusOid: String, hakuOid: String) = {
-      Some(parse(json).extract[Valintatulos])
+      None // TODO Better fixture so that front-end tests can be made
+      /*if (hakemusOid == "1.2.246.562.11.00000441369")
+        Some(parse(json).extract[Valintatulos])
+      else
+        None*/
     }
   }
 
