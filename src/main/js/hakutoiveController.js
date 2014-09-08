@@ -17,6 +17,7 @@ module.exports = function(listApp) {
 
     $scope.opetuspisteValittu = function($item, $model, $label) {
       this.hakutoive.setOpetuspiste($item.id, $item.name)
+      $scope.koulutusList = []
 
       restResources.koulutukset.query({
         asId: this.application.haku.oid,
