@@ -1,6 +1,7 @@
 package fi.vm.sade.omatsivut.hakemus.domain
 
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
+import fi.vm.sade.omatsivut.hakemus.domain.HakutoiveenValintatulosTila.HakutoiveenValintatulosTila
 import fi.vm.sade.omatsivut.haku.domain.{HakuAika, Haku}
 
 object Hakemus {
@@ -51,7 +52,7 @@ case class Valintatulos(hakutoiveet: List[HakutoiveenValintatulos])
 case class HakutoiveenValintatulos(
                                     koulutus: Koulutus,
                                     opetuspiste: Opetuspiste,
-                                    tila: String,
+                                    tila: Option[HakutoiveenValintatulosTila],
                                     vastaanottotieto: String,
                                     ilmoittautumisTila: String,
                                     jonosija: Option[Int],
@@ -59,3 +60,14 @@ case class HakutoiveenValintatulos(
 
 case class Koulutus(oid: String, name: String)
 case class Opetuspiste(oid: String, name: String)
+
+object HakutoiveenValintatulosTila extends Enumeration {
+  type HakutoiveenValintatulosTila = Value
+  val Hyvaksytty, Harkinnanvaraisesti_hyvaksytty, Varalla, Peruutettu, Perunut, Hylatty, Peruuntunut, Kesken = Value
+  def fromString(tila: String) = {
+    if (tila == "")
+      None
+    else
+      Some(withName(tila.toLowerCase.capitalize))
+  }
+}
