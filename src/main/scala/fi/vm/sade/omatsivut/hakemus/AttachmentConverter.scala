@@ -8,27 +8,45 @@ import fi.vm.sade.omatsivut.domain.Attachment
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import scala.collection.JavaConversions._
 import fi.vm.sade.haku.oppija.hakemus.domain.util.ApplicationUtil
+import fi.vm.sade.haku.oppija.hakemus.domain.util.AttachmentUtil
+import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
+import fi.vm.sade.haku.virkailija.koulutusinformaatio.impl.KoulutusinformaatioServiceImpl
+import fi.vm.sade.haku.oppija.hakemus.domain.dto.ApplicationAttachment
+import fi.vm.sade.omatsivut.domain.Attachment
+import fi.vm.sade.omatsivut.domain.Address
+import fi.vm.sade.omatsivut.servlet.ServerContaxtPath
 
-case class AttachmentConverter(implicit val appConfig: AppConfig.AppConfig, val language: Language.Language) {
+object AttachmentConverter {
 
-  private val koulutusInformaatio = appConfig.componentRegistry.koulutusInformaatioService
-
-  def getDiscretionaryAttachments(application: Application): List[Attachment] = {
-    val heading = Translations.getTranslation("applicationPreview", "discretionary")
-    val description = Translations.getTranslation("applicationPreview", "discretionary_info")
-    ApplicationUtil.getDiscretionaryAttachmentAOIds(application).toList.map(
-        koulutusInformaatio.liitepyynto(_, heading, description)
-    )
+  def getAttachments(serverPath: ServerContaxtPath, appSystem: ApplicationSystem, application: Application)(implicit language: Language.Language): List[Attachment] = {
+    val attachmentInfo = AttachmentUtil.resolveAttachments(appSystem, application, getKoulutusinformattioService(serverPath), language.toString())
+    attachmentInfo.toList.map(convertToAttachment(_))
   }
 
-  def getHigherEdAttachments(application: Application): List[Attachment] = {
-    ApplicationUtil
-      .getHigherEdAttachmentAOIds(application).mapValues(_.filterNot(_.isEmpty()))
-      .flatMap{case (baseEducation, aoIds) => {
-        aoIds.map(
-            koulutusInformaatio.liitepyynto(_, "", Translations.getTranslation("applicationPreview", "attachments_info_" + baseEducation))
-        ).map(info => info.copy(heading = info.providerName.getOrElse("")))
-      }}.toList
+  def convertToAttachment(attachment: ApplicationAttachment)(implicit language: Language.Language): Attachment = {
+    val address = Option(attachment.getAddress())
+    Attachment(
+            Option(attachment.getHeader()).flatMap(_.getTranslations().toMap.get(language.toString())),
+            Option(attachment.getDescription()).flatMap(_.getTranslations().toMap.get(language.toString())),
+            address.map(x => Option(x.getRecipient())).flatten,
+            address.map(convertToAddress(_)),
+            Option(attachment.getDeadline()).map(_.getTime())
+          )
+  }
+
+  private def convertToAddress(address: fi.vm.sade.haku.oppija.hakemus.domain.dto.Address): Address = {
+    Address(
+         Option(address.getStreetAddress()),
+         Option(address.getStreetAddress2()),
+         Option(address.getPostalCode()),
+         Option(address.getPostOffice())
+       )
+  }
+
+  private def getKoulutusinformattioService(serverPath: ServerContaxtPath) = {
+    val koulutusInformaatio = new KoulutusinformaatioServiceImpl()
+    koulutusInformaatio.setTargetService(serverPath.path + "/koulutusinformaatio/koulutus")
+    koulutusInformaatio
   }
 
 }

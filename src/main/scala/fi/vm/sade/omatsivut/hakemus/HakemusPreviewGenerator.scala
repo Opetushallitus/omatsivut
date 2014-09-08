@@ -25,23 +25,23 @@ import fi.vm.sade.haku.oppija.lomake.domain.elements.Link
 import fi.vm.sade.haku.oppija.lomake.domain.elements.custom.PostalCode
 import fi.vm.sade.haku.oppija.lomake.domain.elements.Notification
 import fi.vm.sade.omatsivut.domain.Attachment
+import fi.vm.sade.omatsivut.servlet.ServerContaxtPath
 
 case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val language: Language.Language) extends Logging {
   import scala.collection.JavaConversions._
   import scalatags.Text.all._
   private val applicationDao = appConfig.springContext.applicationDAO
   private val applicationSystemService = appConfig.springContext.applicationSystemService
-  private val attachmentInfo = AttachmentConverter()
   val dateFormat = DateTimeFormat.forPattern("dd.M.yyyy")
 
-  def generatePreview(personOid: String, applicationOid: String): Option[String] = {
+  def generatePreview(serverPath: ServerContaxtPath, personOid: String, applicationOid: String): Option[String] = {
     val applicationQuery: Application = new Application().setOid(applicationOid).setPersonOid(personOid)
     applicationDao.find(applicationQuery).toList.headOption.map { application =>
-      applicationPreview(application)
+      applicationPreview(serverPath, application)
     }
   }
 
-  private def applicationPreview(application: Application) = {
+  private def applicationPreview(serverPath: ServerContaxtPath, application: Application) = {
     val applicationSystem = applicationSystemService.getApplicationSystem(application.getApplicationSystemId)
     val answers: FlatAnswers = HakemusConverter.flattenAnswers(ApplicationUpdater.allAnswersFromApplication(application))
     val form = ElementWrapper.wrapFiltered(applicationSystem.getForm, answers)
@@ -95,7 +95,7 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
     }
 
     def attachmentsInfoPreview(): List[TypedTag[String]] = {
-      val aoInfos = attachmentInfo.getDiscretionaryAttachments(application) ::: attachmentInfo.getHigherEdAttachments(application)
+      val aoInfos = AttachmentConverter.getAttachments(serverPath, applicationSystem, application)
 
       if (aoInfos.isEmpty) {
         Nil

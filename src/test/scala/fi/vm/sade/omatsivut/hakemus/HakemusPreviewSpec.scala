@@ -4,16 +4,17 @@ import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.fixtures.TestFixture._
 import fi.vm.sade.omatsivut.fixtures.{FixtureImporter, TestFixture}
 import fi.vm.sade.omatsivut.servlet.ApplicationsServlet
+import fi.vm.sade.omatsivut.servlet.KoulutusServlet
 
 class HakemusPreviewSpec extends HakemusApiSpecification {
   override implicit lazy val appConfig = new AppConfig.IT
 
   sequential
 
-  "GET /applications/preview/:oid" should {
+  "GET /api/applications/preview/:oid" should {
     "generate application preview" in {
       FixtureImporter().applyOverrides("peruskoulu")
-      authGet("/applications/preview/" + TestFixture.hakemus2, personOid) {
+      authGet("/api/applications/preview/" + TestFixture.hakemus2, personOid) {
         response.getContentType() must_== "text/html; charset=UTF-8"
 
         body must contain("""<label>Vastaanotettu</label><span>25.6.2014 15:52</span>""")
@@ -32,27 +33,27 @@ class HakemusPreviewSpec extends HakemusApiSpecification {
         // lupatiedot
         body must contain("""<label>Minulle saa lähettää postia ja sähköpostia vapaista opiskelupaikoista ja muuta koulutusmarkkinointia.</label><span class="answer">Ei</span>""")
         // harkinnanvarainen haku liitepyynnöt
-        body must contain("""<td><div>Kallion lukio</div><div>PL 3805</div><div>00099</div><div>HELSINGIN KAUPUNKI</div></td><td><div>Liitteiden viimeinen palautuspäivä 14.3.2014</div></td>""")
-        body must contain("""<td><div>Salon Lukio</div><div>Kaherinkatu 2</div><div>24130</div><div>SALO</div></td><td><div>Liitteiden viimeinen palautuspäivä 14.3.2014</div></td>""")
+        body must contain("""<td><div>Kallion lukio Lukion ilmaisutaitolinja</div><div>PL 3805</div><div>00099</div><div>HELSINGIN KAUPUNKI</div></td>""")
+        body must contain("""<td><div>Salon Lukio Lukio</div><div>Kaherinkatu 2</div><div>24130</div><div>SALO</div></td>""")
       }
     }
 
     "support higher grade attachements" in {
-      authGet("/applications/preview/" + TestFixture.hakemusWithHigherGradeAttachments, personOid) {
+      authGet("/api/applications/preview/" + TestFixture.hakemusWithHigherGradeAttachments, personOid) {
         println(prettyPrintHtml(body))
-        body must contain("""<td><div>Diakonia-ammattikorkeakoulu, Helsingin toimipiste</div><div>Sturenkatu 2</div><div>00510</div><div>HELSINKI</div></td>""")
+        body must contain("""<div>Sturenkatu 2</div><div>00510</div><div>HELSINKI</div>""")
       }
     }
 
     "support additional questions per preference" in {
-      authGet("/applications/preview/" + TestFixture.hakemusWithAtheleteQuestions, personOid) {
+      authGet("/api/applications/preview/" + TestFixture.hakemusWithAtheleteQuestions, personOid) {
         println(prettyPrintHtml(body))
         body must contain("""<div class="question"><label>Haetko urheilijan ammatilliseen koulutukseen?</label><span class="answer">Kyllä</span></div><div class="question"><label>Haluaisitko suorittaa lukion ja/tai ylioppilastutkinnon samaan aikaan kuin ammatillisen perustutkinnon?</label><span class="answer">Kyllä</span></div>""")
       }
     }
 
     "support grade grid" in {
-      authGet("/applications/preview/" + TestFixture.hakemusWithGradeGridAndDancePreference, personOid) {
+      authGet("/api/applications/preview/" + TestFixture.hakemusWithGradeGridAndDancePreference, personOid) {
         body must contain("""<tr><td id="PK_A1_column1">A1-kieli</td><td id="PK_A1_column2">englanti</td><td id="PK_A1_column3">9</td><td id="PK_A1_column4">Ei arvosanaa</td><td id="PK_A1_column5">Ei arvosanaa</td></tr>""")
         body must contain("""<tr><td id="PK_MA_column1" colspan="2">Matematiikka</td><td id="PK_MA_column3">9</td><td id="PK_MA_column4">Ei arvosanaa</td><td id="PK_MA_column5">Ei arvosanaa</td></tr>""")
       }
@@ -60,14 +61,14 @@ class HakemusPreviewSpec extends HakemusApiSpecification {
 
     "support grade grid from grade 10" in {
       FixtureImporter().applyOverrides("kymppiluokka")
-      authGet("/applications/preview/" + TestFixture.hakemus2, personOid) {
+      authGet("/api/applications/preview/" + TestFixture.hakemus2, personOid) {
         body must contain("""<tr><td id="PK_B1_column1">B1-kieli</td><td id="PK_B1_column2">englanti</td><td id="PK_B1_column3">10(9)</td><td id="PK_B1_column4">Ei arvosanaa</td><td id="PK_B1_column5">Ei arvosanaa</td></tr>""")
         body must contain("""<tr><td id="PK_MA_column1" colspan="2">Matematiikka</td><td id="PK_MA_column3">10(9)</td><td id="PK_MA_column4">Ei arvosanaa</td><td id="PK_MA_column5">Ei arvosanaa</td></tr>""")
       }
     }
 
     "support athlete additional information" in {
-      authGet("/applications/preview/" + TestFixture.hakemusWithAtheleteQuestions, personOid) {
+      authGet("/api/applications/preview/" + TestFixture.hakemusWithAtheleteQuestions, personOid) {
         println(prettyPrintHtml(body))
         body must contain("""Muistathan täyttää myös urheilijan lisätietolomakkeen ja palauttaa sen oppilaitokseen, johon haet.""")
         body must contain("""<a href="http://www.sport.fi/urheiluoppilaitoshaku" target="_blank">http://www.sport.fi/urheiluoppilaitoshaku (pdf-tiedosto, avautuu uuteen välilehteen)</a>""")
@@ -75,7 +76,7 @@ class HakemusPreviewSpec extends HakemusApiSpecification {
     }
 
     "support dance additional information" in {
-      authGet("/applications/preview/" + TestFixture.hakemusWithGradeGridAndDancePreference, personOid) {
+      authGet("/api/applications/preview/" + TestFixture.hakemusWithGradeGridAndDancePreference, personOid) {
         body must contain("""Hait musiikki-, tanssi- tai liikunta-alan koulutukseen. Muista tarkistaa oppilaitoksen nettisivuilta, pitääkö sinun täyttää myös oppilaitoksen oma lisätietolomake.""")
       }
     }
@@ -87,5 +88,6 @@ class HakemusPreviewSpec extends HakemusApiSpecification {
     prettier.format(scala.xml.XML.loadString(content))
   }
 
-  addServlet(new ApplicationsServlet(), "/*")
+  addServlet(new ApplicationsServlet(), "/api")
+  addServlet(new KoulutusServlet(), "/koulutusinformaatio")
 }

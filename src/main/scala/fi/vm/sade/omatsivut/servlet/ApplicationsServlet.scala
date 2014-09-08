@@ -71,7 +71,7 @@ class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfi
   }
 
   get("/applications/preview/:oid") {
-    HakemusPreviewGenerator().generatePreview(personOid(), params("oid")) match {
+    HakemusPreviewGenerator().generatePreview(ServerContaxtPath(request), personOid(), params("oid")) match {
       case Some(previewHtml) =>
         contentType = formats("html")
         Ok(previewHtml)
