@@ -139,10 +139,6 @@ util = {
 }
 
 db = {
-  applyFixture: function(fixtureName) {
-    return Q($.ajax("/omatsivut/util/fixtures/apply?fixturename=" + fixtureName, { type: "PUT" }))
-  },
-
   getApplications: function() {
     return Q($.get("/omatsivut/api/applications"))
   },
@@ -158,6 +154,16 @@ db = {
           }
         }).value()
     })
+  }
+}
+
+fixtures = {
+  applyFixture: function(fixtureName) {
+    return Q($.ajax("/omatsivut/util/fixtures/apply?fixturename=" + fixtureName, { type: "PUT" }))
+  },
+
+  applyValintatulos: function(fixtureName) {
+    return Q($.ajax("/omatsivut/util/fixtures/valintatulos?fixturename=" + fixtureName, { type: "PUT" }))
   }
 }
 

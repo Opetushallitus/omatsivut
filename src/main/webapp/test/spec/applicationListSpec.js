@@ -189,16 +189,24 @@
     })
 
     describe("hakemuksen tila", function() {
-      describe("hakuaika päättynyt", function() {
-        it("hakemusta ei voi muokata", function() {
+      describe("hakuaika päättynyt ja valintatuloksia ei ole julkaistu", function() {
+        before(page.applyValintatulosFixtureAndOpen("ei-tuloksia"))
+        it("hakemusta ei voi muokata", function () {
           hakemusYhteishakuKevat2013WithForeignBaseEducation.preferencesForApplication().length.should.equal(0)
           hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationPeriod().should.equal("Hakuaika on päättynyt. Haun tulokset julkaistaan 11. kesäkuuta 2014.")
           hakemusYhteishakuKevat2013WithForeignBaseEducation.changesSavedTimestamp().should.equal("")
         })
 
-        it.skip("valintatulokset näytetään", function() { // TODO Better fixtures
+        it("valintatuloksia ei näytetä", function() {
+          hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset().length.should.equal(0)
+        })
+      })
+
+      describe("hakuaika päättynyt ja valintatulokset julkaistu", function() {
+        before(page.applyValintatulosFixtureAndOpen("hyvaksytty"))
+        it("valintatulokset näytetään", function() {
           expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].hakukohde).to.equal('Kallion lukio Lukion ilmaisutaitolinja')
-          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].tila).to.equal('HYVAKSYTTY')
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].tila).to.equal('Hyvaksytty')
         })
       })
 

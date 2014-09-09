@@ -3,7 +3,7 @@ function ApplicationListPage() {
 
   function resetDataAndOpen(lang) {
     console.log("resetDataAndOpen(): apply fixtures")
-    return db.applyFixture()
+    return fixtures.applyFixture()
       .then(function() {
         console.log("resetDataAndOpen(): init session")
         return session.init(testHetu, lang)} )
@@ -30,7 +30,13 @@ function ApplicationListPage() {
 
     applyFixtureAndOpen: function(fixtureName) {
       return function() {
-        return db.applyFixture(fixtureName).then(function() { return session.init(testHetu)} ).then(api.openPage())
+        return fixtures.applyFixture(fixtureName).then(function() { return session.init(testHetu)} ).then(api.openPage())
+      }
+    },
+
+    applyValintatulosFixtureAndOpen: function(fixtureName) {
+      return function() {
+        return fixtures.applyValintatulos(fixtureName).then(api.openPage())
       }
     },
 
@@ -139,12 +145,13 @@ function ApplicationListPage() {
 
       valintatulokset: function () {
         var application = getApplicationElement(applicationIndex)
-        return application.find(".hakukohteen-valintatulos")
+
+        return application.find(".result-list li")
           .map(function () {
             var el = $(this)
             return {
-              hakukohde: el.find(".opetuspiste").text() + " " + el.find(".koulutus").text(),
-              tila: el.find(".tila").text()
+              hakukohde: el.find("[ng-bind='tulos.opetuspiste.name']").text() + " " + el.find("[ng-bind='tulos.koulutus.name']").text(),
+              tila: el.find(".item-content").last().text().trim()
             }
           }).toArray()
       },
