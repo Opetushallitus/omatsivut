@@ -1016,7 +1016,11 @@
 
     describe("Liitepyyntölinkki", function() {
       describe("Jos tallennettuun hakemukseen liittyy lisätietopyyntöjä", function() {
-        before(replacePreference(hakemusKorkeakoulu, 1, "Diakonia-ammattikorkeakoulu, Järvenpää"), hakemusKorkeakoulu.saveWaitSuccess)
+        before(
+            replacePreference(hakemusKorkeakoulu, 1, "Diakonia-ammattikorkeakoulu, Järvenpää"),
+            (function() { hakemusKorkeakoulu.questionsForApplication().enterAnswer(2, "Vastaus") } ),
+            hakemusKorkeakoulu.saveWaitSuccess
+        )
         it("liitepyyntö näytetään", function() {
           hakemusKorkeakoulu.calloutText().should.equal("Muista lähettää hakemuksen liitteet.")
         })
