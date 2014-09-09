@@ -48,7 +48,7 @@ object AttachmentConverter {
     hasApplicationOptionAttachmentRequests(applicationSystem, application)
   }
 
-  private def hasApplicationOptionAttachmentRequests(applicationSystem: ApplicationSystem, application: Application): Boolean = {
+  def hasApplicationOptionAttachmentRequests(applicationSystem: ApplicationSystem, application: Application): Boolean = {
     if(applicationSystem.getApplicationOptionAttachmentRequests() == null) {
       false;
     }

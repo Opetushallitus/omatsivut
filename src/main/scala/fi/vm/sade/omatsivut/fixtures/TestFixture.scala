@@ -23,7 +23,8 @@ object TestFixture {
   val hakemusWithHigherGradeAttachments = "1.2.246.562.11.00000877699"
   val hakemusWithApplicationOptionAttachments = "1.2.246.562.11.00000877686"
   val inactiveHakemus = "1.2.246.562.11.00000441369"
-  val applicationSystemOid = "1.2.246.562.5.2014022711042555034240"
+  val applicationSystemNivelKesa2013Oid = "1.2.246.562.5.2014022711042555034240"
+  val applicationSystemKorkeakouluSyksy2014Oid = "1.2.246.562.29.173465377510"
   val testHetu =  "010101-123N"
   val personOid =   "1.2.246.562.24.14229104472"
   val testHetuWithNoApplications = "300794-937F"
@@ -33,8 +34,16 @@ object TestFixture {
 
   lazy val (applicationSystemNivelKesa2013, applicationNivelKesa2013WithPeruskouluBaseEducationApp) = {
     (new AppConfig.IT).withConfig { appConfig =>
-      val as = appConfig.springContext.applicationSystemService.getApplicationSystem(applicationSystemOid)
+      val as = appConfig.springContext.applicationSystemService.getApplicationSystem(applicationSystemNivelKesa2013Oid)
       val app = appConfig.springContext.applicationDAO.find(new Application().setOid(hakemusNivelKesa2013WithPeruskouluBaseEducationId)).toList.head
+      (as, app)
+    }
+  }
+
+  lazy val (applicationSystemKorkeakouluSyksy2014, applicationWithApplicationOptionAttachments) = {
+    (new AppConfig.IT).withConfig { appConfig =>
+      val as = appConfig.springContext.applicationSystemService.getApplicationSystem(applicationSystemKorkeakouluSyksy2014Oid)
+      val app = appConfig.springContext.applicationDAO.find(new Application().setOid(hakemusWithApplicationOptionAttachments)).toList.head
       (as, app)
     }
   }
