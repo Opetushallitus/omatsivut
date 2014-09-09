@@ -31,7 +31,7 @@ object TestFixture {
                     (testHetuWithNoApplications, "1.2.246.562.24.79213463339"))
   implicit val appConfig = new AppConfig.IT
 
-  lazy val (as,applicationNivelKesa2013WithPeruskouluBaseEducationApp) = {
+  lazy val (applicationSystemNivelKesa2013, applicationNivelKesa2013WithPeruskouluBaseEducationApp) = {
     (new AppConfig.IT).withConfig { appConfig =>
       val as = appConfig.springContext.applicationSystemService.getApplicationSystem(applicationSystemOid)
       val app = appConfig.springContext.applicationDAO.find(new Application().setOid(hakemusNivelKesa2013WithPeruskouluBaseEducationId)).toList.head
@@ -39,10 +39,9 @@ object TestFixture {
     }
   }
 
-  def applicationSystem: ApplicationSystem = as
-  def haku(implicit lang: Language.Language) = HakuConverter.convertToHaku(applicationSystem)
+  def haku(implicit lang: Language.Language) = HakuConverter.convertToHaku(applicationSystemNivelKesa2013)
   def hakemusMuutos(implicit lang: Language.Language) = {
-    HakemusConverter.convertToHakemus(applicationSystem, haku, applicationNivelKesa2013WithPeruskouluBaseEducationApp).toHakemusMuutos
+    HakemusConverter.convertToHakemus(applicationSystemNivelKesa2013, haku, applicationNivelKesa2013WithPeruskouluBaseEducationApp).toHakemusMuutos
   }
 
   val ammattistartti: Hakutoive = JsonFixtureMaps.findByKey[Hakutoive]("/mockdata/hakutoiveet.json", "1.2.246.562.14.2014030415375012208392").get
