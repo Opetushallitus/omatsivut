@@ -24,10 +24,11 @@ object HakemusConverter {
 
   def convertToHakemus(applicationSystem: ApplicationSystem, haku: Haku, application: Application)(implicit appConfig: AppConfig) = {
     val koulutusTaustaAnswers: util.Map[String, String] = application.getAnswers.get(educationPhaseKey)
+    val receivedTime =  application.getReceived.getTime
     Hakemus(
       application.getOid,
-      application.getReceived.getTime,
-      application.getUpdated.getTime,
+      receivedTime,
+      Option(application.getUpdated).map(_.getTime).getOrElse(receivedTime),
       tila(applicationSystem, haku, application),
       convertHakuToiveet(application),
       haku,
