@@ -22,7 +22,18 @@
     "chooseLocation": "Valitse ensin opetuspiste",
     "resultsPublishedDate": "Haun tulokset julkaistaan",
     "questionGroupWithTitle": "Lisäkysymykset",
-    "questionGroupWithoutTitle": "Muut lisäkysymykset"
+    "questionGroupWithoutTitle": "Muut lisäkysymykset",
+
+    "resultState": {
+      "Hyvaksytty": "Hyväksytty",
+      "Kesken": "Kesken",
+      "Harkinnanvaraisesti_hyvaksytty": "Hyväksytty",
+      "Varalla": "Varalla",
+      "Peruutettu": "Peruutettu",
+      "Perunut": "Perunut",
+      "Hylatty": "Hylätty",
+      "Peruuntunut": "Peruuntunut"
+    }
   },
 
   "button": {

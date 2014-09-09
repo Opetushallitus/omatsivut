@@ -32,6 +32,10 @@ module.exports = function(listApp) {
         return localization("label.applicationUpdated")
     }
 
+    $scope.formatValintatulos = function(valintatulos) {
+      return localization("label.resultState." + valintatulos.tila)
+    }
+
     $scope.$watch("application.getHakutoiveWatchCollection()", function(hakutoiveet, oldHakutoiveet) {
       // Skip initial values angular style
       if (!_.isEqual(hakutoiveet, oldHakutoiveet)) {

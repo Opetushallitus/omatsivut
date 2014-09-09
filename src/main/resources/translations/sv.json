@@ -22,7 +22,18 @@
     "chooseLocation": "Välj först undervisnigsställe",
     "resultsPublishedDate": "Resultatet av antagningen publiceras",
     "questionGroupWithTitle": "Tillägsfrågor",
-    "questionGroupWithoutTitle": "Andra tillägsfrågor"
+    "questionGroupWithoutTitle": "Andra tillägsfrågor",
+
+    "resultState": {
+      "Hyvaksytty": "Hyväksytty",
+      "Kesken": "Kesken",
+      "Harkinnanvaraisesti_hyvaksytty": "Hyväksytty",
+      "Varalla": "Varalla",
+      "Peruutettu": "Peruutettu",
+      "Perunut": "Perunut",
+      "Hylatty": "Hylätty",
+      "Peruuntunut": "Peruuntunut"
+    }
   },
 
   "button": {

@@ -13,6 +13,103 @@
           "vastaanotettavuustila": "EI_VASTAANOTETTAVISSA",
           "jonosija": 1,
           "varasijanumero": null
+        },
+        {
+          "hakukohdeOid": "1.2.246.562.5.72607738902",
+          "tarjoajaOid": "1.2.246.562.10.591352080610",
+          "valintatila": "KESKEN",
+          "vastaanottotila": "ILMOITETTU",
+          "ilmoittautumistila": null,
+          "jonosija": 1,
+          "varasijanumero": null
+        }
+      ]
+    }
+  ],
+
+  "kaikki-tilat": [
+    {
+      "hakemusOid": "1.2.246.562.11.00000441369",
+      "hakutoiveet": [
+        {
+          "hakukohdeOid": "1.2.246.562.5.72607738902",
+          "tarjoajaOid": "1.2.246.562.10.591352080610",
+          "valintatila": "KESKEN",
+          "vastaanottotila": "ILMOITETTU",
+          "ilmoittautumistila": null,
+          "jonosija": 1,
+          "varasijanumero": null
+        },
+        {
+          "hakukohdeOid": "1.2.246.562.5.72607738902",
+          "tarjoajaOid": "1.2.246.562.10.591352080610",
+          "valintatila": "VARALLA",
+          "vastaanottotila": "ILMOITETTU",
+          "ilmoittautumistila": null,
+          "jonosija": 1,
+          "varasijanumero": null
+        },
+        {
+          "hakukohdeOid": "1.2.246.562.5.72607738902",
+          "tarjoajaOid": "1.2.246.562.10.591352080610",
+          "valintatila": "PERUUTETTU",
+          "vastaanottotila": "ILMOITETTU",
+          "ilmoittautumistila": null,
+          "jonosija": 1,
+          "varasijanumero": null
+        },
+        {
+          "hakukohdeOid": "1.2.246.562.5.72607738902",
+          "tarjoajaOid": "1.2.246.562.10.591352080610",
+          "valintatila": "PERUNUT",
+          "vastaanottotila": "ILMOITETTU",
+          "ilmoittautumistila": null,
+          "jonosija": 1,
+          "varasijanumero": null
+        },
+        {
+          "hakukohdeOid": "1.2.246.562.5.72607738902",
+          "tarjoajaOid": "1.2.246.562.10.591352080610",
+          "valintatila": "HYLATTY",
+          "vastaanottotila": "ILMOITETTU",
+          "ilmoittautumistila": null,
+          "jonosija": 1,
+          "varasijanumero": null
+        },
+        {
+          "hakukohdeOid": "1.2.246.562.5.72607738902",
+          "tarjoajaOid": "1.2.246.562.10.591352080610",
+          "valintatila": "PERUUNTUNUT",
+          "vastaanottotila": "ILMOITETTU",
+          "ilmoittautumistila": null,
+          "jonosija": 1,
+          "varasijanumero": null
+        },
+        {
+          "hakukohdeOid": "1.2.246.562.5.72607738902",
+          "tarjoajaOid": "1.2.246.562.10.591352080610",
+          "valintatila": "HARKINNANVARAISESTI_HYVAKSYTTY",
+          "vastaanottotila": "ILMOITETTU",
+          "ilmoittautumistila": null,
+          "jonosija": 1,
+          "varasijanumero": null
+        }
+      ]
+    }
+   ],
+
+  "kesken": [
+    {
+      "hakemusOid": "1.2.246.562.11.00000441369",
+      "hakutoiveet": [
+        {
+          "hakukohdeOid": "1.2.246.562.5.72607738902",
+          "tarjoajaOid": "1.2.246.562.10.591352080610",
+          "valintatila": "KESKEN",
+          "vastaanottotila": "ILMOITETTU",
+          "ilmoittautumistila": null,
+          "jonosija": 1,
+          "varasijanumero": null
         }
       ]
     }

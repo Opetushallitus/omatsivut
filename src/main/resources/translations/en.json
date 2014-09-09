@@ -22,7 +22,18 @@
     "chooseLocation": "First choose location",
     "resultsPublishedDate": "Results will be published",
     "questionGroupWithTitle": "Additional questions",
-    "questionGroupWithoutTitle": "Other additional questions"
+    "questionGroupWithoutTitle": "Other additional questions",
+
+    "resultState": {
+      "Hyvaksytty": "Hyväksytty",
+      "Kesken": "Kesken",
+      "Harkinnanvaraisesti_hyvaksytty": "Hyväksytty",
+      "Varalla": "Varalla",
+      "Peruutettu": "Peruutettu",
+      "Perunut": "Perunut",
+      "Hylatty": "Hylätty",
+      "Peruuntunut": "Peruuntunut"
+    }
   },
 
   "button": {
