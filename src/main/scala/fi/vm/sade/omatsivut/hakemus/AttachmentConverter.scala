@@ -15,6 +15,7 @@ import fi.vm.sade.haku.oppija.hakemus.domain.dto.ApplicationAttachment
 import fi.vm.sade.omatsivut.domain.Attachment
 import fi.vm.sade.omatsivut.domain.Address
 import fi.vm.sade.omatsivut.servlet.ServerContaxtPath
+import fi.vm.sade.omatsivut.haku.ElementWrapper
 
 object AttachmentConverter {
 
@@ -33,6 +34,25 @@ object AttachmentConverter {
             address.map(convertToAddress(_)),
             Option(attachment.getDeadline()).map(_.getTime())
           )
+  }
+
+  def requiresAdditionalInfo(applicationSystem: ApplicationSystem, application: Application): Boolean = {
+    !ApplicationUtil.getDiscretionaryAttachmentAOIds(application).isEmpty() ||
+    !ApplicationUtil.getHigherEdAttachmentAOIds(application).isEmpty() ||
+    !ApplicationUtil.getApplicationOptionAttachmentAOIds(application).isEmpty() ||
+    !(for(addInfo <- applicationSystem.getAdditionalInformationElements())
+      yield ElementWrapper.wrapFiltered(addInfo, application.getVastauksetMerged().toMap)
+    ).filterNot(_.children.isEmpty).isEmpty ||
+    hasApplicationOptionAttachmentRequests(applicationSystem, application)
+  }
+
+  private def hasApplicationOptionAttachmentRequests(applicationSystem: ApplicationSystem, application: Application): Boolean = {
+    if(applicationSystem.getApplicationOptionAttachmentRequests() == null) {
+      false;
+    }
+    else {
+      !applicationSystem.getApplicationOptionAttachmentRequests().filter(_.include(application.getVastauksetMerged())).isEmpty
+    }
   }
 
   private def convertToAddress(address: fi.vm.sade.haku.oppija.hakemus.domain.dto.Address): Address = {

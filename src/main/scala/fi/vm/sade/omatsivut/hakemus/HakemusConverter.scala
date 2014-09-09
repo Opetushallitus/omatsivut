@@ -33,7 +33,7 @@ object HakemusConverter {
       haku,
       EducationBackground(koulutusTaustaAnswers.get(baseEducationKey), !Try {koulutusTaustaAnswers.get("ammatillinenTutkintoSuoritettu").toBoolean}.getOrElse(false)),
       application.clone().getAnswers.toMap.mapValues { phaseAnswers => phaseAnswers.toMap },
-      requiresAdditionalInfo(applicationSystem, application)
+      AttachmentConverter.requiresAdditionalInfo(applicationSystem, application)
     )
   }
 
@@ -80,25 +80,6 @@ object HakemusConverter {
           hakutoiveenTulos.varasijaNumero
         )
       })
-    }
-  }
-
-  private def requiresAdditionalInfo(applicationSystem: ApplicationSystem, application: Application): Boolean = {
-    !ApplicationUtil.getDiscretionaryAttachmentAOIds(application).isEmpty() ||
-    !ApplicationUtil.getHigherEdAttachmentAOIds(application).isEmpty() ||
-    !ApplicationUtil.getApplicationOptionAttachmentAOIds(application).isEmpty() ||
-    !(for(addInfo <- applicationSystem.getAdditionalInformationElements())
-      yield ElementWrapper.wrapFiltered(addInfo, flattenAnswers(application.getAnswers().toMap.mapValues(_.toMap)))
-    ).filterNot(_.children.isEmpty).isEmpty ||
-    hasApplicationOptionAttachmentRequests(applicationSystem, application)
-  }
-
-  private def hasApplicationOptionAttachmentRequests(applicationSystem: ApplicationSystem, application: Application): Boolean = {
-    if(applicationSystem.getApplicationOptionAttachmentRequests() == null) {
-      false;
-    }
-    else {
-      !applicationSystem.getApplicationOptionAttachmentRequests().filter(_.include(application.getVastauksetMerged())).isEmpty
     }
   }
 
