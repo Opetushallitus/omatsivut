@@ -16,6 +16,8 @@ import fi.vm.sade.omatsivut.domain.Attachment
 import fi.vm.sade.omatsivut.domain.Address
 import fi.vm.sade.omatsivut.servlet.ServerContaxtPath
 import fi.vm.sade.omatsivut.haku.ElementWrapper
+import fi.vm.sade.omatsivut.servlet.KoulutusServlet
+import fi.vm.sade.omatsivut.config.ScalatraPaths
 
 object AttachmentConverter {
 
@@ -66,7 +68,7 @@ object AttachmentConverter {
 
   private def getKoulutusinformaatioService(serverPath: ServerContaxtPath) = {
     val koulutusInformaatio = new KoulutusinformaatioServiceImpl()
-    koulutusInformaatio.setTargetService(serverPath.path + "/koulutusinformaatio/koulutus")
+    koulutusInformaatio.setTargetService(serverPath.path + ScalatraPaths.koulutusinformaatio + "/koulutus")
     koulutusInformaatio
   }
 
