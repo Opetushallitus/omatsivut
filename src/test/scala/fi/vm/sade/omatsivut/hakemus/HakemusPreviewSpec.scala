@@ -38,10 +38,18 @@ class HakemusPreviewSpec extends HakemusApiSpecification {
       }
     }
 
-    "support higher grade attachements" in {
+    "support higher grade attachments" in {
       authGet("/api/applications/preview/" + TestFixture.hakemusWithHigherGradeAttachments, personOid) {
         println(prettyPrintHtml(body))
         body must contain("""<div>Sturenkatu 2</div><div>00510</div><div>HELSINKI</div>""")
+      }
+    }
+
+    "support application option spesific attachments" in {
+      authGet("/api/applications/preview/" + TestFixture.hakemusWithApplicationOptionAttachments, personOid) {
+        println(prettyPrintHtml(body))
+        body must contain("""<td><p>Kirjattu todistus</p></td><td><div>Juksutie 11</div><div>00100</div><div>HELSINKI</div></td><td><div>07.09.2014 23:59</div>""")
+        body must contain("""<p>Maol-voitto</p><p>Lähetä kopio todistuksestasi.</p></td><td><div>Hyn osoite</div><div>00100</div><div>HELSINKI</div></td><td><div>15.08.2014 15:00</div>""")
       }
     }
 
