@@ -4,7 +4,7 @@
   },
 
   "sidebar": {
-    "opintopolku": "Studyinfo",
+    "opintopolku": "My Studyinfo",
     "applications": "My applications"
   },
 
@@ -22,7 +22,7 @@
     "chooseLocation": "First choose location",
     "resultsPublishedDate": "Results will be published",
     "questionGroupWithTitle": "Additional questions",
-    "questionGroupWithoutTitle": "Additional questions"
+    "questionGroupWithoutTitle": "Other additional questions"
   },
 
   "button": {
@@ -44,7 +44,7 @@
     "yes": "Yes",
     "no": "No",
     "rememberSendAttachments": "Remember to send the <a>attachments</a>.",
-    "applicationIsInPostProcessing": "We are processing your application. If you want to make any changes, please try again later."
+    "applicationIsInPostProcessing": "Your application is being processed. If you want to make any changes, please try again later."
   },
 
   "error": {
