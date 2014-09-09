@@ -7,12 +7,18 @@ module.exports = function(listApp, resources) {
       }, obj)
     }
 
-    return function(key) {
+    function replaceVars(value, vars) {
+      return _.reduce(vars, function(memo, val, key) {
+        return memo.replace("__" + key + "__", val)
+      }, value)
+    }
+
+    return function(key, vars) {
       var val = getValue(resources.translations, key)
       if (!val)
         throw new Error("no translation for " + key)
       else
-        return val
+        return replaceVars(val, vars || {})
     }
   }])
 }

@@ -33,7 +33,7 @@ module.exports = function(listApp) {
     }
 
     $scope.formatValintatulos = function(valintatulos) {
-      return localization("label.resultState." + valintatulos.tila)
+      return localization("label.resultState." + valintatulos.tila, {varasija: valintatulos.varasijanumero})
     }
 
     $scope.$watch("application.getHakutoiveWatchCollection()", function(hakutoiveet, oldHakutoiveet) {

@@ -207,7 +207,7 @@
         it("valintatulokset näytetään", function() {
           expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].hakukohde).to.equal('Kallion lukio Lukion ilmaisutaitolinja')
           expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].tila).to.equal('Kesken')
-          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[1].tila).to.equal('Varalla')
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[1].tila).to.equal('2. varasijalla')
           expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[2].tila).to.equal('Peruutettu')
           expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[3].tila).to.equal('Perunut')
           expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[4].tila).to.equal('Hylätty')

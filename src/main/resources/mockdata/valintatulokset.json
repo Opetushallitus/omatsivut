@@ -20,6 +20,7 @@
           "valintatila": "KESKEN",
           "vastaanottotila": "ILMOITETTU",
           "ilmoittautumistila": null,
+          "vastaanotettavuustila": "EI_VASTAANOTETTAVISSA",
           "jonosija": 1,
           "varasijanumero": null
         }
@@ -37,6 +38,7 @@
           "valintatila": "KESKEN",
           "vastaanottotila": "ILMOITETTU",
           "ilmoittautumistila": null,
+          "vastaanotettavuustila": "EI_VASTAANOTETTAVISSA",
           "jonosija": 1,
           "varasijanumero": null
         },
@@ -46,8 +48,9 @@
           "valintatila": "VARALLA",
           "vastaanottotila": "ILMOITETTU",
           "ilmoittautumistila": null,
+          "vastaanotettavuustila": "EI_VASTAANOTETTAVISSA",
           "jonosija": 1,
-          "varasijanumero": null
+          "varasijanumero": 2
         },
         {
           "hakukohdeOid": "1.2.246.562.5.72607738902",
@@ -55,6 +58,7 @@
           "valintatila": "PERUUTETTU",
           "vastaanottotila": "ILMOITETTU",
           "ilmoittautumistila": null,
+          "vastaanotettavuustila": "EI_VASTAANOTETTAVISSA",
           "jonosija": 1,
           "varasijanumero": null
         },
@@ -64,6 +68,7 @@
           "valintatila": "PERUNUT",
           "vastaanottotila": "ILMOITETTU",
           "ilmoittautumistila": null,
+          "vastaanotettavuustila": "EI_VASTAANOTETTAVISSA",
           "jonosija": 1,
           "varasijanumero": null
         },
@@ -73,6 +78,7 @@
           "valintatila": "HYLATTY",
           "vastaanottotila": "ILMOITETTU",
           "ilmoittautumistila": null,
+          "vastaanotettavuustila": "EI_VASTAANOTETTAVISSA",
           "jonosija": 1,
           "varasijanumero": null
         },
@@ -82,6 +88,7 @@
           "valintatila": "PERUUNTUNUT",
           "vastaanottotila": "ILMOITETTU",
           "ilmoittautumistila": null,
+          "vastaanotettavuustila": "EI_VASTAANOTETTAVISSA",
           "jonosija": 1,
           "varasijanumero": null
         },
@@ -91,6 +98,7 @@
           "valintatila": "HARKINNANVARAISESTI_HYVAKSYTTY",
           "vastaanottotila": "ILMOITETTU",
           "ilmoittautumistila": null,
+          "vastaanotettavuustila": "EI_VASTAANOTETTAVISSA",
           "jonosija": 1,
           "varasijanumero": null
         }
@@ -108,6 +116,7 @@
           "valintatila": "KESKEN",
           "vastaanottotila": "ILMOITETTU",
           "ilmoittautumistila": null,
+          "vastaanotettavuustila": "EI_VASTAANOTETTAVISSA",
           "jonosija": 1,
           "varasijanumero": null
         }
