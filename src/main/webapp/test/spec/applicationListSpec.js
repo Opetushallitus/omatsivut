@@ -695,6 +695,36 @@
       })
     })
 
+    describe("Kun hakijalla on koulutus, joka edellyttää ryhmäkohtaisiinkysymyksiin vastausta", function() {
+      before(
+        page.resetDataAndOpen,
+        replacePreference(hakemusKorkeakoulu, 1, "Diakonia-ammattikorkeakoulu, Järvenpää")
+      )
+
+      function answerAoQuestions() {
+        return wait.until(function() { return hakemusKorkeakoulu.questionsForApplication().count() >= 2})()
+          .then(function() { hakemusKorkeakoulu.questionsForApplication().enterAnswer(0, "8,78") })
+          .then(function() { hakemusKorkeakoulu.questionsForApplication().enterAnswer(2, "Ryhmä") })
+          .then(hakemusKorkeakoulu.saveWaitSuccess)
+      }
+
+      it("kysymykset näytetään", function() {
+        var questionTitles = hakemusKorkeakoulu.questionsForApplication().titles()
+        expect(questionTitles).to.deep.equal([
+          'Lukion päättötodistuksen keskiarvo',
+          'Amk-osoiteryhmä',
+          'Testikysymys II'
+          ])
+      })
+
+      describe("Vastaaminen kun haetaan ryhmäkohtaiseen kohteeseen", function() {
+        before(answerAoQuestions)
+
+        it("onnistuu", function() {
+        })
+      })
+    })
+
     describe("Lisäkysymykset", function() {
       describe("Kysymysten suodatus koulutuksen kielen perusteella", function() {
         before(
