@@ -2,9 +2,10 @@ package fi.vm.sade.omatsivut.servlet.testing
 
 import fi.vm.sade.omatsivut.config.AppConfig
 import AppConfig.AppConfig
-import fi.vm.sade.omatsivut.fixtures.FixtureImporter
+import fi.vm.sade.omatsivut.fixtures.{ValintatulosFixtureImporter, FixtureImporter}
 import fi.vm.sade.omatsivut.security.{AuthenticationCipher, ShibbolethCookie}
 import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
+import fi.vm.sade.omatsivut.valintatulokset.MockValintatulosService
 import org.scalatra.{Cookie, CookieOptions}
 
 class TestHelperServlet(implicit val appConfig: AppConfig) extends OmatSivutServletBase  {
@@ -23,6 +24,13 @@ class TestHelperServlet(implicit val appConfig: AppConfig) extends OmatSivutServ
     put("/fixtures/apply") {
       val fixtureName: String = params("fixturename")
       FixtureImporter().applyFixtures(fixtureName)
+    }
+  }
+
+  if(appConfig.componentRegistry.valintatulosService.isInstanceOf[MockValintatulosService]) {
+    put("/fixtures/valintatulos") {
+      val fixtureName: String = params("fixturename")
+      ValintatulosFixtureImporter().applyFixtures(fixtureName)
     }
   }
 

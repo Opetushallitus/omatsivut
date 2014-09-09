@@ -8,7 +8,7 @@ import fi.vm.sade.omatsivut.haku.{HakuRepository, HakuRepositoryComponent}
 import fi.vm.sade.omatsivut.koulutusinformaatio.{KoulutusInformaatioComponent, KoulutusInformaatioService}
 import fi.vm.sade.omatsivut.ohjausparametrit.{OhjausparametritComponent, OhjausparametritService}
 import fi.vm.sade.omatsivut.security.{AuthenticationInfoComponent, AuthenticationInfoService}
-import fi.vm.sade.omatsivut.valintatulokset.{ValintatulosService, ValintatulosServiceComponent}
+import fi.vm.sade.omatsivut.valintatulokset._
 
 protected class ComponentRegistry(implicit val config: AppConfig)
   extends KoulutusInformaatioComponent with
