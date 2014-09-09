@@ -17,21 +17,14 @@ class NoOpValintatulosService extends ValintatulosService {
 }
 
 class MockValintatulosService() extends ValintatulosService with JsonFormats {
-  import org.json4s.jackson.JsonMethods._
-  var tulos:Option[Valintatulos] = None
+  var valintatulokset: List[Valintatulos] = Nil
 
-  def setMockJson(json: String) = {
-    if (json.length == 0)
-      tulos = None
-    else
-      tulos = Some(parse(json).extract[Valintatulos])
+  def useFixture(fixture: List[Valintatulos]) = {
+    valintatulokset = fixture
   }
 
   override def getValintatulos(hakemusOid: String, hakuOid: String) = {
-    tulos match {
-      case Some(valintatulos) if valintatulos.hakemusOid == hakemusOid => tulos
-      case _ => None
-    }
+    valintatulokset.find(_.hakemusOid == hakemusOid)
   }
 }
 
