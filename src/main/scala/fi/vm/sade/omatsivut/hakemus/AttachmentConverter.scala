@@ -19,7 +19,7 @@ import fi.vm.sade.omatsivut.servlet.ServerContaxtPath
 object AttachmentConverter {
 
   def getAttachments(serverPath: ServerContaxtPath, appSystem: ApplicationSystem, application: Application)(implicit language: Language.Language): List[Attachment] = {
-    val attachmentInfo = AttachmentUtil.resolveAttachments(appSystem, application, getKoulutusinformattioService(serverPath), language.toString())
+    val attachmentInfo = AttachmentUtil.resolveAttachments(appSystem, application, getKoulutusinformaatioService(serverPath), language.toString())
     attachmentInfo.toList.map(convertToAttachment(_))
   }
 
@@ -44,7 +44,7 @@ object AttachmentConverter {
        )
   }
 
-  private def getKoulutusinformattioService(serverPath: ServerContaxtPath) = {
+  private def getKoulutusinformaatioService(serverPath: ServerContaxtPath) = {
     val koulutusInformaatio = new KoulutusinformaatioServiceImpl()
     koulutusInformaatio.setTargetService(serverPath.path + "/koulutusinformaatio/koulutus")
     koulutusInformaatio
