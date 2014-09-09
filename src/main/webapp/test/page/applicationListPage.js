@@ -382,6 +382,12 @@ function ApplicationListPage() {
       isMovable: function() {
         return this.arrowDown().isEnabled() && this.arrowUp().isEnabled()
       },
+      isLoadingHakukohde: function() {
+        return el().find(".ajax-spinner-small").is(":visible") && el().find(".koulutus select").is(":not(:visible)")
+      },
+      hakukohdeItems: function() {
+        return el().find(".koulutus option").map(function() { return $(this).text() }).toArray()
+      },
       errorMessage: function() {
         return el().find(".error").text()
       },
@@ -400,12 +406,14 @@ function ApplicationListPage() {
           return wait.forAngular()
         }
       },
-      selectOpetusPiste: function (query) {
+      selectOpetusPiste: function (query, waitForResult) {
+        waitForResult = waitForResult == null ? true : waitForResult
+
         return function() {
           return api.searchOpetusPiste(query)().then(function () {
             opetusPisteListView().find("li:contains('" + query + "')").eq(0).find("a").click()
           }).then(wait.until(function() {
-            return _(el().find(".koulutus select option")).any(function(el) { return $(el).text().length > 0 })
+            return !waitForResult || _(el().find(".koulutus select option")).any(function(el) { return $(el).text().length > 0 })
           })).then(wait.forAngular)
         }
       },
