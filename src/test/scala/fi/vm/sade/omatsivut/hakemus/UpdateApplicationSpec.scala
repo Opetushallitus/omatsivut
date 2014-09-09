@@ -15,13 +15,13 @@ class UpdateApplicationSpec extends HakemusApiSpecification {
 
   "PUT /application/:oid" should {
     "reject application with empty hakutoiveet" in {
-      modifyHakemus(hakemus1) { hakemus => hakemus.copy(hakutoiveet = Nil) } { _ =>
+      modifyHakemus(hakemusNivelKesa2013WithPeruskouluBaseEducationId) { hakemus => hakemus.copy(hakutoiveet = Nil) } { _ =>
         status must_== 400
       }
     }
 
     "accept valid application" in {
-      modifyHakemus (hakemus1){ hakemus => hakemus} { hakemus =>
+      modifyHakemus (hakemusNivelKesa2013WithPeruskouluBaseEducationId){ hakemus => hakemus} { hakemus =>
         val result: JValue = JsonMethods.parse(body)
         status must_== 200
         hasSameHakuToiveet(hakemus, result.extract[Hakemus]) must_== true
@@ -29,7 +29,7 @@ class UpdateApplicationSpec extends HakemusApiSpecification {
     }
 
     "save application" in {
-      modifyHakemus(hakemus1)(answerExtraQuestion(preferencesPhaseKey, "539158b8e4b0b56e67d2c74b", "yes sir")) { newHakemus =>
+      modifyHakemus(hakemusNivelKesa2013WithPeruskouluBaseEducationId)(answerExtraQuestion(preferencesPhaseKey, "539158b8e4b0b56e67d2c74b", "yes sir")) { newHakemus =>
         status must_== 200
         val result: JValue = JsonMethods.parse(body)
         hasSameHakuToiveet(newHakemus, result.extract[Hakemus]) must_== true
@@ -42,9 +42,9 @@ class UpdateApplicationSpec extends HakemusApiSpecification {
     }
 
     "prune answers to removed questions" in {
-      modifyHakemus(hakemus1)(answerExtraQuestion(preferencesPhaseKey, "539158b8e4b0b56e67d2c74b", "yes sir")) { _ =>
+      modifyHakemus(hakemusNivelKesa2013WithPeruskouluBaseEducationId)(answerExtraQuestion(preferencesPhaseKey, "539158b8e4b0b56e67d2c74b", "yes sir")) { _ =>
         status must_== 200
-        modifyHakemus(hakemus1)(removeHakutoive) { hakemus =>
+        modifyHakemus(hakemusNivelKesa2013WithPeruskouluBaseEducationId)(removeHakutoive) { hakemus =>
           status must_== 200
           withSavedApplication(hakemus) { application =>
             application.getPhaseAnswers(preferencesPhaseKey).containsKey("539158b8e4b0b56e67d2c74b") must_== false
@@ -54,7 +54,7 @@ class UpdateApplicationSpec extends HakemusApiSpecification {
     }
 
     "reject answers to unknown questions" in {
-      modifyHakemus(hakemus1)(answerExtraQuestion(preferencesPhaseKey, "unknown", "hacking")) { hakemus =>
+      modifyHakemus(hakemusNivelKesa2013WithPeruskouluBaseEducationId)(answerExtraQuestion(preferencesPhaseKey, "unknown", "hacking")) { hakemus =>
         status must_== 400
       }
     }
@@ -67,14 +67,14 @@ class UpdateApplicationSpec extends HakemusApiSpecification {
 
     "reject update of application that is not ACTIVE or INCOMPLETE" in {
       setupFixture("submittedApplication")
-      modifyHakemus(hakemus2)((hakemus) => hakemus) { hakemus =>
+      modifyHakemus(hakemusYhteishakuKevat2014WithForeignBaseEducationId)((hakemus) => hakemus) { hakemus =>
         status must_== 403
       }
     }
 
     "reject update of application that is in post processing" in {
       setupFixture("postProcessingFailed")
-      modifyHakemus(hakemus2)((hakemus) => hakemus) { hakemus =>
+      modifyHakemus(hakemusYhteishakuKevat2014WithForeignBaseEducationId)((hakemus) => hakemus) { hakemus =>
         status must_== 403
       }
     }

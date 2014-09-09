@@ -16,7 +16,7 @@ class ValidateApplicationSpec extends HakemusApiSpecification {
 
   "POST /application/validate" should {
     "validate application" in {
-      withHakemus(TestFixture.hakemus1) { hakemus =>
+      withHakemus(hakemusNivelKesa2013WithPeruskouluBaseEducationId) { hakemus =>
         validate(hakemus) { (errors, structuredQuestions, _) =>
           errors must_== List()
           structuredQuestions must_== List()
@@ -27,7 +27,7 @@ class ValidateApplicationSpec extends HakemusApiSpecification {
     "validate application with extra answers" in {
       val extraQuestionOne: (Hakemus) => Hakemus = answerExtraQuestion(skillsetPhaseKey, "osaaminen-tuntematon-kysymys", "osaaminen-testivastaus")
       val extraQuestionTwo: (Hakemus) => Hakemus = answerExtraQuestion(preferencesPhaseKey, "hakutoive-tuntematon-kysymys", "osaaminen-testivastaus")
-      modifyHakemus(hakemus1)(extraQuestionOne andThen extraQuestionTwo) { newHakemus =>
+      modifyHakemus(hakemusNivelKesa2013WithPeruskouluBaseEducationId)(extraQuestionOne andThen extraQuestionTwo) { newHakemus =>
         validate(newHakemus) { (errors, structuredQuestions, _) =>
           errors must_== List()
           structuredQuestions must_== List()
@@ -60,7 +60,7 @@ class ValidateApplicationSpec extends HakemusApiSpecification {
     }
 
     "return application period of application system if application type is not 'LISÄHAKU'" in {
-      withHakemus(TestFixture.hakemus2) { hakemus =>
+      withHakemus(hakemusYhteishakuKevat2014WithForeignBaseEducationId) { hakemus =>
         validate(hakemus) { (errors, structuredQuestions, applicationPeriods) =>
           applicationPeriods must_== List(TestFixture.hakemus2_hakuaika)
         }

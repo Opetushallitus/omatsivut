@@ -8,13 +8,13 @@ import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
 case class ApplicationStateFixture(appConfig: AppConfig) {
   private val dao = appConfig.springContext.applicationDAO
   def setState(state: Application.State = Application.State.PASSIVE) {
-    val application: Application = dao.find(new Application().setOid(TestFixture.hakemus2)).get(0)
+    val application: Application = dao.find(new Application().setOid(TestFixture.hakemusYhteishakuKevat2014WithForeignBaseEducationId)).get(0)
     application.setState(state)
     dao.save(application)
   }
 
   def setPostProcessingState(state: Application.PostProcessingState) {
-    val application: Application = dao.find(new Application().setOid(TestFixture.hakemus2)).get(0)
+    val application: Application = dao.find(new Application().setOid(TestFixture.hakemusYhteishakuKevat2014WithForeignBaseEducationId)).get(0)
     application.setRedoPostProcess(state)
     dao.save(application)
   }
