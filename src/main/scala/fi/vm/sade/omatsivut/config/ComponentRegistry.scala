@@ -35,7 +35,7 @@ protected class ComponentRegistry(implicit val config: AppConfig)
     case x: StubbedExternalDeps =>
       new MockValintatulosService()
     case _ =>
-      new RemoteValintatulosService(config.settings.valintaTulosServiceUrl)
+      new NoOpValintatulosService // disabled for now new RemoteValintatulosService(config.settings.valintaTulosServiceUrl)
   }
 
   //RemoteValintatulosService(appConfig.settings.sijoitteluServiceConfig.url)
