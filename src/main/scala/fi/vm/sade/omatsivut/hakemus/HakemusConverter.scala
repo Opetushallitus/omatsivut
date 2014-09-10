@@ -42,17 +42,17 @@ object HakemusConverter {
     if (isPostProcessing(application)) {
       PostProcessing()
     } else {
-      application.getState.toString match {
-        case "ACTIVE" => if (!haku.applicationPeriods.head.active) {
-          HakuPaattynyt(valintatulos = valintatulos(applicationSystem, application))
-        } else {
-          Active()
-        }
-        case "PASSIVE" => Passive()
-        case "INCOMPLETE" => Incomplete()
-        case "SUBMITTED" => Submitted()
-        case x => {
-          throw new RuntimeException("Unexpected state for application " + application.getOid + ": " + x)
+      if (!haku.applicationPeriods.head.active) {
+        HakuPaattynyt(valintatulos = valintatulos(applicationSystem, application))
+      } else {
+        application.getState.toString match {
+          case "ACTIVE" => Active()
+          case "PASSIVE" => Passive()
+          case "INCOMPLETE" => Incomplete()
+          case "SUBMITTED" => Submitted()
+          case x => {
+            throw new RuntimeException("Unexpected state for application " + application.getOid + ": " + x)
+          }
         }
       }
     }
