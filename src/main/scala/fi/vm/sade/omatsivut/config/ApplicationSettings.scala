@@ -36,7 +36,7 @@ case class ApplicationSettings(config: Config) {
   val aesKey = config.getString("omatsivut.crypto.aes.key")
   val hmacKey = config.getString("omatsivut.crypto.hmac.key")
 
-  val environment = getStringWithDefault("environment", "default")
+  val environment = Environment(getStringWithDefault("environment", "default"))
 
   def getStringWithDefault(path: String, default: String) = {
     try {
@@ -62,4 +62,11 @@ case class ApplicationSettings(config: Config) {
       (key, config.getString(key))
     }.toMap
   }
+}
+
+case class Environment(val name: String) {
+  def isLuokka = name == "ophitest"
+  def isReppu = name == "oph"
+  def isProduction = name == "ophprod"
+  def isQA = name == "ophp"
 }

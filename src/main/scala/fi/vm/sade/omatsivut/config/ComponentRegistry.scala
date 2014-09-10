@@ -34,8 +34,10 @@ protected class ComponentRegistry(implicit val config: AppConfig)
       new RemoteValintatulosService(config.settings.valintaTulosServiceUrl)
     case x: StubbedExternalDeps =>
       new MockValintatulosService()
+    case _ if config.settings.environment.isProduction || config.settings.environment.isQA =>
+      new NoOpValintatulosService
     case _ =>
-      new NoOpValintatulosService // disabled for now new RemoteValintatulosService(config.settings.valintaTulosServiceUrl)
+      new RemoteValintatulosService(config.settings.valintaTulosServiceUrl)
   }
 
   //RemoteValintatulosService(appConfig.settings.sijoitteluServiceConfig.url)
