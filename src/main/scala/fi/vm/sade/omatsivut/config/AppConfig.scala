@@ -24,7 +24,7 @@ object AppConfig extends Logging {
       case "dev" => new Dev
       case "dev-audit-log" => new DevWithAuditLog
       case "it" => new IT
-      case "it-with-sijoittelu" => new ITWithSijoitteluService
+      case "it-with-valintatulos" => new ITWithValintaTulosService
       case name => throw new IllegalArgumentException("Unknown value for omatsivut.profile: " + name);
     }
   }
@@ -93,7 +93,7 @@ object AppConfig extends Logging {
       ("mongodb.oppija.uri" -> "mongodb://localhost:28018")
   }
 
-  class ITWithSijoitteluService extends IT {
+  class ITWithValintaTulosService extends IT {
 
   }
 

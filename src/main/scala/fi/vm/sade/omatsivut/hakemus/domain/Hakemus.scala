@@ -53,10 +53,10 @@ case class HakutoiveenValintatulos(
                                     koulutus: Koulutus,
                                     opetuspiste: Opetuspiste,
                                     tila: Option[HakutoiveenValintatulosTila],
-                                    vastaanottotieto: String,
-                                    ilmoittautumisTila: String,
+                                    vastaanottotila: Option[String],
+                                    ilmoittautumistila: Option[String],
                                     jonosija: Option[Int],
-                                    varasijaNumero: Option[Int])
+                                    varasijanumero: Option[Int])
 
 case class Koulutus(oid: String, name: String)
 case class Opetuspiste(oid: String, name: String)

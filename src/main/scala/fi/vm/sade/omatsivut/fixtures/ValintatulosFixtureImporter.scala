@@ -6,7 +6,7 @@ import fi.vm.sade.omatsivut.valintatulokset.{Valintatulos, MockValintatulosServi
 
 case class ValintatulosFixtureImporter(implicit val appConfig: AppConfig) {
   def applyFixtures(fixtureName: String = "") {
-    val fixture = JsonFixtureMaps.findByKey[List[Valintatulos]]("/mockdata/valintatulokset.json", fixtureName).getOrElse(Nil)
+    val fixture: List[Valintatulos] = JsonFixtureMaps.findByKey[List[Valintatulos]]("/mockdata/valintatulokset.json", fixtureName).getOrElse(Nil)
     appConfig.componentRegistry.valintatulosService.asInstanceOf[MockValintatulosService].useFixture(fixture)
   }
 }

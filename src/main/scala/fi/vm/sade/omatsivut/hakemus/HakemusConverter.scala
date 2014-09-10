@@ -74,11 +74,11 @@ object HakemusConverter {
         HakutoiveenValintatulos(
           findKoulutus(hakutoiveenTulos.hakukohdeOid),
           findOpetuspiste(hakutoiveenTulos.tarjoajaOid),
-          HakutoiveenValintatulosTila.fromString(hakutoiveenTulos.tila),
-          hakutoiveenTulos.vastaanottotieto,
-          hakutoiveenTulos.ilmoittautumisTila,
+          HakutoiveenValintatulosTila.fromString(hakutoiveenTulos.valintatila),
+          hakutoiveenTulos.vastaanottotila,
+          hakutoiveenTulos.ilmoittautumistila,
           hakutoiveenTulos.jonosija,
-          hakutoiveenTulos.varasijaNumero
+          hakutoiveenTulos.varasijanumero
         )
       })
     }

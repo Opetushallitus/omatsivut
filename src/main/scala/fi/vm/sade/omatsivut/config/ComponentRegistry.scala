@@ -1,7 +1,7 @@
 package fi.vm.sade.omatsivut.config
 
 import fi.vm.sade.omatsivut.auditlog.{AuditLogger, AuditLoggerComponent}
-import fi.vm.sade.omatsivut.config.AppConfig.{MockAuthentication, AppConfig, ITWithSijoitteluService, StubbedExternalDeps}
+import fi.vm.sade.omatsivut.config.AppConfig.{MockAuthentication, AppConfig, ITWithValintaTulosService, StubbedExternalDeps}
 import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.omatsivut.hakemus.{HakemusRepository, HakemusRepositoryComponent}
 import fi.vm.sade.omatsivut.haku.{HakuRepository, HakuRepositoryComponent}
@@ -30,17 +30,15 @@ protected class ComponentRegistry(implicit val config: AppConfig)
   }
 
   private def configureValintatulosService: ValintatulosService = config match {
-    case x: ITWithSijoitteluService =>
-      new RemoteValintatulosService("http://localhost:8180/resources/sijoittelu") {
-        override def makeRequest(url: String) =  {
-          super.makeRequest(url).map(_.header("Authorization", "Basic " + System.getProperty("omatsivut.sijoittelu.auth")))
-        }
-      }
+    case x: ITWithValintaTulosService =>
+      new RemoteValintatulosService(config.settings.valintaTulosServiceUrl)
     case x: StubbedExternalDeps =>
       new MockValintatulosService()
     case _ =>
-      new NoOpValintatulosService
+      new RemoteValintatulosService(config.settings.valintaTulosServiceUrl)
   }
+
+  //RemoteValintatulosService(appConfig.settings.sijoitteluServiceConfig.url)
 
   private def configureAuthenticationInfoService: AuthenticationInfoService = config match {
     case x: MockAuthentication => new AuthenticationInfoService {
