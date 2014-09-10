@@ -193,7 +193,7 @@
         before(page.applyValintatulosFixtureAndOpen("ei-tuloksia"))
         it("hakemusta ei voi muokata", function () {
           hakemusYhteishakuKevat2013WithForeignBaseEducation.preferencesForApplication().length.should.equal(0)
-          hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationPeriod().should.equal("Hakuaika on päättynyt. Haun tulokset julkaistaan 11. kesäkuuta 2014.")
+          hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationPeriod().should.equal("Hakuaika on päättynyt. Haun tulokset julkaistaan viimeistään 11. kesäkuuta 2014.")
           hakemusYhteishakuKevat2013WithForeignBaseEducation.changesSavedTimestamp().should.equal("")
         })
 

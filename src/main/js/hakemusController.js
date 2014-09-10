@@ -18,11 +18,8 @@ module.exports = function(listApp) {
       return moment(dt).format('LLLL').replace(/,/g, "")
     }
 
-    $scope.formatDateRange = function(range) {
-      function formatDate(dt) { return moment(dt).format('LL').replace(/,/g, "") }
-      var start = formatDate(range.start)
-      var end = formatDate(range.end)
-      return _.unique([start, end]).join(" - ")
+    $scope.formatResultsDate = function(range) {
+      return moment(range.end).format('LL').replace(/,/g, "")
     }
 
     $scope.timestampLabel = function() {
