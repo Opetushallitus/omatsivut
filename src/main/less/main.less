@@ -27,6 +27,10 @@ a {
   &:visited { color: @link-visited-color; }
 }
 
+.italic {
+  font-style: italic;
+}
+
 .container {
   max-width: 1160px;
   margin: 50px auto 100px auto;
@@ -435,6 +439,15 @@ button.delete-btn:not(.confirm) {
   }
 }
 
+.result-list-item {
+  & > .item-content:nth-child(2) {
+    width: 65%;
+  }
+  & > .item-content:nth-child(3) {
+    width: 25%;
+  }
+}
+
 .question-group-indent {
   margin-left: 20px;
 }
@@ -504,12 +517,29 @@ label.title {
   line-height: 1.4em;
   padding: 0 0.4em;
   color: #ffffff;
-  white-space: nowrap;
   vertical-align: baseline;
   border-radius: 3px;
   box-sizing: border-box;
   -webkit-box-sizing: border-box;
-  background-color: @badge-background;
+  background-color: @badge-background-blue;
+  text-align: left;
+
+  &.gray {
+    background-color: @badge-background-gray;
+  }
+
+  &.green {
+    background-color: @badge-background-green;
+  }
+
+  &.orange {
+    background-color: @badge-background-orange;
+  }
+
+  &.transparent {
+    background-color: rgba(0,0,0,0);
+    color: @font-color-light;
+  }
 }
 
 .disabled {

@@ -32,8 +32,19 @@ module.exports = function(listApp) {
         return localization("label.applicationUpdated")
     }
 
-    $scope.formatValintatulos = function(valintatulos) {
+    $scope.valintatulosText = function(valintatulos) {
       return localization("label.resultState." + valintatulos.tila, {varasija: valintatulos.varasijanumero})
+    }
+
+    $scope.valintatulosColor = function(valintatulos) {
+      if (valintatulos.tila == "Hyvaksytty" || valintatulos.tila == "Harkinnanvaraisesti_hyvaksytty")
+        return "green"
+      else if (valintatulos.tila == "Hylatty" || valintatulos.tila == "Perunut" || valintatulos.tila == "Peruutettu")
+        return "gray"
+      else if (valintatulos.tila == "Kesken" || valintatulos.tila == "Varalla")
+        return "blue"
+      else
+        return "transparent lighter italic"
     }
 
     $scope.$watch("application.getHakutoiveWatchCollection()", function(hakutoiveet, oldHakutoiveet) {

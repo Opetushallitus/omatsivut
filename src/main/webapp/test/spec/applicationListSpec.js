@@ -202,17 +202,17 @@
         })
       })
 
-      describe("hakuaika päättynyt ja valintatulokset julkaistu", function() {
+      describe("hakuaika päättynyt ja valintatuloksia julkaistu", function() {
         before(page.applyValintatulosFixtureAndOpen("kaikki-tilat"))
         it("valintatulokset näytetään", function() {
           expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].hakukohde).to.equal('Kallion lukio Lukion ilmaisutaitolinja')
-          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].tila).to.equal('Kesken')
-          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[1].tila).to.equal('2. varasijalla')
-          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[2].tila).to.equal('Peruutettu')
-          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[3].tila).to.equal('Perunut')
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].tila).to.equal('Opiskelijavalinta kesken')
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[1].tila).to.equal('2. varasijalla. Varasijoja täytetään __varasijaPvm__ asti.')
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[2].tila).to.equal('Hakutoive peruutettu')
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[3].tila).to.equal('Peruit hakutoiveen')
           expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[4].tila).to.equal('Hylätty')
-          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[5].tila).to.equal('Peruuntunut')
-          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[6].tila).to.equal('Hyväksytty')
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[5].tila).to.equal('Hakutoive peruuntunut')
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[6].tila).to.equal('Opiskelupaikka myönnetty')
         })
       })
 
