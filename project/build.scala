@@ -64,7 +64,7 @@ object OmatsivutBuild extends Build {
         "org.apache.tomcat.embed" % "tomcat-embed-core"         % TomcatVersion % "container;test",
         "org.apache.tomcat.embed" % "tomcat-embed-logging-juli" % TomcatVersion % "container;test",
         "org.apache.tomcat.embed" % "tomcat-embed-jasper"       % TomcatVersion % "container;test",
-        "org.mongodb" %% "casbah" % "2.7.2",
+        "org.mongodb" %% "casbah" % "2.7.3",
         "org.json4s" %% "json4s-jackson" % "3.2.10",
         "org.json4s" %% "json4s-ext" % "3.2.10",
         "com.typesafe" % "config" % "1.2.1",
