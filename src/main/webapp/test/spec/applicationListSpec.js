@@ -214,12 +214,13 @@
         it("valintatulokset näytetään", function () {
           expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].hakukohde).to.equal('Kallion lukio Lukion ilmaisutaitolinja')
           expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].tila).to.equal('Opiskelijavalinta kesken')
-          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[1].tila).to.equal('2. varasijalla. Varasijoja täytetään __varasijaPvm__ asti.')
-          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[2].tila).to.equal('Hakutoive peruutettu')
-          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[3].tila).to.equal('Peruit hakutoiveen')
-          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[4].tila).to.equal('Hylätty')
-          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[5].tila).to.equal('Hakutoive peruuntunut')
-          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[6].tila).to.equal('Opiskelupaikka myönnetty')
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[1].tila).to.equal('2. varasijalla. Varasijoja täytetään 26. elokuuta 2014 asti.')
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[2].tila).to.equal('2. varasijalla')
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[3].tila).to.equal('Hakutoive peruutettu')
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[4].tila).to.equal('Peruit hakutoiveen')
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[5].tila).to.equal('Hylätty')
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[6].tila).to.equal('Hakutoive peruuntunut')
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[7].tila).to.equal('Opiskelupaikka myönnetty')
         })
 
         describe("opiskelija on ottanut paikan vastaan ehdollisesti, mutta valinta on kesken", function() {

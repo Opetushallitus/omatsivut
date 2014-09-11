@@ -44,7 +44,7 @@
                             <span class="badge label-info">
                                 {{ localization('label.applicationPeriodEnded') }}
                                 <span ng-if="application.haku.results">
-                                    {{ localization('label.resultsPublishedDate') }} {{ formatResultsDate(application.haku.results) }}.
+                                    {{ localization('label.resultsPublishedDate') }} {{ formatDate(application.haku.results.end) }}.
                                 </span>
                             </span>
                         </div>

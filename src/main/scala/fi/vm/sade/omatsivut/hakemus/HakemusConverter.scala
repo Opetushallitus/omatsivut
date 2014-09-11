@@ -78,6 +78,7 @@ object HakemusConverter {
           hakutoiveenTulos.vastaanottotila,
           hakutoiveenTulos.ilmoittautumistila,
           hakutoiveenTulos.jonosija,
+          hakutoiveenTulos.varasijojaTaytetaanAsti.map(_.getTime),
           hakutoiveenTulos.varasijanumero
         )
       })

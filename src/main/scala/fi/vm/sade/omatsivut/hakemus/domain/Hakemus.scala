@@ -56,6 +56,7 @@ case class HakutoiveenValintatulos(
                                     vastaanottotila: Option[String],
                                     ilmoittautumistila: Option[String],
                                     jonosija: Option[Int],
+                                    varasijojaTaytetaanAsti: Option[Long],
                                     varasijanumero: Option[Int])
 
 case class Koulutus(oid: String, name: String)

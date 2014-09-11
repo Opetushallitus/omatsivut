@@ -1,5 +1,7 @@
 package fi.vm.sade.omatsivut.valintatulokset
 
+import java.util.Date
+
 import fi.vm.sade.omatsivut.http.{DefaultHttpClient, HttpRequest}
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.util.Logging
@@ -67,4 +69,6 @@ case class HakutoiveenValintatulos(hakukohdeOid: String,
                                    ilmoittautumistila: Option[String],
                                    vastaanotettavuustila: String,
                                    jonosija: Option[Int],
+                                   varasijojaKaytetaanAlkaen: Option[Date],
+                                   varasijojaTaytetaanAsti: Option[Date],
                                    varasijanumero: Option[Int])

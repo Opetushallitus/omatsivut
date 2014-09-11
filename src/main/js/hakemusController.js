@@ -18,8 +18,11 @@ module.exports = function(listApp) {
       return moment(dt).format('LLLL').replace(/,/g, "")
     }
 
-    $scope.formatResultsDate = function(range) {
-      return moment(range.end).format('LL').replace(/,/g, "")
+    $scope.formatDate = function(dt) {
+      if (dt == null)
+        return ""
+      else
+        return moment(dt).format('LL').replace(/,/g, "")
     }
 
     $scope.timestampLabel = function() {
@@ -30,7 +33,11 @@ module.exports = function(listApp) {
     }
 
     $scope.valintatulosText = function(valintatulos) {
-      return localization("label.resultState." + valintatulos.tila, {varasija: valintatulos.varasijanumero})
+      var localizationString = (valintatulos.tila === "Varalla" && valintatulos.varasijojaTaytetaanAsti != null) ? "label.resultState.VarallaPvm" : "label.resultState." + valintatulos.tila
+      return localization(localizationString, {
+        varasija: valintatulos.varasijanumero,
+        varasijaPvm: $scope.formatDate(valintatulos.varasijojaTaytetaanAsti)
+      })
     }
 
     $scope.valintatulosColor = function(valintatulos) {

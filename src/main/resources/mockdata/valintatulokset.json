@@ -50,6 +50,18 @@
           "ilmoittautumistila": null,
           "vastaanotettavuustila": "EI_VASTAANOTETTAVISSA",
           "jonosija": 1,
+          "varasijanumero": 2,
+          "varasijojaKaytetaanAlkaen":"2014-08-26T19:05:23Z",
+          "varasijojaTaytetaanAsti":"2014-08-26T19:05:23Z"
+        },
+        {
+          "hakukohdeOid": "1.2.246.562.5.72607738902",
+          "tarjoajaOid": "1.2.246.562.10.591352080610",
+          "valintatila": "VARALLA",
+          "vastaanottotila": "ILMOITETTU",
+          "ilmoittautumistila": null,
+          "vastaanotettavuustila": "EI_VASTAANOTETTAVISSA",
+          "jonosija": 1,
           "varasijanumero": 2
         },
         {

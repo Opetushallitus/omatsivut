@@ -29,6 +29,7 @@
       "Kesken": "Kesken",
       "Harkinnanvaraisesti_hyvaksytty": "Hyväksytty",
       "Varalla": "Varalla",
+      "VarallaPvm": "__varasija__. varasijalla. Varasijoja täytetään __varasijaPvm__ asti.",
       "Peruutettu": "Peruutettu",
       "Perunut": "Perunut",
       "Hylatty": "Hylätty",
