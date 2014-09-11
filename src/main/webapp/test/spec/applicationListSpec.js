@@ -202,9 +202,16 @@
         })
       })
 
-      describe("hakuaika päättynyt ja valintatuloksia julkaistu", function() {
+      describe("hakuaika päättynyt ja opiskelijavalinta on kesken", function() {
         before(page.applyValintatulosFixtureAndOpen("kaikki-tilat"))
-        it("valintatulokset näytetään", function() {
+
+        it("hakemusta ei voi muokata", function () {
+          hakemusYhteishakuKevat2013WithForeignBaseEducation.preferencesForApplication().length.should.equal(0)
+          hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationPeriod().should.equal("Hakuaika on päättynyt. Haun tulokset julkaistaan viimeistään 11. kesäkuuta 2014.")
+          hakemusYhteishakuKevat2013WithForeignBaseEducation.changesSavedTimestamp().should.equal("")
+        })
+
+        it("valintatulokset näytetään", function () {
           expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].hakukohde).to.equal('Kallion lukio Lukion ilmaisutaitolinja')
           expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].tila).to.equal('Opiskelijavalinta kesken')
           expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[1].tila).to.equal('2. varasijalla. Varasijoja täytetään __varasijaPvm__ asti.')
@@ -213,6 +220,27 @@
           expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[4].tila).to.equal('Hylätty')
           expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[5].tila).to.equal('Hakutoive peruuntunut')
           expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[6].tila).to.equal('Opiskelupaikka myönnetty')
+        })
+
+        describe("opiskelija on ottanut paikan vastaan ehdollisesti, mutta valinta on kesken", function() {
+          it.skip("tieto näytetään oikein", function() {})
+        })
+      })
+
+      describe("hakuaika päättynyt ja opiskelijalle tarjotaan paikkaa", function() {
+        describe("kyllä / ei", function() {
+          it.skip("paikan vastaanottaminen onnistuu", function() { })
+          it.skip("paikan hylkääminen onnistuu", function() { })
+        })
+
+        describe("ehdollinen vastaanotto", function() {
+          it.skip("paikan vastaanottaminen onnistuu", function() { })
+          it.skip("paikan hylkääminen onnistuu", function() { })
+        })
+      })
+
+      describe("vanhat hakemukset", function() {
+        it.skip("valintatulokset näytetään oikein", function() {
         })
       })
 
