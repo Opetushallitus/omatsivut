@@ -60,7 +60,7 @@ trait HakuRepositoryComponent {
     private def getHakutoiveApplicationPeriods(application: Application, applicationSystem: ApplicationSystem) : Option[List[HakuAika]] = {
       val hakutoiveet = application.getPhaseAnswers("hakutoiveet").toMap
       hakutoiveet.get("preference1-Koulutus-id")
-        .flatMap(koulutusInformaatioService.koulutus(_))
+        .flatMap(koulutusInformaatioService.koulutus(_, Language.fi.toString()))
         .flatMap { koulutus => (koulutus.applicationStartDate, koulutus.applicationEndDate) match {
         case (Some(start), Some(end)) =>
           Some(List(HakuAika(start, end)))

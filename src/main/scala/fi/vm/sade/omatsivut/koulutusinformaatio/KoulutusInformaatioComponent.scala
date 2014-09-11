@@ -20,7 +20,7 @@ trait KoulutusInformaatioComponent {
     def koulutukset(asId: String, opetuspisteId: String, baseEducation: Option[String], vocational: String, uiLang: String) = {
       JsonFixtureMaps.findByKey[List[Koulutus]]("/mockdata/koulutukset.json", opetuspisteId)
     }
-    def koulutus(aoId: String) = {
+    def koulutus(aoId: String, lang: String) = {
       JsonFixtureMaps.findByFieldValue[List[Koulutus]]("/mockdata/koulutukset.json", "id", aoId).getOrElse(List()).headOption
     }
   }
@@ -35,7 +35,7 @@ trait KoulutusInformaatioComponent {
 
       new KoulutusInformaatioService {
         def opetuspisteet(asId: String, query: String): Option[List[Opetuspiste]] = opetuspisteetMemo(asId, query)
-        def koulutus(aoId: String): Option[Koulutus] = koulutusMemo(aoId)
+        def koulutus(aoId: String, lang: String): Option[Koulutus] = koulutusMemo(aoId, lang)
         def koulutukset(asId: String, opetuspisteId: String, baseEducation: Option[String], vocational: String, uiLang: String): Option[List[Koulutus]] = koulutuksetMemo(asId, opetuspisteId, baseEducation, vocational, uiLang)
       }
     }
@@ -66,8 +66,10 @@ trait KoulutusInformaatioComponent {
       wrapAsOption(parse(resultString).extract[List[Koulutus]])
     }
 
-    def koulutus(aoId: String): Option[Koulutus] = {
+    def koulutus(aoId: String, lang: String): Option[Koulutus] = {
       val (responseCode, headersMap, resultString) = DefaultHttpClient.httpGet(appConfig.settings.koulutusinformaatioAoUrl + "/" + aoId)
+        .param("lang", lang)
+        .param("uiLang", lang)
         .responseWithHeaders
       withWarnLogging{
         parse(resultString).extract[Option[Koulutus]]

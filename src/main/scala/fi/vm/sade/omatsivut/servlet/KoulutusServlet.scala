@@ -22,7 +22,7 @@ class KoulutusServlet(implicit val swagger: Swagger, val appConfig: AppConfig) e
   }
 
   get("/koulutus/:aoId") {
-    checkNotFound(koulutusInformaatio.koulutus(params("aoId")))
+    checkNotFound(koulutusInformaatio.koulutus(params("aoId"), params("lang")))
   }
 
   private def checkNotFound[A](result: Option[A]) = {
