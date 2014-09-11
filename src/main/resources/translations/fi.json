@@ -17,7 +17,7 @@
     "results": "Valinnan tulos",
     "location": "Opetuspiste",
     "location_university": "Korkeakoulu",
-    "education": "Koulutus",
+    "education": "Hakukohde",
     "education_university": "Hakukohde",
     "chooseLocation": "Valitse ensin opetuspiste",
     "resultsPublishedDate": "Haun tulokset julkaistaan viimeistään",
@@ -25,15 +25,15 @@
     "questionGroupWithoutTitle": "Muut lisäkysymykset",
 
     "resultState": {
-      "Hyvaksytty": "Opiskelupaikka myönnetty",
+      "Hyvaksytty": "Hyväksytty",
       "Kesken": "Opiskelijavalinta kesken",
-      "Harkinnanvaraisesti_hyvaksytty": "Opiskelupaikka myönnetty",
+      "Harkinnanvaraisesti_hyvaksytty": "Hyväksytty",
       "Varalla": "__varasija__. varasijalla",
       "VarallaPvm": "__varasija__. varasijalla. Varasijoja täytetään __varasijaPvm__ asti.",
-      "Peruutettu": "Hakutoive peruutettu",
-      "Perunut": "Peruit hakutoiveen",
+      "Peruutettu": "Peruutettu",
+      "Perunut": "Peruit opiskelupaikan",
       "Hylatty": "Hylätty",
-      "Peruuntunut": "Hakutoive peruuntunut"
+      "Peruuntunut": "Peruuntunut"
     }
   },
 

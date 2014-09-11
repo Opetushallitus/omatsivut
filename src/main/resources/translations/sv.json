@@ -26,12 +26,12 @@
 
     "resultState": {
       "Hyvaksytty": "Hyväksytty",
-      "Kesken": "Kesken",
+      "Kesken": "Opiskelijavalinta kesken",
       "Harkinnanvaraisesti_hyvaksytty": "Hyväksytty",
-      "Varalla": "Varalla",
+      "Varalla": "__varasija__. varasijalla",
       "VarallaPvm": "__varasija__. varasijalla. Varasijoja täytetään __varasijaPvm__ asti.",
       "Peruutettu": "Peruutettu",
-      "Perunut": "Perunut",
+      "Perunut": "Peruit opiskelupaikan",
       "Hylatty": "Hylätty",
       "Peruuntunut": "Peruuntunut"
     }
