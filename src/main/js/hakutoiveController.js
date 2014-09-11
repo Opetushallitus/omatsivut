@@ -55,7 +55,11 @@ module.exports = function(listApp) {
     }
 
     $scope.findOpetuspiste = function(val) {
-      return restResources.opetuspisteet.query({query: val, asId: $scope.application.haku.oid }).$promise
+      return restResources.opetuspisteet.query({
+        query: val,
+        asId: $scope.application.haku.oid,
+        lang: $scope.localization("languageId")
+      }).$promise
     };
   }])
 }

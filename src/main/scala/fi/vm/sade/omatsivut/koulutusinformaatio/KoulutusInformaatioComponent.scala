@@ -14,7 +14,7 @@ trait KoulutusInformaatioComponent {
   val koulutusInformaatioService: KoulutusInformaatioService
 
   class StubbedKoulutusInformaatioService extends KoulutusInformaatioService {
-    def opetuspisteet(asId: String, query: String) = {
+    def opetuspisteet(asId: String, query: String, lang: String) = {
       JsonFixtureMaps.findByKey[List[Opetuspiste]]("/mockdata/opetuspisteet.json", query.substring(0, 1).toLowerCase)
     }
     def koulutukset(asId: String, opetuspisteId: String, baseEducation: Option[String], vocational: String, uiLang: String) = {
@@ -34,7 +34,7 @@ trait KoulutusInformaatioComponent {
       val koulutuksetMemo = TTLOptionalMemoize.memoize(service.koulutukset _, cacheTimeSec)
 
       new KoulutusInformaatioService {
-        def opetuspisteet(asId: String, query: String): Option[List[Opetuspiste]] = opetuspisteetMemo(asId, query)
+        def opetuspisteet(asId: String, query: String, lang: String): Option[List[Opetuspiste]] = opetuspisteetMemo(asId, query, lang)
         def koulutus(aoId: String, lang: String): Option[Koulutus] = koulutusMemo(aoId, lang)
         def koulutukset(asId: String, opetuspisteId: String, baseEducation: Option[String], vocational: String, uiLang: String): Option[List[Koulutus]] = koulutuksetMemo(asId, opetuspisteId, baseEducation, vocational, uiLang)
       }
@@ -46,9 +46,10 @@ trait KoulutusInformaatioComponent {
 
     private def wrapAsOption[A](l: List[A]): Option[List[A]] = if (!l.isEmpty) Some(l) else None
 
-    def opetuspisteet(asId: String, query: String): Option[List[Opetuspiste]] = {
+    def opetuspisteet(asId: String, query: String, lang: String): Option[List[Opetuspiste]] = {
       val (responseCode, headersMap, resultString) = DefaultHttpClient.httpGet(appConfig.settings.koulutusinformaatioLopUrl + "/search/" + Http.urlEncode(query, "UTF-8"))
         .param("asId", asId)
+        .param("lang", lang)
         .responseWithHeaders
 
       wrapAsOption(parse(resultString).extract[List[Opetuspiste]])

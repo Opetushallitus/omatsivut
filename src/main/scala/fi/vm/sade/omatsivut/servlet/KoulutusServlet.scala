@@ -14,7 +14,7 @@ class KoulutusServlet(implicit val swagger: Swagger, val appConfig: AppConfig) e
   }
 
   get("/opetuspisteet/:query") {
-    checkNotFound(koulutusInformaatio.opetuspisteet(params("asId"), params("query")))
+    checkNotFound(koulutusInformaatio.opetuspisteet(params("asId"), params("query"), params("lang")))
   }
 
   get("/koulutukset/:asId/:opetuspisteId") {
