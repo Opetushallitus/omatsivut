@@ -41,7 +41,7 @@ module.exports = function(listApp) {
     }
 
     $scope.valintatulosColor = function(valintatulos) {
-      if (valintatulos.tila == "Hyvaksytty" || valintatulos.tila == "Harkinnanvaraisesti_hyvaksytty")
+      if (valintatulos.tila == "Hyvaksytty" || valintatulos.tila == "HarkinnanvaraisestiHyvaksytty")
         return "green"
       else if (valintatulos.tila == "Hylatty" || valintatulos.tila == "Perunut" || valintatulos.tila == "Peruutettu")
         return "gray"

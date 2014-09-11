@@ -2,7 +2,11 @@ package fi.vm.sade.omatsivut.hakemus.domain
 
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
 import fi.vm.sade.omatsivut.hakemus.domain.HakutoiveenValintatulosTila.HakutoiveenValintatulosTila
+import fi.vm.sade.omatsivut.hakemus.domain.VastaanotettavuusTila.VastaanotettavuusTila
 import fi.vm.sade.omatsivut.haku.domain.{HakuAika, Haku}
+
+import scala.util.matching.Regex
+import scala.util.matching.Regex.Match
 
 object Hakemus {
   type Answers = Map[String, Map[String, String]]
@@ -54,6 +58,7 @@ case class HakutoiveenValintatulos(
                                     opetuspiste: Opetuspiste,
                                     tila: Option[HakutoiveenValintatulosTila],
                                     vastaanottotila: Option[String],
+                                    vastaanotettavuustila: Option[VastaanotettavuusTila],
                                     ilmoittautumistila: Option[String],
                                     jonosija: Option[Int],
                                     varasijojaTaytetaanAsti: Option[Long],
@@ -62,13 +67,25 @@ case class HakutoiveenValintatulos(
 case class Koulutus(oid: String, name: String)
 case class Opetuspiste(oid: String, name: String)
 
-object HakutoiveenValintatulosTila extends Enumeration {
+object HakutoiveenValintatulosTila extends CapitalizedEnumeration {
   type HakutoiveenValintatulosTila = Value
-  val Hyvaksytty, Harkinnanvaraisesti_hyvaksytty, Varalla, Peruutettu, Perunut, Hylatty, Peruuntunut, Kesken = Value
-  def fromString(tila: String) = {
-    if (tila == "")
+  val Hyvaksytty, HarkinnanvaraisestiHyvaksytty, Varalla, Peruutettu, Perunut, Hylatty, Peruuntunut, Kesken = Value
+}
+
+object VastaanotettavuusTila extends CapitalizedEnumeration {
+  type VastaanotettavuusTila = Value
+  val EiVastaanotettavissa, VastaanotettavissaSitovasti, VastaanotettavissaEhdollisesti = Value
+}
+
+trait CapitalizedEnumeration extends Enumeration {
+  private val camelcaseRegexp = new Regex("_(.)")
+  private def underscoreToCamelCase(name: String) = {
+    camelcaseRegexp.replaceAllIn(name, (m: Match)=>m.group(1).toUpperCase)
+  }
+  def fromString(value: String) = { // SOMETHING_LIKE_THIS -> SomethingLikeThis
+    if (value == "")
       None
     else
-      Some(withName(tila.toLowerCase.capitalize))
+      Some(withName(underscoreToCamelCase(value.toLowerCase.capitalize)))
   }
 }

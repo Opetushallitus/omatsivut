@@ -76,6 +76,7 @@ object HakemusConverter {
           findOpetuspiste(hakutoiveenTulos.tarjoajaOid),
           HakutoiveenValintatulosTila.fromString(hakutoiveenTulos.valintatila),
           hakutoiveenTulos.vastaanottotila,
+          VastaanotettavuusTila.fromString(hakutoiveenTulos.vastaanotettavuustila),
           hakutoiveenTulos.ilmoittautumistila,
           hakutoiveenTulos.jonosija,
           hakutoiveenTulos.varasijojaTaytetaanAsti.map(_.getTime),
