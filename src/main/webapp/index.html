@@ -40,7 +40,7 @@
                                 {{ localization('label.applicationPeriodEnds') }} <time datetime="{{ application.haku.applicationPeriods[0].end | date:'yyyy-MM-ddTHH:mmZ' }}">{{ formatApplicationPeriod(application.haku.applicationPeriods[0].end) }}</time>
                             </span>
                         </div>
-                        <div role="presentation" ng-if="!application.haku.applicationPeriods[0].active && !application.state.valintatulos" class="application-period">
+                        <div role="presentation" ng-if="!application.haku.applicationPeriods[0].active && !application.hasFinalResults()" class="application-period">
                             <span class="badge label-info">
                                 {{ localization('label.applicationPeriodEnded') }}
                                 <span ng-if="application.haku.results">

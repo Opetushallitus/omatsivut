@@ -64,6 +64,28 @@ Hakemus.prototype = {
     return this.hakutoiveet[from].hasData() && from >= 0 && to <= lastFilledItem && to >= 0
   },
 
+  hasFinalResults: function() {
+    return !this.stateResultsPending() // TODO Fix logic
+  },
+
+  stateResultsPending: function() {
+    return this.state.id == "HAKUPAATTYNYT" &&
+      (this.hasResultState("Kesken") || this.valintatulosHakutoiveet().length === 0)
+  },
+
+  valintatulosHakutoiveet: function() {
+    return this.state && this.state.valintatulos ? this.state.valintatulos.hakutoiveet : []
+  },
+
+  hasResultState: function(resultStates) {
+    if (!_.isArray(resultStates))
+      resultStates = [resultStates]
+
+    return _(this.valintatulosHakutoiveet()).any(function(hakutoive) {
+      return _(resultStates).contains(hakutoive.tila)}
+    )
+  },
+
   toJson: function() {
     var self = this
 
