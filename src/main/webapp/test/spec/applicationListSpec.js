@@ -188,13 +188,17 @@
       })
     })
 
-    describe("hakemuksen tila", function() {
-      describe("hakuaika päättynyt ja valintatuloksia ei ole julkaistu", function() {
+    describe("valintatulokset", function() {
+      var hakuaikatieto = "Hakuaika on päättynyt. Haun tulokset julkaistaan viimeistään 11. kesäkuuta 2014."
+
+      describe("kun valintatuloksia ei ole julkaistu", function() {
         before(page.applyValintatulosFixtureAndOpen("ei-tuloksia"))
         it("hakemusta ei voi muokata", function () {
           hakemusYhteishakuKevat2013WithForeignBaseEducation.preferencesForApplication().length.should.equal(0)
-          hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationPeriod().should.equal("Hakuaika on päättynyt. Haun tulokset julkaistaan viimeistään 11. kesäkuuta 2014.")
-          hakemusYhteishakuKevat2013WithForeignBaseEducation.changesSavedTimestamp().should.equal("")
+        })
+
+        it("hakuaikatieto näkyy", function() {
+          hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationPeriod().should.equal(hakuaikatieto)
         })
 
         it("valintatuloksia ei näytetä", function() {
@@ -202,13 +206,15 @@
         })
       })
 
-      describe("hakuaika päättynyt ja opiskelijavalinta on kesken", function() {
+      describe("kun valinta on kesken ja osa valintatuloksia on julkaistu", function() {
         before(page.applyValintatulosFixtureAndOpen("kaikki-tilat"))
 
         it("hakemusta ei voi muokata", function () {
           hakemusYhteishakuKevat2013WithForeignBaseEducation.preferencesForApplication().length.should.equal(0)
-          hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationPeriod().should.equal("Hakuaika on päättynyt. Haun tulokset julkaistaan viimeistään 11. kesäkuuta 2014.")
-          hakemusYhteishakuKevat2013WithForeignBaseEducation.changesSavedTimestamp().should.equal("")
+        })
+
+        it("hakuaikatieto näkyy", function() {
+          hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationPeriod().should.equal(hakuaikatieto)
         })
 
         it("valintatulokset näytetään", function () {
@@ -228,7 +234,14 @@
         })
       })
 
-      describe("hakuaika päättynyt ja opiskelijalle tarjotaan paikkaa", function() {
+      describe("kun lopulliset tulokset on julkaistu", function() {
+        before(page.applyValintatulosFixtureAndOpen("hyvaksytty"))
+        it("hakuaikatieto piilotetaan", function() {
+          hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationPeriod().should.equal("")
+        })
+      })
+
+      describe("opiskelijalle tarjotaan paikkaa", function() {
         describe("kyllä / ei", function() {
           it.skip("paikan vastaanottaminen onnistuu", function() { })
           it.skip("paikan hylkääminen onnistuu", function() { })
@@ -244,7 +257,9 @@
         it.skip("valintatulokset näytetään oikein", function() {
         })
       })
+    })
 
+    describe("hakemuksen tila", function() {
       describe("passiivinen hakemus", function() {
         before(page.applyFixtureAndOpen("passiveApplication"))
         it("hakemus ei näy", function() {

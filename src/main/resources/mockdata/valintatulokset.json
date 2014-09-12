@@ -10,14 +10,14 @@
           "valintatila": "HYVAKSYTTY",
           "vastaanottotila": "ILMOITETTU",
           "ilmoittautumistila": null,
-          "vastaanotettavuustila": "EI_VASTAANOTETTAVISSA",
+          "vastaanotettavuustila": "VASTAANOTETTAVISSA_SITOVASTI",
           "jonosija": 1,
           "varasijanumero": null
         },
         {
           "hakukohdeOid": "1.2.246.562.5.72607738902",
           "tarjoajaOid": "1.2.246.562.10.591352080610",
-          "valintatila": "KESKEN",
+          "valintatila": "PERUUTETTU",
           "vastaanottotila": "ILMOITETTU",
           "ilmoittautumistila": null,
           "vastaanotettavuustila": "EI_VASTAANOTETTAVISSA",
