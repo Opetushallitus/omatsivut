@@ -14,11 +14,19 @@ case class Koulutus(  id: String,
                       kaksoistutkinto: Boolean,
                       vocational: Boolean,
                       educationCodeUri: String,
+                      attachments: List[Attachment],
                       attachmentDeliveryDeadline: Option[Long],
                       attachmentDeliveryAddress: Option[Address],
                       organizationGroups: List[OrganizationGroup],
                       applicationStartDate: Option[Long],
                       applicationEndDate: Option[Long]
+)
+
+case class Attachment(  dueDate: Option[Long],
+                        `type`: Option[String],
+                        descreption: Option[String],
+                        address: Option[Address],
+                        emailAddr: Option[String]
 )
 
 case class OrganizationGroup(  oid: String,

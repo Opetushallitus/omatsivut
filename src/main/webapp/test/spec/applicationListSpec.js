@@ -1053,6 +1053,7 @@
             'Koulutus-id-kaksoistutkinto': 'false',
             'Koulutus-id-sora': 'false',
             'Koulutus-id-vocational': 'true',
+            'Koulutus-id-attachments': 'false',
             'Koulutus-id-lang': 'FI',
             'Koulutus-id-aoIdentifier': '019',
             'Koulutus-id-athlete': 'false',

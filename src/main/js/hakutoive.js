@@ -45,6 +45,7 @@ Hakutoive.prototype = {
     this.data["Koulutus-id-vocational"] = toString(koulutus.vocational)
     this.data["Koulutus-id-educationcode"] = toString(koulutus.educationCodeUri)
     this.data["Koulutus-id-athlete"] = toString(koulutus.athleteEducation)
+    this.data["Koulutus-id-attachments"] = toString(koulutus.attachments != null && koulutus.attachments.length > 0)
     this.addGroupInfo(koulutus)
     this.isModified = true
     this.setErrors([])
