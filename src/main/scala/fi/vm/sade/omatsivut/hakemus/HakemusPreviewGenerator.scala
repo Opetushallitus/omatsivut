@@ -118,8 +118,8 @@ case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val langua
       List(tr(
         td(
           elemIfNotEmptyString(p(_), info.name),
-          elemIfNotEmptyString(text => p(raw(text)), info.heading),
-          elemIfNotEmptyString(text => p(raw(text)), info.description)
+          elemIfNotEmptyString(text => p(text), info.heading),
+          elemIfNotEmptyString(text => div(raw(text)), info.description)
         ),
         td(elemIfNotEmptyString(div(_), info.recipientName ),
            attachmentAddressInfoPreview(info.address)),
