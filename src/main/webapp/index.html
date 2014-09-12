@@ -50,7 +50,7 @@
                         </div>
                     </p>
                     <p>
-                        <div role="presentation" class="timestamp-row">
+                        <div class="timestamp-row" role="presentation" >
                             <i aria-hidden="true" class="icon-doc-text"></i>
                             <a class="preview" ng-href="/omatsivut/api/applications/preview/{{application.oid}}" ng-class="{disabled: hasChanged || statusMessageType=='pending' || isValidating}" target="_blank">{{ localization('button.showApplication') }}</a>
                             <span class="timestamp" ng-if="application.isPeriodActive()" ng-class="{disabled: hasChanged || statusMessageType=='pending' || isValidating}">
@@ -61,6 +61,8 @@
                         <div class="application-state-message" ng-if="application.state.id == 'POSTPROCESSING' || application.state.id == 'SUBMITTED'">
                             {{ localization("message.applicationIsInPostProcessing") }}
                         </div>
+
+                        <div class="application-state-message" ng-if="resultState" ng-bind="resultState"></div>
                     </p>
 
                     <section class="application-section application-valintatulos" ng-if="application.state.valintatulos">

@@ -56,7 +56,16 @@
     "yes": "Yes",
     "no": "No",
     "rememberSendAttachments": "Remember to send the <a>attachments</a>.",
-    "applicationIsInPostProcessing": "Your application is being processed. If you want to make any changes, please try again later."
+    "applicationIsInPostProcessing": "Your application is being processed. If you want to make any changes, please try again later.",
+
+    "resultState": {
+      "Vastaanottanut": "Otit opiskelupaikan vastaan: __opiskelupaikka__ (__pvm__)",
+      "Hylatty": "Et saanut opiskelupaikkaa",
+      "Perunut": "Et ottanut opiskelupaikkaa vastaan",
+      "EiVastaanotettuMaaraAikana": "Et ottanut opiskelupaikkaa vastaan määräaikaan mennessä",
+      "Peruutettu": "Et ottanut opiskelupaikkaa vastaan",
+      "EhdollisestiVastaanottanut": "Olet ottanut ehdollisesti vastaan opiskelupaikan: __opiskelupaikka__"
+    }
   },
 
   "error": {

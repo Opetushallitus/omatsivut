@@ -32,6 +32,18 @@ module.exports = function(listApp) {
         return localization("label.applicationUpdated")
     }
 
+    $scope.resultState = getResultState($scope.application)
+
+    function getResultState(application) {
+      if (application.state.valintatulos) { //TODO replace dummy implementation
+        var hakutoive = _(application.state.valintatulos.hakutoiveet).find(function(hakutoive) { return hakutoive.vastaanottotila == "VASTAANOTTANUT" })
+        if (hakutoive != null)
+          return localization("message.resultState.Vastaanottanut", {
+            opiskelupaikka: hakutoive.opetuspiste.name + " - " + hakutoive.koulutus.name
+          })
+      }
+    }
+
     function underscoreToCamelCase(str) {
       return str.toLowerCase().replace(/^(.)|_(.)/g, function(match, char1, char2) {
         return char1!=null ? char1.toUpperCase() : char2.toUpperCase()

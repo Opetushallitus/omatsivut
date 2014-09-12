@@ -56,7 +56,16 @@
     "yes": "Kyllä",
     "no": "Ei",
     "rememberSendAttachments": "Muista lähettää hakemuksen <a>liitteet</a>.",
-    "applicationIsInPostProcessing": "Hakemuksesi on vielä käsiteltävänä. Jos haluat muuttaa hakutoiveitasi, yritä myöhemmin uudelleen."
+    "applicationIsInPostProcessing": "Hakemuksesi on vielä käsiteltävänä. Jos haluat muuttaa hakutoiveitasi, yritä myöhemmin uudelleen.",
+
+    "resultState": {
+      "Vastaanottanut": "Otit opiskelupaikan vastaan: __opiskelupaikka__ (__pvm__)",
+      "Hylatty": "Et saanut opiskelupaikkaa",
+      "Perunut": "Et ottanut opiskelupaikkaa vastaan",
+      "EiVastaanotettuMaaraAikana": "Et ottanut opiskelupaikkaa vastaan määräaikaan mennessä",
+      "Peruutettu": "Et ottanut opiskelupaikkaa vastaan",
+      "EhdollisestiVastaanottanut": "Olet ottanut ehdollisesti vastaan opiskelupaikan: __opiskelupaikka__"
+    }
   },
 
   "error": {

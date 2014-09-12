@@ -56,7 +56,16 @@
     "yes": "Ja",
     "no": "Nej",
     "rememberSendAttachments": "Kom ihåg att skicka ansökningsblankettens <a>bilagor</a>.",
-    "applicationIsInPostProcessing": "Din ansökan bearbetas fortfarande. Om du vill ändra dina ansökningsmäl, var god försök igen senare."
+    "applicationIsInPostProcessing": "Din ansökan bearbetas fortfarande. Om du vill ändra dina ansökningsmäl, var god försök igen senare.",
+
+    "resultState": {
+      "Vastaanottanut": "Otit opiskelupaikan vastaan: __opiskelupaikka__ (__pvm__)",
+      "Hylatty": "Et saanut opiskelupaikkaa",
+      "Perunut": "Et ottanut opiskelupaikkaa vastaan",
+      "EiVastaanotettuMaaraAikana": "Et ottanut opiskelupaikkaa vastaan määräaikaan mennessä",
+      "Peruutettu": "Et ottanut opiskelupaikkaa vastaan",
+      "EhdollisestiVastaanottanut": "Olet ottanut ehdollisesti vastaan opiskelupaikan: __opiskelupaikka__"
+    }
   },
 
   "error": {
