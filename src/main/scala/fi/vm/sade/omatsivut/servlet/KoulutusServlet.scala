@@ -4,6 +4,7 @@ import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.json.JsonFormats
 import org.scalatra.json.JacksonJsonSupport
 import org.scalatra.swagger.{Swagger, SwaggerSupport}
+import fi.vm.sade.omatsivut.domain.Language
 
 class KoulutusServlet(implicit val swagger: Swagger, val appConfig: AppConfig) extends OmatSivutServletBase with JacksonJsonSupport with JsonFormats with SwaggerSupport {
   protected val applicationDescription = "Oppijan henkilökohtaisen palvelun REST API, jolla etsitään opetuspisteitä ja koulutuksia"
@@ -14,15 +15,15 @@ class KoulutusServlet(implicit val swagger: Swagger, val appConfig: AppConfig) e
   }
 
   get("/opetuspisteet/:query") {
-    checkNotFound(koulutusInformaatio.opetuspisteet(params("asId"), params("query"), params("lang")))
+    checkNotFound(koulutusInformaatio.opetuspisteet(params("asId"), params("query"), paramOption("lang").getOrElse(Language.fi.toString())))
   }
 
   get("/koulutukset/:asId/:opetuspisteId") {
-    checkNotFound(koulutusInformaatio.koulutukset(params("asId"), params("opetuspisteId"), paramOption("baseEducation"), params("vocational"), params("uiLang")))
+    checkNotFound(koulutusInformaatio.koulutukset(params("asId"), params("opetuspisteId"), paramOption("baseEducation"), params("vocational"), paramOption("uiLang").getOrElse(Language.fi.toString())))
   }
 
   get("/koulutus/:aoId") {
-    checkNotFound(koulutusInformaatio.koulutus(params("aoId"), params("lang")))
+    checkNotFound(koulutusInformaatio.koulutus(params("aoId"), paramOption("lang").getOrElse(Language.fi.toString())))
   }
 
   private def checkNotFound[A](result: Option[A]) = {
