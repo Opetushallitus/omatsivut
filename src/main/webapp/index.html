@@ -35,12 +35,12 @@
                 <li ng-repeat="application in applications" class="application-list-item" ng-controller="hakemusController" data-oid="{{application.oid}}" highlight-save>
                     <h2>{{application.haku.name }}</h2>
                     <p>
-                        <div role="presentation" ng-if="application.haku.applicationPeriods[0].active" class="application-period">
+                        <div class="application-period" role="presentation" ng-if="application.isPeriodActive()">
                             <span class="label-info">
                                 {{ localization('label.applicationPeriodEnds') }} <time datetime="{{ application.haku.applicationPeriods[0].end | date:'yyyy-MM-ddTHH:mmZ' }}">{{ formatApplicationPeriod(application.haku.applicationPeriods[0].end) }}</time>
                             </span>
                         </div>
-                        <div role="presentation" ng-if="!application.haku.applicationPeriods[0].active && !application.hasFinalResults()" class="application-period">
+                        <div class="application-period" role="presentation" ng-if="!application.isPeriodActive() && !application.allResultsAvailable()">
                             <span class="badge label-info">
                                 {{ localization('label.applicationPeriodEnded') }}
                                 <span ng-if="application.haku.results">
@@ -53,7 +53,7 @@
                         <div role="presentation" class="timestamp-row">
                             <i aria-hidden="true" class="icon-doc-text"></i>
                             <a class="preview" ng-href="/omatsivut/api/applications/preview/{{application.oid}}" ng-class="{disabled: hasChanged || statusMessageType=='pending' || isValidating}" target="_blank">{{ localization('button.showApplication') }}</a>
-                            <span class="timestamp" ng-if="application.haku.applicationPeriods[0].active" ng-class="{disabled: hasChanged || statusMessageType=='pending' || isValidating}">
+                            <span class="timestamp" ng-if="application.isPeriodActive()" ng-class="{disabled: hasChanged || statusMessageType=='pending' || isValidating}">
                                 ({{ timestampLabel() }} <time datetime="{{ application.updated | date:'yyyy-MM-ddTHH:mmZ' }}">{{ formatTimestamp(application.updated) }}</time>)
                             </span>
                         </div>

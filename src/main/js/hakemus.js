@@ -64,13 +64,16 @@ Hakemus.prototype = {
     return this.hakutoiveet[from].hasData() && from >= 0 && to <= lastFilledItem && to >= 0
   },
 
-  hasFinalResults: function() {
-    return !this.stateResultsPending() // TODO Fix logic
+  isPeriodActive: function() {
+    return this.haku.applicationPeriods[0].active
   },
 
-  stateResultsPending: function() {
-    return this.state.id == "HAKUPAATTYNYT" &&
-      (this.hasResultState("KESKEN") || this.valintatulosHakutoiveet().length === 0)
+  onlyPartialResultsAvailable: function() {
+    return this.valintatulosHakutoiveet().length > 0 && !this.allResultsAvailable()
+  },
+
+  allResultsAvailable: function() {
+    return !this.hasResultState(["KESKEN", "VARALLA"]) && this.valintatulosHakutoiveet().length > 0
   },
 
   valintatulosHakutoiveet: function() {
