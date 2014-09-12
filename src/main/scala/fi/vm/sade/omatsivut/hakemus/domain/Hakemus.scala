@@ -56,9 +56,9 @@ case class Valintatulos(hakutoiveet: List[HakutoiveenValintatulos])
 case class HakutoiveenValintatulos(
                                     koulutus: Koulutus,
                                     opetuspiste: Opetuspiste,
-                                    tila: Option[HakutoiveenValintatulosTila],
+                                    tila: HakutoiveenValintatulosTila,
                                     vastaanottotila: Option[String],
-                                    vastaanotettavuustila: Option[VastaanotettavuusTila],
+                                    vastaanotettavuustila: VastaanotettavuusTila,
                                     ilmoittautumistila: Option[String],
                                     jonosija: Option[Int],
                                     varasijojaTaytetaanAsti: Option[Long],
@@ -67,25 +67,12 @@ case class HakutoiveenValintatulos(
 case class Koulutus(oid: String, name: String)
 case class Opetuspiste(oid: String, name: String)
 
-object HakutoiveenValintatulosTila extends CapitalizedEnumeration {
+object HakutoiveenValintatulosTila extends Enumeration {
   type HakutoiveenValintatulosTila = Value
-  val Hyvaksytty, HarkinnanvaraisestiHyvaksytty, Varalla, Peruutettu, Perunut, Hylatty, Peruuntunut, Kesken = Value
+  val HYVAKSYTTY, HARKINNANVARAISESTI_HYVAKSYTTY, VARALLA, PERUUTETTU, PERUNUT, HYLATTY, PERUUNTUNUT, KESKEN = Value
 }
 
-object VastaanotettavuusTila extends CapitalizedEnumeration {
+object VastaanotettavuusTila extends Enumeration {
   type VastaanotettavuusTila = Value
-  val EiVastaanotettavissa, VastaanotettavissaSitovasti, VastaanotettavissaEhdollisesti = Value
-}
-
-trait CapitalizedEnumeration extends Enumeration {
-  private val camelcaseRegexp = new Regex("_(.)")
-  private def underscoreToCamelCase(name: String) = {
-    camelcaseRegexp.replaceAllIn(name, (m: Match)=>m.group(1).toUpperCase)
-  }
-  def fromString(value: String) = { // SOMETHING_LIKE_THIS -> SomethingLikeThis
-    if (value == "")
-      None
-    else
-      Some(withName(underscoreToCamelCase(value.toLowerCase.capitalize)))
-  }
+  val EI_VASTAANOTETTAVISSA, VASTAANOTETTAVISSA_SITOVASTI, VASTAANOTETTAVISSA_EHDOLLISESTI = Value
 }

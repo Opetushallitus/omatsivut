@@ -70,7 +70,7 @@ Hakemus.prototype = {
 
   stateResultsPending: function() {
     return this.state.id == "HAKUPAATTYNYT" &&
-      (this.hasResultState("Kesken") || this.valintatulosHakutoiveet().length === 0)
+      (this.hasResultState("KESKEN") || this.valintatulosHakutoiveet().length === 0)
   },
 
   valintatulosHakutoiveet: function() {

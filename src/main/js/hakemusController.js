@@ -32,8 +32,15 @@ module.exports = function(listApp) {
         return localization("label.applicationUpdated")
     }
 
+    function underscoreToCamelCase(str) {
+      return str.toLowerCase().replace(/^(.)|_(.)/g, function(match, char1, char2) {
+        return char1!=null ? char1.toUpperCase() : char2.toUpperCase()
+      })
+    }
+
     $scope.valintatulosText = function(valintatulos) {
-      var localizationString = (valintatulos.tila === "Varalla" && valintatulos.varasijojaTaytetaanAsti != null) ? "label.resultState.VarallaPvm" : "label.resultState." + valintatulos.tila
+      var tila = underscoreToCamelCase(valintatulos.tila)
+      var localizationString = (tila=== "Varalla" && valintatulos.varasijojaTaytetaanAsti != null) ? "label.resultState.VarallaPvm" : "label.resultState." + tila
       return localization(localizationString, {
         varasija: valintatulos.varasijanumero,
         varasijaPvm: $scope.formatDate(valintatulos.varasijojaTaytetaanAsti)
@@ -41,11 +48,12 @@ module.exports = function(listApp) {
     }
 
     $scope.valintatulosColor = function(valintatulos) {
-      if (valintatulos.tila == "Hyvaksytty" || valintatulos.tila == "HarkinnanvaraisestiHyvaksytty")
+      var tila = underscoreToCamelCase(valintatulos.tila)
+      if (tila == "Hyvaksytty" || tila == "HarkinnanvaraisestiHyvaksytty")
         return "green"
-      else if (valintatulos.tila == "Hylatty" || valintatulos.tila == "Perunut" || valintatulos.tila == "Peruutettu")
+      else if (tila == "Hylatty" || tila == "Perunut" || tila == "Peruutettu")
         return "gray"
-      else if (valintatulos.tila == "Kesken" || valintatulos.tila == "Varalla")
+      else if (tila == "Kesken" || tila == "Varalla")
         return "blue"
       else
         return "transparent lighter italic"

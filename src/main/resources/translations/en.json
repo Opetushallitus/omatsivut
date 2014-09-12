@@ -27,7 +27,7 @@
     "resultState": {
       "Hyvaksytty": "Hyväksytty",
       "Kesken": "Opiskelijavalinta kesken",
-      "Harkinnanvaraisesti_hyvaksytty": "Hyväksytty",
+      "HarkinnanvaraisestiHyvaksytty": "Hyväksytty",
       "Varalla": "__varasija__. varasijalla",
       "VarallaPvm": "__varasija__. varasijalla. Varasijoja täytetään __varasijaPvm__ asti.",
       "Peruutettu": "Peruutettu",
