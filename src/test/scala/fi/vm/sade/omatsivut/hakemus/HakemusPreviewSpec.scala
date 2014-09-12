@@ -6,6 +6,7 @@ import fi.vm.sade.omatsivut.fixtures.{FixtureImporter, TestFixture}
 import fi.vm.sade.omatsivut.servlet.ApplicationsServlet
 import fi.vm.sade.omatsivut.servlet.KoulutusServlet
 import fi.vm.sade.omatsivut.config.ScalatraPaths
+import org.xml.sax.SAXParseException
 
 class HakemusPreviewSpec extends HakemusApiSpecification {
   override implicit lazy val appConfig = new AppConfig.IT
@@ -49,8 +50,13 @@ class HakemusPreviewSpec extends HakemusApiSpecification {
     "support application option spesific attachments" in {
       authGet(ScalatraPaths.applications + "/applications/preview/" + TestFixture.hakemusWithApplicationOptionAttachments, personOid) {
         println(prettyPrintHtml(body))
+        // ApplicationOptionAttachments
+        body must contain("""<td><p>Kopio ulkomaisesta tutkintotodistuksesta</p><div><p>Osoittaakseen hakukelpoisuutensa ulkomailla suoritetulla tutkintotodistuksella hakevan on toimitettava todistukset liitteiden toimitusaikataulun mukaisesti 6.10.2014 mennessä, tämä ei koske ulkomailla suoritettuja kansainvälisiä ylioppilastutkintoja.</p>
+<p>Todistuskopioiden lisäksi on toimitettava kopio virallisen kielenkääntäjän suomeksi, ruotsiksi tai englanniksi tekemä käännöskopio tutkintotodistuksesta, jos tutkintotodistuksen kieli ei ole mikään näistä. Käännöksessä tulee olla kääntäjän allekirjoitus ja leima. Käännös tulee toimittaa liitteiden toimitusaikataulun mukaisesti ensisijaisen ammattikorkeakouluhakukohteen hakijapalveluihin 6.10.2014 mennessä.</p>
+<p>Jos hakija on pakolainen tai pakolaiseen rinnastettavassa asemassa, eikä hän voi todistaa tutkintoaan asiakirjoin, ammattikorkeakoulu voi kutsua hakijan valintakokeeseen, siitä huolimatta, ettei ammattikorkeakoulu käytä harkinnanvaraista valintaa. Tällöin hakijalla tulee olla pakolais-statuksestaan kertova viranomaispäätös (turvapaikkapäätös tai oleskelulupa suojelun perusteella). Hakijan tulee toimittaa kopio kyseisestä päätöksestä ensisijaisen ammattikorkeakoulun hakijapalveluihin liitteiden toimitusaikataulun mukaisesti 6.10.2014 mennessä.</p></div></td><td><div>PL 4011</div><div>00079</div><div>METROPOLIA</div></td><td><div>06.10.2014 15:00</div>""")
+        // ApplicationOptionAttachmentRequests
         body must contain("""<td><p>Kirjattu todistus</p></td><td><div>Juksutie 11</div><div>00100</div><div>HELSINKI</div></td><td><div>07.09.2014 23:59</div>""")
-        body must contain("""<p>Maol-voitto</p><p>Lähetä kopio todistuksestasi.</p></td><td><div>Hyn osoite</div><div>00100</div><div>HELSINKI</div></td><td><div>15.08.2014 15:00</div>""")
+        body must contain("""<p>Maol-voitto</p><div>Lähetä kopio todistuksestasi.</div></td><td><div>Hyn osoite</div><div>00100</div><div>HELSINKI</div></td><td><div>15.08.2014 15:00</div>""")
       }
     }
 
@@ -93,8 +99,16 @@ class HakemusPreviewSpec extends HakemusApiSpecification {
   }
 
   private def prettyPrintHtml(content: String) = {
-    val prettier = new scala.xml.PrettyPrinter(80, 4)
-    prettier.format(scala.xml.XML.loadString(content))
+    try {
+      val prettier = new scala.xml.PrettyPrinter(80, 4)
+      prettier.format(scala.xml.XML.loadString(content))
+    }
+    catch {
+      case e: SAXParseException => {
+        e.printStackTrace()
+        content
+      }
+    }
   }
 
   addServlet(new ApplicationsServlet(), ScalatraPaths.applications)
