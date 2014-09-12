@@ -100,8 +100,8 @@
         getJson("/omatsivut/translations?lang=sv")
       ]).then(function(translations) {
           var translations = _(translations).map(function(translation) { return _.keys(util.flattenObject(translation)).sort() })
-          translations[0].should.deep.equal(translations[1])
-          translations[1].should.deep.equal(translations[2])
+          diffKeys(translations[0], translations[1]).should.deep.equal([])
+          diffKeys(translations[1], translations[2]).should.deep.equal([])
           _(translations[0]).any(function(val) { return _.isEmpty(val) }).should.be.false
           _(translations[1]).any(function(val) { return _.isEmpty(val) }).should.be.false
           _(translations[2]).any(function(val) { return _.isEmpty(val) }).should.be.false
@@ -1151,5 +1151,9 @@
 
   function findApplicationById(applications, id) {
     return _.find(applications, function(a) { return a.oid == id })
+  }
+
+  function diffKeys(arr1, arr2) {
+    return _.flatten([_.difference(arr1, arr2), _.difference(arr2, arr1)])
   }
 })()
