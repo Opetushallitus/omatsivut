@@ -1,5 +1,7 @@
 package fi.vm.sade.omatsivut.config
 
+import java.util.concurrent.Executors
+
 import fi.vm.sade.omatsivut.auditlog.{AuditLogger, AuditLoggerComponent}
 import fi.vm.sade.omatsivut.config.AppConfig.{MockAuthentication, AppConfig, ITWithValintaTulosService, StubbedExternalDeps}
 import fi.vm.sade.omatsivut.fixtures.TestFixture
@@ -57,11 +59,14 @@ protected class ComponentRegistry(implicit val config: AppConfig)
     case _ => new RemoteAuthenticationInfoService(config.settings.authenticationServiceConfig)(config)
   }
 
+  lazy val springContext: OmatSivutSpringContext = config.springContext
+  private lazy val runningLogger = new RunnableLogger(config)
+  private lazy val pool = Executors.newSingleThreadExecutor()
   val koulutusInformaatioService: KoulutusInformaatioService = configureKoulutusInformaatioService
   val ohjausparametritService: OhjausparametritService = configureOhjausparametritService
   val valintatulosService: ValintatulosService = configureValintatulosService
   val authenticationInfoService: AuthenticationInfoService = configureAuthenticationInfoService
-  val auditLogger: AuditLogger = new AuditLoggerFacade(config.auditLogger)
+  val auditLogger: AuditLogger = new AuditLoggerFacade(runningLogger)
   val hakuRepository: HakuRepository = new RemoteHakuRepository()
   val hakemusRepository: HakemusRepository = new RemoteHakemusRepository()
 
@@ -70,4 +75,12 @@ protected class ComponentRegistry(implicit val config: AppConfig)
   def newSecuredSessionServlet = new SecuredSessionServlet()
   def newLogoutServlet = new LogoutServlet()
   def newSwaggerServlet = new SwaggerServlet()
+
+  def start {
+    pool.execute(runningLogger)
+  }
+
+  def stop {
+
+  }
 }

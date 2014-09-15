@@ -1,10 +1,6 @@
 package fi.vm.sade.omatsivut.config
 
-import java.util.concurrent.Executors
-
 import com.typesafe.config.Config
-import fi.vm.sade.omatsivut._
-import fi.vm.sade.omatsivut.auditlog.RunnableLogger
 import fi.vm.sade.omatsivut.fixtures.FixtureImporter
 import fi.vm.sade.omatsivut.mongo.{EmbeddedMongo, MongoServer}
 import fi.vm.sade.omatsivut.security.{AuthenticationContext, ProductionAuthenticationContext, TestAuthenticationContext}
@@ -131,19 +127,17 @@ object AppConfig extends Logging {
     def springConfiguration: OmatSivutConfiguration
     lazy val springContext = new OmatSivutSpringContext(OmatSivutSpringContext.createApplicationContext(this))
     lazy val authContext: AuthenticationContext = if (usesFakeAuthentication) new TestAuthenticationContext else new ProductionAuthenticationContext
-    lazy val auditLogger = new RunnableLogger(this)
-    private lazy val pool = Executors.newSingleThreadExecutor()
     lazy val componentRegistry: ComponentRegistry = new ComponentRegistry()(this)
     val cookieTimeoutMinutes = 30
 
     def usesFakeAuthentication: Boolean = false
     def usesLocalDatabase = false
     final def start {
-      pool.execute(auditLogger)
+      componentRegistry.start
       onStart
     }
     final def stop {
-      pool.shutdown()
+      componentRegistry.stop
       onStop
     }
     def onStart {}
