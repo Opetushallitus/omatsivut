@@ -1,23 +1,16 @@
 package fi.vm.sade.omatsivut.hakemus
 
-import fi.vm.sade.omatsivut.koulutusinformaatio.KoulutusInformaatioService
-import fi.vm.sade.omatsivut.config.AppConfig
-import fi.vm.sade.omatsivut.domain.Language
-import fi.vm.sade.omatsivut.localization.Translations
-import fi.vm.sade.omatsivut.domain.Attachment
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
-import scala.collection.JavaConversions._
-import fi.vm.sade.haku.oppija.hakemus.domain.util.ApplicationUtil
-import fi.vm.sade.haku.oppija.hakemus.domain.util.AttachmentUtil
+import fi.vm.sade.haku.oppija.hakemus.domain.dto.ApplicationAttachment
+import fi.vm.sade.haku.oppija.hakemus.domain.util.{ApplicationUtil, AttachmentUtil}
 import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
 import fi.vm.sade.haku.virkailija.koulutusinformaatio.impl.KoulutusinformaatioServiceImpl
-import fi.vm.sade.haku.oppija.hakemus.domain.dto.ApplicationAttachment
-import fi.vm.sade.omatsivut.domain.Attachment
-import fi.vm.sade.omatsivut.domain.Address
-import fi.vm.sade.omatsivut.servlet.ServerContaxtPath
-import fi.vm.sade.omatsivut.haku.ElementWrapper
-import fi.vm.sade.omatsivut.servlet.KoulutusServlet
 import fi.vm.sade.omatsivut.config.ScalatraPaths
+import fi.vm.sade.omatsivut.domain.{Address, Attachment, Language}
+import fi.vm.sade.omatsivut.haku.ElementWrapper
+import fi.vm.sade.omatsivut.servlet.ServerContaxtPath
+
+import scala.collection.JavaConversions._
 
 object AttachmentConverter {
 
