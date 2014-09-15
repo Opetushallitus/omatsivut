@@ -46,7 +46,7 @@ module.exports = function(listApp) {
 
     function underscoreToCamelCase(str) {
       return str.toLowerCase().replace(/^(.)|_(.)/g, function(match, char1, char2) {
-        return char1!=null ? char1.toUpperCase() : char2.toUpperCase()
+        return (char1?char1:"" + char2?char2:"").toUpperCase()
       })
     }
 
