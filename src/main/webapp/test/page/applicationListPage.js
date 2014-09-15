@@ -182,8 +182,8 @@ function ApplicationListPage() {
         return getApplicationElement().find(".timestamp").text()
       },
 
-      applicationPeriod: function() {
-        return getApplicationElement().find(".application-period").children().map(function() {
+      applicationStatus: function() {
+        return getApplicationElement().find(".application-status").children().map(function() {
           return $(this).text().replace(/(\r\n|\n|\r)/gm,"").replace(/\s+/g," ").trim() }
         ).toArray().join(" ")
       },

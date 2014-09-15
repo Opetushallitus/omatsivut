@@ -152,5 +152,23 @@
         }
       ]
     }
+  ],
+
+  "hylatty": [
+    {
+      "hakemusOid": "1.2.246.562.11.00000441369",
+      "hakutoiveet": [
+        {
+          "hakukohdeOid": "1.2.246.562.5.72607738902",
+          "tarjoajaOid": "1.2.246.562.10.591352080610",
+          "valintatila": "HYLATTY",
+          "vastaanottotila": "ILMOITETTU",
+          "ilmoittautumistila": null,
+          "vastaanotettavuustila": "EI_VASTAANOTETTAVISSA",
+          "jonosija": 1,
+          "varasijanumero": null
+        }
+      ]
+    }
   ]
 }

@@ -76,6 +76,10 @@ Hakemus.prototype = {
     return !this.hasResultState(["KESKEN", "VARALLA"]) && this.valintatulosHakutoiveet().length > 0
   },
 
+  rejected: function() {
+    return this.hasOnlyResultStates(["HYLATTY","PERUNUT","PERUUNTUNUT","PERUTTU"]) && this.valintatulosHakutoiveet().length > 0
+  },
+
   valintatulosHakutoiveet: function() {
     return this.state && this.state.valintatulos ? this.state.valintatulos.hakutoiveet : []
   },
@@ -85,6 +89,15 @@ Hakemus.prototype = {
       resultStates = [resultStates]
 
     return _(this.valintatulosHakutoiveet()).any(function(hakutoive) {
+      return _(resultStates).contains(hakutoive.tila)}
+    )
+  },
+
+  hasOnlyResultStates: function(resultStates) {
+    if (!_.isArray(resultStates))
+      resultStates = [resultStates]
+
+    return _(this.valintatulosHakutoiveet()).all(function(hakutoive) {
       return _(resultStates).contains(hakutoive.tila)}
     )
   },

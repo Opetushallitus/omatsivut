@@ -163,7 +163,7 @@
       before(page.resetDataAndOpen)
 
       it("hakuaika haetaan hakukohteelta", function() {
-        hakemusLisaKevat2014WithForeignBaseEducation.applicationPeriod().should.equal("Hakuaika päättyy perjantaina 28. elokuuta 2054 klo 14.19")
+        hakemusLisaKevat2014WithForeignBaseEducation.applicationStatus().should.equal("Hakuaika päättyy perjantaina 28. elokuuta 2054 klo 14.19")
       })
 
       describe("hakuajan päivittyminen", function() {
@@ -172,7 +172,7 @@
         )
 
         it("hakuaika päivittyy kun hakutoive muuttuu", function() {
-          hakemusLisaKevat2014WithForeignBaseEducation.applicationPeriod().should.equal("Hakuaika päättyy keskiviikkona 1. joulukuuta 2100 klo 07.00")
+          hakemusLisaKevat2014WithForeignBaseEducation.applicationStatus().should.equal("Hakuaika päättyy keskiviikkona 1. joulukuuta 2100 klo 07.00")
         })
       })
 
@@ -183,7 +183,7 @@
         })
 
         it("ohjeteksti päivittyy", function() {
-          hakemusLisaKevat2014WithForeignBaseEducation.applicationPeriod().should.equal("Hakuaika on päättynyt.")
+          hakemusLisaKevat2014WithForeignBaseEducation.applicationStatus().should.equal("Hakuaika on päättynyt.")
         })
       })
     })
@@ -198,7 +198,7 @@
         })
 
         it("hakuaikatieto näkyy", function() {
-          hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationPeriod().should.equal(hakuaikatieto)
+          hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal(hakuaikatieto)
         })
 
         it("valintatuloksia ei näytetä", function() {
@@ -214,7 +214,7 @@
         })
 
         it("hakuaikatieto näkyy", function() {
-          hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationPeriod().should.equal(hakuaikatieto)
+          hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal(hakuaikatieto)
         })
 
         it("valintatulokset näytetään", function () {
@@ -237,7 +237,7 @@
       describe("kun lopulliset tulokset on julkaistu", function() {
         before(page.applyValintatulosFixtureAndOpen("hyvaksytty"))
         it("hakuaikatieto piilotetaan", function() {
-          hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationPeriod().should.equal("")
+          hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal("")
         })
       })
 
@@ -254,7 +254,20 @@
       })
 
       describe("vanhat hakemukset", function() {
-        it.skip("valintatulokset näytetään oikein", function() {
+        describe("jos kaikki kohteet on hylätty tai peruttu", function() {
+          before(page.applyValintatulosFixtureAndOpen("hylatty"))
+          it("hakemusta ei voi muokata", function () {
+            hakemusYhteishakuKevat2013WithForeignBaseEducation.preferencesForApplication().length.should.equal(0)
+          })
+
+          it("et saanut paikkaa näkyy", function() {
+            hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal("Et saanut opiskelupaikkaa.")
+          })
+
+          it("valintatulokset näytetään", function () {
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].hakukohde).to.equal('Kallion lukio Lukion ilmaisutaitolinja')
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].tila).to.equal('Hylätty')
+          })
         })
       })
     })

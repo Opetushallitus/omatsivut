@@ -34,36 +34,43 @@
 
                 <li ng-repeat="application in applications" class="application-list-item" ng-controller="hakemusController" data-oid="{{application.oid}}" highlight-save>
                     <h2>{{application.haku.name }}</h2>
-                    <p>
-                        <div class="application-period" role="presentation" ng-if="application.isPeriodActive()">
+                    <div ng-if="application.isPeriodActive()" role="presentation">
+                        <p class="application-status">
                             <span class="label-info">
                                 {{ localization('label.applicationPeriodEnds') }} <time datetime="{{ application.haku.applicationPeriods[0].end | date:'yyyy-MM-ddTHH:mmZ' }}">{{ formatApplicationPeriod(application.haku.applicationPeriods[0].end) }}</time>
                             </span>
-                        </div>
-                        <div class="application-period" role="presentation" ng-if="!application.isPeriodActive() && !application.allResultsAvailable()">
+                        </p>
+                    </div>
+                    <div ng-if="!application.isPeriodActive()" role="presentation">
+                        <p class="application-status" ng-if="!application.allResultsAvailable()">
                             <span class="badge label-info">
                                 {{ localization('label.applicationPeriodEnded') }}
                                 <span ng-if="application.haku.results">
                                     {{ localization('label.resultsPublishedDate') }} {{ formatDate(application.haku.results.end) }}.
                                 </span>
                             </span>
-                        </div>
-                    </p>
-                    <p>
-                        <div class="timestamp-row" role="presentation" >
+                        </p>
+                        <p class="application-status" role="presentation" ng-if="application.rejected()">
+                            <span class="label-info">
+                                {{ localization('label.applicationRejected') }}
+                            </span>
+                        </p>
+                    </div>
+
+                    <div role="presentation">
+                        <p class="timestamp-row">
                             <i aria-hidden="true" class="icon-doc-text"></i>
                             <a class="preview" ng-href="/omatsivut/api/applications/preview/{{application.oid}}" ng-class="{disabled: hasChanged || statusMessageType=='pending' || isValidating}" target="_blank">{{ localization('button.showApplication') }}</a>
                             <span class="timestamp" ng-if="application.isPeriodActive()" ng-class="{disabled: hasChanged || statusMessageType=='pending' || isValidating}">
                                 ({{ timestampLabel() }} <time datetime="{{ application.updated | date:'yyyy-MM-ddTHH:mmZ' }}">{{ formatTimestamp(application.updated) }}</time>)
                             </span>
-                        </div>
+                        </p>
 
-                        <div class="application-state-message" ng-if="application.state.id == 'POSTPROCESSING' || application.state.id == 'SUBMITTED'">
+                        <p class="application-state-message" ng-if="application.state.id == 'POSTPROCESSING' || application.state.id == 'SUBMITTED'">
                             {{ localization("message.applicationIsInPostProcessing") }}
-                        </div>
-
+                        </p>
                         <div class="application-state-message" ng-if="resultState" ng-bind="resultState"></div>
-                    </p>
+                    </div>
 
                     <section class="application-section application-valintatulos" ng-if="application.state.valintatulos">
                         <header class="application-section-heading">
