@@ -13,7 +13,7 @@ import fi.vm.sade.omatsivut.util.Logging
 
 import scala.collection.JavaConversions._
 
-case class ApplicationValidator(implicit val appConfig: AppConfig) extends Logging {
+class ApplicationValidator(implicit val appConfig: AppConfig) extends Logging {
   private val dao = appConfig.springContext.applicationDAO
   private val validator = appConfig.springContext.validator
   private val hakemusRepository = appConfig.componentRegistry.hakemusRepository

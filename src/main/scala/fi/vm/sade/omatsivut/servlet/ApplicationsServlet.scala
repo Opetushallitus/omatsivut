@@ -1,7 +1,7 @@
 package fi.vm.sade.omatsivut.servlet
 
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
-import fi.vm.sade.omatsivut.config.{ComponentRegistry, AppConfig}
+import fi.vm.sade.omatsivut.config.{OmatSivutSpringContext, SpringContextComponent, ComponentRegistry, AppConfig}
 import AppConfig.AppConfig
 import fi.vm.sade.omatsivut.hakemus.domain._
 import fi.vm.sade.omatsivut.haku.{HakuRepositoryComponent, HakuRepository}
@@ -18,14 +18,15 @@ import fi.vm.sade.omatsivut.hakemus._
 import fi.vm.sade.omatsivut.hakemus.domain.ValidationError
 
 trait ApplicationsServletContainer {
-  this: HakuRepositoryComponent with HakemusRepositoryComponent =>
+  this: HakuRepositoryComponent with HakemusRepositoryComponent with SpringContextComponent =>
 
   val hakuRepository: HakuRepository
   val hakemusRepository: HakemusRepository
+  val springContext: OmatSivutSpringContext
 
   class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfig) extends OmatSivutServletBase with JacksonJsonSupport with JsonFormats with SwaggerSupport with Authentication {
     override def applicationName = Some("api")
-    private val applicationSystemService = appConfig.springContext.applicationSystemService
+    private val applicationSystemService = springContext.applicationSystemService
 
     protected val applicationDescription = "Oppijan henkilökohtaisen palvelun REST API, jolla voi hakea ja muokata hakemuksia ja omia tietoja"
 
@@ -56,7 +57,7 @@ trait ApplicationsServletContainer {
     put("/applications/:oid", operation(putApplicationsSwagger)) {
       val updated = Serialization.read[HakemusMuutos](request.body)
       val applicationSystem = applicationSystemService.getApplicationSystem(updated.hakuOid)
-      val errors = ApplicationValidator().validate(applicationSystem)(updated)
+      val errors = new ApplicationValidator().validate(applicationSystem)(updated)
       if(errors.isEmpty) {
         hakemusRepository.updateHakemus(applicationSystem)(updated, personOid()) match {
           case Some(saved) => Ok(saved)
@@ -70,7 +71,7 @@ trait ApplicationsServletContainer {
     post("/applications/validate/:oid", operation(validateApplicationsSwagger)) {
       val validate = Serialization.read[HakemusMuutos](request.body)
       val applicationSystem = applicationSystemService.getApplicationSystem(validate.hakuOid)
-      val (errors: List[ValidationError], questions: List[QuestionNode], updatedApplication: Application) = ApplicationValidator().validateAndFindQuestions(applicationSystem)(validate, paramOption("questionsOf").getOrElse("").split(',').toList)
+      val (errors: List[ValidationError], questions: List[QuestionNode], updatedApplication: Application) = new ApplicationValidator().validateAndFindQuestions(applicationSystem)(validate, paramOption("questionsOf").getOrElse("").split(',').toList)
       ValidationResult(errors, questions, hakuRepository.getApplicationPeriods(updatedApplication, applicationSystem))
     }
 
