@@ -1,28 +1,27 @@
 package fi.vm.sade.omatsivut.servlet
 
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
-import fi.vm.sade.omatsivut.config.{OmatSivutSpringContext, SpringContextComponent, ComponentRegistry, AppConfig}
-import AppConfig.AppConfig
-import fi.vm.sade.omatsivut.hakemus.domain._
-import fi.vm.sade.omatsivut.haku.{HakuRepositoryComponent, HakuRepository}
-import fi.vm.sade.omatsivut.haku.domain.{QuestionNode, HakuAika}
+import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
+import fi.vm.sade.omatsivut.config.{OmatSivutSpringContext, SpringContextComponent}
+import fi.vm.sade.omatsivut.hakemus._
+import fi.vm.sade.omatsivut.hakemus.domain.{HakemusMuutos, ValidationError, _}
+import fi.vm.sade.omatsivut.haku.domain.{HakuAika, QuestionNode}
+import fi.vm.sade.omatsivut.haku.{HakuRepository, HakuRepositoryComponent}
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.security.Authentication
 import org.json4s.jackson.Serialization
 import org.scalatra.json._
 import org.scalatra.swagger.SwaggerSupportSyntax.OperationBuilder
 import org.scalatra.swagger._
-import org.scalatra.{NotFound, BadRequest, Ok, Forbidden}
-import fi.vm.sade.omatsivut.hakemus.domain.HakemusMuutos
-import fi.vm.sade.omatsivut.hakemus._
-import fi.vm.sade.omatsivut.hakemus.domain.ValidationError
+import org.scalatra.{BadRequest, Forbidden, NotFound, Ok}
 
 trait ApplicationsServletContainer {
-  this: HakuRepositoryComponent with HakemusRepositoryComponent with SpringContextComponent =>
+  this: HakuRepositoryComponent with HakemusRepositoryComponent with ApplicationValidatorComponent with SpringContextComponent =>
 
   val hakuRepository: HakuRepository
   val hakemusRepository: HakemusRepository
   val springContext: OmatSivutSpringContext
+  val applicationValidator: ApplicationValidator = newApplicationValidator
 
   class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfig) extends OmatSivutServletBase with JacksonJsonSupport with JsonFormats with SwaggerSupport with Authentication {
     override def applicationName = Some("api")
@@ -57,7 +56,7 @@ trait ApplicationsServletContainer {
     put("/applications/:oid", operation(putApplicationsSwagger)) {
       val updated = Serialization.read[HakemusMuutos](request.body)
       val applicationSystem = applicationSystemService.getApplicationSystem(updated.hakuOid)
-      val errors = new ApplicationValidator().validate(applicationSystem)(updated)
+      val errors = applicationValidator.validate(applicationSystem)(updated)
       if(errors.isEmpty) {
         hakemusRepository.updateHakemus(applicationSystem)(updated, personOid()) match {
           case Some(saved) => Ok(saved)
@@ -71,7 +70,7 @@ trait ApplicationsServletContainer {
     post("/applications/validate/:oid", operation(validateApplicationsSwagger)) {
       val validate = Serialization.read[HakemusMuutos](request.body)
       val applicationSystem = applicationSystemService.getApplicationSystem(validate.hakuOid)
-      val (errors: List[ValidationError], questions: List[QuestionNode], updatedApplication: Application) = new ApplicationValidator().validateAndFindQuestions(applicationSystem)(validate, paramOption("questionsOf").getOrElse("").split(',').toList)
+      val (errors: List[ValidationError], questions: List[QuestionNode], updatedApplication: Application) = applicationValidator.validateAndFindQuestions(applicationSystem)(validate, paramOption("questionsOf").getOrElse("").split(',').toList)
       ValidationResult(errors, questions, hakuRepository.getApplicationPeriods(updatedApplication, applicationSystem))
     }
 

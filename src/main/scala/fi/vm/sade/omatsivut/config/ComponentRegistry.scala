@@ -5,7 +5,7 @@ import java.util.concurrent.Executors
 import fi.vm.sade.omatsivut.auditlog.{AuditLogger, AuditLoggerComponent}
 import fi.vm.sade.omatsivut.config.AppConfig.{MockAuthentication, AppConfig, ITWithValintaTulosService, StubbedExternalDeps}
 import fi.vm.sade.omatsivut.fixtures.TestFixture
-import fi.vm.sade.omatsivut.hakemus.{HakemusRepository, HakemusRepositoryComponent}
+import fi.vm.sade.omatsivut.hakemus.{ApplicationValidatorComponent, HakemusRepository, HakemusRepositoryComponent}
 import fi.vm.sade.omatsivut.haku.{HakuRepository, HakuRepositoryComponent}
 import fi.vm.sade.omatsivut.koulutusinformaatio.{KoulutusInformaatioComponent, KoulutusInformaatioService}
 import fi.vm.sade.omatsivut.ohjausparametrit.{OhjausparametritComponent, OhjausparametritService}
@@ -23,6 +23,7 @@ protected class ComponentRegistry(implicit val config: AppConfig)
           ValintatulosServiceComponent with
           AuditLoggerComponent with
           AuthenticationInfoComponent with
+          ApplicationValidatorComponent with
           ApplicationsServletContainer with
           KoulutusServletComponent with
           SecuredSessionServletComponent with
@@ -71,6 +72,7 @@ protected class ComponentRegistry(implicit val config: AppConfig)
   val hakuRepository: HakuRepository = new RemoteHakuRepository()
   val hakemusRepository: HakemusRepository = new RemoteHakemusRepository()
 
+  def newApplicationValidator: ApplicationValidator = new ApplicationValidator()
   def newApplicationsServlet = new ApplicationsServlet()
   def newKoulutusServlet = new KoulutusServlet()
   def newSecuredSessionServlet = new SecuredSessionServlet()
