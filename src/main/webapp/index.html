@@ -24,14 +24,13 @@
             <div class="application-list-status"
                 ng-if="applicationStatusMessage.length > 0"
                 ng-class="applicationStatusMessageType" ng-cloak
-                ng-switch="applicationStatusMessage" role="status">
-                <span ng-switch-default>
+                role="status">
+                <span>
                     {{ localization(applicationStatusMessage) }}
                 </span>
             </div>
 
             <ul id="hakemus-list" aria-label="{{ localization('title.omatHakemukset') }}" ng-cloak>
-
                 <li ng-repeat="application in applications" class="application-list-item" ng-controller="hakemusController" data-oid="{{application.oid}}" highlight-save>
                     <h2>{{application.haku.name }}</h2>
                     <div ng-if="application.isPeriodActive()" role="presentation">
