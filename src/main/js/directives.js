@@ -154,23 +154,4 @@ module.exports = function(listApp) {
       }
     }
   }])
-
-  listApp.directive("questionTemplate", function(RecursionHelper) {
-    return {
-      restrict: 'E',
-      scope: {
-        questionNode: '=questionNode',
-        application: '=application',
-        level: '=level'
-      },
-      templateUrl: 'questionTemplate.html',
-      compile: function(element) {
-        return RecursionHelper.compile(element, function($scope, iElement, iAttrs, controller, transcludeFn){
-          $scope.isGroup = function() {
-            return $scope.questionNode && !_.isEmpty($scope.questionNode.questionNodes)
-          }
-        })
-      }
-    }
-  })
 }
