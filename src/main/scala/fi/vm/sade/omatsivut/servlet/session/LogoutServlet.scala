@@ -3,7 +3,7 @@ package fi.vm.sade.omatsivut.servlet.session
 import fi.vm.sade.omatsivut.config.AppConfig
 import AppConfig.AppConfig
 import fi.vm.sade.omatsivut.auditlog.{AuditLoggerComponent, AuditLogger, Logout}
-import fi.vm.sade.omatsivut.security.{AuthCookieParsing, CookieCredentials}
+import fi.vm.sade.omatsivut.security.{AuthenticationCipher, AuthCookieParsing, CookieCredentials}
 import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
 
 trait LogoutServletComponent {
@@ -13,7 +13,7 @@ trait LogoutServletComponent {
 
   class LogoutServlet(implicit val appConfig: AppConfig) extends OmatSivutServletBase with AuthCookieParsing with ShibbolethPaths {
     get("/*") {
-      parseCredentials(request) match {
+      parseCredentials(request, new AuthenticationCipher(appConfig)) match {
         case Some(credentials) => sendLogOut(credentials)
         case _ => redirectToShibbolethLogout(request, response)
       }

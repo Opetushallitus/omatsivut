@@ -23,7 +23,7 @@ trait ApplicationsServletContainer {
   val springContext: OmatSivutSpringContext
   val applicationValidator: ApplicationValidator = newApplicationValidator
 
-  class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfig) extends OmatSivutServletBase with JacksonJsonSupport with JsonFormats with SwaggerSupport with Authentication {
+  class ApplicationsServlet(val appConfig: AppConfig)(implicit val swagger: Swagger) extends OmatSivutServletBase with JacksonJsonSupport with JsonFormats with SwaggerSupport with Authentication {
     override def applicationName = Some("api")
     private val applicationSystemService = springContext.applicationSystemService
 
@@ -75,7 +75,7 @@ trait ApplicationsServletContainer {
     }
 
     get("/applications/preview/:oid") {
-      HakemusPreviewGenerator().generatePreview(ServerContaxtPath(request), personOid(), params("oid")) match {
+      HakemusPreviewGenerator()(appConfig, language).generatePreview(ServerContaxtPath(request), personOid(), params("oid")) match {
         case Some(previewHtml) =>
           contentType = formats("html")
           Ok(previewHtml)

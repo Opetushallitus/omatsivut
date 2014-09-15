@@ -73,7 +73,7 @@ protected class ComponentRegistry(implicit val config: AppConfig)
   val hakemusRepository: HakemusRepository = new RemoteHakemusRepository()
 
   def newApplicationValidator: ApplicationValidator = new ApplicationValidator()
-  def newApplicationsServlet = new ApplicationsServlet()
+  def newApplicationsServlet = new ApplicationsServlet(config)
   def newKoulutusServlet = new KoulutusServlet()
   def newSecuredSessionServlet = new SecuredSessionServlet()
   def newLogoutServlet = new LogoutServlet()

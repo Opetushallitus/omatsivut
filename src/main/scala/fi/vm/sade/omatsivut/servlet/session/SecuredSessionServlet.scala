@@ -51,7 +51,7 @@ trait SecuredSessionServletComponent {
     }
 
     private def createAuthCookieResponse(credentials: CookieCredentials) {
-      val encryptedCredentials = AuthenticationCipher(appConfig).encrypt(credentials.toString)
+      val encryptedCredentials = new AuthenticationCipher(appConfig).encrypt(credentials.toString)
       response.addCookie(Cookie("auth", encryptedCredentials)(appConfig.authContext.cookieOptions))
       response.redirect(redirectUri)
     }

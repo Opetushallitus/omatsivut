@@ -10,7 +10,7 @@ import org.joda.time.DateTime
 import org.scalatra.ScalatraBase
 
 trait Authentication extends ScalatraBase with AuthCookieParsing with Logging {
-  implicit val appConfig: AppConfig
+  val appConfig: AppConfig
 
   def personOid() = personOidOption.getOrElse(sys.error("Unauthenticated account"))
 
@@ -20,7 +20,7 @@ trait Authentication extends ScalatraBase with AuthCookieParsing with Logging {
   }
 
   def credentialsOption: Option[CookieCredentials] = {
-    parseCredentials(request)
+    parseCredentials(request, new AuthenticationCipher(appConfig))
   }
 
   def validateCredentials(credentials: CookieCredentials, req: HttpServletRequest) = {
@@ -64,11 +64,11 @@ trait AuthCookieParsing extends Logging {
     } yield cookie
   }
 
-  def parseCredentials(req: HttpServletRequest)(implicit appConfig: AppConfig): Option[CookieCredentials] = {
+  def parseCredentials(req: HttpServletRequest, cipher: AuthenticationCipher): Option[CookieCredentials] = {
     authCookie(req) match {
       case Some(c) => {
         try {
-          val decrypt: String = AuthenticationCipher(appConfig).decrypt(c.getValue)
+          val decrypt: String = cipher.decrypt(c.getValue)
           Some(CookieCredentials.fromString(decrypt))
         } catch {
           case e: Exception => {
