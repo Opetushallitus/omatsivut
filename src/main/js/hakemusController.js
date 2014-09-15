@@ -34,20 +34,23 @@ module.exports = function(listApp) {
 
     $scope.resultState = getResultState($scope.application)
 
-    function getResultState(application) {
-      if (application.state.valintatulos) { //TODO replace dummy implementation
-        var hakutoive = _(application.state.valintatulos.hakutoiveet).find(function(hakutoive) { return hakutoive.vastaanottotila == "VASTAANOTTANUT" })
-        if (hakutoive != null)
-          return localization("message.resultState.Vastaanottanut", {
-            opiskelupaikka: hakutoive.opetuspiste.name + " - " + hakutoive.koulutus.name
-          })
-      }
-    }
-
     function underscoreToCamelCase(str) {
       return str.toLowerCase().replace(/^(.)|_(.)/g, function(match, char1, char2) {
         return (char1?char1:"" + char2?char2:"").toUpperCase()
       })
+    }
+
+    function getResultState(application) {
+      var hakutoive = _($scope.application.valintatulosHakutoiveet()).find(function(hakutoive) { return hakutoive.vastaanottotila != "KESKEN" && hakutoive.vastaanottotila != "ILMOITETTU"})
+      if (hakutoive != null) {
+        var tila = underscoreToCamelCase(hakutoive.vastaanottotila)
+        return localization("message.resultState." + tila, {
+          opiskelupaikka: hakutoive.opetuspiste.name + " - " + hakutoive.koulutus.name
+        })
+      }
+      if(application.hasOnlyResultStates(["HYLATTY","PERUNUT","PERUUNTUNUT","PERUTTU"]) && application.valintatulosHakutoiveet().length > 0) {
+        return localization("message.resultState.Hylatty")
+      }
     }
 
     $scope.valintatulosText = function(valintatulos) {

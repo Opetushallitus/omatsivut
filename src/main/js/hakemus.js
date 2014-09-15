@@ -76,10 +76,6 @@ Hakemus.prototype = {
     return !this.hasResultState(["KESKEN", "VARALLA"]) && this.valintatulosHakutoiveet().length > 0
   },
 
-  rejected: function() {
-    return this.hasOnlyResultStates(["HYLATTY","PERUNUT","PERUUNTUNUT","PERUTTU"]) && this.valintatulosHakutoiveet().length > 0
-  },
-
   valintatulosHakutoiveet: function() {
     return this.state && this.state.valintatulos ? this.state.valintatulos.hakutoiveet : []
   },

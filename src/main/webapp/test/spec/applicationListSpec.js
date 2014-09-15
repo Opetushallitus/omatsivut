@@ -254,6 +254,7 @@
       })
 
       describe("vanhat hakemukset", function() {
+
         describe("jos kaikki kohteet on hylätty tai peruttu", function() {
           before(page.applyValintatulosFixtureAndOpen("hylatty"))
           it("hakemusta ei voi muokata", function () {
@@ -261,12 +262,44 @@
           })
 
           it("et saanut paikkaa näkyy", function() {
-            hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal("Et saanut opiskelupaikkaa.")
+            hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal("Et saanut opiskelupaikkaa")
           })
 
           it("valintatulokset näytetään", function () {
             expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].hakukohde).to.equal('Kallion lukio Lukion ilmaisutaitolinja')
             expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].tila).to.equal('Hylätty')
+          })
+        })
+
+        describe("jos on ottanut paikan vastaan", function() {
+          before(page.applyValintatulosFixtureAndOpen("vastaanottanut"))
+          it("hakemusta ei voi muokata", function () {
+            hakemusYhteishakuKevat2013WithForeignBaseEducation.preferencesForApplication().length.should.equal(0)
+          })
+
+          it("vastaanottotieto näkyy", function() {
+            hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal("Olet ottanut opiskelupaikan vastaan: Kallion lukio - Lukion ilmaisutaitolinja")
+          })
+
+          it("valintatulokset näytetään", function () {
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].hakukohde).to.equal('Kallion lukio Lukion ilmaisutaitolinja')
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].tila).to.equal('Hyväksytty')
+          })
+        })
+
+        describe("jos ei ole ottanut paikkaa vastaan määräaikaan mennessä", function() {
+          before(page.applyValintatulosFixtureAndOpen("vastaanottoMaaraaika"))
+          it("hakemusta ei voi muokata", function () {
+            hakemusYhteishakuKevat2013WithForeignBaseEducation.preferencesForApplication().length.should.equal(0)
+          })
+
+          it("vastaanottotieto näkyy", function() {
+            hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal("Et ottanut opiskelupaikkaa vastaan määräaikaan mennessä: Kallion lukio - Lukion ilmaisutaitolinja")
+          })
+
+          it("valintatulokset näytetään", function () {
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].hakukohde).to.equal('Kallion lukio Lukion ilmaisutaitolinja')
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].tila).to.equal('Peruuntunut')
           })
         })
       })

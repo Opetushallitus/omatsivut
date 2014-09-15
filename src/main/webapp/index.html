@@ -50,11 +50,7 @@
                                 </span>
                             </span>
                         </p>
-                        <p class="application-status" role="presentation" ng-if="application.rejected()">
-                            <span class="label-info">
-                                {{ localization('label.applicationRejected') }}
-                            </span>
-                        </p>
+                        <p class="application-status"  ng-if="resultState" ng-bind="resultState"></p>
                     </div>
 
                     <div role="presentation">
@@ -69,7 +65,6 @@
                         <p class="application-state-message" ng-if="application.state.id == 'POSTPROCESSING' || application.state.id == 'SUBMITTED'">
                             {{ localization("message.applicationIsInPostProcessing") }}
                         </p>
-                        <div class="application-state-message" ng-if="resultState" ng-bind="resultState"></div>
                     </div>
 
                     <section class="application-section application-valintatulos" ng-if="application.state.valintatulos">

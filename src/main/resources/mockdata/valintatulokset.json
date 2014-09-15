@@ -46,6 +46,24 @@
     }
   ],
 
+  "vastaanottoMaaraaika": [
+    {
+      "hakemusOid": "1.2.246.562.11.00000441369",
+      "hakutoiveet": [
+        {
+          "hakukohdeOid": "1.2.246.562.5.72607738902",
+          "tarjoajaOid": "1.2.246.562.10.591352080610",
+          "valintatila": "PERUUNTUNUT",
+          "vastaanottotila": "EI_VASTAANOTETTU_MAARA_AIKANA",
+          "ilmoittautumistila": null,
+          "vastaanotettavuustila": "EI_VASTAANOTETTAVISSA",
+          "jonosija": 1,
+          "varasijanumero": null
+        }
+      ]
+    }
+  ],
+
   "kaikki-tilat": [
     {
       "hakemusOid": "1.2.246.562.11.00000441369",

@@ -13,7 +13,6 @@
     "applicationPeriodEnded": "Ansökan har avslutats",
     "applicationReceived": "Ansökningsblankett inlämnad",
     "applicationUpdated": "Senast bearbetad",
-    "applicationRejected": "Et saanut opiskelupaikkaa.",
     "preferences": "Ansökningsönskemål",
     "results": "Resultat",
     "location": "Undervisningsställe",
@@ -60,10 +59,10 @@
     "applicationIsInPostProcessing": "Din ansökan bearbetas fortfarande. Om du vill ändra dina ansökningsmäl, var god försök igen senare.",
 
     "resultState": {
-      "Vastaanottanut": "Otit opiskelupaikan vastaan: __opiskelupaikka__ (__pvm__)",
+      "Vastaanottanut": "Olet ottanut opiskelupaikan vastaan: __opiskelupaikka__",
       "Hylatty": "Et saanut opiskelupaikkaa",
       "Perunut": "Et ottanut opiskelupaikkaa vastaan",
-      "EiVastaanotettuMaaraAikana": "Et ottanut opiskelupaikkaa vastaan määräaikaan mennessä",
+      "EiVastaanotettuMaaraAikana": "Et ottanut opiskelupaikkaa vastaan määräaikaan mennessä: __opiskelupaikka__",
       "Peruutettu": "Et ottanut opiskelupaikkaa vastaan",
       "EhdollisestiVastaanottanut": "Olet ottanut ehdollisesti vastaan opiskelupaikan: __opiskelupaikka__"
     }

@@ -183,9 +183,10 @@ function ApplicationListPage() {
       },
 
       applicationStatus: function() {
-        return getApplicationElement().find(".application-status").children().map(function() {
-          return $(this).text().replace(/(\r\n|\n|\r)/gm,"").replace(/\s+/g," ").trim() }
-        ).toArray().join(" ")
+        function trimText() {
+          return $(this).text().replace(/(\r\n|\n|\r)/gm,"").replace(/\s+/g," ").trim()
+        }
+        return getApplicationElement().find(".application-status").map(trimText).toArray().join(" ")
       },
 
       previewLink: function() {
