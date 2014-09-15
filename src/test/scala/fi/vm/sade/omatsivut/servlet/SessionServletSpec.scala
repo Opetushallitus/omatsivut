@@ -1,12 +1,14 @@
 package fi.vm.sade.omatsivut.servlet
 
+import fi.vm.sade.omatsivut.ScalatraTestSupport
 import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.omatsivut.security.ShibbolethCookie
-import fi.vm.sade.omatsivut.servlet.session.SecuredSessionServlet
-import org.scalatra.test.specs2.MutableScalatraSpec
 
-class SessionServletSpec extends MutableScalatraSpec {
+class SessionServletSpec extends ScalatraTestSupport {
+  override implicit lazy val appConfig = new AppConfig.IT
+  addServlet(appConfig.componentRegistry.newSecuredSessionServlet, "/secure")
+
   "GET /secure/initsession" should {
     "generate auth cookie" in {
       val shibbolethCookie: ShibbolethCookie = ShibbolethCookie("_shibsession_test", "test")
@@ -26,6 +28,4 @@ class SessionServletSpec extends MutableScalatraSpec {
       }
     }
   }
-
-  addServlet(new SecuredSessionServlet()(new AppConfig.IT), "/secure")
 }

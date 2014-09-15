@@ -12,8 +12,6 @@ import org.scalatra.ScalatraBase
 trait Authentication extends ScalatraBase with AuthCookieParsing with Logging {
   implicit val appConfig: AppConfig
 
-  val cookieTimeoutMinutes = 30
-
   def personOid() = personOidOption.getOrElse(sys.error("Unauthenticated account"))
 
   def personOidOption: Option[String] = credentialsOption match {
@@ -30,7 +28,7 @@ trait Authentication extends ScalatraBase with AuthCookieParsing with Logging {
   }
 
   private def authenticationCookieHasNotTimedOut(credentials: CookieCredentials): Boolean = {
-    credentials.creationTime.plusMinutes(cookieTimeoutMinutes).isAfterNow
+    credentials.creationTime.plusMinutes(appConfig.cookieTimeoutMinutes).isAfterNow
   }
 
   private def shibbolethCookieHasNotChanged(credentials: CookieCredentials, req: HttpServletRequest) = {

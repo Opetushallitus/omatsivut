@@ -1,10 +1,13 @@
 package fi.vm.sade.omatsivut.security
 
 import fi.vm.sade.omatsivut.ScalatraTestSupport
+import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.fixtures.TestFixture
-import fi.vm.sade.omatsivut.servlet.ApplicationsServlet
 
 class AuthenticationTimeOutSpec extends ScalatraTestSupport {
+  override implicit lazy val appConfig = new AppConfig.ImmediateCookieTimeout
+  addServlet(appConfig.componentRegistry.newApplicationsServlet, "/*")
+
   "GET /applications" should {
     "return 401 if cookie has timed out" in {
       authGet("/applications", TestFixture.personOid) {
@@ -22,8 +25,4 @@ class AuthenticationTimeOutSpec extends ScalatraTestSupport {
       }
     }
   }
-
-  addServlet(new ApplicationsServlet() {
-    override val cookieTimeoutMinutes = 0
-  }, "/*")
 }

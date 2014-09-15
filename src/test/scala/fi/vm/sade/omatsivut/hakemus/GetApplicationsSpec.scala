@@ -3,7 +3,6 @@ package fi.vm.sade.omatsivut.hakemus
 import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.omatsivut.fixtures.TestFixture._
-import fi.vm.sade.omatsivut.servlet.ApplicationsServlet
 
 class GetApplicationsSpec extends HakemusApiSpecification {
   override implicit lazy val appConfig = new AppConfig.IT
@@ -55,5 +54,5 @@ class GetApplicationsSpec extends HakemusApiSpecification {
     }
   }
 
-  addServlet(new ApplicationsServlet(), "/*")
+  addServlet(appConfig.componentRegistry.newApplicationsServlet, "/*")
 }

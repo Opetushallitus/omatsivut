@@ -1,10 +1,13 @@
 package fi.vm.sade.omatsivut.security
 
+import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.fixtures.TestFixture
-import fi.vm.sade.omatsivut.servlet.ApplicationsServlet
 import fi.vm.sade.omatsivut.ScalatraTestSupport
 
 class AuthenticationSpec extends ScalatraTestSupport {
+  override implicit lazy val appConfig = new AppConfig.IT
+  addServlet(appConfig.componentRegistry.newApplicationsServlet, "/*")
+
   "GET /applications" should {
     "return 401 if not authenticated" in {
       get("/applications") {
@@ -18,6 +21,4 @@ class AuthenticationSpec extends ScalatraTestSupport {
       }
     }
   }
-
-  addServlet(new ApplicationsServlet(), "/*")
 }

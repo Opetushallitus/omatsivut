@@ -5,13 +5,13 @@ import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.omatsivut.fixtures.TestFixture._
 import fi.vm.sade.omatsivut.hakemus.domain._
 import fi.vm.sade.omatsivut.haku.domain.{QuestionId, QuestionNode, HakuAika}
-import fi.vm.sade.omatsivut.servlet.ApplicationsServlet
 import org.json4s._
 import org.json4s.jackson.{JsonMethods, Serialization}
-import fi.vm.sade.haku.oppija.lomake.domain.ApplicationPeriod
 
 class ValidateApplicationSpec extends HakemusApiSpecification {
   override implicit lazy val appConfig = new AppConfig.IT
+  addServlet(appConfig.componentRegistry.newApplicationsServlet, "/*")
+
   sequential
 
   "POST /application/validate" should {
@@ -90,6 +90,4 @@ class ValidateApplicationSpec extends HakemusApiSpecification {
       f(errors, structuredQuestions, applicationPeriods)
     }
   }
-
-  addServlet(new ApplicationsServlet(), "/*")
 }

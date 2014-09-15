@@ -4,7 +4,7 @@ import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.omatsivut.config.{ComponentRegistry, AppConfig}
 import AppConfig.AppConfig
 import fi.vm.sade.omatsivut.hakemus.domain._
-import fi.vm.sade.omatsivut.haku.HakuRepository
+import fi.vm.sade.omatsivut.haku.{HakuRepositoryComponent, HakuRepository}
 import fi.vm.sade.omatsivut.haku.domain.{QuestionNode, HakuAika}
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.security.Authentication
@@ -17,68 +17,74 @@ import fi.vm.sade.omatsivut.hakemus.domain.HakemusMuutos
 import fi.vm.sade.omatsivut.hakemus._
 import fi.vm.sade.omatsivut.hakemus.domain.ValidationError
 
-class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfig) extends OmatSivutServletBase with JacksonJsonSupport with JsonFormats with SwaggerSupport with Authentication {
-  override def applicationName = Some("api")
-  private val applicationSystemService = appConfig.springContext.applicationSystemService
-  private val hakuRepository = appConfig.componentRegistry.hakuRepository
-  private val hakemusRepository = appConfig.componentRegistry.hakemusRepository
+trait ApplicationsServletContainer {
+  this: HakuRepositoryComponent with HakemusRepositoryComponent =>
 
-  protected val applicationDescription = "Oppijan henkilökohtaisen palvelun REST API, jolla voi hakea ja muokata hakemuksia ja omia tietoja"
+  val hakuRepository: HakuRepository
+  val hakemusRepository: HakemusRepository
 
-  val getApplicationsSwagger: OperationBuilder = (apiOperation[List[Hakemus]]("getApplications")
-    summary "Hae kirjautuneen oppijan hakemukset"
+  class ApplicationsServlet(implicit val swagger: Swagger, val appConfig: AppConfig) extends OmatSivutServletBase with JacksonJsonSupport with JsonFormats with SwaggerSupport with Authentication {
+    override def applicationName = Some("api")
+    private val applicationSystemService = appConfig.springContext.applicationSystemService
+
+    protected val applicationDescription = "Oppijan henkilökohtaisen palvelun REST API, jolla voi hakea ja muokata hakemuksia ja omia tietoja"
+
+    val getApplicationsSwagger: OperationBuilder = (apiOperation[List[Hakemus]]("getApplications")
+      summary "Hae kirjautuneen oppijan hakemukset"
+      )
+
+    val putApplicationsSwagger = (apiOperation[Unit]("putApplication")
+      summary "Tallenna hakemus"
+      )
+
+    val validateApplicationsSwagger = (apiOperation[Unit]("validateApplication")
+      summary "Tarkista hakemus ja palauta virheet sekä kysymykset joihin ei ole vastattu"
+      )
+
+    val previewApplicationSwagger: OperationBuilder = (apiOperation[String]("previewApplication")
+      summary "Hakemuksen esikatselu HTML-muodossa"
     )
 
-  val putApplicationsSwagger = (apiOperation[Unit]("putApplication")
-    summary "Tallenna hakemus"
-    )
+    before() {
+      contentType = formats("json")
+    }
 
-  val validateApplicationsSwagger = (apiOperation[Unit]("validateApplication")
-    summary "Tarkista hakemus ja palauta virheet sekä kysymykset joihin ei ole vastattu"
-    )
+    get("/applications", operation(getApplicationsSwagger)) {
+      hakemusRepository.fetchHakemukset(personOid())
+    }
 
-  val previewApplicationSwagger: OperationBuilder = (apiOperation[String]("previewApplication")
-    summary "Hakemuksen esikatselu HTML-muodossa"
-  )
-
-  before() {
-    contentType = formats("json")
-  }
-
-  get("/applications", operation(getApplicationsSwagger)) {
-    hakemusRepository.fetchHakemukset(personOid())
-  }
-
-  put("/applications/:oid", operation(putApplicationsSwagger)) {
-    val updated = Serialization.read[HakemusMuutos](request.body)
-    val applicationSystem = applicationSystemService.getApplicationSystem(updated.hakuOid)
-    val errors = ApplicationValidator().validate(applicationSystem)(updated)
-    if(errors.isEmpty) {
-      hakemusRepository.updateHakemus(applicationSystem)(updated, personOid()) match {
-        case Some(saved) => Ok(saved)
-        case None => Forbidden()
+    put("/applications/:oid", operation(putApplicationsSwagger)) {
+      val updated = Serialization.read[HakemusMuutos](request.body)
+      val applicationSystem = applicationSystemService.getApplicationSystem(updated.hakuOid)
+      val errors = ApplicationValidator().validate(applicationSystem)(updated)
+      if(errors.isEmpty) {
+        hakemusRepository.updateHakemus(applicationSystem)(updated, personOid()) match {
+          case Some(saved) => Ok(saved)
+          case None => Forbidden()
+        }
+      } else {
+        BadRequest(errors)
       }
-    } else {
-      BadRequest(errors)
     }
-  }
 
-  post("/applications/validate/:oid", operation(validateApplicationsSwagger)) {
-    val validate = Serialization.read[HakemusMuutos](request.body)
-    val applicationSystem = applicationSystemService.getApplicationSystem(validate.hakuOid)
-    val (errors: List[ValidationError], questions: List[QuestionNode], updatedApplication: Application) = ApplicationValidator().validateAndFindQuestions(applicationSystem)(validate, paramOption("questionsOf").getOrElse("").split(',').toList)
-    ValidationResult(errors, questions, hakuRepository.getApplicationPeriods(updatedApplication, applicationSystem))
-  }
-
-  get("/applications/preview/:oid") {
-    HakemusPreviewGenerator().generatePreview(ServerContaxtPath(request), personOid(), params("oid")) match {
-      case Some(previewHtml) =>
-        contentType = formats("html")
-        Ok(previewHtml)
-      case None =>
-        NotFound()
+    post("/applications/validate/:oid", operation(validateApplicationsSwagger)) {
+      val validate = Serialization.read[HakemusMuutos](request.body)
+      val applicationSystem = applicationSystemService.getApplicationSystem(validate.hakuOid)
+      val (errors: List[ValidationError], questions: List[QuestionNode], updatedApplication: Application) = ApplicationValidator().validateAndFindQuestions(applicationSystem)(validate, paramOption("questionsOf").getOrElse("").split(',').toList)
+      ValidationResult(errors, questions, hakuRepository.getApplicationPeriods(updatedApplication, applicationSystem))
     }
-  }
 
-  case class ValidationResult(errors: List[ValidationError], questions: List[QuestionNode], applicationPeriods: List[HakuAika])
+    get("/applications/preview/:oid") {
+      HakemusPreviewGenerator().generatePreview(ServerContaxtPath(request), personOid(), params("oid")) match {
+        case Some(previewHtml) =>
+          contentType = formats("html")
+          Ok(previewHtml)
+        case None =>
+          NotFound()
+      }
+    }
+
+    case class ValidationResult(errors: List[ValidationError], questions: List[QuestionNode], applicationPeriods: List[HakuAika])
+  }
 }
+

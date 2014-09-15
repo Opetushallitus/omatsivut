@@ -3,7 +3,6 @@ package fi.vm.sade.omatsivut.hakemus
 import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.fixtures.TestFixture._
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus
-import fi.vm.sade.omatsivut.servlet.ApplicationsServlet
 import org.json4s._
 import org.json4s.jackson.JsonMethods
 
@@ -11,7 +10,7 @@ class UpdateApplicationSpec extends HakemusApiSpecification {
   override implicit lazy val appConfig = new AppConfig.IT
   sequential
 
-  addServlet(new ApplicationsServlet(), "/*")
+  addServlet(appConfig.componentRegistry.newApplicationsServlet, "/*")
 
   "PUT /application/:oid" should {
     "reject application with empty hakutoiveet" in {

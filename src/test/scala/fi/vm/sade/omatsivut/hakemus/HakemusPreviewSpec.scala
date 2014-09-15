@@ -3,8 +3,6 @@ package fi.vm.sade.omatsivut.hakemus
 import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.fixtures.TestFixture._
 import fi.vm.sade.omatsivut.fixtures.{FixtureImporter, TestFixture}
-import fi.vm.sade.omatsivut.servlet.ApplicationsServlet
-import fi.vm.sade.omatsivut.servlet.KoulutusServlet
 import fi.vm.sade.omatsivut.config.ScalatraPaths
 import org.xml.sax.SAXParseException
 
@@ -111,6 +109,6 @@ class HakemusPreviewSpec extends HakemusApiSpecification {
     }
   }
 
-  addServlet(new ApplicationsServlet(), ScalatraPaths.applications)
-  addServlet(new KoulutusServlet(), ScalatraPaths.koulutusinformaatio)
+  addServlet(appConfig.componentRegistry.newApplicationsServlet, ScalatraPaths.applications)
+  addServlet(appConfig.componentRegistry.newKoulutusServlet, ScalatraPaths.koulutusinformaatio)
 }

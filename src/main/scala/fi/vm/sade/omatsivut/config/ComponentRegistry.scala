@@ -8,6 +8,8 @@ import fi.vm.sade.omatsivut.haku.{HakuRepository, HakuRepositoryComponent}
 import fi.vm.sade.omatsivut.koulutusinformaatio.{KoulutusInformaatioComponent, KoulutusInformaatioService}
 import fi.vm.sade.omatsivut.ohjausparametrit.{OhjausparametritComponent, OhjausparametritService}
 import fi.vm.sade.omatsivut.security.{AuthenticationInfoComponent, AuthenticationInfoService}
+import fi.vm.sade.omatsivut.servlet.session.{LogoutServletComponent, SecuredSessionServletComponent}
+import fi.vm.sade.omatsivut.servlet.{SwaggerServlet, OmatSivutSwagger, KoulutusServletComponent, ApplicationsServletContainer}
 import fi.vm.sade.omatsivut.valintatulokset._
 
 protected class ComponentRegistry(implicit val config: AppConfig)
@@ -17,7 +19,13 @@ protected class ComponentRegistry(implicit val config: AppConfig)
           HakemusRepositoryComponent with
           ValintatulosServiceComponent with
           AuditLoggerComponent with
-          AuthenticationInfoComponent {
+          AuthenticationInfoComponent with
+          ApplicationsServletContainer with
+          KoulutusServletComponent with
+          SecuredSessionServletComponent with
+          LogoutServletComponent {
+
+  implicit val swagger = new OmatSivutSwagger
 
   private def configureOhjausparametritService: OhjausparametritService = config match {
     case _ : StubbedExternalDeps => new StubbedOhjausparametritService()
@@ -56,4 +64,10 @@ protected class ComponentRegistry(implicit val config: AppConfig)
   val auditLogger: AuditLogger = new AuditLoggerFacade(config.auditLogger)
   val hakuRepository: HakuRepository = new RemoteHakuRepository()
   val hakemusRepository: HakemusRepository = new RemoteHakemusRepository()
+
+  def newApplicationsServlet = new ApplicationsServlet()
+  def newKoulutusServlet = new KoulutusServlet()
+  def newSecuredSessionServlet = new SecuredSessionServlet()
+  def newLogoutServlet = new LogoutServlet()
+  def newSwaggerServlet = new SwaggerServlet()
 }

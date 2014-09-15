@@ -97,6 +97,10 @@ object AppConfig extends Logging {
 
   }
 
+  class ImmediateCookieTimeout extends IT {
+    override val cookieTimeoutMinutes = 0
+  }
+
   trait ExternalProps {
     def configFile = System.getProperty("user.home") + "/oph-configuration/omatsivut.properties"
     lazy val settings = ApplicationSettings.loadSettings(configFile)
@@ -130,6 +134,7 @@ object AppConfig extends Logging {
     lazy val auditLogger = new RunnableLogger(this)
     private lazy val pool = Executors.newSingleThreadExecutor()
     lazy val componentRegistry: ComponentRegistry = new ComponentRegistry()(this)
+    val cookieTimeoutMinutes = 30
 
     def usesFakeAuthentication: Boolean = false
     def usesLocalDatabase = false
