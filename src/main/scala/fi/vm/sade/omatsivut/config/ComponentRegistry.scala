@@ -15,7 +15,8 @@ import fi.vm.sade.omatsivut.servlet.{SwaggerServlet, OmatSivutSwagger, KoulutusS
 import fi.vm.sade.omatsivut.valintatulokset._
 
 protected class ComponentRegistry(implicit val config: AppConfig)
-  extends KoulutusInformaatioComponent with
+  extends SpringContextComponent with
+          KoulutusInformaatioComponent with
           OhjausparametritComponent with
           HakuRepositoryComponent with
           HakemusRepositoryComponent with
@@ -60,7 +61,7 @@ protected class ComponentRegistry(implicit val config: AppConfig)
   }
 
   lazy val springContext: OmatSivutSpringContext = config.springContext
-  private lazy val runningLogger = new RunnableLogger(config)
+  private lazy val runningLogger = new RunnableLogger()
   private lazy val pool = Executors.newSingleThreadExecutor()
   val koulutusInformaatioService: KoulutusInformaatioService = configureKoulutusInformaatioService
   val ohjausparametritService: OhjausparametritService = configureOhjausparametritService

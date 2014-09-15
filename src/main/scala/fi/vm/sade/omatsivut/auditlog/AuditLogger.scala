@@ -8,6 +8,9 @@ import fi.vm.sade.omatsivut.util.Logging
 import org.slf4j.LoggerFactory
 
 trait AuditLoggerComponent {
+  this: SpringContextComponent =>
+
+  val springContext: OmatSivutSpringContext
   val auditLogger: AuditLogger
 
   class AuditLoggerFacade(runningLogger: RunnableLogger) extends AuditLogger {
@@ -19,9 +22,9 @@ trait AuditLoggerComponent {
     }
   }
 
-  class RunnableLogger(val appConfig: AppConfig) extends Runnable with Logging {
+  class RunnableLogger extends Runnable with Logging {
     private val queue = new ArrayBlockingQueue[AuditEvent](2000)
-    private def auditLogger = appConfig.springContext.auditLogger
+    private def auditLogger = springContext.auditLogger
 
     def log(event: AuditEvent) {
       try {
