@@ -4,8 +4,9 @@ import java.util.concurrent.Executors
 
 import fi.vm.sade.omatsivut.auditlog.{AuditLogger, AuditLoggerComponent}
 import fi.vm.sade.omatsivut.config.AppConfig.{MockAuthentication, AppConfig, ITWithValintaTulosService, StubbedExternalDeps}
+import fi.vm.sade.omatsivut.domain.Language.Language
 import fi.vm.sade.omatsivut.fixtures.TestFixture
-import fi.vm.sade.omatsivut.hakemus.{ApplicationValidatorComponent, HakemusRepository, HakemusRepositoryComponent}
+import fi.vm.sade.omatsivut.hakemus.{HakemusPreviewGeneratorComponent, ApplicationValidatorComponent, HakemusRepository, HakemusRepositoryComponent}
 import fi.vm.sade.omatsivut.haku.{HakuRepository, HakuRepositoryComponent}
 import fi.vm.sade.omatsivut.koulutusinformaatio.{KoulutusInformaatioComponent, KoulutusInformaatioService}
 import fi.vm.sade.omatsivut.ohjausparametrit.{OhjausparametritComponent, OhjausparametritService}
@@ -24,6 +25,7 @@ protected class ComponentRegistry(implicit val config: AppConfig)
           AuditLoggerComponent with
           AuthenticationInfoComponent with
           ApplicationValidatorComponent with
+          HakemusPreviewGeneratorComponent with
           ApplicationsServletContainer with
           KoulutusServletComponent with
           SecuredSessionServletComponent with
@@ -73,6 +75,7 @@ protected class ComponentRegistry(implicit val config: AppConfig)
   val hakemusRepository: HakemusRepository = new RemoteHakemusRepository()
 
   def newApplicationValidator: ApplicationValidator = new ApplicationValidator()
+  def newHakemusPreviewGenerator(language: Language): HakemusPreviewGenerator = new HakemusPreviewGenerator()(language)
   def newApplicationsServlet = new ApplicationsServlet(config)
   def newKoulutusServlet = new KoulutusServlet()
   def newSecuredSessionServlet = new SecuredSessionServlet()
@@ -86,4 +89,5 @@ protected class ComponentRegistry(implicit val config: AppConfig)
   def stop {
 
   }
+
 }

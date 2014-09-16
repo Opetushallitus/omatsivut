@@ -16,16 +16,20 @@ import org.scalatra.swagger._
 import org.scalatra.{BadRequest, Forbidden, NotFound, Ok}
 
 trait ApplicationsServletContainer {
-  this: HakuRepositoryComponent with HakemusRepositoryComponent with ApplicationValidatorComponent with SpringContextComponent =>
+  this: HakuRepositoryComponent with
+    HakemusRepositoryComponent with
+    ApplicationValidatorComponent with
+    HakemusPreviewGeneratorComponent with
+    SpringContextComponent =>
 
   val hakuRepository: HakuRepository
   val hakemusRepository: HakemusRepository
   val springContext: OmatSivutSpringContext
-  val applicationValidator: ApplicationValidator = newApplicationValidator
 
   class ApplicationsServlet(val appConfig: AppConfig)(implicit val swagger: Swagger) extends OmatSivutServletBase with JacksonJsonSupport with JsonFormats with SwaggerSupport with Authentication {
     override def applicationName = Some("api")
     private val applicationSystemService = springContext.applicationSystemService
+    private val applicationValidator: ApplicationValidator = newApplicationValidator
 
     protected val applicationDescription = "Oppijan henkilökohtaisen palvelun REST API, jolla voi hakea ja muokata hakemuksia ja omia tietoja"
 
@@ -75,7 +79,7 @@ trait ApplicationsServletContainer {
     }
 
     get("/applications/preview/:oid") {
-      new HakemusPreviewGenerator()(appConfig, language).generatePreview(ServerContaxtPath(request), personOid(), params("oid")) match {
+      newHakemusPreviewGenerator(language).generatePreview(ServerContaxtPath(request), personOid(), params("oid")) match {
         case Some(previewHtml) =>
           contentType = formats("html")
           Ok(previewHtml)
