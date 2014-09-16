@@ -54,5 +54,5 @@ class GetApplicationsSpec extends HakemusApiSpecification with FixturePerson {
     }
   }
 
-  addServlet(appConfig.componentRegistry.newApplicationsServlet, "/*")
+  addServlet(componentRegistry.newApplicationsServlet, "/*")
 }

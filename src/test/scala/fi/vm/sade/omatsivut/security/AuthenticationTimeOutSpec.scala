@@ -7,7 +7,7 @@ import fi.vm.sade.omatsivut.hakemus.FixturePerson
 
 class AuthenticationTimeOutSpec extends ScalatraTestSupport with FixturePerson {
   override lazy val appConfig = new AppConfig.ImmediateCookieTimeout
-  addServlet(appConfig.componentRegistry.newApplicationsServlet, "/*")
+  addServlet(componentRegistry.newApplicationsServlet, "/*")
 
   "GET /applications" should {
     "return 401 if cookie has timed out" in {

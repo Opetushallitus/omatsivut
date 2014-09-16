@@ -7,7 +7,7 @@ import fi.vm.sade.omatsivut.security.ShibbolethCookie
 
 class SessionServletSpec extends ScalatraTestSupport {
   override lazy val appConfig = new AppConfig.IT
-  addServlet(appConfig.componentRegistry.newSecuredSessionServlet, "/secure")
+  addServlet(componentRegistry.newSecuredSessionServlet, "/secure")
 
   "GET /secure/initsession" should {
     "generate auth cookie" in {

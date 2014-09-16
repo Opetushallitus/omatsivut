@@ -2,7 +2,7 @@ package fi.vm.sade.omatsivut.fixtures
 
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
-import fi.vm.sade.omatsivut.config.{AppConfig, OmatSivutSpringContext}
+import fi.vm.sade.omatsivut.config.{ComponentRegistry, AppConfig, OmatSivutSpringContext}
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
 import fi.vm.sade.omatsivut.haku.HakuConverter
@@ -27,10 +27,11 @@ object TestFixture {
   val persons = Map((testHetu, personOid),
                     (testHetuWithNoApplications, "1.2.246.562.24.79213463339"))
   val appConfig = new AppConfig.IT
+  val componentRegistry = new ComponentRegistry(appConfig)
 
   lazy val (applicationSystemNivelKesa2013, applicationNivelKesa2013WithPeruskouluBaseEducationApp) = {
-    withConfig(new AppConfig.IT, { appConfig =>
-      val springContext: OmatSivutSpringContext = appConfig.componentRegistry.springContext
+    withConfig(new ComponentRegistry(appConfig), { registry =>
+      val springContext: OmatSivutSpringContext = registry.springContext
       val as = springContext.applicationSystemService.getApplicationSystem(applicationSystemNivelKesa2013Oid)
       val app = springContext.applicationDAO.find(new Application().setOid(hakemusNivelKesa2013WithPeruskouluBaseEducationId)).toList.head
       (as, app)
@@ -38,26 +39,26 @@ object TestFixture {
   }
 
   lazy val (applicationSystemKorkeakouluSyksy2014, applicationWithApplicationOptionAttachments) = {
-    withConfig(new AppConfig.IT, { appConfig =>
-      val springContext: OmatSivutSpringContext = appConfig.componentRegistry.springContext
+    withConfig(new ComponentRegistry(appConfig), { registry =>
+      val springContext: OmatSivutSpringContext = registry.springContext
       val as = springContext.applicationSystemService.getApplicationSystem(applicationSystemKorkeakouluSyksy2014Oid)
       val app = springContext.applicationDAO.find(new Application().setOid(hakemusWithApplicationOptionAttachments)).toList.head
       (as, app)
     })
   }
 
-  def withConfig[T](appConfig: AppConfig, f: (AppConfig => T)): T = {
-    appConfig.componentRegistry.start
+  def withConfig[T](registry: ComponentRegistry, f: (ComponentRegistry => T)): T = {
+    registry.start
     try {
-      f(appConfig)
+      f(registry)
     } finally {
-      appConfig.componentRegistry.stop
+      registry.stop
     }
   }
 
   def haku(implicit lang: Language.Language) = HakuConverter.convertToHaku(applicationSystemNivelKesa2013)
   def hakemusMuutos(implicit lang: Language.Language) = {
-    appConfig.componentRegistry.hakemusConverter.convertToHakemus(applicationSystemNivelKesa2013, haku, applicationNivelKesa2013WithPeruskouluBaseEducationApp).toHakemusMuutos
+    componentRegistry.hakemusConverter.convertToHakemus(applicationSystemNivelKesa2013, haku, applicationNivelKesa2013WithPeruskouluBaseEducationApp).toHakemusMuutos
   }
 
   val ammattistartti: Hakutoive = JsonFixtureMaps.findByKey[Hakutoive]("/mockdata/hakutoiveet.json", "1.2.246.562.14.2014030415375012208392").get

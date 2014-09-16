@@ -8,7 +8,7 @@ import org.xml.sax.SAXParseException
 
 class HakemusPreviewSpec extends HakemusApiSpecification with FixturePerson {
   override lazy val appConfig = new AppConfig.IT
-  private val springContext: OmatSivutSpringContext = appConfig.componentRegistry.springContext
+  private val springContext: OmatSivutSpringContext = componentRegistry.springContext
   private val dao: ApplicationDAO = springContext.applicationDAO
   private val mongoTemplate = springContext.mongoTemplate
 
@@ -113,6 +113,6 @@ class HakemusPreviewSpec extends HakemusApiSpecification with FixturePerson {
     }
   }
 
-  addServlet(appConfig.componentRegistry.newApplicationsServlet, ScalatraPaths.applications)
-  addServlet(appConfig.componentRegistry.newKoulutusServlet, ScalatraPaths.koulutusinformaatio)
+  addServlet(componentRegistry.newApplicationsServlet, ScalatraPaths.applications)
+  addServlet(componentRegistry.newKoulutusServlet, ScalatraPaths.koulutusinformaatio)
 }

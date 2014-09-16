@@ -11,7 +11,7 @@ class UpdateApplicationSpec extends HakemusApiSpecification with FixturePerson {
   override implicit lazy val appConfig = new AppConfig.IT
   sequential
 
-  addServlet(appConfig.componentRegistry.newApplicationsServlet, "/*")
+  addServlet(componentRegistry.newApplicationsServlet, "/*")
 
   "PUT /application/:oid" should {
     "reject application with empty hakutoiveet" in {

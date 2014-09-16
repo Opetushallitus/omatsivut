@@ -1,6 +1,6 @@
 package fi.vm.sade.omatsivut
 
-import fi.vm.sade.omatsivut.config.AppConfig
+import fi.vm.sade.omatsivut.config.{ComponentRegistry, AppConfig}
 import fi.vm.sade.omatsivut.security.{AuthenticationCipher, CookieCredentials, ShibbolethCookie}
 import fi.vm.sade.omatsivut.servlet.OmatSivutSwagger
 import org.scalatra.test.specs2.MutableScalatraSpec
@@ -9,6 +9,7 @@ import org.specs2.specification.{Fragments, Step}
 trait ScalatraTestSupport extends MutableScalatraSpec {
   implicit val swagger = new OmatSivutSwagger
   lazy val appConfig = AppConfigSetup.create
+  lazy val componentRegistry = new ComponentRegistry(appConfig)
 
   def authGet[A](uri: String)(f: => A)(implicit personOid: PersonOid): A = {
     get(uri, headers = authHeaders(personOid.oid))(f)
@@ -27,7 +28,7 @@ trait ScalatraTestSupport extends MutableScalatraSpec {
     Map("Cookie" -> ("auth=" + new AuthenticationCipher(appConfig.settings.aesKey, appConfig.settings.hmacKey).encrypt(CookieCredentials(oid, shibbolethCookie).toString) + "; " + shibbolethCookie))
   }
 
-  override def map(fs: => Fragments) = Step(appConfig.componentRegistry.start) ^ super.map(fs)
+  override def map(fs: => Fragments) = Step(componentRegistry.start) ^ super.map(fs)
 }
 
 object AppConfigSetup {

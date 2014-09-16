@@ -10,7 +10,7 @@ import org.json4s.jackson.{JsonMethods, Serialization}
 
 class ValidateApplicationSpec extends HakemusApiSpecification with FixturePerson {
   override lazy val appConfig = new AppConfig.IT
-  addServlet(appConfig.componentRegistry.newApplicationsServlet, "/*")
+  addServlet(componentRegistry.newApplicationsServlet, "/*")
 
   sequential
 
