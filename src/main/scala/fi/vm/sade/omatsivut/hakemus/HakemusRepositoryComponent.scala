@@ -20,12 +20,12 @@ trait HakemusRepositoryComponent {
     import scala.collection.JavaConversions._
     private val dao = springContext.applicationDAO
 
-    override def canUpdate(applicationSystem: ApplicationSystem, application: Application)(implicit lang: Language.Language): Boolean = {
+    private def canUpdate(applicationSystem: ApplicationSystem, application: Application, userOid: String)(implicit lang: Language.Language): Boolean = {
       val applicationPeriods = hakuRepository.getApplicationPeriods(application, applicationSystem)
       val isActiveHakuPeriod = applicationPeriods.exists(_.active)
       val stateUpdateable = application.getState == Application.State.ACTIVE || application.getState == Application.State.INCOMPLETE
       val inPostProcessing = !(application.getRedoPostProcess() == Application.PostProcessingState.DONE || application.getRedoPostProcess() == null)
-      isActiveHakuPeriod && stateUpdateable && !inPostProcessing
+      isActiveHakuPeriod && stateUpdateable && !inPostProcessing && userOid == application.getPersonOid
     }
 
     override def updateHakemus(applicationSystem: ApplicationSystem)(hakemus: HakemusMuutos, userOid: String)(implicit lang: Language.Language): Option[Hakemus] = {
@@ -36,7 +36,7 @@ trait HakemusRepositoryComponent {
 
       timed({
         applicationJavaObject
-          .filter(application => canUpdate(applicationSystem, application))
+          .filter(application => canUpdate(applicationSystem, application, userOid))
           .map { application =>
           val originalAnswers: Hakemus.Answers = application.getAnswers.toMap.mapValues(_.toMap)
           ApplicationUpdater.update(applicationSystem)(application, hakemus)

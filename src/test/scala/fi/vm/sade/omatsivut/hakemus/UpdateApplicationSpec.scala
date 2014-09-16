@@ -1,5 +1,6 @@
 package fi.vm.sade.omatsivut.hakemus
 
+import fi.vm.sade.omatsivut.PersonOid
 import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.fixtures.TestFixture._
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus
@@ -19,6 +20,13 @@ class UpdateApplicationSpec extends HakemusApiSpecification with FixturePerson {
       }
     }
 
+    "reject application with different person oid" in {
+      withHakemus(hakemusNivelKesa2013WithPeruskouluBaseEducationId) { hakemus =>
+        saveHakemus(hakemus) {
+          status must_== 403
+        } (PersonOid("wat"))
+      }
+    }
 
     "accept valid application" in {
       modifyHakemus (hakemusNivelKesa2013WithPeruskouluBaseEducationId){ hakemus => hakemus} { hakemus =>
