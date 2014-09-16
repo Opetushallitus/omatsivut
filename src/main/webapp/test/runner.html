@@ -26,7 +26,12 @@
     if (window.mochaPhantomJS) {
         mochaPhantomJS.run()
     } else {
-        mocha.run()
+        var runner = mocha.run()
+        $(document).keyup(function(e) { 
+          if(e.keyCode==27) {
+              runner._abort = true
+          }
+        })
     }
 </script>
 <iframe id="testframe"></iframe>
