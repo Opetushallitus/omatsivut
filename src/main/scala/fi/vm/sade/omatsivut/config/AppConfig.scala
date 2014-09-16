@@ -127,7 +127,7 @@ object AppConfig extends Logging {
     def springConfiguration: OmatSivutConfiguration
     lazy val springContext = new OmatSivutSpringContext(OmatSivutSpringContext.createApplicationContext(this))
     lazy val authContext: AuthenticationContext = if (usesFakeAuthentication) new TestAuthenticationContext else new ProductionAuthenticationContext
-    lazy val componentRegistry: ComponentRegistry = new ComponentRegistry()(this)
+    lazy val componentRegistry: ComponentRegistry = new ComponentRegistry(this)
     val cookieTimeoutMinutes = 30
 
     def usesFakeAuthentication: Boolean = false

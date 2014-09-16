@@ -15,7 +15,7 @@ import fi.vm.sade.omatsivut.servlet.session.{LogoutServletContainer, SecuredSess
 import fi.vm.sade.omatsivut.servlet.{SwaggerServlet, OmatSivutSwagger, KoulutusServletContainer, ApplicationsServletContainer}
 import fi.vm.sade.omatsivut.valintatulokset._
 
-protected class ComponentRegistry(implicit val config: AppConfig)
+protected class ComponentRegistry(val config: AppConfig)
   extends SpringContextComponent with
           KoulutusInformaatioComponent with
           OhjausparametritComponent with
