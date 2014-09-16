@@ -1,11 +1,11 @@
 import javax.servlet.ServletContext
-import fi.vm.sade.omatsivut.config.{OmatSivutSpringContext, AppConfig}
-import AppConfig.AppConfig
+
+import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
+import fi.vm.sade.omatsivut.config.{AppConfig, OmatSivutSpringContext, ScalatraPaths}
 import fi.vm.sade.omatsivut.servlet._
-import fi.vm.sade.omatsivut.servlet.session.{SessionServlet, LoginServlet}
-import fi.vm.sade.omatsivut.servlet.testing.{FakeShibbolethServlet, TestHelperServlet}
+import fi.vm.sade.omatsivut.servlet.session.{LoginServlet, SessionServlet}
+import fi.vm.sade.omatsivut.servlet.testing.FakeShibbolethServlet
 import org.scalatra._
-import fi.vm.sade.omatsivut.config.ScalatraPaths
 
 class ScalatraBootstrap extends LifeCycle {
   val config: AppConfig = AppConfig.fromSystemProperty
@@ -23,7 +23,7 @@ class ScalatraBootstrap extends LifeCycle {
     context.mount(new RaamitServlet(config), "/raamit")
     context.mount(new LoginServlet(config), "/login")
     context.mount(config.componentRegistry.newLogoutServlet, "/logout")
-    context.mount(new TestHelperServlet(config), "/util")
+    context.mount(config.componentRegistry.newTestHelperServlet, "/util")
     context.mount(new FakeShibbolethServlet(config), "/Shibboleth.sso")
   }
 

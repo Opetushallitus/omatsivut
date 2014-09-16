@@ -12,6 +12,7 @@ import fi.vm.sade.omatsivut.koulutusinformaatio.{KoulutusInformaatioComponent, K
 import fi.vm.sade.omatsivut.ohjausparametrit.{OhjausparametritComponent, OhjausparametritService}
 import fi.vm.sade.omatsivut.security.{AuthenticationInfoComponent, AuthenticationInfoService}
 import fi.vm.sade.omatsivut.servlet.session.{LogoutServletContainer, SecuredSessionServletContainer}
+import fi.vm.sade.omatsivut.servlet.testing.TestHelperServletContainer
 import fi.vm.sade.omatsivut.servlet.{SwaggerServlet, OmatSivutSwagger, KoulutusServletContainer, ApplicationsServletContainer}
 import fi.vm.sade.omatsivut.valintatulokset._
 
@@ -30,7 +31,8 @@ protected class ComponentRegistry(val config: AppConfig)
           ApplicationsServletContainer with
           KoulutusServletContainer with
           SecuredSessionServletContainer with
-          LogoutServletContainer {
+          LogoutServletContainer with
+          TestHelperServletContainer {
 
   implicit val swagger = new OmatSivutSwagger
 
@@ -83,6 +85,7 @@ protected class ComponentRegistry(val config: AppConfig)
   def newKoulutusServlet = new KoulutusServlet
   def newSecuredSessionServlet = new SecuredSessionServlet(config)
   def newLogoutServlet = new LogoutServlet(config)
+  def newTestHelperServlet = new TestHelperServlet(config)
   def newSwaggerServlet = new SwaggerServlet
 
   def start {
