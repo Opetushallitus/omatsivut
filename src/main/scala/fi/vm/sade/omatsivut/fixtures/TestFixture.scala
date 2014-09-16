@@ -26,10 +26,10 @@ object TestFixture {
   val persons = Map((testHetu, personOid),
                     (testHetuWithNoApplications, "1.2.246.562.24.79213463339"))
   val appConfig = new AppConfig.IT
-  val springContext: OmatSivutSpringContext = appConfig.componentRegistry.springContext
 
   lazy val (applicationSystemNivelKesa2013, applicationNivelKesa2013WithPeruskouluBaseEducationApp) = {
     (new AppConfig.IT).withConfig { appConfig =>
+      val springContext: OmatSivutSpringContext = appConfig.componentRegistry.springContext
       val as = springContext.applicationSystemService.getApplicationSystem(applicationSystemNivelKesa2013Oid)
       val app = springContext.applicationDAO.find(new Application().setOid(hakemusNivelKesa2013WithPeruskouluBaseEducationId)).toList.head
       (as, app)
@@ -38,6 +38,7 @@ object TestFixture {
 
   lazy val (applicationSystemKorkeakouluSyksy2014, applicationWithApplicationOptionAttachments) = {
     (new AppConfig.IT).withConfig { appConfig =>
+      val springContext: OmatSivutSpringContext = appConfig.componentRegistry.springContext
       val as = springContext.applicationSystemService.getApplicationSystem(applicationSystemKorkeakouluSyksy2014Oid)
       val app = springContext.applicationDAO.find(new Application().setOid(hakemusWithApplicationOptionAttachments)).toList.head
       (as, app)
