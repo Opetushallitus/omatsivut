@@ -66,7 +66,7 @@
                         </p>
                         <div class="application-state-message" ng-if="resultState" ng-bind="resultState"></div>
 
-                        <hakutoiveen-vastaanotto hakutoiveet="application.vastaanotettavatHakutoiveet()">
+                        <hakutoiveen-vastaanotto hakutoiveet="application.vastaanotettavatHakutoiveet()" callback="vastaanotaHakutoive">
                         </hakutoiveen-vastaanotto>
                     </div>
 

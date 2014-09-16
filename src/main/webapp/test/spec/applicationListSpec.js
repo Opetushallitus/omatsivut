@@ -381,8 +381,10 @@
     })
 
     describe("Virheidenkäsittely", function() {
-      before(ApplicationListPage().resetDataAndOpen)
-      before(mockAjax.init)
+      before(
+        ApplicationListPage().resetDataAndOpen,
+        mockAjax.init
+      )
 
       describe("Lisäkysymykset", function() {
         before(function() { mockAjax.respondOnce("POST", "/omatsivut/api/applications/validate/1.2.246.562.11.00000877107", 400, "") })
@@ -408,6 +410,20 @@
           it("lista tyhjennetään", function() {
             expect(hakemusKorkeakoulu.getPreference(1).hakukohdeItems()).to.deep.equal([""])
           })
+        })
+      })
+
+      describe("Hakutoiveen vastaanotto", function() {
+        before(
+          page.applyValintatulosFixtureAndOpen("hyvaksytty_ehdollisesti"),
+          mockAjax.init,
+          function() { mockAjax.respondOnce("PUT", "http://localhost:8080/omatsivut/api/valitseOpetuspiste?applicationId=1.2.246.562.11.00000441369", 400, "") },
+          hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().selectOption("VASTAANOTTANUT"),
+          hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().send
+        )
+
+        it("ajax-virheet näytetään", function() {
+          hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().errorText().should.equal("virhe")
         })
       })
 

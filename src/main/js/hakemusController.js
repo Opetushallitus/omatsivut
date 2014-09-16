@@ -92,6 +92,21 @@ module.exports = function(listApp) {
         validateHakutoiveet(false)
     })
 
+    $scope.vastaanotaHakutoive = function(data, errorCallback) {
+      restResources.valitseOpetuspiste.put({applicationId: $scope.application.oid }, {
+        opetuspiste: data.hakutoive.opetuspiste.oid,
+        vastaanottotila: data.vastaanottotila
+      }, onSuccess, onError)
+
+      function onSuccess() {
+
+      }
+
+      function onError() {
+        errorCallback("virhe")
+      }
+    }
+
     function applicationChanged() {
       $scope.hasChanged = true
       if ($scope.statusMessageType == "success")

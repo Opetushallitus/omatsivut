@@ -8,6 +8,13 @@ module.exports = function(listApp) {
           }
         }),
 
+      valitseOpetuspiste: $resource("/omatsivut/api/valitseOpetuspiste", null, {
+        "put": {
+          method: "PUT",
+          url: "/omatsivut/api/valitseOpetuspiste/:id"
+        }
+      }),
+
       koulutukset: $resource("/omatsivut/koulutusinformaatio/koulutukset/:asId/:opetuspisteId"),
       opetuspisteet: $resource("/omatsivut/koulutusinformaatio/opetuspisteet/:query")
     }

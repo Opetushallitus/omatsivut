@@ -1,9 +1,16 @@
 <div class="" ng-repeat="hakutoive in hakutoiveet()">
     Opiskelupaikka myönnetty: {{ hakutoive.opetuspiste.name }} - {{ hakutoive.koulutus.name }}
 
-    <label><input type="radio" name="vastaanotettavaHakutoive" value="VASTAANOTTANUT" ng-model="vastaanottotila" />Vastaanottanut</label>
-    <label><input type="radio" name="vastaanotettavaHakutoive" value="PERUNUT" />Perunut</label>
-    <label ng-if="hakutoive.vastaanotettavuustila == 'VASTAANOTETTAVISSA_EHDOLLISESTI'"><input type="radio" name="vastaanotettavaHakutoive" value="EHDOLLISESTI_VASTAANOTTANUT"/>Ehdollisesti vastaanottanut</label>
+    <label><input type="radio" name="vastaanotettavaHakutoive" value="VASTAANOTTANUT" ng-model="vastaanottotila" ng-disabled="ajaxPending"/>Vastaanottanut</label>
+    <label><input type="radio" name="vastaanotettavaHakutoive" value="PERUNUT" ng-model="vastaanottotila" ng-disabled="ajaxPending"/>Perunut</label>
+    <label ng-if="hakutoive.vastaanotettavuustila == 'VASTAANOTETTAVISSA_EHDOLLISESTI'"><input type="radio" name="vastaanotettavaHakutoive" value="EHDOLLISESTI_VASTAANOTTANUT" ng-model="vastaanottotila" ng-disabled="ajaxPending"/>Ehdollisesti vastaanottanut</label>
 
-    <button class="vastaanota-btn" disable-click-focus confirm ng-disabled="vastaanottotila.length==0" confirm-text="{{localization('button.vastaanota_confirm')}}" confirm-action="vastaanotaHakutoive(hakutoive)" aria-label="{{ localization('button.vastaanota_ariaLabel') }}" ng-bind="localization('button.vastaanota_confirm')"></button>
+    <div>
+        <span ng-bind="error" class="status-message error" ></span>
+        <span class="ajax-spinner" ng-show="ajaxPending"></span>
+        <button class="vastaanota-btn" disable-click-focus
+                confirm confirm-text="{{localization('button.vastaanota_confirm')}}" confirm-action="vastaanotaHakutoive(hakutoive)"
+                ng-disabled="vastaanottotila.length==0 || ajaxPending" aria-label="{{ localization('button.vastaanota_ariaLabel') }}" ng-bind="localization('button.vastaanota_confirm')">
+        </button>
+    </div>
 </div>

@@ -173,6 +173,15 @@ function ApplicationListPage() {
 
           confirmButtonEnabled: function() {
             return !getApplicationElement(applicationIndex).find(".vastaanota-btn").prop("disabled")
+          },
+
+          send: function() {
+            getApplicationElement(applicationIndex).find(".vastaanota-btn").click().click() // confirm
+            return wait.forAngular()
+          },
+
+          errorText: function() {
+            return getApplicationElement(applicationIndex).find(".status-message.error").text()
           }
         }
       },
