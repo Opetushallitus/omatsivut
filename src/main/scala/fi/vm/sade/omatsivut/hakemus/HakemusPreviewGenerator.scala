@@ -27,7 +27,7 @@ import fi.vm.sade.haku.oppija.lomake.domain.elements.Notification
 import fi.vm.sade.omatsivut.domain.Attachment
 import fi.vm.sade.omatsivut.servlet.ServerContaxtPath
 
-case class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val language: Language.Language) extends Logging {
+class HakemusPreviewGenerator(implicit val appConfig: AppConfig, val language: Language.Language) extends Logging {
   import scala.collection.JavaConversions._
   import scalatags.Text.all._
   private val applicationDao = appConfig.springContext.applicationDAO

@@ -75,7 +75,7 @@ trait ApplicationsServletContainer {
     }
 
     get("/applications/preview/:oid") {
-      HakemusPreviewGenerator()(appConfig, language).generatePreview(ServerContaxtPath(request), personOid(), params("oid")) match {
+      new HakemusPreviewGenerator()(appConfig, language).generatePreview(ServerContaxtPath(request), personOid(), params("oid")) match {
         case Some(previewHtml) =>
           contentType = formats("html")
           Ok(previewHtml)
