@@ -10,16 +10,16 @@ trait ScalatraTestSupport extends MutableScalatraSpec {
   implicit val swagger = new OmatSivutSwagger
   lazy val appConfig = AppConfigSetup.create
 
-  def authGet[A](uri: String, oid : String)(f: => A): A = {
-    get(uri, headers = authHeaders(oid))(f)
+  def authGet[A](uri: String)(f: => A)(implicit personOid: PersonOid): A = {
+    get(uri, headers = authHeaders(personOid.oid))(f)
   }
 
-  def authPost[A](uri: String, oid: String, body: Array[Byte])(f: => A): A = {
-    post(uri, body, headers = authHeaders(oid))(f)
+  def authPost[A](uri: String, oid: String, body: Array[Byte])(f: => A)(implicit personOid: PersonOid): A = {
+    post(uri, body, headers = authHeaders(personOid.oid))(f)
   }
 
-  def authPut[A](uri: String, oid: String, body: Array[Byte])(f: => A): A = {
-    put(uri, body, headers = authHeaders(oid))(f)
+  def authPut[A](uri: String, body: Array[Byte])(f: => A)(implicit personOid: PersonOid): A = {
+    put(uri, body, headers = authHeaders(personOid.oid))(f)
   }
 
   def authHeaders[A](oid: String): Map[String, String] = {
@@ -33,3 +33,5 @@ trait ScalatraTestSupport extends MutableScalatraSpec {
 object AppConfigSetup {
   lazy val create = AppConfig.fromSystemProperty
 }
+
+case class PersonOid(oid: String)

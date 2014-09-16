@@ -11,6 +11,10 @@ import fi.vm.sade.omatsivut.fixtures.{FixtureImporter, TestFixture}
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.ScalatraTestSupport
 import fi.vm.sade.omatsivut.config.{OmatSivutSpringContext, AppConfig}
+import fi.vm.sade.omatsivut.ScalatraTestSupport
+import fi.vm.sade.omatsivut.config.AppConfig
+import fi.vm.sade.omatsivut.{PersonOid, ScalatraTestSupport}
+import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.fixtures.FixtureImporter
 import fi.vm.sade.omatsivut.fixtures.TestFixture._
@@ -32,22 +36,22 @@ trait HakemusApiSpecification extends ScalatraTestSupport {
   val skillsetPhaseKey: String = OppijaConstants.PHASE_GRADES
   val ssnKey: String = OppijaConstants.ELEMENT_ID_SOCIAL_SECURITY_NUMBER
 
-  def withHakemus[T](oid: String)(f: (Hakemus => T)): T = {
-    withApplications(oid) { applications =>
+  def withHakemus[T](oid: String)(f: (Hakemus => T))(implicit personOid: PersonOid): T = {
+    withApplications { applications =>
       val hakemus = applications.find(_.oid == oid).get.copy(answers = Hakemus.emptyAnswers)
       f(hakemus)
     }
   }
 
-  def withApplications[T](oid: String)(f: (List[Hakemus] => T)): T = {
-    authGet("/applications", personOid) {
+  def withApplications[T](f: (List[Hakemus] => T))(implicit personOid: PersonOid): T = {
+    authGet("/applications") {
       val applications: List[Hakemus] = Serialization.read[List[Hakemus]](body)
       f(applications)
     }
   }
 
-  def saveHakemus[T](hakemus: Hakemus)(f: => T): T = {
-    authPut("/applications/" + hakemus.oid, personOid, Serialization.write(hakemus.toHakemusMuutos)) {
+  def saveHakemus[T](hakemus: Hakemus)(f: => T)(implicit personOid: PersonOid): T = {
+    authPut("/applications/" + hakemus.oid, Serialization.write(hakemus.toHakemusMuutos)) {
       f
     }
   }
@@ -56,7 +60,7 @@ trait HakemusApiSpecification extends ScalatraTestSupport {
     new FixtureImporter(dao, springContext.mongoTemplate).applyFixtures(fixtureName)
   }
 
-  def modifyHakemus[T](oid: String)(modification: (Hakemus => Hakemus))(f: Hakemus => T): T = {
+  def modifyHakemus[T](oid: String)(modification: (Hakemus => Hakemus))(f: Hakemus => T)(implicit personOid: PersonOid): T = {
     withHakemus(oid) { hakemus =>
       val modified = modification(hakemus)
       saveHakemus(modified) {
@@ -103,4 +107,8 @@ class HakemuksenTilaSerializer extends Serializer[HakemuksenTila] {
   override def serialize(implicit format: Formats): PartialFunction[Any, JValue] = {
     case any: HakemuksenTila => Extraction.decompose(any)(JsonFormats.genericFormats)
   }
+}
+
+trait FixturePerson {
+  implicit val personOid: PersonOid = PersonOid(TestFixture.personOid)
 }

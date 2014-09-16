@@ -3,8 +3,9 @@ package fi.vm.sade.omatsivut.security
 import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.omatsivut.ScalatraTestSupport
+import fi.vm.sade.omatsivut.hakemus.FixturePerson
 
-class AuthenticationSpec extends ScalatraTestSupport {
+class AuthenticationSpec extends ScalatraTestSupport with FixturePerson {
   override lazy val appConfig = new AppConfig.IT
   addServlet(appConfig.componentRegistry.newApplicationsServlet, "/*")
 
@@ -16,7 +17,7 @@ class AuthenticationSpec extends ScalatraTestSupport {
     }
 
     "return 200 with proper credentials" in {
-      authGet("/applications", TestFixture.personOid) {
+      authGet("/applications") {
         status must_== 200
       }
     }

@@ -6,7 +6,7 @@ import fi.vm.sade.omatsivut.hakemus.domain.Hakemus
 import org.json4s._
 import org.json4s.jackson.JsonMethods
 
-class UpdateApplicationSpec extends HakemusApiSpecification {
+class UpdateApplicationSpec extends HakemusApiSpecification with FixturePerson {
   override implicit lazy val appConfig = new AppConfig.IT
   sequential
 
@@ -18,6 +18,7 @@ class UpdateApplicationSpec extends HakemusApiSpecification {
         status must_== 400
       }
     }
+
 
     "accept valid application" in {
       modifyHakemus (hakemusNivelKesa2013WithPeruskouluBaseEducationId){ hakemus => hakemus} { hakemus =>

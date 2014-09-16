@@ -8,7 +8,7 @@ import fi.vm.sade.omatsivut.haku.domain.{QuestionId, QuestionNode, HakuAika}
 import org.json4s._
 import org.json4s.jackson.{JsonMethods, Serialization}
 
-class ValidateApplicationSpec extends HakemusApiSpecification {
+class ValidateApplicationSpec extends HakemusApiSpecification with FixturePerson {
   override lazy val appConfig = new AppConfig.IT
   addServlet(appConfig.componentRegistry.newApplicationsServlet, "/*")
 
