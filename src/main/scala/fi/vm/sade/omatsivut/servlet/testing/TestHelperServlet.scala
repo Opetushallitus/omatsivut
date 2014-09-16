@@ -5,10 +5,12 @@ import AppConfig.AppConfig
 import fi.vm.sade.omatsivut.fixtures.{ValintatulosFixtureImporter, FixtureImporter}
 import fi.vm.sade.omatsivut.security.{AuthenticationCipher, ShibbolethCookie}
 import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
-import fi.vm.sade.omatsivut.valintatulokset.MockValintatulosService
+import fi.vm.sade.omatsivut.valintatulokset.{ValintatulosService, MockValintatulosService}
 import org.scalatra.{Cookie, CookieOptions}
 
 class TestHelperServlet(val appConfig: AppConfig) extends OmatSivutServletBase  {
+  private val valintatulosService: ValintatulosService = appConfig.componentRegistry.valintatulosService
+
   if(appConfig.usesFakeAuthentication) {
     get("/fakesession") {
       val shibbolethCookie = ShibbolethCookie("_shibsession_fakeshibbolethsession", new AuthenticationCipher(appConfig.settings.aesKey, appConfig.settings.hmacKey).encrypt("FAKESESSION"))
@@ -27,10 +29,10 @@ class TestHelperServlet(val appConfig: AppConfig) extends OmatSivutServletBase  
     }
   }
 
-  if(appConfig.componentRegistry.valintatulosService.isInstanceOf[MockValintatulosService]) {
+  if(valintatulosService.isInstanceOf[MockValintatulosService]) {
     put("/fixtures/valintatulos") {
       val fixtureName: String = params("fixturename")
-      new ValintatulosFixtureImporter(appConfig).applyFixtures(fixtureName)
+      new ValintatulosFixtureImporter(valintatulosService.asInstanceOf[MockValintatulosService]).applyFixtures(fixtureName)
     }
   }
 
