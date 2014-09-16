@@ -26,7 +26,7 @@ object TestFixture {
   val persons = Map((testHetu, personOid),
                     (testHetuWithNoApplications, "1.2.246.562.24.79213463339"))
   val appConfig = new AppConfig.IT
-  val springContext: OmatSivutSpringContext = appConfig.springContext
+  val springContext: OmatSivutSpringContext = appConfig.componentRegistry.springContext
 
   lazy val (applicationSystemNivelKesa2013, applicationNivelKesa2013WithPeruskouluBaseEducationApp) = {
     (new AppConfig.IT).withConfig { appConfig =>

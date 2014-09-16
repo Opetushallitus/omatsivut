@@ -29,10 +29,10 @@ class AppConfigSpec extends Specification {
   }
 
   def validateConfig(config: AppConfig) = {
-    config.springContext.applicationDAO
-    config.springContext.applicationSystemService
-    config.springContext.mongoTemplate
-    config.springContext.validator
+    config.componentRegistry.springContext.applicationDAO
+    config.componentRegistry.springContext.applicationSystemService
+    config.componentRegistry.springContext.mongoTemplate
+    config.componentRegistry.springContext.validator
     success
   }
 }

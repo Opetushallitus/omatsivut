@@ -24,7 +24,7 @@ import org.json4s.reflect.TypeInfo
 trait HakemusApiSpecification extends ScalatraTestSupport {
   implicit val jsonFormats: Formats = JsonFormats.jsonFormats ++ List(new HakemuksenTilaSerializer)
 
-  val dao: ApplicationDAO = appConfig.springContext.applicationDAO
+  val dao: ApplicationDAO = appConfig.componentRegistry.springContext.applicationDAO
 
   val personalInfoPhaseKey: String = OppijaConstants.PHASE_PERSONAL
   val preferencesPhaseKey: String = OppijaConstants.PHASE_APPLICATION_OPTIONS

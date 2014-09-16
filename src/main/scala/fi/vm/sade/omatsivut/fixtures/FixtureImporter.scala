@@ -7,7 +7,7 @@ import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import org.springframework.data.mongodb.core.MongoTemplate
 
 class FixtureImporter(val appConfig: AppConfig) {
-  val springContext: OmatSivutSpringContext = appConfig.springContext
+  val springContext: OmatSivutSpringContext = appConfig.componentRegistry.springContext
   val applicationDAO = springContext.applicationDAO
   val monogTemplate: MongoTemplate = springContext.mongoTemplate
 

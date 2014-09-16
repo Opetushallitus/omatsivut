@@ -64,9 +64,10 @@ protected class ComponentRegistry(val config: AppConfig)
     case _ => new RemoteAuthenticationInfoService(config.settings.authenticationServiceConfig, config)
   }
 
-  lazy val springContext: OmatSivutSpringContext = config.springContext
+
   private lazy val runningLogger = new RunnableLogger
   private lazy val pool = Executors.newSingleThreadExecutor
+  lazy val springContext = new OmatSivutSpringContext(OmatSivutSpringContext.createApplicationContext(config))
   val koulutusInformaatioService: KoulutusInformaatioService = configureKoulutusInformaatioService
   val ohjausparametritService: OhjausparametritService = configureOhjausparametritService
   val valintatulosService: ValintatulosService = configureValintatulosService
@@ -91,5 +92,4 @@ protected class ComponentRegistry(val config: AppConfig)
   def stop {
 
   }
-
 }
