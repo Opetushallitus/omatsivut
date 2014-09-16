@@ -11,7 +11,7 @@ import fi.vm.sade.haku.oppija.lomake.domain.elements.{HiddenValue, Link, Notific
 import fi.vm.sade.haku.oppija.lomake.domain.rules.{AddElementRule, RelatedQuestionRule}
 import fi.vm.sade.omatsivut.config.{OmatSivutSpringContext, SpringContextComponent}
 import fi.vm.sade.omatsivut.domain.{Address, Attachment, Language}
-import fi.vm.sade.omatsivut.hakemus.HakemusConverter.FlatAnswers
+import fi.vm.sade.omatsivut.hakemus.FlatAnswers.FlatAnswers
 import fi.vm.sade.omatsivut.haku.{ElementWrapper, OptionWrapper}
 import fi.vm.sade.omatsivut.localization.Translations
 import fi.vm.sade.omatsivut.servlet.ServerContaxtPath
@@ -20,7 +20,7 @@ import fi.vm.sade.omatsivut.util.Logging
 import scalatags.Text.TypedTag
 
 trait HakemusPreviewGeneratorComponent {
-  this: SpringContextComponent =>
+  this: SpringContextComponent with HakemusConverterComponent =>
 
   val springContext: OmatSivutSpringContext
 
@@ -41,7 +41,7 @@ trait HakemusPreviewGeneratorComponent {
 
     private def applicationPreview(serverPath: ServerContaxtPath, application: Application) = {
       val applicationSystem = applicationSystemService.getApplicationSystem(application.getApplicationSystemId)
-      val answers: FlatAnswers = HakemusConverter.flattenAnswers(ApplicationUpdater.allAnswersFromApplication(application))
+      val answers: FlatAnswers = FlatAnswers.flatten(ApplicationUpdater.allAnswersFromApplication(application))
       val form = ElementWrapper.wrapFiltered(applicationSystem.getForm, answers)
       val addInfos = for(addInfo <- applicationSystem.getAdditionalInformationElements()) yield ElementWrapper.wrapFiltered(addInfo, answers)
 

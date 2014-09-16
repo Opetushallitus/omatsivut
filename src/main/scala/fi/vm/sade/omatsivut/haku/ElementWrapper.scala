@@ -5,8 +5,7 @@ import fi.vm.sade.haku.oppija.lomake.domain.elements._
 import fi.vm.sade.haku.oppija.lomake.domain.elements.custom.gradegrid.GradeGridOptionQuestion
 import fi.vm.sade.haku.oppija.lomake.domain.elements.questions.OptionQuestion
 import fi.vm.sade.omatsivut.domain.Language.Language
-import fi.vm.sade.omatsivut.hakemus.HakemusConverter.FlatAnswers
-
+import fi.vm.sade.omatsivut.hakemus.FlatAnswers.FlatAnswers
 import scala.collection.JavaConversions._
 
 class OptionWrapper(element: ElementWrapper) {

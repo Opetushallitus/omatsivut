@@ -26,6 +26,7 @@ protected class ComponentRegistry(implicit val config: AppConfig)
           AuthenticationInfoComponent with
           ApplicationValidatorComponent with
           HakemusPreviewGeneratorComponent with
+          HakemusConverterComponent with
           ApplicationsServletContainer with
           KoulutusServletContainer with
           SecuredSessionServletContainer with
@@ -73,6 +74,7 @@ protected class ComponentRegistry(implicit val config: AppConfig)
   val auditLogger: AuditLogger = new AuditLoggerFacade(runningLogger)
   val hakuRepository: HakuRepository = new RemoteHakuRepository
   val hakemusRepository: HakemusRepository = new RemoteHakemusRepository
+  val hakemusConverter: HakemusConverter = new HakemusConverter
 
   def newApplicationValidator: ApplicationValidator = new ApplicationValidator
   def newHakemusPreviewGenerator(language: Language): HakemusPreviewGenerator = new HakemusPreviewGenerator()(language)

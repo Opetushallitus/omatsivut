@@ -11,7 +11,7 @@ import fi.vm.sade.omatsivut.haku.{HakuConverter, HakuRepository, HakuRepositoryC
 import fi.vm.sade.omatsivut.util.Timer
 
 trait HakemusRepositoryComponent {
-  this: HakuRepositoryComponent with AuditLoggerComponent =>
+  this: HakuRepositoryComponent with HakemusConverterComponent with AuditLoggerComponent =>
 
   val hakuRepository: HakuRepository
 
@@ -43,7 +43,7 @@ trait HakemusRepositoryComponent {
             dao.update(applicationQuery, application)
           }, 1000, "Application update DAO")
           auditLogger.log(UpdateHakemus(userOid, hakemus.oid, originalAnswers, application.getAnswers.toMap.mapValues(_.toMap)))
-          HakemusConverter.convertToHakemus(applicationSystem, HakuConverter.convertToHaku(applicationSystem), application)
+          hakemusConverter.convertToHakemus(applicationSystem, HakuConverter.convertToHaku(applicationSystem), application)
         }
       }, 1000, "Application update")
     }
@@ -72,7 +72,7 @@ trait HakemusRepositoryComponent {
             hakuRepository.getHakuByApplication(application)
           }, 1000, "HakuRepository get haku")
           hakuOption.map { case (applicationSystem: ApplicationSystem, haku: Haku) => {
-            val hakemus = HakemusConverter.convertToHakemus(applicationSystem, haku, application)
+            val hakemus = hakemusConverter.convertToHakemus(applicationSystem, haku, application)
             auditLogger.log(ShowHakemus(personOid, hakemus.oid))
             hakemus
           }}

@@ -1,11 +1,10 @@
 package fi.vm.sade.omatsivut.servlet
 
-import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
+import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.json.JsonFormats
-import fi.vm.sade.omatsivut.koulutusinformaatio.{KoulutusInformaatioService, KoulutusInformaatioComponent}
+import fi.vm.sade.omatsivut.koulutusinformaatio.{KoulutusInformaatioComponent, KoulutusInformaatioService}
 import org.scalatra.json.JacksonJsonSupport
 import org.scalatra.swagger.{Swagger, SwaggerSupport}
-import fi.vm.sade.omatsivut.domain.Language
 
 trait KoulutusServletContainer {
   this: KoulutusInformaatioComponent =>

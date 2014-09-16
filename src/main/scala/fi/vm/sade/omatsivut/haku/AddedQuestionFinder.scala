@@ -6,7 +6,7 @@ import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
 import fi.vm.sade.omatsivut.hakemus.domain._
-import fi.vm.sade.omatsivut.hakemus.{ApplicationUpdater, HakemusConverter, HakutoiveetConverter}
+import fi.vm.sade.omatsivut.hakemus.{FlatAnswers, ApplicationUpdater, HakutoiveetConverter}
 import fi.vm.sade.omatsivut.haku.domain.{QuestionGroup, QuestionLeafNode, QuestionNode}
 
 object AddedQuestionFinder {
@@ -14,9 +14,9 @@ object AddedQuestionFinder {
 
   def findAddedQuestions(applicationSystem: ApplicationSystem, newAnswers: Answers, oldAnswers: Answers)(implicit lang: Language.Language): Set[QuestionLeafNode] = {
     val form = applicationSystem.getForm
-    val oldAnswersFlat: Map[String, String] = HakemusConverter.flattenAnswers(oldAnswers)
+    val oldAnswersFlat: Map[String, String] = FlatAnswers.flatten(oldAnswers)
     val oldQuestions = FormQuestionFinder.findQuestionsFromElements(Set(ElementWrapper.wrapFiltered(form, oldAnswersFlat)))
-    val newAnswersFlat: Map[String, String] = HakemusConverter.flattenAnswers(newAnswers)
+    val newAnswersFlat: Map[String, String] = FlatAnswers.flatten(newAnswers)
     val newQuestions = FormQuestionFinder.findQuestionsFromElements(Set(ElementWrapper.wrapFiltered(form, newAnswersFlat)))
     newQuestions.diff(oldQuestions)
   }
@@ -34,7 +34,7 @@ object AddedQuestionFinder {
   }
 
   def findQuestions(applicationSystem: ApplicationSystem)(storedApplication: Application, hakemus: HakemusMuutos, newKoulutusIds: List[String])(implicit lang: Language.Language) = {
-    val filteredForm: ElementWrapper = ElementWrapper.wrapFiltered(applicationSystem.getForm, HakemusConverter.flattenAnswers(ApplicationUpdater.getAllAnswersForApplication(applicationSystem, storedApplication.clone(), hakemus)))
+    val filteredForm: ElementWrapper = ElementWrapper.wrapFiltered(applicationSystem.getForm, FlatAnswers.flatten(ApplicationUpdater.getAllAnswersForApplication(applicationSystem, storedApplication.clone(), hakemus)))
 
     val questionsPerHakutoive: List[QuestionNode] = hakemus.hakutoiveet.zipWithIndex.flatMap { case (hakutoive, index) =>
       hakutoive.get("Koulutus-id") match {
