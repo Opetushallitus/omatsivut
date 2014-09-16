@@ -42,7 +42,9 @@
     "sortUp_ariaLabel": "Siirrä hakutoivetta mieluisuusjärjestyksessä ylöspäin ",
     "sortDown_ariaLabel": "Siirrä hakutoivetta mieluisuusjärjestyksessä alaspäin",
     "delete_confirm": "Poista",
-    "delete_ariaLabel": "Poista hakutoive valitsemalla tämä kaksi kertaa  ",
+    "delete_ariaLabel": "Poista hakutoive valitsemalla tämä kaksi kertaa",
+    "vastaanota_confirm": "Lähetä vastaus",
+    "vastaanota_ariaLabel": "Lähetä vastaus valitsemalla tämä kaksi kertaa",
     "logout": "Kirjaudu ulos",
     "showApplication": "Näytä koko hakemus"
   },

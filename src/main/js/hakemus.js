@@ -80,6 +80,12 @@ Hakemus.prototype = {
     return this.state && this.state.valintatulos ? this.state.valintatulos.hakutoiveet : []
   },
 
+  vastaanotettavatHakutoiveet: function() {
+    return _(this.valintatulosHakutoiveet()).filter(function(hakutoive) {
+      return hakutoive.vastaanotettavuustila === "VASTAANOTETTAVISSA_SITOVASTI" || hakutoive.vastaanotettavuustila === "VASTAANOTETTAVISSA_EHDOLLISESTI"
+    })
+  },
+
   hasResultState: function(resultStates) {
     if (!_.isArray(resultStates))
       resultStates = [resultStates]

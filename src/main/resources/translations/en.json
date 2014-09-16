@@ -43,6 +43,8 @@
     "sortDown_ariaLabel": "Move your study program choice to a lower priority",
     "delete_confirm": "Delete",
     "delete_ariaLabel": "Remove your choice by doubleclicking",
+    "vastaanota_confirm": "Lähetä vastaus",
+    "vastaanota_ariaLabel": "Lähetä vastaus valitsemalla tämä kaksi kertaa",
     "logout": "Log out",
     "showApplication": "Show application form"
   },

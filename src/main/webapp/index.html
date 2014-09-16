@@ -64,6 +64,10 @@
                         <p class="application-state-message" ng-if="application.state.id == 'POSTPROCESSING' || application.state.id == 'SUBMITTED'">
                             {{ localization("message.applicationIsInPostProcessing") }}
                         </p>
+                        <div class="application-state-message" ng-if="resultState" ng-bind="resultState"></div>
+
+                        <hakutoiveen-vastaanotto hakutoiveet="application.vastaanotettavatHakutoiveet()">
+                        </hakutoiveen-vastaanotto>
                     </div>
 
                     <section class="application-section application-valintatulos" ng-if="application.state.valintatulos">

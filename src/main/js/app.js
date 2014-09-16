@@ -23,6 +23,7 @@ require('./restResources')(listApp)
 require('./recursionHelper')
 require('../lib/angular-debounce')
 require('./templates/question')(listApp)
+require('./templates/hakutoiveenVastaanotto')(listApp)
 
 listApp.run(function ($rootScope, localization) {
   $rootScope.localization = localization
