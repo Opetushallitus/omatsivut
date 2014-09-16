@@ -61,7 +61,7 @@ protected class ComponentRegistry(implicit val config: AppConfig)
     case x: MockAuthentication => new AuthenticationInfoService {
       def getHenkiloOID(hetu: String) = TestFixture.persons.get(hetu)
     }
-    case _ => new RemoteAuthenticationInfoService(config.settings.authenticationServiceConfig)(config)
+    case _ => new RemoteAuthenticationInfoService(config.settings.authenticationServiceConfig, config)
   }
 
   lazy val springContext: OmatSivutSpringContext = config.springContext

@@ -1,13 +1,12 @@
 package fi.vm.sade.omatsivut.security
 
-import fi.vm.sade.omatsivut.config.{RemoteApplicationConfig, AppConfig}
-import fi.vm.sade.omatsivut.config.AppConfig.{MockAuthentication, AppConfig}
+import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
+import fi.vm.sade.omatsivut.config.RemoteApplicationConfig
 import fi.vm.sade.omatsivut.fixtures.TestFixture
-import fi.vm.sade.omatsivut.http.HttpClient
+import fi.vm.sade.omatsivut.http.DefaultHttpClient
 import fi.vm.sade.omatsivut.util.Logging
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
-import fi.vm.sade.omatsivut.http.DefaultHttpClient
 
 trait AuthenticationInfoComponent {
   val authenticationInfoService: AuthenticationInfoService
@@ -16,12 +15,11 @@ trait AuthenticationInfoComponent {
     def getHenkiloOID(hetu: String) = TestFixture.persons.get(hetu)
   }
 
-  class RemoteAuthenticationInfoService(config: RemoteApplicationConfig)(implicit val appConfig: AppConfig) extends AuthenticationInfoService with Logging {
-
+  class RemoteAuthenticationInfoService(config: RemoteApplicationConfig, appConfig: AppConfig) extends AuthenticationInfoService with Logging {
     implicit val formats = DefaultFormats
 
     def getHenkiloOID(hetu : String) : Option[String] = {
-      CASClient(DefaultHttpClient).getServiceTicket(config) match {
+      new CASClient(DefaultHttpClient, appConfig.settings.casTicketUrl).getServiceTicket(config) match {
         case None => None
         case Some(ticket) => getHenkiloOID(hetu, ticket)
       }

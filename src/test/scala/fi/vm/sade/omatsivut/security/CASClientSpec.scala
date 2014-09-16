@@ -7,13 +7,14 @@ import fi.vm.sade.omatsivut.http.FakeHttpRequest
 import fi.vm.sade.omatsivut.http.FakeHttpClient
 
 class CasClientSpec extends Specification {
-  implicit lazy val appConfig = new AppConfig.IT
+  val appConfig = new AppConfig.IT
+  val casTicketUrl = appConfig.settings.casTicketUrl
 
   "CAS client" should {
     "parse ticket granting ticket from Location header" in {
-      val client = CASClient(new FakeHttpClient(new FakeHttpRequest() {
+      val client = new CASClient(new FakeHttpClient(new FakeHttpRequest() {
         override def responseWithHeaders = (201, Map[String, List[String]](("Location", List("https://my.cas.serv/some/ticket/url/my-test-ticket"))), "")
-      }))
+      }), casTicketUrl)
       val tgt = client.getTicketGrantingTicket("username", "pasword")
       tgt must_== Some("my-test-ticket")
     }
@@ -21,9 +22,9 @@ class CasClientSpec extends Specification {
 
   "CAS client" should {
     "return no ticket granting ticket when no Location header" in {
-      val client = CASClient(new FakeHttpClient(new FakeHttpRequest() {
+      val client = new CASClient(new FakeHttpClient(new FakeHttpRequest() {
         override def responseWithHeaders = (201, Map[String, List[String]](), "")
-      }))
+      }), casTicketUrl)
       val tgt = client.getTicketGrantingTicket("username", "pasword")
       tgt must_== None
     }
@@ -31,9 +32,9 @@ class CasClientSpec extends Specification {
 
   "CAS client" should {
     "return no ticket granting ticket when invalid Location header" in {
-      val client = CASClient(new FakeHttpClient(new FakeHttpRequest() {
+      val client = new CASClient(new FakeHttpClient(new FakeHttpRequest() {
         override def responseWithHeaders = (201, Map[String, List[String]](("Location", List("value"))), "")
-      }))
+      }), casTicketUrl)
       val tgt = client.getTicketGrantingTicket("username", "pasword")
       tgt must_== None
     }
@@ -41,7 +42,7 @@ class CasClientSpec extends Specification {
 
   "CAS client" should {
     "return no ticket granting ticket when other than 201 response code" in {
-      val client = CASClient(new FakeHttpClient(new FakeHttpRequest()))
+      val client = new CASClient(new FakeHttpClient(new FakeHttpRequest()), casTicketUrl)
       val tgt = client.getTicketGrantingTicket("username", "pasword")
       tgt must_== None
     }
