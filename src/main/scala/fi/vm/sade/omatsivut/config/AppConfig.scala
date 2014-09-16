@@ -151,9 +151,6 @@ object AppConfig extends Logging {
       }
     }
 
-
-    lazy val mongoTemplate = springContext.mongoTemplate
-
     def settings: ApplicationSettings
 
     def properties = settings.toProperties

@@ -1,14 +1,15 @@
 package fi.vm.sade.omatsivut.fixtures
 
 import fi.vm.sade.haku.testfixtures.MongoFixtureImporter
-import fi.vm.sade.omatsivut.config.AppConfig
+import fi.vm.sade.omatsivut.config.{OmatSivutSpringContext, AppConfig}
 import AppConfig.AppConfig
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import org.springframework.data.mongodb.core.MongoTemplate
 
 class FixtureImporter(val appConfig: AppConfig) {
-  val applicationDAO = appConfig.springContext.applicationDAO
-  val monogTemplate: MongoTemplate = appConfig.mongoTemplate
+  val springContext: OmatSivutSpringContext = appConfig.springContext
+  val applicationDAO = springContext.applicationDAO
+  val monogTemplate: MongoTemplate = springContext.mongoTemplate
 
 
   def applyFixtures(fixtureName: String = "") {

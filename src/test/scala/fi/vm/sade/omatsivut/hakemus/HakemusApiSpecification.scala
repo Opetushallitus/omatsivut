@@ -1,6 +1,7 @@
 package fi.vm.sade.omatsivut.hakemus
 
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
+import fi.vm.sade.haku.oppija.hakemus.it.dao.ApplicationDAO
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 import fi.vm.sade.omatsivut.fixtures.{FixtureImporter, TestFixture}
 import fi.vm.sade.omatsivut.json.{QuestionNodeSerializer, JsonFormats}
@@ -22,6 +23,8 @@ import org.json4s.reflect.TypeInfo
 
 trait HakemusApiSpecification extends ScalatraTestSupport {
   implicit val jsonFormats: Formats = JsonFormats.jsonFormats ++ List(new HakemuksenTilaSerializer)
+
+  val dao: ApplicationDAO = appConfig.springContext.applicationDAO
 
   val personalInfoPhaseKey: String = OppijaConstants.PHASE_PERSONAL
   val preferencesPhaseKey: String = OppijaConstants.PHASE_APPLICATION_OPTIONS
@@ -75,8 +78,9 @@ trait HakemusApiSpecification extends ScalatraTestSupport {
     hakemus.copy(hakutoiveet = hakemus.hakutoiveet.patch(emptyIndex, List(hakutoive), 1))
   }
 
+
   def withSavedApplication[T](hakemus: Hakemus)(f: Application => T): T = {
-    val application = appConfig.springContext.applicationDAO.find(new Application().setOid(hakemus.oid)).get(0)
+    val application = dao.find(new Application().setOid(hakemus.oid)).get(0)
     f(application)
   }
 

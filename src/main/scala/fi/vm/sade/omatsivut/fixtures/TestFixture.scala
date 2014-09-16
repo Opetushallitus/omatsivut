@@ -1,7 +1,7 @@
 package fi.vm.sade.omatsivut.fixtures
 
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
-import fi.vm.sade.omatsivut.config.AppConfig
+import fi.vm.sade.omatsivut.config.{OmatSivutSpringContext, AppConfig}
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
 import fi.vm.sade.omatsivut.haku.HakuConverter
@@ -26,19 +26,20 @@ object TestFixture {
   val persons = Map((testHetu, personOid),
                     (testHetuWithNoApplications, "1.2.246.562.24.79213463339"))
   val appConfig = new AppConfig.IT
+  val springContext: OmatSivutSpringContext = appConfig.springContext
 
   lazy val (applicationSystemNivelKesa2013, applicationNivelKesa2013WithPeruskouluBaseEducationApp) = {
     (new AppConfig.IT).withConfig { appConfig =>
-      val as = appConfig.springContext.applicationSystemService.getApplicationSystem(applicationSystemNivelKesa2013Oid)
-      val app = appConfig.springContext.applicationDAO.find(new Application().setOid(hakemusNivelKesa2013WithPeruskouluBaseEducationId)).toList.head
+      val as = springContext.applicationSystemService.getApplicationSystem(applicationSystemNivelKesa2013Oid)
+      val app = springContext.applicationDAO.find(new Application().setOid(hakemusNivelKesa2013WithPeruskouluBaseEducationId)).toList.head
       (as, app)
     }
   }
 
   lazy val (applicationSystemKorkeakouluSyksy2014, applicationWithApplicationOptionAttachments) = {
     (new AppConfig.IT).withConfig { appConfig =>
-      val as = appConfig.springContext.applicationSystemService.getApplicationSystem(applicationSystemKorkeakouluSyksy2014Oid)
-      val app = appConfig.springContext.applicationDAO.find(new Application().setOid(hakemusWithApplicationOptionAttachments)).toList.head
+      val as = springContext.applicationSystemService.getApplicationSystem(applicationSystemKorkeakouluSyksy2014Oid)
+      val app = springContext.applicationDAO.find(new Application().setOid(hakemusWithApplicationOptionAttachments)).toList.head
       (as, app)
     }
   }
