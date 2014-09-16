@@ -11,8 +11,8 @@ import fi.vm.sade.omatsivut.haku.{HakuRepository, HakuRepositoryComponent}
 import fi.vm.sade.omatsivut.koulutusinformaatio.{KoulutusInformaatioComponent, KoulutusInformaatioService}
 import fi.vm.sade.omatsivut.ohjausparametrit.{OhjausparametritComponent, OhjausparametritService}
 import fi.vm.sade.omatsivut.security.{AuthenticationInfoComponent, AuthenticationInfoService}
-import fi.vm.sade.omatsivut.servlet.session.{LogoutServletComponent, SecuredSessionServletComponent}
-import fi.vm.sade.omatsivut.servlet.{SwaggerServlet, OmatSivutSwagger, KoulutusServletComponent, ApplicationsServletContainer}
+import fi.vm.sade.omatsivut.servlet.session.{LogoutServletContainer, SecuredSessionServletContainer}
+import fi.vm.sade.omatsivut.servlet.{SwaggerServlet, OmatSivutSwagger, KoulutusServletContainer, ApplicationsServletContainer}
 import fi.vm.sade.omatsivut.valintatulokset._
 
 protected class ComponentRegistry(implicit val config: AppConfig)
@@ -27,9 +27,9 @@ protected class ComponentRegistry(implicit val config: AppConfig)
           ApplicationValidatorComponent with
           HakemusPreviewGeneratorComponent with
           ApplicationsServletContainer with
-          KoulutusServletComponent with
-          SecuredSessionServletComponent with
-          LogoutServletComponent {
+          KoulutusServletContainer with
+          SecuredSessionServletContainer with
+          LogoutServletContainer {
 
   implicit val swagger = new OmatSivutSwagger
 

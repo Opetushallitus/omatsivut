@@ -9,7 +9,7 @@ import org.scalatra.Cookie
 
 import scala.collection.JavaConverters._
 
-trait SecuredSessionServletComponent {
+trait SecuredSessionServletContainer {
   this: AuditLoggerComponent with AuthenticationInfoComponent =>
 
   val authenticationInfoService: AuthenticationInfoService

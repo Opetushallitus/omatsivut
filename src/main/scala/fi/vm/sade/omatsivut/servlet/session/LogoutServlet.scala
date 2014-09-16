@@ -6,7 +6,7 @@ import fi.vm.sade.omatsivut.auditlog.{AuditLoggerComponent, AuditLogger, Logout}
 import fi.vm.sade.omatsivut.security.{AuthenticationCipher, AuthCookieParsing, CookieCredentials}
 import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
 
-trait LogoutServletComponent {
+trait LogoutServletContainer {
   this: AuditLoggerComponent =>
 
   val auditLogger: AuditLogger

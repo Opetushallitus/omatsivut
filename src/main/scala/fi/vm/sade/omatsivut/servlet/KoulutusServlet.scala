@@ -7,7 +7,7 @@ import org.scalatra.json.JacksonJsonSupport
 import org.scalatra.swagger.{Swagger, SwaggerSupport}
 import fi.vm.sade.omatsivut.domain.Language
 
-trait KoulutusServletComponent {
+trait KoulutusServletContainer {
   this: KoulutusInformaatioComponent =>
 
   val koulutusInformaatioService: KoulutusInformaatioService
