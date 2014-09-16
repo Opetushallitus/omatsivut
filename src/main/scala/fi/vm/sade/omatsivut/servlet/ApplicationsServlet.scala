@@ -91,6 +91,13 @@ trait ApplicationsServletContainer {
       }
     }
 
+    post("/applications/vastaanota/:oid") {
+      val vastaanotto = Serialization.read[Vastaanotto](request.body)
+
+    }
+
+    case class Vastaanotto(hakukohdeOid: String, tila: String)
+
     case class ValidationResult(errors: List[ValidationError], questions: List[QuestionNode], applicationPeriods: List[HakuAika])
 
   }

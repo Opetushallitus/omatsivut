@@ -9,6 +9,7 @@ import org.json4s.JsonAST.JValue
 
 trait ValintatulosService {
   def getValintatulos(hakemusOid: String, hakuOid: String): Option[Valintatulos]
+  def vastaanota(hakemusOid: String, hakuOid: String, vastaanotto: Vastaanotto)
 }
 
 case class Valintatulos(hakemusOid: String, hakutoiveet: List[HakutoiveenValintatulos])
@@ -24,12 +25,16 @@ case class HakutoiveenValintatulos(hakukohdeOid: String,
                                    varasijojaTaytetaanAsti: Option[Date],
                                    varasijanumero: Option[Int])
 
+case class Vastaanotto(hakukohdeOid: String, tila: String, muokkaaja: String, selite: String)
+
 trait ValintatulosServiceComponent {
   val valintatulosService: ValintatulosService
 }
 
 class NoOpValintatulosService extends ValintatulosService {
   override def getValintatulos(hakemusOid: String, hakuOid: String) = None
+
+  override def vastaanota(hakemusOid: String, hakuOid: String, vastaanotto: Vastaanotto) {}
 }
 
 class MockValintatulosService() extends ValintatulosService with JsonFormats {
@@ -41,6 +46,10 @@ class MockValintatulosService() extends ValintatulosService with JsonFormats {
 
   override def getValintatulos(hakemusOid: String, hakuOid: String) = {
     valintatulokset.find(_.hakemusOid == hakemusOid)
+  }
+
+  override def vastaanota(hakemusOid: String, hakuOid: String, vastaanotto: Vastaanotto) {
+
   }
 }
 
@@ -66,6 +75,10 @@ class RemoteValintatulosService(valintatulosServiceUrl: String) extends Valintat
           None
       }
     }
+  }
+
+  override def vastaanota(hakemusOid: String, hakuOid: String, vastaanotto: Vastaanotto) {
+    // TODO
   }
 
   def makeRequest(url: String): Option[HttpRequest] = {
