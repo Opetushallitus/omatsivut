@@ -39,7 +39,7 @@ trait HakemusConverterComponent {
       )
     }
 
-    def tila(applicationSystem: ApplicationSystem, haku: Haku, application: Application): HakemuksenTila = {
+    private def tila(applicationSystem: ApplicationSystem, haku: Haku, application: Application): HakemuksenTila = {
       if (isPostProcessing(application)) {
         PostProcessing()
       } else {
@@ -59,7 +59,7 @@ trait HakemusConverterComponent {
       }
     }
 
-    def valintatulos(applicationSystem: ApplicationSystem, application: Application): Option[Valintatulos] = {
+    private def valintatulos(applicationSystem: ApplicationSystem, application: Application): Option[Valintatulos] = {
       val hakutoiveet = convertHakuToiveet(application)
 
       def findKoulutus(oid: String): Koulutus = {
