@@ -49,7 +49,7 @@ trait HakemusApiSpecification extends ScalatraTestSupport {
   }
 
   def setupFixture(fixtureName: String)(implicit appConfig: AppConfig) = {
-    FixtureImporter.apply().applyFixtures(fixtureName)
+    FixtureImporter(appConfig).applyFixtures(fixtureName)
   }
 
   def modifyHakemus[T](oid: String)(modification: (Hakemus => Hakemus))(f: Hakemus => T): T = {

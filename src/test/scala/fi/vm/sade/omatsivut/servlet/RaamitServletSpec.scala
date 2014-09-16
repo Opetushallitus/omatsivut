@@ -12,5 +12,5 @@ class RaamitServletSpec extends ScalatraTestSupport  {
     }
   }
 
-  addServlet(new RaamitServlet(), "/*")
+  addServlet(new RaamitServlet(appConfig), "/*")
 }

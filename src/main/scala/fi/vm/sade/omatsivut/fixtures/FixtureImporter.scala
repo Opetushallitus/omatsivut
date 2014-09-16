@@ -5,7 +5,7 @@ import fi.vm.sade.omatsivut.config.AppConfig
 import AppConfig.AppConfig
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 
-case class FixtureImporter(implicit val appConfig: AppConfig) {
+case class FixtureImporter(val appConfig: AppConfig) {
   def applyFixtures(fixtureName: String = "") {
     MongoFixtureImporter.importJsonFixtures(appConfig.mongoTemplate, appConfig.springContext.applicationDAO)
     applyOverrides(fixtureName)

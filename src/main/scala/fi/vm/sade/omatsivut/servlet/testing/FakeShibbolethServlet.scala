@@ -5,7 +5,7 @@ import AppConfig.AppConfig
 import fi.vm.sade.omatsivut.security.AuthCookieParsing
 import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
 
-class FakeShibbolethServlet(implicit val appConfig: AppConfig) extends OmatSivutServletBase with AuthCookieParsing  {
+class FakeShibbolethServlet(val appConfig: AppConfig) extends OmatSivutServletBase with AuthCookieParsing  {
   if(appConfig.usesFakeAuthentication){
     get("/Logout") {
       tellBrowserToDeleteAuthCookie(request, response)
