@@ -12,7 +12,7 @@ class ScalatraBootstrap extends LifeCycle {
   OmatSivutSpringContext.check
 
   override def init(context: ServletContext) {
-    config.start
+    config.componentRegistry.start
 
     context.mount(config.componentRegistry.newApplicationsServlet, ScalatraPaths.applications)
     context.mount(new TranslationServlet, "/translations")
@@ -28,7 +28,7 @@ class ScalatraBootstrap extends LifeCycle {
   }
 
   override def destroy(context: ServletContext) = {
-    config.stop
+    config.componentRegistry.stop
     super.destroy(context)
   }
 }

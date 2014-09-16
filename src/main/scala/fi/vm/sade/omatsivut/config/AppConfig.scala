@@ -71,14 +71,9 @@ object AppConfig extends Logging {
 
     override def onStart {
       mongo = EmbeddedMongo.start
-      try {
-        new FixtureImporter(componentRegistry.springContext.applicationDAO, componentRegistry.springContext.mongoTemplate).applyFixtures()
-      } catch {
-        case e: Exception =>
-          stop
-          throw e
-      }
+      new FixtureImporter(componentRegistry.springContext.applicationDAO, componentRegistry.springContext.mongoTemplate).applyFixtures()
     }
+
     override def onStop {
       mongo.foreach(_.stop)
       mongo = None
@@ -131,14 +126,7 @@ object AppConfig extends Logging {
 
     def usesFakeAuthentication: Boolean = false
     def usesLocalDatabase = false
-    final def start {
-      componentRegistry.start
-      onStart
-    }
-    final def stop {
-      componentRegistry.stop
-      onStop
-    }
+
     def onStart {}
     def onStop {}
 

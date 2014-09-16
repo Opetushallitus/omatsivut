@@ -47,11 +47,11 @@ object TestFixture {
   }
 
   def withConfig[T](appConfig: AppConfig, f: (AppConfig => T)): T = {
-    appConfig.start
+    appConfig.componentRegistry.start
     try {
       f(appConfig)
     } finally {
-      appConfig.stop
+      appConfig.componentRegistry.stop
     }
   }
 

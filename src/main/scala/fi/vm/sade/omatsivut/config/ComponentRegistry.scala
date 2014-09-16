@@ -89,10 +89,17 @@ protected class ComponentRegistry(val config: AppConfig)
   def newSwaggerServlet = new SwaggerServlet
 
   def start {
-    pool.execute(runningLogger)
+    try {
+      pool.execute(runningLogger)
+      config.onStart
+    } catch {
+      case e: Exception =>
+        stop
+        throw e
+    }
   }
 
   def stop {
-
+    config.onStop
   }
 }

@@ -27,7 +27,7 @@ trait ScalatraTestSupport extends MutableScalatraSpec {
     Map("Cookie" -> ("auth=" + new AuthenticationCipher(appConfig.settings.aesKey, appConfig.settings.hmacKey).encrypt(CookieCredentials(oid, shibbolethCookie).toString) + "; " + shibbolethCookie))
   }
 
-  override def map(fs: => Fragments) = Step(appConfig.start) ^ super.map(fs)
+  override def map(fs: => Fragments) = Step(appConfig.componentRegistry.start) ^ super.map(fs)
 }
 
 object AppConfigSetup {
