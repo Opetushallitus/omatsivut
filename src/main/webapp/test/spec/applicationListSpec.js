@@ -281,7 +281,7 @@
 
       describe("vanhat hakemukset", function() {
 
-        describe("jos kaikki kohteet on hylätty tai peruttu", function() {
+        describe("jos ylin hakutoive on hylätty", function() {
           before(page.applyValintatulosFixtureAndOpen("hylatty"))
           it("hakemusta ei voi muokata", function () {
             hakemusYhteishakuKevat2013WithForeignBaseEducation.preferencesForApplication().length.should.equal(0)
@@ -294,6 +294,22 @@
           it("valintatulokset näytetään", function () {
             expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].hakukohde).to.equal('Kallion lukio Lukion ilmaisutaitolinja')
             expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].tila).to.equal('Hylätty')
+          })
+        })
+
+        describe("jos ylin hakutoive on peruttu", function() {
+          before(page.applyValintatulosFixtureAndOpen("perunut"))
+          it("hakemusta ei voi muokata", function () {
+            hakemusYhteishakuKevat2013WithForeignBaseEducation.preferencesForApplication().length.should.equal(0)
+          })
+
+          it("olet perunut hakemuksen näkyy", function() {
+            hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal("Olet perunut hakemuksen")
+          })
+
+          it("valintatulokset näytetään", function () {
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].hakukohde).to.equal('Kallion lukio Lukion ilmaisutaitolinja')
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].tila).to.equal('Peruit opiskelupaikan')
           })
         })
 
