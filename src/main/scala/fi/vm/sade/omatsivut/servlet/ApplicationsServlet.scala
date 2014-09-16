@@ -75,9 +75,10 @@ trait ApplicationsServletContainer {
     }
 
     post("/applications/validate/:oid", operation(validateApplicationsSwagger)) {
-      val validate = Serialization.read[HakemusMuutos](request.body)
-      val applicationSystem = applicationSystemService.getApplicationSystem(validate.hakuOid)
-      val (errors: List[ValidationError], questions: List[QuestionNode], updatedApplication: Application) = applicationValidator.validateAndFindQuestions(applicationSystem)(validate, paramOption("questionsOf").getOrElse("").split(',').toList)
+      val muutos = Serialization.read[HakemusMuutos](request.body)
+      val applicationSystem = applicationSystemService.getApplicationSystem(muutos.hakuOid)
+      val questionsOf: List[String] = paramOption("questionsOf").getOrElse("").split(',').toList
+      val (errors: List[ValidationError], questions: List[QuestionNode], updatedApplication: Application) = applicationValidator.validateAndFindQuestions(applicationSystem)(muutos, questionsOf, personOid())
       ValidationResult(errors, questions, hakuRepository.getApplicationPeriods(updatedApplication, applicationSystem))
     }
 

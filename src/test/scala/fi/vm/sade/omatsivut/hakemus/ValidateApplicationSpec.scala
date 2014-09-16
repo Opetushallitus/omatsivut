@@ -1,5 +1,6 @@
 package fi.vm.sade.omatsivut.hakemus
 
+import fi.vm.sade.omatsivut.PersonOid
 import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.omatsivut.fixtures.TestFixture._
@@ -18,9 +19,18 @@ class ValidateApplicationSpec extends HakemusApiSpecification with FixturePerson
     "validate application" in {
       withHakemus(hakemusNivelKesa2013WithPeruskouluBaseEducationId) { hakemus =>
         validate(hakemus) { (errors, structuredQuestions, _) =>
+          status must_== 200
           errors must_== List()
           structuredQuestions must_== List()
         }
+      }
+    }
+
+    "reject application with different personOid" in {
+      withHakemus(hakemusNivelKesa2013WithPeruskouluBaseEducationId) { hakemus =>
+        validate(hakemus) { (errors, structuredQuestions, _) =>
+          status must_== 500
+        }(PersonOid("wat"))
       }
     }
 
@@ -29,6 +39,7 @@ class ValidateApplicationSpec extends HakemusApiSpecification with FixturePerson
       val extraQuestionTwo: (Hakemus) => Hakemus = answerExtraQuestion(preferencesPhaseKey, "hakutoive-tuntematon-kysymys", "osaaminen-testivastaus")
       modifyHakemus(hakemusNivelKesa2013WithPeruskouluBaseEducationId)(extraQuestionOne andThen extraQuestionTwo) { newHakemus =>
         validate(newHakemus) { (errors, structuredQuestions, _) =>
+          status must_== 200
           errors must_== List()
           structuredQuestions must_== List()
         }
@@ -38,6 +49,7 @@ class ValidateApplicationSpec extends HakemusApiSpecification with FixturePerson
     "get additional question correctly for old questions" in {
       withHakemus(TestFixture.hakemusWithGradeGridAndDancePreference) { hakemus =>
         validate(hakemus, Some("1.2.246.562.5.31982630126,1.2.246.562.5.68672543292,1.2.246.562.14.2013102812460331191879" )) { (errors, structuredQuestions, _) =>
+          status must_== 200
           QuestionNode.flatten(structuredQuestions).map(_.id) must_== List(
              QuestionId("hakutoiveet","preference1-discretionary"),
              QuestionId("hakutoiveet","preference1_kaksoistutkinnon_lisakysymys"),
@@ -77,12 +89,11 @@ class ValidateApplicationSpec extends HakemusApiSpecification with FixturePerson
     }
   }
 
-  def validate[T](hakemus:Hakemus, questionsOf: Option[String] = None)(f: (List[ValidationError], List[QuestionNode], List[HakuAika]) => T) = {
+  def validate[T](hakemus:Hakemus, questionsOf: Option[String] = None)(f: (List[ValidationError], List[QuestionNode], List[HakuAika]) => T)(implicit personOid: PersonOid) = {
     authPost("/applications/validate/" + hakemus.oid + (questionsOf match {
         case Some(value) =>  "?questionsOf=" + value
         case None => ""}),
         TestFixture.personOid, Serialization.write(hakemus.toHakemusMuutos)) {
-      status must_== 200
       val result: JValue = JsonMethods.parse(body)
       val errors: List[ValidationError] = (result \ "errors").extract[List[ValidationError]]
       val structuredQuestions: List[QuestionNode] = (result \ "questions").extract[List[QuestionNode]]

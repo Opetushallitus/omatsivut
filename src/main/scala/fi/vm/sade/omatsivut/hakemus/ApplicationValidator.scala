@@ -30,9 +30,10 @@ trait ApplicationValidatorComponent {
       validateHakutoiveetAndAnswers(updatedApplication, storedApplication, applicationSystem) ++ errorsForUnknownAnswers(applicationSystem, hakemus)
     }
 
-    def validateAndFindQuestions(applicationSystem: ApplicationSystem)(hakemus: HakemusMuutos, newKoulutusIds: List[String])(implicit lang: Language.Language): (List[ValidationError], List[QuestionNode], Application) = {
+    def validateAndFindQuestions(applicationSystem: ApplicationSystem)(hakemus: HakemusMuutos, newKoulutusIds: List[String], personOid: String)(implicit lang: Language.Language): (List[ValidationError], List[QuestionNode], Application) = {
       withErrorLogging {
         val storedApplication = hakemusRepository.findStoredApplication(hakemus)
+        if (storedApplication.getPersonOid != personOid) throw new IllegalArgumentException("personId mismatch")
         val updatedApplication = update(hakemus, applicationSystem, storedApplication)
         val validationErrors: List[ValidationError] = validateHakutoiveetAndAnswers(updatedApplication, storedApplication, applicationSystem)
         val questions = AddedQuestionFinder.findQuestions(applicationSystem)(storedApplication, hakemus, newKoulutusIds)
