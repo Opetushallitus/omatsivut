@@ -5,7 +5,7 @@ import fi.vm.sade.omatsivut.config.AppConfig
 import AppConfig.AppConfig
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
 
-case class ApplicationStateFixture(appConfig: AppConfig) {
+class ApplicationStateFixture(appConfig: AppConfig) {
   private val dao = appConfig.springContext.applicationDAO
   def setState(state: Application.State = Application.State.PASSIVE) {
     val application: Application = dao.find(new Application().setOid(TestFixture.hakemusYhteishakuKevat2014WithForeignBaseEducationId)).get(0)

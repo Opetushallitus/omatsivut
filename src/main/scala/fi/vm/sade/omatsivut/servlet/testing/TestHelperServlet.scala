@@ -23,14 +23,14 @@ class TestHelperServlet(val appConfig: AppConfig) extends OmatSivutServletBase  
   if(appConfig.usesLocalDatabase) {
     put("/fixtures/apply") {
       val fixtureName: String = params("fixturename")
-      FixtureImporter(appConfig).applyFixtures(fixtureName)
+      new FixtureImporter(appConfig).applyFixtures(fixtureName)
     }
   }
 
   if(appConfig.componentRegistry.valintatulosService.isInstanceOf[MockValintatulosService]) {
     put("/fixtures/valintatulos") {
       val fixtureName: String = params("fixturename")
-      ValintatulosFixtureImporter(appConfig).applyFixtures(fixtureName)
+      new ValintatulosFixtureImporter(appConfig).applyFixtures(fixtureName)
     }
   }
 
