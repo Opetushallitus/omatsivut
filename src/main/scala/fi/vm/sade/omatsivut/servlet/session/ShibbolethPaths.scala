@@ -8,12 +8,12 @@ import org.scalatra.servlet.RichResponse
 
 trait ShibbolethPaths {
 
-  def redirectToShibbolethLogin(response: RichResponse)(implicit appConfig: AppConfig, lang: Language.Language) {
-    response.redirect(appConfig.authContext.ssoContextPath + "/Shibboleth.sso/Login" + lang.toString().toUpperCase())
+  def redirectToShibbolethLogin(response: RichResponse, ssoContextPath: String)(implicit lang: Language.Language) {
+    response.redirect(ssoContextPath + "/Shibboleth.sso/Login" + lang.toString().toUpperCase())
   }
   
-  def redirectToShibbolethLogout(request: HttpServletRequest, response: RichResponse)(implicit appConfig: AppConfig): Unit = {
+  def redirectToShibbolethLogout(request: HttpServletRequest, response: RichResponse, ssoContextPath: String): Unit = {
     val returnUrl = request.getContextPath + "/session/reset"
-    response.redirect(appConfig.authContext.ssoContextPath + "/Shibboleth.sso/Logout?return=" + returnUrl)
+    response.redirect(ssoContextPath + "/Shibboleth.sso/Logout?return=" + returnUrl)
   }
 }

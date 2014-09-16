@@ -15,7 +15,7 @@ trait SecuredSessionServletContainer {
   val authenticationInfoService: AuthenticationInfoService
   val auditLogger: AuditLogger
 
-  class SecuredSessionServlet(implicit val appConfig: AppConfig) extends OmatSivutServletBase with AuthCookieParsing with ShibbolethPaths {
+  class SecuredSessionServlet(val appConfig: AppConfig) extends OmatSivutServletBase with AuthCookieParsing with ShibbolethPaths {
     get("/initsession") {
       checkCredentials match {
         case (Some(oid), Some(cookie)) => {
@@ -27,7 +27,7 @@ trait SecuredSessionServletContainer {
           logger.warn("No user OID found. Cookie: " + cookie)
           response.redirect(request.getContextPath + "/no-applications.html")
         }
-        case _ => redirectToShibbolethLogin(response)
+        case _ => redirectToShibbolethLogin(response, appConfig.authContext.ssoContextPath)
       }
     }
 
@@ -51,7 +51,7 @@ trait SecuredSessionServletContainer {
     }
 
     private def createAuthCookieResponse(credentials: CookieCredentials) {
-      val encryptedCredentials = new AuthenticationCipher(appConfig).encrypt(credentials.toString)
+      val encryptedCredentials = new AuthenticationCipher(appConfig.settings.aesKey, appConfig.settings.hmacKey).encrypt(credentials.toString)
       response.addCookie(Cookie("auth", encryptedCredentials)(appConfig.authContext.cookieOptions))
       response.redirect(redirectUri)
     }

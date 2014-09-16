@@ -6,6 +6,6 @@ import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
 
 class LoginServlet(implicit val appConfig: AppConfig) extends OmatSivutServletBase with ShibbolethPaths {
   get("/*") {
-    redirectToShibbolethLogin(response)
+    redirectToShibbolethLogin(response, appConfig.authContext.ssoContextPath)
   }
 }

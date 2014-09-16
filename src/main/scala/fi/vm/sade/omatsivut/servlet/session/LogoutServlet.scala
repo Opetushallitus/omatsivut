@@ -13,16 +13,16 @@ trait LogoutServletContainer {
 
   class LogoutServlet(implicit val appConfig: AppConfig) extends OmatSivutServletBase with AuthCookieParsing with ShibbolethPaths {
     get("/*") {
-      parseCredentials(request, new AuthenticationCipher(appConfig)) match {
+      parseCredentials(request, new AuthenticationCipher(appConfig.settings.aesKey, appConfig.settings.hmacKey)) match {
         case Some(credentials) => sendLogOut(credentials)
-        case _ => redirectToShibbolethLogout(request, response)
+        case _ => redirectToShibbolethLogout(request, response, appConfig.authContext.ssoContextPath)
       }
     }
 
     def sendLogOut(credentials: CookieCredentials) {
       auditLogger.log(Logout(credentials))
       tellBrowserToDeleteAuthCookie(request, response)
-      redirectToShibbolethLogout(request, response)
+      redirectToShibbolethLogout(request, response, appConfig.authContext.ssoContextPath)
     }
   }
 }

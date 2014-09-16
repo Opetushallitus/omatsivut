@@ -36,9 +36,9 @@ trait AES {
   case class AesResult(cipher: Array[Byte], initialVector: Array[Byte])
 }
 
-class AuthenticationCipher(val appConfig: AppConfig) extends AES with HmacSHA256 {
-  val key = appConfig.settings.aesKey.getBytes("UTF-8")
-  val macKey = appConfig.settings.hmacKey.getBytes("UTF-8")
+class AuthenticationCipher(val aesKey: String, hmacKey: String) extends AES with HmacSHA256 {
+  val key = aesKey.getBytes("UTF-8")
+  val macKey = hmacKey.getBytes("UTF-8")
 
   def encrypt(s: String) = {
     val aesResult = encryptAES(s.getBytes("UTF-8"), key)

@@ -11,7 +11,7 @@ import org.scalatra.{Cookie, CookieOptions}
 class TestHelperServlet(implicit val appConfig: AppConfig) extends OmatSivutServletBase  {
   if(appConfig.usesFakeAuthentication) {
     get("/fakesession") {
-      val shibbolethCookie = ShibbolethCookie("_shibsession_fakeshibbolethsession", new AuthenticationCipher(appConfig).encrypt("FAKESESSION"))
+      val shibbolethCookie = ShibbolethCookie("_shibsession_fakeshibbolethsession", new AuthenticationCipher(appConfig.settings.aesKey, appConfig.settings.hmacKey).encrypt("FAKESESSION"))
       response.addCookie(fakeShibbolethSessionCookie(shibbolethCookie))
       paramOption("hetu") match {
         case Some(hetu) => response.redirect(request.getContextPath + "/secure/initsession?hetu=" + hetu)

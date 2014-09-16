@@ -20,7 +20,7 @@ trait Authentication extends ScalatraBase with AuthCookieParsing with Logging {
   }
 
   def credentialsOption: Option[CookieCredentials] = {
-    parseCredentials(request, new AuthenticationCipher(appConfig))
+    parseCredentials(request, new AuthenticationCipher(appConfig.settings.aesKey, appConfig.settings.hmacKey))
   }
 
   def validateCredentials(credentials: CookieCredentials, req: HttpServletRequest) = {

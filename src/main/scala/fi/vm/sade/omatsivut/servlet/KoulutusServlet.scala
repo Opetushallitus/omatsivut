@@ -12,7 +12,7 @@ trait KoulutusServletContainer {
 
   val koulutusInformaatioService: KoulutusInformaatioService
 
-  class KoulutusServlet(implicit val swagger: Swagger, val appConfig: AppConfig) extends OmatSivutServletBase with JacksonJsonSupport with JsonFormats with SwaggerSupport {
+  class KoulutusServlet(implicit val swagger: Swagger) extends OmatSivutServletBase with JacksonJsonSupport with JsonFormats with SwaggerSupport {
     protected val applicationDescription = "Oppijan henkilökohtaisen palvelun REST API, jolla etsitään opetuspisteitä ja koulutuksia"
 
     before() {
