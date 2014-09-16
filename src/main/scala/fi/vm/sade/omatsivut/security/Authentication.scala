@@ -2,15 +2,15 @@ package fi.vm.sade.omatsivut.security
 
 import javax.servlet.http.{Cookie, HttpServletRequest, HttpServletResponse}
 
-import fi.vm.sade.omatsivut.config.AppConfig
-import AppConfig.AppConfig
-import fi.vm.sade.omatsivut.auditlog.{SessionTimeout, AuditLogger}
+import fi.vm.sade.omatsivut.auditlog.{AuditLogger, SessionTimeout}
+import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.util.Logging
 import org.joda.time.DateTime
 import org.scalatra.ScalatraBase
 
 trait Authentication extends ScalatraBase with AuthCookieParsing with Logging {
   val appConfig: AppConfig
+  val authAuditLogger: AuditLogger
 
   def personOid() = personOidOption.getOrElse(sys.error("Unauthenticated account"))
 
@@ -40,7 +40,7 @@ trait Authentication extends ScalatraBase with AuthCookieParsing with Logging {
       case Some(cookie) if validateCredentials(cookie, request) => true
       case Some(cookie) => {
         logger.info("Cookie was invalid: " + cookie)
-        appConfig.componentRegistry.auditLogger.log(SessionTimeout(cookie))
+        authAuditLogger.log(SessionTimeout(cookie))
         tellBrowserToDeleteAuthCookie(request, response)
         halt(status = 401, headers = Map("WWW-Authenticate" -> "SecureCookie"))
       }

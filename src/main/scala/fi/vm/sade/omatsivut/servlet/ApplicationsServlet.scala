@@ -1,6 +1,7 @@
 package fi.vm.sade.omatsivut.servlet
 
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
+import fi.vm.sade.omatsivut.auditlog.{AuditLoggerComponent, AuditLogger}
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.config.{OmatSivutSpringContext, SpringContextComponent}
 import fi.vm.sade.omatsivut.hakemus._
@@ -20,7 +21,8 @@ trait ApplicationsServletContainer {
     HakemusRepositoryComponent with
     ApplicationValidatorComponent with
     HakemusPreviewGeneratorComponent with
-    SpringContextComponent =>
+    SpringContextComponent with
+    AuditLoggerComponent =>
 
   val hakuRepository: HakuRepository
   val hakemusRepository: HakemusRepository
@@ -30,6 +32,7 @@ trait ApplicationsServletContainer {
     override def applicationName = Some("api")
     private val applicationSystemService = springContext.applicationSystemService
     private val applicationValidator: ApplicationValidator = newApplicationValidator
+    override val authAuditLogger: AuditLogger = auditLogger
 
     protected val applicationDescription = "Oppijan henkilökohtaisen palvelun REST API, jolla voi hakea ja muokata hakemuksia ja omia tietoja"
 
@@ -89,6 +92,7 @@ trait ApplicationsServletContainer {
     }
 
     case class ValidationResult(errors: List[ValidationError], questions: List[QuestionNode], applicationPeriods: List[HakuAika])
+
   }
 }
 
