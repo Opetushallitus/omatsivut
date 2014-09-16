@@ -111,14 +111,14 @@ module.exports = function(listApp) {
         callback : '&confirmAction'
       },
       link: function (scope, element, attrs) {
+        var originalText = ""
+
         function cancel() {
           element.removeClass("confirm")
           element.text(originalText)
           element.off(".cancelConfirm")
           $("body").off(".cancelConfirm")
         }
-
-        var originalText = element.text()
 
         element.on("click", function() {
           if (element.hasClass("confirm")) {
@@ -127,6 +127,7 @@ module.exports = function(listApp) {
           } else {
             element.hide()
             element.addClass("confirm")
+            originalText = element.text()
             element.text(attrs.confirmText)
             $("body").one("click.cancelConfirm", cancel)
             element.one("mouseout.cancelConfirm", function() { element.blur() })
