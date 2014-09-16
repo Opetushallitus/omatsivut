@@ -156,6 +156,27 @@ function ApplicationListPage() {
           }).toArray()
       },
 
+      vastaanotto: function() {
+        return {
+          vaihtoehdot: function() {
+            return getApplicationElement(applicationIndex).find("hakutoiveen-vastaanotto label:visible").map(function() {
+              return $(this).text().trim()
+            }).toArray()
+          },
+
+          selectOption: function(id) {
+            return function() {
+              getApplicationElement(applicationIndex).find("input[value='" + id + "']").click().click() // Angular hack
+              return wait.forAngular()
+            }
+          },
+
+          confirmButtonEnabled: function() {
+            return !getApplicationElement(applicationIndex).find(".vastaanota-btn").prop("disabled")
+          }
+        }
+      },
+
       isValidationErrorVisible: function() {
         return getApplicationElement().find(".status-message.error").is(":visible")
       },

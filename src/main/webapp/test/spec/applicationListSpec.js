@@ -243,11 +243,37 @@
 
       describe("opiskelijalle tarjotaan paikkaa", function() {
         describe("kyllä / ei", function() {
+          before(page.applyValintatulosFixtureAndOpen("hyvaksytty"))
+          it("oikeat vaihtoehdot tulevat näkyviin", function() {
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().vaihtoehdot()).to.deep.equal([
+              "Vastaanottanut", "Perunut"
+            ])
+          })
+
+          it("nappi on disabloitu", function() {
+            hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().confirmButtonEnabled().should.be.false
+          })
+
+          describe("valinnan jälkeen", function() {
+            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().selectOption("VASTAANOTTANUT"))
+
+            it("nappi on enabloitu", function() {
+              hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().confirmButtonEnabled().should.be.true
+            })
+          })
+
           it.skip("paikan vastaanottaminen onnistuu", function() { })
           it.skip("paikan hylkääminen onnistuu", function() { })
         })
 
         describe("ehdollinen vastaanotto", function() {
+          before(page.applyValintatulosFixtureAndOpen("hyvaksytty_ehdollisesti"))
+          it("oikeat vaihtoehdot tulevat näkyviin", function() {
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().vaihtoehdot()).to.deep.equal([
+              'Vastaanottanut', 'Perunut', 'Ehdollisesti vastaanottanut'
+            ])
+          })
+
           it.skip("paikan vastaanottaminen onnistuu", function() { })
           it.skip("paikan hylkääminen onnistuu", function() { })
         })
