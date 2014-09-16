@@ -79,7 +79,7 @@ protected class ComponentRegistry(implicit val config: AppConfig)
   def newApplicationsServlet = new ApplicationsServlet(config)
   def newKoulutusServlet = new KoulutusServlet()
   def newSecuredSessionServlet = new SecuredSessionServlet(config)
-  def newLogoutServlet = new LogoutServlet()
+  def newLogoutServlet = new LogoutServlet(config)
   def newSwaggerServlet = new SwaggerServlet()
 
   def start {

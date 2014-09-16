@@ -14,7 +14,7 @@ trait LogoutServletContainer {
 
   val auditLogger: AuditLogger
 
-  class LogoutServlet(implicit val appConfig: AppConfig) extends OmatSivutServletBase with AuthCookieParsing {
+  class LogoutServlet(val appConfig: AppConfig) extends OmatSivutServletBase with AuthCookieParsing {
     get("/*") {
       parseCredentials(request, new AuthenticationCipher(appConfig.settings.aesKey, appConfig.settings.hmacKey)) match {
         case Some(credentials) => sendLogOut(credentials)
