@@ -5,7 +5,7 @@ import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.omatsivut.ScalatraTestSupport
 
 class AuthenticationSpec extends ScalatraTestSupport {
-  override implicit lazy val appConfig = new AppConfig.IT
+  override lazy val appConfig = new AppConfig.IT
   addServlet(appConfig.componentRegistry.newApplicationsServlet, "/*")
 
   "GET /applications" should {

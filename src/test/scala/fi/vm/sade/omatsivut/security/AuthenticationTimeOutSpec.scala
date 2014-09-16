@@ -5,7 +5,7 @@ import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.fixtures.TestFixture
 
 class AuthenticationTimeOutSpec extends ScalatraTestSupport {
-  override implicit lazy val appConfig = new AppConfig.ImmediateCookieTimeout
+  override lazy val appConfig = new AppConfig.ImmediateCookieTimeout
   addServlet(appConfig.componentRegistry.newApplicationsServlet, "/*")
 
   "GET /applications" should {

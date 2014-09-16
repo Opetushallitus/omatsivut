@@ -7,7 +7,7 @@ import fi.vm.sade.omatsivut.config.ScalatraPaths
 import org.xml.sax.SAXParseException
 
 class HakemusPreviewSpec extends HakemusApiSpecification {
-  override implicit lazy val appConfig = new AppConfig.IT
+  override lazy val appConfig = new AppConfig.IT
 
   sequential
 

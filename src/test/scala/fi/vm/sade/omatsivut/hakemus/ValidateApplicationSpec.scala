@@ -9,7 +9,7 @@ import org.json4s._
 import org.json4s.jackson.{JsonMethods, Serialization}
 
 class ValidateApplicationSpec extends HakemusApiSpecification {
-  override implicit lazy val appConfig = new AppConfig.IT
+  override lazy val appConfig = new AppConfig.IT
   addServlet(appConfig.componentRegistry.newApplicationsServlet, "/*")
 
   sequential

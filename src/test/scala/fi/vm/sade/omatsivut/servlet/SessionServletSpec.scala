@@ -6,7 +6,7 @@ import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.omatsivut.security.ShibbolethCookie
 
 class SessionServletSpec extends ScalatraTestSupport {
-  override implicit lazy val appConfig = new AppConfig.IT
+  override lazy val appConfig = new AppConfig.IT
   addServlet(appConfig.componentRegistry.newSecuredSessionServlet, "/secure")
 
   "GET /secure/initsession" should {

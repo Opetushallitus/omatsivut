@@ -5,7 +5,7 @@ import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.omatsivut.fixtures.TestFixture._
 
 class GetApplicationsSpec extends HakemusApiSpecification {
-  override implicit lazy val appConfig = new AppConfig.IT
+  override lazy val appConfig = new AppConfig.IT
 
   sequential
 

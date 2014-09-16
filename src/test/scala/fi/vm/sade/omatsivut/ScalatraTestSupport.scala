@@ -7,8 +7,8 @@ import org.scalatra.test.specs2.MutableScalatraSpec
 import org.specs2.specification.{Fragments, Step}
 
 trait ScalatraTestSupport extends MutableScalatraSpec {
-  implicit lazy val appConfig = AppConfigSetup.create
   implicit val swagger = new OmatSivutSwagger
+  lazy val appConfig = AppConfigSetup.create
 
   def authGet[A](uri: String, oid : String)(f: => A): A = {
     get(uri, headers = authHeaders(oid))(f)
