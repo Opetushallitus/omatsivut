@@ -7,6 +7,23 @@ import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.util.Logging
 import org.json4s.JsonAST.JValue
 
+trait ValintatulosService {
+  def getValintatulos(hakemusOid: String, hakuOid: String): Option[Valintatulos]
+}
+
+case class Valintatulos(hakemusOid: String, hakutoiveet: List[HakutoiveenValintatulos])
+
+case class HakutoiveenValintatulos(hakukohdeOid: String,
+                                   tarjoajaOid: String,
+                                   valintatila: String,
+                                   vastaanottotila: Option[String],
+                                   ilmoittautumistila: Option[String],
+                                   vastaanotettavuustila: String,
+                                   jonosija: Option[Int],
+                                   varasijojaKaytetaanAlkaen: Option[Date],
+                                   varasijojaTaytetaanAsti: Option[Date],
+                                   varasijanumero: Option[Int])
+
 trait ValintatulosServiceComponent {
   val valintatulosService: ValintatulosService
 }
@@ -55,20 +72,3 @@ class RemoteValintatulosService(valintatulosServiceUrl: String) extends Valintat
     Some(DefaultHttpClient.httpGet(url))
   }
 }
-
-trait ValintatulosService {
-  def getValintatulos(hakemusOid: String, hakuOid: String): Option[Valintatulos]
-}
-
-case class Valintatulos(hakemusOid: String, hakutoiveet: List[HakutoiveenValintatulos])
-
-case class HakutoiveenValintatulos(hakukohdeOid: String,
-                                   tarjoajaOid: String,
-                                   valintatila: String,
-                                   vastaanottotila: Option[String],
-                                   ilmoittautumistila: Option[String],
-                                   vastaanotettavuustila: String,
-                                   jonosija: Option[Int],
-                                   varasijojaKaytetaanAlkaen: Option[Date],
-                                   varasijojaTaytetaanAsti: Option[Date],
-                                   varasijanumero: Option[Int])
