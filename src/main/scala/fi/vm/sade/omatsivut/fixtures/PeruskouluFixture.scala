@@ -1,10 +1,9 @@
 package fi.vm.sade.omatsivut.fixtures
 
-import fi.vm.sade.omatsivut.config.AppConfig
-import AppConfig.AppConfig
+import fi.vm.sade.haku.oppija.hakemus.it.dao.ApplicationDAO
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
 
-class PeruskouluFixture(appConfig: AppConfig) extends HakemusWithDifferentAnswersFixture(TestFixture.hakemusYhteishakuKevat2014WithForeignBaseEducationId)(appConfig: AppConfig) {
+class PeruskouluFixture(dao: ApplicationDAO) extends HakemusWithDifferentAnswersFixture(TestFixture.hakemusYhteishakuKevat2014WithForeignBaseEducationId)(dao) {
   def apply {
     val answers: Answers = Map(
       "koulutustausta" ->
