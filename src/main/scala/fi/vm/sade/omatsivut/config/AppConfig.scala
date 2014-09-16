@@ -1,7 +1,6 @@
 package fi.vm.sade.omatsivut.config
 
 import com.typesafe.config.Config
-import fi.vm.sade.omatsivut.fixtures.FixtureImporter
 import fi.vm.sade.omatsivut.mongo.{EmbeddedMongo, MongoServer}
 import fi.vm.sade.omatsivut.security.{AuthenticationContext, ProductionAuthenticationContext, TestAuthenticationContext}
 import fi.vm.sade.omatsivut.util.Logging
@@ -71,7 +70,6 @@ object AppConfig extends Logging {
 
     override def onStart {
       mongo = EmbeddedMongo.start
-      new FixtureImporter(componentRegistry.springContext.applicationDAO, componentRegistry.springContext.mongoTemplate).applyFixtures()
     }
 
     override def onStop {

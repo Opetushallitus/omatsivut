@@ -3,9 +3,9 @@ package fi.vm.sade.omatsivut.config
 import java.util.concurrent.Executors
 
 import fi.vm.sade.omatsivut.auditlog.{AuditLogger, AuditLoggerComponent}
-import fi.vm.sade.omatsivut.config.AppConfig.{MockAuthentication, AppConfig, ITWithValintaTulosService, StubbedExternalDeps}
+import fi.vm.sade.omatsivut.config.AppConfig._
 import fi.vm.sade.omatsivut.domain.Language.Language
-import fi.vm.sade.omatsivut.fixtures.TestFixture
+import fi.vm.sade.omatsivut.fixtures.{FixtureImporter, TestFixture}
 import fi.vm.sade.omatsivut.hakemus._
 import fi.vm.sade.omatsivut.haku.{HakuRepository, HakuRepositoryComponent}
 import fi.vm.sade.omatsivut.koulutusinformaatio.{KoulutusInformaatioComponent, KoulutusInformaatioService}
@@ -90,8 +90,11 @@ protected class ComponentRegistry(val config: AppConfig)
 
   def start {
     try {
-      pool.execute(runningLogger)
       config.onStart
+      pool.execute(runningLogger)
+      if(config.isInstanceOf[IT]) {
+        new FixtureImporter(springContext.applicationDAO, springContext.mongoTemplate).applyFixtures()
+      }
     } catch {
       case e: Exception =>
         stop
