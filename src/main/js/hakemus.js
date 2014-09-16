@@ -95,15 +95,6 @@ Hakemus.prototype = {
     )
   },
 
-  hasOnlyResultStates: function(resultStates) {
-    if (!_.isArray(resultStates))
-      resultStates = [resultStates]
-
-    return _(this.valintatulosHakutoiveet()).all(function(hakutoive) {
-      return _(resultStates).contains(hakutoive.tila)}
-    )
-  },
-
   toJson: function() {
     var self = this
 

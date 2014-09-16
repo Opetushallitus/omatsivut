@@ -1,6 +1,7 @@
 package fi.vm.sade.omatsivut.hakemus.domain
 
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
+import fi.vm.sade.omatsivut.hakemus.domain.ResultState.ResultState
 import fi.vm.sade.omatsivut.hakemus.domain.HakutoiveenValintatulosTila.HakutoiveenValintatulosTila
 import fi.vm.sade.omatsivut.hakemus.domain.VastaanotettavuusTila.VastaanotettavuusTila
 import fi.vm.sade.omatsivut.haku.domain.{HakuAika, Haku}
@@ -48,16 +49,26 @@ sealed trait HakemuksenTila {
 case class Submitted(id: String = "SUBMITTED") extends HakemuksenTila // Alkutila, ei editoitatissa
 case class PostProcessing(id: String = "POSTPROCESSING") extends HakemuksenTila // Taustaprosessointi kesken, ei editoitavissa
 case class Active(id: String = "ACTIVE") extends HakemuksenTila // Aktiivinen, editoitavissa
-case class HakuPaattynyt(id: String = "HAKUPAATTYNYT", valintatulos: Option[Valintatulos] = None) extends HakemuksenTila // Haku päättynyt
+case class HakuPaattynyt(id: String = "HAKUPAATTYNYT", valintatulos: Option[Valintatulos] = None, resultStatus: Option[ResultStatus]) extends HakemuksenTila // Haku päättynyt
 case class Passive(id: String = "PASSIVE") extends HakemuksenTila // Passiivinen/poistettu
 case class Incomplete(id: String = "INCOMPLETE") extends HakemuksenTila // Tietoja puuttuu
+
+object ResultState extends Enumeration {
+  type ResultState = Value
+  val VASTAANOTTANUT, EI_VASTAANOTETTU_MAARA_AIKANA, EHDOLLISESTI_VASTAANOTTANUT, PERUUTETTU, PERUNUT, HYLATTY, HYVAKSYTTY, PERUUNTUNUT, KESKEN = Value
+}
+
+case class ResultStatus (
+                          state: ResultState = ResultState.KESKEN,
+                          opiskelupaikka: Option[String] = None
+)
 
 case class Valintatulos(hakutoiveet: List[HakutoiveenValintatulos])
 case class HakutoiveenValintatulos(
                                     koulutus: Koulutus,
                                     opetuspiste: Opetuspiste,
                                     tila: HakutoiveenValintatulosTila,
-                                    vastaanottotila: Option[String],
+                                    vastaanottotila: ResultState,
                                     vastaanotettavuustila: VastaanotettavuusTila,
                                     ilmoittautumistila: Option[String],
                                     jonosija: Option[Int],

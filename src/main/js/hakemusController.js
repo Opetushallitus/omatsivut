@@ -32,7 +32,7 @@ module.exports = function(listApp) {
         return localization("label.applicationUpdated")
     }
 
-    $scope.resultState = getResultState($scope.application)
+    $scope.resultStatus = getResultStatus($scope.application)
 
     function underscoreToCamelCase(str) {
       return str.toLowerCase().replace(/^(.)|_(.)/g, function(match, char1, char2) {
@@ -40,16 +40,13 @@ module.exports = function(listApp) {
       })
     }
 
-    function getResultState(application) {
-      var hakutoive = _($scope.application.valintatulosHakutoiveet()).find(function(hakutoive) { return hakutoive.vastaanottotila != "KESKEN" && hakutoive.vastaanottotila != "ILMOITETTU"})
-      if (hakutoive != null) {
-        var tila = underscoreToCamelCase(hakutoive.vastaanottotila)
-        return localization("message.resultState." + tila, {
-          opiskelupaikka: hakutoive.opetuspiste.name + " - " + hakutoive.koulutus.name
+    function getResultStatus(application) {
+      var resultStatus = _().find(function(hakutoive) { return hakutoive.vastaanottotila != "KESKEN" && hakutoive.vastaanottotila != "ILMOITETTU"})
+      if (application.state && application.state.resultStatus != null) {
+        var status = application.state.resultStatus
+        return localization("message.resultState." + underscoreToCamelCase(status.state), {
+          opiskelupaikka: status.opiskelupaikka
         })
-      }
-      if(application.hasOnlyResultStates(["HYLATTY","PERUNUT","PERUUNTUNUT","PERUTTU"]) && application.valintatulosHakutoiveet().length > 0) {
-        return localization("message.resultState.Hylatty")
       }
     }
 

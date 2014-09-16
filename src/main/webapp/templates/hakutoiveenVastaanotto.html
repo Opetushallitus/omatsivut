@@ -1,6 +1,5 @@
 <div class="" ng-repeat="hakutoive in hakutoiveet()">
-    Opiskelupaikka myönnetty: {{ hakutoive.opetuspiste.name }} - {{ hakutoive.koulutus.name }}
-
+    Vastaa sitovasti:
     <label><input type="radio" name="vastaanotettavaHakutoive" value="VASTAANOTTANUT" ng-model="vastaanottotila" ng-disabled="ajaxPending"/>Vastaanottanut</label>
     <label><input type="radio" name="vastaanotettavaHakutoive" value="PERUNUT" ng-model="vastaanottotila" ng-disabled="ajaxPending"/>Perunut</label>
     <label ng-if="hakutoive.vastaanotettavuustila == 'VASTAANOTETTAVISSA_EHDOLLISESTI'"><input type="radio" name="vastaanotettavaHakutoive" value="EHDOLLISESTI_VASTAANOTTANUT" ng-model="vastaanottotila" ng-disabled="ajaxPending"/>Ehdollisesti vastaanottanut</label>

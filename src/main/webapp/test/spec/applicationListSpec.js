@@ -214,7 +214,7 @@
         })
 
         it("hakuaikatieto näkyy", function() {
-          hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal(hakuaikatieto)
+          hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal(hakuaikatieto + " Opiskelijavalinta on kesken")
         })
 
         it("valintatulokset näytetään", function () {
@@ -234,10 +234,10 @@
         })
       })
 
-      describe("kun lopulliset tulokset on julkaistu", function() {
+      describe("kun lopulliset tulokset on julkaistu ja opiskelija on hyväksytty", function() {
         before(page.applyValintatulosFixtureAndOpen("hyvaksytty"))
-        it("hakuaikatieto piilotetaan", function() {
-          hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal("")
+        it("ilmoitetaan myönnetystä paikasta", function() {
+          hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal("Sinulle on myönnetty opiskelupaikka: Kallion lukio - Lukion ilmaisutaitolinja")
         })
       })
 

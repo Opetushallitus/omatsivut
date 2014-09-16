@@ -1,7 +1,6 @@
 package fi.vm.sade.omatsivut.hakemus
 
 import java.util
-
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
@@ -23,15 +22,16 @@ trait HakemusConverterComponent {
     val baseEducationKey = OppijaConstants.ELEMENT_ID_BASE_EDUCATION
     val preferencePhaseKey = OppijaConstants.PHASE_APPLICATION_OPTIONS
 
-    def convertToHakemus(applicationSystem: ApplicationSystem, haku: Haku, application: Application): Hakemus= {
+    def convertToHakemus(applicationSystem: ApplicationSystem, haku: Haku, application: Application) = {
       val koulutusTaustaAnswers: util.Map[String, String] = application.getAnswers.get(educationPhaseKey)
       val receivedTime =  application.getReceived.getTime
+      val hakutoiveet = convertHakuToiveet(application)
       Hakemus(
         application.getOid,
         receivedTime,
         Option(application.getUpdated).map(_.getTime).getOrElse(receivedTime),
-        tila(applicationSystem, haku, application),
-        convertHakuToiveet(application),
+        tila(applicationSystem, haku, application, hakutoiveet),
+        hakutoiveet,
         haku,
         EducationBackground(koulutusTaustaAnswers.get(baseEducationKey), !Try {koulutusTaustaAnswers.get("ammatillinenTutkintoSuoritettu").toBoolean}.getOrElse(false)),
         application.clone().getAnswers.toMap.mapValues { phaseAnswers => phaseAnswers.toMap },
@@ -39,12 +39,13 @@ trait HakemusConverterComponent {
       )
     }
 
-    private def tila(applicationSystem: ApplicationSystem, haku: Haku, application: Application): HakemuksenTila = {
+    def tila(applicationSystem: ApplicationSystem, haku: Haku, application: Application, hakutoiveet: List[Hakutoive]): HakemuksenTila = {
       if (isPostProcessing(application)) {
         PostProcessing()
       } else {
         if (!haku.applicationPeriods.head.active) {
-          HakuPaattynyt(valintatulos = valintatulos(applicationSystem, application))
+          val valintatulos = convertTovalintatulos(applicationSystem, application, hakutoiveet)
+          HakuPaattynyt(valintatulos = valintatulos, resultStatus = resultStatus(valintatulos))
         } else {
           application.getState.toString match {
             case "ACTIVE" => Active()
@@ -59,9 +60,49 @@ trait HakemusConverterComponent {
       }
     }
 
-    private def valintatulos(applicationSystem: ApplicationSystem, application: Application): Option[Valintatulos] = {
-      val hakutoiveet = convertHakuToiveet(application)
+    private def resultStatus(valintatulos: Option[Valintatulos]): Option[ResultStatus] = {
+      valintatulos.map(tulos => {
+        tulos.hakutoiveet.find(hasVastaanottotieto(_)) match {
+          case Some(vastaanotettu) => ResultStatus(vastaanotettu.vastaanottotila, Some(vastaanotettu.opetuspiste.name + " - " + vastaanotettu.koulutus.name))
+          case None => {
+            tulos.hakutoiveet.find(isVastaanotettavissa(_)) match {
+              case Some(vastaanotettavissa) => ResultStatus(ResultState.HYVAKSYTTY, Some(vastaanotettavissa.opetuspiste.name + " - " + vastaanotettavissa.koulutus.name))
+              case None => {
+                if(tulos.hakutoiveet.exists(isKesken(_)) || tulos.hakutoiveet.exists(isHyvaksytty(_))) {
+                  ResultStatus()
+                }
+                else {
+                  ResultStatus(ResultState.withName(tulos.hakutoiveet.head.tila.toString()), None)
+                }
+              }
+            }
+          }
+        }
+      })
+    }
 
+    private def isKesken(hakutoiveenValintatulos: HakutoiveenValintatulos) = {
+      hakutoiveenValintatulos.tila  == HakutoiveenValintatulosTila.KESKEN ||
+      hakutoiveenValintatulos.tila == HakutoiveenValintatulosTila.VARALLA
+    }
+
+    private def isHyvaksytty(hakutoiveenValintatulos: HakutoiveenValintatulos) = {
+      hakutoiveenValintatulos.tila  == HakutoiveenValintatulosTila.HYVAKSYTTY ||
+      hakutoiveenValintatulos.tila == HakutoiveenValintatulosTila.HARKINNANVARAISESTI_HYVAKSYTTY
+    }
+
+    private def hasVastaanottotieto(hakutoiveenValintatulos: HakutoiveenValintatulos) = {
+      hakutoiveenValintatulos.vastaanottotila == ResultState.VASTAANOTTANUT ||
+      hakutoiveenValintatulos.vastaanottotila == ResultState.EHDOLLISESTI_VASTAANOTTANUT ||
+      hakutoiveenValintatulos.vastaanottotila == ResultState.EI_VASTAANOTETTU_MAARA_AIKANA
+    }
+
+    private def isVastaanotettavissa(hakutoiveenValintatulos: HakutoiveenValintatulos) = {
+      hakutoiveenValintatulos.vastaanotettavuustila == VastaanotettavuusTila.VASTAANOTETTAVISSA_EHDOLLISESTI ||
+      hakutoiveenValintatulos.vastaanotettavuustila == VastaanotettavuusTila.VASTAANOTETTAVISSA_SITOVASTI
+    }
+
+    private def convertTovalintatulos(applicationSystem: ApplicationSystem, application: Application, hakutoiveet: List[Hakutoive]): Option[Valintatulos] = {
       def findKoulutus(oid: String): Koulutus = {
         hakutoiveet.find(_.get("Koulutus-id") == Some(oid)).map{ hakutoive => Koulutus(oid, hakutoive("Koulutus"))}.getOrElse(Koulutus(oid, oid))
       }
@@ -75,7 +116,7 @@ trait HakemusConverterComponent {
             findKoulutus(hakutoiveenTulos.hakukohdeOid),
             findOpetuspiste(hakutoiveenTulos.tarjoajaOid),
             HakutoiveenValintatulosTila.withName(hakutoiveenTulos.valintatila),
-            hakutoiveenTulos.vastaanottotila,
+            convertToResultsState(hakutoiveenTulos),
             VastaanotettavuusTila.withName(hakutoiveenTulos.vastaanotettavuustila),
             hakutoiveenTulos.ilmoittautumistila,
             hakutoiveenTulos.jonosija,
@@ -83,6 +124,15 @@ trait HakemusConverterComponent {
             hakutoiveenTulos.varasijanumero
           )
         })
+      }
+    }
+
+    private def convertToResultsState(hakutoiveenTulos: fi.vm.sade.omatsivut.valintatulokset.HakutoiveenValintatulos) = {
+      hakutoiveenTulos.vastaanottotila  match {
+        case None => ResultState.KESKEN
+        case Some(tulos) => {
+          ResultState.withName(tulos)
+        }
       }
     }
 
