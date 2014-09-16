@@ -1,0 +1,9 @@
+<div class="" ng-repeat="hakutoive in hakutoiveet()">
+    Opiskelupaikka myönnetty: {{ hakutoive.opetuspiste.name }} - {{ hakutoive.koulutus.name }}
+
+    <label><input type="radio" name="vastaanotettavaHakutoive" value="VASTAANOTTANUT" ng-model="vastaanottotila" />Vastaanottanut</label>
+    <label><input type="radio" name="vastaanotettavaHakutoive" value="PERUNUT" />Perunut</label>
+    <label ng-if="hakutoive.vastaanotettavuustila == 'VASTAANOTETTAVISSA_EHDOLLISESTI'"><input type="radio" name="vastaanotettavaHakutoive" value="EHDOLLISESTI_VASTAANOTTANUT"/>Ehdollisesti vastaanottanut</label>
+
+    <button class="vastaanota-btn" disable-click-focus confirm ng-disabled="vastaanottotila.length==0" confirm-text="{{localization('button.vastaanota_confirm')}}" confirm-action="vastaanotaHakutoive(hakutoive)" aria-label="{{ localization('button.vastaanota_ariaLabel') }}" ng-bind="localization('button.vastaanota_confirm')"></button>
+</div>
