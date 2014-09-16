@@ -6,7 +6,7 @@ import fi.vm.sade.omatsivut.auditlog.{AuditLogger, AuditLoggerComponent}
 import fi.vm.sade.omatsivut.config.AppConfig.{MockAuthentication, AppConfig, ITWithValintaTulosService, StubbedExternalDeps}
 import fi.vm.sade.omatsivut.domain.Language.Language
 import fi.vm.sade.omatsivut.fixtures.TestFixture
-import fi.vm.sade.omatsivut.hakemus.{HakemusPreviewGeneratorComponent, ApplicationValidatorComponent, HakemusRepository, HakemusRepositoryComponent}
+import fi.vm.sade.omatsivut.hakemus._
 import fi.vm.sade.omatsivut.haku.{HakuRepository, HakuRepositoryComponent}
 import fi.vm.sade.omatsivut.koulutusinformaatio.{KoulutusInformaatioComponent, KoulutusInformaatioService}
 import fi.vm.sade.omatsivut.ohjausparametrit.{OhjausparametritComponent, OhjausparametritService}
@@ -64,23 +64,23 @@ protected class ComponentRegistry(implicit val config: AppConfig)
   }
 
   lazy val springContext: OmatSivutSpringContext = config.springContext
-  private lazy val runningLogger = new RunnableLogger()
-  private lazy val pool = Executors.newSingleThreadExecutor()
+  private lazy val runningLogger = new RunnableLogger
+  private lazy val pool = Executors.newSingleThreadExecutor
   val koulutusInformaatioService: KoulutusInformaatioService = configureKoulutusInformaatioService
   val ohjausparametritService: OhjausparametritService = configureOhjausparametritService
   val valintatulosService: ValintatulosService = configureValintatulosService
   val authenticationInfoService: AuthenticationInfoService = configureAuthenticationInfoService
   val auditLogger: AuditLogger = new AuditLoggerFacade(runningLogger)
-  val hakuRepository: HakuRepository = new RemoteHakuRepository()
-  val hakemusRepository: HakemusRepository = new RemoteHakemusRepository()
+  val hakuRepository: HakuRepository = new RemoteHakuRepository
+  val hakemusRepository: HakemusRepository = new RemoteHakemusRepository
 
-  def newApplicationValidator: ApplicationValidator = new ApplicationValidator()
+  def newApplicationValidator: ApplicationValidator = new ApplicationValidator
   def newHakemusPreviewGenerator(language: Language): HakemusPreviewGenerator = new HakemusPreviewGenerator()(language)
   def newApplicationsServlet = new ApplicationsServlet(config)
-  def newKoulutusServlet = new KoulutusServlet()
+  def newKoulutusServlet = new KoulutusServlet
   def newSecuredSessionServlet = new SecuredSessionServlet(config)
   def newLogoutServlet = new LogoutServlet(config)
-  def newSwaggerServlet = new SwaggerServlet()
+  def newSwaggerServlet = new SwaggerServlet
 
   def start {
     pool.execute(runningLogger)
