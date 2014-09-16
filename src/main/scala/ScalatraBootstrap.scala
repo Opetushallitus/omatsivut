@@ -8,7 +8,7 @@ import org.scalatra._
 import fi.vm.sade.omatsivut.config.ScalatraPaths
 
 class ScalatraBootstrap extends LifeCycle {
-  implicit val config: AppConfig = AppConfig.fromSystemProperty
+  val config: AppConfig = AppConfig.fromSystemProperty
   OmatSivutSpringContext.check
 
   override def init(context: ServletContext) {
