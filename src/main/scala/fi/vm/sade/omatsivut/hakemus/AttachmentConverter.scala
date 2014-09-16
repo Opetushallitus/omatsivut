@@ -2,6 +2,7 @@ package fi.vm.sade.omatsivut.hakemus
 
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.hakemus.domain.dto.ApplicationAttachment
+import fi.vm.sade.haku.oppija.hakemus.domain.dto.{Address => HakuAddress}
 import fi.vm.sade.haku.oppija.hakemus.domain.util.{ApplicationUtil, AttachmentUtil}
 import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
 import fi.vm.sade.haku.virkailija.koulutusinformaatio.impl.KoulutusinformaatioServiceImpl
@@ -50,7 +51,7 @@ object AttachmentConverter {
     }
   }
 
-  private def convertToAddress(address: fi.vm.sade.haku.oppija.hakemus.domain.dto.Address): Address = {
+  private def convertToAddress(address: HakuAddress): Address = {
     Address(
          Option(address.getStreetAddress()),
          Option(address.getStreetAddress2()),
