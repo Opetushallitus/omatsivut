@@ -1,5 +1,6 @@
 package fi.vm.sade.omatsivut.servlet.testing
 
+import fi.vm.sade.haku.oppija.hakemus.it.dao.ApplicationDAO
 import fi.vm.sade.omatsivut.config.AppConfig
 import AppConfig.AppConfig
 import fi.vm.sade.omatsivut.fixtures.{ValintatulosFixtureImporter, FixtureImporter}
@@ -7,9 +8,12 @@ import fi.vm.sade.omatsivut.security.{AuthenticationCipher, ShibbolethCookie}
 import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
 import fi.vm.sade.omatsivut.valintatulokset.{ValintatulosService, MockValintatulosService}
 import org.scalatra.{Cookie, CookieOptions}
+import org.springframework.data.mongodb.core.MongoTemplate
 
 class TestHelperServlet(val appConfig: AppConfig) extends OmatSivutServletBase  {
   private val valintatulosService: ValintatulosService = appConfig.componentRegistry.valintatulosService
+  private val applicationDao: ApplicationDAO = appConfig.componentRegistry.springContext.applicationDAO
+  private val mongoTemplate: MongoTemplate = appConfig.componentRegistry.springContext.mongoTemplate
 
   if(appConfig.usesFakeAuthentication) {
     get("/fakesession") {
@@ -25,7 +29,7 @@ class TestHelperServlet(val appConfig: AppConfig) extends OmatSivutServletBase  
   if(appConfig.usesLocalDatabase) {
     put("/fixtures/apply") {
       val fixtureName: String = params("fixturename")
-      new FixtureImporter(appConfig).applyFixtures(fixtureName)
+      new FixtureImporter(applicationDao, mongoTemplate).applyFixtures(fixtureName)
     }
   }
 

@@ -10,7 +10,7 @@ import org.json4s._
 import fi.vm.sade.omatsivut.fixtures.{FixtureImporter, TestFixture}
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.ScalatraTestSupport
-import fi.vm.sade.omatsivut.config.AppConfig
+import fi.vm.sade.omatsivut.config.{OmatSivutSpringContext, AppConfig}
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.fixtures.FixtureImporter
 import fi.vm.sade.omatsivut.fixtures.TestFixture._
@@ -24,7 +24,8 @@ import org.json4s.reflect.TypeInfo
 trait HakemusApiSpecification extends ScalatraTestSupport {
   implicit val jsonFormats: Formats = JsonFormats.jsonFormats ++ List(new HakemuksenTilaSerializer)
 
-  val dao: ApplicationDAO = appConfig.componentRegistry.springContext.applicationDAO
+  private val springContext: OmatSivutSpringContext = appConfig.componentRegistry.springContext
+  private val dao: ApplicationDAO = springContext.applicationDAO
 
   val personalInfoPhaseKey: String = OppijaConstants.PHASE_PERSONAL
   val preferencesPhaseKey: String = OppijaConstants.PHASE_APPLICATION_OPTIONS
@@ -52,7 +53,7 @@ trait HakemusApiSpecification extends ScalatraTestSupport {
   }
 
   def setupFixture(fixtureName: String)(implicit appConfig: AppConfig) = {
-    new FixtureImporter(appConfig).applyFixtures(fixtureName)
+    new FixtureImporter(dao, springContext.mongoTemplate).applyFixtures(fixtureName)
   }
 
   def modifyHakemus[T](oid: String)(modification: (Hakemus => Hakemus))(f: Hakemus => T): T = {

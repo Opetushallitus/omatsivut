@@ -1,19 +1,22 @@
 package fi.vm.sade.omatsivut.hakemus
 
-import fi.vm.sade.omatsivut.config.AppConfig
+import fi.vm.sade.haku.oppija.hakemus.it.dao.ApplicationDAO
+import fi.vm.sade.omatsivut.config.{OmatSivutSpringContext, AppConfig, ScalatraPaths}
 import fi.vm.sade.omatsivut.fixtures.TestFixture._
 import fi.vm.sade.omatsivut.fixtures.{FixtureImporter, TestFixture}
-import fi.vm.sade.omatsivut.config.ScalatraPaths
 import org.xml.sax.SAXParseException
 
 class HakemusPreviewSpec extends HakemusApiSpecification {
   override lazy val appConfig = new AppConfig.IT
+  private val springContext: OmatSivutSpringContext = appConfig.componentRegistry.springContext
+  private val dao: ApplicationDAO = springContext.applicationDAO
+  private val mongoTemplate = springContext.mongoTemplate
 
   sequential
 
   "GET /api/applications/preview/:oid" should {
     "generate application preview" in {
-      new FixtureImporter(appConfig).applyOverrides("peruskoulu")
+      new FixtureImporter(dao, mongoTemplate).applyOverrides("peruskoulu")
       authGet(ScalatraPaths.applications + "/applications/preview/" + hakemusYhteishakuKevat2014WithForeignBaseEducationId, personOid) {
         response.getContentType() must_== "text/html; charset=UTF-8"
 
@@ -73,7 +76,7 @@ class HakemusPreviewSpec extends HakemusApiSpecification {
     }
 
     "support grade grid from grade 10" in {
-      new FixtureImporter(appConfig).applyOverrides("kymppiluokka")
+      new FixtureImporter(dao, mongoTemplate).applyOverrides("kymppiluokka")
       authGet(ScalatraPaths.applications + "/applications/preview/" + hakemusYhteishakuKevat2014WithForeignBaseEducationId, personOid) {
         body must contain("""<tr><td id="PK_B1_column1">B1-kieli</td><td id="PK_B1_column2">englanti</td><td id="PK_B1_column3">10(9)</td><td id="PK_B1_column4">Ei arvosanaa</td><td id="PK_B1_column5">Ei arvosanaa</td></tr>""")
         body must contain("""<tr><td id="PK_MA_column1" colspan="2">Matematiikka</td><td id="PK_MA_column3">10(9)</td><td id="PK_MA_column4">Ei arvosanaa</td><td id="PK_MA_column5">Ei arvosanaa</td></tr>""")

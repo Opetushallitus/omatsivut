@@ -72,7 +72,7 @@ object AppConfig extends Logging {
     override def onStart {
       mongo = EmbeddedMongo.start
       try {
-        new FixtureImporter(this).applyFixtures()
+        new FixtureImporter(componentRegistry.springContext.applicationDAO, componentRegistry.springContext.mongoTemplate).applyFixtures()
       } catch {
         case e: Exception =>
           stop
