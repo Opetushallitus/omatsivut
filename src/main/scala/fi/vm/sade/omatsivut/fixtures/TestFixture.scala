@@ -1,7 +1,8 @@
 package fi.vm.sade.omatsivut.fixtures
 
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
-import fi.vm.sade.omatsivut.config.{OmatSivutSpringContext, AppConfig}
+import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
+import fi.vm.sade.omatsivut.config.{AppConfig, OmatSivutSpringContext}
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
 import fi.vm.sade.omatsivut.haku.HakuConverter
@@ -28,20 +29,29 @@ object TestFixture {
   val appConfig = new AppConfig.IT
 
   lazy val (applicationSystemNivelKesa2013, applicationNivelKesa2013WithPeruskouluBaseEducationApp) = {
-    (new AppConfig.IT).withConfig { appConfig =>
+    withConfig(new AppConfig.IT, { appConfig =>
       val springContext: OmatSivutSpringContext = appConfig.componentRegistry.springContext
       val as = springContext.applicationSystemService.getApplicationSystem(applicationSystemNivelKesa2013Oid)
       val app = springContext.applicationDAO.find(new Application().setOid(hakemusNivelKesa2013WithPeruskouluBaseEducationId)).toList.head
       (as, app)
-    }
+    })
   }
 
   lazy val (applicationSystemKorkeakouluSyksy2014, applicationWithApplicationOptionAttachments) = {
-    (new AppConfig.IT).withConfig { appConfig =>
+    withConfig(new AppConfig.IT, { appConfig =>
       val springContext: OmatSivutSpringContext = appConfig.componentRegistry.springContext
       val as = springContext.applicationSystemService.getApplicationSystem(applicationSystemKorkeakouluSyksy2014Oid)
       val app = springContext.applicationDAO.find(new Application().setOid(hakemusWithApplicationOptionAttachments)).toList.head
       (as, app)
+    })
+  }
+
+  def withConfig[T](appConfig: AppConfig, f: (AppConfig => T)): T = {
+    appConfig.start
+    try {
+      f(appConfig)
+    } finally {
+      appConfig.stop
     }
   }
 

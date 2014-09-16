@@ -141,14 +141,6 @@ object AppConfig extends Logging {
     }
     def onStart {}
     def onStop {}
-    def withConfig[T](f: (AppConfig => T)): T = {
-      start
-      try {
-        f(this)
-      } finally {
-        stop
-      }
-    }
 
     def settings: ApplicationSettings
 
