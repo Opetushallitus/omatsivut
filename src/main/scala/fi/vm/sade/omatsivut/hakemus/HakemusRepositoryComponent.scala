@@ -4,6 +4,7 @@ import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
 import fi.vm.sade.omatsivut.auditlog._
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
+import fi.vm.sade.omatsivut.config.SpringContextComponent
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.hakemus.domain._
 import fi.vm.sade.omatsivut.haku.domain.Haku
@@ -11,13 +12,13 @@ import fi.vm.sade.omatsivut.haku.{HakuConverter, HakuRepository, HakuRepositoryC
 import fi.vm.sade.omatsivut.util.Timer
 
 trait HakemusRepositoryComponent {
-  this: HakuRepositoryComponent with HakemusConverterComponent with AuditLoggerComponent =>
+  this: HakuRepositoryComponent with HakemusConverterComponent with SpringContextComponent with AuditLoggerComponent =>
 
   val hakuRepository: HakuRepository
 
-  class RemoteHakemusRepository(implicit val appConfig: AppConfig) extends Timer with HakemusRepository {
+  class RemoteHakemusRepository extends Timer with HakemusRepository {
     import scala.collection.JavaConversions._
-    private val dao = appConfig.springContext.applicationDAO
+    private val dao = springContext.applicationDAO
 
     override def canUpdate(applicationSystem: ApplicationSystem, application: Application)(implicit lang: Language.Language): Boolean = {
       val applicationPeriods = hakuRepository.getApplicationPeriods(application, applicationSystem)
