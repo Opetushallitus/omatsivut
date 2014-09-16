@@ -27,11 +27,11 @@ class MockValintatulosService() extends ValintatulosService with JsonFormats {
   }
 }
 
-class RemoteValintatulosService(sijoitteluServiceUrl: String) extends ValintatulosService with JsonFormats with Logging {
+class RemoteValintatulosService(valintatulosServiceUrl: String) extends ValintatulosService with JsonFormats with Logging {
   import org.json4s.jackson.JsonMethods._
 
   override def getValintatulos(hakemusOid: String, hakuOid: String) = {
-    val url = sijoitteluServiceUrl + "/haku/"+hakuOid+"/hakemus/"+hakemusOid
+    val url = valintatulosServiceUrl + "/haku/"+hakuOid+"/hakemus/"+hakemusOid
     makeRequest(url).flatMap{ request =>
       request.responseWithHeaders match {
         case (200, _, resultString) => {
