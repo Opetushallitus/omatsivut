@@ -4,7 +4,7 @@ import fi.vm.sade.omatsivut.config.AppConfig
 import AppConfig.AppConfig
 import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
 
-class SessionServlet(implicit val appConfig: AppConfig) extends OmatSivutServletBase {
+class SessionServlet(val appConfig: AppConfig) extends OmatSivutServletBase {
   get("/reset") {
     redirectToIndex
   }
