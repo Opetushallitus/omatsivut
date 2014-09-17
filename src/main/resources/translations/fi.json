@@ -70,6 +70,14 @@
       "Perunut": "Olet perunut hakemuksen",
       "Peruutettu": "Hakemus on peruutettu",
       "Peruuntunut": "Hakemus on peruuntunut"
+    },
+
+    "acceptEducation": {
+      "received": "Opiskelupaikka myönnetty: __opetuspiste__ - __koulutus__",
+      "latestAnswer": "Vastaa sitovasti viimeistään __aika__",
+      "accept": "Otan myönnetyn opiskelupaikan vastaan",
+      "conditionalAccept": "Otan myönnetyn opiskelupaikan vastaan, jos en saa paikkaa mistään ylemmästä hakukohteestani",
+      "reject": "En ota opiskelupaikkaa vastaan"
     }
   },
 

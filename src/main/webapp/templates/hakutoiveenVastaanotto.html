@@ -1,15 +1,20 @@
 <div class="hakutoiveenVastaanotto" ng-repeat="hakutoive in application.vastaanotettavatHakutoiveet()">
     <h2>
-        Opiskelupaikka myönnetty: {{ hakutoive.opetuspiste.name }} - {{ hakutoive.koulutus.name }}
+        {{ localization('message.acceptEducation.received', {
+          opetuspiste: hakutoive.opetuspiste.name,
+          koulutus: hakutoive.koulutus.name
+        }) }}
     </h2>
     <div class="badge blue" ng-if="application.haku.results.vastaanottoEnd">
-        Vastaa sitovasti viimeistään {{ formatTimestamp( application.haku.results.vastaanottoEnd ) }}
+         {{ localization('message.acceptEducation.latestAnswer', {
+          aika: formatTimestamp( application.haku.results.vastaanottoEnd )
+        }) }}
     </div>
 
     <ul class="hakutoive-options">
-        <li><label><input type="radio" name="vastaanotettavaHakutoive" value="VASTAANOTTANUT" ng-model="vastaanottotila" ng-disabled="ajaxPending"/>Otan myönnetyn opiskelupaikan vastaan</label></li>
-        <li><label><input type="radio" name="vastaanotettavaHakutoive" value="PERUNUT" ng-model="vastaanottotila" ng-disabled="ajaxPending"/>En ota opiskelupaikkaa vastaan</label></li>
-        <li><label ng-show="hakutoive.vastaanotettavuustila == 'VASTAANOTETTAVISSA_EHDOLLISESTI'"><input type="radio" name="vastaanotettavaHakutoive" value="EHDOLLISESTI_VASTAANOTTANUT" ng-model="vastaanottotila" ng-disabled="ajaxPending"/>Otan myönnetyn opiskelupaikan vastaan, jos en saa paikkaa mistään ylemmästä hakukohteestani</label></li>
+        <li><label><input type="radio" name="vastaanotettavaHakutoive" value="VASTAANOTTANUT" ng-model="vastaanottotila" ng-disabled="ajaxPending"/>{{ localization('message.acceptEducation.accept') }}</label></li>
+        <li><label><input type="radio" name="vastaanotettavaHakutoive" value="PERUNUT" ng-model="vastaanottotila" ng-disabled="ajaxPending"/>{{ localization('message.acceptEducation.reject') }}</label></li>
+        <li><label ng-show="hakutoive.vastaanotettavuustila == 'VASTAANOTETTAVISSA_EHDOLLISESTI'"><input type="radio" name="vastaanotettavaHakutoive" value="EHDOLLISESTI_VASTAANOTTANUT" ng-model="vastaanottotila" ng-disabled="ajaxPending"/>{{ localization('message.acceptEducation.conditionalAccept') }}</label></li>
     </ul>
 
     <div>
