@@ -449,7 +449,6 @@
           mockAjax.init,
           function() { mockAjax.respondOnce("POST", "/omatsivut/api/applications/vastaanota/1.2.246.562.5.2013080813081926341928/1.2.246.562.11.00000441369", 400, "") },
           hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().selectOption("VASTAANOTTANUT"),
-          hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().send,
           hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().send
         )
 
