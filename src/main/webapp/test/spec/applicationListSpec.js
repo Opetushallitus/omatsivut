@@ -281,7 +281,7 @@
 
       describe("vanhat hakemukset", function() {
 
-        describe("jos ylin hakutoive on hylätty", function() {
+        describe("jos ei ole vastaanottotietoa ja ylin hakutoive on hylätty", function() {
           before(page.applyValintatulosFixtureAndOpen("hylatty"))
           it("hakemusta ei voi muokata", function () {
             hakemusYhteishakuKevat2013WithForeignBaseEducation.preferencesForApplication().length.should.equal(0)
@@ -297,7 +297,7 @@
           })
         })
 
-        describe("jos ylin hakutoive on peruttu", function() {
+        describe("jos ei ole vastaanottotietoa ja jos ylin hakutoive on peruttu", function() {
           before(page.applyValintatulosFixtureAndOpen("perunut"))
           it("hakemusta ei voi muokata", function () {
             hakemusYhteishakuKevat2013WithForeignBaseEducation.preferencesForApplication().length.should.equal(0)
