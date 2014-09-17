@@ -73,30 +73,37 @@ class RemoteValintatulosService(valintatulosServiceUrl: String) extends Valintat
 
   override def getValintatulos(hakemusOid: String, hakuOid: String) = {
     val url = valintatulosServiceUrl + "/haku/"+hakuOid+"/hakemus/"+hakemusOid
-    makeRequest(url).flatMap{ request =>
-      request.responseWithHeaders match {
-        case (200, _, resultString) => {
-          try {
-            parse(resultString).extractOpt[JValue].map(_.extract[Valintatulos])
-          } catch {
-            case e:Exception => {
-              logger.error("Error processing response from valinta-tulos-service at " + url + ", response was " + resultString, e)
-              None
-            }
+    val request = DefaultHttpClient.httpGet(url)
+
+    request.responseWithHeaders match {
+      case (200, _, resultString) => {
+        try {
+          parse(resultString).extractOpt[JValue].map(_.extract[Valintatulos])
+        } catch {
+          case e:Exception => {
+            logger.error("Error processing response from valinta-tulos-service at " + url + ", response was " + resultString, e)
+            None
           }
         }
-        case (errorCode, _, resultString) =>
-          logger.error("Response code " + errorCode + " fetching data from valinta-tulos-service at " + url)
-          None
       }
+      case (errorCode, _, resultString) =>
+        logger.error("Response code " + errorCode + " fetching data from valinta-tulos-service at " + url)
+        None
     }
   }
 
   override def vastaanota(hakemusOid: String, hakuOid: String, vastaanotto: Vastaanotto) {
-    // TODO
-  }
-
-  def makeRequest(url: String): Option[HttpRequest] = {
-    Some(DefaultHttpClient.httpGet(url))
+    import org.json4s.jackson.Serialization
+    val url = valintatulosServiceUrl + "/haku/"+hakuOid+"/hakemus/"+hakemusOid+"/vastaanota"
+    val request = DefaultHttpClient.httpPost(url, Some(Serialization.write(vastaanotto))).header("Content-type", "application/json")
+    request.responseWithHeaders match {
+      case (200, _, resultString) => {
+        println(resultString)
+        println(resultString)
+      }
+      case (errorCode, _, resultString) =>
+        logger.error("Response code " + errorCode + " from valinta-tulos-service at " + url)
+        None
+    }
   }
 }
