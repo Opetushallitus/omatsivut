@@ -63,7 +63,6 @@
 
     "resultState": {
       "Kesken": "Opiskelijavalinta on kesken",
-      "Hyvaksytty": "Sinulle on myönnetty opiskelupaikka:  __opiskelupaikka__",
       "Hylatty": "Et saanut opiskelupaikkaa",
       "Vastaanottanut": "Olet ottanut opiskelupaikan vastaan: __opiskelupaikka__",
       "EhdollisestiVastaanottanut": "Olet ottanut ehdollisesti vastaan opiskelupaikan: __opiskelupaikka__",

@@ -158,6 +158,12 @@ function ApplicationListPage() {
 
       vastaanotto: function() {
         return {
+          title: function() {
+            return getApplicationElement(applicationIndex).find("hakutoiveen-vastaanotto h2").map(function() {
+              return $(this).text().trim()
+            }).toArray()
+          },
+
           vaihtoehdot: function() {
             return getApplicationElement(applicationIndex).find("hakutoiveen-vastaanotto label:visible").map(function() {
               return $(this).text().trim()

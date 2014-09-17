@@ -237,7 +237,9 @@
       describe("kun lopulliset tulokset on julkaistu ja opiskelija on hyväksytty", function() {
         before(page.applyValintatulosFixtureAndOpen("hyvaksytty"))
         it("ilmoitetaan myönnetystä paikasta", function() {
-          hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal("Sinulle on myönnetty opiskelupaikka: Kallion lukio - Lukion ilmaisutaitolinja")
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().title()).to.deep.equal([
+                "Opiskelupaikka myönnetty: Kallion lukio - Lukion ilmaisutaitolinja"
+          ])
         })
       })
 
@@ -246,7 +248,8 @@
           before(page.applyValintatulosFixtureAndOpen("hyvaksytty"))
           it("oikeat vaihtoehdot tulevat näkyviin", function() {
             expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().vaihtoehdot()).to.deep.equal([
-              "Vastaanottanut", "Perunut"
+                  'Otan myönnetyn opiskelupaikan vastaan',
+                  'En ota opiskelupaikkaa vastaan'
             ])
           })
 
@@ -270,7 +273,9 @@
           before(page.applyValintatulosFixtureAndOpen("hyvaksytty_ehdollisesti"))
           it("oikeat vaihtoehdot tulevat näkyviin", function() {
             expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().vaihtoehdot()).to.deep.equal([
-              'Vastaanottanut', 'Perunut', 'Ehdollisesti vastaanottanut'
+                  'Otan myönnetyn opiskelupaikan vastaan',
+                  'En ota opiskelupaikkaa vastaan',
+                  'Otan myönnetyn opiskelupaikan vastaan, jos en saa paikkaa mistään ylemmästä hakukohteestani'
             ])
           })
 
@@ -435,6 +440,7 @@
           mockAjax.init,
           function() { mockAjax.respondOnce("PUT", "http://localhost:8080/omatsivut/api/valitseOpetuspiste?applicationId=1.2.246.562.11.00000441369", 400, "") },
           hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().selectOption("VASTAANOTTANUT"),
+          hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().send,
           hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().send
         )
 
