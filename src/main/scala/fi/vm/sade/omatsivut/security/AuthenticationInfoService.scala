@@ -26,19 +26,24 @@ trait AuthenticationInfoComponent {
     }
 
     private def getHenkiloOID(hetu: String, serviceTicket: String): Option[String] = {
-      val (responseCode, headersMap, resultString) = DefaultHttpClient.httpGet(config.url + "/" + config.config.getString("get_oid.path") + "/" + hetu)
+      val path: String = config.url + "/" + config.config.getString("get_oid.path") + "/" + hetu
+      val (responseCode, headersMap, resultString) = DefaultHttpClient.httpGet(path)
            .param("ticket", serviceTicket)
            .responseWithHeaders
 
       responseCode match {
         case 404 => None
-        case _ => {
+        case 200 => {
           val json = parse(resultString)
           val oids: List[String] = for {
             JObject(child) <- json
             JField("oidHenkilo", JString(oid)) <- child
           } yield oid
           oids.headOption
+        }
+        case code => {
+          logger.error("Error fetching personOid. Response code=" + code + ", content=" + resultString)
+          None
         }
       }
     }
