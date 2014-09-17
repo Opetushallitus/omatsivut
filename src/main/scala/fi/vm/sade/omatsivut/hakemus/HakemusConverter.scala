@@ -61,18 +61,18 @@ trait HakemusConverterComponent {
     }
 
     private def resultStatus(valintatulos: Option[Valintatulos]): Option[ResultStatus] = {
-      valintatulos.map(tulos => {
+      valintatulos.flatMap(tulos => {
         tulos.hakutoiveet.find(hasVastaanottotieto(_)) match {
-          case Some(vastaanotettu) => ResultStatus(vastaanotettu.vastaanottotila, Some(vastaanotettu.opetuspiste.name + " - " + vastaanotettu.koulutus.name))
+          case Some(vastaanotettu) => Some(ResultStatus(vastaanotettu.vastaanottotila, Some(vastaanotettu.opetuspiste.name + " - " + vastaanotettu.koulutus.name)))
           case None => {
             tulos.hakutoiveet.find(isVastaanotettavissa(_)) match {
-              case Some(vastaanotettavissa) => ResultStatus(ResultState.HYVAKSYTTY, Some(vastaanotettavissa.opetuspiste.name + " - " + vastaanotettavissa.koulutus.name))
+              case Some(vastaanotettavissa) => None
               case None => {
                 if(tulos.hakutoiveet.exists(isKesken(_)) || tulos.hakutoiveet.exists(isHyvaksytty(_))) {
-                  ResultStatus()
+                  Some(ResultStatus())
                 }
                 else {
-                  ResultStatus(ResultState.withName(tulos.hakutoiveet.head.tila.toString()), None)
+                  Some(ResultStatus(ResultState.withName(tulos.hakutoiveet.head.tila.toString()), None))
                 }
               }
             }

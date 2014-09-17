@@ -43,7 +43,8 @@
     "sortDown_ariaLabel": "Flytta ansökningsönskemålet neråt",
     "delete_confirm": "Ta bort",
     "delete_ariaLabel": "Ta bort ansökningsönskemålet genom att dubbelklicka",
-    "vastaanota_confirm": "Lähetä vastaus",
+    "vastaanota": "Lähetä vastaus",
+    "vastaanota_confirm": "Vahvista vastaus. Valintaa ei voi perua.",
     "vastaanota_ariaLabel": "Lähetä vastaus valitsemalla tämä kaksi kertaa",
     "logout": "Logga ut",
     "showApplication": "Visa ansökningsblankett"

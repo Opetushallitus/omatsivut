@@ -43,7 +43,8 @@
     "sortDown_ariaLabel": "Siirrä hakutoivetta mieluisuusjärjestyksessä alaspäin",
     "delete_confirm": "Poista",
     "delete_ariaLabel": "Poista hakutoive valitsemalla tämä kaksi kertaa",
-    "vastaanota_confirm": "Lähetä vastaus",
+    "vastaanota": "Lähetä vastaus",
+    "vastaanota_confirm": "Vahvista vastaus. Valintaa ei voi perua.",
     "vastaanota_ariaLabel": "Lähetä vastaus valitsemalla tämä kaksi kertaa",
     "logout": "Kirjaudu ulos",
     "showApplication": "Näytä koko hakemus"

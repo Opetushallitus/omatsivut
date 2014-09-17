@@ -1,15 +1,23 @@
-<div class="" ng-repeat="hakutoive in hakutoiveet()">
-    Vastaa sitovasti:
-    <label><input type="radio" name="vastaanotettavaHakutoive" value="VASTAANOTTANUT" ng-model="vastaanottotila" ng-disabled="ajaxPending"/>Vastaanottanut</label>
-    <label><input type="radio" name="vastaanotettavaHakutoive" value="PERUNUT" ng-model="vastaanottotila" ng-disabled="ajaxPending"/>Perunut</label>
-    <label ng-if="hakutoive.vastaanotettavuustila == 'VASTAANOTETTAVISSA_EHDOLLISESTI'"><input type="radio" name="vastaanotettavaHakutoive" value="EHDOLLISESTI_VASTAANOTTANUT" ng-model="vastaanottotila" ng-disabled="ajaxPending"/>Ehdollisesti vastaanottanut</label>
+<div class="hakutoiveenVastaanotto" ng-repeat="hakutoive in hakutoiveet()">
+    <h2>
+        Opiskelupaikka myönnetty: {{ hakutoive.opetuspiste.name }} - {{ hakutoive.koulutus.name }}
+    </h2>
+    <div class="badge blue">
+        Vastaa sitovasti viimeistään pvm {{ }}
+    </div>
+
+    <ul class="hakutoive-options">
+        <li><label><input type="radio" name="vastaanotettavaHakutoive" value="VASTAANOTTANUT" ng-model="vastaanottotila" ng-disabled="ajaxPending"/>Otan myönnetyn opiskelupaikan vastaan</label></li>
+        <li><label><input type="radio" name="vastaanotettavaHakutoive" value="PERUNUT" ng-model="vastaanottotila" ng-disabled="ajaxPending"/>En ota opiskelupaikkaa vastaan</label></li>
+        <li><label ng-show="hakutoive.vastaanotettavuustila == 'VASTAANOTETTAVISSA_EHDOLLISESTI'"><input type="radio" name="vastaanotettavaHakutoive" value="EHDOLLISESTI_VASTAANOTTANUT" ng-model="vastaanottotila" ng-disabled="ajaxPending"/>Otan myönnetyn opiskelupaikan vastaan, jos en saa paikkaa mistään ylemmästä hakukohteestani</label></li>
+    </ul>
 
     <div>
-        <span ng-bind="error" class="status-message error" ></span>
         <span class="ajax-spinner" ng-show="ajaxPending"></span>
         <button class="vastaanota-btn" disable-click-focus
                 confirm confirm-text="{{localization('button.vastaanota_confirm')}}" confirm-action="vastaanotaHakutoive(hakutoive)"
-                ng-disabled="vastaanottotila.length==0 || ajaxPending" aria-label="{{ localization('button.vastaanota_ariaLabel') }}" ng-bind="localization('button.vastaanota_confirm')">
+                ng-disabled="vastaanottotila.length==0 || ajaxPending" aria-label="{{ localization('button.vastaanota_ariaLabel') }}" ng-bind="localization('button.vastaanota')">
         </button>
+        <span ng-bind="error" class="status-message error" ></span>
     </div>
 </div>
