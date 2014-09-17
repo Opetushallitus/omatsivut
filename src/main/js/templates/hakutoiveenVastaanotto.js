@@ -1,10 +1,11 @@
 ; module.exports = function(listApp) {
-  listApp.directive("hakutoiveenVastaanotto", ["localization", function (localization) {
+  listApp.directive("hakutoiveenVastaanotto", ["localization", "restResources", function (localization, restResources) {
     return {
       restrict: 'E',
       scope: {
         hakutoiveet: '&hakutoiveet',
-        confirmCallback: '=callback'
+        applicationOid: '=applicationOid',
+        updateApplication: '=updateApplication'
       },
       templateUrl: 'templates/hakutoiveenVastaanotto.html',
       link: function (scope, element, attrs) {
@@ -17,10 +18,18 @@
           var scope = this
           scope.error = ""
           scope.ajaxPending = true
-          scope.confirmCallback({ hakutoive: hakutoive, vastaanottotila: this.vastaanottotila }, failedCallback)
 
-          function failedCallback(errorText) {
-            scope.error = errorText
+          restResources.valitseOpetuspiste.put({applicationId: scope.applicationOid }, {
+            opetuspiste: hakutoive.opetuspiste.oid,
+            vastaanottotila: this.vastaanottotila
+          }, onSuccess, onError)
+
+          function onSuccess() {
+
+          }
+
+          function onError() {
+            scope.error = "virhe"
             scope.ajaxPending = false
           }
         }

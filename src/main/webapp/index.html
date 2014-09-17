@@ -50,7 +50,7 @@
                             </span>
                         </p>
                         <p class="application-status"  ng-if="resultStatus" ng-bind="resultStatus"></p>
-                        <hakutoiveen-vastaanotto hakutoiveet="application.vastaanotettavatHakutoiveet()" callback="vastaanotaHakutoive">
+                        <hakutoiveen-vastaanotto hakutoiveet="application.vastaanotettavatHakutoiveet()" applicationOid="application.oid" updateApplication="updateApplicationAfterPost">
                         </hakutoiveen-vastaanotto>
                     </div>
 
