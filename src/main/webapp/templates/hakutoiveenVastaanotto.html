@@ -1,9 +1,9 @@
-<div class="hakutoiveenVastaanotto" ng-repeat="hakutoive in hakutoiveet()">
+<div class="hakutoiveenVastaanotto" ng-repeat="hakutoive in application.vastaanotettavatHakutoiveet()">
     <h2>
         Opiskelupaikka myönnetty: {{ hakutoive.opetuspiste.name }} - {{ hakutoive.koulutus.name }}
     </h2>
-    <div class="badge blue">
-        Vastaa sitovasti viimeistään pvm {{ }}
+    <div class="badge blue" ng-if="application.haku.results.vastaanottoEnd">
+        Vastaa sitovasti viimeistään {{ formatTimestamp( application.haku.results.vastaanottoEnd ) }}
     </div>
 
     <ul class="hakutoive-options">

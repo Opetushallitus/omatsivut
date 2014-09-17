@@ -244,8 +244,15 @@
       })
 
       describe("opiskelijalle tarjotaan paikkaa", function() {
-        describe("kyllä / ei", function() {
+        describe("sitova vastaanotto", function() {
           before(page.applyValintatulosFixtureAndOpen("hyvaksytty"))
+
+          it("vastausaika näkyy", function() {
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().info()).to.deep.equal([
+                  "Vastaa sitovasti viimeistään 11. kesäkuuta 2014 klo 07.52"
+            ])
+          })
+
           it("oikeat vaihtoehdot tulevat näkyviin", function() {
             expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().vaihtoehdot()).to.deep.equal([
                   'Otan myönnetyn opiskelupaikan vastaan',
@@ -280,6 +287,11 @@
 
         describe("ehdollinen vastaanotto", function() {
           before(page.applyValintatulosFixtureAndOpen("hyvaksytty_ehdollisesti"))
+          it("vastausaika näkyy", function() {
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().info()).to.deep.equal([
+                  "Vastaa sitovasti viimeistään 11. kesäkuuta 2014 klo 07.52"
+            ])
+          })
           it("oikeat vaihtoehdot tulevat näkyviin", function() {
             expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().vaihtoehdot()).to.deep.equal([
                   'Otan myönnetyn opiskelupaikan vastaan',

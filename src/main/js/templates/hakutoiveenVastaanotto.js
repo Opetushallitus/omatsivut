@@ -3,9 +3,7 @@
     return {
       restrict: 'E',
       scope: {
-        hakutoiveet: '&hakutoiveet',
-        applicationOid: '=applicationOid',
-        hakuOid: '=hakuOid',
+        application: '=application',
         updateApplication: '=updateApplication'
       },
       templateUrl: 'templates/hakutoiveenVastaanotto.html',
@@ -15,12 +13,16 @@
         scope.ajaxPending = false
         scope.error = ""
 
+        scope.formatTimestamp = function(dt) {
+            return moment(dt).format('LLL').replace(/,/g, "")
+        }
+
         scope.vastaanotaHakutoive = function(hakutoive) {
           var scope = this
           scope.error = ""
           scope.ajaxPending = true
 
-          restResources.vastaanota.post({applicationOid: scope.applicationOid, hakuOid: scope.hakuOid }, {
+          restResources.vastaanota.post({applicationOid: scope.application.oid, hakuOid: scope.application.haku.oid}, {
             hakukohdeOid: hakutoive.koulutus.oid,
             tila: this.vastaanottotila
           }, onSuccess, onError)

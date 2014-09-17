@@ -2,11 +2,13 @@ package fi.vm.sade.omatsivut.ohjausparametrit
 
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.fixtures.JsonFixtureMaps
-import fi.vm.sade.omatsivut.haku.domain.Tulokset
 import fi.vm.sade.omatsivut.http.DefaultHttpClient
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.memoize.TTLOptionalMemoize
 import org.json4s.JsonAST.JValue
+import fi.vm.sade.omatsivut.haku.domain.Tulosaikataulu
+import fi.vm.sade.omatsivut.haku.domain.Julkistus
+import fi.vm.sade.omatsivut.haku.domain.Tulosaikataulu
 
 
 trait OhjausparametritComponent {
@@ -46,16 +48,21 @@ trait OhjausparametritComponent {
 
   private object OhjausparametritParser extends JsonFormats {
     def parseValintatulokset(json: JValue) = {
-      for {
+      val julkistus = for {
         obj <- (json \ "PH_VTJH").toOption
         start <- (obj \ "dateStart").extractOpt[Long]
         end <- (obj \ "dateEnd").extractOpt[Long]
-      } yield Tulokset(start, end)
+      } yield Julkistus(start, end)
+      val vastaanottoEnd = for {
+        obj <- (json \ "PH_OPVP").toOption
+        end <- (obj \ "date").extractOpt[Long]
+      } yield end
+      Some(Tulosaikataulu(julkistus, vastaanottoEnd))
     }
   }
 }
 
 trait OhjausparametritService {
-  def valintatulokset(asId: String): Option[Tulokset]
+  def valintatulokset(asId: String): Option[Tulosaikataulu]
 }
 
