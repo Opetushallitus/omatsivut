@@ -295,8 +295,8 @@
           it("oikeat vaihtoehdot tulevat näkyviin", function() {
             expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().vaihtoehdot()).to.deep.equal([
                   'Otan myönnetyn opiskelupaikan vastaan',
-                  'En ota opiskelupaikkaa vastaan',
-                  'Otan myönnetyn opiskelupaikan vastaan, jos en saa paikkaa mistään ylemmästä hakukohteestani'
+                  'Otan myönnetyn opiskelupaikan vastaan, jos en saa paikkaa mistään ylemmästä hakukohteestani',
+                  'En ota opiskelupaikkaa vastaan'
             ])
           })
 

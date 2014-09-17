@@ -13,8 +13,8 @@
 
     <ul class="hakutoive-options">
         <li><label><input type="radio" name="vastaanotettavaHakutoive" value="VASTAANOTTANUT" ng-model="vastaanottotila" ng-disabled="ajaxPending"/>{{ localization('message.acceptEducation.accept') }}</label></li>
-        <li><label><input type="radio" name="vastaanotettavaHakutoive" value="PERUNUT" ng-model="vastaanottotila" ng-disabled="ajaxPending"/>{{ localization('message.acceptEducation.reject') }}</label></li>
         <li><label ng-show="hakutoive.vastaanotettavuustila == 'VASTAANOTETTAVISSA_EHDOLLISESTI'"><input type="radio" name="vastaanotettavaHakutoive" value="EHDOLLISESTI_VASTAANOTTANUT" ng-model="vastaanottotila" ng-disabled="ajaxPending"/>{{ localization('message.acceptEducation.conditionalAccept') }}</label></li>
+        <li><label><input type="radio" name="vastaanotettavaHakutoive" value="PERUNUT" ng-model="vastaanottotila" ng-disabled="ajaxPending"/>{{ localization('message.acceptEducation.reject') }}</label></li>
     </ul>
 
     <div>
