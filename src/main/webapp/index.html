@@ -33,6 +33,18 @@
             <ul id="hakemus-list" aria-label="{{ localization('title.omatHakemukset') }}" ng-cloak>
                 <li ng-repeat="application in applications" class="application-list-item" ng-controller="hakemusController" data-oid="{{application.oid}}" highlight-save>
                     <h2>{{application.haku.name }}</h2>
+
+                    <div class="timestamp-row">
+                        <i aria-hidden="true" class="icon-doc-text"></i>
+                        <a class="preview" ng-href="/omatsivut/api/applications/preview/{{application.oid}}" ng-class="{disabled: hasChanged || statusMessageType=='pending' || isValidating}" target="_blank">{{ localization('button.showApplication') }}</a>
+                            <span class="timestamp" ng-if="application.isPeriodActive()" ng-class="{disabled: hasChanged || statusMessageType=='pending' || isValidating}">
+                                ({{ timestampLabel() }} <time datetime="{{ application.updated | date:'yyyy-MM-ddTHH:mmZ' }}">{{ formatTimestamp(application.updated) }}</time>)
+                            </span>
+                        <div callout="attachments">
+                            <localized-link key="message.rememberSendAttachments" href="{{ '/omatsivut/api/applications/preview/' + application.oid + '#liitteet'}}" target="_blank"></localized-link>
+                        </div>
+                    </div>
+
                     <div ng-if="application.isPeriodActive()" role="presentation">
                         <p class="application-status">
                             <span class="label-info">
@@ -55,14 +67,6 @@
                     </div>
 
                     <div role="presentation">
-                        <p class="timestamp-row">
-                            <i aria-hidden="true" class="icon-doc-text"></i>
-                            <a class="preview" ng-href="/omatsivut/api/applications/preview/{{application.oid}}" ng-class="{disabled: hasChanged || statusMessageType=='pending' || isValidating}" target="_blank">{{ localization('button.showApplication') }}</a>
-                            <span class="timestamp" ng-if="application.isPeriodActive()" ng-class="{disabled: hasChanged || statusMessageType=='pending' || isValidating}">
-                                ({{ timestampLabel() }} <time datetime="{{ application.updated | date:'yyyy-MM-ddTHH:mmZ' }}">{{ formatTimestamp(application.updated) }}</time>)
-                            </span>
-                        </p>
-
                         <p class="application-state-message" ng-if="application.state.id == 'POSTPROCESSING' || application.state.id == 'SUBMITTED'">
                             {{ localization("message.applicationIsInPostProcessing") }}
                         </p>
@@ -107,9 +111,6 @@
                             {{ localization('label.preferences') }}
                             <button class="float-right save-btn" ng-disabled="!hasChanged || statusMessageType=='pending' || !isSaveable || isValidating" ng-click="saveApplication()">{{ localization('button.save') }}</button>
                             <span role="status" class="status-message float-right" ng-class="{'ajax-spinner': statusMessageType=='pending', error: statusMessageType=='error'}" ng-bind="statusMessage"></span>
-                            <div callout="attachments">
-                                <localized-link key="message.rememberSendAttachments" href="{{ '/omatsivut/api/applications/preview/' + application.oid + '#liitteet'}}" target="_blank"></localized-link>
-                            </div>
                         </header>
 
                         <div class="preference-list" ng-class="{validating: isValidating}" sortable sortable-item=".preference-list-item" sortable-moved="movePreference">

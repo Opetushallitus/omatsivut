@@ -13,7 +13,7 @@ h1 {
 
 h2 {
   .sub-heading-font;
-  margin: 20px 0px;
+  margin: 20px 0px 0px 0px;
 
   &:first-child {
     margin-top: 0;
@@ -262,16 +262,19 @@ button.delete-btn:not(.confirm) {
 }
 
 .application-section {
-  margin-top: 20px;
+  margin-top: 0px;
 }
 
 .timestamp-row {
+  margin-bottom: 10px;
   transition: background-color 1000ms;
   display: inline-block;
+  position: relative;
 
   &.saved {
     background-color: @save-highlight-timestamp-color;
   }
+
 }
 
 .preference-list {
