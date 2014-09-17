@@ -263,9 +263,18 @@
             it("nappi on enabloitu", function() {
               hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().confirmButtonEnabled().should.be.true
             })
+
           })
 
-          it.skip("paikan vastaanottaminen onnistuu", function() { })
+          describe("paikan vastaanottaminen", function() {
+            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().selectOption("VASTAANOTTANUT"))
+            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().send)
+
+            it("vastaanottotieto näkyy", function() {
+              hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal("Olet ottanut opiskelupaikan vastaan: Kallion lukio - Lukion ilmaisutaitolinja")
+            })
+          })
+
           it.skip("paikan hylkääminen onnistuu", function() { })
         })
 
@@ -438,7 +447,7 @@
         before(
           page.applyValintatulosFixtureAndOpen("hyvaksytty_ehdollisesti"),
           mockAjax.init,
-          function() { mockAjax.respondOnce("PUT", "http://localhost:8080/omatsivut/api/valitseOpetuspiste?applicationId=1.2.246.562.11.00000441369", 400, "") },
+          function() { mockAjax.respondOnce("POST", "/omatsivut/api/applications/vastaanota/1.2.246.562.5.2013080813081926341928/1.2.246.562.11.00000441369", 400, "") },
           hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().selectOption("VASTAANOTTANUT"),
           hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().send,
           hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().send

@@ -5,6 +5,7 @@
       scope: {
         hakutoiveet: '&hakutoiveet',
         applicationOid: '=applicationOid',
+        hakuOid: '=hakuOid',
         updateApplication: '=updateApplication'
       },
       templateUrl: 'templates/hakutoiveenVastaanotto.html',
@@ -19,17 +20,19 @@
           scope.error = ""
           scope.ajaxPending = true
 
-          restResources.valitseOpetuspiste.put({applicationId: scope.applicationOid }, {
-            opetuspiste: hakutoive.opetuspiste.oid,
-            vastaanottotila: this.vastaanottotila
+          restResources.vastaanota.post({applicationOid: scope.applicationOid, hakuOid: scope.hakuOid }, {
+            hakukohdeOid: hakutoive.koulutus.oid,
+            tila: this.vastaanottotila
           }, onSuccess, onError)
 
-          function onSuccess() {
-
+          function onSuccess(updatedApplication) {
+            scope.ajaxPending = false
+            scope.error = ""
+            scope.updateApplication(updatedApplication)
           }
 
           function onError() {
-            scope.error = "virhe"
+            scope.error = "virhe" // TODO: localize
             scope.ajaxPending = false
           }
         }

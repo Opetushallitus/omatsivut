@@ -8,4 +8,5 @@ trait HakemusRepository {
   def updateHakemus(applicationSystem: ApplicationSystem)(hakemus: HakemusMuutos, userOid: String)(implicit lang: Language): Option[Hakemus]
   def findStoredApplication(hakemus: HakemuksenTunniste): Application
   def fetchHakemukset(personOid: String)(implicit lang: Language): List[Hakemus]
+  def getHakemus(personOid: String, hakemusOid: String)(implicit lang: Language): Option[Hakemus]
 }

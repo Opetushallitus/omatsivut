@@ -5,10 +5,16 @@ module.exports = function(listApp) {
   listApp.controller("hakemusController", ["$scope", "$element", "$http", "$sce", "restResources", "applicationValidator", "settings", "debounce", "localization", function ($scope, $element, $http, $sce, restResources, applicationValidator, settings, debounce, localization) {
     applicationValidator = debounce(applicationValidator(), settings.modelDebounce)
 
-    $scope.applicationPeriod = $scope.application.haku.applicationPeriods[0]
-    $scope.hasChanged = false
-    $scope.isSaveable = true
-    $scope.isValidating = false
+    function updateHakemus(hakemus) {
+      $scope.application = hakemus
+      $scope.applicationPeriod = $scope.application.haku.applicationPeriods[0]
+      $scope.hasChanged = false
+      $scope.isSaveable = true
+      $scope.isValidating = false
+      $scope.resultStatus = getResultStatus($scope.application)
+    }
+
+    updateHakemus($scope.application)
 
     $scope.formatTimestamp = function(dt) {
       return moment(dt).format('LLL').replace(/,/g, "")
@@ -32,7 +38,6 @@ module.exports = function(listApp) {
         return localization("label.applicationUpdated")
     }
 
-    $scope.resultStatus = getResultStatus($scope.application)
 
     function underscoreToCamelCase(str) {
       return str.toLowerCase().replace(/^(.)|_(.)/g, function(match, char1, char2) {
@@ -90,6 +95,7 @@ module.exports = function(listApp) {
     })
 
     $scope.updateApplicationAfterPost = function(updated) {
+      updateHakemus(new Hakemus(updated))
     }
 
     function applicationChanged() {

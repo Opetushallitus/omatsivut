@@ -49,7 +49,22 @@ class MockValintatulosService() extends ValintatulosService with JsonFormats {
   }
 
   override def vastaanota(hakemusOid: String, hakuOid: String, vastaanotto: Vastaanotto) {
-
+    valintatulokset = valintatulokset.map { valintatulos =>
+      if (valintatulos.hakemusOid == hakemusOid) {
+        valintatulos.copy(hakutoiveet = valintatulos.hakutoiveet.map { hakutoive =>
+          vastaanotto.tila match {
+            case "VASTAANOTTANUT" =>
+              (if (hakutoive.hakukohdeOid == vastaanotto.hakukohdeOid) {
+                hakutoive.copy(vastaanottotila = Some("VASTAANOTTANUT"))
+              } else {
+                hakutoive.copy(vastaanottotila = Some("PERUUNTUNUT"))
+              }).copy(vastaanotettavuustila = "EI_VASTAANOTETTAVISSA")
+          }
+        })
+      } else {
+        valintatulos
+      }
+    }
   }
 }
 

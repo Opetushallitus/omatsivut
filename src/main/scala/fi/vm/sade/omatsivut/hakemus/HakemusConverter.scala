@@ -44,7 +44,7 @@ trait HakemusConverterComponent {
         PostProcessing()
       } else {
         if (!haku.applicationPeriods.head.active) {
-          val valintatulos = convertTovalintatulos(applicationSystem, application, hakutoiveet)
+          val valintatulos = convertToValintatulos(applicationSystem, application, hakutoiveet)
           HakuPaattynyt(valintatulos = valintatulos, resultStatus = resultStatus(valintatulos))
         } else {
           application.getState.toString match {
@@ -102,7 +102,7 @@ trait HakemusConverterComponent {
       hakutoiveenValintatulos.vastaanotettavuustila == VastaanotettavuusTila.VASTAANOTETTAVISSA_SITOVASTI
     }
 
-    private def convertTovalintatulos(applicationSystem: ApplicationSystem, application: Application, hakutoiveet: List[Hakutoive]): Option[Valintatulos] = {
+    private def convertToValintatulos(applicationSystem: ApplicationSystem, application: Application, hakutoiveet: List[Hakutoive]): Option[Valintatulos] = {
       def findKoulutus(oid: String): Koulutus = {
         hakutoiveet.find(_.get("Koulutus-id") == Some(oid)).map{ hakutoive => Koulutus(oid, hakutoive("Koulutus"))}.getOrElse(Koulutus(oid, oid))
       }

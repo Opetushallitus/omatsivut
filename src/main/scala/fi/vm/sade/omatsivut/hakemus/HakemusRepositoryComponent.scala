@@ -6,6 +6,8 @@ import fi.vm.sade.omatsivut.auditlog._
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.config.SpringContextComponent
 import fi.vm.sade.omatsivut.domain.Language
+import fi.vm.sade.omatsivut.domain.Language
+import fi.vm.sade.omatsivut.domain.Language.Language
 import fi.vm.sade.omatsivut.hakemus.domain._
 import fi.vm.sade.omatsivut.haku.domain.Haku
 import fi.vm.sade.omatsivut.haku.{HakuConverter, HakuRepository, HakuRepositoryComponent}
@@ -60,9 +62,17 @@ trait HakemusRepositoryComponent {
     }
 
     override def fetchHakemukset(personOid: String)(implicit lang: Language.Language): List[Hakemus] = {
+      fetchHakemukset(new Application().setPersonOid(personOid))
+    }
+
+    override def getHakemus(personOid: String, hakemusOid: String)(implicit lang: Language) = {
+      fetchHakemukset(new Application().setPersonOid(personOid).setOid(hakemusOid)).headOption
+    }
+
+    private def fetchHakemukset(query: Application)(implicit lang: Language) = {
       timed({
         val applicationJavaObjects: List[Application] = timed({
-          dao.find(new Application().setPersonOid(personOid)).toList
+          dao.find(query).toList
         }, 1000, "Application fetch DAO")
         applicationJavaObjects.filter{
           application => {
@@ -74,11 +84,12 @@ trait HakemusRepositoryComponent {
           }, 1000, "HakuRepository get haku")
           hakuOption.map { case (applicationSystem: ApplicationSystem, haku: Haku) => {
             val hakemus = hakemusConverter.convertToHakemus(applicationSystem, haku, application)
-            auditLogger.log(ShowHakemus(personOid, hakemus.oid))
+            auditLogger.log(ShowHakemus(application.getPersonOid, hakemus.oid))
             hakemus
           }}
         }).flatten.toList.sortBy[Long](_.received).reverse
       }, 1000, "Application fetch")
     }
   }
+
 }

@@ -10,6 +10,7 @@ import fi.vm.sade.omatsivut.haku.domain.{HakuAika, QuestionNode}
 import fi.vm.sade.omatsivut.haku.{HakuRepository, HakuRepositoryComponent}
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.security.Authentication
+import fi.vm.sade.omatsivut.valintatulokset.{Vastaanotto, ValintatulosService, ValintatulosServiceComponent}
 import org.json4s.jackson.Serialization
 import org.scalatra.json._
 import org.scalatra.swagger.SwaggerSupportSyntax.OperationBuilder
@@ -19,6 +20,7 @@ import org.scalatra.{BadRequest, Forbidden, NotFound, Ok}
 trait ApplicationsServletContainer {
   this: HakuRepositoryComponent with
     HakemusRepositoryComponent with
+    ValintatulosServiceComponent with
     ApplicationValidatorComponent with
     HakemusPreviewGeneratorComponent with
     SpringContextComponent with
@@ -27,6 +29,7 @@ trait ApplicationsServletContainer {
   val hakuRepository: HakuRepository
   val hakemusRepository: HakemusRepository
   val springContext: OmatSivutSpringContext
+  val valintatulosService: ValintatulosService
 
   class ApplicationsServlet(val appConfig: AppConfig)(implicit val swagger: Swagger) extends OmatSivutServletBase with JacksonJsonSupport with JsonFormats with SwaggerSupport with Authentication {
     override def applicationName = Some("api")
@@ -61,7 +64,8 @@ trait ApplicationsServletContainer {
     }
 
     put("/applications/:oid", operation(putApplicationsSwagger)) {
-      val updated = Serialization.read[HakemusMuutos](request.body)
+      val content: String = request.body
+      val updated = Serialization.read[HakemusMuutos](content)
       val applicationSystem = applicationSystemService.getApplicationSystem(updated.hakuOid)
       val errors = applicationValidator.validate(applicationSystem)(updated)
       if(errors.isEmpty) {
@@ -92,15 +96,19 @@ trait ApplicationsServletContainer {
       }
     }
 
-    post("/applications/vastaanota/:oid") {
-      val vastaanotto = Serialization.read[Vastaanotto](request.body)
-
+    post("/applications/vastaanota/:hakuOid/:hakemusOid") {
+      val hakemusOid = params("hakemusOid")
+      val hakuOid = params("hakuOid")
+      val vastaanotto = Serialization.read[ClientSideVastaanotto](request.body)
+      val muokkaaja: String = "henkilö:" + personOid()
+      val selite = "Muokkaus Omat Sivut -palvelussa"
+      valintatulosService.vastaanota(hakemusOid, hakuOid, Vastaanotto(vastaanotto.hakukohdeOid, vastaanotto.tila, muokkaaja, selite))
+      hakemusRepository.getHakemus(personOid(), hakemusOid)
     }
-
-    case class Vastaanotto(hakukohdeOid: String, tila: String)
-
-    case class ValidationResult(errors: List[ValidationError], questions: List[QuestionNode], applicationPeriods: List[HakuAika])
-
   }
 }
+
+case class ClientSideVastaanotto(hakukohdeOid: String, tila: String)
+
+case class ValidationResult(errors: List[ValidationError], questions: List[QuestionNode], applicationPeriods: List[HakuAika])
 

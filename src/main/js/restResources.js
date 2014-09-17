@@ -8,10 +8,10 @@ module.exports = function(listApp) {
           }
         }),
 
-      valitseOpetuspiste: $resource("/omatsivut/api/valitseOpetuspiste", null, {
-        "put": {
-          method: "PUT",
-          url: "/omatsivut/api/valitseOpetuspiste/:id"
+      vastaanota: $resource("/omatsivut/api/applications/vastaanota", null, {
+        "post": {
+          method: "POST",
+          url: "/omatsivut/api/applications/vastaanota/:hakuOid/:applicationOid"
         }
       }),
 
