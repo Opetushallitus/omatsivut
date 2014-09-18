@@ -4,7 +4,10 @@ var gulp = require('gulp'),
     less = require('gulp-less'),
     jshint = require('gulp-jshint'),
     livereload = require('gulp-livereload'),
-    templates = require('gulp-angular-templatecache');
+    templates = require('gulp-angular-templatecache'),
+    uglify = require('gulp-uglify'),
+    gulpif = require('gulp-if'),
+    ngAnnotate = require('gulp-ng-annotate')
 
 var jsFiles = 'src/main/js/**/*.js';
 var isWatch
@@ -46,14 +49,24 @@ gulp.task('less', function () {
 });
 
 gulp.task('browserify', function() {
-    gulp.src(['src/main/js/app.js'])
-        .pipe(browserify({
-            insertGlobals: true,
-            debug: true
-        }).on('error', handleError))
-        .pipe(concat('bundle.js'))
-        .pipe(gulp.dest('src/main/webapp'));
-});
+  compileJs(false)
+})
+
+gulp.task('browserify-min', function() {
+  compileJs(true)
+})
+
+function compileJs(compress) {
+  gulp.src(['src/main/js/app.js'])
+    .pipe(browserify({
+      insertGlobals: true,
+      debug: true
+    }).on('error', handleError))
+    .pipe(concat('bundle.js'))
+    .pipe(gulpif(compress, ngAnnotate()))
+    .pipe(gulpif(compress, uglify({ mangle: true })))
+    .pipe(gulp.dest('src/main/webapp'))
+}
 
 gulp.task('watch', function() {
     isWatch = true
@@ -64,6 +77,7 @@ gulp.task('watch', function() {
     gulp.watch(['src/main/less/**/*.less'],['less']);
 });
 
-gulp.task('compile', ['templates', 'browserify', 'less']);
-gulp.task('dev', ['lint', 'compile', 'watch']);
+gulp.task('compile', ['templates', 'browserify-min', 'less']);
+gulp.task('compile-dev', ['templates', 'browserify', 'less']);
+gulp.task('dev', ['lint', 'compile-dev', 'watch']);
 gulp.task('default', ['dev']);

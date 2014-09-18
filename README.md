@@ -63,9 +63,13 @@ Aja TomcatRunner-luokka. Jotta impersonointi/autentikoinnin ohitus onnistuu, ann
 
 Frontti paketoidaan gulpilla ja browserifyllä. Paketointi tapahtuu mocha-testien ajon yhteydessä (`runtests.sh`).
 
-Jatkuva fronttikäännös käyntiin näin:
+Jatkuva fronttikäännös käyntiin näin (ei minimointia):
 
     node_modules/gulp/bin/gulp.js dev
+
+Javascriptin minimointi:
+
+    node_modules/gulp/bin/gulp.js compile
 
 Tyylit tehty lessillä. Css-fileet src-puussa generoidaan siitä ja ovat ignoroitu gitissä.
 
