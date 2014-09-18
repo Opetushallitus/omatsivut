@@ -483,7 +483,7 @@
         )
 
         it("ajax-virheet näytetään", function() {
-          hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().errorText().should.equal("virhe")
+          hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().errorText().should.equal("Tallentaminen epäonnistui. Yritä myöhemmin uudelleen.")
         })
       })
 

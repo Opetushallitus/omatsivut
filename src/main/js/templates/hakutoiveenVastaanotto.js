@@ -34,7 +34,7 @@
           }
 
           function onError() {
-            scope.error = "virhe" // TODO: localize
+            scope.error = localization('error.saveFailed')
             scope.ajaxPending = false
           }
         }
