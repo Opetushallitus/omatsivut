@@ -4,25 +4,29 @@ require('angular-module-sanitize');
 require('angular-animate');
 _ = require("underscore");
 require("../lib/ui-bootstrap-custom-tpls-0.10.0.min.js");
+require('./recursionHelper')
+require('../lib/angular-debounce')
+
 window.moment = require("moment");
 require("../lib/moment-locale-fi.js");
 require("moment/locale/sv.js");
 require("moment/locale/en-gb.js");
-var listApp = angular.module('listApp', ["ngResource", "ngSanitize", "ngAnimate", "RecursionHelper", "ui.bootstrap.typeahead", "template/typeahead/typeahead-popup.html", "template/typeahead/typeahead-match.html", "debounce", "exceptionOverride", "templates"], function($locationProvider) {
-  $locationProvider.html5Mode(false);
-});
 
 angular.module("templates", [])
 require("../templates/templates.js")
 
+var listApp = angular.module('listApp', ["ngResource", "ngSanitize", "ngAnimate", "RecursionHelper", "ui.bootstrap.typeahead", "template/typeahead/typeahead-popup.html", "template/typeahead/typeahead-match.html", "debounce", "exceptionOverride", "templates"], function($locationProvider) {
+  $locationProvider.html5Mode(false)
+});
+
 var staticResources = require('./staticResources')
+require('./localization')(listApp, staticResources)
+require('./restResources')(listApp)
+
 require('./hakutoiveController')(listApp)
 require('./hakemusController')(listApp)
 require('./applicationValidator')(listApp)
-require('./localization')(listApp, staticResources)
-require('./restResources')(listApp)
-require('./recursionHelper')
-require('../lib/angular-debounce')
+require('./settings')(listApp, testMode())
 
 require('./directives/callout')(listApp)
 require('./directives/confirm')(listApp)
@@ -66,12 +70,3 @@ angular.module("exceptionOverride", []).factory("$exceptionHandler", function() 
       console.error(exception.stack)
   };
 })
-
-listApp.factory("settings", ["$animate", function($animate) {
-  if (testMode()) $animate.enabled(false)
-  return {
-    uiTransitionTime: testMode() ? 10 : 500,
-    modelDebounce: testMode() ? 0 : 300,
-    uiIndicatorDebounce: testMode() ? 0: 500
-  };
-}]);
