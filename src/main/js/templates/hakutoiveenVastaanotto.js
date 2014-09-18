@@ -1,4 +1,4 @@
-; module.exports = function(listApp) {
+module.exports = function(listApp) {
   listApp.directive("hakutoiveenVastaanotto", ["localization", "restResources", function (localization, restResources) {
     return {
       restrict: 'E',

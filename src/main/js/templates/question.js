@@ -1,4 +1,4 @@
-; module.exports = function(listApp) {
+module.exports = function(listApp) {
   listApp.directive("question", function (RecursionHelper) {
     return {
       restrict: 'E',
