@@ -72,7 +72,7 @@ gulp.task('watch', function() {
     isWatch = true
     livereload.listen();
     gulp.watch(['src/main/webapp/**/*.js', 'src/main/webapp/**/*.css', 'src/main/webapp/**/*.html'], livereload.changed);
-    gulp.watch(['src/main/templates/**/*.html'], ['compile'])
+    gulp.watch(['src/main/templates/**/*.html'], ['compile-dev'])
     gulp.watch([jsFiles],['lint', 'browserify']);
     gulp.watch(['src/main/less/**/*.less'],['less']);
 });
