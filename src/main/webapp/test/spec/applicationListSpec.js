@@ -230,7 +230,7 @@
           expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[7].tila).to.equal('Hyväksytty')
         })
 
-        describe("opiskelija on ottanut paikan vastaan ehdollisesti, mutta valinta on kesken", function() {
+        describe("hakija on ottanut paikan vastaan ehdollisesti, mutta valinta on kesken", function() {
           it.skip("tieto näytetään oikein", function() {})
         })
       })
@@ -244,7 +244,7 @@
         })
       })
 
-      describe("opiskelijalle tarjotaan paikkaa", function() {
+      describe("hakijalle tarjotaan paikkaa", function() {
         describe("sitova vastaanotto", function() {
           before(page.applyValintatulosFixtureAndOpen("hyvaksytty"))
 
@@ -283,7 +283,15 @@
             })
           })
 
-          it.skip("paikan hylkääminen onnistuu", function() { })
+          describe("paikan hylkääminen", function() {
+            before(page.applyValintatulosFixtureAndOpen("hyvaksytty"))
+            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().selectOption("PERUNUT"))
+            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().send)
+
+            it("perumistieto näkyy", function() {
+              hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal("Olet perunut hakemuksen")
+            })
+          })
         })
 
         describe("ehdollinen vastaanotto", function() {
@@ -301,8 +309,34 @@
             ])
           })
 
-          it.skip("paikan vastaanottaminen onnistuu", function() { })
-          it.skip("paikan hylkääminen onnistuu", function() { })
+          describe("paikan vastaanottaminen", function() {
+            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().selectOption("VASTAANOTTANUT"))
+            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().send)
+
+            it("vastaanottotieto näkyy", function() {
+              hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal("Olet ottanut opiskelupaikan vastaan: Salon lukio - Lukio")
+            })
+          })
+
+          describe("paikan vastaanottaminen ehdollisesti", function() {
+            before(page.applyValintatulosFixtureAndOpen("hyvaksytty_ehdollisesti"))
+            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().selectOption("EHDOLLISESTI_VASTAANOTTANUT"))
+            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().send)
+
+            it("vastaanottotieto näkyy", function() {
+              hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal("Hakuaika on päättynyt. Haun tulokset julkaistaan viimeistään 11. kesäkuuta 2014. Olet ottanut ehdollisesti vastaan opiskelupaikan: Salon lukio - Lukio")
+            })
+          })
+
+          describe("paikan hylkääminen", function() {
+            before(page.applyValintatulosFixtureAndOpen("hyvaksytty_ehdollisesti"))
+            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().selectOption("PERUNUT"))
+            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().send)
+
+            it.skip("perumistieto näkyy", function() {
+              hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal("Olet perunut hakemuksen")
+            })
+          })
         })
       })
 

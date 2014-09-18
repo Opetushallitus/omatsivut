@@ -48,17 +48,26 @@ class MockValintatulosService() extends ValintatulosService with JsonFormats {
     valintatulokset.find(_.hakemusOid == hakemusOid)
   }
 
+
+  private def processHakutoive(hakutoive: HakutoiveenValintatulos, vastaanotto: Vastaanotto, vastaanottotila: String, setOthersToCancelled: Boolean) = {
+    val isMatch = hakutoive.hakukohdeOid == vastaanotto.hakukohdeOid
+    val determinedVastaanottoTila = if (isMatch) vastaanottotila else "KESKEN"
+    val valintaTila = if(setOthersToCancelled && !isMatch) "PERUUNTUNUT" else hakutoive.valintatila
+    hakutoive.copy(vastaanottotila = Some(determinedVastaanottoTila), vastaanotettavuustila = "EI_VASTAANOTETTAVISSA", valintatila = valintaTila)
+  }
+
+
   override def vastaanota(hakemusOid: String, hakuOid: String, vastaanotto: Vastaanotto) {
     valintatulokset = valintatulokset.map { valintatulos =>
       if (valintatulos.hakemusOid == hakemusOid) {
         valintatulos.copy(hakutoiveet = valintatulos.hakutoiveet.map { hakutoive =>
           vastaanotto.tila match {
-            case "VASTAANOTTANUT" =>
-              (if (hakutoive.hakukohdeOid == vastaanotto.hakukohdeOid) {
-                hakutoive.copy(vastaanottotila = Some("VASTAANOTTANUT"))
-              } else {
-                hakutoive.copy(vastaanottotila = Some("PERUUNTUNUT"))
-              }).copy(vastaanotettavuustila = "EI_VASTAANOTETTAVISSA")
+            case "VASTAANOTTANUT" => processHakutoive(hakutoive, vastaanotto, "VASTAANOTTANUT", setOthersToCancelled = true)
+            case "PERUNUT" => {
+              val processed = processHakutoive(hakutoive, vastaanotto, "PERUNUT", setOthersToCancelled = true)
+              processed.copy(valintatila = if (hakutoive.hakukohdeOid == vastaanotto.hakukohdeOid) "PERUNUT" else processed.valintatila)
+            }
+            case "EHDOLLISESTI_VASTAANOTTANUT" => processHakutoive(hakutoive, vastaanotto, "EHDOLLISESTI_VASTAANOTTANUT", setOthersToCancelled = false)
           }
         })
       } else {
