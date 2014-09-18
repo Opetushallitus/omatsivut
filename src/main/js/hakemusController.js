@@ -140,7 +140,7 @@ module.exports = function(listApp) {
 
         var updateQuestions = data.questions != null && !Hakutoive.hasHakutoiveErrors(data.errors)
 
-        if (updateQuestions) // frontside validation does not include questions -> don't update // TODO: testikeissi tälle (vastaa kysymykseen, aiheuta fronttivalidaatiovirhe)
+        if (updateQuestions) // frontside validation does not include questions -> don't update
           $scope.application.mergeValidationResult(data)
 
         updateValidationMessages(data.errors, skipQuestions)

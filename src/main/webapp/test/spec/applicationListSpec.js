@@ -441,6 +441,23 @@
         })
       })
 
+      describe("Jos tulee validaatiovirhe hakutoiveesta", function() {
+        before(function() { mockAjax.respondOnce("POST", "/omatsivut/api/applications/validate/1.2.246.562.11.00000877107", 200, '{"errors":[{"key":"preference1-Koulutus","message":"Testi virhe."}],"questions":[{"title":"Etelä-Savon ammattiopisto,  Otavankatu 4 - Ammattistartti","questions":[{"title":"Hakutoiveet - Hakutoiveet","questions":[{"id":{"phaseId":"hakutoiveet","questionId":"539ecf15e4b09a485311aac9"},"title":"Testikysymys, avaoin vastaus kenttä (pakollinen)?","help":"100 merkkiä max (kolmella kielellä kysymys)","required":true,"maxlength":100,"questionType":"Text"}]}]}],"applicationPeriods":[{"start":1404190831839,"end":4131320431839,"active":true}]}')})
+        before(
+            hakemusNivelKesa2013WithPeruskouluBaseEducation.getPreference(0).moveDown,
+            function() { return hakemusNivelKesa2013WithPeruskouluBaseEducation.saveError().length > 0 }
+        )
+
+        it("näytetään virhe", function() {
+            hakemusNivelKesa2013WithPeruskouluBaseEducation.getPreference(0).errorMessage().should.equal("Testi virhe.")
+        })
+
+        it("uusia kysymyksiä ei näytetä käyttäjälle", function() {
+            var questionTitles = hakemusNivelKesa2013WithPeruskouluBaseEducation.questionsForApplication().titles()
+            expect(questionTitles).to.deep.equal([])
+        })
+      })
+
       describe("Hakukohteen valinta", function() {
         describe("vanhat hakukohteet katoavat näkyvistä, jos koulutusinformaatio-API ei vastaa", function() {
           before(replacePreference(hakemusKorkeakoulu, 1, "Ahlman"))
