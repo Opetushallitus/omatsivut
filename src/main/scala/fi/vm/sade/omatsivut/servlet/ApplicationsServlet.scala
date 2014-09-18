@@ -99,11 +99,16 @@ trait ApplicationsServletContainer {
     post("/applications/vastaanota/:hakuOid/:hakemusOid") {
       val hakemusOid = params("hakemusOid")
       val hakuOid = params("hakuOid")
-      val vastaanotto = Serialization.read[ClientSideVastaanotto](request.body)
-      val muokkaaja: String = "henkilö:" + personOid()
-      val selite = "Muokkaus Omat Sivut -palvelussa"
-      valintatulosService.vastaanota(hakemusOid, hakuOid, Vastaanotto(vastaanotto.hakukohdeOid, vastaanotto.tila, muokkaaja, selite))
-      hakemusRepository.getHakemus(personOid(), hakemusOid)
+      if (!hakemusRepository.exists(personOid(), hakuOid, hakemusOid)) {
+        response.setStatus(404)
+        "Not found"
+      } else {
+        val vastaanotto = Serialization.read[ClientSideVastaanotto](request.body)
+        val muokkaaja: String = "henkilö:" + personOid()
+        val selite = "Muokkaus Omat Sivut -palvelussa"
+        valintatulosService.vastaanota(hakemusOid, hakuOid, Vastaanotto(vastaanotto.hakukohdeOid, vastaanotto.tila, muokkaaja, selite))
+        hakemusRepository.getHakemus(personOid(), hakemusOid)
+      }
     }
   }
 }

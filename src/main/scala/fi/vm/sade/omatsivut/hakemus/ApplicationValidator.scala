@@ -55,7 +55,7 @@ trait ApplicationValidatorComponent {
       application.getState == Application.State.INCOMPLETE
     }
 
-    private def update(hakemus: HakemusMuutos, applicationSystem: ApplicationSystem, application: Application)(implicit lang: Language.Language) = {
+    private def update(hakemus: HakemusMuutos, applicationSystem: ApplicationSystem, application: Application)(implicit lang: Language.Language): Application = {
       ApplicationUpdater.update(applicationSystem)(application.clone(), hakemus) // application is mutated
     }
 

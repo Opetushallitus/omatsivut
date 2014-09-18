@@ -90,6 +90,10 @@ trait HakemusRepositoryComponent {
         }).flatten.toList.sortBy[Long](_.received).reverse
       }, 1000, "Application fetch")
     }
+
+    override def exists(personOid: String, hakuOid: String, hakemusOid: String) = {
+      dao.find(new Application().setPersonOid(personOid).setOid(hakemusOid).setApplicationSystemId(hakuOid)).size() == 1
+    }
   }
 
 }

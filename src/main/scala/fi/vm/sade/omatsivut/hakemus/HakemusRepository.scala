@@ -9,4 +9,5 @@ trait HakemusRepository {
   def findStoredApplicationByOid(oid: String): Application
   def fetchHakemukset(personOid: String)(implicit lang: Language): List[Hakemus]
   def getHakemus(personOid: String, hakemusOid: String)(implicit lang: Language): Option[Hakemus]
+  def exists(personOid: String, hakuOid: String, hakemusOid: String): Boolean
 }

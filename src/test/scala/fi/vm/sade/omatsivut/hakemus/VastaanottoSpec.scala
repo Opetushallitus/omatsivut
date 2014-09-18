@@ -26,7 +26,7 @@ class VastaanottoSpec extends HakemusApiSpecification with FixturePerson {
       new ValintatulosFixtureImporter(componentRegistry.valintatulosService.asInstanceOf[MockValintatulosService]).applyFixtures("hyvaksytty")
 
       authPost("/applications/vastaanota/1.2.246.562.5.2013080813081926341928/1.2.246.562.11.00000441369", Serialization.write(ClientSideVastaanotto("1.2.246.562.5.72607738902", "VASTAANOTTANUT"))) {
-        status must_== 403
+        status must_== 404
       }(PersonOid("WRONG PERSON"))
     }
   }
