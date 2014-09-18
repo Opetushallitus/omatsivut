@@ -8,9 +8,12 @@ window.moment = require("moment");
 require("../lib/moment-locale-fi.js");
 require("moment/locale/sv.js");
 require("moment/locale/en-gb.js");
-var listApp = angular.module('listApp', ["ngResource", "ngSanitize", "ngAnimate", "RecursionHelper", "ui.bootstrap.typeahead", "template/typeahead/typeahead-popup.html", "template/typeahead/typeahead-match.html", "debounce", "exceptionOverride"], function($locationProvider) {
+var listApp = angular.module('listApp', ["ngResource", "ngSanitize", "ngAnimate", "RecursionHelper", "ui.bootstrap.typeahead", "template/typeahead/typeahead-popup.html", "template/typeahead/typeahead-match.html", "debounce", "exceptionOverride", "templates"], function($locationProvider) {
   $locationProvider.html5Mode(false);
 });
+
+angular.module("templates", [])
+require("../templates/templates.js")
 
 var staticResources = require('./staticResources')
 require('./hakutoiveController')(listApp)

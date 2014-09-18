@@ -83,6 +83,7 @@ oph_vars
 # generated js and css files
 src/main/webapp/bundle.js
 src/main/webapp/css/
+src/main/templates/templates.js
 
 # active mq
 activemq-data

@@ -3,7 +3,8 @@ var gulp = require('gulp'),
     concat = require('gulp-concat'),
     less = require('gulp-less'),
     jshint = require('gulp-jshint'),
-    livereload = require('gulp-livereload');
+    livereload = require('gulp-livereload'),
+    templates = require('gulp-angular-templatecache');
 
 var jsFiles = 'src/main/js/**/*.js';
 var isWatch
@@ -26,6 +27,12 @@ gulp.task('lint', function() {
         }))
         .pipe(jshint.reporter('default'));
 });
+
+gulp.task("templates", function() {
+  gulp.src("src/main/templates/**/*.html")
+    .pipe(templates("templates.js", { root:"templates/"}))
+    .pipe(gulp.dest("src/main/templates"))
+})
 
 gulp.task('less', function () {
     gulp.src('src/main/less/**/main.less')
@@ -52,10 +59,11 @@ gulp.task('watch', function() {
     isWatch = true
     livereload.listen();
     gulp.watch(['src/main/webapp/**/*.js', 'src/main/webapp/**/*.css', 'src/main/webapp/**/*.html'], livereload.changed);
+    gulp.watch(['src/main/templates/**/*.html'], ['compile'])
     gulp.watch([jsFiles],['lint', 'browserify']);
     gulp.watch(['src/main/less/**/*.less'],['less']);
 });
 
-gulp.task('compile', ['browserify', 'less']);
+gulp.task('compile', ['templates', 'browserify', 'less']);
 gulp.task('dev', ['lint', 'compile', 'watch']);
 gulp.task('default', ['dev']);
