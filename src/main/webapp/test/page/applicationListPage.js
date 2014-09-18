@@ -63,9 +63,9 @@ function ApplicationListPage() {
     },
 
     getNonLocalizedText: function() {
-      return getTemplates().then(function(templates) {
+      return getTemplateTexts().then(function(templates) {
         function nonLocalizedText(text) {
-          text = text.replace(/\{\{.*?\}\}/g, "")
+          text = text.replace(/\{\{[\s\S]*?\}\}/g, "")
           return text.match(/\w+/)
         }
 
@@ -80,11 +80,19 @@ function ApplicationListPage() {
     return S("#hakemus-list").attr("ng-cloak") == null && api.applications().length > 0
   }
 
-  function getTemplates() {
-    return Q($.get("/omatsivut/index.html")).then(function(data) {
-      var dom = $(data)
-      var template = $(dom.find("script").detach().text())
-      return [dom.text(), template.text()]
+  function getTemplateTexts() {
+    return Q.all([
+      Q($.get("/omatsivut/index.html")),
+      Q($.get("/omatsivut/bundle.js"))
+    ]).then(function(arr) {
+      var indexHtml = arr[0]
+      var templateIds = _.uniq(arr[1].match(/templates\/.*?html/g))
+      var templates = _(templateIds).map(function(id) {
+        var html = testFrame().angular.element(S("body")).injector().get("$templateCache").get(id)
+        return $(html).text()
+      })
+
+      return _.flatten([$(indexHtml).text(), templates])
     })
   }
 
