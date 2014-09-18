@@ -17,7 +17,6 @@ require("../templates/templates.js")
 
 var staticResources = require('./staticResources')
 require('./hakutoiveController')(listApp)
-require('./listController')(listApp)
 require('./hakemusController')(listApp)
 require('./applicationValidator')(listApp)
 require('./localization')(listApp, staticResources)
@@ -31,6 +30,7 @@ require('./directives/localizedLink')(listApp)
 require('./directives/sortable')(listApp)
 require('./directives/ui-effects')(listApp)
 require('./directives/question')(listApp)
+require('./directives/applicationList')(listApp)
 require('./directives/hakutoiveenVastaanotto')(listApp)
 
 listApp.run(function ($rootScope, localization) {
