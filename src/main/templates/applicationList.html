@@ -31,6 +31,10 @@
                         {{ localization('label.applicationPeriodEnds') }} <time datetime="{{ application.haku.applicationPeriods[0].end | date:'yyyy-MM-ddTHH:mmZ' }}">{{ formatApplicationPeriod(application.haku.applicationPeriods[0].end) }}</time>
                     </span>
                 </p>
+
+                <p class="application-state-message" ng-if="application.state.id == 'POSTPROCESSING' || application.state.id == 'SUBMITTED'">
+                    {{ localization("message.applicationIsInPostProcessing") }}
+                </p>
             </div>
 
             <div ng-if="!application.isPeriodActive()" role="presentation">
@@ -43,15 +47,9 @@
                     </span>
                 </p>
                 <p class="application-status"  ng-if="resultStatus" ng-bind="resultStatus"></p>
+
                 <hakutoiveen-vastaanotto application-oid="application.oid" haku="application.haku" hakutoiveet="application.vastaanotettavatHakutoiveet()" update-application="updateApplicationAfterPost">
                 </hakutoiveen-vastaanotto>
-            </div>
-
-            <div role="presentation">
-                <p class="application-state-message" ng-if="application.state.id == 'POSTPROCESSING' || application.state.id == 'SUBMITTED'">
-                    {{ localization("message.applicationIsInPostProcessing") }}
-                </p>
-                <div class="application-state-message" ng-if="resultState" ng-bind="resultState"></div>
             </div>
 
             <valintatulos data="application.state.valintatulos"></valintatulos>
