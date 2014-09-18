@@ -460,6 +460,7 @@
       })
 
       describe("Hakukohteen valinta", function() {
+
         describe("vanhat hakukohteet katoavat näkyvistä, jos koulutusinformaatio-API ei vastaa", function() {
           before(replacePreference(hakemusKorkeakoulu, 1, "Ahlman"))
           before(function() { mockAjax.respondOnce("GET", "/omatsivut/koulutusinformaatio/koulutukset/1.2.246.562.29.173465377510/1.2.246.562.10.60222091211?uiLang=fi&vocational=true", 400, "")})
@@ -474,17 +475,45 @@
       })
 
       describe("Hakutoiveen vastaanotto", function() {
+
         before(
-          page.applyValintatulosFixtureAndOpen("hyvaksytty_ehdollisesti"),
-          mockAjax.init,
-          function() { mockAjax.respondOnce("POST", "/omatsivut/api/applications/vastaanota/1.2.246.562.5.2013080813081926341928/1.2.246.562.11.00000441369", 400, "") },
-          hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().selectOption("VASTAANOTTANUT"),
-          hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().send
+            page.applyValintatulosFixtureAndOpen("hyvaksytty_ehdollisesti"),
+            mockAjax.init
         )
 
-        it("ajax-virheet näytetään", function() {
-          hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().errorText().should.equal("Tallentaminen epäonnistui. Yritä myöhemmin uudelleen.")
+        describe("kun server ei vastaa", function() {
+          before(
+              function() { mockAjax.respondOnce("POST", "/omatsivut/api/applications/vastaanota/1.2.246.562.5.2013080813081926341928/1.2.246.562.11.00000441369", 400, "") },
+              hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().selectOption("VASTAANOTTANUT"),
+              hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().send
+            )
+          it("virhe näytetään", function() {
+            hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().errorText().should.equal("Tallentaminen epäonnistui. Yritä myöhemmin uudelleen.")
+          })
         })
+
+        describe("kun session on vanhentunut", function() {
+          before(
+            function() { mockAjax.respondOnce("POST", "/omatsivut/api/applications/vastaanota/1.2.246.562.5.2013080813081926341928/1.2.246.562.11.00000441369", 401, "") },
+            hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().selectOption("VASTAANOTTANUT"),
+            hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().send
+          )
+          it("virhe näytetään", function() {
+            hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().errorText().should.equal("Tallentaminen epäonnistui, sillä istunto on vanhentunut. Kirjaudu uudestaan sisään.")
+          })
+        })
+
+        describe("kun serveriltä tulee odottamaton virhe", function() {
+          before(
+            function() { mockAjax.respondOnce("POST", "/omatsivut/api/applications/vastaanota/1.2.246.562.5.2013080813081926341928/1.2.246.562.11.00000441369", 500, "") },
+            hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().selectOption("VASTAANOTTANUT"),
+            hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().send
+          )
+          it("virhe näytetään", function() {
+            hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().errorText().should.equal("Odottamaton virhe. Ota yhteyttä ylläpitoon.")
+          })
+        })
+
       })
 
       describe("Tallennus", function() {

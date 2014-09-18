@@ -33,9 +33,16 @@
             scope.updateApplication(updatedApplication)
           }
 
-          function onError() {
-            scope.error = localization('error.saveFailed')
-            scope.ajaxPending = false
+          function onError(err) {
+            var saveError = (function() {
+             if (err.status == 401)
+                return "error.saveFailed_sessionExpired"
+              else if (err.status == 500)
+                return "error.serverError"
+              else
+                return "error.saveFailed"
+            })()
+            scope.error = localization(saveError)
           }
         }
       }
