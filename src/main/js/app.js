@@ -36,6 +36,7 @@ require('./directives/ui-effects')(listApp)
 require('./directives/question')(listApp)
 require('./directives/applicationList')(listApp)
 require('./directives/hakutoiveenVastaanotto')(listApp)
+require('./directives/valintatulos')(listApp)
 
 listApp.run(function ($rootScope, localization) {
   $rootScope.localization = localization

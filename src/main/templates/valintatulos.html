@@ -1,0 +1,33 @@
+<section class="application-section application-valintatulos" ng-if="valintatulos()">
+    <header class="application-section-heading">
+        {{ localization('label.results') }}
+    </header>
+    <ul class="result-list">
+        <li class="result-list-item" ng-repeat="tulos in valintatulos().hakutoiveet">
+            <div class="item-content">
+                <span class="row-number">{{$index+1}}.</span>
+            </div>
+            <div class="item-content">
+                <div class="row opetuspiste">
+                    <div class="label-column">{{localization('label.location' + (application.haku.korkeakouluhaku ? '_university' : ''))}}:</div>
+
+                    <div class="value-column">
+                        <span ng-bind="tulos.opetuspiste.name"></span>
+                    </div>
+                </div>
+                <div class="row koulutus">
+                    <div class="label-column">{{ localization('label.education' + (application.haku.korkeakouluhaku ? '_university' : '')) }}:</div>
+
+                    <div class="value-column">
+                        <span ng-bind="tulos.koulutus.name"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="item-content">
+                <span class="badge" ng-class="valintatulosColor(tulos)" ng-bind="valintatulosText(tulos)"></span>
+            </div>
+        </li>
+    </ul>
+</section>
+

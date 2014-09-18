@@ -26,5 +26,11 @@ module.exports = {
       }
       return list
     })(rootNode, [])
+  },
+
+  underscoreToCamelCase: function(str) {
+    return str.toLowerCase().replace(/^(.)|_(.)/g, function(match, char1, char2) {
+      return (char1?char1:"" + char2?char2:"").toUpperCase()
+    })
   }
 }

@@ -1,5 +1,6 @@
 var Hakemus = require("./hakemus")
 var Hakutoive = require("./hakutoive")
+var util = require("./util")
 
 module.exports = function(listApp) {
   listApp.controller("hakemusController", ["$scope", "$element", "$http", "$sce", "restResources", "applicationValidator", "settings", "debounce", "localization", function ($scope, $element, $http, $sce, restResources, applicationValidator, settings, debounce, localization) {
@@ -38,42 +39,14 @@ module.exports = function(listApp) {
         return localization("label.applicationUpdated")
     }
 
-
-    function underscoreToCamelCase(str) {
-      return str.toLowerCase().replace(/^(.)|_(.)/g, function(match, char1, char2) {
-        return (char1?char1:"" + char2?char2:"").toUpperCase()
-      })
-    }
-
     function getResultStatus(application) {
       var resultStatus = _().find(function(hakutoive) { return hakutoive.vastaanottotila != "KESKEN" && hakutoive.vastaanottotila != "ILMOITETTU"})
       if (application.state && application.state.resultStatus != null) {
         var status = application.state.resultStatus
-        return localization("message.resultState." + underscoreToCamelCase(status.state), {
+        return localization("message.resultState." + util.underscoreToCamelCase(status.state), {
           opiskelupaikka: status.opiskelupaikka
         })
       }
-    }
-
-    $scope.valintatulosText = function(valintatulos) {
-      var tila = underscoreToCamelCase(valintatulos.tila)
-      var localizationString = (tila=== "Varalla" && valintatulos.varasijojaTaytetaanAsti != null) ? "label.resultState.VarallaPvm" : "label.resultState." + tila
-      return localization(localizationString, {
-        varasija: valintatulos.varasijanumero,
-        varasijaPvm: $scope.formatDate(valintatulos.varasijojaTaytetaanAsti)
-      })
-    }
-
-    $scope.valintatulosColor = function(valintatulos) {
-      var tila = underscoreToCamelCase(valintatulos.tila)
-      if (tila == "Hyvaksytty" || tila == "HarkinnanvaraisestiHyvaksytty")
-        return "green"
-      else if (tila == "Hylatty" || tila == "Perunut" || tila == "Peruutettu")
-        return "gray"
-      else if (tila == "Kesken" || tila == "Varalla")
-        return "blue"
-      else
-        return "transparent lighter italic"
     }
 
     $scope.$watch("application.getHakutoiveWatchCollection()", function(hakutoiveet, oldHakutoiveet) {
