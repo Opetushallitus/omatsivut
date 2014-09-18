@@ -1,13 +1,13 @@
-<div class="hakutoiveenVastaanotto" ng-repeat="hakutoive in application.vastaanotettavatHakutoiveet()">
+<div class="hakutoiveenVastaanotto" ng-repeat="hakutoive in hakutoiveet()">
     <h2>
         {{ localization('message.acceptEducation.received', {
           opetuspiste: hakutoive.opetuspiste.name,
           koulutus: hakutoive.koulutus.name
         }) }}
     </h2>
-    <div class="badge blue" ng-if="application.haku.results.vastaanottoEnd">
+    <div class="badge blue" ng-if="haku.results.vastaanottoEnd">
          {{ localization('message.acceptEducation.latestAnswer', {
-          aika: formatTimestamp( application.haku.results.vastaanottoEnd )
+          aika: formatTimestamp(haku.results.vastaanottoEnd)
         }) }}
     </div>
 

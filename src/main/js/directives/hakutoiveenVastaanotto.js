@@ -3,7 +3,9 @@ module.exports = function(listApp) {
     return {
       restrict: 'E',
       scope: {
-        application: '=application',
+        applicationOid: '&applicationOid',
+        haku: '&haku',
+        hakutoiveet: '&hakutoiveet',
         updateApplication: '=updateApplication'
       },
       templateUrl: 'templates/hakutoiveenVastaanotto.html',
@@ -22,7 +24,7 @@ module.exports = function(listApp) {
           scope.error = ""
           scope.ajaxPending = true
 
-          restResources.vastaanota.post({applicationOid: scope.application.oid, hakuOid: scope.application.haku.oid}, {
+          restResources.vastaanota.post({applicationOid: scope.applicationOid(), hakuOid: scope.haku.oid}, {
             hakukohdeOid: hakutoive.koulutus.oid,
             tila: this.vastaanottotila
           }, onSuccess, onError)

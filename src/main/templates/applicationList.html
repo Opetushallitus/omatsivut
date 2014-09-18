@@ -32,6 +32,7 @@
                     </span>
                 </p>
             </div>
+
             <div ng-if="!application.isPeriodActive()" role="presentation">
                 <p class="application-status" ng-if="!application.allResultsAvailable() && application.vastaanotettavatHakutoiveet().length == 0">
                     <span class="badge label-info">
@@ -42,7 +43,7 @@
                     </span>
                 </p>
                 <p class="application-status"  ng-if="resultStatus" ng-bind="resultStatus"></p>
-                <hakutoiveen-vastaanotto application="application" update-application="updateApplicationAfterPost">
+                <hakutoiveen-vastaanotto application-oid="application.oid" haku="application.haku" hakutoiveet="application.vastaanotettavatHakutoiveet()" update-application="updateApplicationAfterPost">
                 </hakutoiveen-vastaanotto>
             </div>
 
