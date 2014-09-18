@@ -15,7 +15,7 @@ trait ScalatraTestSupport extends MutableScalatraSpec {
     get(uri, headers = authHeaders(personOid.oid))(f)
   }
 
-  def authPost[A](uri: String, oid: String, body: Array[Byte])(f: => A)(implicit personOid: PersonOid): A = {
+  def authPost[A](uri: String, body: Array[Byte])(f: => A)(implicit personOid: PersonOid): A = {
     post(uri, body, headers = authHeaders(personOid.oid))(f)
   }
 

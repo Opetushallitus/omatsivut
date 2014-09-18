@@ -92,8 +92,7 @@ class ValidateApplicationSpec extends HakemusApiSpecification with FixturePerson
   def validate[T](hakemus:Hakemus, questionsOf: Option[String] = None)(f: (List[ValidationError], List[QuestionNode], List[HakuAika]) => T)(implicit personOid: PersonOid) = {
     authPost("/applications/validate/" + hakemus.oid + (questionsOf match {
         case Some(value) =>  "?questionsOf=" + value
-        case None => ""}),
-        TestFixture.personOid, Serialization.write(hakemus.toHakemusMuutos)) {
+        case None => ""}), Serialization.write(hakemus.toHakemusMuutos)) {
       val result: JValue = JsonMethods.parse(body)
       val errors: List[ValidationError] = (result \ "errors").extract[List[ValidationError]]
       val structuredQuestions: List[QuestionNode] = (result \ "questions").extract[List[QuestionNode]]
