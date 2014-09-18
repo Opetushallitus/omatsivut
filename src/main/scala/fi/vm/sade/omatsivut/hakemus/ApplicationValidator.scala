@@ -25,14 +25,14 @@ trait ApplicationValidatorComponent {
     private val validator: ElementTreeValidator = springContext.validator
 
     def validate(applicationSystem: ApplicationSystem)(hakemus: HakemusMuutos)(implicit lang: Language.Language): List[ValidationError] = {
-      val storedApplication = hakemusRepository.findStoredApplication(hakemus)
+      val storedApplication = hakemusRepository.findStoredApplicationByOid(hakemus.oid)
       val updatedApplication = update(hakemus, applicationSystem, storedApplication)
       validateHakutoiveetAndAnswers(updatedApplication, storedApplication, applicationSystem) ++ errorsForUnknownAnswers(applicationSystem, hakemus)
     }
 
     def validateAndFindQuestions(applicationSystem: ApplicationSystem)(hakemus: HakemusMuutos, newKoulutusIds: List[String], personOid: String)(implicit lang: Language.Language): (List[ValidationError], List[QuestionNode], Application) = {
       withErrorLogging {
-        val storedApplication = hakemusRepository.findStoredApplication(hakemus)
+        val storedApplication = hakemusRepository.findStoredApplicationByOid(hakemus.oid)
         if (storedApplication.getPersonOid != personOid) throw new IllegalArgumentException("personId mismatch")
         val updatedApplication = update(hakemus, applicationSystem, storedApplication)
         val validationErrors: List[ValidationError] = validateHakutoiveetAndAnswers(updatedApplication, storedApplication, applicationSystem)
@@ -65,7 +65,7 @@ trait ApplicationValidatorComponent {
     }
 
     private def errorsForUnknownAnswers(applicationSystem: ApplicationSystem, hakemus: HakemusMuutos)(implicit lang: Language.Language): List[ValidationError] = {
-      val application = hakemusRepository.findStoredApplication(hakemus)
+      val application = hakemusRepository.findStoredApplicationByOid(hakemus.oid)
       val allAnswers: Answers = ApplicationUpdater.getAllAnswersForApplication(applicationSystem, application, hakemus)
       val acceptedAnswerIds: Seq[AnswerId] = AddedQuestionFinder.findAddedQuestions(applicationSystem, allAnswers, Hakemus.emptyAnswers).flatMap(_.answerIds).toList
 

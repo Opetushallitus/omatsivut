@@ -51,12 +51,12 @@ trait HakemusRepositoryComponent {
       }, 1000, "Application update")
     }
 
-    override def findStoredApplication(hakemus: HakemuksenTunniste): Application = {
+    override def findStoredApplicationByOid(oid: String): Application = {
       val applications = timed({
-        dao.find(new Application().setOid(hakemus.oid)).toList
+        dao.find(new Application().setOid(oid)).toList
       }, 1000, "Application fetch DAO")
-      if (applications.size > 1) throw new RuntimeException("Too many applications for oid " + hakemus.oid)
-      if (applications.size == 0) throw new RuntimeException("Application not found for oid " + hakemus.oid)
+      if (applications.size > 1) throw new RuntimeException("Too many applications for oid " + oid)
+      if (applications.size == 0) throw new RuntimeException("Application not found for oid " + oid)
       val application = applications.head
       application
     }

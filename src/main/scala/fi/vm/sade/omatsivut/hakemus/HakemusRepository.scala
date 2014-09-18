@@ -6,7 +6,7 @@ import fi.vm.sade.omatsivut.hakemus.domain.{HakemuksenTunniste, Hakemus, Hakemus
 
 trait HakemusRepository {
   def updateHakemus(applicationSystem: ApplicationSystem)(hakemus: HakemusMuutos, userOid: String)(implicit lang: Language): Option[Hakemus]
-  def findStoredApplication(hakemus: HakemuksenTunniste): Application
+  def findStoredApplicationByOid(oid: String): Application
   def fetchHakemukset(personOid: String)(implicit lang: Language): List[Hakemus]
   def getHakemus(personOid: String, hakemusOid: String)(implicit lang: Language): Option[Hakemus]
 }
