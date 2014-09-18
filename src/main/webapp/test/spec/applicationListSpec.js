@@ -490,6 +490,9 @@
           it("virhe näytetään", function() {
             hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().errorText().should.equal("Tallentaminen epäonnistui. Yritä myöhemmin uudelleen.")
           })
+          it("nappi on enabloitu", function() {
+            hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().confirmButtonEnabled().should.be.true
+          })
         })
 
         describe("kun session on vanhentunut", function() {

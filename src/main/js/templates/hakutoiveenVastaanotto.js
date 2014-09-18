@@ -43,6 +43,7 @@
                 return "error.saveFailed"
             })()
             scope.error = localization(saveError)
+            scope.ajaxPending = false
           }
         }
       }
