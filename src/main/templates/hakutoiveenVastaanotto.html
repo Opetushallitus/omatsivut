@@ -5,9 +5,9 @@
           koulutus: hakutoive.koulutus.name
         }) }}
     </h2>
-    <div class="badge blue" ng-if="haku.results.vastaanottoEnd">
+    <div class="badge blue" ng-if="haku().results.vastaanottoEnd">
          {{ localization('message.acceptEducation.latestAnswer', {
-          aika: formatTimestamp(haku.results.vastaanottoEnd)
+          aika: formatTimestamp(haku().results.vastaanottoEnd)
         }) }}
     </div>
 

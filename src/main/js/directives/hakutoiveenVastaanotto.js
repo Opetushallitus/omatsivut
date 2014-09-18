@@ -24,7 +24,7 @@ module.exports = function(listApp) {
           scope.error = ""
           scope.ajaxPending = true
 
-          restResources.vastaanota.post({applicationOid: scope.applicationOid(), hakuOid: scope.haku.oid}, {
+          restResources.vastaanota.post({applicationOid: scope.applicationOid(), hakuOid: scope.haku().oid}, {
             hakukohdeOid: hakutoive.koulutus.oid,
             tila: this.vastaanottotila
           }, onSuccess, onError)
