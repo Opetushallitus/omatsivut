@@ -32,7 +32,7 @@ gulp.task('lint', function() {
 });
 
 gulp.task("templates", function() {
-  gulp.src("src/main/templates/**/*.html")
+  return gulp.src("src/main/templates/**/*.html")
     .pipe(templates("templates.js", { root:"templates/"}))
     .pipe(gulp.dest("src/main/templates"))
 })
@@ -48,11 +48,11 @@ gulp.task('less', function () {
       .pipe(gulp.dest('src/main/webapp/css'));
 });
 
-gulp.task('browserify', function() {
+gulp.task('browserify', ["templates"], function() {
   compileJs(false)
 })
 
-gulp.task('browserify-min', function() {
+gulp.task('browserify-min', ["templates"], function() {
   compileJs(true)
 })
 
