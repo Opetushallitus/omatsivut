@@ -3,9 +3,9 @@
 <div class="timestamp-row">
     <i aria-hidden="true" class="icon-doc-text"></i>
     <a class="preview" ng-href="/omatsivut/api/applications/preview/{{application.oid}}" ng-class="{disabled: hasChanged || statusMessageType=='pending' || isValidating}" target="_blank">{{ localization('button.showApplication') }}</a>
-                    <span class="timestamp" ng-if="application.isPeriodActive()" ng-class="{disabled: hasChanged || statusMessageType=='pending' || isValidating}">
-                        ({{ timestampLabel() }} <time datetime="{{ application.updated | date:'yyyy-MM-ddTHH:mmZ' }}">{{ formatTimestamp(application.updated) }}</time>)
-                    </span>
+    <span class="timestamp" ng-if="application.isPeriodActive()" ng-class="{disabled: hasChanged || statusMessageType=='pending' || isValidating}">
+        ({{ timestampLabel() }} <time datetime="{{ application.updated | date:'yyyy-MM-ddTHH:mmZ' }}">{{ formatTimestamp(application.updated) }}</time>)
+    </span>
     <div callout="attachments">
         <localized-link key="message.rememberSendAttachments" href="{{ '/omatsivut/api/applications/preview/' + application.oid + '#liitteet'}}" target="_blank"></localized-link>
     </div>
@@ -13,9 +13,9 @@
 
 <div ng-if="application.isPeriodActive()" role="presentation">
     <p class="application-status">
-                    <span class="label-info">
-                        {{ localization('label.applicationPeriodEnds') }} <time datetime="{{ application.haku.applicationPeriods[0].end | date:'yyyy-MM-ddTHH:mmZ' }}">{{ formatApplicationPeriod(application.haku.applicationPeriods[0].end) }}</time>
-                    </span>
+        <span class="label-info">
+            {{ localization('label.applicationPeriodEnds') }} <time datetime="{{ application.haku.applicationPeriods[0].end | date:'yyyy-MM-ddTHH:mmZ' }}">{{ formatApplicationPeriod(application.haku.applicationPeriods[0].end) }}</time>
+        </span>
     </p>
 
     <p class="application-state-message" ng-if="application.state.id == 'POSTPROCESSING' || application.state.id == 'SUBMITTED'">
@@ -25,12 +25,12 @@
 
 <div ng-if="!application.isPeriodActive()" role="presentation">
     <p class="application-status" ng-if="!application.allResultsAvailable() && application.vastaanotettavatHakutoiveet().length == 0">
-                    <span class="badge label-info">
-                        {{ localization('label.applicationPeriodEnded') }}
-                        <span ng-if="application.haku.results.julkistus">
-                            {{ localization('label.resultsPublishedDate') }} {{ formatDate(application.haku.results.julkistus.end) }}.
-                        </span>
-                    </span>
+        <span class="badge label-info">
+            {{ localization('label.applicationPeriodEnded') }}
+            <span ng-if="application.haku.results.julkistus">
+                {{ localization('label.resultsPublishedDate') }} {{ formatDate(application.haku.results.julkistus.end) }}.
+            </span>
+        </span>
     </p>
     <p class="application-status" ng-if="getResultStatus(application)" ng-bind="getResultStatus(application)"></p>
 
@@ -38,7 +38,13 @@
     </hakutoiveen-vastaanotto>
 </div>
 
-<valintatulos data="application.state.valintatulos"></valintatulos>
+<section class="application-section application-valintatulos" ng-if="application.state.valintatulos">
+    <header class="application-section-heading">
+        {{ localization('label.results') }}
+    </header>
+
+    <valintatulos data="application.state.valintatulos"></valintatulos>
+</section>
 
 <section class="application-section" ng-if="application.state.id == 'ACTIVE' || application.state.id == 'INCOMPLETE'">
     <header class="application-section-heading">
@@ -50,6 +56,7 @@
     <hakutoiveet application="application" preference-moved="preferenceMoved">
     </hakutoiveet>
 </section>
+
 <section class="application-section additional-questions" ng-if="application.additionalQuestions.questionNodes.length > 0">
     <question question-node="application.additionalQuestions" application="application" class="questions" level="-1">
     </question>
