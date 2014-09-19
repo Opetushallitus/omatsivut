@@ -30,6 +30,10 @@ object OmatsivutBuild extends Build {
     }
   }
 
+  if(!System.getProperty("java.version").startsWith("1.7")) {
+    throw new IllegalStateException("Wrong java version (required 1.7): " + System.getProperty("java.version"))
+  }
+
   lazy val project = Project (
     "omatsivut",
     file("."),
