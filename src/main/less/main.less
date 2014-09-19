@@ -317,7 +317,6 @@ button.delete-btn:not(.confirm) {
   height: 120px;
   width: 100%;
   padding: 0px 0px 0px 20px;
-  transition: background-color 1000ms;
   border-bottom: 1px solid @border-color;
 
   &:last-child {
@@ -403,32 +402,6 @@ button.delete-btn:not(.confirm) {
     position: absolute;
   }
 
-  &.ng-leave {
-    -webkit-transition:0.5s all;
-    transition:0.5s all;
-    max-height: 120px;
-    overflow: hidden;
-  }
-
-  &.ng-leave-active {
-    max-height: 0px;
-    padding-top: 0px;
-    padding-bottom: 0px;
-  }
-
-  &.ng-enter {
-    -webkit-transition:0.5s all;
-    transition:0.5s all;
-    max-height: 0px;
-    overflow: hidden;
-    padding-top: 0px;
-    padding-bottom: 0px;
-  }
-
-  &.ng-enter-active {
-    max-height: 120px;
-  }
-
   input[disabled] {
     background: transparent;
     box-shadow: none;
@@ -460,6 +433,36 @@ button.delete-btn:not(.confirm) {
       padding-left: 7px;
       display: block;
     }
+  }
+}
+
+.preference-list-item {
+  transition: background-color 1000ms;
+
+  &.ng-leave {
+    -webkit-transition:0.5s all;
+    transition:0.5s all;
+    max-height: 120px;
+    overflow: hidden;
+  }
+
+  &.ng-leave-active {
+    max-height: 0px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+  }
+
+  &.ng-enter {
+    -webkit-transition:0.5s all;
+    transition:0.5s all;
+    max-height: 0px;
+    overflow: hidden;
+    padding-top: 0px;
+    padding-bottom: 0px;
+  }
+
+  &.ng-enter-active {
+    max-height: 120px;
   }
 }
 
@@ -528,6 +531,18 @@ button.delete-btn:not(.confirm) {
     margin-left: 10px;
   }
 }
+
+.hakutoiveenVastaanotto {
+  &.ng-leave {
+    -webkit-transition:0.5s all;
+    transition:0.5s all;
+  }
+
+  &.ng-leave-active {
+    opacity: 0;
+  }
+}
+
 
 label.title {
   font-weight: bold;

@@ -32,7 +32,7 @@
                         </span>
                     </span>
     </p>
-    <p class="application-status"  ng-if="resultStatus" ng-bind="resultStatus"></p>
+    <p class="application-status" ng-if="getResultStatus(application)" ng-bind="getResultStatus(application)"></p>
 
     <hakutoiveen-vastaanotto application-oid="application.oid" haku="application.haku" hakutoiveet="application.vastaanotettavatHakutoiveet()" update-application="updateApplicationAfterPost">
     </hakutoiveen-vastaanotto>

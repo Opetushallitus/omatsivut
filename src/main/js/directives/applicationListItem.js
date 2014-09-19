@@ -21,7 +21,6 @@ module.exports = function(listApp) {
           $scope.hasChanged = false
           $scope.isSaveable = true
           $scope.isValidating = false
-          $scope.resultStatus = getResultStatus($scope.application)
         }
 
         updateHakemus($scope.application)
@@ -48,7 +47,7 @@ module.exports = function(listApp) {
             return localization("label.applicationUpdated")
         }
 
-        function getResultStatus(application) {
+        $scope.getResultStatus = function(application) {
           var resultStatus = _().find(function(hakutoive) { return hakutoive.vastaanottotila != "KESKEN" && hakutoive.vastaanottotila != "ILMOITETTU"})
           if (application.state && application.state.resultStatus != null) {
             var status = application.state.resultStatus
@@ -77,7 +76,7 @@ module.exports = function(listApp) {
         })
 
         $scope.updateApplicationAfterPost = function(updated) {
-          updateHakemus(new Hakemus(updated))
+          $scope.application.mergeSavedApplication(updated)
         }
 
         function applicationChanged() {
