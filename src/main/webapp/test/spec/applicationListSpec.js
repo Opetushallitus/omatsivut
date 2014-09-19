@@ -333,7 +333,7 @@
             before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().selectOption("PERUNUT"))
             before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().send)
 
-            it.skip("perumistieto näkyy", function() {
+            it("perumistieto näkyy", function() {
               hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal("Olet perunut hakemuksen")
             })
           })

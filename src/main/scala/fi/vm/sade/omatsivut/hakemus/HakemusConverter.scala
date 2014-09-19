@@ -92,9 +92,7 @@ trait HakemusConverterComponent {
     }
 
     private def hasVastaanottotieto(hakutoiveenValintatulos: HakutoiveenValintatulos) = {
-      hakutoiveenValintatulos.vastaanottotila == ResultState.VASTAANOTTANUT ||
-      hakutoiveenValintatulos.vastaanottotila == ResultState.EHDOLLISESTI_VASTAANOTTANUT ||
-      hakutoiveenValintatulos.vastaanottotila == ResultState.EI_VASTAANOTETTU_MAARA_AIKANA
+      hakutoiveenValintatulos.vastaanottotila != ResultState.KESKEN
     }
 
     private def isVastaanotettavissa(hakutoiveenValintatulos: HakutoiveenValintatulos) = {
