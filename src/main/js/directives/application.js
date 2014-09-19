@@ -3,13 +3,13 @@ var Hakutoive = require("../hakutoive")
 var util = require("../util")
 
 module.exports = function(listApp) {
-  listApp.directive("applicationListItem", ["$http", "$sce", "restResources", "applicationValidator", "settings", "debounce", "localization", function ($http, $sce, restResources, applicationValidator, settings, debounce, localization) {
+  listApp.directive("application", ["$http", "$sce", "restResources", "applicationValidator", "settings", "debounce", "localization", function ($http, $sce, restResources, applicationValidator, settings, debounce, localization) {
     return {
       restrict: 'E',
       scope: {
         application: "=application"
       },
-      templateUrl: 'templates/applicationListItem.html',
+      templateUrl: 'templates/application.html',
 
       link: function ($scope, element, attrs) {
         $scope.localization = localization
