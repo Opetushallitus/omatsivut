@@ -21,7 +21,7 @@ object DefaultHttpClient extends HttpClient {
 
   private def changeOptions(request: Http.Request): Http.Request = {
     request
-      .options(HttpOptions.connTimeout(5000))
-      .option(HttpOptions.readTimeout(10000))
+      .options(HttpOptions.connTimeout(10000))
+      .option(HttpOptions.readTimeout(60000))
   }
 }
