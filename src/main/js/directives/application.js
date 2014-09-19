@@ -3,7 +3,7 @@ var Hakutoive = require("../hakutoive")
 var util = require("../util")
 
 module.exports = function(listApp) {
-  listApp.directive("application", ["$http", "$sce", "restResources", "applicationValidator", "settings", "debounce", "localization", function ($http, $sce, restResources, applicationValidator, settings, debounce, localization) {
+  listApp.directive("application", ["$http", "$sce", "restResources", "applicationValidator", "settings", "debounce", "localization", "$timeout", function ($http, $sce, restResources, applicationValidator, settings, debounce, localization, $timeout) {
     return {
       restrict: 'E',
       scope: {
@@ -21,6 +21,7 @@ module.exports = function(listApp) {
           $scope.hasChanged = false
           $scope.isSaveable = true
           $scope.isValidating = false
+          $scope.resultStatus = getResultStatus(hakemus)
         }
 
         updateHakemus($scope.application)
@@ -47,7 +48,7 @@ module.exports = function(listApp) {
             return localization("label.applicationUpdated")
         }
 
-        $scope.getResultStatus = function(application) {
+        function getResultStatus(application) {
           var resultStatus = _().find(function(hakutoive) { return hakutoive.vastaanottotila != "KESKEN" && hakutoive.vastaanottotila != "ILMOITETTU"})
           if (application.state && application.state.resultStatus != null) {
             var status = application.state.resultStatus
@@ -77,6 +78,9 @@ module.exports = function(listApp) {
 
         $scope.updateApplicationAfterPost = function(updated) {
           $scope.application.mergeSavedApplication(updated)
+          $timeout(function() { // Don't display until dialog has faded out
+            $scope.resultStatus = getResultStatus($scope.application)
+          }, 500)
         }
 
         function applicationChanged() {

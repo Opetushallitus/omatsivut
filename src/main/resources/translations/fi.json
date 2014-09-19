@@ -63,13 +63,13 @@
 
     "resultState": {
       "Kesken": "Opiskelijavalinta on kesken",
-      "Hylatty": "Et saanut opiskelupaikkaa",
-      "Vastaanottanut": "Olet ottanut opiskelupaikan vastaan: __opiskelupaikka__",
-      "EhdollisestiVastaanottanut": "Olet ottanut ehdollisesti vastaan opiskelupaikan: __opiskelupaikka__",
-      "EiVastaanotettuMaaraAikana": "Et ottanut opiskelupaikkaa vastaan määräaikaan mennessä: __opiskelupaikka__",
-      "Perunut": "Olet perunut hakemuksen",
-      "Peruutettu": "Hakemus on peruutettu",
-      "Peruuntunut": "Hakemus on peruuntunut"
+      "Hylatty": "Et saanut opiskelupaikkaa.",
+      "Vastaanottanut": "Olet ottanut opiskelupaikan vastaan: __opiskelupaikka__.",
+      "EhdollisestiVastaanottanut": "Olet ottanut ehdollisesti vastaan opiskelupaikan: __opiskelupaikka__.",
+      "EiVastaanotettuMaaraAikana": "Et ottanut opiskelupaikkaa vastaan määräaikaan mennessä: __opiskelupaikka__.",
+      "Perunut": "Olet perunut hakemuksen.",
+      "Peruutettu": "Hakemus on peruutettu.",
+      "Peruuntunut": "Hakemus on peruuntunut."
     },
 
     "acceptEducation": {

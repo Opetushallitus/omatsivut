@@ -279,7 +279,7 @@
             before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().send)
 
             it("vastaanottotieto näkyy", function() {
-              hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal("Olet ottanut opiskelupaikan vastaan: Kallion lukio - Lukion ilmaisutaitolinja")
+              hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal("Olet ottanut opiskelupaikan vastaan: Kallion lukio - Lukion ilmaisutaitolinja.")
             })
           })
 
@@ -289,7 +289,7 @@
             before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().send)
 
             it("perumistieto näkyy", function() {
-              hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal("Olet perunut hakemuksen")
+              hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal("Olet perunut hakemuksen.")
             })
           })
         })
@@ -314,7 +314,7 @@
             before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().send)
 
             it("vastaanottotieto näkyy", function() {
-              hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal("Olet ottanut opiskelupaikan vastaan: Salon lukio - Lukio")
+              hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal("Olet ottanut opiskelupaikan vastaan: Salon lukio - Lukio.")
             })
           })
 
@@ -324,7 +324,7 @@
             before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().send)
 
             it("vastaanottotieto näkyy", function() {
-              hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal("Hakuaika on päättynyt. Haun tulokset julkaistaan viimeistään 11. kesäkuuta 2014. Olet ottanut ehdollisesti vastaan opiskelupaikan: Salon lukio - Lukio")
+              hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal("Hakuaika on päättynyt. Haun tulokset julkaistaan viimeistään 11. kesäkuuta 2014. Olet ottanut ehdollisesti vastaan opiskelupaikan: Salon lukio - Lukio.")
             })
           })
 
@@ -334,7 +334,7 @@
             before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().send)
 
             it("perumistieto näkyy", function() {
-              hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal("Olet perunut hakemuksen")
+              hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal("Olet perunut hakemuksen.")
             })
           })
         })
@@ -349,7 +349,7 @@
           })
 
           it("et saanut paikkaa näkyy", function() {
-            hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal("Et saanut opiskelupaikkaa")
+            hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal("Et saanut opiskelupaikkaa.")
           })
 
           it("valintatulokset näytetään", function () {
@@ -365,7 +365,7 @@
           })
 
           it("olet perunut hakemuksen näkyy", function() {
-            hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal("Olet perunut hakemuksen")
+            hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal("Olet perunut hakemuksen.")
           })
 
           it("valintatulokset näytetään", function () {
@@ -381,7 +381,7 @@
           })
 
           it("vastaanottotieto näkyy", function() {
-            hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal("Olet ottanut opiskelupaikan vastaan: Kallion lukio - Lukion ilmaisutaitolinja")
+            hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal("Olet ottanut opiskelupaikan vastaan: Kallion lukio - Lukion ilmaisutaitolinja.")
           })
 
           it("valintatulokset näytetään", function () {
@@ -397,7 +397,7 @@
           })
 
           it("vastaanottotieto näkyy", function() {
-            hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal("Et ottanut opiskelupaikkaa vastaan määräaikaan mennessä: Kallion lukio - Lukion ilmaisutaitolinja")
+            hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal("Et ottanut opiskelupaikkaa vastaan määräaikaan mennessä: Kallion lukio - Lukion ilmaisutaitolinja.")
           })
 
           it("valintatulokset näytetään", function () {

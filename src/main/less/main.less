@@ -277,11 +277,20 @@ button.delete-btn:not(.confirm) {
 
 }
 
-.hakutoiveenVastaanotto {
+.hakutoiveenvastaanottoBox() {
   background-color: #fcfcfc;
   border: 1px solid #cdcdcd;
   padding: 20px;
   margin: 10px 0px;
+}
+
+.result-status {
+  .hakutoiveenvastaanottoBox();
+  font-style: italic;
+}
+
+.hakutoiveenVastaanotto {
+  .hakutoiveenvastaanottoBox();
 
   .hakutoive-options {
     margin: 10px 0px;
@@ -295,6 +304,15 @@ button.delete-btn:not(.confirm) {
 
   .status-message {
     margin-left: 5px;
+  }
+
+  &.ng-leave {
+    -webkit-transition:0.5s all;
+    transition:0.5s all;
+  }
+
+  &.ng-leave-active {
+    opacity: 0;
   }
 }
 
@@ -531,18 +549,6 @@ button.delete-btn:not(.confirm) {
     margin-left: 10px;
   }
 }
-
-.hakutoiveenVastaanotto {
-  &.ng-leave {
-    -webkit-transition:0.5s all;
-    transition:0.5s all;
-  }
-
-  &.ng-leave-active {
-    opacity: 0;
-  }
-}
-
 
 label.title {
   font-weight: bold;
