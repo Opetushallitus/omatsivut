@@ -1,6 +1,28 @@
-var Hakutoive = require('./hakutoive')
+var Hakutoive = require('../hakutoive')
 
 module.exports = function(listApp) {
+  listApp.directive("hakutoiveet", ["localization", function (localization) {
+    return {
+      restrict: 'E',
+      scope: {
+        application: "=application",
+        preferenceMoved: "=preferenceMoved"
+      },
+      templateUrl: 'templates/hakutoiveet.html',
+
+      link: function ($scope, element, attrs) {
+        $scope.localization = localization
+
+        $scope.movePreference = function(from, to) {
+          if (to >= 0 && to < this.application.hakutoiveet.length) {
+            this.application.movePreference(from, to)
+            this.preferenceMoved()
+          }
+        }
+      }
+    }
+  }])
+
   listApp.controller("additionalQuestionController", ["$scope", "localization", function($scope, localization) {
     $scope.localization = localization
     $scope.questionAnswered = function() {

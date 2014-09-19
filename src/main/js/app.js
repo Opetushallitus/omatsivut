@@ -23,7 +23,6 @@ var staticResources = require('./staticResources')
 require('./localization')(listApp, staticResources)
 require('./restResources')(listApp)
 
-require('./hakutoiveController')(listApp)
 require('./applicationValidator')(listApp)
 require('./settings')(listApp, testMode())
 
@@ -36,7 +35,7 @@ require('./directives/question')(listApp)
 require('./directives/applicationList')(listApp)
 require('./directives/applicationListItem')(listApp)
 require('./directives/hakutoiveenVastaanotto')(listApp)
-require('./directives/preferenceList')(listApp)
+require('./directives/hakutoiveet')(listApp)
 require('./directives/valintatulos')(listApp)
 
 listApp.run(function ($rootScope, localization) {

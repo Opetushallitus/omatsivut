@@ -47,8 +47,8 @@
         <span role="status" class="status-message float-right" ng-class="{'ajax-spinner': statusMessageType=='pending', error: statusMessageType=='error'}" ng-bind="statusMessage"></span>
     </header>
 
-    <preference-list application="application" preference-moved="preferenceMoved">
-    </preference-list>
+    <hakutoiveet application="application" preference-moved="preferenceMoved">
+    </hakutoiveet>
 </section>
 <section class="application-section additional-questions" ng-if="application.additionalQuestions.questionNodes.length > 0">
     <question question-node="application.additionalQuestions" application="application" class="questions" level="-1">
