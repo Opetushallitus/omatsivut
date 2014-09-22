@@ -53,7 +53,7 @@ module.exports = function(listApp) {
           if (application.state && application.state.resultStatus != null) {
             var status = application.state.resultStatus
             return localization("message.resultState." + util.underscoreToCamelCase(status.state), {
-              opiskelupaikka: status.opiskelupaikka
+              opiskelupaikka: status.opiskelupaikka == null ? "" : status.opiskelupaikka
             })
           }
         }
