@@ -20,6 +20,7 @@ case class HakutoiveenValintatulos(hakukohdeOid: String,
                                    vastaanottotila: Option[String],
                                    ilmoittautumistila: Option[String],
                                    vastaanotettavuustila: String,
+                                   viimeisinVastaanottotilanMuutos: Option[Date],
                                    jonosija: Option[Int],
                                    varasijojaKaytetaanAlkaen: Option[Date],
                                    varasijojaTaytetaanAsti: Option[Date],
@@ -53,7 +54,7 @@ class MockValintatulosService() extends ValintatulosService with JsonFormats {
     val isMatch = hakutoive.hakukohdeOid == vastaanotto.hakukohdeOid
     val determinedVastaanottoTila = if (isMatch) vastaanottotila else "KESKEN"
     val valintaTila = if(setOthersToCancelled && !isMatch) "PERUUNTUNUT" else hakutoive.valintatila
-    hakutoive.copy(vastaanottotila = Some(determinedVastaanottoTila), vastaanotettavuustila = "EI_VASTAANOTETTAVISSA", valintatila = valintaTila)
+    hakutoive.copy(vastaanottotila = Some(determinedVastaanottoTila), vastaanotettavuustila = "EI_VASTAANOTETTAVISSA", valintatila = valintaTila, viimeisinVastaanottotilanMuutos = Some(new Date()))
   }
 
 

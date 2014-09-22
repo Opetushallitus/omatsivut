@@ -69,6 +69,7 @@
           "vastaanottotila": "VASTAANOTTANUT",
           "ilmoittautumistila": null,
           "vastaanotettavuustila": "EI_VASTAANOTETTAVISSA",
+          "viimeisinVastaanottotilanMuutos": "2014-08-26T19:05:23Z",
           "jonosija": 1,
           "varasijanumero": null
         }

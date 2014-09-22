@@ -63,7 +63,7 @@ trait HakemusConverterComponent {
     private def resultStatus(valintatulos: Option[Valintatulos]): Option[ResultStatus] = {
       valintatulos.flatMap(tulos => {
         tulos.hakutoiveet.find(hasVastaanottotieto(_)) match {
-          case Some(vastaanotettu) => Some(ResultStatus(vastaanotettu.vastaanottotila, Some(vastaanotettu.opetuspiste.name + " - " + vastaanotettu.koulutus.name)))
+          case Some(vastaanotettu) => Some(ResultStatus(vastaanotettu.vastaanottotila, vastaanotettu.viimeisinVastaanottotilanMuutos, Some(vastaanotettu.opetuspiste.name + " - " + vastaanotettu.koulutus.name)))
           case None => {
             tulos.hakutoiveet.find(isVastaanotettavissa(_)) match {
               case Some(vastaanotettavissa) => None
@@ -72,7 +72,7 @@ trait HakemusConverterComponent {
                   Some(ResultStatus())
                 }
                 else {
-                  Some(ResultStatus(ResultState.withName(tulos.hakutoiveet.head.tila.toString()), None))
+                  Some(ResultStatus(ResultState.withName(tulos.hakutoiveet.head.tila.toString())))
                 }
               }
             }
@@ -116,6 +116,7 @@ trait HakemusConverterComponent {
             HakutoiveenValintatulosTila.withName(hakutoiveenTulos.valintatila),
             convertToResultsState(hakutoiveenTulos),
             VastaanotettavuusTila.withName(hakutoiveenTulos.vastaanotettavuustila),
+            hakutoiveenTulos.viimeisinVastaanottotilanMuutos .map(_.getTime),
             hakutoiveenTulos.ilmoittautumistila,
             hakutoiveenTulos.jonosija,
             hakutoiveenTulos.varasijojaTaytetaanAsti.map(_.getTime),
