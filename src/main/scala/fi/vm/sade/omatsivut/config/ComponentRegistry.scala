@@ -48,6 +48,7 @@ class ComponentRegistry(val config: AppConfig)
 
   private def configureValintatulosService: ValintatulosService = config match {
     case x: ITWithValintaTulosService =>
+      ValintatulosServiceRunner.start
       new RemoteValintatulosService(config.settings.valintaTulosServiceUrl)
     case x: StubbedExternalDeps =>
       new MockValintatulosService()
