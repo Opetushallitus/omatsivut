@@ -164,6 +164,10 @@ function ApplicationListPage() {
           }).toArray()
       },
 
+      vastaanotettavia: function() {
+        return getApplicationElement(applicationIndex).find(".hakutoiveenVastaanotto").length
+      },
+
       vastaanotto: function(index) {
         function vastaanottoElement() {
           return getApplicationElement(applicationIndex).find(".hakutoiveenVastaanotto").eq(index)

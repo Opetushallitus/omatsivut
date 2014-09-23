@@ -344,18 +344,37 @@
         before(page.applyValintatulosFixtureAndOpen("hyvaksytty_kahteen"))
 
         it("oikeat vaihtoehdot tulevat näkyviin", function() {
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotettavia()).to.equal(2)
           expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).vaihtoehdot()).to.deep.equal([
+            'Otan myönnetyn opiskelupaikan vastaan',
+            'En ota opiskelupaikkaa vastaan'
+          ])
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(1).vaihtoehdot()).to.deep.equal([
             'Otan myönnetyn opiskelupaikan vastaan',
             'En ota opiskelupaikkaa vastaan'
           ])
         })
 
-        describe("paikan vastaanottaminen", function() {
+        describe("ensimmäisen paikan vastaanottaminen", function() {
           before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VASTAANOTTANUT"))
           before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send)
 
           it("vastaanottotieto näkyy", function() {
             hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.match(/^Olet ottanut opiskelupaikan vastaan \d+\. \w+ 20\d\d\ klo \d+\.\d\d: Kallion lukio - Lukion ilmaisutaitolinja./)
+          })
+
+          it("kumpikaan paikka ei ole enää vastaanotettavissa", function() {
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotettavia()).to.equal(0)
+          })
+        })
+
+        describe("toisen paikan vastaanottaminen", function() {
+          before(page.applyValintatulosFixtureAndOpen("hyvaksytty_kahteen"))
+          before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(1).selectOption("VASTAANOTTANUT"))
+          before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(1).send)
+
+          it("vastaanottotieto näkyy", function() {
+            hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.match(/^Olet ottanut opiskelupaikan vastaan \d+\. \w+ 20\d\d\ klo \d+\.\d\d: Salon lukio - Lukio./)
           })
         })
       })
