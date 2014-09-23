@@ -119,7 +119,7 @@ class RemoteValintatulosService(valintatulosServiceUrl: String) extends Valintat
   }
 }
 
-object ValintatulosServiceRunner {
+object ValintatulosServiceRunner extends Logging {
   val valintatulosPort = 8097
   val searchPaths = List("./valinta-tulos-service", "../valinta-tulos-service")
 
@@ -128,7 +128,11 @@ object ValintatulosServiceRunner {
       findValintatulosService match {
         case Some(path) => {
           val cwd = new java.io.File(path)
-          Process(List(path + "/sbt", "container:start", "shell", "-Dvalintatulos.profile=it"), cwd, "JAVA_HOME" -> "/Library/Java/JavaVirtualMachines/jdk1.8.0_20.jdk/Contents/Home").run(true)
+          val javaHome = System.getProperty("valintatulos.JAVA_HOME", "")
+          logger.info("Launching valintatulosservice")
+          if (javaHome == "")
+            logger.warn("valintatulos.JAVA_HOME system property not found")
+          Process(List(path + "/sbt", "container:start", "shell", "-Dvalintatulos.profile=it"), cwd, "JAVA_HOME" -> javaHome).run(true)
         }
         case _ =>
       }
