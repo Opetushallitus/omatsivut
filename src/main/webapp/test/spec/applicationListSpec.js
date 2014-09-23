@@ -238,7 +238,7 @@
       describe("kun lopulliset tulokset on julkaistu ja opiskelija on hyväksytty", function() {
         before(page.applyValintatulosFixtureAndOpen("hyvaksytty"))
         it("ilmoitetaan myönnetystä paikasta", function() {
-          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().title()).to.deep.equal([
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).title()).to.deep.equal([
                 "Opiskelupaikka myönnetty: Kallion lukio - Lukion ilmaisutaitolinja"
           ])
         })
@@ -249,34 +249,34 @@
           before(page.applyValintatulosFixtureAndOpen("hyvaksytty"))
 
           it("vastausaika näkyy", function() {
-            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().info()).to.deep.equal([
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).info()).to.deep.equal([
                   "Vastaa sitovasti viimeistään 11. kesäkuuta 2014 klo 07.52"
             ])
           })
 
           it("oikeat vaihtoehdot tulevat näkyviin", function() {
-            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().vaihtoehdot()).to.deep.equal([
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).vaihtoehdot()).to.deep.equal([
                   'Otan myönnetyn opiskelupaikan vastaan',
                   'En ota opiskelupaikkaa vastaan'
             ])
           })
 
           it("nappi on disabloitu", function() {
-            hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().confirmButtonEnabled().should.be.false
+            hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).confirmButtonEnabled().should.be.false
           })
 
           describe("valinnan jälkeen", function() {
-            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().selectOption("VASTAANOTTANUT"))
+            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VASTAANOTTANUT"))
 
             it("nappi on enabloitu", function() {
-              hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().confirmButtonEnabled().should.be.true
+              hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).confirmButtonEnabled().should.be.true
             })
 
           })
 
           describe("paikan vastaanottaminen", function() {
-            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().selectOption("VASTAANOTTANUT"))
-            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().send)
+            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VASTAANOTTANUT"))
+            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send)
 
             it("vastaanottotieto näkyy", function() {
               hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.match(/^Olet ottanut opiskelupaikan vastaan \d+\. \w+ 20\d\d\ klo \d+\.\d\d: Kallion lukio - Lukion ilmaisutaitolinja./)
@@ -285,8 +285,8 @@
 
           describe("paikan hylkääminen", function() {
             before(page.applyValintatulosFixtureAndOpen("hyvaksytty"))
-            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().selectOption("PERUNUT"))
-            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().send)
+            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("PERUNUT"))
+            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send)
 
             it("perumistieto näkyy", function() {
               hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.match(/^Olet perunut hakemuksen \d+\. \w+ 20\d\d\ klo \d+\.\d\d./)
@@ -297,12 +297,12 @@
         describe("ehdollinen vastaanotto", function() {
           before(page.applyValintatulosFixtureAndOpen("hyvaksytty_ehdollisesti"))
           it("vastausaika näkyy", function() {
-            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().info()).to.deep.equal([
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).info()).to.deep.equal([
                   "Vastaa sitovasti viimeistään 11. kesäkuuta 2014 klo 07.52"
             ])
           })
           it("oikeat vaihtoehdot tulevat näkyviin", function() {
-            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().vaihtoehdot()).to.deep.equal([
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).vaihtoehdot()).to.deep.equal([
                   'Otan myönnetyn opiskelupaikan vastaan',
                   'Otan myönnetyn opiskelupaikan vastaan, jos en saa paikkaa mistään ylemmästä hakukohteestani',
                   'En ota opiskelupaikkaa vastaan'
@@ -310,8 +310,8 @@
           })
 
           describe("paikan vastaanottaminen", function() {
-            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().selectOption("VASTAANOTTANUT"))
-            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().send)
+            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VASTAANOTTANUT"))
+            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send)
 
             it("vastaanottotieto näkyy", function() {
               expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus()).to.match(/^Olet ottanut opiskelupaikan vastaan \d+\. \w+ 20\d\d\ klo \d+\.\d\d: Salon lukio - Lukio./)
@@ -320,8 +320,8 @@
 
           describe("paikan vastaanottaminen ehdollisesti", function() {
             before(page.applyValintatulosFixtureAndOpen("hyvaksytty_ehdollisesti"))
-            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().selectOption("EHDOLLISESTI_VASTAANOTTANUT"))
-            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().send)
+            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("EHDOLLISESTI_VASTAANOTTANUT"))
+            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send)
 
             it("vastaanottotieto näkyy", function() {
               hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.match(/^Hakuaika on päättynyt. Haun tulokset julkaistaan viimeistään 11. kesäkuuta 2014. Olet ottanut ehdollisesti vastaan opiskelupaikan \d+\. \w+ 20\d\d\ klo \d+\.\d\d: Salon lukio - Lukio./)
@@ -330,12 +330,32 @@
 
           describe("paikan hylkääminen", function() {
             before(page.applyValintatulosFixtureAndOpen("hyvaksytty_ehdollisesti"))
-            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().selectOption("PERUNUT"))
-            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().send)
+            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("PERUNUT"))
+            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send)
 
             it("perumistieto näkyy", function() {
               hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.match(/^Olet perunut hakemuksen \d+\. \w+ 20\d\d\ klo \d+\.\d\d\./)
             })
+          })
+        })
+      })
+
+      describe("hakijalle tarjotaan kahta paikkaa", function() {
+        before(page.applyValintatulosFixtureAndOpen("hyvaksytty_kahteen"))
+
+        it("oikeat vaihtoehdot tulevat näkyviin", function() {
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).vaihtoehdot()).to.deep.equal([
+            'Otan myönnetyn opiskelupaikan vastaan',
+            'En ota opiskelupaikkaa vastaan'
+          ])
+        })
+
+        describe("paikan vastaanottaminen", function() {
+          before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VASTAANOTTANUT"))
+          before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send)
+
+          it("vastaanottotieto näkyy", function() {
+            hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.match(/^Olet ottanut opiskelupaikan vastaan \d+\. \w+ 20\d\d\ klo \d+\.\d\d: Kallion lukio - Lukion ilmaisutaitolinja./)
           })
         })
       })
@@ -518,39 +538,38 @@
         describe("kun server ei vastaa", function() {
           before(
               function() { mockAjax.respondOnce("POST", "/omatsivut/api/applications/vastaanota/1.2.246.562.5.2013080813081926341928/1.2.246.562.11.00000441369", 400, "") },
-              hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().selectOption("VASTAANOTTANUT"),
-              hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().send
+              hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VASTAANOTTANUT"),
+              hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send
             )
           it("virhe näytetään", function() {
-            hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().errorText().should.equal("Tallentaminen epäonnistui. Yritä myöhemmin uudelleen.")
+            hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).errorText().should.equal("Tallentaminen epäonnistui. Yritä myöhemmin uudelleen.")
           })
           it("nappi on enabloitu", function() {
-            hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().confirmButtonEnabled().should.be.true
+            hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).confirmButtonEnabled().should.be.true
           })
         })
 
         describe("kun session on vanhentunut", function() {
           before(
             function() { mockAjax.respondOnce("POST", "/omatsivut/api/applications/vastaanota/1.2.246.562.5.2013080813081926341928/1.2.246.562.11.00000441369", 401, "") },
-            hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().selectOption("VASTAANOTTANUT"),
-            hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().send
+            hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VASTAANOTTANUT"),
+            hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send
           )
           it("virhe näytetään", function() {
-            hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().errorText().should.equal("Tallentaminen epäonnistui, sillä istunto on vanhentunut. Kirjaudu uudestaan sisään.")
+            hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).errorText().should.equal("Tallentaminen epäonnistui, sillä istunto on vanhentunut. Kirjaudu uudestaan sisään.")
           })
         })
 
         describe("kun serveriltä tulee odottamaton virhe", function() {
           before(
             function() { mockAjax.respondOnce("POST", "/omatsivut/api/applications/vastaanota/1.2.246.562.5.2013080813081926341928/1.2.246.562.11.00000441369", 500, "") },
-            hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().selectOption("VASTAANOTTANUT"),
-            hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().send
+            hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VASTAANOTTANUT"),
+            hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send
           )
           it("virhe näytetään", function() {
-            hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto().errorText().should.equal("Odottamaton virhe. Ota yhteyttä ylläpitoon.")
+            hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).errorText().should.equal("Odottamaton virhe. Ota yhteyttä ylläpitoon.")
           })
         })
-
       })
 
       describe("Tallennus", function() {
