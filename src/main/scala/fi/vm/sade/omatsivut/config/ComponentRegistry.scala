@@ -51,7 +51,7 @@ class ComponentRegistry(val config: AppConfig)
       new RemoteValintatulosService(config.settings.valintaTulosServiceUrl)
     case x: StubbedExternalDeps =>
       new MockValintatulosService()
-    case _ if config.settings.environment.isProduction || config.settings.environment.isQA =>
+    case _ if config.settings.environment.isProduction =>
       new NoOpValintatulosService
     case _ =>
       new RemoteValintatulosService(config.settings.valintaTulosServiceUrl)
