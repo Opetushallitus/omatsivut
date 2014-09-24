@@ -12,6 +12,7 @@ import fi.vm.sade.omatsivut.hakemus.domain._
 import fi.vm.sade.omatsivut.haku.domain.Haku
 import fi.vm.sade.omatsivut.haku.{HakuConverter, HakuRepository, HakuRepositoryComponent}
 import fi.vm.sade.omatsivut.util.Timer
+import fi.vm.sade.haku.oppija.hakemus.service.ApplicationService
 
 trait HakemusRepositoryComponent {
   this: HakuRepositoryComponent with HakemusConverterComponent with SpringContextComponent with AuditLoggerComponent =>
@@ -21,6 +22,7 @@ trait HakemusRepositoryComponent {
   class RemoteHakemusRepository extends Timer with HakemusRepository {
     import scala.collection.JavaConversions._
     private val dao = springContext.applicationDAO
+    private val applicationService = springContext.applicationService
 
     private def canUpdate(applicationSystem: ApplicationSystem, application: Application, userOid: String)(implicit lang: Language.Language): Boolean = {
       val applicationPeriods = hakuRepository.getApplicationPeriods(application, applicationSystem)
@@ -42,6 +44,9 @@ trait HakemusRepositoryComponent {
           .map { application =>
           val originalAnswers: Hakemus.Answers = application.getAnswers.toMap.mapValues(_.toMap)
           ApplicationUpdater.update(applicationSystem)(application, hakemus)
+          timed({
+            applicationService.updateAuthorizationMeta(application, false)
+          }, 1000, "ApplicationService update authorization Meta")
           timed({
             dao.update(applicationQuery, application)
           }, 1000, "Application update DAO")
