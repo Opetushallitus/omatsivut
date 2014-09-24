@@ -62,11 +62,11 @@ trait HakemusConverterComponent {
 
     private def resultStatus(valintatulos: Option[Valintatulos]): Option[ResultStatus] = {
       valintatulos.flatMap(tulos => {
-        tulos.hakutoiveet.find(hasVastaanottotieto(_)) match {
-          case Some(vastaanotettu) => Some(ResultStatus(vastaanotettu.vastaanottotila, vastaanotettu.viimeisinVastaanottotilanMuutos, Some(vastaanotettu.opetuspiste.name + " - " + vastaanotettu.koulutus.name)))
+        tulos.hakutoiveet.find(isVastaanotettavissa(_)) match {
+          case Some(vastaanotettavissa) => None
           case None => {
-            tulos.hakutoiveet.find(isVastaanotettavissa(_)) match {
-              case Some(vastaanotettavissa) => None
+            tulos.hakutoiveet.find(hasVastaanottotieto(_)) match {
+              case Some(vastaanotettu) => Some(ResultStatus(vastaanotettu.vastaanottotila, vastaanotettu.viimeisinVastaanottotilanMuutos, Some(vastaanotettu.opetuspiste.name + " - " + vastaanotettu.koulutus.name)))
               case None => {
                 if(tulos.hakutoiveet.exists(isKesken(_)) || tulos.hakutoiveet.exists(isHyvaksytty(_))) {
                   Some(ResultStatus())
