@@ -93,7 +93,7 @@ trait HakemusPreviewGeneratorComponent {
       }
 
       def attachmentsInfoPreview(): List[TypedTag[String]] = {
-        val aoInfos = AttachmentConverter.getAttachments(serverPath, applicationSystem, application)
+        val aoInfos = AttachmentConverter.getAttachments(application)
 
         if (aoInfos.isEmpty) {
           Nil

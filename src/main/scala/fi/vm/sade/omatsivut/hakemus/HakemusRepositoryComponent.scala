@@ -45,8 +45,11 @@ trait HakemusRepositoryComponent {
           val originalAnswers: Hakemus.Answers = application.getAnswers.toMap.mapValues(_.toMap)
           ApplicationUpdater.update(applicationSystem)(application, hakemus)
           timed({
+            applicationService.updatePreferenceBasedData(application)
+          }, 1000, "ApplicationService: update preference based data")
+          timed({
             applicationService.updateAuthorizationMeta(application, false)
-          }, 1000, "ApplicationService update authorization Meta")
+          }, 1000, "ApplicationService: update authorization Meta")
           timed({
             dao.update(applicationQuery, application)
           }, 1000, "Application update DAO")

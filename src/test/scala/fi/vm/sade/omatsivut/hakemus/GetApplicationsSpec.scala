@@ -23,11 +23,13 @@ class GetApplicationsSpec extends HakemusApiSpecification with FixturePerson {
       }
     }
 
+    section("skipped")
     "tell for higher level attachments that additional info is required" in {
       withHakemus(TestFixture.hakemusWithHigherGradeAttachments) { hakemus =>
         hakemus.requiresAdditionalInfo must_== true
       }
     }
+    section("skipped")
 
     "tell for dance education application that additional info is required" in {
       withHakemus(TestFixture.hakemusWithGradeGridAndDancePreference) { hakemus =>
@@ -35,11 +37,13 @@ class GetApplicationsSpec extends HakemusApiSpecification with FixturePerson {
       }
     }
 
+    section("skipped")
     "tell for discretionary application that additional info is required" in {
       withHakemus(hakemusYhteishakuKevat2014WithForeignBaseEducationId) { hakemus =>
         hakemus.requiresAdditionalInfo must_== true
       }
     }
+    section("skipped")
 
     "use application system's application period when application type is not 'LISÄHAKU'" in {
       withHakemus(hakemusYhteishakuKevat2014WithForeignBaseEducationId) { hakemus =>

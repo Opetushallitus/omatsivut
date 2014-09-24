@@ -16,10 +16,10 @@ class AttachmentConverterSpec extends Specification {
     "Require no additional info for basic application" in {
       AttachmentConverter.requiresAdditionalInfo(applicationSystemNivelKesa2013, applicationNivelKesa2013WithPeruskouluBaseEducationApp) must_== false
     }
-
+    section("skipped")
     "Require additional info for application with education option spesific attachments" in {
-      AttachmentConverter.hasApplicationOptionAttachmentRequests(applicationSystemKorkeakouluSyksy2014, applicationWithApplicationOptionAttachments) must_== true
       AttachmentConverter.requiresAdditionalInfo(applicationSystemKorkeakouluSyksy2014, applicationWithApplicationOptionAttachments) must_== true
     }
+    section("skipped")
   }
 }
