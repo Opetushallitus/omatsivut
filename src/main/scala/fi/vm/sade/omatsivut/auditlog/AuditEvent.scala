@@ -25,7 +25,7 @@ case class SessionTimeout(credentials: CookieCredentials, target: String = "Sess
 }
 case class ShowHakemus(userOid: String, hakemusOid: String, target: String = "Hakemus") extends AuditEvent {
   def toTapahtuma = Tapahtuma.createREAD(systemName, userOid, target, toLogMessage)
-  def toLogMessage = "Haettu hakemus: " + hakemusOid + " with " + userOid
+  def toLogMessage = "Haettu hakemus: " + hakemusOid + ", oppija " + userOid
 }
 case class UpdateHakemus(userOid: String, hakemusOid: String, originalAnswers: Answers, updatedAnswers: Answers, target: String = "Hakemus") extends AuditEvent {
   def toTapahtuma = {
@@ -50,5 +50,5 @@ case class UpdateHakemus(userOid: String, hakemusOid: String, originalAnswers: A
     }
   }
 
-  def toLogMessage = "Tallennettu päivitetty hakemus: " + hakemusOid + " with " + userOid
+  def toLogMessage = "Tallennettu päivitetty hakemus: " + hakemusOid + ", oppija " + userOid
 }
