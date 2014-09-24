@@ -20,20 +20,20 @@
     "education": "Utbildning",
     "education_university": "Utbildning",
     "chooseLocation": "Välj först undervisnigsställe",
-    "resultsPublishedDate": "Resultatet av antagningen publiceras senast",
+    "resultsPublishedDate": "Resultaten från ansökan publiceras senast",
     "questionGroupWithTitle": "Tillägsfrågor",
     "questionGroupWithoutTitle": "Andra tillägsfrågor",
 
     "resultState": {
-      "Hyvaksytty": "Hyväksytty",
-      "Kesken": "Opiskelijavalinta kesken",
-      "HarkinnanvaraisestiHyvaksytty": "Hyväksytty",
-      "Varalla": "__varasija__. varasijalla",
-      "VarallaPvm": "__varasija__. varasijalla. Varasijoja täytetään __varasijaPvm__ asti.",
-      "Peruutettu": "Peruutettu",
-      "Perunut": "Peruit opiskelupaikan",
-      "Hylatty": "Hylätty",
-      "Peruuntunut": "Peruuntunut"
+      "Hyvaksytty": "Godkänd",
+      "Kesken": "Studerandeantagningen oavslutad",
+      "HarkinnanvaraisestiHyvaksytty": "Godkänd enligt prövning",
+      "Varalla": "__reservplats__. på reservplats",
+      "VarallaPvm": "__reservplats___. på reservplats. Reservplatser fylls ända till __varasijaPvm__.",
+      "Peruutettu": "Annullerats",
+      "Perunut": "Du har annullerat studieplatsen",
+      "Hylatty": "Icke godkänd",
+      "Peruuntunut": "Annullerad"
     }
   },
 
@@ -42,10 +42,10 @@
     "sortUp_ariaLabel": "Flytta ansökningsönskemålet uppåt",
     "sortDown_ariaLabel": "Flytta ansökningsönskemålet neråt",
     "delete_confirm": "Ta bort",
-    "delete_ariaLabel": "Ta bort ansökningsönskemålet genom att dubbelklicka",
-    "vastaanota": "Lähetä vastaus",
-    "vastaanota_confirm": "Vahvista vastaus. Valintaa ei voi perua.",
-    "vastaanota_ariaLabel": "Lähetä vastaus valitsemalla tämä kaksi kertaa",
+    "delete_ariaLabel": "Ta bort ansökningsönskemålet genom att välja detta två gånger",
+    "vastaanota": "Skicka svar",
+    "vastaanota_confirm": "Bekräfta svaret. Valet går inte att annullera.",
+    "vastaanota_ariaLabel": "Skicka svaret genom att välja detta två gånger",
     "logout": "Logga ut",
     "showApplication": "Visa ansökningsblankett"
   },
@@ -62,22 +62,22 @@
     "applicationIsInPostProcessing": "Din ansökan bearbetas fortfarande. Om du vill ändra dina ansökningsmäl, var god försök igen senare.",
 
     "resultState": {
-      "Kesken": "Opiskelijavalinta on kesken",
-      "Hylatty": "Et saanut opiskelupaikkaa",
-      "Vastaanottanut": "Olet ottanut opiskelupaikan vastaan__aika__: __opiskelupaikka__.",
-      "EhdollisestiVastaanottanut": "Olet ottanut ehdollisesti vastaan opiskelupaikan__aika__: __opiskelupaikka__.",
-      "EiVastaanotettuMaaraAikana": "Et ottanut opiskelupaikkaa vastaan määräaikaan mennessä: __opiskelupaikka__.",
-      "Perunut": "Olet perunut hakemuksen__aika__.",
-      "Peruutettu": "Hakemus on peruutettu__aika__.",
-      "Peruuntunut": "Hakemus on peruuntunut"
+      "Kesken": "Studerandeantagningen oavslutad",
+      "Hylatty": "Du har inte fått någon studieplats",
+      "Vastaanottanut": "Du har tagit emot studieplatsen__aika__: __opiskelupaikka__.",
+      "EhdollisestiVastaanottanut": "Du har tagit emot studieplatsen villkorligt__aika__: __opiskelupaikka__.",
+      "EiVastaanotettuMaaraAikana": "Du har inte tagit emot studieplatsen inom utsatt tid: __opiskelupaikka__.",
+      "Perunut": "Du har annullerat ansökan__aika__.",
+      "Peruutettu": "Ansökan har annullerats__aika__.",
+      "Peruuntunut": "Ansökan har blivit annullerad"
     },
 
     "acceptEducation": {
-      "received": "Opiskelupaikka myönnetty: __opetuspiste__ - __koulutus__",
-      "latestAnswer": "Vastaa sitovasti viimeistään __aika__",
-      "accept": "Otan myönnetyn opiskelupaikan vastaan",
-      "conditionalAccept": "Otan myönnetyn opiskelupaikan vastaan, jos en saa paikkaa mistään ylemmästä hakukohteestani",
-      "reject": "En ota opiskelupaikkaa vastaan"
+      "received": "Studieplats beviljad: __opetuspiste__ - __koulutus__",
+      "latestAnswer": "Ge bindande svar senast __aika__",
+      "accept": "Jag tar emot den beviljade studieplatsen",
+      "conditionalAccept": "Jag tar emot den beviljade studieplatsen, om jag inte får en plats från något av mina högre prioriserade.",
+      "reject": "Jag tar inte emot studieplatsen"
     }
   },
 
