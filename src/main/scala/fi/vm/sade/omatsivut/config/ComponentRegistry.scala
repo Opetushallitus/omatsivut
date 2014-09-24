@@ -55,8 +55,6 @@ class ComponentRegistry(val config: AppConfig)
       new RemoteValintatulosService(config.settings.valintaTulosServiceUrl)
   }
 
-  //RemoteValintatulosService(appConfig.settings.sijoitteluServiceConfig.url)
-
   private def configureAuthenticationInfoService: AuthenticationInfoService = config match {
     case x: MockAuthentication => new AuthenticationInfoService {
       def getHenkiloOID(hetu: String) = TestFixture.persons.get(hetu)
