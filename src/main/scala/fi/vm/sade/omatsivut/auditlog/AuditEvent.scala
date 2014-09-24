@@ -3,6 +3,8 @@ package fi.vm.sade.omatsivut.auditlog
 import fi.vm.sade.log.model.Tapahtuma
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus.Answers
 import fi.vm.sade.omatsivut.security.CookieCredentials
+import fi.vm.sade.omatsivut.hakemus.domain.Valintatulos
+import fi.vm.sade.omatsivut.valintatulokset.Vastaanotto
 
 sealed trait AuditEvent {
   def target: String
@@ -51,4 +53,8 @@ case class UpdateHakemus(userOid: String, hakemusOid: String, originalAnswers: A
   }
 
   def toLogMessage = "Tallennettu päivitetty hakemus: " + hakemusOid + ", oppija " + userOid
+}
+case class SaveVastaanotto(userOid: String, hakemusOid: String, vastaanotto: Vastaanotto, target: String = "Vastaanottotila") extends AuditEvent {
+  def toTapahtuma = Tapahtuma.createUPDATE(systemName, userOid, target, toLogMessage)
+  def toLogMessage = "Tallennettu vastaanottotieto: " + vastaanotto.tila + " oppijan " + userOid + " hakemuksen " + hakemusOid + " hakukohteen " + vastaanotto.hakukohdeOid
 }

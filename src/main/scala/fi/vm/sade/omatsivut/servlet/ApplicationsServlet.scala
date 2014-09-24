@@ -18,6 +18,8 @@ import org.scalatra.swagger._
 import org.scalatra.{BadRequest, Forbidden, NotFound, Ok}
 import org.scalatra.ActionResult
 import org.scalatra.ActionResult
+import fi.vm.sade.omatsivut.auditlog.AuditEvent
+import fi.vm.sade.omatsivut.auditlog.SaveVastaanotto
 
 trait ApplicationsServletContainer {
   this: HakuRepositoryComponent with
@@ -115,10 +117,13 @@ trait ApplicationsServletContainer {
         response.setStatus(404)
         "Not found"
       } else {
-        val vastaanotto = Serialization.read[ClientSideVastaanotto](request.body)
+        val clientVastaanotto = Serialization.read[ClientSideVastaanotto](request.body)
         val muokkaaja: String = "henkilö:" + personOid()
         val selite = "Muokkaus Omat Sivut -palvelussa"
-        valintatulosService.vastaanota(hakemusOid, hakuOid, Vastaanotto(vastaanotto.hakukohdeOid, vastaanotto.tila, muokkaaja, selite))
+        val vastaanotto = Vastaanotto(clientVastaanotto.hakukohdeOid, clientVastaanotto.tila, muokkaaja, selite)
+        if(valintatulosService.vastaanota(hakemusOid, hakuOid, vastaanotto)) {
+          auditLogger.log(SaveVastaanotto(personOid(), hakemusOid, vastaanotto))
+        }
         hakemusRepository.getHakemus(personOid(), hakemusOid)
       }
     }
