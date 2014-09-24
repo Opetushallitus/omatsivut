@@ -82,7 +82,7 @@ case class Opetuspiste(oid: String, name: String)
 
 object HakutoiveenValintatulosTila extends Enumeration {
   type HakutoiveenValintatulosTila = Value
-  val HYVAKSYTTY, HARKINNANVARAISESTI_HYVAKSYTTY, VARALLA, PERUUTETTU, PERUNUT, HYLATTY, PERUUNTUNUT, KESKEN = Value
+  val HYVAKSYTTY, HARKINNANVARAISESTI_HYVAKSYTTY, VARASIJALTA_HYVAKSYTTY, VARALLA, PERUUTETTU, PERUNUT, HYLATTY, PERUUNTUNUT, KESKEN = Value
 }
 
 object VastaanotettavuusTila extends Enumeration {
