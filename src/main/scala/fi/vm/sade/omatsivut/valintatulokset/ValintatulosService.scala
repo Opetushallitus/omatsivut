@@ -1,13 +1,11 @@
 package fi.vm.sade.omatsivut.valintatulokset
 
-import java.nio.file.{Paths, Files}
 import java.util.Date
 
-import fi.vm.sade.omatsivut.http.{DefaultHttpClient, HttpRequest}
+import fi.vm.sade.omatsivut.http.{DefaultHttpClient}
 import fi.vm.sade.omatsivut.json.JsonFormats
-import fi.vm.sade.omatsivut.util.{PortChecker, Logging}
+import fi.vm.sade.omatsivut.util.{Logging}
 import org.json4s.JsonAST.JValue
-import scala.sys.process.Process
 
 trait ValintatulosService {
   def getValintatulos(hakemusOid: String, hakuOid: String): Option[Valintatulos]
@@ -116,30 +114,5 @@ class RemoteValintatulosService(valintatulosServiceUrl: String) extends Valintat
         logger.error("Response code " + errorCode + " from valinta-tulos-service at " + url)
         None
     }
-  }
-}
-
-object ValintatulosServiceRunner extends Logging {
-  val valintatulosPort = 8097
-  val searchPaths = List("./valinta-tulos-service", "../valinta-tulos-service")
-
-  def start = {
-    if (PortChecker.isFreeLocalPort(valintatulosPort)) {
-      findValintatulosService match {
-        case Some(path) => {
-          val cwd = new java.io.File(path)
-          val javaHome = System.getProperty("valintatulos.JAVA_HOME", "")
-          logger.info("Launching valintatulosservice")
-          if (javaHome == "")
-            logger.warn("valintatulos.JAVA_HOME system property not found")
-          Process(List(path + "/sbt", "container:start", "shell", "-Dvalintatulos.profile=it"), cwd, "JAVA_HOME" -> javaHome).run(true)
-        }
-        case _ =>
-      }
-    }
-  }
-
-  private def findValintatulosService = {
-    searchPaths.find((path) => Files.exists(Paths.get(path)))
   }
 }

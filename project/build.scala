@@ -1,3 +1,8 @@
+import java.io.IOException
+import java.net.Socket
+import java.nio.file.{Paths, Files}
+import com.earldouglas.xsbtwebplugin.PluginKeys.start
+import scala.sys.process.Process
 import sbt._
 import Keys._
 import sbtbuildinfo.Plugin._
@@ -21,8 +26,10 @@ object OmatsivutBuild extends Build {
 
   val mochaTask = mocha <<= (start in container.Configuration) map {
     Unit => {
+      val valintatulosService = ValintatulosServiceRunner.start
       val pb = Seq("node_modules/mocha-phantomjs/bin/mocha-phantomjs" ,"-R", "spec", "http://localhost:8080/omatsivut/test/runner.html")
       val res = pb.!
+      valintatulosService.map(_.destroy)
       if(res != 0){
         throw new MochaException()
       }
@@ -106,5 +113,40 @@ object OmatsivutBuild extends Build {
     )
   ).settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
   lazy val projectRef: ProjectReference = project
+}
 
+object ValintatulosServiceRunner {
+  val valintatulosPort = 8097
+  val searchPaths = List("./valinta-tulos-service", "../valinta-tulos-service")
+
+  def start = {
+    if (PortChecker.isFreeLocalPort(valintatulosPort)) {
+      findValintatulosService match {
+        case Some(path) => {
+          val cwd = new java.io.File(path)
+          val javaHome = System.getProperty("JAVA8_HOME", "")
+          Some(Process(List("./sbt", "test:run-main fi.vm.sade.valintatulosservice.JettyLauncher", "-Dvalintatulos.profile=it"), cwd, "JAVA_HOME" -> javaHome).run)
+        }
+        case _ =>
+          None
+      }
+    } else
+      None
+  }
+
+  private def findValintatulosService = {
+    searchPaths.find((path) => Files.exists(Paths.get(path)))
+  }
+}
+
+object PortChecker {
+  def isFreeLocalPort(port: Int): Boolean = {
+    try {
+      val socket = new Socket("127.0.0.1", port)
+      socket.close()
+      false
+    } catch {
+      case e:IOException => true
+    }
+  }
 }
