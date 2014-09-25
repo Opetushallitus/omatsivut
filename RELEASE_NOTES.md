@@ -1,6 +1,6 @@
-# Tuotantoon viedyt ominaisuudet
+# Tuotantoon viedyt ominaisuudet (storyt)
 
-Ks. [testitapaukset](https://confluence.oph.ware.fi/confluence/pages/viewpage.action?pageId=19955772)
+[Storyjen kuvaukset](https://confluence.oph.ware.fi/confluence/pages/viewpage.action?pageId=19955772)
 
 ## Tuotannossa
 
