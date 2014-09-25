@@ -7,6 +7,13 @@
 - Bamboossa [Release 970](https://bamboo.oph.ware.fi/deploy/viewDeploymentVersion.action?versionId=89980956)
 - Viimeisin valmistunut story: [OHP-102](https://jira.oph.ware.fi/jira/browse/OHP-102)
 
+### release 1076
+
+- Tuki valintatuloksen näyttämiselle: [OHP-97](https://jira.oph.ware.fi/jira/browse/OHP-97)
+- Tuki opiskelupaikan vastaanottamisella: [OHP-98](https://jira.oph.ware.fi/jira/browse/OHP-98)
+- Tallennuksessa muokataan auhtorization meta uusia hakutoiveita vastaavaksi
+- Uusi hakemus-api versio käyttöön: liitteiden tiedot tallennetaan hakemukselle
+
 ### release 970
 
 - Korjattu bugi hakemuksen muokkauksessa
