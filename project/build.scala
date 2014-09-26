@@ -16,6 +16,7 @@ object OmatsivutBuild extends Build {
   val Organization = "fi.vm.sade"
   val Name = "omatsivut"
   val Version = "0.1.0-SNAPSHOT"
+  val JavaVersion = "1.7"
   val ScalaVersion = "2.11.1"
   val ScalatraVersion = "2.3.0.RC3"
   val TomcatVersion = "7.0.22"
@@ -37,6 +38,10 @@ object OmatsivutBuild extends Build {
     }
   }
 
+  if(!System.getProperty("java.version").startsWith(JavaVersion)) {
+    throw new IllegalStateException("Wrong java version (required " + JavaVersion + "): " + System.getProperty("java.version"))
+  }
+
   lazy val project = Project (
     "omatsivut",
     file("."),
@@ -46,7 +51,7 @@ object OmatsivutBuild extends Build {
       name := Name,
       version := Version,
       scalaVersion := ScalaVersion,
-      javacOptions ++= Seq("-source", "1.7", "-target", "1.7"),
+      javacOptions ++= Seq("-source", JavaVersion, "-target", JavaVersion),
       scalacOptions ++= Seq("-target:jvm-1.7", "-deprecation"),
       resolvers += "Local Maven Repository" at "file://"+Path.userHome.absolutePath+"/.m2/repository",
       resolvers += Classpaths.typesafeReleases,
@@ -107,7 +112,10 @@ object OmatsivutBuild extends Build {
       artifactPath in (Compile, packageWar) ~= { defaultPath =>
         file("target") / defaultPath.getName
       },
-      testOptions in Test += Tests.Argument("junitxml", "console")
+      testOptions in Test := Seq(
+        Tests.Argument("junitxml", "console"),
+        Tests.Argument("exclude", "skipped")
+      )
     ) ++ container.deploy(
       "/omatsivut" -> projectRef
     )

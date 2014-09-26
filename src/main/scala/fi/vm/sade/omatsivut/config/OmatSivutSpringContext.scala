@@ -15,13 +15,16 @@ import org.springframework.context.annotation._
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer
 import org.springframework.core.env.{MapPropertySource, MutablePropertySources}
 import org.springframework.data.mongodb.core.MongoTemplate
-
 import scala.collection.JavaConversions._
+import fi.vm.sade.haku.oppija.hakemus.service.ApplicationService
+import fi.vm.sade.haku.virkailija.koulutusinformaatio.KoulutusinformaatioService
 
 class OmatSivutSpringContext(context: ApplicationContext) {
   def applicationSystemService = context.getBean(classOf[ApplicationSystemService])
 
   def applicationDAO = context.getBean(classOf[ApplicationDAO])
+
+  def applicationService = context.getBean(classOf[ApplicationService])
 
   def mongoTemplate = context.getBean(classOf[MongoTemplate])
 
@@ -73,11 +76,16 @@ object OmatSivutSpringContext {
 
   @Configuration
   @ComponentScan(basePackages = Array(
+    "fi.vm.sade.security",
     "fi.vm.sade.haku.oppija.lomake",
     "fi.vm.sade.haku.oppija.repository",
     "fi.vm.sade.haku.oppija.hakemus.it.dao",
     "fi.vm.sade.haku.oppija.hakemus.converter",
-    "fi.vm.sade.haku.oppija.common.koulutusinformaatio"))
+    "fi.vm.sade.haku.oppija.hakemus.service",
+    "fi.vm.sade.haku.oppija.common.koulutusinformaatio",
+    "fi.vm.sade.haku.virkailija.koulutusinformaatio",
+    "fi.vm.sade.haku.oppija.common.organisaatio"
+  ))
   @ImportResource(Array("/META-INF/spring/logger-context.xml"))
   @Import(Array(classOf[OmatSivutMongoConfiguration]))
   class Default extends OmatSivutConfiguration {

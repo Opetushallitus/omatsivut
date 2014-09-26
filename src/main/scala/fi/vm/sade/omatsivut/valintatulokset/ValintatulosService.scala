@@ -9,7 +9,7 @@ import org.json4s.JsonAST.JValue
 
 trait ValintatulosService {
   def getValintatulos(hakemusOid: String, hakuOid: String): Option[Valintatulos]
-  def vastaanota(hakemusOid: String, hakuOid: String, vastaanotto: Vastaanotto)
+  def vastaanota(hakemusOid: String, hakuOid: String, vastaanotto: Vastaanotto): Boolean
 }
 
 case class Valintatulos(hakemusOid: String, hakutoiveet: List[HakutoiveenValintatulos])
@@ -20,6 +20,7 @@ case class HakutoiveenValintatulos(hakukohdeOid: String,
                                    vastaanottotila: Option[String],
                                    ilmoittautumistila: Option[String],
                                    vastaanotettavuustila: String,
+                                   viimeisinVastaanottotilanMuutos: Option[Date],
                                    jonosija: Option[Int],
                                    varasijojaKaytetaanAlkaen: Option[Date],
                                    varasijojaTaytetaanAsti: Option[Date],
@@ -34,7 +35,7 @@ trait ValintatulosServiceComponent {
 class NoOpValintatulosService extends ValintatulosService {
   override def getValintatulos(hakemusOid: String, hakuOid: String) = None
 
-  override def vastaanota(hakemusOid: String, hakuOid: String, vastaanotto: Vastaanotto) {}
+  override def vastaanota(hakemusOid: String, hakuOid: String, vastaanotto: Vastaanotto) = true
 }
 
 class MockValintatulosService() extends ValintatulosService with JsonFormats {
@@ -53,11 +54,11 @@ class MockValintatulosService() extends ValintatulosService with JsonFormats {
     val isMatch = hakutoive.hakukohdeOid == vastaanotto.hakukohdeOid
     val determinedVastaanottoTila = if (isMatch) vastaanottotila else "KESKEN"
     val valintaTila = if(setOthersToCancelled && !isMatch) "PERUUNTUNUT" else hakutoive.valintatila
-    hakutoive.copy(vastaanottotila = Some(determinedVastaanottoTila), vastaanotettavuustila = "EI_VASTAANOTETTAVISSA", valintatila = valintaTila)
+    hakutoive.copy(vastaanottotila = Some(determinedVastaanottoTila), vastaanotettavuustila = "EI_VASTAANOTETTAVISSA", valintatila = valintaTila, viimeisinVastaanottotilanMuutos = Some(new Date()))
   }
 
 
-  override def vastaanota(hakemusOid: String, hakuOid: String, vastaanotto: Vastaanotto) {
+  override def vastaanota(hakemusOid: String, hakuOid: String, vastaanotto: Vastaanotto) = {
     valintatulokset = valintatulokset.map { valintatulos =>
       if (valintatulos.hakemusOid == hakemusOid) {
         valintatulos.copy(hakutoiveet = valintatulos.hakutoiveet.map { hakutoive =>
@@ -74,6 +75,7 @@ class MockValintatulosService() extends ValintatulosService with JsonFormats {
         valintatulos
       }
     }
+    true
   }
 }
 
@@ -101,18 +103,18 @@ class RemoteValintatulosService(valintatulosServiceUrl: String) extends Valintat
     }
   }
 
-  override def vastaanota(hakemusOid: String, hakuOid: String, vastaanotto: Vastaanotto) {
+  override def vastaanota(hakemusOid: String, hakuOid: String, vastaanotto: Vastaanotto) = {
     import org.json4s.jackson.Serialization
     val url = valintatulosServiceUrl + "/haku/"+hakuOid+"/hakemus/"+hakemusOid+"/vastaanota"
     val request = DefaultHttpClient.httpPost(url, Some(Serialization.write(vastaanotto))).header("Content-type", "application/json")
     request.responseWithHeaders match {
       case (200, _, resultString) => {
-        println(resultString)
-        println(resultString)
+        logger.debug("POST " + valintatulosServiceUrl + ": " + resultString)
+        true
       }
       case (errorCode, _, resultString) =>
         logger.error("Response code " + errorCode + " from valinta-tulos-service at " + url)
-        None
+        false
     }
   }
 }

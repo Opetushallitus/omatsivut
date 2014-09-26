@@ -1,11 +1,18 @@
-# Tuotantoon viedyt ominaisuudet
+# Tuotantoon viedyt ominaisuudet (storyt)
 
-Ks. [testitapaukset](https://confluence.oph.ware.fi/confluence/pages/viewpage.action?pageId=19955772)
+[Storyjen kuvaukset](https://confluence.oph.ware.fi/confluence/pages/viewpage.action?pageId=19955772)
 
 ## Tuotannossa
 
 - Bamboossa [Release 970](https://bamboo.oph.ware.fi/deploy/viewDeploymentVersion.action?versionId=89980956)
 - Viimeisin valmistunut story: [OHP-102](https://jira.oph.ware.fi/jira/browse/OHP-102)
+
+### release 1076
+
+- Tuki valintatuloksen näyttämiselle: [OHP-97](https://jira.oph.ware.fi/jira/browse/OHP-97)
+- Tuki opiskelupaikan vastaanottamisella: [OHP-98](https://jira.oph.ware.fi/jira/browse/OHP-98)
+- Tallennuksessa muokataan auhtorization meta uusia hakutoiveita vastaavaksi
+- Uusi hakemus-api versio käyttöön: liitteiden tiedot tallennetaan hakemukselle
 
 ### release 970
 

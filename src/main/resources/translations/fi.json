@@ -33,7 +33,8 @@
       "Peruutettu": "Peruutettu",
       "Perunut": "Peruit opiskelupaikan",
       "Hylatty": "Hylätty",
-      "Peruuntunut": "Peruuntunut"
+      "Peruuntunut": "Peruuntunut",
+      "VarasijaltaHyvaksytty": "Hyväksytty varasijalta"
     }
   },
 
@@ -64,11 +65,11 @@
     "resultState": {
       "Kesken": "Opiskelijavalinta on kesken",
       "Hylatty": "Et saanut opiskelupaikkaa.",
-      "Vastaanottanut": "Olet ottanut opiskelupaikan vastaan: __opiskelupaikka__.",
-      "EhdollisestiVastaanottanut": "Olet ottanut ehdollisesti vastaan opiskelupaikan: __opiskelupaikka__.",
+      "Vastaanottanut": "Olet ottanut opiskelupaikan vastaan__aika__: __opiskelupaikka__.",
+      "EhdollisestiVastaanottanut": "Olet ottanut ehdollisesti vastaan opiskelupaikan__aika__: __opiskelupaikka__.",
       "EiVastaanotettuMaaraAikana": "Et ottanut opiskelupaikkaa vastaan määräaikaan mennessä: __opiskelupaikka__.",
-      "Perunut": "Olet perunut hakemuksen.",
-      "Peruutettu": "Hakemus on peruutettu.",
+      "Perunut": "Olet perunut hakemuksen__aika__.",
+      "Peruutettu": "Hakemus on peruutettu__aika__.",
       "Peruuntunut": "Hakemus on peruuntunut."
     },
 
@@ -76,7 +77,7 @@
       "received": "Opiskelupaikka myönnetty: __opetuspiste__ - __koulutus__",
       "latestAnswer": "Vastaa sitovasti viimeistään __aika__",
       "accept": "Otan myönnetyn opiskelupaikan vastaan",
-      "conditionalAccept": "Otan myönnetyn opiskelupaikan vastaan, jos en saa paikkaa mistään ylemmästä hakukohteestani",
+      "conditionalAccept": "Otan myönnetyn opiskelupaikan vastaan, jos en saa paikkaa mistään mieluisammasta hakukohteestani",
       "reject": "En ota opiskelupaikkaa vastaan"
     }
   },

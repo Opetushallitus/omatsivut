@@ -60,6 +60,7 @@ object ResultState extends Enumeration {
 
 case class ResultStatus (
                           state: ResultState = ResultState.KESKEN,
+                          changeTime: Option[Long] = None,
                           opiskelupaikka: Option[String] = None
 )
 
@@ -70,6 +71,7 @@ case class HakutoiveenValintatulos(
                                     tila: HakutoiveenValintatulosTila,
                                     vastaanottotila: ResultState,
                                     vastaanotettavuustila: VastaanotettavuusTila,
+                                    viimeisinVastaanottotilanMuutos: Option[Long],
                                     ilmoittautumistila: Option[String],
                                     jonosija: Option[Int],
                                     varasijojaTaytetaanAsti: Option[Long],
@@ -80,7 +82,7 @@ case class Opetuspiste(oid: String, name: String)
 
 object HakutoiveenValintatulosTila extends Enumeration {
   type HakutoiveenValintatulosTila = Value
-  val HYVAKSYTTY, HARKINNANVARAISESTI_HYVAKSYTTY, VARALLA, PERUUTETTU, PERUNUT, HYLATTY, PERUUNTUNUT, KESKEN = Value
+  val HYVAKSYTTY, HARKINNANVARAISESTI_HYVAKSYTTY, VARASIJALTA_HYVAKSYTTY, VARALLA, PERUUTETTU, PERUNUT, HYLATTY, PERUUNTUNUT, KESKEN = Value
 }
 
 object VastaanotettavuusTila extends Enumeration {

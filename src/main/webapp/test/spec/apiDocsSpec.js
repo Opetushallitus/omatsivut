@@ -7,8 +7,8 @@
     )
 
     describe("näyttäminen", function() {
-      it('apissa on kolme endpointtia', function () {
-        expect(page.endpoints().length).to.equal(3)
+      it('apissa on viisi endpointtia', function () {
+        expect(page.endpoints().length).to.equal(5)
       })
 
       it('kaikilla endpointeilla on kuvaus', function () {

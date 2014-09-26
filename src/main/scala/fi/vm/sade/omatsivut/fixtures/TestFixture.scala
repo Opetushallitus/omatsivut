@@ -16,8 +16,6 @@ object TestFixture {
   val hakemusWithAtheleteQuestions = "1.2.246.562.11.00000441371"
   val hakemusLisahaku = hakemusWithAtheleteQuestions
   val hakemusWithGradeGridAndDancePreference = "1.2.246.562.11.00000855417"
-  val hakemusWithHigherGradeAttachments = "1.2.246.562.11.00000877699"
-  val hakemusWithApplicationOptionAttachments = "1.2.246.562.11.00000877686"
   val inactiveHakemus = "1.2.246.562.11.00000441369"
   val applicationSystemNivelKesa2013Oid = "1.2.246.562.5.2014022711042555034240"
   val applicationSystemKorkeakouluSyksy2014Oid = "1.2.246.562.29.173465377510"
@@ -34,15 +32,6 @@ object TestFixture {
       val springContext: OmatSivutSpringContext = registry.springContext
       val as = springContext.applicationSystemService.getApplicationSystem(applicationSystemNivelKesa2013Oid)
       val app = springContext.applicationDAO.find(new Application().setOid(hakemusNivelKesa2013WithPeruskouluBaseEducationId)).toList.head
-      (as, app)
-    })
-  }
-
-  lazy val (applicationSystemKorkeakouluSyksy2014, applicationWithApplicationOptionAttachments) = {
-    withConfig(new ComponentRegistry(appConfig), { registry =>
-      val springContext: OmatSivutSpringContext = registry.springContext
-      val as = springContext.applicationSystemService.getApplicationSystem(applicationSystemKorkeakouluSyksy2014Oid)
-      val app = springContext.applicationDAO.find(new Application().setOid(hakemusWithApplicationOptionAttachments)).toList.head
       (as, app)
     })
   }

@@ -25,15 +25,16 @@
     "questionGroupWithoutTitle": "Other additional questions",
 
     "resultState": {
-      "Hyvaksytty": "Hyväksytty",
-      "Kesken": "Opiskelijavalinta kesken",
-      "HarkinnanvaraisestiHyvaksytty": "Hyväksytty",
-      "Varalla": "__varasija__. varasijalla",
-      "VarallaPvm": "__varasija__. varasijalla. Varasijoja täytetään __varasijaPvm__ asti.",
-      "Peruutettu": "Peruutettu",
-      "Perunut": "Peruit opiskelupaikan",
-      "Hylatty": "Hylätty",
-      "Peruuntunut": "Peruuntunut"
+      "Hyvaksytty": "Accepted",
+      "Kesken": "Student admission process unfinished",
+      "HarkinnanvaraisestiHyvaksytty": "Discretionary admission",
+      "Varalla": "On a reserve place __varasija__.",
+      "VarallaPvm": "On a reserve place.__varasija__. Reserve places are filled until __varasijaPvm__.",
+      "Peruutettu": "Cancelled",
+      "Perunut": "You have cancelled the study place",
+      "Hylatty": "Not accepted",
+      "Peruuntunut": "Cancelled",
+      "VarasijaltaHyvaksytty": "Accepted from reserve place"
     }
   },
 
@@ -43,9 +44,9 @@
     "sortDown_ariaLabel": "Move your study program choice to a lower priority",
     "delete_confirm": "Delete",
     "delete_ariaLabel": "Remove your choice by doubleclicking",
-    "vastaanota": "Lähetä vastaus",
-    "vastaanota_confirm": "Vahvista vastaus. Valintaa ei voi perua.",
-    "vastaanota_ariaLabel": "Lähetä vastaus valitsemalla tämä kaksi kertaa",
+    "vastaanota": "Send answer",
+    "vastaanota_confirm": "Confirm your answer. The choice cannot be cancelled.",
+    "vastaanota_ariaLabel": "Send the answer by choosing this two times",
     "logout": "Log out",
     "showApplication": "Show application form"
   },
@@ -62,22 +63,22 @@
     "applicationIsInPostProcessing": "Your application is being processed. If you want to make any changes, please try again later.",
 
     "resultState": {
-      "Kesken": "Opiskelijavalinta on kesken",
-      "Hylatty": "Et saanut opiskelupaikkaa",
-      "Vastaanottanut": "Olet ottanut opiskelupaikan vastaan: __opiskelupaikka__",
-      "EhdollisestiVastaanottanut": "Olet ottanut ehdollisesti vastaan opiskelupaikan: __opiskelupaikka__",
-      "EiVastaanotettuMaaraAikana": "Et ottanut opiskelupaikkaa vastaan määräaikaan mennessä: __opiskelupaikka__",
-      "Perunut": "Olet perunut hakemuksen",
-      "Peruutettu": "Hakemus on peruutettu",
-      "Peruuntunut": "Hakemus on peruuntunut"
+      "Kesken": "Student admission process is unfinished",
+      "Hylatty": "You have not received a study place",
+      "Vastaanottanut": "You have confirmed the study place__aika__: __opiskelupaikka__.",
+      "EhdollisestiVastaanottanut": "You have confirmed the study place conditionally__aika__: __opiskelupaikka__.",
+      "EiVastaanotettuMaaraAikana": "You have not confirmed the study place within the set time: __opiskelupaikka__.",
+      "Perunut": "You have cancelled the application__aika__.",
+      "Peruutettu": "The application has been cancelled__aika__.",
+      "Peruuntunut": "The application has been cancelled"
     },
 
     "acceptEducation": {
-      "received": "Opiskelupaikka myönnetty: __opetuspiste__ - __koulutus__",
-      "latestAnswer": "Vastaa sitovasti viimeistään __aika__",
-      "accept": "Otan myönnetyn opiskelupaikan vastaan",
-      "conditionalAccept": "Otan myönnetyn opiskelupaikan vastaan, jos en saa paikkaa mistään ylemmästä hakukohteestani",
-      "reject": "En ota opiskelupaikkaa vastaan"
+      "received": "Study place granted: __opetuspiste__ - __koulutus__",
+      "latestAnswer": "Give a binding answer at the latest __aika__",
+      "accept": "I confirm the granted study place",
+      "conditionalAccept": "I confirm the granted study place if I do not receive a study place from any of my higher prioritized options.",
+      "reject": "I do not confirm the study place."
     }
   },
 

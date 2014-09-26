@@ -23,12 +23,6 @@ class GetApplicationsSpec extends HakemusApiSpecification with FixturePerson {
       }
     }
 
-    "tell for higher level attachments that additional info is required" in {
-      withHakemus(TestFixture.hakemusWithHigherGradeAttachments) { hakemus =>
-        hakemus.requiresAdditionalInfo must_== true
-      }
-    }
-
     "tell for dance education application that additional info is required" in {
       withHakemus(TestFixture.hakemusWithGradeGridAndDancePreference) { hakemus =>
         hakemus.requiresAdditionalInfo must_== true

@@ -164,44 +164,51 @@ function ApplicationListPage() {
           }).toArray()
       },
 
-      vastaanotto: function() {
+      vastaanotettavia: function() {
+        return getApplicationElement(applicationIndex).find(".hakutoiveenVastaanotto").length
+      },
+
+      vastaanotto: function(index) {
+        function vastaanottoElement() {
+          return getApplicationElement(applicationIndex).find(".hakutoiveenVastaanotto").eq(index)
+        }
         return {
           title: function() {
-            return getApplicationElement(applicationIndex).find("hakutoiveen-vastaanotto h2").map(function() {
+            return vastaanottoElement().find("h2").map(function() {
               return $(this).text().trim()
             }).toArray()
           },
 
           info: function() {
-            return getApplicationElement(applicationIndex).find("hakutoiveen-vastaanotto .badge").map(function() {
+            return vastaanottoElement().find(".badge").map(function() {
               return $(this).text().trim()
             }).toArray()
           },
 
           vaihtoehdot: function() {
-            return getApplicationElement(applicationIndex).find("hakutoiveen-vastaanotto label:visible").map(function() {
+            return vastaanottoElement().find("label:visible").map(function() {
               return $(this).text().trim()
             }).toArray()
           },
 
           selectOption: function(id) {
             return function() {
-              getApplicationElement(applicationIndex).find("input[value='" + id + "']").click().click() // Angular hack
+              vastaanottoElement().find("input[value='" + id + "']").click().click() // Angular hack
               return wait.forAngular()
             }
           },
 
           confirmButtonEnabled: function() {
-            return !getApplicationElement(applicationIndex).find(".vastaanota-btn").prop("disabled")
+            return !vastaanottoElement().find(".vastaanota-btn").prop("disabled")
           },
 
           send: function() {
-            getApplicationElement(applicationIndex).find(".vastaanota-btn").click().click() // confirm
+            vastaanottoElement().find(".vastaanota-btn").click().click() // confirm
             return wait.forAngular()
           },
 
           errorText: function() {
-            return getApplicationElement(applicationIndex).find(".status-message.error").text()
+            return vastaanottoElement().find(".status-message.error").text()
           }
         }
       },

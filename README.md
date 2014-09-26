@@ -75,9 +75,7 @@ Tyylit tehty lessillä. Css-fileet src-puussa generoidaan siitä ja ovat ignoroi
 
 ## Impersonointi / autentikoinnin ohitus
 
-Jos applikaatiota ajetaan "testimoodissa" eli esim. `-Domatsivut.profile=dev`, niin autentikointi on mahdollista ohittaa.
-
-Tämä tapahtuu menemällä urliin http://localhost:8080/omatsivut/util/fakesession?hetu=010101-123N
+Jos applikaatiota ajetaan "testimoodissa" eli esim. `-Domatsivut.profile=dev`, niin autentikointi on mahdollista ohittaa - vetuman sijaan näytetään "Vetuma Simulator"-näkymä, jossa voi syöttää haluamansa henkilötunnuksen.
 
 ## mocha-phantomjs -testit
 

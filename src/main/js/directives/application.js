@@ -26,9 +26,11 @@ module.exports = function(listApp) {
 
         updateHakemus($scope.application)
 
-        $scope.formatTimestamp = function(dt) {
+        function formatTimestamp(dt) {
           return moment(dt).format('LLL').replace(/,/g, "")
         }
+
+        $scope.formatTimestamp = formatTimestamp
 
         $scope.formatApplicationPeriod = function(dt) {
           return moment(dt).format('LLLL').replace(/,/g, "")
@@ -53,7 +55,8 @@ module.exports = function(listApp) {
           if (application.state && application.state.resultStatus != null) {
             var status = application.state.resultStatus
             return localization("message.resultState." + util.underscoreToCamelCase(status.state), {
-              opiskelupaikka: status.opiskelupaikka
+              aika: status.changeTime == null ? "" : " " + formatTimestamp(status.changeTime),
+              opiskelupaikka: status.opiskelupaikka == null ? "" : status.opiskelupaikka
             })
           }
         }
