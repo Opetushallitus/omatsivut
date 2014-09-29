@@ -440,7 +440,7 @@
         })
 
         describe("jos on ottanut paikan vastaan", function() {
-          before(page.applyValintatulosFixtureAndOpen("vastaanottanut"))
+          before(page.applyValintatulosFixtureAndOpen("hyvaksytty-vastaanottanut"))
           it("hakemusta ei voi muokata", function () {
             hakemusYhteishakuKevat2013WithForeignBaseEducation.preferencesForApplication().length.should.equal(0)
           })
@@ -576,7 +576,7 @@
       describe("Hakutoiveen vastaanotto", function() {
 
         before(
-            page.applyValintatulosFixtureAndOpen("hyvaksytty_ehdollisesti"),
+            page.applyValintatulosFixtureAndOpen("hyvaksytty-kesken-julkaistavissa"),
             mockAjax.init
         )
 
