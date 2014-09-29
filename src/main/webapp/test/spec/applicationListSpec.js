@@ -199,11 +199,13 @@
         })
 
         it("hakuaikatieto näkyy", function() {
-          hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal(hakuaikatieto)
+          hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal(hakuaikatieto + " Opiskelijavalinta on kesken")
         })
 
-        it("valintatuloksia ei näytetä", function() {
-          hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset().length.should.equal(0)
+        it("valintatulokset näytetään tilassa \"Opiskelijavalinta kesken\"", function () {
+          hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset().length.should.equal(2)
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].tila).to.equal('Opiskelijavalinta kesken')
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[1].tila).to.equal('Opiskelijavalinta kesken')
         })
       })
 
