@@ -235,9 +235,7 @@
         })
 
         it.skip("valintatulokset näytetään", function () {
-          // TODO: fikstuurit näille kaikille tiloille
           expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[1].tila).to.equal('2. varasijalla. Varasijoja täytetään 26. elokuuta 2014 asti.')
-          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[6].tila).to.equal('Peruuntunut')
         })
       })
 
@@ -300,6 +298,9 @@
         it("valintatulokset näytetään", function () {
           expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].hakukohde).to.equal('Kallion lukio Lukion ilmaisutaitolinja')
           expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].tila).to.equal('Hyväksytty varasijalta')
+
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[1].hakukohde).to.equal('Kallion lukio Lukio')
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[1].tila).to.equal('Peruuntunut')
         })
 
         it("paikka on vastaanotettavissa", function() {
