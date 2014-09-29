@@ -2,6 +2,13 @@
 
 Oppijan henkilökohtainen palvelu
 
+## Teknologiat
+
+- Scala 2.11.1
+- Java 7 (ei tällä hetkellä toimi Java8:lla)
+- Angular.js
+- SBT
+
 ## Asetukset
 
 Sovellus tukee eri profiileita. Profiili määritellään `omatsivut.profile` system propertyllä, esim `-Domatsivut.profile=it`.
