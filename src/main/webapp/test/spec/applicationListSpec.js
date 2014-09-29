@@ -184,7 +184,7 @@
         })
 
         it("ohjeteksti päivittyy", function() {
-          hakemusLisaKevat2014WithForeignBaseEducation.applicationStatus().should.equal("Hakuaika on päättynyt.")
+          hakemusLisaKevat2014WithForeignBaseEducation.applicationStatus().should.equal("Hakuaika on päättynyt. Opiskelijavalinta on kesken")
         })
       })
     })
@@ -410,7 +410,7 @@
       })
 
       describe("hakijalle tarjotaan kahta paikkaa", function() {
-        before(page.applyValintatulosFixtureAndOpen("hyvaksytty_kahteen"))
+        before(page.applyValintatulosFixtureAndOpen("hyvaksytty-kaikkiin"))
 
         it("oikeat vaihtoehdot tulevat näkyviin", function() {
           expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotettavia()).to.equal(2)
@@ -438,12 +438,12 @@
         })
 
         describe("toisen paikan vastaanottaminen", function() {
-          before(page.applyValintatulosFixtureAndOpen("hyvaksytty_kahteen"))
+          before(page.applyValintatulosFixtureAndOpen("hyvaksytty-kaikkiin"))
           before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(1).selectOption("VASTAANOTTANUT"))
           before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(1).send)
 
           it("vastaanottotieto näkyy", function() {
-            hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.match(/^Olet ottanut opiskelupaikan vastaan \d+\. \w+ 20\d\d\ klo \d+\.\d\d: Salon lukio - Lukio./)
+            hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.match(/^Olet ottanut opiskelupaikan vastaan \d+\. \w+ 20\d\d\ klo \d+\.\d\d: Kallion lukio - Lukio./)
           })
         })
       })
