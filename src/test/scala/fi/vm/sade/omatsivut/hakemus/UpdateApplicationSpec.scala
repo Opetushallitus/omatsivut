@@ -61,11 +61,19 @@ class UpdateApplicationSpec extends HakemusApiSpecification with FixturePerson {
       }
     }
 
-    "do hiddenvalues" in {
-      modifyHakemus(hakemusYhteishakuKevat2014WithForeignBaseEducationId)((hakemus) => hakemus) { hakemus =>
+    "apply hiddenValues on the form" in {
+      def removeDiscretionaryFlags(hakemus: Hakemus) = {
+        // remove the discretionary flag to be able to test that it is automatically applied from the form
+        hakemus.copy(hakutoiveet = hakemus.hakutoiveet.map {hakutoive =>
+          hakutoive - "discretionary"
+        })
+      }
+      modifyHakemus(hakemusYhteishakuKevat2014WithForeignBaseEducationId)(removeDiscretionaryFlags) { hakemus =>
         status must_== 200
         withSavedApplication(hakemus) { application =>
+          // verify that the discretionary flag is actually set
           application.getPhaseAnswers(preferencesPhaseKey).get("preference1-discretionary") must_== "true"
+          // verify that the flag is not set in a different phase (koulutustausta). this verifies a bug fix
           application.getPhaseAnswers("koulutustausta").get("preference1-discretionary") must_== null
         }
       }
