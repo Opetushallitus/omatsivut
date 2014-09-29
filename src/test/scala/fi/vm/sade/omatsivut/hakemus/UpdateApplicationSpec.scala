@@ -61,6 +61,17 @@ class UpdateApplicationSpec extends HakemusApiSpecification with FixturePerson {
       }
     }
 
+    "do hiddenvalues" in {
+      modifyHakemus(hakemusYhteishakuKevat2014WithForeignBaseEducationId)((hakemus) => hakemus) { hakemus =>
+        status must_== 200
+        withSavedApplication(hakemus) { application =>
+          application.getPhaseAnswers(preferencesPhaseKey).get("preference1-discretionary") must_== "true"
+          application.getPhaseAnswers("koulutustausta").get("preference1-discretionary") must_== null
+        }
+      }
+    }
+
+
     "reject answers to unknown questions" in {
       modifyHakemus(hakemusNivelKesa2013WithPeruskouluBaseEducationId)(answerExtraQuestion(preferencesPhaseKey, "unknown", "hacking")) { hakemus =>
         status must_== 400
