@@ -163,7 +163,7 @@ fixtures = {
   },
 
   applyValintatulos: function(fixtureName) {
-    return Q($.ajax("/omatsivut/util/fixtures/valintatulos?fixturename=" + fixtureName, { type: "PUT" }))
+    return Q($.ajax("http://localhost:8097/valinta-tulos-service/util/fixtures/apply?fixturename=" + fixtureName, { type: "PUT" }))
   }
 }
 
