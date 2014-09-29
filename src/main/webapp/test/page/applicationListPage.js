@@ -173,6 +173,10 @@ function ApplicationListPage() {
           return getApplicationElement(applicationIndex).find(".hakutoiveenVastaanotto").eq(index)
         }
         return {
+          visible: function() {
+            return vastaanottoElement().is(":visible")
+          },
+
           title: function() {
             return vastaanottoElement().find("h2").map(function() {
               return $(this).text().trim()
