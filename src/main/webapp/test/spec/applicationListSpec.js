@@ -236,15 +236,61 @@
 
         it.skip("valintatulokset näytetään", function () {
           // TODO: fikstuurit näille kaikille tiloille
-          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].hakukohde).to.equal('Kallion lukio Lukion ilmaisutaitolinja')
-          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].tila).to.equal('Opiskelijavalinta kesken')
           expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[1].tila).to.equal('2. varasijalla. Varasijoja täytetään 26. elokuuta 2014 asti.')
-          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[2].tila).to.equal('2. varasijalla')
-          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[3].tila).to.equal('Peruutettu')
-          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[4].tila).to.equal('Peruit opiskelupaikan')
-          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[5].tila).to.equal('Hylätty')
           expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[6].tila).to.equal('Peruuntunut')
-          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[7].tila).to.equal('Hyväksytty')
+        })
+      })
+
+      describe("Hylätty", function() {
+        before(page.applyValintatulosFixtureAndOpen("hylatty-julkaistavissa"))
+
+        it("hakuaikatieto näkyy", function() {
+          hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal(hakuaikatieto + " Opiskelijavalinta on kesken")
+        })
+
+        it("valintatulokset näytetään", function () {
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].hakukohde).to.equal('Kallion lukio Lukion ilmaisutaitolinja')
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].tila).to.equal('Hylätty')
+        })
+
+        it("paikka ei ole vastaanotettavissa", function() {
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).visible()).to.equal(false)
+        })
+      })
+
+      describe("Peruutettu", function() {
+        // TODO: tässä ylempi toive on vielä "kesken", mutta kokonaistilanteena näkyy "peruutettu".
+
+        before(page.applyValintatulosFixtureAndOpen("hyvaksytty-valintatulos-peruutettu"))
+
+        it("hakuaikatieto näkyy", function() {
+          hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal(hakuaikatieto + " Hakemus on peruutettu 26. elokuuta 2014 klo 19.05.")
+        })
+
+        it("valintatulokset näytetään", function () {
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[1].hakukohde).to.equal('Kallion lukio Lukio')
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[1].tila).to.equal('Peruutettu')
+        })
+
+        it("paikka ei ole vastaanotettavissa", function() {
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).visible()).to.equal(false)
+        })
+      })
+
+      describe("Perunut", function() {
+        before(page.applyValintatulosFixtureAndOpen("hyvaksytty-valintatulos-perunut"))
+
+        it("hakuaikatieto näkyy", function() {
+          hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal(hakuaikatieto + " Olet perunut hakemuksen 26. elokuuta 2014 klo 19.05.")
+        })
+
+        it("valintatulokset näytetään", function () {
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[1].hakukohde).to.equal('Kallion lukio Lukio')
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[1].tila).to.equal('Peruit opiskelupaikan')
+        })
+
+        it("paikka ei ole vastaanotettavissa", function() {
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).visible()).to.equal(false)
         })
       })
 
