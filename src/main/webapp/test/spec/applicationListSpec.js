@@ -240,7 +240,7 @@
         describe("hakija ei ole ottanut paikkaa vastaan ehdollisesti, mutta valinta on kesken", function() {
           before(page.applyValintatulosFixtureAndOpen("perunut_ehdollisen_vastaanoton"))
           it("tieto näytetään oikein", function() {
-            hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.match(/^Hakuaika on päättynyt. Haun tulokset julkaistaan viimeistään 11. kesäkuuta 2014. Olet perunut hakemuksen \d+\. \w+ 20\d\d\ klo \d+\.\d\d./)
+            hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.match(/^Hakuaika on päättynyt. Haun tulokset julkaistaan viimeistään 11. kesäkuuta 2014. Opiskelijavalinta on kesken/)
           })
         })
       })
@@ -401,7 +401,7 @@
             before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send)
 
             it("perumistieto näkyy", function() {
-              hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal("Hakuaika on päättynyt. Haun tulokset julkaistaan viimeistään 11. kesäkuuta 2014. Opiskelijavalinta on kesken")
+              hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.match(/^Olet perunut hakemuksen \d+\. \w+ 20\d\d\ klo \d+\.\d\d./)
             })
           })
         })
