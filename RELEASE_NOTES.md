@@ -4,10 +4,10 @@
 
 ## Tuotannossa
 
-- Bamboossa [Release 970](https://bamboo.oph.ware.fi/deploy/viewDeploymentVersion.action?versionId=89980956)
+- Bamboossa [Release 1092](https://bamboo.oph.ware.fi/deploy/viewDeploymentVersion.action?versionId=93913126)
 - Viimeisin valmistunut story: [OHP-102](https://jira.oph.ware.fi/jira/browse/OHP-102)
 
-### release 1076
+### release 1092
 
 - Tuki valintatuloksen näyttämiselle: [OHP-97](https://jira.oph.ware.fi/jira/browse/OHP-97)
 - Tuki opiskelupaikan vastaanottamisella: [OHP-98](https://jira.oph.ware.fi/jira/browse/OHP-98)
