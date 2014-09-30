@@ -25,17 +25,15 @@ object OmatsivutBuild extends Build {
   // task for running mocha tests
   lazy val mocha = taskKey[Int]("run phantomJS tests")
 
-  val mochaTask = mocha <<= (start in container.Configuration) map {
-    Unit => {
-      val valintatulosService = ValintatulosServiceRunner.start
-      val pb = Seq("node_modules/mocha-phantomjs/bin/mocha-phantomjs" ,"-R", "spec", "http://localhost:8080/omatsivut/test/runner.html")
-      val res = pb.!
-      valintatulosService.map(_.destroy)
-      if(res != 0){
-        throw new MochaException()
-      }
-      res
+  val mochaTask = mocha <<= (start in container.Configuration) map { _ =>
+    val valintatulosService = ValintatulosServiceRunner.start
+    val pb = Seq("node_modules/mocha-phantomjs/bin/mocha-phantomjs" ,"-R", "spec", "http://localhost:8080/omatsivut/test/runner.html")
+    val res = pb.!
+    valintatulosService.foreach(_.destroy)
+    if(res != 0){
+      throw new MochaException()
     }
+    res
   }
 
   if(!System.getProperty("java.version").startsWith(JavaVersion)) {
