@@ -26,10 +26,10 @@ object OmatsivutBuild extends Build {
   lazy val mocha = taskKey[Int]("run phantomJS tests")
 
   val mochaTask = mocha <<= (start in container.Configuration) map { _ =>
-    val valintatulosService = ValintatulosServiceRunner.start
+    ValintatulosServiceRunner.start
     val pb = Seq("node_modules/mocha-phantomjs/bin/mocha-phantomjs" ,"-R", "spec", "http://localhost:8080/omatsivut/test/runner.html")
     val res = pb.!
-    valintatulosService.foreach(_.destroy)
+    ValintatulosServiceRunner.stop
     if(res != 0){
       throw new MochaException()
     }
@@ -112,7 +112,9 @@ object OmatsivutBuild extends Build {
       },
       testOptions in Test := Seq(
         Tests.Argument("junitxml", "console"),
-        Tests.Argument("exclude", "skipped")
+        Tests.Argument("exclude", "skipped"),
+        Tests.Setup( () => ValintatulosServiceRunner.start ),
+        Tests.Cleanup( () => ValintatulosServiceRunner.stop )
       )
     ) ++ container.deploy(
       "/omatsivut" -> projectRef
@@ -124,11 +126,13 @@ object OmatsivutBuild extends Build {
 object ValintatulosServiceRunner {
   val valintatulosPort = 8097
   val searchPaths = List("./valinta-tulos-service", "../valinta-tulos-service")
+  var currentRunner: Option[scala.sys.process.Process] = None
 
-  def start = {
-    if (PortChecker.isFreeLocalPort(valintatulosPort)) {
+  def start = this.synchronized {
+    if (currentRunner == None && PortChecker.isFreeLocalPort(valintatulosPort)) {
       findValintatulosService match {
         case Some(path) => {
+          println("Starting valinta-tulos-service from " + path)
           val cwd = new java.io.File(path)
           val javaHome = System.getProperty("JAVA8_HOME", "")
           Process(List("./sbt", "test:compile"), cwd, "JAVA_HOME" -> javaHome).!
@@ -136,13 +140,16 @@ object ValintatulosServiceRunner {
           for (i <- 0 to 60 if PortChecker.isFreeLocalPort(valintatulosPort)) {
             Thread.sleep(1000)
           }
-          Some(process)
+          currentRunner = Some(process)
         }
         case _ =>
-          None
+          println("******* valinta-tulos-service not found ********")
       }
-    } else
-      None
+    }
+  }
+
+  def stop = this.synchronized {
+    currentRunner.foreach(_.destroy)
   }
 
   private def findValintatulosService = {
