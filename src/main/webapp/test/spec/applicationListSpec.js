@@ -364,7 +364,7 @@
         })
 
         describe("ehdollinen vastaanotto", function() {
-          before(page.applyValintatulosFixtureAndOpen("hyvaksytty_ehdollisesti"))
+          before(page.applyValintatulosFixtureAndOpen("vastaanotettavissa-ehdollisesti"))
           it("vastausaika näkyy", function() {
             expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).info()).to.deep.equal([
                   "Vastaa sitovasti viimeistään 11. kesäkuuta 2014 klo 07.52"
@@ -383,22 +383,22 @@
             before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send)
 
             it("vastaanottotieto näkyy", function() {
-              expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus()).to.match(/^Olet ottanut opiskelupaikan vastaan \d+\. \w+ 20\d\d\ klo \d+\.\d\d: Salon lukio - Lukio./)
+              expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus()).to.match(/^Olet ottanut opiskelupaikan vastaan \d+\. \w+ 20\d\d\ klo \d+\.\d\d: Kallion lukio - Lukio./)
             })
           })
 
           describe("paikan vastaanottaminen ehdollisesti", function() {
-            before(page.applyValintatulosFixtureAndOpen("hyvaksytty_ehdollisesti"))
+            before(page.applyValintatulosFixtureAndOpen("vastaanotettavissa-ehdollisesti"))
             before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("EHDOLLISESTI_VASTAANOTTANUT"))
             before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send)
 
             it("vastaanottotieto näkyy", function() {
-              hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.match(/^Hakuaika on päättynyt. Haun tulokset julkaistaan viimeistään 11. kesäkuuta 2014. Olet ottanut ehdollisesti vastaan opiskelupaikan \d+\. \w+ 20\d\d\ klo \d+\.\d\d: Salon lukio - Lukio./)
+              hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.match(/^Hakuaika on päättynyt. Haun tulokset julkaistaan viimeistään 11. kesäkuuta 2014. Olet ottanut ehdollisesti vastaan opiskelupaikan \d+\. \w+ 20\d\d\ klo \d+\.\d\d: Kallion lukio - Lukio./)
             })
           })
 
           describe("paikan hylkääminen", function() {
-            before(page.applyValintatulosFixtureAndOpen("hyvaksytty_ehdollisesti"))
+            before(page.applyValintatulosFixtureAndOpen("vastaanotettavissa-ehdollisesti"))
             before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("PERUNUT"))
             before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send)
 
