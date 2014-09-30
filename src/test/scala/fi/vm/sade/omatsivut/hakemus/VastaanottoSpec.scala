@@ -2,10 +2,9 @@ package fi.vm.sade.omatsivut.hakemus
 
 import fi.vm.sade.omatsivut.PersonOid
 import fi.vm.sade.omatsivut.config.AppConfig
-import fi.vm.sade.omatsivut.fixtures.ValintatulosFixtureImporter
 import fi.vm.sade.omatsivut.hakemus.domain.{Hakemus, HakuPaattynyt}
 import fi.vm.sade.omatsivut.servlet.ClientSideVastaanotto
-import fi.vm.sade.omatsivut.valintatulokset.MockValintatulosService
+import fi.vm.sade.omatsivut.valintatulokset.RemoteValintatulosService
 import org.json4s.jackson._
 
 class VastaanottoSpec extends HakemusApiSpecification with FixturePerson {
@@ -15,7 +14,7 @@ class VastaanottoSpec extends HakemusApiSpecification with FixturePerson {
 
   "POST /applications/vastaanota/:hakuOid/:hakemusOid" should {
     "vastaanottaa paikan" in {
-      new ValintatulosFixtureImporter(componentRegistry.valintatulosService.asInstanceOf[MockValintatulosService]).applyFixtures("hyvaksytty")
+      new RemoteValintatulosService(appConfig.settings.valintaTulosServiceUrl).applyFixture("hyvaksytty-ilmoitettu")
 
       authPost("/applications/vastaanota/1.2.246.562.5.2013080813081926341928/1.2.246.562.11.00000441369", Serialization.write(ClientSideVastaanotto("1.2.246.562.5.72607738902", "VASTAANOTTANUT"))) {
         status must_== 200
@@ -23,7 +22,7 @@ class VastaanottoSpec extends HakemusApiSpecification with FixturePerson {
     }
 
     "hylkää pyynnön väärältä henkilöltä" in {
-      new ValintatulosFixtureImporter(componentRegistry.valintatulosService.asInstanceOf[MockValintatulosService]).applyFixtures("hyvaksytty")
+      new RemoteValintatulosService(appConfig.settings.valintaTulosServiceUrl).applyFixture("hyvaksytty-ilmoitettu")
 
       authPost("/applications/vastaanota/1.2.246.562.5.2013080813081926341928/1.2.246.562.11.00000441369", Serialization.write(ClientSideVastaanotto("1.2.246.562.5.72607738902", "VASTAANOTTANUT"))) {
         status must_== 404

@@ -2,7 +2,7 @@ package fi.vm.sade.omatsivut.config
 
 import java.io.File
 
-import com.typesafe.config.{Config, ConfigException, ConfigFactory}
+import com.typesafe.config.{ConfigValueFactory, Config, ConfigException, ConfigFactory}
 import fi.vm.sade.omatsivut.util.Logging
 
 import scala.collection.JavaConversions._
@@ -21,6 +21,10 @@ object ApplicationSettings extends Logging {
   }
 }
 case class ApplicationSettings(config: Config) {
+  def withOverride(keyValuePair : (String, String)) = {
+    ApplicationSettings(config.withValue(keyValuePair._1, ConfigValueFactory.fromAnyRef(keyValuePair._2)))
+  }
+
   val casTicketUrl = config.getString("omatsivut.cas.ticket.url")
 
   val raamitUrl = config.getString("omatsivut.oppija-raamit.url")

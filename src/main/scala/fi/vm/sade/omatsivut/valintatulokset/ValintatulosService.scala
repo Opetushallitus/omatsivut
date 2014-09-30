@@ -38,49 +38,20 @@ class NoOpValintatulosService extends ValintatulosService {
   override def vastaanota(hakemusOid: String, hakuOid: String, vastaanotto: Vastaanotto) = true
 }
 
-class MockValintatulosService() extends ValintatulosService with JsonFormats {
-  private var valintatulokset: List[Valintatulos] = Nil
-
-  def useFixture(fixture: List[Valintatulos]) = {
-    valintatulokset = fixture
-  }
-
-  override def getValintatulos(hakemusOid: String, hakuOid: String) = {
-    valintatulokset.find(_.hakemusOid == hakemusOid)
-  }
-
-
-  private def processHakutoive(hakutoive: HakutoiveenValintatulos, vastaanotto: Vastaanotto, vastaanottotila: String, setOthersToCancelled: Boolean) = {
-    val isMatch = hakutoive.hakukohdeOid == vastaanotto.hakukohdeOid
-    val determinedVastaanottoTila = if (isMatch) vastaanottotila else "KESKEN"
-    val valintaTila = if(setOthersToCancelled && !isMatch) "PERUUNTUNUT" else hakutoive.valintatila
-    hakutoive.copy(vastaanottotila = Some(determinedVastaanottoTila), vastaanotettavuustila = "EI_VASTAANOTETTAVISSA", valintatila = valintaTila, viimeisinVastaanottotilanMuutos = Some(new Date()))
-  }
-
-
-  override def vastaanota(hakemusOid: String, hakuOid: String, vastaanotto: Vastaanotto) = {
-    valintatulokset = valintatulokset.map { valintatulos =>
-      if (valintatulos.hakemusOid == hakemusOid) {
-        valintatulos.copy(hakutoiveet = valintatulos.hakutoiveet.map { hakutoive =>
-          vastaanotto.tila match {
-            case "VASTAANOTTANUT" => processHakutoive(hakutoive, vastaanotto, "VASTAANOTTANUT", setOthersToCancelled = true)
-            case "PERUNUT" => {
-              val processed = processHakutoive(hakutoive, vastaanotto, "PERUNUT", setOthersToCancelled = true)
-              processed.copy(valintatila = if (hakutoive.hakukohdeOid == vastaanotto.hakukohdeOid) "PERUNUT" else processed.valintatila)
-            }
-            case "EHDOLLISESTI_VASTAANOTTANUT" => processHakutoive(hakutoive, vastaanotto, "EHDOLLISESTI_VASTAANOTTANUT", setOthersToCancelled = false)
-          }
-        })
-      } else {
-        valintatulos
-      }
-    }
-    true
-  }
-}
 
 class RemoteValintatulosService(valintatulosServiceUrl: String) extends ValintatulosService with JsonFormats with Logging {
   import org.json4s.jackson.JsonMethods._
+
+  def applyFixture(fixture: String) {
+    val url = valintatulosServiceUrl + "/util/fixtures/apply?fixturename="+fixture
+    DefaultHttpClient.httpPut(url).responseWithHeaders match {
+      case (200, _, resultString) =>
+        logger.info("Using valinta-tulos-service fixture: " + fixture)
+      case (errorCode, _, resultString) =>
+        logger.error("Response code " + errorCode + " applying fixtures at " + url)
+    }
+  }
+
 
   override def getValintatulos(hakemusOid: String, hakuOid: String) = {
     val url = valintatulosServiceUrl + "/haku/"+hakuOid+"/hakemus/"+hakemusOid

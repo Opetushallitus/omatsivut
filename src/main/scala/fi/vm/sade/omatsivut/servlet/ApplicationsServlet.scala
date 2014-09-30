@@ -123,6 +123,8 @@ trait ApplicationsServletContainer {
         val vastaanotto = Vastaanotto(clientVastaanotto.hakukohdeOid, clientVastaanotto.tila, muokkaaja, selite)
         if(valintatulosService.vastaanota(hakemusOid, hakuOid, vastaanotto)) {
           auditLogger.log(SaveVastaanotto(personOid(), hakemusOid, vastaanotto))
+        } else {
+          response.setStatus(500)
         }
         hakemusRepository.getHakemus(personOid(), hakemusOid)
       }

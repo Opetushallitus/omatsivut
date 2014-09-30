@@ -77,6 +77,9 @@ object AppConfig extends Logging {
       mongo = None
     }
 
+    override lazy val settings = ConfigTemplateProcessor.createSettings(templateAttributesFile).withOverride(
+      "omatsivut.valinta-tulos-service.url", "http://localhost:8097/valinta-tulos-service")
+
     override def properties = super.properties +
       ("mongo.db.name" -> "hakulomake") +
       ("mongodb.oppija.uri" -> "mongodb://localhost:28018")

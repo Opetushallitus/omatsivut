@@ -2,10 +2,10 @@ package fi.vm.sade.omatsivut.servlet.testing
 
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.config.SpringContextComponent
-import fi.vm.sade.omatsivut.fixtures.{FixtureImporter, ValintatulosFixtureImporter}
+import fi.vm.sade.omatsivut.fixtures.FixtureImporter
 import fi.vm.sade.omatsivut.security.{AuthenticationCipher, ShibbolethCookie}
 import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
-import fi.vm.sade.omatsivut.valintatulokset.{MockValintatulosService, ValintatulosServiceComponent}
+import fi.vm.sade.omatsivut.valintatulokset.ValintatulosServiceComponent
 import org.scalatra.{Cookie, CookieOptions}
 
 trait TestHelperServletContainer {
@@ -29,13 +29,6 @@ trait TestHelperServletContainer {
       put("/fixtures/apply") {
         val fixtureName: String = params("fixturename")
         new FixtureImporter(springContext.applicationDAO, springContext.mongoTemplate).applyFixtures(fixtureName)
-      }
-    }
-
-    if(valintatulosService.isInstanceOf[MockValintatulosService]) {
-      put("/fixtures/valintatulos") {
-        val fixtureName: String = params("fixturename")
-        new ValintatulosFixtureImporter(valintatulosService.asInstanceOf[MockValintatulosService]).applyFixtures(fixtureName)
       }
     }
 

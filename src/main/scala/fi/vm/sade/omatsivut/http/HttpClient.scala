@@ -19,6 +19,10 @@ object DefaultHttpClient extends HttpClient {
     }))
   }
 
+  def httpPut(url: String) : HttpRequest = {
+    new DefaultHttpRequest(Http(url).method("put"))
+  }
+
   private def changeOptions(request: Http.Request): Http.Request = {
     request
       .options(HttpOptions.connTimeout(10000))
