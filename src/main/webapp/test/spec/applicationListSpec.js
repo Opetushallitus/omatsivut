@@ -231,7 +231,17 @@
         })
 
         describe("hakija on ottanut paikan vastaan ehdollisesti, mutta valinta on kesken", function() {
-          it.skip("tieto näytetään oikein", function() {})
+          before(page.applyValintatulosFixtureAndOpen("hyvaksynyt_ehdollisesti"))
+          it("tieto näytetään oikein", function() {
+            hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.match(/^Hakuaika on päättynyt. Haun tulokset julkaistaan viimeistään 11. kesäkuuta 2014. Opiskelijavalinta on kesken/)
+          })
+        })
+
+        describe("hakija ei ole ottanut paikkaa vastaan ehdollisesti, mutta valinta on kesken", function() {
+          before(page.applyValintatulosFixtureAndOpen("perunut_ehdollisen_vastaanoton"))
+          it("tieto näytetään oikein", function() {
+            hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.match(/^Hakuaika on päättynyt. Haun tulokset julkaistaan viimeistään 11. kesäkuuta 2014. Opiskelijavalinta on kesken/)
+          })
         })
       })
 
