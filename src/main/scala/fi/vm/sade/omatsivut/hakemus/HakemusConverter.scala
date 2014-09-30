@@ -8,9 +8,10 @@ import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
 import fi.vm.sade.omatsivut.hakemus.domain._
 import fi.vm.sade.omatsivut.haku.domain.Haku
 import fi.vm.sade.omatsivut.valintatulokset.ValintatulosServiceComponent
-
 import scala.collection.JavaConversions._
 import scala.util.Try
+import fi.vm.sade.omatsivut.valintatulokset.Vastaanottoaikataulu
+import org.joda.time.LocalDateTime
 
 trait HakemusConverterComponent {
   this: ValintatulosServiceComponent =>
@@ -127,6 +128,7 @@ trait HakemusConverterComponent {
             HakutoiveenValintatulosTila.withName(hakutoiveenTulos.valintatila),
             convertToResultsState(hakutoiveenTulos),
             VastaanotettavuusTila.withName(hakutoiveenTulos.vastaanotettavuustila),
+            convertToVastaanotettavuusAsti(valintaTulos.aikataulu, hakutoiveenTulos),
             hakutoiveenTulos.viimeisinVastaanottotilanMuutos .map(_.getTime),
             hakutoiveenTulos.ilmoittautumistila,
             hakutoiveenTulos.jonosija,
@@ -134,6 +136,19 @@ trait HakemusConverterComponent {
             hakutoiveenTulos.varasijanumero
           )
         })
+      }
+    }
+
+    private def convertToVastaanotettavuusAsti(aikataulu: Option[Vastaanottoaikataulu], hakutoiveenTulos: fi.vm.sade.omatsivut.valintatulokset.HakutoiveenValintatulos): Option[Long] = {
+      aikataulu match {
+        case None => None
+        case Some(aikataulu) => {
+          val bufferDeadline = hakutoiveenTulos.viimeisinVastaanottotilanMuutos.map(new LocalDateTime(_).plusDays(aikataulu.vastaanottoBufferDays.getOrElse(0)).toDate())
+          (aikataulu.vastaanottoEnd , bufferDeadline) match {
+            case (Some(end), Some(buffer)) => Some((if(buffer.after(end)) buffer else end).getTime())
+            case (end, _) => end.map(_.getTime())
+          }
+        }
       }
     }
 

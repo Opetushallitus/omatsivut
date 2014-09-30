@@ -53,11 +53,7 @@ trait OhjausparametritComponent {
         start <- (obj \ "dateStart").extractOpt[Long]
         end <- (obj \ "dateEnd").extractOpt[Long]
       } yield Julkistus(start, end)
-      val vastaanottoEnd = for {
-        obj <- (json \ "PH_OPVP").toOption
-        end <- (obj \ "date").extractOpt[Long]
-      } yield end
-      Some(Tulosaikataulu(julkistus, vastaanottoEnd))
+      Some(Tulosaikataulu(julkistus))
     }
   }
 }

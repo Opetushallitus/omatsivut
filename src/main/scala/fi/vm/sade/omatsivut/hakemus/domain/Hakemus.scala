@@ -71,6 +71,7 @@ case class HakutoiveenValintatulos(
                                     tila: HakutoiveenValintatulosTila,
                                     vastaanottotila: ResultState,
                                     vastaanotettavuustila: VastaanotettavuusTila,
+                                    vastaanotettavissaAsti: Option[Long],
                                     viimeisinVastaanottotilanMuutos: Option[Long],
                                     ilmoittautumistila: Option[String],
                                     jonosija: Option[Int],

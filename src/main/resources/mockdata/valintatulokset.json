@@ -3,6 +3,9 @@
   "hyvaksytty": [
     {
       "hakemusOid": "1.2.246.562.11.00000441369",
+      "aikataulu": {
+        "vastaanottoEnd": "2014-06-11T07:52:00Z"
+      },
       "hakutoiveet": [
         {
           "hakukohdeOid": "1.2.246.562.5.72607738902",
@@ -11,6 +14,39 @@
           "vastaanottotila": "KESKEN",
           "ilmoittautumistila": null,
           "vastaanotettavuustila": "VASTAANOTETTAVISSA_SITOVASTI",
+          "jonosija": 1,
+          "varasijanumero": null
+        },
+        {
+          "hakukohdeOid": "1.2.246.562.5.16303028779",
+          "tarjoajaOid": "1.2.246.562.10.455978782510",
+          "valintatila": "PERUUTETTU",
+          "vastaanottotila": "KESKEN",
+          "ilmoittautumistila": null,
+          "vastaanotettavuustila": "EI_VASTAANOTETTAVISSA",
+          "jonosija": 1,
+          "varasijanumero": null
+        }
+      ]
+    }
+  ],
+
+  "hyvaksytty_ilmoitettu_myohaan": [
+    {
+      "hakemusOid": "1.2.246.562.11.00000441369",
+      "aikataulu": {
+        "vastaanottoEnd": "2014-06-11T07:52:00Z",
+        "vastaanottoBufferDays": 36000
+      },
+      "hakutoiveet": [
+        {
+          "hakukohdeOid": "1.2.246.562.5.72607738902",
+          "tarjoajaOid": "1.2.246.562.10.591352080610",
+          "valintatila": "HYVAKSYTTY",
+          "vastaanottotila": "KESKEN",
+          "ilmoittautumistila": null,
+          "vastaanotettavuustila": "VASTAANOTETTAVISSA_SITOVASTI",
+          "viimeisinVastaanottotilanMuutos": "2014-06-10T17:52:00Z",
           "jonosija": 1,
           "varasijanumero": null
         },
@@ -59,6 +95,9 @@
   "hyvaksytty_ehdollisesti": [
     {
       "hakemusOid": "1.2.246.562.11.00000441369",
+      "aikataulu": {
+        "vastaanottoEnd": "2014-06-11T07:52:00Z"
+      },
       "hakutoiveet": [
         {
           "hakukohdeOid": "1.2.246.562.5.72607738902",
@@ -79,6 +118,74 @@
           "vastaanottotila": "KESKEN",
           "ilmoittautumistila": null,
           "vastaanotettavuustila": "VASTAANOTETTAVISSA_EHDOLLISESTI",
+          "jonosija": 1,
+          "varasijanumero": null
+        }
+      ]
+    }
+  ],
+
+  "hyvaksynyt_ehdollisesti": [
+    {
+      "hakemusOid": "1.2.246.562.11.00000441369",
+      "aikataulu": {
+        "vastaanottoEnd": "2014-06-11T07:52:00Z"
+      },
+      "hakutoiveet": [
+        {
+          "hakukohdeOid": "1.2.246.562.5.72607738902",
+          "tarjoajaOid": "1.2.246.562.10.591352080610",
+          "valintatila": "VARALLA",
+          "vastaanottotila": "KESKEN",
+          "ilmoittautumistila": null,
+          "vastaanotettavuustila": "EI_VASTAANOTETTAVISSA",
+          "jonosija": 1,
+          "varasijanumero": 2,
+          "varasijojaKaytetaanAlkaen":"2014-08-26T19:05:23Z",
+          "varasijojaTaytetaanAsti":"2014-08-26T19:05:23Z"
+        },
+        {
+          "hakukohdeOid": "1.2.246.562.5.16303028779",
+          "tarjoajaOid": "1.2.246.562.10.455978782510",
+          "valintatila": "HYVAKSYTTY",
+          "vastaanottotila": "EHDOLLISESTI_VASTAANOTTANUT",
+          "ilmoittautumistila": null,
+          "vastaanotettavuustila": "EI_VASTAANOTETTAVISSA",
+          "viimeisinVastaanottotilanMuutos": "2014-08-26T19:05:23Z",
+          "jonosija": 1,
+          "varasijanumero": null
+        }
+      ]
+    }
+  ],
+
+  "perunut_ehdollisen_vastaanoton": [
+    {
+      "hakemusOid": "1.2.246.562.11.00000441369",
+      "aikataulu": {
+        "vastaanottoEnd": "2014-06-11T07:52:00Z"
+      },
+      "hakutoiveet": [
+        {
+          "hakukohdeOid": "1.2.246.562.5.72607738902",
+          "tarjoajaOid": "1.2.246.562.10.591352080610",
+          "valintatila": "VARALLA",
+          "vastaanottotila": "KESKEN",
+          "ilmoittautumistila": null,
+          "vastaanotettavuustila": "EI_VASTAANOTETTAVISSA",
+          "jonosija": 1,
+          "varasijanumero": 2,
+          "varasijojaKaytetaanAlkaen":"2014-08-26T19:05:23Z",
+          "varasijojaTaytetaanAsti":"2014-08-26T19:05:23Z"
+        },
+        {
+          "hakukohdeOid": "1.2.246.562.5.16303028779",
+          "tarjoajaOid": "1.2.246.562.10.455978782510",
+          "valintatila": "PERUNUT",
+          "vastaanottotila": "PERUNUT",
+          "ilmoittautumistila": null,
+          "vastaanotettavuustila": "EI_VASTAANOTETTAVISSA",
+          "viimeisinVastaanottotilanMuutos": "2014-08-26T19:05:23Z",
           "jonosija": 1,
           "varasijanumero": null
         }
