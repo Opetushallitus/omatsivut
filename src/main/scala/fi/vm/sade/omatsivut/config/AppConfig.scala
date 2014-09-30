@@ -35,8 +35,9 @@ object AppConfig extends Logging {
 
   class Dev extends AppConfig with ExampleTemplatedProps with MockAuthentication {
     def springConfiguration = new OmatSivutSpringContext.Dev()
-    override def properties = super.properties +
-      ("mongodb.oppija.uri" -> "mongodb://localhost:27017")
+
+    override lazy val settings = ConfigTemplateProcessor.createSettings(templateAttributesFile)
+      .withOverride("mongodb.oppija.uri", "mongodb://localhost:27017")
   }
 
   class DevWithAuditLog extends AppConfig with ExampleTemplatedProps with MockAuthentication  {
@@ -56,10 +57,10 @@ object AppConfig extends Logging {
       activemqOpt = None
     }
 
-    override def properties = super.properties +
-      ("mongodb.oppija.uri" -> "mongodb://localhost:27017") +
-      ("log.mongo.uri" -> "${mongodb.oppija.uri}") +
-      ("activemq.brokerurl" -> "vm://transport")
+    override lazy val settings = ConfigTemplateProcessor.createSettings(templateAttributesFile)
+      .withOverride("mongodb.oppija.uri", "mongodb://localhost:27017")
+      .withOverride("log.mongo.uri", "mongodb://localhost:27017")
+      .withOverride("activemq.brokerurl", "vm://transport")
   }
 
   class IT extends ExampleTemplatedProps with MockAuthentication with StubbedExternalDeps {
@@ -77,12 +78,10 @@ object AppConfig extends Logging {
       mongo = None
     }
 
-    override lazy val settings = ConfigTemplateProcessor.createSettings(templateAttributesFile).withOverride(
-      "omatsivut.valinta-tulos-service.url", "http://localhost:8097/valinta-tulos-service")
-
-    override def properties = super.properties +
-      ("mongo.db.name" -> "hakulomake") +
-      ("mongodb.oppija.uri" -> "mongodb://localhost:28018")
+    override lazy val settings = ConfigTemplateProcessor.createSettings(templateAttributesFile)
+      .withOverride("omatsivut.valinta-tulos-service.url", "http://localhost:8097/valinta-tulos-service")
+      .withOverride("mongo.db.name", "hakulomake")
+      .withOverride("mongodb.oppija.uri", "mongodb://localhost:28018")
   }
 
   class ITWithValintaTulosService extends IT {
