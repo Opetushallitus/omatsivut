@@ -76,7 +76,11 @@ case class HakutoiveenValintatulos(
                                     ilmoittautumistila: Option[String],
                                     jonosija: Option[Int],
                                     varasijojaTaytetaanAsti: Option[Long],
-                                    varasijanumero: Option[Int])
+                                    varasijanumero: Option[Int]) {
+  def isPeruuntunut = {
+    vastaanottotila == ResultState.PERUNUT || vastaanottotila == ResultState.PERUUTETTU || vastaanottotila == ResultState.PERUUNTUNUT
+  }
+}
 
 case class Koulutus(oid: String, name: String)
 case class Opetuspiste(oid: String, name: String)

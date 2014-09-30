@@ -66,7 +66,7 @@ trait HakemusConverterComponent {
         tulos.hakutoiveet.find(isVastaanotettavissa(_)) match {
           case Some(vastaanotettavissa) => None
           case None => {
-            tulos.hakutoiveet.find(hasVastaanottotieto(_)) match {
+            vastaanottotieto(tulos.hakutoiveet) match {
               case Some(vastaanotettu) => Some(ResultStatus(vastaanotettu.vastaanottotila, vastaanotettu.viimeisinVastaanottotilanMuutos, Some(vastaanotettu.opetuspiste.name + " - " + vastaanotettu.koulutus.name)))
               case None => {
                 if(tulos.hakutoiveet.exists(isKesken(_)) || tulos.hakutoiveet.exists(isHyvaksytty(_))) {
@@ -92,8 +92,19 @@ trait HakemusConverterComponent {
       hakutoiveenValintatulos.tila == HakutoiveenValintatulosTila.HARKINNANVARAISESTI_HYVAKSYTTY
     }
 
-    private def hasVastaanottotieto(hakutoiveenValintatulos: HakutoiveenValintatulos) = {
-      hakutoiveenValintatulos.vastaanottotila != ResultState.KESKEN
+    private def vastaanottotieto(valintatulokset: List[HakutoiveenValintatulos]) = {
+      val valmisIndex = valintatulokset.indexWhere(_.vastaanottotila != ResultState.KESKEN)
+      if (valmisIndex >= 0) {
+        if (valintatulokset(valmisIndex).isPeruuntunut) {
+          valintatulokset.slice(0, valmisIndex).find(_.tila == HakutoiveenValintatulosTila.VARALLA) match {
+            case Some(kesken) => None // jos jokin yläpuolella on varalla
+            case _ => Some(valintatulokset(valmisIndex))
+          }
+        } else
+          Some(valintatulokset(valmisIndex))
+      } else {
+        None
+      }
     }
 
     private def isVastaanotettavissa(hakutoiveenValintatulos: HakutoiveenValintatulos) = {
