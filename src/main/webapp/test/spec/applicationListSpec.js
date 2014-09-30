@@ -403,7 +403,7 @@
             before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send)
 
             it("perumistieto näkyy", function() {
-              hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.match(/^Olet perunut hakemuksen \d+\. \w+ 20\d\d\ klo \d+\.\d\d\./)
+              hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal("Hakuaika on päättynyt. Haun tulokset julkaistaan viimeistään 11. kesäkuuta 2014. Opiskelijavalinta on kesken")
             })
           })
         })
