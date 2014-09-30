@@ -12,7 +12,9 @@ trait ValintatulosService {
   def vastaanota(hakemusOid: String, hakuOid: String, vastaanotto: Vastaanotto): Boolean
 }
 
-case class Valintatulos(hakemusOid: String, hakutoiveet: List[HakutoiveenValintatulos])
+case class Vastaanottoaikataulu(vastaanottoEnd: Option[Date], vastaanottoBufferDays: Option[Int])
+
+case class Valintatulos(hakemusOid: String, aikataulu: Option[Vastaanottoaikataulu], hakutoiveet: List[HakutoiveenValintatulos])
 
 case class HakutoiveenValintatulos(hakukohdeOid: String,
                                    tarjoajaOid: String,

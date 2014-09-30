@@ -294,6 +294,63 @@
           })
         })
 
+        describe("vastaanotto varsinaisen vastaanootttoajan jälkeen", function() {
+          before(page.applyValintatulosFixtureAndOpen("hyvaksytty_ilmoitettu_myohaan"))
+
+          it("vastausaika näkyy", function() {
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).info()).to.deep.equal([
+                  "Vastaa sitovasti viimeistään 2. tammikuuta 2113 klo 17.52"
+            ])
+          })
+
+          describe("paikan vastaanottaminen", function() {
+            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VASTAANOTTANUT"))
+            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send)
+
+            it("vastaanottotieto näkyy", function() {
+              hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.match(/^Olet ottanut opiskelupaikan vastaan \d+\. \w+ 20\d\d\ klo \d+\.\d\d: Kallion lukio - Lukion ilmaisutaitolinja./)
+            })
+          })
+        })
+
+        describe("vastaanotto varsinaisen vastaanoottoajan jälkeen", function() {
+          before(page.applyValintatulosFixtureAndOpen("hyvaksytty_ilmoitettu_myohaan"))
+
+          it("vastausaika näkyy", function() {
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).info()).to.deep.equal([
+                  "Vastaa sitovasti viimeistään 2. tammikuuta 2113 klo 17.52"
+            ])
+          })
+
+          describe("paikan vastaanottaminen", function() {
+            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VASTAANOTTANUT"))
+            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send)
+
+            it("vastaanottotieto näkyy", function() {
+              hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.match(/^Olet ottanut opiskelupaikan vastaan \d+\. \w+ 20\d\d\ klo \d+\.\d\d: Kallion lukio - Lukion ilmaisutaitolinja./)
+            })
+          })
+        })
+
+        describe("vastaanotto vastaanoottoajan jälkeen", function() {
+          before(page.applyValintatulosFixtureAndOpen("hyvaksytty_ilmoitettu_myohaan"))
+
+          it("vastausaika näkyy", function() {
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).info()).to.deep.equal([
+                  "Vastaa sitovasti viimeistään 2. tammikuuta 2113 klo 17.52"
+            ])
+          })
+
+          describe("paikan vastaanottaminen", function() {
+            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VASTAANOTTANUT"))
+            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send)
+
+            it("vastaanottotieto näkyy", function() {
+              hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.match(/^Olet ottanut opiskelupaikan vastaan \d+\. \w+ 20\d\d\ klo \d+\.\d\d: Kallion lukio - Lukion ilmaisutaitolinja./)
+            })
+          })
+        })
+
         describe("ehdollinen vastaanotto", function() {
           before(page.applyValintatulosFixtureAndOpen("hyvaksytty_ehdollisesti"))
           it("vastausaika näkyy", function() {

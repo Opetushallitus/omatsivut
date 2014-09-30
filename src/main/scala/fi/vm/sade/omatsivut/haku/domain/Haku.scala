@@ -4,7 +4,7 @@ import org.joda.time.Interval
 
 case class Haku(oid: String, name: String, applicationPeriods: List[HakuAika], korkeakouluhaku: Boolean, results: Option[Tulosaikataulu] = None)
 case class HakuAika(start: Long, end: Long, active: Boolean)
-case class Tulosaikataulu(julkistus: Option[Julkistus], vastaanottoEnd: Option[Long])
+case class Tulosaikataulu(julkistus: Option[Julkistus])
 case class Julkistus(start: Long, end: Long)
 
 object HakuAika {
