@@ -233,14 +233,14 @@
         describe("hakija on ottanut paikan vastaan ehdollisesti, mutta valinta on kesken", function() {
           before(page.applyValintatulosFixtureAndOpen("hyvaksynyt_ehdollisesti"))
           it("tieto näytetään oikein", function() {
-            hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.match(/^Hakuaika on päättynyt. Haun tulokset julkaistaan viimeistään 11. kesäkuuta 2014. Opiskelijavalinta on kesken/)
+            hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.match(/^Hakuaika on päättynyt. Haun tulokset julkaistaan viimeistään 11. kesäkuuta 2014. Olet ottanut ehdollisesti vastaan opiskelupaikan \d+\. \w+ 20\d\d\ klo \d+\.\d\d: Salon lukio - Lukio./)
           })
         })
 
         describe("hakija ei ole ottanut paikkaa vastaan ehdollisesti, mutta valinta on kesken", function() {
           before(page.applyValintatulosFixtureAndOpen("perunut_ehdollisen_vastaanoton"))
           it("tieto näytetään oikein", function() {
-            hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.match(/^Hakuaika on päättynyt. Haun tulokset julkaistaan viimeistään 11. kesäkuuta 2014. Opiskelijavalinta on kesken/)
+            hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.match(/^Hakuaika on päättynyt. Haun tulokset julkaistaan viimeistään 11. kesäkuuta 2014. Olet perunut hakemuksen \d+\. \w+ 20\d\d\ klo \d+\.\d\d./)
           })
         })
       })
