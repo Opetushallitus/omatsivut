@@ -2,29 +2,12 @@
 
 Oppijan henkilökohtainen palvelu
 
-## Asetukset
+## Teknologiat
 
-Sovellus tukee eri profiileita. Profiili määritellään `omatsivut.profile` system propertyllä, esim `-Domatsivut.profile=it`.
-Profiili määrittää lähinnä, mistä propertyt haetaan, mutta sen avulla myös voidaan mockata palveluita. Ks `AppConfig.scala`.
-
-### dev-profiili
-
-Näillä asetuksilla käytetään paikallista mongo-kantaa ja mockattuja ulkoisia järjestelmiä. kehityskäyttöön soveltuvat arvot ovat `dev.conf` tiedostossa versionhallinnassa.
-
-### it-profiili
-
-It-profiililla käytetään embedded mongo-kantaa, joka käynnistetään serverin käynnistyksen yhteydessä porttiin 28018.
-
-### default-profiili
-
-Oletusasetuksilla käytetään ulkoista konfiguraatiotiedostoa `omatsivut.properties`. `omatsivut.properties` tiedoston etsintäjärjestys:
-`omatsivut.configFile` system property  - kehityksessä IDE:stä käytettävä tapa, jos haluaa ajaa eri asetuksilla serveriä
-`~/oph-configuration/omatsivut.properties` - sovelluspalvelimilla  käytettävä tapa
-
-### templated-profiili
-
-Templated profiililla voi käyttää konfiguraatiota, jossa template-konfiguraatioon asettaan arvot ulkoisesta konfiguraatiosta. Käytä system propertyä `-Domatsivut.profile=templated`
-ja aseta muuttujat sisältävän tiedoston sijainti system propertyssä, esim. `-Domatsivut.vars={HAKEMISTO}/oph_vars.yml` - mallia vars-tiedostoon voi ottaa tiedostosta `src/main/resources/oph-configuration/dev-vars.yml`
+- Scala 2.11.1
+- Java 7 (ei tällä hetkellä toimi Java8:lla)
+- Angular.js
+- SBT
 
 ## SBT-buildi
 
@@ -93,6 +76,31 @@ npm install
 ### Testien ajaminen selaimessa
 
 Tomcat käyntiin (ks yllä) ja sitten [http://localhost:8080/omatsivut/test/runner.html](http://localhost:8080/omatsivut/test/runner.html)
+
+## Asetukset
+
+Sovellus tukee eri profiileita. Profiili määritellään `omatsivut.profile` system propertyllä, esim `-Domatsivut.profile=it`.
+Profiili määrittää lähinnä, mistä propertyt haetaan, mutta sen avulla myös voidaan mockata palveluita. Ks `AppConfig.scala`.
+
+### dev-profiili
+
+Näillä asetuksilla käytetään paikallista mongo-kantaa ja mockattuja ulkoisia järjestelmiä. kehityskäyttöön soveltuvat arvot ovat `dev.conf` tiedostossa versionhallinnassa.
+
+### it-profiili
+
+It-profiililla käytetään embedded mongo-kantaa, joka käynnistetään serverin käynnistyksen yhteydessä porttiin 28018.
+
+### default-profiili
+
+Oletusasetuksilla käytetään ulkoista konfiguraatiotiedostoa `omatsivut.properties`. `omatsivut.properties` tiedoston etsintäjärjestys:
+`omatsivut.configFile` system property  - kehityksessä IDE:stä käytettävä tapa, jos haluaa ajaa eri asetuksilla serveriä
+`~/oph-configuration/omatsivut.properties` - sovelluspalvelimilla  käytettävä tapa
+
+### templated-profiili
+
+Templated profiililla voi käyttää konfiguraatiota, jossa template-konfiguraatioon asettaan arvot ulkoisesta konfiguraatiosta. Käytä system propertyä `-Domatsivut.profile=templated`
+ja aseta muuttujat sisältävän tiedoston sijainti system propertyssä, esim. `-Domatsivut.vars={HAKEMISTO}/oph_vars.yml` - mallia vars-tiedostoon voi ottaa tiedostosta `src/main/resources/oph-configuration/dev-vars.yml`
+
 
 ## Paikallinen mongo
 

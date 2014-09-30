@@ -49,9 +49,9 @@ object ApplicationUpdater {
   private def updateSingleAnswer(answers: Answers, question: QuestionId, answer: String) = {
     answers.map { case (phase, phaseAnswers) =>
       if (phase == question.phaseId)
-        (phase, phaseAnswers)
-      else
         (phase, phaseAnswers + (question.questionId -> answer))
+      else
+        (phase, phaseAnswers)
     }
   }
 
