@@ -4,10 +4,9 @@ Oppijan henkilökohtainen palvelu
 
 ## Teknologiat
 
-- Scala 2.11.1
-- Java 7 (ei tällä hetkellä toimi Java8:lla)
-- Angular.js
-- SBT
+- Serverillä Scala 2.11.1, JRE7 (ei tällä hetkellä toimi Java8:lla), SBT
+- Frontissa Angular.js, gulp.js, npm
+- Testeissä Specs2, mocha, phantomjs. Kaikille toiminnoille automaattiset testit.
 
 ## SBT-buildi
 
