@@ -8,17 +8,52 @@ Oppijan henkilökohtainen palvelu
 - Frontissa Angular.js, gulp.js, npm
 - Testeissä Specs2, mocha, phantomjs. Kaikille toiminnoille automaattiset testit.
 
-## SBT-buildi
+## Get started
 
-### Generoi projekti
+Ennen ajamista aja nämä:
 
-Eclipseen:
+    npm install
+    node_modules/gulp/bin/gulp.js compile
+
+### Käännä ja käynnistä sovellus ##
+
+```sh
+$ ./sbt
+> ~container:start
+```
+
+Avaa selaimessa [http://localhost:8080/omatsivut/](http://localhost:8080/omatsivut/).
+
+### Generoi IDE-projekti
+
+Generoi projekti Eclipseen:
 
 `./sbt eclipse`
 
 ... tai IDEAan:
 
 `./sbt 'gen-idea no-sbt-build-module'`
+
+### Käynnistä sovellus IDEAsta/Eclipsestä
+
+Aja TomcatRunner-luokka. Jotta impersonointi/autentikoinnin ohitus onnistuu, anna parametri `-Domatsivut.profile=it`.
+
+### Offline-käyttö (skipRaamit)
+
+Kun sovellusta ajetaan `-Domatsivut.profile=it`-parametrillä, toimii se ilman verkkoyhteyttä vaikkapa junassa.
+Selaimessa sovellus kuitenkin lataa "oppija-raamit" testiympäristön serveriltä, johon sinulla ei välttämättä ole pääsyä.
+Tässä tapauksessa voit käyttää osoitetta http://localhost:8080/omatsivut/index.html#skipRaamit, jolloin raamit jätetään
+pois. Mocha-testit käyttävät samaa ratkaisua.
+
+### Valinta-tulos-service
+
+Jotta hakemuksiin liittyvät valintatulokset voitaisiin näyttää, täytyy sovelluksen saada yhteys
+[valinta-tulos-service](https://github.com/Opetushallitus/valinta-tulos-service) -palveluun. Voit käynnistää paikallisen
+instanssin noudattamalla valinta-tulos-servicen README:ssa olevia ohjeita.
+
+Myös mocha-testien onnistunut ajo edellyttää paikallisesti ajossa olevaa valinta-tulos-service -instanssia.
+
+## SBT-buildi
 
 ### Yksikkötestit
 
@@ -35,15 +70,11 @@ $ ./sbt
 > ~container:start
 ```
 
-Avaa selaimessa [http://localhost:8080/omatsivut/](http://localhost:8080/omatsivut/).
-
-### Käynnistä IDEAsta/Eclipsestä
-
-Aja TomcatRunner-luokka. Jotta impersonointi/autentikoinnin ohitus onnistuu, anna parametri `-Domatsivut.profile=dev`.
-
 ## Fronttidevaus
 
 Frontti paketoidaan gulpilla ja browserifyllä. Paketointi tapahtuu mocha-testien ajon yhteydessä (`runtests.sh`).
+
+Aja ensin `npm install`.
 
 Jatkuva fronttikäännös käyntiin näin (ei minimointia):
 
@@ -76,24 +107,38 @@ npm install
 
 Tomcat käyntiin (ks yllä) ja sitten [http://localhost:8080/omatsivut/test/runner.html](http://localhost:8080/omatsivut/test/runner.html)
 
-## Asetukset
+## Sovellusprofiilit
 
 Sovellus tukee eri profiileita. Profiili määritellään `omatsivut.profile` system propertyllä, esim `-Domatsivut.profile=it`.
 Profiili määrittää lähinnä, mistä propertyt haetaan, mutta sen avulla myös voidaan mockata palveluita. Ks `AppConfig.scala`.
 
-### dev-profiili
-
-Näillä asetuksilla käytetään paikallista mongo-kantaa ja mockattuja ulkoisia järjestelmiä. kehityskäyttöön soveltuvat arvot ovat `dev.conf` tiedostossa versionhallinnassa.
-
 ### it-profiili
 
 It-profiililla käytetään embedded mongo-kantaa, joka käynnistetään serverin käynnistyksen yhteydessä porttiin 28018.
+Tämä on kätevin profiili kehityskäyttöön, ja ainoa profiili, jolla esimerkiksi mocha-testit voidaan onnistuneesti ajaa.
+
+### dev-profiili
+
+Tällä profiililla käytetään paikallista mongo-kantaa ja mockattuja ulkoisia järjestelmiä (pois lukien valinta-tulos-service).
+
+Paikallisen mongon käynnistys:
+
+`mongod --fork --config /usr/local/etc/mongod.conf`
+
+### templated-profiili
+
+Tällä profiililla sovelluksen asetukset generoidaan tuotantoympäristöä vastaavasti `omatsivut.properties.template` -tiedostosta
+ja annetusta muuttujatiedostosta. Testi- ja tuotantoympäristöissä käytettävät muuttujatiedostot sijaitsevat erillisessä
+ "deploy" -repositoriossa.
+
+Muuttujatiedoston sijainti määritellään näin: `-Domatsivut.vars=../deploy/vars/environments/oph_vars.yml`.
+
 
 ### default-profiili
 
-Oletusasetuksilla käytetään ulkoista konfiguraatiotiedostoa `omatsivut.properties`. `omatsivut.properties` tiedoston etsintäjärjestys:
-`omatsivut.configFile` system property  - kehityksessä IDE:stä käytettävä tapa, jos haluaa ajaa eri asetuksilla serveriä
-`~/oph-configuration/omatsivut.properties` - sovelluspalvelimilla  käytettävä tapa
+Oletusasetuksilla käytetään ulkoista konfiguraatiotiedostoa `omatsivut.properties`, joka generoidaan deployn yhteydessä
+ `omatsivut.properties.template` ja ulkoisesta muuttujatiedostosta. Tätä profiilia käytetään testi- ja
+tuotantoympäristöissä.
 
 ### templated-profiili
 
@@ -101,12 +146,8 @@ Templated profiililla voi käyttää konfiguraatiota, jossa template-konfiguraat
 ja aseta muuttujat sisältävän tiedoston sijainti system propertyssä, esim. `-Domatsivut.vars={HAKEMISTO}/oph_vars.yml` - mallia vars-tiedostoon voi ottaa tiedostosta `src/main/resources/oph-configuration/dev-vars.yml`
 
 
-## Paikallinen mongo
-
-Käynnistys
-
-`mongod --fork --config /usr/local/etc/mongod.conf`
-
 ## API-dokumentaatio
+
+REST-rajapinnat dokumentoitu Swaggerilla.
 
 [http://localhost:8080/omatsivut/api-docs](http://localhost:8080/omatsivut/api-docs)
