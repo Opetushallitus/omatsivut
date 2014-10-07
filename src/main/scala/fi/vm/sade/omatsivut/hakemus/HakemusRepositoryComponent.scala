@@ -13,13 +13,14 @@ import fi.vm.sade.omatsivut.haku.domain.Haku
 import fi.vm.sade.omatsivut.haku.{HakuConverter, HakuRepository, HakuRepositoryComponent}
 import fi.vm.sade.omatsivut.util.Timer
 import fi.vm.sade.haku.oppija.hakemus.service.ApplicationService
+import fi.vm.sade.omatsivut.util.Timer.timed
 
 trait HakemusRepositoryComponent {
   this: HakuRepositoryComponent with HakemusConverterComponent with SpringContextComponent with AuditLoggerComponent =>
 
   val hakuRepository: HakuRepository
 
-  class RemoteHakemusRepository extends Timer with HakemusRepository {
+  class RemoteHakemusRepository extends HakemusRepository {
     import scala.collection.JavaConversions._
     private val dao = springContext.applicationDAO
     private val applicationService = springContext.applicationService

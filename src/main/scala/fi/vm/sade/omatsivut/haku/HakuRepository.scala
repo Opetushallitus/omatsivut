@@ -9,7 +9,8 @@ import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.haku.domain.{Haku, HakuAika}
 import fi.vm.sade.omatsivut.koulutusinformaatio.{KoulutusInformaatioService, KoulutusInformaatioComponent}
 import fi.vm.sade.omatsivut.ohjausparametrit.{OhjausparametritComponent, OhjausparametritService}
-import fi.vm.sade.omatsivut.util.Timer
+import fi.vm.sade.omatsivut.util.{Logging, Timer}
+import fi.vm.sade.omatsivut.util.Timer.timed
 
 import scala.collection.JavaConversions._
 
@@ -19,7 +20,7 @@ trait HakuRepositoryComponent {
   val ohjausparametritService: OhjausparametritService
   val koulutusInformaatioService: KoulutusInformaatioService
 
-  class RemoteHakuRepository extends Timer with HakuRepository {
+  class RemoteHakuRepository extends HakuRepository with Logging {
     private val repository = springContext.applicationSystemService
 
     def getHakuByApplication(application: Application)(implicit lang: Language.Language): Option[(ApplicationSystem, Haku)] = {

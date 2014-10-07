@@ -5,6 +5,7 @@ import fi.vm.sade.omatsivut.config.SpringContextComponent
 import fi.vm.sade.omatsivut.fixtures.FixtureImporter
 import fi.vm.sade.omatsivut.security.{AuthenticationCipher, ShibbolethCookie}
 import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
+import fi.vm.sade.omatsivut.util.Timer
 import fi.vm.sade.omatsivut.valintatulokset.ValintatulosServiceComponent
 import org.scalatra.{Cookie, CookieOptions}
 
