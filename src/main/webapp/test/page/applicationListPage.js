@@ -3,19 +3,6 @@ var prevLang = "fi"
 function ApplicationListPage() {
   var testHetu = "010101-123N"
 
-  function resetDataAndOpen(lang, fixtureName, applicationOid) {
-    return fixtures.applyFixture(fixtureName, applicationOid)
-      .then(function() {
-        if (prevLang != lang) {
-          // Force frame reload
-          $(testFrame().document).find("html").html("")
-          prevLang = lang
-        }
-        return session.init(testHetu, lang)
-      })
-      .then(api.reloadPage())
-  }
-
   var api = {
     openPage: function(pageLoadedCheck) {
       if (!pageLoadedCheck) {
@@ -37,7 +24,16 @@ function ApplicationListPage() {
 
     applyFixtureAndOpen: function(params) {
       return function() {
-        return resetDataAndOpen(params.lang, params.fixtureName, params.applicationOid)
+        return fixtures.applyFixture(params.fixtureName, params.applicationOid)
+          .then(function() {
+            if (prevLang != params.lang) {
+              // Force frame reload
+              $(testFrame().document).find("html").html("")
+              prevLang = params.lang
+            }
+            return session.init(testHetu, params.lang)
+          })
+          .then(api.reloadPage())
       }
     },
 
