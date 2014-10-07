@@ -29,7 +29,9 @@ trait TestHelperServletContainer {
     if(appConfig.usesLocalDatabase) {
       put("/fixtures/apply") {
         val fixtureName: String = params("fixturename")
-        new FixtureImporter(springContext.applicationDAO, springContext.mongoTemplate).applyFixtures(fixtureName)
+        Timer.timed({
+          new FixtureImporter(springContext.applicationDAO, springContext.mongoTemplate).applyFixtures(fixtureName, "application")
+        }, 100, "Apply fixtures")
       }
     }
 
