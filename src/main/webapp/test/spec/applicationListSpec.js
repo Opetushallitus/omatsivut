@@ -325,21 +325,23 @@
         describe("sitova vastaanotto", function() {
           before(page.applyValintatulosFixtureAndOpen("hyvaksytty-kesken-julkaistavissa"))
 
-          it("vastausaika näkyy", function() {
-            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).info()).to.deep.equal([
-                  "Vastaa sitovasti viimeistään 10. tammikuuta 2100 klo 12.00"
-            ])
-          })
+          describe("ennen valintaa", function() {
+            it("vastausaika näkyy", function () {
+              expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).info()).to.deep.equal([
+                "Vastaa sitovasti viimeistään 10. tammikuuta 2100 klo 12.00"
+              ])
+            })
 
-          it("oikeat vaihtoehdot tulevat näkyviin", function() {
-            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).vaihtoehdot()).to.deep.equal([
-                  'Otan myönnetyn opiskelupaikan vastaan',
-                  'En ota opiskelupaikkaa vastaan'
-            ])
-          })
+            it("oikeat vaihtoehdot tulevat näkyviin", function () {
+              expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).vaihtoehdot()).to.deep.equal([
+                'Otan myönnetyn opiskelupaikan vastaan',
+                'En ota opiskelupaikkaa vastaan'
+              ])
+            })
 
-          it("nappi on disabloitu", function() {
-            hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).confirmButtonEnabled().should.be.false
+            it("nappi on disabloitu", function () {
+              hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).confirmButtonEnabled().should.be.false
+            })
           })
 
           describe("valinnan jälkeen", function() {
