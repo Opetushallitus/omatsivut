@@ -426,16 +426,18 @@
       describe("hakijalle tarjotaan kahta paikkaa", function() {
         before(page.applyValintatulosFixtureAndOpen("hyvaksytty-kaikkiin"))
 
-        it("oikeat vaihtoehdot tulevat näkyviin", function() {
-          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotettavia()).to.equal(2)
-          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).vaihtoehdot()).to.deep.equal([
-            'Otan myönnetyn opiskelupaikan vastaan',
-            'En ota opiskelupaikkaa vastaan'
-          ])
-          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(1).vaihtoehdot()).to.deep.equal([
-            'Otan myönnetyn opiskelupaikan vastaan',
-            'En ota opiskelupaikkaa vastaan'
-          ])
+        describe("alkutilassa", function() {
+          it("oikeat vaihtoehdot tulevat näkyviin", function() {
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotettavia()).to.equal(2)
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).vaihtoehdot()).to.deep.equal([
+              'Otan myönnetyn opiskelupaikan vastaan',
+              'En ota opiskelupaikkaa vastaan'
+            ])
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(1).vaihtoehdot()).to.deep.equal([
+              'Otan myönnetyn opiskelupaikan vastaan',
+              'En ota opiskelupaikkaa vastaan'
+            ])
+          })
         })
 
         describe("ensimmäisen paikan vastaanottaminen", function() {
