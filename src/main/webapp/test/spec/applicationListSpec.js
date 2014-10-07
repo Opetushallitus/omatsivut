@@ -191,7 +191,7 @@
     describe("valintatulokset", function() {
       before(page.applyFixtureAndOpen({applicationOid: hakemusYhteishakuKevat2013WithForeignBaseEducationId}))
 
-      var hakuaikatieto = "Hakuaika on päättynyt. Haun tulokset julkaistaan viimeistään 11. kesäkuuta 2014."
+      var hakuaikatieto = "Hakuaika on päättynyt. Tulokset julkaistaan viimeistään 11. kesäkuuta 2014."
 
       describe("kun valintatuloksia ei ole julkaistu", function() {
         before(page.applyValintatulosFixtureAndOpen("ei-tuloksia"))
@@ -407,7 +407,7 @@
             before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send)
 
             it("vastaanottotieto näkyy", function() {
-              hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.match(/^Hakuaika on päättynyt. Haun tulokset julkaistaan viimeistään 11. kesäkuuta 2014. Olet ottanut ehdollisesti vastaan opiskelupaikan \d+\. \w+ 20\d\d\ klo \d+\.\d\d: Kallion lukio - Lukio./)
+              hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.match(/^Hakuaika on päättynyt. Tulokset julkaistaan viimeistään 11. kesäkuuta 2014. Olet ottanut ehdollisesti vastaan opiskelupaikan \d+\. \w+ 20\d\d\ klo \d+\.\d\d: Kallion lukio - Lukio./)
             })
           })
 
@@ -417,7 +417,7 @@
             before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send)
 
             it("perumistieto näkyy", function() {
-              hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal("Hakuaika on päättynyt. Haun tulokset julkaistaan viimeistään 11. kesäkuuta 2014. Opiskelijavalinta on kesken")
+              hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal("Hakuaika on päättynyt. Tulokset julkaistaan viimeistään 11. kesäkuuta 2014. Opiskelijavalinta on kesken")
             })
           })
         })
