@@ -162,8 +162,6 @@
     })
 
     describe("lisähaku", function() {
-      before(page.applyFixtureAndOpen({}))
-
       it("hakuaika haetaan hakukohteelta", function() {
         hakemusLisaKevat2014WithForeignBaseEducation.applicationStatus().should.equal("Hakuaika päättyy perjantaina 28. elokuuta 2054 klo 14.19")
       })
@@ -565,7 +563,7 @@
       })
 
       describe("incomplete-tilassa oleva hakemus", function() {
-        before(page.applyFixtureAndOpen({}))
+        before(page.applyFixtureAndOpen({applicationOid: hakemusIncompleteId}))
         it("hakemusta voi muokata", function() {
           hakemusIncomplete.preferencesForApplication().length.should.not.equal(0)
         })
@@ -727,7 +725,7 @@
     })
 
     describe("Käyttö näppäimistöllä", function() {
-      before(page.applyFixtureAndOpen({}))
+      before(page.applyFixtureAndOpen({applicationOid: hakemusYhteishakuKevat2014WithForeignBaseEducationId}))
       it("tab-nappi toimii oletusjärjestyksessä", function() {
         hakemusYhteishakuKevat2014WithForeignBaseEducation.getPreference(0).arrowUp().isRealButton().should.be.true
         hakemusYhteishakuKevat2014WithForeignBaseEducation.getPreference(0).arrowDown().isRealButton().should.be.true
