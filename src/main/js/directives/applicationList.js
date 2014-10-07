@@ -8,9 +8,14 @@ module.exports = function(listApp) {
       templateUrl: 'templates/applicationList.html',
 
       link: function ($scope, element, attrs) {
-        $scope.applicationStatusMessage = "message.loadingApplications"
-        $scope.applicationStatusMessageType = "ajax-spinner"
-        restResources.applications.query(success, error)
+        $scope.loadApplications = loadApplications
+        loadApplications()
+
+        function loadApplications() {
+          $scope.applicationStatusMessage = "message.loadingApplications"
+          $scope.applicationStatusMessageType = "ajax-spinner"
+          restResources.applications.query(success, error)
+        }
 
         function success(data) {
           $scope.applications = _.map(data, function(json) { return new Hakemus(json) })

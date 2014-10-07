@@ -94,6 +94,7 @@
   })
 
   describe("Monikielisyys", function () {
+
     it("kaikkien kielitiedostojen rakenne on sama", function() {
       return Q.all([
         getJson("/omatsivut/translations?lang=fi"),
@@ -1324,7 +1325,7 @@
           })
 
           describe("Kun ladataan sivu uudelleen", function() {
-            before(page.openPage())
+            before(page.reloadPage())
             it("valitut hakutoiveet näytetään", function() {
               hakemusNivelKesa2013WithPeruskouluBaseEducation.getPreference(2).opetuspiste().should.equal("Etelä-Savon ammattiopisto,  Otavankatu 4")
             })
@@ -1336,7 +1337,7 @@
             before(
               hakemusNivelKesa2013WithPeruskouluBaseEducation.getPreference(2).remove,
               hakemusNivelKesa2013WithPeruskouluBaseEducation.saveWaitSuccess,
-              page.openPage(),
+              page.reloadPage(),
               replacePreference(hakemusNivelKesa2013WithPeruskouluBaseEducation, 2, "Etelä-Savon ammattiopisto")
             )
             it("hakutoiveeseen liittyvien lisäkysymysten aiemmat vastaukset hävitetään", function() {

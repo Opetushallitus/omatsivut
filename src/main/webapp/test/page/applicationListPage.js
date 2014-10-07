@@ -1,3 +1,5 @@
+var prevLang = "fi"
+
 function ApplicationListPage() {
   var testHetu = "010101-123N"
 
@@ -6,8 +8,14 @@ function ApplicationListPage() {
     return fixtures.applyFixture()
       .then(function() {
         console.log("resetDataAndOpen(): init session")
-        return session.init(testHetu, lang)} )
-      .then(api.openPage())
+        if (prevLang != lang) {
+          // Force frame reload
+          $(testFrame().document).find("html").html("")
+          prevLang = lang
+        }
+        return session.init(testHetu, lang)
+      })
+      .then(api.reloadPage())
   }
 
   var api = {
@@ -16,6 +24,17 @@ function ApplicationListPage() {
         pageLoadedCheck = applicationPageVisible
       }
       return openPage("/omatsivut/#skipRaamit", pageLoadedCheck)
+    },
+
+    reloadPage: function() {
+      return function() {
+        if (!api.isVisible()) {
+          return api.openPage()()
+        } else {
+          testFrame().angular.element(testFrame().jQuery("application-list").get(0)).scope().loadApplications()
+          return wait.forAngular()
+        }
+      }
     },
 
     resetDataAndOpen: function() {
@@ -30,14 +49,18 @@ function ApplicationListPage() {
 
     applyFixtureAndOpen: function(fixtureName) {
       return function() {
-        return fixtures.applyFixture(fixtureName).then(function() { return session.init(testHetu)} ).then(api.openPage())
+        return fixtures.applyFixture(fixtureName).then(function() { return session.init(testHetu)} ).then(api.reloadPage())
       }
     },
 
     applyValintatulosFixtureAndOpen: function(fixtureName) {
       return function() {
-        return fixtures.applyValintatulos(fixtureName).then(api.openPage())
+        return fixtures.applyValintatulos(fixtureName).then(api.reloadPage())
       }
+    },
+
+    isVisible: function() {
+      return S("#hakemus-list").is(":visible")
     },
 
     hetu: function () {
