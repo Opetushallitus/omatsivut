@@ -35,19 +35,9 @@ function ApplicationListPage() {
       }
     },
 
-    resetDataAndOpen: function() {
-      return resetDataAndOpen()
-    },
-
-    resetDataAndOpenWithLang: function(lang) {
+    applyFixtureAndOpen: function(params) {
       return function() {
-        return resetDataAndOpen(lang)
-      }
-    },
-
-    applyFixtureAndOpen: function(fixtureName, applicationOid) {
-      return function() {
-        return fixtures.applyFixture(fixtureName, applicationOid).then(function() { return session.init(testHetu)} ).then(api.reloadPage())
+        return resetDataAndOpen(params.lang, params.fixtureName, params.applicationOid)
       }
     },
 
