@@ -6,8 +6,11 @@ import fi.vm.sade.haku.testfixtures.MongoFixtureImporter
 import org.springframework.data.mongodb.core.MongoTemplate
 
 class FixtureImporter(val applicationDAO: ApplicationDAO, val mongoTemplate: MongoTemplate) {
-  def applyFixtures(fixtureName: String = "", collection: String = "**") {
-    MongoFixtureImporter.importJsonFixtures(mongoTemplate, applicationDAO, collection)
+  def applyFixtures(fixtureName: String = "", selector: String = "**/*.json") {
+    if (!selector.endsWith("*.json")) {
+      MongoFixtureImporter.clearFixtures(mongoTemplate, applicationDAO, "application")
+    }
+    MongoFixtureImporter.importJsonFixtures(mongoTemplate, applicationDAO, selector)
     applyOverrides(fixtureName)
   }
 

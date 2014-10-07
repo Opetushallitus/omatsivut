@@ -191,6 +191,8 @@
     })
 
     describe("valintatulokset", function() {
+      before(page.applyFixtureAndOpen("", hakemusYhteishakuKevat2013WithForeignBaseEducationId))
+
       var hakuaikatieto = "Hakuaika on päättynyt. Haun tulokset julkaistaan viimeistään 11. kesäkuuta 2014."
 
       describe("kun valintatuloksia ei ole julkaistu", function() {

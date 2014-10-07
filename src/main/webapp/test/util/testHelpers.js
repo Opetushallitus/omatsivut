@@ -158,8 +158,9 @@ db = {
 }
 
 fixtures = {
-  applyFixture: function(fixtureName) {
-    return Q($.ajax("/omatsivut/util/fixtures/apply?fixturename=" + fixtureName, { type: "PUT" }))
+  applyFixture: function(fixtureName, applicationOid) {
+    applicationOid = applicationOid || "*"
+    return Q($.ajax("/omatsivut/util/fixtures/apply?fixturename=" + fixtureName + "&applicationOid=" + applicationOid, { type: "PUT" }))
   },
 
   applyValintatulos: function(fixtureName) {

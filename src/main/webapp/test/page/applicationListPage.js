@@ -3,11 +3,9 @@ var prevLang = "fi"
 function ApplicationListPage() {
   var testHetu = "010101-123N"
 
-  function resetDataAndOpen(lang) {
-    console.log("resetDataAndOpen(): apply fixtures")
-    return fixtures.applyFixture()
+  function resetDataAndOpen(lang, fixtureName, applicationOid) {
+    return fixtures.applyFixture(fixtureName, applicationOid)
       .then(function() {
-        console.log("resetDataAndOpen(): init session")
         if (prevLang != lang) {
           // Force frame reload
           $(testFrame().document).find("html").html("")
@@ -47,9 +45,9 @@ function ApplicationListPage() {
       }
     },
 
-    applyFixtureAndOpen: function(fixtureName) {
+    applyFixtureAndOpen: function(fixtureName, applicationOid) {
       return function() {
-        return fixtures.applyFixture(fixtureName).then(function() { return session.init(testHetu)} ).then(api.reloadPage())
+        return fixtures.applyFixture(fixtureName, applicationOid).then(function() { return session.init(testHetu)} ).then(api.reloadPage())
       }
     },
 
