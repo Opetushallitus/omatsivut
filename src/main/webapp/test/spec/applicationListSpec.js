@@ -250,12 +250,10 @@
       })
 
       describe("Peruutettu", function() {
-        // TODO: tässä ylempi toive on vielä "kesken", mutta kokonaistilanteena näkyy "peruutettu".
-
         before(page.applyValintatulosFixtureAndOpen("hyvaksytty-valintatulos-peruutettu"))
 
         it("hakuaikatieto näkyy", function() {
-          hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal(hakuaikatieto + " Hakemus on peruutettu 26. elokuuta 2014 klo 19.05.")
+          hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal(hakuaikatieto + " Opiskelijavalinta on kesken")
         })
 
         it("valintatulokset näytetään", function () {
@@ -269,10 +267,10 @@
       })
 
       describe("Perunut", function() {
-        before(page.applyValintatulosFixtureAndOpen("hyvaksytty-valintatulos-perunut"))
+        before(page.applyValintatulosFixtureAndOpen("hyvaksytty-valintatulos-perunut")) // TODO voiko fikstuurin ensimmäinen hakukohde olla "Kesken" tässä tapauksessa?
 
         it("hakuaikatieto näkyy", function() {
-          hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal(hakuaikatieto + " Olet perunut hakemuksen 26. elokuuta 2014 klo 19.05.")
+          hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal(hakuaikatieto + " Opiskelijavalinta on kesken")
         })
 
         it("valintatulokset näytetään", function () {
@@ -314,21 +312,23 @@
         describe("sitova vastaanotto", function() {
           before(page.applyValintatulosFixtureAndOpen("hyvaksytty-kesken-julkaistavissa"))
 
-          it("vastausaika näkyy", function() {
-            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).info()).to.deep.equal([
-                  "Vastaa sitovasti viimeistään 10. tammikuuta 2100 klo 12.00"
-            ])
-          })
+          describe("ennen valintaa", function() {
+            it("vastausaika näkyy", function () {
+              expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).info()).to.deep.equal([
+                "Vastaa sitovasti viimeistään 10. tammikuuta 2100 klo 12.00"
+              ])
+            })
 
-          it("oikeat vaihtoehdot tulevat näkyviin", function() {
-            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).vaihtoehdot()).to.deep.equal([
-                  'Otan myönnetyn opiskelupaikan vastaan',
-                  'En ota opiskelupaikkaa vastaan'
-            ])
-          })
+            it("oikeat vaihtoehdot tulevat näkyviin", function () {
+              expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).vaihtoehdot()).to.deep.equal([
+                'Otan myönnetyn opiskelupaikan vastaan',
+                'En ota opiskelupaikkaa vastaan'
+              ])
+            })
 
-          it("nappi on disabloitu", function() {
-            hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).confirmButtonEnabled().should.be.false
+            it("nappi on disabloitu", function () {
+              hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).confirmButtonEnabled().should.be.false
+            })
           })
 
           describe("valinnan jälkeen", function() {

@@ -96,7 +96,7 @@ trait HakemusConverterComponent {
       val valmisIndex = valintatulokset.indexWhere(_.vastaanottotila != ResultState.KESKEN)
       if (valmisIndex >= 0) {
         if (valintatulokset(valmisIndex).isPeruuntunut) {
-          valintatulokset.slice(0, valmisIndex).find(_.tila == HakutoiveenValintatulosTila.VARALLA) match {
+          valintatulokset.slice(0, valmisIndex).find(isKesken(_)) match {
             case Some(kesken) => None // jos jokin yläpuolella on varalla
             case _ => Some(valintatulokset(valmisIndex))
           }
