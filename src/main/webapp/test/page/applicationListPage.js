@@ -37,9 +37,9 @@ function ApplicationListPage() {
       }
     },
 
-    applyValintatulosFixtureAndOpen: function(fixtureName) {
+    applyValintatulosFixtureAndOpen: function(fixtureName, ohjausparametrit) {
       return function() {
-        return fixtures.applyValintatulos(fixtureName).then(api.reloadPage())
+        return fixtures.applyValintatulos(fixtureName, ohjausparametrit).then(api.reloadPage())
       }
     },
 
