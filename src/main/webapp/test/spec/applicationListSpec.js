@@ -358,12 +358,12 @@
           })
         })
 
-        describe.skip("vastaanotto varsinaisen vastaanootttoajan jälkeen", function() {
-          before(page.applyValintatulosFixtureAndOpen("hyvaksytty_ilmoitettu_myohaan"))
+        describe("vastaanotto varsinaisen vastaanootttoajan jälkeen", function() {
+          before(page.applyValintatulosFixtureAndOpen("hyvaksytty-ilmoitettu", "vastaanotto-loppunut-iso-buffer"))
 
           it("vastausaika näkyy", function() {
             expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).info()).to.deep.equal([
-                  "Vastaa sitovasti viimeistään 2. tammikuuta 2113 klo 17.52"
+                  "Vastaa sitovasti viimeistään 11. tammikuuta 2042 klo 19.05"
             ])
           })
 
