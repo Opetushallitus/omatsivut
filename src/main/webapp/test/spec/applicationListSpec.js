@@ -739,7 +739,7 @@
 
     describe("Hakutoiveiden validaatio", function() {
       before(
-        page.applyFixtureAndOpen({}),
+        page.applyFixtureAndOpen({applicationOid: hakemusNivelKesa2013WithPeruskouluBaseEducationId}),
         leaveOnlyOnePreference
       )
 
@@ -812,7 +812,7 @@
 
       describe("kun valinta jätetään kesken ja siirrytään vaihtamaan toista hakukohdetta", function() {
         before(
-          page.applyFixtureAndOpen({}),
+          page.applyFixtureAndOpen({applicationOid: hakemusNivelKesa2013WithPeruskouluBaseEducationId}),
           leaveOnlyOnePreference, // first two steps to undo previous test case
           hakemusNivelKesa2013WithPeruskouluBaseEducation.getPreference(1).selectOpetusPiste("Ahl"),
           hakemusNivelKesa2013WithPeruskouluBaseEducation.getPreference(2).selectOpetusPiste("Turun Kristillinen"),
@@ -859,7 +859,7 @@
 
     describe("Kun hakijalla on ulkomaalainen pohjakoulutus", function() {
       before(
-        page.applyFixtureAndOpen({}),
+        page.applyFixtureAndOpen({applicationOid: hakemusYhteishakuKevat2014WithForeignBaseEducationId}),
         hakemusYhteishakuKevat2014WithForeignBaseEducation.getPreference(0).remove,
         hakemusYhteishakuKevat2014WithForeignBaseEducation.saveWaitSuccess,
         replacePreference(hakemusYhteishakuKevat2014WithForeignBaseEducation, 1, "Kallion")
@@ -883,7 +883,7 @@
 
     describe("Kun hakijalla on koulutus, joka edellyttää harkinnanvaraisuuskysymyksiin vastausta", function() {
       before(
-        page.applyFixtureAndOpen({fixtureName:"peruskoulu"}),
+        page.applyFixtureAndOpen({fixtureName:"peruskoulu", applicationOid: hakemusYhteishakuKevat2014WithForeignBaseEducationId}),
         hakemusYhteishakuKevat2014WithForeignBaseEducation.getPreference(0).remove,
         hakemusYhteishakuKevat2014WithForeignBaseEducation.saveWaitSuccess,
         replacePreference(hakemusYhteishakuKevat2014WithForeignBaseEducation, 1, "Ahlman", 0)
@@ -950,7 +950,7 @@
 
     describe("Kun hakijalla on koulutus, joka edellyttää urheilijakysymyksiin vastausta", function() {
       before(
-        page.applyFixtureAndOpen({}),
+        page.applyFixtureAndOpen({applicationOid: hakemusYhteishakuKevat2014WithForeignBaseEducationId}),
         hakemusYhteishakuKevat2014WithForeignBaseEducation.getPreference(0).remove,
         hakemusYhteishakuKevat2014WithForeignBaseEducation.saveWaitSuccess,
         replacePreference(hakemusYhteishakuKevat2014WithForeignBaseEducation, 1, "Tampere", 0)
@@ -1019,7 +1019,7 @@
 
     describe("Kun hakijalla on koulutus, joka edellyttää sora kysymyksiin vastausta", function() {
       before(
-        page.applyFixtureAndOpen({}),
+        page.applyFixtureAndOpen({applicationOid: hakemusKorkeakouluId}),
         replacePreference(hakemusKorkeakoulu, 1, "Etelä-Savon ammattiopisto,  Otavankatu 4", 1)
       )
 
@@ -1086,7 +1086,7 @@
 
     describe("Kun hakijalla on koulutus, joka edellyttää ryhmäkohtaisiinkysymyksiin vastausta", function() {
       before(
-        page.applyFixtureAndOpen({}),
+        page.applyFixtureAndOpen({applicationOid: hakemusKorkeakouluId}),
         replacePreference(hakemusKorkeakoulu, 1, "Diakonia-ammattikorkeakoulu, Järvenpää")
       )
 
@@ -1117,7 +1117,7 @@
     describe("Lisäkysymykset", function() {
       describe("Kysymysten suodatus koulutuksen kielen perusteella", function() {
         before(
-          page.applyFixtureAndOpen({}),
+          page.applyFixtureAndOpen({applicationOid: hakemusLisaKevat2014WithForeignBaseEducationId}),
           hakemusLisaKevat2014WithForeignBaseEducation.getPreference(0).remove,
           replacePreference(hakemusLisaKevat2014WithForeignBaseEducation, 0, "Ammattiopisto Livia, fiskeri")
         )
@@ -1161,7 +1161,7 @@
 
       describe("Lisäkysymyksien näyttäminen", function() {
         before(
-          page.applyFixtureAndOpen({}),
+          page.applyFixtureAndOpen({applicationOid: hakemusNivelKesa2013WithPeruskouluBaseEducationId}),
           hakemusNivelKesa2013WithPeruskouluBaseEducation.getPreference(1).remove,
           hakemusNivelKesa2013WithPeruskouluBaseEducation.getPreference(1).remove,
           hakemusNivelKesa2013WithPeruskouluBaseEducation.saveWaitSuccess
@@ -1201,7 +1201,7 @@
 
       describe("Lisäkysymyksiin vastaaminen", function() {
         before(
-          page.applyFixtureAndOpen({}),
+          page.applyFixtureAndOpen({applicationOid: hakemusNivelKesa2013WithPeruskouluBaseEducationId}),
           replacePreference(hakemusNivelKesa2013WithPeruskouluBaseEducation, 2, "Etelä-Savon ammattiopisto")
         )
 
@@ -1325,7 +1325,7 @@
 
         describe("Kun poistetaan lisätty hakutoive, jolla lisäkysymyksiä, joihin vastattiin", function() {
           before(
-            page.applyFixtureAndOpen({}),
+            page.applyFixtureAndOpen({applicationOid: hakemusNivelKesa2013WithPeruskouluBaseEducationId}),
             replacePreference(hakemusNivelKesa2013WithPeruskouluBaseEducation, 2, "Etelä-Savon ammattiopisto"),
             answerAllQuestions,
             hakemusNivelKesa2013WithPeruskouluBaseEducation.getPreference(2).remove,
@@ -1340,14 +1340,14 @@
 
         describe("Kun vastataan tallentamatta ja muokataan hakutoiveita", function() {
           before(
-            page.applyFixtureAndOpen({}),
+            page.applyFixtureAndOpen({applicationOid: hakemusNivelKesa2013WithPeruskouluBaseEducationId}),
             replacePreference(hakemusNivelKesa2013WithPeruskouluBaseEducation, 2, "Etelä-Savon ammattiopisto"),
             answerAllQuestions,
             hakemusNivelKesa2013WithPeruskouluBaseEducation.getPreference(1).remove,
             hakemusNivelKesa2013WithPeruskouluBaseEducation.getPreference(2).searchOpetusPiste("qwer")
           )
 
-          after(page.applyFixtureAndOpen({}))
+          after(page.applyFixtureAndOpen({applicationOid: hakemusNivelKesa2013WithPeruskouluBaseEducationId}))
 
           it("kysymykset pysyvät näkyvillä, jos muutoksilla ei vaikutusta kysymyksiin", function() {
             var questionTitles = hakemusNivelKesa2013WithPeruskouluBaseEducation.questionsForApplication().titles()
@@ -1380,7 +1380,7 @@
 
     describe("Hakemuslistauksen muokkaus", function () {
       before(
-        page.applyFixtureAndOpen({fixtureName:"peruskoulu"}),
+        page.applyFixtureAndOpen({fixtureName:"peruskoulu", applicationOid: hakemusYhteishakuKevat2014WithForeignBaseEducationId}),
         replacePreference(hakemusYhteishakuKevat2014WithForeignBaseEducation, 1, "Diakonia-ammattikorkeakoulu, Helsingin toimipiste"),
         replacePreference(hakemusYhteishakuKevat2014WithForeignBaseEducation, 2, "Ahlman", 1),
         answerDiscretionaryQuestions,
@@ -1435,6 +1435,7 @@
     })
 
     describe("Liitepyyntölinkki", function() {
+      before(page.applyFixtureAndOpen({}))
       describe("Jos tallennettuun hakemukseen liittyy lisätietopyyntöjä", function() {
         before(
             replacePreference(hakemusKorkeakoulu, 1, "Diakonia-ammattikorkeakoulu, Järvenpää"),
