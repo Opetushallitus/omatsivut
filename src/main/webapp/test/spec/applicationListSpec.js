@@ -263,12 +263,10 @@
       })
 
       describe("Peruutettu", function() {
-        // TODO: tässä ylempi toive on vielä "kesken", mutta kokonaistilanteena näkyy "peruutettu".
-
         before(page.applyValintatulosFixtureAndOpen("hyvaksytty-valintatulos-peruutettu"))
 
         it("hakuaikatieto näkyy", function() {
-          hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal(hakuaikatieto + " Hakemus on peruutettu 26. elokuuta 2014 klo 19.05.")
+          hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal(hakuaikatieto + " Opiskelijavalinta on kesken")
         })
 
         it("valintatulokset näytetään", function () {
@@ -282,10 +280,10 @@
       })
 
       describe("Perunut", function() {
-        before(page.applyValintatulosFixtureAndOpen("hyvaksytty-valintatulos-perunut"))
+        before(page.applyValintatulosFixtureAndOpen("hyvaksytty-valintatulos-perunut")) // TODO voiko fikstuurin ensimmäinen hakukohde olla "Kesken" tässä tapauksessa?
 
         it("hakuaikatieto näkyy", function() {
-          hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal(hakuaikatieto + " Olet perunut hakemuksen 26. elokuuta 2014 klo 19.05.")
+          hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal(hakuaikatieto + " Opiskelijavalinta on kesken")
         })
 
         it("valintatulokset näytetään", function () {
