@@ -38,7 +38,7 @@
     </hakutoiveen-vastaanotto>
 </div>
 
-<section class="application-section application-valintatulos" ng-if="application.state.valintatulos">
+<section class="application-section application-valintatulos" ng-if="application.hasSomeResults()">
     <header class="application-section-heading">
         {{ localization('label.results') }}
     </header>

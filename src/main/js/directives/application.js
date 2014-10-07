@@ -52,7 +52,7 @@ module.exports = function(listApp) {
 
         function getResultStatus(application) {
           var resultStatus = _().find(function(hakutoive) { return hakutoive.vastaanottotila != "KESKEN" && hakutoive.vastaanottotila != "ILMOITETTU"})
-          if (application.state && application.state.resultStatus != null) {
+          if (application.state && application.state.resultStatus != null && application.hasSomeResults()) {
             var status = application.state.resultStatus
             return localization("message.resultState." + util.underscoreToCamelCase(status.state), {
               aika: status.changeTime == null ? "" : " " + formatTimestamp(status.changeTime),

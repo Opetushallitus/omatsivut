@@ -183,7 +183,7 @@
         })
 
         it("ohjeteksti päivittyy", function() {
-          hakemusLisaKevat2014WithForeignBaseEducation.applicationStatus().should.equal("Hakuaika on päättynyt. Opiskelijavalinta on kesken")
+          hakemusLisaKevat2014WithForeignBaseEducation.applicationStatus().should.equal("Hakuaika on päättynyt.")
         })
       })
     })
@@ -200,13 +200,11 @@
         })
 
         it("hakuaikatieto näkyy", function() {
-          hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal(hakuaikatieto + " Opiskelijavalinta on kesken")
+          hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal(hakuaikatieto)
         })
 
-        it("valintatulokset näytetään tilassa \"Opiskelijavalinta kesken\"", function () {
-          hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset().length.should.equal(2)
-          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].tila).to.equal('Opiskelijavalinta kesken')
-          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[1].tila).to.equal('Opiskelijavalinta kesken')
+        it("valintatuloksia ei näytetä", function () {
+          hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset().length.should.equal(0)
         })
       })
 

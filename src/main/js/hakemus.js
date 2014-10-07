@@ -68,12 +68,13 @@ Hakemus.prototype = {
     return this.haku.applicationPeriods[0].active
   },
 
-  onlyPartialResultsAvailable: function() {
-    return this.valintatulosHakutoiveet().length > 0 && !this.allResultsAvailable()
-  },
-
   allResultsAvailable: function() {
     return !this.hasResultState(["KESKEN", "VARALLA"]) && this.valintatulosHakutoiveet().length > 0
+  },
+
+  hasSomeResults: function() {
+    var hakutoiveet = this.valintatulosHakutoiveet()
+    return hakutoiveet.length > 0 && _(hakutoiveet).some(function(hakutoive) { return hakutoive.tila != "KESKEN" })
   },
 
   valintatulosHakutoiveet: function() {
