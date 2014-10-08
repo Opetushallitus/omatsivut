@@ -39,11 +39,7 @@
 </div>
 
 <section class="application-section application-valintatulos" ng-if="application.hasSomeResults()">
-    <header class="application-section-heading">
-        {{ localization('label.results') }}
-    </header>
-
-    <valintatulos data="application.state.valintatulos"></valintatulos>
+    <valintatulos data="application.state.valintatulos" final="application.allResultsAvailable()"></valintatulos>
 </section>
 
 <section class="application-section" ng-if="application.state.id == 'ACTIVE' || application.state.id == 'INCOMPLETE'">

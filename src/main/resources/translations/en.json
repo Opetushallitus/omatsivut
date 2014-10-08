@@ -23,6 +23,8 @@
     "resultsPublishedDate": "Results will be published by",
     "questionGroupWithTitle": "Additional questions",
     "questionGroupWithoutTitle": "Other additional questions",
+    "resultsFinal": "Lopullinen",
+    "resultsPending": "Kesken",
 
     "resultState": {
       "Hyvaksytty": "Accepted",

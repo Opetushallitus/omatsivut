@@ -5,7 +5,8 @@ module.exports = function(listApp) {
     return {
       restrict: 'E',
       scope: {
-        valintatulos: '&data'
+        valintatulos: '&data',
+        isFinal: '&final'
       },
       templateUrl: 'templates/valintatulos.html',
       link: function ($scope, element, attrs) {
@@ -17,6 +18,10 @@ module.exports = function(listApp) {
           else
             return moment(dt).format('LL').replace(/,/g, "")
         }
+
+        $scope.$watch("isFinal()", function(value) {
+          $scope.status = value ? localization("label.resultsFinal") : localization("label.resultsPending")
+        })
 
         $scope.valintatulosText = function(valintatulos) {
           var tila = util.underscoreToCamelCase(valintatulos.tila)

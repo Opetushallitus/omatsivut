@@ -23,6 +23,8 @@
     "resultsPublishedDate": "Tulokset julkaistaan viimeistään",
     "questionGroupWithTitle": "Lisäkysymykset",
     "questionGroupWithoutTitle": "Muut lisäkysymykset",
+    "resultsFinal": "Valintatilanne (Lopullinen)",
+    "resultsPending": "Valintatilanne (Kesken)",
 
     "resultState": {
       "Hyvaksytty": "Hyväksytty",

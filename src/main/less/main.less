@@ -277,6 +277,32 @@ button.delete-btn:not(.confirm) {
 
 }
 
+.result-list {
+  border-collapse: collapse;
+  width: 100%;
+  margin-top: 20px;
+
+  th {
+    .section-heading-font(@font-color);
+    padding-bottom: 8px;
+    line-height: 20px;
+    border-bottom: 1px solid #bfe4f1;
+
+    &:first-child {
+      width: 50%;
+    }
+  }
+
+  td {
+    padding: 8px 0;
+    border-bottom: 1px solid #bfe4f1;
+
+    &:first-child {
+      padding-right: 10px;
+    }
+  }
+}
+
 .hakutoiveenvastaanottoBox() {
   background-color: #fcfcfc;
   border: 1px solid #cdcdcd;
@@ -331,7 +357,7 @@ button.delete-btn:not(.confirm) {
   }
 }
 
-.preference-list-item, .result-list-item {
+.preference-list-item {
   height: 120px;
   width: 100%;
   padding: 0px 0px 0px 20px;
@@ -481,15 +507,6 @@ button.delete-btn:not(.confirm) {
 
   &.ng-enter-active {
     max-height: 120px;
-  }
-}
-
-.result-list-item {
-  & > .item-content:nth-child(2) {
-    width: 65%;
-  }
-  & > .item-content:nth-child(3) {
-    width: 25%;
   }
 }
 
