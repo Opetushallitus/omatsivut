@@ -161,12 +161,12 @@ function ApplicationListPage() {
       valintatulokset: function () {
         var application = getApplicationElement(applicationIndex)
 
-        return application.find(".result-list li")
+        return application.find(application.find(".result-list tr[ng-repeat]"))
           .map(function () {
             var el = $(this)
             return {
               hakukohde: el.find("[ng-bind='tulos.opetuspiste.name']").text() + " " + el.find("[ng-bind='tulos.koulutus.name']").text(),
-              tila: el.find(".item-content").last().text().trim()
+              tila: el.find("[ng-bind='valintatulosText(tulos)']").text().trim()
             }
           }).toArray()
       },
@@ -259,6 +259,10 @@ function ApplicationListPage() {
 
       previewLink: function() {
         return getApplicationElement().find(".preview")
+      },
+
+      resultTableTitle: function() {
+        return getApplicationElement().find(".result-list th.ng-binding").text().trim()
       },
 
       convertToKorkeakouluhaku: function() {

@@ -10,7 +10,7 @@
 
   "label": {
     "applicationPeriodEnds": "Hakuaika päättyy",
-    "applicationPeriodEnded": "Hakuaika on päättynyt.",
+    "applicationPeriodEnded": "Opiskelijavalinta on kesken.",
     "applicationReceived": "Hakemus jätetty",
     "applicationUpdated": "Hakemusta muokattu",
     "preferences": "Hakutoiveet",
@@ -70,7 +70,7 @@
       "Vastaanottanut": "Olet ottanut opiskelupaikan vastaan__aika__: __opiskelupaikka__.",
       "EhdollisestiVastaanottanut": "Olet ottanut ehdollisesti vastaan opiskelupaikan__aika__: __opiskelupaikka__.",
       "EiVastaanotettuMaaraAikana": "Et ottanut opiskelupaikkaa vastaan määräaikaan mennessä: __opiskelupaikka__.",
-      "Perunut": "Olet perunut hakemuksen__aika__.",
+      "Perunut": "Olet perunut opiskelupaikan__aika__.",
       "Peruutettu": "Hakemus on peruutettu__aika__.",
       "Peruuntunut": "Hakemus on peruuntunut."
     },

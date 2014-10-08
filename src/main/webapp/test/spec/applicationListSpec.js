@@ -183,7 +183,7 @@
         })
 
         it("ohjeteksti päivittyy", function() {
-          hakemusLisaKevat2014WithForeignBaseEducation.applicationStatus().should.equal("Hakuaika on päättynyt.")
+          hakemusLisaKevat2014WithForeignBaseEducation.applicationStatus().should.equal("Opiskelijavalinta on kesken.")
         })
       })
     })
@@ -191,7 +191,7 @@
     describe("valintatulokset", function() {
       before(page.applyFixtureAndOpen({applicationOid: hakemusYhteishakuKevat2013WithForeignBaseEducationId}))
 
-      var hakuaikatieto = "Hakuaika on päättynyt. Tulokset julkaistaan viimeistään 11. kesäkuuta 2014."
+      var hakuaikatieto = "Opiskelijavalinta on kesken. Tulokset julkaistaan viimeistään 11. kesäkuuta 2014."
 
       describe("kun valintatuloksia ei ole julkaistu", function() {
         before(page.applyValintatulosFixtureAndOpen("ei-tuloksia"))
@@ -216,7 +216,8 @@
         })
 
         it("hakuaikatieto näkyy", function() {
-          hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal(hakuaikatieto + " Opiskelijavalinta on kesken")
+          hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal(hakuaikatieto)
+          hakemusYhteishakuKevat2013WithForeignBaseEducation.resultTableTitle().should.equal("Valintatilanne (Kesken)")
         })
 
         it("valintatulokset näytetään", function () {
@@ -234,7 +235,8 @@
         before(page.applyValintatulosFixtureAndOpen("hylatty-julkaistavissa"))
 
         it("hakuaikatieto näkyy", function() {
-          hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal(hakuaikatieto + " Opiskelijavalinta on kesken")
+          hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal(hakuaikatieto)
+          hakemusYhteishakuKevat2013WithForeignBaseEducation.resultTableTitle().should.equal("Valintatilanne (Kesken)")
         })
 
         it("valintatulokset näytetään", function () {
@@ -251,7 +253,8 @@
         before(page.applyValintatulosFixtureAndOpen("hyvaksytty-valintatulos-peruutettu"))
 
         it("hakuaikatieto näkyy", function() {
-          hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal(hakuaikatieto + " Opiskelijavalinta on kesken")
+          hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal(hakuaikatieto)
+          hakemusYhteishakuKevat2013WithForeignBaseEducation.resultTableTitle().should.equal("Valintatilanne (Kesken)")
         })
 
         it("valintatulokset näytetään", function () {
@@ -265,10 +268,11 @@
       })
 
       describe("Perunut", function() {
-        before(page.applyValintatulosFixtureAndOpen("hyvaksytty-valintatulos-perunut")) // TODO voiko fikstuurin ensimmäinen hakukohde olla "Kesken" tässä tapauksessa?
+        before(page.applyValintatulosFixtureAndOpen("hyvaksytty-valintatulos-perunut"))
 
         it("hakuaikatieto näkyy", function() {
-          hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal(hakuaikatieto + " Opiskelijavalinta on kesken")
+          hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal(hakuaikatieto)
+          hakemusYhteishakuKevat2013WithForeignBaseEducation.resultTableTitle().should.equal("Valintatilanne (Kesken)")
         })
 
         it("valintatulokset näytetään", function () {
@@ -353,7 +357,7 @@
             before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send)
 
             it("perumistieto näkyy", function() {
-              hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.match(/^Olet perunut hakemuksen \d+\. \w+ 20\d\d\ klo \d+\.\d\d./)
+              hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.match(/^Olet perunut opiskelupaikan \d+\. \w+ 20\d\d\ klo \d+\.\d\d./)
             })
           })
         })
@@ -409,7 +413,7 @@
             before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send)
 
             it("vastaanottotieto näkyy", function() {
-              hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.match(/^Hakuaika on päättynyt. Tulokset julkaistaan viimeistään 11. kesäkuuta 2014. Olet ottanut ehdollisesti vastaan opiskelupaikan \d+\. \w+ 20\d\d\ klo \d+\.\d\d: Kallion lukio - Lukio./)
+              hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.match(/^Opiskelijavalinta on kesken. Tulokset julkaistaan viimeistään 11. kesäkuuta 2014. Olet ottanut ehdollisesti vastaan opiskelupaikan \d+\. \w+ 20\d\d\ klo \d+\.\d\d: Kallion lukio - Lukio./)
             })
           })
 
@@ -419,7 +423,7 @@
             before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send)
 
             it("perumistieto näkyy", function() {
-              hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal("Hakuaika on päättynyt. Tulokset julkaistaan viimeistään 11. kesäkuuta 2014. Opiskelijavalinta on kesken")
+              hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal("Opiskelijavalinta on kesken. Tulokset julkaistaan viimeistään 11. kesäkuuta 2014.")
             })
           })
         })
@@ -490,8 +494,8 @@
             hakemusYhteishakuKevat2013WithForeignBaseEducation.preferencesForApplication().length.should.equal(0)
           })
 
-          it("olet perunut hakemuksen näkyy", function() {
-            hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal("Olet perunut hakemuksen.")
+          it("olet perunut opiskelupaikan näkyy", function() {
+            hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal("Olet perunut opiskelupaikan.")
           })
 
           it("valintatulokset näytetään", function () {
