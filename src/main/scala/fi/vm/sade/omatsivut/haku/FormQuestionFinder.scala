@@ -1,5 +1,6 @@
 package fi.vm.sade.omatsivut.haku
 
+import fi.vm.sade.haku.oppija.lomake.domain.I18nText
 import fi.vm.sade.haku.oppija.lomake.domain.elements.questions.{DropdownSelect, TextQuestion, CheckBox => HakuCheckBox, OptionQuestion => HakuOption, Radio => HakuRadio, TextArea => HakuTextArea}
 import fi.vm.sade.haku.oppija.lomake.domain.elements.{Element, HiddenValue, Titled, TitledGroup, Notification => HakuNotification, Text => HakuText}
 import fi.vm.sade.haku.oppija.lomake.validation.validators.RequiredFieldValidator
@@ -32,18 +33,18 @@ object FormQuestionFinder extends Logging {
     def isRequired = element.getValidators.filter(o => o.isInstanceOf[RequiredFieldValidator]).nonEmpty
     element match {
       case e: TextQuestion =>
-        List(Text(id, title(e), helpText(e), isRequired, maxLength(e)))
+        List(Text(id, title(e), helpText(e), verboseHelpText(e), isRequired, maxLength(e)))
       case e: HakuTextArea =>
         val rows = toInt(element.getAttributes.toMap.getOrElse("rows", "3")).getOrElse(3)
         val cols = toInt(element.getAttributes.toMap.getOrElse("cols", "80")).getOrElse(80)
-        List(TextArea(id, title(e), helpText(e), isRequired, maxLength(e), rows, cols))
+        List(TextArea(id, title(e), helpText(e), verboseHelpText(e), isRequired, maxLength(e), rows, cols))
       case e: HakuRadio =>
-        List(Radio(id, title(e), helpText(e), dropDownOrRadioOptions(e), isRequired))
+        List(Radio(id, title(e), helpText(e), verboseHelpText(e), dropDownOrRadioOptions(e), isRequired))
       case e: DropdownSelect =>
-        List(Dropdown(id, title(e), helpText(e), dropDownOrRadioOptions(e), isRequired))
+        List(Dropdown(id, title(e), helpText(e), verboseHelpText(e), dropDownOrRadioOptions(e), isRequired))
       case e: TitledGroup if containsCheckBoxes(e) =>
         val checkboxOptions = elementWrapper.getChildElementsOfType[HakuCheckBox].map(o => AnswerOption(title(o), o.id))
-        List(Checkbox(id, title(e), helpText(e), checkboxOptions, isRequired))
+        List(Checkbox(id, title(e), helpText(e), verboseHelpText(e), checkboxOptions, isRequired))
       case e: TitledGroup => List(Label(id, title(e)))
       case e: HakuNotification => List(Notification(id, title(e), e.getNotificationType()))
       case e: HakuText => List(Label(id, title(e)))
@@ -54,7 +55,6 @@ object FormQuestionFinder extends Logging {
   private def containsCheckBoxes(e: TitledGroup): Boolean = {
     getImmediateChildElementsOfType[HakuCheckBox](e).nonEmpty
   }
-
 
   private def dropDownOrRadioOptions(e: HakuOption)(implicit lang: Language.Language): List[AnswerOption] = {
     e.getOptions.map(o => AnswerOption(title(o), o.getValue, o.isDefaultOption)).toList
@@ -77,18 +77,23 @@ object FormQuestionFinder extends Logging {
   }
 
   private def title[T <: Titled](e: T)(implicit lang: Language.Language): String = {
-    val i18ntext = e.getI18nText
-    if (i18ntext == null)
-      ""
-    else
-      i18ntext.getTranslations.get(lang.toString())
+    textToTranslatedString({() => e.getI18nText })
   }
+
   private def helpText[T <: Titled](e: T)(implicit lang: Language.Language): String = {
-    val help = e.getHelp()
-    if (help == null)
+    textToTranslatedString({() => e.getHelp})
+  }
+
+  private def verboseHelpText[T <: Titled](e: T)(implicit lang: Language.Language): String = {
+    textToTranslatedString({() => e.getVerboseHelp })
+  }
+
+  private def textToTranslatedString[T <: Titled](f: () => I18nText)(implicit lang: Language.Language): String = {
+    val text = f()
+    if(text == null)
       ""
     else
-      help.getTranslations.get(lang.toString())
+      text.getTranslations.get(lang.toString())
   }
 
   private def maxLength(element: Element) = {

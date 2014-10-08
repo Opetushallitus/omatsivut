@@ -40,6 +40,7 @@ trait TextNode extends QuestionLeafNode {
 
 trait Question extends QuestionLeafNode {
   def help: String
+  def verboseHelp: String
   def required: Boolean
   def questionType: String
   def answerIds: List[AnswerId] = List(AnswerId(id.phaseId, id.questionId))
@@ -61,11 +62,11 @@ trait MultiValued extends WithOptions {
 case class Label(id: QuestionId, title: String) extends TextNode
 case class Notification(id: QuestionId, title: String, notificationType: NotificationType) extends TextNode
 
-case class Text(id: QuestionId, title: String, help: String, required: Boolean, maxlength: Int, questionType: String = "Text") extends Question
-case class TextArea(id: QuestionId, title: String, help: String, required: Boolean, maxlength: Int, rows: Int, cols: Int, questionType: String = "TextArea") extends Question
-case class Radio(id: QuestionId, title: String, help: String, options: List[AnswerOption], required: Boolean, questionType: String = "Radio") extends WithOptions
-case class Checkbox(id: QuestionId, title: String, help: String, options: List[AnswerOption], required: Boolean, questionType: String = "Checkbox") extends MultiValued
-case class Dropdown(id: QuestionId, title: String, help: String, options: List[AnswerOption], required: Boolean, questionType: String = "Dropdown") extends WithOptions
+case class Text(id: QuestionId, title: String, help: String, verboseHelp: String, required: Boolean, maxlength: Int, questionType: String = "Text") extends Question
+case class TextArea(id: QuestionId, title: String, help: String, verboseHelp: String, required: Boolean, maxlength: Int, rows: Int, cols: Int, questionType: String = "TextArea") extends Question
+case class Radio(id: QuestionId, title: String, help: String, verboseHelp: String, options: List[AnswerOption], required: Boolean, questionType: String = "Radio") extends WithOptions
+case class Checkbox(id: QuestionId, title: String, help: String, verboseHelp: String, options: List[AnswerOption], required: Boolean, questionType: String = "Checkbox") extends MultiValued
+case class Dropdown(id: QuestionId, title: String, help: String, verboseHelp: String, options: List[AnswerOption], required: Boolean, questionType: String = "Dropdown") extends WithOptions
 
 case class AnswerOption(title: String, value: String, default: Boolean = false)
 
