@@ -1421,7 +1421,7 @@
     describe("Näytä hakemus -linkki", function() {
       describe("Kun hakemusta ei ole muokattu", function() {
         it("linkki avaa esikatselusivun", function() {
-          hakemusYhteishakuKevat2014WithForeignBaseEducation.previewLink().text().should.equal("Näytä koko hakemus")
+          hakemusYhteishakuKevat2014WithForeignBaseEducation.previewLink().text().should.equal("Näytä hakemus")
           hakemusYhteishakuKevat2014WithForeignBaseEducation.previewLink().hasClass("disabled").should.equal(false)
           hakemusYhteishakuKevat2014WithForeignBaseEducation.previewLink().attr("href").should.equal("/omatsivut/api/applications/preview/1.2.246.562.11.00000441368")
         })
