@@ -531,6 +531,22 @@
             expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[1].tila).to.equal('Peruuntunut')
           })
         })
+
+        describe("jos ei ole ottanut paikkaa vastaa paikkaa ja vastaanotto on päättynyt", function() {
+          before(page.applyValintatulosFixtureAndOpen("hyvaksytty-ilmoitettu", "vastaanotto-loppunut"))
+          it("hakemusta ei voi muokata", function () {
+            hakemusYhteishakuKevat2013WithForeignBaseEducation.preferencesForApplication().length.should.equal(0)
+          })
+
+          it("vastaanottotieto näkyy", function() {
+            hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal("Et ottanut opiskelupaikkaa vastaan määräaikaan mennessä: Kallion lukio - Lukion ilmaisutaitolinja.")
+          })
+
+          it("valintatulokset näytetään", function () {
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[1].hakukohde).to.equal('Salon lukio Lukio')
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[1].tila).to.equal('Peruuntunut')
+          })
+        })
       })
     })
 
