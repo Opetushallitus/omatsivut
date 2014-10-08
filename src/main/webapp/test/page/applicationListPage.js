@@ -191,7 +191,7 @@ function ApplicationListPage() {
           },
 
           info: function() {
-            return vastaanottoElement().find(".badge").map(function() {
+            return vastaanottoElement().find("[ng-if='hakutoive.vastaanotettavissaAsti']").map(function() {
               return $(this).text().trim()
             }).toArray()
           },

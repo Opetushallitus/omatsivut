@@ -5,7 +5,7 @@
           koulutus: hakutoive.koulutus.name
         }) }}
     </h2>
-    <div class="badge blue" ng-if="hakutoive.vastaanotettavissaAsti">
+    <div class="italic" ng-if="hakutoive.vastaanotettavissaAsti">
          {{ localization('message.acceptEducation.latestAnswer', {
           aika: formatTimestamp(hakutoive.vastaanotettavissaAsti)
         }) }}
