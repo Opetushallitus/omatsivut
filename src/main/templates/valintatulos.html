@@ -4,13 +4,13 @@
         <th></th>
     </thead>
     <tbody>
-    <tr ng-repeat="tulos in valintatulos().hakutoiveet">
+    <tr ng-repeat="tulos in valintatulos().hakutoiveet" ng-class="valintatulosColor(tulos)">
         <td>
             <span class="row-number">{{$index+1}}.</span>
             <span ng-bind="tulos.opetuspiste.name"></span> -
             <span ng-bind="tulos.koulutus.name"></span>
         </td>
-        <td ng-class="valintatulosColor(tulos)">
+        <td>
             <span ng-bind="valintatulosText(tulos)"></span>
         </td>
     </tr>

@@ -33,15 +33,10 @@ module.exports = function(listApp) {
         }
 
         $scope.valintatulosColor = function(valintatulos) {
-          var tila = util.underscoreToCamelCase(valintatulos.tila)
-          if (tila == "Hyvaksytty" || tila == "HarkinnanvaraisestiHyvaksytty" || tila == "VarasijaltaHyvaksytty")
-            return "green"
-          else if (tila == "Hylatty" || tila == "Perunut" || tila == "Peruutettu")
-            return "gray"
-          else if (tila == "Kesken" || tila == "Varalla")
-            return "blue"
-          else
-            return "transparent lighter italic"
+          if (valintatulos.vastaanottotila == "VASTAANOTTANUT" || valintatulos.vastaanottotila == "PERUNUT")
+            return "confirmed"
+          else if (valintatulos.tila == "PERUUNTUNUT")
+            return "canceled"
         }
       }
     }
