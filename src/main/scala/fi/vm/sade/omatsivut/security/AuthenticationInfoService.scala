@@ -11,10 +11,6 @@ import org.json4s.jackson.JsonMethods._
 trait AuthenticationInfoComponent {
   val authenticationInfoService: AuthenticationInfoService
 
-  class MockAuthenticationInfoService extends AuthenticationInfoService {
-    def getHenkiloOID(hetu: String) = TestFixture.persons.get(hetu)
-  }
-
   class RemoteAuthenticationInfoService(config: RemoteApplicationConfig, appConfig: AppConfig) extends AuthenticationInfoService with Logging {
     implicit val formats = DefaultFormats
 
