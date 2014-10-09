@@ -4,6 +4,7 @@ import java.util
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
+import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
 import fi.vm.sade.omatsivut.hakemus.domain._
 import fi.vm.sade.omatsivut.haku.domain.Haku
@@ -23,7 +24,7 @@ trait HakemusConverterComponent {
     val baseEducationKey = OppijaConstants.ELEMENT_ID_BASE_EDUCATION
     val preferencePhaseKey = OppijaConstants.PHASE_APPLICATION_OPTIONS
 
-    def convertToHakemus(applicationSystem: ApplicationSystem, haku: Haku, application: Application) = {
+    def convertToHakemus(applicationSystem: ApplicationSystem, haku: Haku, application: Application)(implicit lang: Language.Language) = {
       val koulutusTaustaAnswers: util.Map[String, String] = application.getAnswers.get(educationPhaseKey)
       val receivedTime =  application.getReceived.getTime
       val hakutoiveet = convertHakuToiveet(application)
@@ -40,7 +41,7 @@ trait HakemusConverterComponent {
       )
     }
 
-    def tila(applicationSystem: ApplicationSystem, haku: Haku, application: Application, hakutoiveet: List[Hakutoive]): HakemuksenTila = {
+    def tila(applicationSystem: ApplicationSystem, haku: Haku, application: Application, hakutoiveet: List[Hakutoive])(implicit lang: Language.Language): HakemuksenTila = {
       if (isPostProcessing(application)) {
         PostProcessing()
       } else {
@@ -112,7 +113,7 @@ trait HakemusConverterComponent {
       hakutoiveenValintatulos.vastaanotettavuustila == VastaanotettavuusTila.VASTAANOTETTAVISSA_SITOVASTI
     }
 
-    private def convertToValintatulos(applicationSystem: ApplicationSystem, application: Application, hakutoiveet: List[Hakutoive]): Option[Valintatulos] = {
+    private def convertToValintatulos(applicationSystem: ApplicationSystem, application: Application, hakutoiveet: List[Hakutoive])(implicit lang: Language.Language): Option[Valintatulos] = {
       def findKoulutus(oid: String): Koulutus = {
         hakutoiveet.find(_.get("Koulutus-id") == Some(oid)).map{ hakutoive => Koulutus(oid, hakutoive("Koulutus"))}.getOrElse(Koulutus(oid, oid))
       }
@@ -133,7 +134,8 @@ trait HakemusConverterComponent {
             hakutoiveenTulos.ilmoittautumistila,
             hakutoiveenTulos.jonosija,
             hakutoiveenTulos.varasijojaTaytetaanAsti.map(_.getTime),
-            hakutoiveenTulos.varasijanumero
+            hakutoiveenTulos.varasijanumero,
+            hakutoiveenTulos.tilanKuvaukset.get(lang.toString.toUpperCase)
           )
         })
       }

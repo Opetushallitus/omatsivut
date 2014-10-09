@@ -26,7 +26,8 @@ case class HakutoiveenValintatulos(hakukohdeOid: String,
                                    jonosija: Option[Int],
                                    varasijojaKaytetaanAlkaen: Option[Date],
                                    varasijojaTaytetaanAsti: Option[Date],
-                                   varasijanumero: Option[Int])
+                                   varasijanumero: Option[Int],
+                                   tilanKuvaukset: Map[String, String])
 
 case class Vastaanotto(hakukohdeOid: String, tila: String, muokkaaja: String, selite: String)
 

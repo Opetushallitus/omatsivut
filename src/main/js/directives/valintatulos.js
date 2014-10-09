@@ -24,16 +24,21 @@ module.exports = function(listApp) {
         })
 
         $scope.valintatulosText = function(valintatulos) {
-          var tila = util.underscoreToCamelCase(valintatulos.tila)
-          var localizationString = (tila=== "Varalla" && valintatulos.varasijojaTaytetaanAsti != null) ? "label.resultState.VarallaPvm" : "label.resultState." + tila
-          return localization(localizationString, {
-            varasija: valintatulos.varasijanumero,
-            varasijaPvm: $scope.formatDate(valintatulos.varasijojaTaytetaanAsti)
-          })
+          if (_.isEmpty(valintatulos.tilankuvaus)) {
+            var tila = util.underscoreToCamelCase(valintatulos.tila)
+            var localizationString = (tila === "Varalla" && valintatulos.varasijojaTaytetaanAsti != null) ? "label.resultState.VarallaPvm" : "label.resultState." + tila
+            return localization(localizationString, {
+              varasija: valintatulos.varasijanumero,
+              varasijaPvm: $scope.formatDate(valintatulos.varasijojaTaytetaanAsti)
+            })
+          } else
+          {
+            return valintatulos.tilankuvaus
+          }
         }
 
         $scope.valintatulosColor = function(valintatulos) {
-          if (valintatulos.vastaanottotila == "VASTAANOTTANUT" || valintatulos.vastaanottotila == "PERUNUT")
+          if (valintatulos.vastaanottotila == "VASTAANOTTANUT" || valintatulos.vastaanottotila == "PERUNUT" || valintatulos.vastaanottotila == "EI_VASTAANOTETTU_MAARA_AIKANA")
             return "confirmed"
           else if (valintatulos.tila == "PERUUNTUNUT")
             return "canceled"
