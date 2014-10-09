@@ -7,9 +7,10 @@
 - Bamboossa [Release 1092](https://bamboo.oph.ware.fi/deploy/viewDeploymentVersion.action?versionId=93913126)
 - Viimeisin valmistunut story: [OHP-102](https://jira.oph.ware.fi/jira/browse/OHP-102)
 
-### release 1126
+### release 1271
 
 - Tuki hakijakohtaiselle paikan vastaanottoajalle (annetaan aikaa viimeisen tilamuutoksen jälkeen vastaanottaa paikka)
+- Korjauksia ja tyylimuutoksia paikan vastaanottoon
 
 ### release 1092
 
