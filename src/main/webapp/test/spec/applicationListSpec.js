@@ -33,19 +33,32 @@
   })
 
   describe('Tyhjä hakemuslistaus', function () {
-    var emptyPage = ApplicationListPage()
     function emptyApplicationPageVisible() {
-      return S("#hakemus-list").attr("ng-cloak") == null && emptyPage.listStatusInfo().length > 0
+      return S("#hakemus-list").attr("ng-cloak") == null && page.listStatusInfo().length > 0
     }
 
     before(function (done) {
-      session.init("300794-937F","fi").then(emptyPage.openPage(emptyApplicationPageVisible)).done(done)
+      session.init("300794-937F","fi").then(page.openPage(emptyApplicationPageVisible)).done(done)
     })
 
     describe("jos käyttäjällä ei ole hakemuksia", function() {
       it("näytetään ilmoitus", function() {
         expect(page.listStatusInfo()).to.equal('Sinulla ei ole hakemuksia, joita on mahdollista muokata. Etsi koulutukset sanahaulla, ja täytä hakulomake. Tunnistautuneena voit tällä sivulla muokata hakemustasi hakuaikana.' )
       })
+    })
+  })
+
+  describe('Kun käyttäjän oid puuttuu', function () {
+    function oidNotFoundPageVisible() {
+      return S(".no-applications").is(":visible")
+    }
+
+    before(function (done) {
+      session.init("091094-970D","fi").then(page.openPage(oidNotFoundPageVisible)).done(done)
+    })
+
+    it("näytetään ilmoitus", function() {
+      expect(S("h1").text()).to.equal("Henkilötunnuksellasi ei löytynyt hakemuksia")
     })
   })
 

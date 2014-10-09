@@ -22,6 +22,8 @@ object TestFixture {
   val testHetu =  "010101-123N"
   val personOid =   "1.2.246.562.24.14229104472"
   val testHetuWithNoApplications = "300794-937F"
+  val testHetuWithNoPersonOid = "091094-970D"
+
   val persons = Map((testHetu, personOid),
                     (testHetuWithNoApplications, "1.2.246.562.24.79213463339"))
   val appConfig = new AppConfig.IT
