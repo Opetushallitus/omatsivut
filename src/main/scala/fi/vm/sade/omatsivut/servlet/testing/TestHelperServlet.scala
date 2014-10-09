@@ -30,9 +30,9 @@ trait TestHelperServletContainer {
       put("/fixtures/apply") {
         val fixtureName: String = params("fixturename")
         val applicationOid: String = params.get("applicationOid").getOrElse("*").split("\\.").last
-        Timer.timed({
+        Timer.timed(100, "Apply fixtures"){
           new FixtureImporter(springContext.applicationDAO, springContext.mongoTemplate).applyFixtures(fixtureName, "application/"+applicationOid+".json")
-        }, 100, "Apply fixtures")
+        }
       }
     }
 

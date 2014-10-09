@@ -35,35 +35,35 @@ trait HakemusRepositoryComponent {
 
     override def updateHakemus(applicationSystem: ApplicationSystem)(hakemus: HakemusMuutos, userOid: String)(implicit lang: Language.Language): Option[Hakemus] = {
       val applicationQuery: Application = new Application().setOid(hakemus.oid)
-      val applicationJavaObject: Option[Application] = timed({
+      val applicationJavaObject: Option[Application] = timed(1000, "Application fetch DAO"){
         dao.find(applicationQuery).toList.headOption
-      }, 1000, "Application fetch DAO")
+      }
 
-      timed({
+      timed(1000, "Application update"){
         applicationJavaObject
           .filter(application => canUpdate(applicationSystem, application, userOid))
           .map { application =>
           val originalAnswers: Hakemus.Answers = application.getAnswers.toMap.mapValues(_.toMap)
           ApplicationUpdater.update(applicationSystem)(application, hakemus)
-          timed({
+          timed(1000, "ApplicationService: update preference based data"){
             applicationService.updatePreferenceBasedData(application)
-          }, 1000, "ApplicationService: update preference based data")
-          timed({
+          }
+          timed(1000, "ApplicationService: update authorization Meta"){
             applicationService.updateAuthorizationMeta(application, false)
-          }, 1000, "ApplicationService: update authorization Meta")
-          timed({
+          }
+          timed(1000, "Application update DAO"){
             dao.update(applicationQuery, application)
-          }, 1000, "Application update DAO")
+          }
           auditLogger.log(UpdateHakemus(userOid, hakemus.oid, originalAnswers, application.getAnswers.toMap.mapValues(_.toMap)))
           hakemusConverter.convertToHakemus(applicationSystem, HakuConverter.convertToHaku(applicationSystem), application)
         }
-      }, 1000, "Application update")
+      }
     }
 
     override def findStoredApplicationByOid(oid: String): Application = {
-      val applications = timed({
+      val applications = timed(1000, "Application fetch DAO"){
         dao.find(new Application().setOid(oid)).toList
-      }, 1000, "Application fetch DAO")
+      }
       if (applications.size > 1) throw new RuntimeException("Too many applications for oid " + oid)
       if (applications.size == 0) throw new RuntimeException("Application not found for oid " + oid)
       val application = applications.head
@@ -79,25 +79,25 @@ trait HakemusRepositoryComponent {
     }
 
     private def fetchHakemukset(query: Application)(implicit lang: Language) = {
-      timed({
-        val applicationJavaObjects: List[Application] = timed({
+      timed(1000, "Application fetch"){
+        val applicationJavaObjects: List[Application] = timed(1000, "Application fetch DAO"){
           dao.find(query).toList
-        }, 1000, "Application fetch DAO")
+        }
         applicationJavaObjects.filter{
           application => {
             !application.getState.equals(Application.State.PASSIVE)
           }
         }.map(application => {
-          val hakuOption = timed({
+          val hakuOption = timed(1000, "HakuRepository get haku"){
             hakuRepository.getHakuByApplication(application)
-          }, 1000, "HakuRepository get haku")
+          }
           hakuOption.map { case (applicationSystem: ApplicationSystem, haku: Haku) => {
             val hakemus = hakemusConverter.convertToHakemus(applicationSystem, haku, application)
             auditLogger.log(ShowHakemus(application.getPersonOid, hakemus.oid))
             hakemus
           }}
         }).flatten.toList.sortBy[Long](_.received).reverse
-      }, 1000, "Application fetch")
+      }
     }
 
     override def exists(personOid: String, hakuOid: String, hakemusOid: String) = {

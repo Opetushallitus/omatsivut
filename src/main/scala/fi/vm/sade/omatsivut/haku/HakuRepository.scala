@@ -29,9 +29,9 @@ trait HakuRepositoryComponent {
         case applicationSystemId =>
           tryFind(applicationSystemId).map(appSystem => (appSystem, HakuConverter.convertToHaku(appSystem)) match {
             case (appSystem, haku) => {
-              val results = timed({
+              val results = timed(1000, "Ohjausparametrit valintatulokset") {
                 ohjausparametritService.valintatulokset(applicationSystemId)
-              }, 1000, "Ohjausparametrit valintatulokset")
+              }
               (appSystem, haku.copy(results = results, applicationPeriods = getApplicationPeriods(application, appSystem)))
             }
           })
@@ -40,9 +40,9 @@ trait HakuRepositoryComponent {
 
     private def tryFind(applicationSystemOid: String): Option[ApplicationSystem] = {
       try {
-        Some(timed({
+        Some(timed(1000, "Application system service"){
           repository.getApplicationSystem(applicationSystemOid)
-        }, 1000, "Application system service"))
+        })
       } catch {
         case e: Exception =>
           logger.error("applicationSystem loading failed", e)

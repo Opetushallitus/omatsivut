@@ -5,6 +5,7 @@ import AppConfig.AppConfig
 import fi.vm.sade.omatsivut.auditlog.{AuditLoggerComponent, AuditLogger, Login}
 import fi.vm.sade.omatsivut.security._
 import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
+import org.apache.commons.io.IOUtils
 import org.scalatra.Cookie
 
 import scala.collection.JavaConverters._
@@ -18,14 +19,13 @@ trait SecuredSessionServletContainer {
   class SecuredSessionServlet(val appConfig: AppConfig) extends OmatSivutServletBase with AuthCookieParsing with ShibbolethPaths {
     get("/initsession") {
       checkCredentials match {
-        case (Some(oid), Some(cookie)) => {
-          val credentials: CookieCredentials = CookieCredentials(oid, cookie)
+        case (oid, Some(cookie)) => {
+          if (!oid.isDefined) {
+            logger.warn("No user OID found. Cookie: " + cookie)
+          }
+          val credentials: CookieCredentials = CookieCredentials(cookie, oid)
           auditLogger.log(Login(credentials))
           createAuthCookieResponse(credentials)
-        }
-        case (None, Some(cookie)) => {
-          logger.warn("No user OID found. Cookie: " + cookie)
-          response.redirect(request.getContextPath + "/no-applications.html")
         }
         case _ => redirectToShibbolethLogin(response, appConfig.authContext.ssoContextPath)
       }

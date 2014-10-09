@@ -25,7 +25,7 @@ trait ScalatraTestSupport extends MutableScalatraSpec {
 
   def authHeaders[A](oid: String): Map[String, String] = {
     val shibbolethCookie: ShibbolethCookie = ShibbolethCookie("_shibsession_test", "test")
-    Map("Cookie" -> ("auth=" + new AuthenticationCipher(appConfig.settings.aesKey, appConfig.settings.hmacKey).encrypt(CookieCredentials(oid, shibbolethCookie).toString) + "; " + shibbolethCookie))
+    Map("Cookie" -> ("auth=" + new AuthenticationCipher(appConfig.settings.aesKey, appConfig.settings.hmacKey).encrypt(CookieCredentials(shibbolethCookie, Some(oid)).toString) + "; " + shibbolethCookie))
   }
 
   override def map(fs: => Fragments) = Step(componentRegistry.start) ^ super.map(fs)

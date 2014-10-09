@@ -1,45 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns="http://java.sun.com/xml/ns/javaee"
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
-      version="3.0">
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+         version="3.0">
 
-  <!--
-    This listener loads a class in the default package called ScalatraBootstrap.
-    That class should implement org.scalatra.LifeCycle.  Your app can be
-    configured in Scala code there.
-  -->
-  <listener>
-    <listener-class>org.scalatra.servlet.ScalatraListener</listener-class>
-  </listener>
+    <!--
+      This listener loads a class in the default package called ScalatraBootstrap.
+      That class should implement org.scalatra.LifeCycle.  Your app can be
+      configured in Scala code there.
+    -->
+    <listener>
+        <listener-class>org.scalatra.servlet.ScalatraListener</listener-class>
+    </listener>
 
-  <filter>
-    <filter-name>CacheControlFilter</filter-name>
-    <filter-class>fi.vm.sade.omatsivut.servlet.CacheControlFilter</filter-class>
-  </filter>
+    <filter>
+        <filter-name>CacheControlFilter</filter-name>
+        <filter-class>fi.vm.sade.omatsivut.servlet.CacheControlFilter</filter-class>
+    </filter>
 
-  <filter-mapping>
-    <filter-name>CacheControlFilter</filter-name>
-    <url-pattern>/*</url-pattern>
-  </filter-mapping>
+    <filter>
+        <filter-name>UserFilter</filter-name>
+        <filter-class>fi.vm.sade.omatsivut.servlet.UserFilter</filter-class>
+    </filter>
 
-  <filter>
-    <filter-name>LanguageFilter</filter-name>
-    <filter-class>fi.vm.sade.omatsivut.servlet.LanguageFilter</filter-class>
-  </filter>
 
-  <filter-mapping>
-    <filter-name>LanguageFilter</filter-name>
-    <url-pattern>/*</url-pattern>
-  </filter-mapping>
+    <filter-mapping>
+        <filter-name>CacheControlFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
 
-  <mime-mapping>
-    <extension>html</extension>
-    <mime-type>text/html;charset=UTF-8</mime-type>
-  </mime-mapping>
+    <filter>
+        <filter-name>LanguageFilter</filter-name>
+        <filter-class>fi.vm.sade.omatsivut.servlet.LanguageFilter</filter-class>
+    </filter>
 
-  <welcome-file-list>
-    <welcome-file>index.html</welcome-file>
-  </welcome-file-list>
+    <filter-mapping>
+        <filter-name>LanguageFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+
+    <filter-mapping>
+        <filter-name>UserFilter</filter-name>
+        <url-pattern>/</url-pattern>
+    </filter-mapping>
+
+    <filter-mapping>
+        <filter-name>UserFilter</filter-name>
+        <url-pattern>/index.html</url-pattern>
+    </filter-mapping>
+
+    <mime-mapping>
+        <extension>html</extension>
+        <mime-type>text/html;charset=UTF-8</mime-type>
+    </mime-mapping>
+
+    <welcome-file-list>
+        <welcome-file>index.html</welcome-file>
+    </welcome-file-list>
 
 </web-app>

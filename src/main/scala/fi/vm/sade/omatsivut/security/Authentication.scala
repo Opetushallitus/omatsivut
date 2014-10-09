@@ -4,7 +4,7 @@ import javax.servlet.http.{Cookie, HttpServletRequest, HttpServletResponse}
 
 import fi.vm.sade.omatsivut.auditlog.{AuditLogger, SessionTimeout}
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
-import fi.vm.sade.omatsivut.util.Logging
+import fi.vm.sade.omatsivut.util.{Timer, Logging}
 import org.joda.time.DateTime
 import org.scalatra.ScalatraBase
 
@@ -14,14 +14,7 @@ trait Authentication extends ScalatraBase with AuthCookieParsing with Logging {
 
   def personOid() = personOidOption.getOrElse(sys.error("Unauthenticated account"))
 
-  def personOidOption: Option[String] = credentialsOption match {
-    case Some(cookie) => Some(cookie.oid)
-    case _ => None
-  }
-
-  def credentialsOption: Option[CookieCredentials] = {
-    parseCredentials(request, new AuthenticationCipher(appConfig.settings.aesKey, appConfig.settings.hmacKey))
-  }
+  def personOidOption: Option[String] = credentialsOption(request).flatMap(_.oid)
 
   def validateCredentials(credentials: CookieCredentials, req: HttpServletRequest) = {
     shibbolethCookieHasNotChanged(credentials, req) && authenticationCookieHasNotTimedOut(credentials)
@@ -36,7 +29,7 @@ trait Authentication extends ScalatraBase with AuthCookieParsing with Logging {
   }
 
   before() {
-    credentialsOption match {
+    credentialsOption(request) match {
       case Some(cookie) if validateCredentials(cookie, request) => true
       case Some(cookie) => {
         logger.info("Cookie was invalid: " + cookie)
@@ -52,9 +45,16 @@ trait Authentication extends ScalatraBase with AuthCookieParsing with Logging {
 }
 
 trait AuthCookieParsing extends Logging {
+  def appConfig: AppConfig
 
   def authCookie(req: HttpServletRequest) = {
     reqCookie(req, {_.getName == "auth"})
+  }
+
+  def credentialsOption(request: HttpServletRequest): Option[CookieCredentials] = {
+    Timer.timed(blockname = "credentialsOption") {
+      parseCredentials(request, new AuthenticationCipher(appConfig.settings.aesKey, appConfig.settings.hmacKey))
+    }
   }
 
   private def reqCookie(req: HttpServletRequest, matcher: (Cookie) => Boolean) = {
@@ -110,12 +110,19 @@ trait AuthCookieParsing extends Logging {
 object CookieCredentials {
   def fromString(str: String) = {
     val split = str.split("\\|")
-    CookieCredentials(split(0), ShibbolethCookie.fromString(split(1)), new DateTime(split(2).toLong))
+    val oidPart: String = split(0)
+    val oid = if (oidPart.isEmpty) { None } else { Some(oidPart) }
+    CookieCredentials(ShibbolethCookie.fromString(split(1)), oid, new DateTime(split(2).toLong))
   }
 }
-case class CookieCredentials(oid: String, shibbolethCookie: ShibbolethCookie, creationTime: DateTime = new DateTime()) {
-  override def toString = oid + "|" + shibbolethCookie.toString + "|" + creationTime.getMillis
+
+case class CookieCredentials(shibbolethCookie: ShibbolethCookie, oid: Option[String], creationTime: DateTime = new DateTime()) {
+  override def toString = oid.getOrElse("") + "|" + shibbolethCookie.toString + "|" + creationTime.getMillis
+
+  def oidMissing = !hasOid
+  def hasOid = oid.isDefined
 }
+
 object ShibbolethCookie {
   def fromCookie(cookie: Cookie) = {
     ShibbolethCookie(cookie.getName, cookie.getValue)
