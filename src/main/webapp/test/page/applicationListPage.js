@@ -246,6 +246,18 @@ function ApplicationListPage() {
         return Questions(function() { return getApplicationElement().find(".questions") })
       },
 
+      helpTextsForQuestions: function () {
+        var helpTexts = []
+        getApplicationElement().find(".helptext").each(function() { helpTexts.push($(this).text()) })
+        return helpTexts
+      },
+
+      verboseHelpTextsForQuestions: function () {
+        var verboseHelpTexts = [];
+        getApplicationElement().find(".verboseHelp").each(function() { verboseHelpTexts.push($(this).attr("title")) });
+        return verboseHelpTexts
+      },
+
       changesSavedTimestamp: function () {
         return getApplicationElement().find(".timestamp").text()
       },

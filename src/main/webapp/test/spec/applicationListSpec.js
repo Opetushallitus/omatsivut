@@ -1139,6 +1139,13 @@
           ])
       })
 
+      it("ohjeet näytetaan", function() {
+        var helpTexts = hakemusKorkeakoulu.helpTextsForQuestions()
+        expect(helpTexts).to.include("OHJE 123")
+        var verboseHelpTexts = hakemusKorkeakoulu.verboseHelpTextsForQuestions()
+        expect(verboseHelpTexts).to.include("LISÄOHJE 123")
+      })
+
       describe("Vastaaminen kun haetaan ryhmäkohtaiseen kohteeseen", function() {
         before(answerAoQuestions)
 
