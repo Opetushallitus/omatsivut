@@ -163,12 +163,17 @@ fixtures = {
     return Q($.ajax("/omatsivut/util/fixtures/apply?fixturename=" + fixtureName + "&applicationOid=" + applicationOid, { type: "PUT" }))
   },
 
-  applyValintatulos: function(fixtureName, ohjausparametrit) {
-    var ohjausparametritQuery = ""
-    if(ohjausparametrit != null) {
-      ohjausparametritQuery = "&ohjausparametrit=" + ohjausparametrit
+  applyValintatulos: function(fixtureName, otherFixtures) {
+    var query = ""
+    if(otherFixtures != null) {
+      if(otherFixtures.ohjausparametrit != null) {
+        query = "&ohjausparametrit=" + otherFixtures.ohjausparametrit
+      }
+      if(otherFixtures.haku != null) {
+        query = query +"&haku=" + otherFixtures.haku
+      }
     }
-    return Q($.ajax("http://localhost:8097/valinta-tulos-service/util/fixtures/apply?fixturename=" + fixtureName + ohjausparametritQuery, { type: "PUT" }))
+    return Q($.ajax("http://localhost:8097/valinta-tulos-service/util/fixtures/apply?fixturename=" + fixtureName + query, { type: "PUT" }))
   }
 }
 

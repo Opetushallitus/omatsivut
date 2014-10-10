@@ -376,7 +376,7 @@
         })
 
         describe("vastaanotto varsinaisen vastaanootttoajan jälkeen", function() {
-          before(page.applyValintatulosFixtureAndOpen("hyvaksytty-ilmoitettu", "vastaanotto-loppunut-iso-buffer"))
+          before(page.applyValintatulosFixtureAndOpen("hyvaksytty-ilmoitettu", {"ohjausparametrit": "vastaanotto-loppunut-iso-buffer"}))
 
           describe("ennen vastaanottoa", function() {
             it("vastausaika näkyy", function () {
@@ -550,7 +550,7 @@
         })
 
         describe("jos ei ole ottanut paikkaa vastaa paikkaa ja vastaanotto on päättynyt", function() {
-          before(page.applyValintatulosFixtureAndOpen("hyvaksytty-ilmoitettu", "vastaanotto-loppunut"))
+          before(page.applyValintatulosFixtureAndOpen("hyvaksytty-ilmoitettu", {"ohjausparametrit": "vastaanotto-loppunut"}))
           it("hakemusta ei voi muokata", function () {
             hakemusYhteishakuKevat2013WithForeignBaseEducation.preferencesForApplication().length.should.equal(0)
           })
