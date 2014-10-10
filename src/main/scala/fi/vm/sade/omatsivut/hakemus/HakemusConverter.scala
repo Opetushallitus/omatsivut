@@ -68,7 +68,7 @@ trait HakemusConverterComponent {
           case Some(vastaanotettavissa) => None
           case None => {
             vastaanottotieto(tulos.hakutoiveet) match {
-              case Some(vastaanotettu) => Some(ResultStatus(vastaanotettu.vastaanottotila, vastaanotettu.viimeisinVastaanottotilanMuutos, Some(vastaanotettu.opetuspiste.name + " - " + vastaanotettu.koulutus.name)))
+              case Some(vastaanotettu) => Some(ResultStatus(vastaanotettu.vastaanottotila, vastaanotettu.viimeisinValintatuloksenMuutos, Some(vastaanotettu.opetuspiste.name + " - " + vastaanotettu.koulutus.name)))
               case None => {
                 if(tulos.hakutoiveet.exists(isKesken(_)) || tulos.hakutoiveet.exists(isHyvaksytty(_))) {
                   Some(ResultStatus())
@@ -130,7 +130,7 @@ trait HakemusConverterComponent {
             convertToResultsState(hakutoiveenTulos),
             VastaanotettavuusTila.withName(hakutoiveenTulos.vastaanotettavuustila),
             convertToVastaanotettavuusAsti(valintaTulos.aikataulu, hakutoiveenTulos),
-            hakutoiveenTulos.viimeisinVastaanottotilanMuutos .map(_.getTime),
+            hakutoiveenTulos.viimeisinValintatuloksenMuutos .map(_.getTime),
             hakutoiveenTulos.ilmoittautumistila,
             hakutoiveenTulos.jonosija,
             hakutoiveenTulos.varasijojaTaytetaanAsti.map(_.getTime),
@@ -145,7 +145,7 @@ trait HakemusConverterComponent {
       aikataulu match {
         case None => None
         case Some(aikataulu) => {
-          val bufferDeadline = hakutoiveenTulos.viimeisinVastaanottotilanMuutos.map(new LocalDateTime(_).plusDays(aikataulu.vastaanottoBufferDays.getOrElse(0)).toDate())
+          val bufferDeadline = hakutoiveenTulos.viimeisinValintatuloksenMuutos.map(new LocalDateTime(_).plusDays(aikataulu.vastaanottoBufferDays.getOrElse(0)).toDate())
           (aikataulu.vastaanottoEnd , bufferDeadline) match {
             case (Some(end), Some(buffer)) => Some((if(buffer.after(end)) buffer else end).getTime())
             case (end, _) => end.map(_.getTime())

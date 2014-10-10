@@ -72,7 +72,7 @@ case class HakutoiveenValintatulos(
                                     vastaanottotila: ResultState,
                                     vastaanotettavuustila: VastaanotettavuusTila,
                                     vastaanotettavissaAsti: Option[Long],
-                                    viimeisinVastaanottotilanMuutos: Option[Long],
+                                    viimeisinValintatuloksenMuutos: Option[Long],
                                     ilmoittautumistila: Option[String],
                                     jonosija: Option[Int],
                                     varasijojaTaytetaanAsti: Option[Long],
