@@ -35,7 +35,7 @@
       "Peruutettu": "Cancelled",
       "Perunut": "You have cancelled the study place",
       "Hylatty": "Not accepted",
-      "Peruuntunut": "Cancelled",
+      "Peruuntunut": "Cancelled automatically",
       "VarasijaltaHyvaksytty": "Accepted from reserve place"
     }
   },

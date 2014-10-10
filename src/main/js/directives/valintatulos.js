@@ -38,9 +38,7 @@ module.exports = function(listApp) {
         }
 
         $scope.valintatulosColor = function(valintatulos) {
-          if (valintatulos.vastaanottotila == "VASTAANOTTANUT" || valintatulos.vastaanottotila == "PERUNUT" || valintatulos.vastaanottotila == "EI_VASTAANOTETTU_MAARA_AIKANA")
-            return "confirmed"
-          else if (valintatulos.tila == "PERUUNTUNUT")
+          if (valintatulos.tila == "PERUUNTUNUT")
             return "canceled"
         }
       }
