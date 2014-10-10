@@ -221,7 +221,7 @@
         })
       })
 
-      describe("kun valinta on kesken ja hakija on 2. varasijalla", function() {
+      describe("kun kk valinta on kesken ja hakija on 2. varasijalla", function() {
         before(page.applyValintatulosFixtureAndOpen("hyvaksytty-ylempi-varalla"))
 
         it("hakemusta ei voi muokata", function () {
@@ -241,6 +241,30 @@
 
         it("paikka ei ole vastaanotettavissa", function() {
           expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).visible()).to.equal(false)
+        })
+      })
+
+      describe("kun 2. asteen valinta on kesken ja hakija on 2. varasijalla", function() {
+        before(page.applyValintatulosFixtureAndOpen("hyvaksytty-ylempi-varalla", {"haku": "toinen-aste"}))
+
+        it("hakemusta ei voi muokata", function () {
+          hakemusYhteishakuKevat2013WithForeignBaseEducation.preferencesForApplication().length.should.equal(0)
+        })
+
+        it("valintatulokset näytetään", function () {
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].hakukohde).to.equal('Kallion lukio Lukion ilmaisutaitolinja')
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].tila).to.equal('2. varasijalla. Varasijoja täytetään 26. elokuuta 2014 asti.')
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[1].tila).to.equal('Hyväksytty')
+        })
+
+        it("ilmoitetaan myönnetystä paikasta", function() {
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).title()).to.deep.equal([
+                "Opiskelupaikka myönnetty: Kallion lukio - Lukio"
+          ])
+        })
+
+        it("paikka on vastaanotettavissa", function() {
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).visible()).to.equal(true)
         })
       })
 
