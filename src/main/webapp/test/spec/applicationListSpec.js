@@ -420,18 +420,56 @@
           })
         })
 
-        describe("ehdollinen vastaanotto", function() {
-          before(page.applyValintatulosFixtureAndOpen("vastaanotettavissa-ehdollisesti"))
+        describe("toisen asteen haussa, kun ylempi toive on varalla ja alempi hyväksytty", function() {
+          before(page.applyValintatulosFixtureAndOpen("vastaanotettavissa-ehdollisesti", {"haku": "toinen-aste"}))
+
+          it("voi ottaa paikan vastaan", function() {
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).vaihtoehdot()).to.deep.equal([
+                  'Otan myönnetyn opiskelupaikan vastaan',
+                  'En ota opiskelupaikkaa vastaan'
+            ])
+          })
+
           it("vastausaika näkyy", function() {
             expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).info()).to.deep.equal([
                   "Vastaa sitovasti viimeistään 10. tammikuuta 2100 klo 12.00"
             ])
           })
-          it("oikeat vaihtoehdot tulevat näkyviin", function() {
+
+          describe("paikan vastaanottaminen", function() {
+            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VASTAANOTTANUT"))
+            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send)
+
+            it("vastaanottotieto näkyy", function() {
+              expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus()).to.match(/^Olet ottanut opiskelupaikan vastaan \d+\. \w+ 20\d\d\ klo \d+\.\d\d: Kallion lukio - Lukio./)
+            })
+          })
+
+          describe("paikan hylkääminen", function() {
+            before(page.applyValintatulosFixtureAndOpen("vastaanotettavissa-ehdollisesti", {"haku": "toinen-aste"}))
+            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("PERUNUT"))
+            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send)
+
+            it("perumistieto näkyy", function() {
+              hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal("Opiskelijavalinta on kesken. Tulokset julkaistaan viimeistään 11. kesäkuuta 2014.")
+            })
+          })
+        })
+
+        describe("kk haussa, kun ylempi toive on varalla ja alempi hyväksytty", function() {
+          before(page.applyValintatulosFixtureAndOpen("vastaanotettavissa-ehdollisesti"))
+
+          it("voi ottaa myös ehdollisesti vastaan", function() {
             expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).vaihtoehdot()).to.deep.equal([
                   'Otan myönnetyn opiskelupaikan vastaan',
                   'Otan myönnetyn opiskelupaikan vastaan, jos en saa paikkaa mistään mieluisammasta hakukohteestani',
                   'En ota opiskelupaikkaa vastaan'
+            ])
+          })
+
+          it("vastausaika näkyy", function() {
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).info()).to.deep.equal([
+                  "Vastaa sitovasti viimeistään 10. tammikuuta 2100 klo 12.00"
             ])
           })
 
