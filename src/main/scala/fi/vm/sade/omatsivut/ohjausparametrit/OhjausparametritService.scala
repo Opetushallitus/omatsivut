@@ -5,10 +5,8 @@ import fi.vm.sade.omatsivut.fixtures.JsonFixtureMaps
 import fi.vm.sade.omatsivut.http.DefaultHttpClient
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.memoize.TTLOptionalMemoize
+import fi.vm.sade.omatsivut.ohjausparametrit.domain.{Tulosaikataulu, Julkistus}
 import org.json4s.JsonAST.JValue
-import fi.vm.sade.omatsivut.haku.domain.Tulosaikataulu
-import fi.vm.sade.omatsivut.haku.domain.Julkistus
-import fi.vm.sade.omatsivut.haku.domain.Tulosaikataulu
 
 
 trait OhjausparametritComponent {

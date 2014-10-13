@@ -4,10 +4,7 @@ import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
 import fi.vm.sade.omatsivut.hakemus.domain.ResultState.ResultState
 import fi.vm.sade.omatsivut.hakemus.domain.HakutoiveenValintatulosTila.HakutoiveenValintatulosTila
 import fi.vm.sade.omatsivut.hakemus.domain.VastaanotettavuusTila.VastaanotettavuusTila
-import fi.vm.sade.omatsivut.haku.domain.{HakuAika, Haku}
-
-import scala.util.matching.Regex
-import scala.util.matching.Regex.Match
+import fi.vm.sade.omatsivut.tarjonta.Haku
 
 object Hakemus {
   type Answers = Map[String, Map[String, String]]

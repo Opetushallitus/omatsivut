@@ -14,6 +14,7 @@ import fi.vm.sade.omatsivut.security.{AuthenticationInfoComponent, Authenticatio
 import fi.vm.sade.omatsivut.servlet.session.{LogoutServletContainer, SecuredSessionServletContainer}
 import fi.vm.sade.omatsivut.servlet.testing.TestHelperServletContainer
 import fi.vm.sade.omatsivut.servlet.{SwaggerServlet, OmatSivutSwagger, KoulutusServletContainer, ApplicationsServletContainer}
+import fi.vm.sade.omatsivut.tarjonta.{TarjontaService, TarjontaComponent}
 import fi.vm.sade.omatsivut.valintatulokset._
 
 class ComponentRegistry(val config: AppConfig)
@@ -32,7 +33,8 @@ class ComponentRegistry(val config: AppConfig)
           KoulutusServletContainer with
           SecuredSessionServletContainer with
           LogoutServletContainer with
-          TestHelperServletContainer {
+          TestHelperServletContainer with
+          TarjontaComponent {
 
   implicit val swagger = new OmatSivutSwagger
 
@@ -67,6 +69,7 @@ class ComponentRegistry(val config: AppConfig)
   val hakuRepository: HakuRepository = new RemoteHakuRepository
   val hakemusRepository: HakemusRepository = new RemoteHakemusRepository
   val hakemusConverter: HakemusConverter = new HakemusConverter
+  val tarjontaService: TarjontaService = new StubbedTarjontaService
 
   def newApplicationValidator: ApplicationValidator = new ApplicationValidator
   def newHakemusPreviewGenerator(language: Language): HakemusPreviewGenerator = new HakemusPreviewGenerator()(language)

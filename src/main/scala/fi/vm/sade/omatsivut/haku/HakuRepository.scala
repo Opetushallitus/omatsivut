@@ -2,23 +2,20 @@ package fi.vm.sade.omatsivut.haku
 
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
-import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
-import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.config.SpringContextComponent
 import fi.vm.sade.omatsivut.domain.Language
-import fi.vm.sade.omatsivut.haku.domain.{Haku, HakuAika}
-import fi.vm.sade.omatsivut.koulutusinformaatio.{KoulutusInformaatioService, KoulutusInformaatioComponent}
+import fi.vm.sade.omatsivut.koulutusinformaatio.{KoulutusInformaatioComponent, KoulutusInformaatioService}
 import fi.vm.sade.omatsivut.ohjausparametrit.{OhjausparametritComponent, OhjausparametritService}
-import fi.vm.sade.omatsivut.util.{Logging, Timer}
+import fi.vm.sade.omatsivut.tarjonta.{Hakuaika, Haku, TarjontaComponent, TarjontaService}
+import fi.vm.sade.omatsivut.util.Logging
 import fi.vm.sade.omatsivut.util.Timer.timed
 
-import scala.collection.JavaConversions._
-
 trait HakuRepositoryComponent {
-  this: OhjausparametritComponent with KoulutusInformaatioComponent with SpringContextComponent =>
+  this: OhjausparametritComponent with KoulutusInformaatioComponent with SpringContextComponent with TarjontaComponent =>
 
   val ohjausparametritService: OhjausparametritService
   val koulutusInformaatioService: KoulutusInformaatioService
+  val tarjontaService: TarjontaService
 
   class RemoteHakuRepository extends HakuRepository with Logging {
     private val repository = springContext.applicationSystemService
@@ -27,13 +24,8 @@ trait HakuRepositoryComponent {
       application.getApplicationSystemId match {
         case "" => None
         case applicationSystemId =>
-          tryFind(applicationSystemId).map(appSystem => (appSystem, HakuConverter.convertToHaku(appSystem)) match {
-            case (appSystem, haku) => {
-              val results = timed(1000, "Ohjausparametrit valintatulokset") {
-                ohjausparametritService.valintatulokset(applicationSystemId)
-              }
-              (appSystem, haku.copy(results = results, applicationPeriods = getApplicationPeriods(application, appSystem)))
-            }
+          tryFind(applicationSystemId).map(appSystem => (appSystem, tarjontaService.haku(applicationSystemId)) match {
+            case (as, Some(haku)) => (as, haku)
           })
       }
     }
@@ -50,25 +42,10 @@ trait HakuRepositoryComponent {
       }
     }
 
-    def getApplicationPeriods(application: Application, applicationSystem: ApplicationSystem): List[HakuAika] = {
-      val applicationPeriods = applicationSystem.getApplicationSystemType match {
-        case OppijaConstants.LISA_HAKU =>
-          getHakutoiveApplicationPeriods(application, applicationSystem)
-        case _ => None
-      }
-      applicationPeriods.getOrElse(HakuConverter.convertToHakuajat(applicationSystem))
-    }
-
-    private def getHakutoiveApplicationPeriods(application: Application, applicationSystem: ApplicationSystem) : Option[List[HakuAika]] = {
-      val hakutoiveet = application.getPhaseAnswers("hakutoiveet").toMap
-      hakutoiveet.get("preference1-Koulutus-id")
-        .flatMap(koulutusInformaatioService.koulutus(_, Language.fi.toString()))
-        .flatMap { koulutus => (koulutus.applicationStartDate, koulutus.applicationEndDate) match {
-        case (Some(start), Some(end)) =>
-          Some(List(HakuAika(start, end)))
-        case _ =>
-          None
-      }
+    override def getApplicationPeriods(applicationSystemId: String): List[Hakuaika] = {
+      tarjontaService.haku(applicationSystemId).map(h => h.hakuajat) match {
+        case Some(hakuajat) => hakuajat
+        case _ => List()
       }
     }
   }
@@ -76,6 +53,6 @@ trait HakuRepositoryComponent {
 
 trait HakuRepository {
   def getHakuByApplication(application: Application)(implicit lang: Language.Language): Option[(ApplicationSystem, Haku)]
-  def getApplicationPeriods(application: Application, applicationSystem: ApplicationSystem): List[HakuAika]
+  def getApplicationPeriods(applicationSystemId: String): List[Hakuaika]
 }
 

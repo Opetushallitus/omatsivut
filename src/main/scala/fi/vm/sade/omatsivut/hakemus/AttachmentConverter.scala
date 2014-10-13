@@ -1,11 +1,12 @@
 package fi.vm.sade.omatsivut.hakemus
 
+import fi.vm.sade.haku.oppija.lomake.domain.elements.Element
+
 import scala.collection.JavaConversions._
 
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.hakemus.domain.ApplicationAttachment
 import fi.vm.sade.haku.oppija.hakemus.domain.util.AttachmentUtil
-import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
 import fi.vm.sade.omatsivut.domain.{Address, Attachment, Language}
 import fi.vm.sade.omatsivut.haku.ElementWrapper
 
@@ -28,9 +29,9 @@ object AttachmentConverter {
           )
   }
 
-  def requiresAdditionalInfo(applicationSystem: ApplicationSystem, application: Application): Boolean = {
+  def requiresAdditionalInfo(additionalInformationElements: List[Element], application: Application): Boolean = {
     !AttachmentUtil.resolveAttachments(application).isEmpty() ||
-    !(for(addInfo <- applicationSystem.getAdditionalInformationElements())
+    !(for(addInfo <- additionalInformationElements)
       yield ElementWrapper.wrapFiltered(addInfo, application.getVastauksetMerged().toMap)
     ).filterNot(_.children.isEmpty).isEmpty
   }

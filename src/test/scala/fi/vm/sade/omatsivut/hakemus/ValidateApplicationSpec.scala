@@ -5,7 +5,8 @@ import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.omatsivut.fixtures.TestFixture._
 import fi.vm.sade.omatsivut.hakemus.domain._
-import fi.vm.sade.omatsivut.haku.domain.{QuestionId, QuestionNode, HakuAika}
+import fi.vm.sade.omatsivut.haku.domain.{QuestionId, QuestionNode}
+import fi.vm.sade.omatsivut.tarjonta.Hakuaika
 import org.json4s._
 import org.json4s.jackson.{JsonMethods, Serialization}
 
@@ -89,14 +90,14 @@ class ValidateApplicationSpec extends HakemusApiSpecification with FixturePerson
     }
   }
 
-  def validate[T](hakemus:Hakemus, questionsOf: Option[String] = None)(f: (List[ValidationError], List[QuestionNode], List[HakuAika]) => T)(implicit personOid: PersonOid) = {
+  def validate[T](hakemus:Hakemus, questionsOf: Option[String] = None)(f: (List[ValidationError], List[QuestionNode], List[Hakuaika]) => T)(implicit personOid: PersonOid) = {
     authPost("/applications/validate/" + hakemus.oid + (questionsOf match {
         case Some(value) =>  "?questionsOf=" + value
         case None => ""}), Serialization.write(hakemus.toHakemusMuutos)) {
       val result: JValue = JsonMethods.parse(body)
       val errors: List[ValidationError] = (result \ "errors").extract[List[ValidationError]]
       val structuredQuestions: List[QuestionNode] = (result \ "questions").extract[List[QuestionNode]]
-      val applicationPeriods: List[HakuAika] = (result \ "applicationPeriods").extract[List[HakuAika]]
+      val applicationPeriods: List[Hakuaika] = (result \ "applicationPeriods").extract[List[Hakuaika]]
       f(errors, structuredQuestions, applicationPeriods)
     }
   }

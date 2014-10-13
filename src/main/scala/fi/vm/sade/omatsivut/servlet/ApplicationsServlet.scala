@@ -6,10 +6,12 @@ import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.config.{OmatSivutSpringContext, SpringContextComponent}
 import fi.vm.sade.omatsivut.hakemus._
 import fi.vm.sade.omatsivut.hakemus.domain.{HakemusMuutos, ValidationError, _}
-import fi.vm.sade.omatsivut.haku.domain.{HakuAika, QuestionNode}
+import fi.vm.sade.omatsivut.haku.domain.QuestionNode
 import fi.vm.sade.omatsivut.haku.{HakuRepository, HakuRepositoryComponent}
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.security.Authentication
+import fi.vm.sade.omatsivut.tarjonta.Hakuaika
+import fi.vm.sade.omatsivut.util.Timer._
 import fi.vm.sade.omatsivut.valintatulokset.{Vastaanotto, ValintatulosService, ValintatulosServiceComponent}
 import org.json4s.jackson.Serialization
 import org.scalatra.json._
@@ -64,9 +66,12 @@ trait ApplicationsServletContainer {
       val content: String = request.body
       val updated = Serialization.read[HakemusMuutos](content)
       val applicationSystem = applicationSystemService.getApplicationSystem(updated.hakuOid)
+      val haku = timed(1000, "Tarjonta fetch Application"){
+        tarjontaService.haku(applicationSystem.getId)
+      }
       val errors = applicationValidator.validate(applicationSystem)(updated)
       if(errors.isEmpty) {
-        hakemusRepository.updateHakemus(applicationSystem)(updated, personOid()) match {
+        hakemusRepository.updateHakemus(applicationSystem, haku.get)(updated, personOid()) match {
           case Some(saved) => Ok(saved)
           case None => Forbidden()
         }
@@ -86,7 +91,7 @@ trait ApplicationsServletContainer {
       val applicationSystem = applicationSystemService.getApplicationSystem(muutos.hakuOid)
       val questionsOf: List[String] = paramOption("questionsOf").getOrElse("").split(',').toList
       val (errors: List[ValidationError], questions: List[QuestionNode], updatedApplication: Application) = applicationValidator.validateAndFindQuestions(applicationSystem)(muutos, questionsOf, personOid())
-      ValidationResult(errors, questions, hakuRepository.getApplicationPeriods(updatedApplication, applicationSystem))
+      ValidationResult(errors, questions, hakuRepository.getApplicationPeriods(applicationSystem.getId))
     }
 
 
@@ -134,5 +139,5 @@ trait ApplicationsServletContainer {
 
 case class ClientSideVastaanotto(hakukohdeOid: String, tila: String)
 
-case class ValidationResult(errors: List[ValidationError], questions: List[QuestionNode], applicationPeriods: List[HakuAika])
+case class ValidationResult(errors: List[ValidationError], questions: List[QuestionNode], applicationPeriods: List[Hakuaika])
 
