@@ -1,9 +1,11 @@
 package fi.vm.sade.omatsivut.tarjonta
 
+import fi.vm.sade.omatsivut.config.RemoteApplicationConfig
 import fi.vm.sade.omatsivut.fixtures.JsonFixtureMaps
 import fi.vm.sade.omatsivut.http.DefaultHttpClient
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.ohjausparametrit.OhjausparametritComponent
+import fi.vm.sade.omatsivut.security.CasTicketRequiring
 import org.json4s.JsonAST.JValue
 
 trait TarjontaComponent {
@@ -15,18 +17,23 @@ trait TarjontaComponent {
     }
   }
 
-  class RemoteTarjontaService extends TarjontaService with JsonFormats {
+  class RemoteTarjontaService(val config: RemoteApplicationConfig, val casTicketUrl: String) extends TarjontaService with JsonFormats with CasTicketRequiring {
     import org.json4s.jackson.JsonMethods._
 
     override def haku(oid: String): Option[Haku] = {
-      val (responseCode, _, resultString) = DefaultHttpClient.httpGet("https://itest-virkailija.oph.ware.fi/tarjonta-service/rest/v1/haku/" + oid).responseWithHeaders()
-      responseCode match {
-        case 200 =>
-          parse(resultString).extractOpt[JValue].flatMap(HakuParser.parseHaku(_)).map { tarjontaHaku =>
-            val tulokset = ohjausparametritService.valintatulokset(oid)
-            Haku(tarjontaHaku).copy(tulosaikataulu = tulokset)
-          }
-      }
+      withServiceTicket(serviceTicket => {
+        val (responseCode, _, resultString) =
+          DefaultHttpClient.httpGet("https://itest-virkailija.oph.ware.fi/tarjonta-service/rest/v1/haku/" + oid)
+            .param("ticket", serviceTicket)
+            .responseWithHeaders()
+        responseCode match {
+          case 200 =>
+            parse(resultString).extractOpt[JValue].flatMap(HakuParser.parseHaku(_)).map { tarjontaHaku =>
+              val tulokset = ohjausparametritService.valintatulokset(oid)
+              Haku(tarjontaHaku).copy(tulosaikataulu = tulokset)
+            }
+        }
+      })
     }
   }
 }

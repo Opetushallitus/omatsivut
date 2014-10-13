@@ -54,7 +54,7 @@ class ComponentRegistry(val config: AppConfig)
     case x: MockAuthentication => new AuthenticationInfoService {
       def getHenkiloOID(hetu: String) = TestFixture.persons.get(hetu)
     }
-    case _ => new RemoteAuthenticationInfoService(config.settings.authenticationServiceConfig, config)
+    case _ => new RemoteAuthenticationInfoService(config.settings.authenticationServiceConfig, config.settings.casTicketUrl)
   }
 
 
