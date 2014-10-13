@@ -48,7 +48,7 @@
     })
   })
 
-  describe('Kun käyttäjän oid puuttuu', function () {
+  describe.skip('Kun käyttäjän oid puuttuu', function () {
     function oidNotFoundPageVisible() {
       return S(".no-applications").is(":visible")
     }
