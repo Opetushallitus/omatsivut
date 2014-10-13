@@ -7,7 +7,7 @@
     <title>Ei hakemuksia</title>
 </head>
 <body>
-<div class="container no-applications">
+<div class="container">
     <div class="sidebar-column">
         <ul class="sidebar-menu">
             <li class="sidebar-menu-top-level" data-i18n="sidebar.opintopolku">
@@ -29,7 +29,7 @@
         resGetPath: "translations/__lng__.json",
         fallbackLng: "fi"
     }, function() {
-        $("body").i18n()
+        $("body").i18n().addClass("no-applications")
         var raamit = document.createElement("script");
         raamit.src = "raamit/load";
         document.getElementsByTagName("head")[0].appendChild(raamit);
