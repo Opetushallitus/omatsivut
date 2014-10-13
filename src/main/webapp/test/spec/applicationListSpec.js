@@ -245,7 +245,7 @@
       })
 
       describe("kun 2. asteen valinta on kesken ja hakija on 2. varasijalla", function() {
-        before(page.applyValintatulosFixtureAndOpen("hyvaksytty-ylempi-varalla", {"haku": "toinen-aste"}))
+        before(page.applyValintatulosFixtureAndOpen("hyvaksytty-ylempi-varalla", {"haku": "toinen-aste-yhteishaku"}))
 
         it("hakemusta ei voi muokata", function () {
           hakemusYhteishakuKevat2013WithForeignBaseEducation.preferencesForApplication().length.should.equal(0)
@@ -421,7 +421,7 @@
         })
 
         describe("toisen asteen haussa, kun ylempi toive on varalla ja alempi hyväksytty", function() {
-          before(page.applyValintatulosFixtureAndOpen("vastaanotettavissa-ehdollisesti", {"haku": "toinen-aste"}))
+          before(page.applyValintatulosFixtureAndOpen("vastaanotettavissa-ehdollisesti", {"haku": "toinen-aste-yhteishaku"}))
 
           it("voi ottaa paikan vastaan", function() {
             expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).vaihtoehdot()).to.deep.equal([
@@ -451,7 +451,7 @@
           })
 
           describe("paikan hylkääminen", function() {
-            before(page.applyValintatulosFixtureAndOpen("vastaanotettavissa-ehdollisesti", {"haku": "toinen-aste"}))
+            before(page.applyValintatulosFixtureAndOpen("vastaanotettavissa-ehdollisesti", {"haku": "toinen-aste-yhteishaku"}))
             before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("PERUNUT"))
             before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send)
 
@@ -551,7 +551,7 @@
       })
 
       describe("kun hakijalle tarjotaan kahta paikkaa toisen asteen haussa", function() {
-        before(page.applyValintatulosFixtureAndOpen("hyvaksytty-kaikkiin", {"haku": "toinen-aste"}))
+        before(page.applyValintatulosFixtureAndOpen("hyvaksytty-kaikkiin", {"haku": "toinen-aste-yhteishaku"}))
 
         describe("alkutilassa", function() {
           it("oikeat vaihtoehdot tulevat näkyviin", function() {
