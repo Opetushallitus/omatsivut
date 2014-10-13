@@ -64,19 +64,17 @@ trait HakemusConverterComponent {
 
     private def resultStatus(valintatulos: Option[Valintatulos]): Option[ResultStatus] = {
       valintatulos.flatMap(tulos => {
-        tulos.hakutoiveet.find(isVastaanotettavissa(_)) match {
-          case Some(vastaanotettavissa) => None
+        vastaanottotieto(tulos.hakutoiveet) match {
+          case Some(vastaanotettu) => Some(ResultStatus(vastaanotettu.vastaanottotila, vastaanotettu.viimeisinValintatuloksenMuutos, Some(vastaanotettu.opetuspiste.name + " - " + vastaanotettu.koulutus.name)))
           case None => {
-            vastaanottotieto(tulos.hakutoiveet) match {
-              case Some(vastaanotettu) => Some(ResultStatus(vastaanotettu.vastaanottotila, vastaanotettu.viimeisinValintatuloksenMuutos, Some(vastaanotettu.opetuspiste.name + " - " + vastaanotettu.koulutus.name)))
-              case None => {
-                if(tulos.hakutoiveet.exists(isKesken(_)) || tulos.hakutoiveet.exists(isHyvaksytty(_))) {
-                  Some(ResultStatus())
-                }
-                else {
-                  Some(ResultStatus(ResultState.withName(tulos.hakutoiveet.head.tila.toString())))
-                }
+            if(tulos.hakutoiveet.exists(isKesken(_)) || tulos.hakutoiveet.exists(isHyvaksytty(_))) {
+              tulos.hakutoiveet.find(isVastaanotettavissa(_)) match {
+                case Some(vastaanotettavissa) => None
+                case None => Some(ResultStatus())
               }
+            }
+            else {
+              Some(ResultStatus(ResultState.withName(tulos.hakutoiveet.head.tila.toString())))
             }
           }
         }
@@ -90,7 +88,8 @@ trait HakemusConverterComponent {
 
     private def isHyvaksytty(hakutoiveenValintatulos: HakutoiveenValintatulos) = {
       hakutoiveenValintatulos.tila  == HakutoiveenValintatulosTila.HYVAKSYTTY ||
-      hakutoiveenValintatulos.tila == HakutoiveenValintatulosTila.HARKINNANVARAISESTI_HYVAKSYTTY
+      hakutoiveenValintatulos.tila == HakutoiveenValintatulosTila.HARKINNANVARAISESTI_HYVAKSYTTY ||
+      hakutoiveenValintatulos.tila == HakutoiveenValintatulosTila.VARASIJALTA_HYVAKSYTTY
     }
 
     private def vastaanottotieto(valintatulokset: List[HakutoiveenValintatulos]) = {

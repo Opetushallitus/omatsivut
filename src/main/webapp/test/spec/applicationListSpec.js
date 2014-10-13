@@ -441,7 +441,12 @@
             before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send)
 
             it("vastaanottotieto näkyy", function() {
-              expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus()).to.match(/^Olet ottanut opiskelupaikan vastaan \d+\. \w+ 20\d\d\ klo \d+\.\d\d: Kallion lukio - Lukio./)
+              expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus()).to.match(/^Opiskelijavalinta on kesken. Tulokset julkaistaan viimeistään 11. kesäkuuta 2014. Olet ottanut opiskelupaikan vastaan \d+\. \w+ 20\d\d\ klo \d+\.\d\d: Kallion lukio - Lukio./)
+            })
+
+            it("toinen toive ei peruunnu", function () {
+              expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].hakukohde).to.equal('Kallion lukio Lukion ilmaisutaitolinja')
+              expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].tila).to.equal('1. varasijalla')
             })
           })
 
@@ -504,7 +509,7 @@
         })
       })
 
-      describe("hakijalle tarjotaan kahta paikkaa", function() {
+      describe("kun hakijalle tarjotaan kahta paikkaa kk haussa", function() {
         before(page.applyValintatulosFixtureAndOpen("hyvaksytty-kaikkiin"))
 
         describe("alkutilassa", function() {
@@ -526,7 +531,7 @@
           before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send)
 
           it("vastaanottotieto näkyy", function() {
-            hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.match(/^Olet ottanut opiskelupaikan vastaan \d+\. \w+ 20\d\d\ klo \d+\.\d\d: Kallion lukio - Lukion ilmaisutaitolinja./)
+            hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.match(/^Olet ottanut opiskelupaikan vastaan \d+\. \w+ 20\d\d\ klo \d+\.\d\d: Kallion lukio - Lukion ilmaisutaitolinja.$/)
           })
 
           it("kumpikaan paikka ei ole enää vastaanotettavissa", function() {
@@ -540,7 +545,57 @@
           before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(1).send)
 
           it("vastaanottotieto näkyy", function() {
-            hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.match(/^Olet ottanut opiskelupaikan vastaan \d+\. \w+ 20\d\d\ klo \d+\.\d\d: Kallion lukio - Lukio./)
+            hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.match(/^Olet ottanut opiskelupaikan vastaan \d+\. \w+ 20\d\d\ klo \d+\.\d\d: Kallion lukio - Lukio.$/)
+          })
+        })
+      })
+
+      describe("kun hakijalle tarjotaan kahta paikkaa toisen asteen haussa", function() {
+        before(page.applyValintatulosFixtureAndOpen("hyvaksytty-kaikkiin", {"haku": "toinen-aste"}))
+
+        describe("alkutilassa", function() {
+          it("oikeat vaihtoehdot tulevat näkyviin", function() {
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotettavia()).to.equal(2)
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).vaihtoehdot()).to.deep.equal([
+              'Otan myönnetyn opiskelupaikan vastaan',
+              'En ota opiskelupaikkaa vastaan'
+            ])
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(1).vaihtoehdot()).to.deep.equal([
+              'Otan myönnetyn opiskelupaikan vastaan',
+              'En ota opiskelupaikkaa vastaan'
+            ])
+          })
+        })
+
+        describe("ensimmäisen paikan vastaanottaminen", function() {
+          before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VASTAANOTTANUT"))
+          before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send)
+
+          describe("jälkeen", function() {
+
+            it("vastaanottotieto näkyy", function() {
+              hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.match(/^Olet ottanut opiskelupaikan vastaan \d+\. \w+ 20\d\d\ klo \d+\.\d\d: Kallion lukio - Lukion ilmaisutaitolinja.$/)
+            })
+
+            it("toinen paikka on myös vastaanotettavissa", function() {
+              expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).vaihtoehdot()).to.deep.equal([
+               'Otan myönnetyn opiskelupaikan vastaan',
+               'En ota opiskelupaikkaa vastaan'
+              ])
+            })
+          })
+
+          describe("toisen paikan vastaanottaminen", function() {
+            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VASTAANOTTANUT"))
+            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send)
+
+            it("vastaanottotieto näkyy", function() {
+              hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.match(/^Olet ottanut opiskelupaikan vastaan \d+\. \w+ 20\d\d\ klo \d+\.\d\d: Kallion lukio - Lukion ilmaisutaitolinja.$/)
+            })
+
+            it("kumpikaan paikka ei ole enää vastaanotettavissa", function() {
+              expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotettavia()).to.equal(0)
+            })
           })
         })
       })
