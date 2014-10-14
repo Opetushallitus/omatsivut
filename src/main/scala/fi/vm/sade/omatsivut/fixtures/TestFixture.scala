@@ -54,7 +54,6 @@ object TestFixture {
   val ammattistarttiAhlman: Hakutoive = JsonFixtureMaps.findByKey[Hakutoive]("/mockdata/hakutoiveet.json", "1.2.246.562.14.2014040912353139913320").get
   val hevostalous: Hakutoive = JsonFixtureMaps.findByKey[Hakutoive]("/mockdata/hakutoiveet.json", "1.2.246.562.5.31982630126").get
 
-  val hakemus2_hakuaika = Hakuaika("1", 1404190831839L,4131320431839L)
-  val hakemusLisahaku_hakuaikaForPreference = Hakuaika("2", 1409224751000L,2671528751000L)
+  val hakemus2_hakuaika = Hakuaika("5474", 1404190831839L, 4131320431839L)
   val hakemusLisahaku_hakuaikaDefault = hakemus2_hakuaika
 }

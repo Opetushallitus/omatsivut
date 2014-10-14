@@ -16,10 +16,10 @@
             "jarjestelmanHakulomake": true,
             "hakuaikas": [
                 {
-                    "hakuaikaId": "219502",
+                    "hakuaikaId": "5474",
                     "nimi": "",
-                    "alkuPvm": 1410152431839,
-                    "loppuPvm": 1413979209430
+                    "alkuPvm": 1404190831839,
+                    "loppuPvm": 4131320431839
                 }
             ],
             "hakukohdeOids": [
@@ -224,7 +224,7 @@
         "result": {
             "modified": 1412325731347,
             "modifiedBy": "1.2.246.562.24.480305445310",
-            "oid": "1.2.246.562.29.173465377510",
+            "oid": "1.2.246.562.5.2013080813081926341928",
             "hakukausiUri": "kausi_s#1",
             "hakukausiVuosi": 2014,
             "hakutapaUri": "hakutapa_01#1",
@@ -239,8 +239,8 @@
                 {
                     "hakuaikaId": "219502",
                     "nimi": "",
-                    "alkuPvm": 1410152431839,
-                    "loppuPvm": 1413979209430
+                    "alkuPvm": 1372654831000,
+                    "loppuPvm": 1375279200000
                 }
             ],
             "hakukohdeOids": [
@@ -445,7 +445,7 @@
         "result": {
             "modified": 1412325731347,
             "modifiedBy": "1.2.246.562.24.480305445310",
-            "oid": "1.2.246.562.29.173465377510",
+            "oid": "1.2.246.562.5.2014020613412490531399",
             "hakukausiUri": "kausi_s#1",
             "hakukausiVuosi": 2014,
             "hakutapaUri": "hakutapa_01#1",
@@ -460,8 +460,8 @@
                 {
                     "hakuaikaId": "219502",
                     "nimi": "",
-                    "alkuPvm": 1410152431839,
-                    "loppuPvm": 1413979209430
+                    "alkuPvm": 1404190831839,
+                    "loppuPvm": 1404190831839
                 }
             ],
             "hakukohdeOids": [
@@ -680,8 +680,8 @@
             "hakuaikas": [
                 {
                     "hakuaikaId": "5474",
-                    "alkuPvm": 1393221600000,
-                    "loppuPvm": 1394802000000
+                    "alkuPvm": 1404190831839,
+                    "loppuPvm": 4131320431839
                 }
             ],
             "hakukohdeOids": [
@@ -3712,8 +3712,8 @@
             "hakuaikas": [
                 {
                     "hakuaikaId": "211367",
-                    "alkuPvm": 1402894855226,
-                    "loppuPvm": 1406289655226,
+                    "alkuPvm": 1404190831839,
+                    "loppuPvm": 4131320431839,
                     "nimet": {
                         "kieli_fi": "Yhteishaun hakuajan nimi"
                     }
