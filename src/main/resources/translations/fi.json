@@ -34,11 +34,11 @@
       "VarallaPvm": "__varasija__. varasijalla. Varasijoja täytetään __varasijaPvm__ asti.",
       "Peruutettu": "Peruutettu",
       "Perunut": "Peruit opiskelupaikan",
-      "Peruuntunut": "Peruuntunut automaattisesti",
+      "Peruuntunut": "Peruuntunut",
       "VarasijaltaHyvaksytty": "Hyväksytty varasijalta",
-      "Vastaanottanut": "Olet ottanut paikan vastaan",
+      "Vastaanottanut": "Opiskelupaikka vastaanotettu",
       "Hylatty": "Et saanut opiskelupaikkaa.",
-      "EhdollisestiVastaanottanut": "Olet ottanut paikan vastaan ehdollisesti",
+      "EhdollisestiVastaanottanut": "Opiskelupaikka vastaanotettu ehdollisesti",
       "EiVastaanotettuMaaraAikana": "Et ottanut opiskelupaikkaa vastaan määräaikaan mennessä"
     }
   },
