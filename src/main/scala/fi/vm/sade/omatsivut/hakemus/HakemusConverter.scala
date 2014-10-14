@@ -46,7 +46,7 @@ trait HakemusConverterComponent {
       if (isPostProcessing(application)) {
         PostProcessing()
       } else {
-        if (!haku.hakuajat.head.active) {
+        if (!haku.applicationPeriods.head.active) {
           val valintatulos = convertToValintatulos(applicationSystemId, application, hakutoiveet)
           HakuPaattynyt(valintatulos = valintatulos)
         } else {

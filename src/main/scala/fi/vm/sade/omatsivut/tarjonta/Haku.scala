@@ -1,12 +1,12 @@
 package fi.vm.sade.omatsivut.tarjonta
 
+import fi.vm.sade.omatsivut.domain.Language.Language
 import fi.vm.sade.omatsivut.ohjausparametrit.domain.Tulosaikataulu
-import fi.vm.sade.omatsivut.tarjonta.HaunTyyppi.HaunTyyppi
 import org.joda.time.Interval
 
 object Haku {
-  def apply(tarjontaHaku: TarjontaHaku) : Haku = {
-    Haku(tarjontaHaku.oid, tarjontaHaku.hakuaikas.map(h => Hakuaika(h)), HaunTyyppi(tarjontaHaku).toString, isKorkeakouluhaku(tarjontaHaku))
+  def apply(tarjontaHaku: TarjontaHaku)(implicit lang: Language) : Haku = {
+    Haku(tarjontaHaku.oid, tarjontaHaku.nimi("kieli_" + lang.toString), tarjontaHaku.hakuaikas.map(h => Hakuaika(h)), HaunTyyppi(tarjontaHaku).toString, isKorkeakouluhaku(tarjontaHaku))
   }
 
   private def isKorkeakouluhaku(tarjontaHaku: TarjontaHaku) = {
@@ -24,7 +24,7 @@ object Hakuaika {
   }
 }
 
-case class Haku(oid: String, hakuajat: List[Hakuaika], tyyppi: String, korkeakouluHaku: Boolean, tulosaikataulu: Option[Tulosaikataulu] = None)
+case class Haku(oid: String, name: String, applicationPeriods: List[Hakuaika], tyyppi: String, korkeakouluHaku: Boolean, tulosaikataulu: Option[Tulosaikataulu] = None)
 case class Hakuaika(id: String, start: Long, end: Long, active: Boolean)
 
 object HaunTyyppi extends Enumeration {

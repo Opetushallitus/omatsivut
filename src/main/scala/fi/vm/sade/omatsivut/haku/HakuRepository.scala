@@ -39,8 +39,8 @@ trait HakuRepositoryComponent {
       }
     }
 
-    override def getApplicationPeriods(applicationSystemId: String): List[Hakuaika] = {
-      tarjontaService.haku(applicationSystemId).map(h => h.hakuajat) match {
+    override def getApplicationPeriods(applicationSystemId: String)(implicit lang: Language.Language) : List[Hakuaika] = {
+      tarjontaService.haku(applicationSystemId).map(h => h.applicationPeriods) match {
         case Some(hakuajat) => hakuajat
         case _ => List()
       }
@@ -50,6 +50,6 @@ trait HakuRepositoryComponent {
 
 trait HakuRepository {
   def getHakuByApplication(application: Application)(implicit lang: Language.Language): (Option[ApplicationSystem], Option[Haku])
-  def getApplicationPeriods(applicationSystemId: String): List[Hakuaika]
+  def getApplicationPeriods(applicationSystemId: String)(implicit lang: Language.Language) : List[Hakuaika]
 }
 
