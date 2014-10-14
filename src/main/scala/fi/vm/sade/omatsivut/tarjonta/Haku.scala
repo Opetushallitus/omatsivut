@@ -24,7 +24,7 @@ object Hakuaika {
   }
 }
 
-case class Haku(oid: String, name: String, applicationPeriods: List[Hakuaika], tyyppi: String, korkeakouluHaku: Boolean, tulosaikataulu: Option[Tulosaikataulu] = None)
+case class Haku(oid: String, name: String, applicationPeriods: List[Hakuaika], tyyppi: String, korkeakouluHaku: Boolean, results: Option[Tulosaikataulu] = None)
 case class Hakuaika(id: String, start: Long, end: Long, active: Boolean)
 
 object HaunTyyppi extends Enumeration {

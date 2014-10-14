@@ -14,7 +14,11 @@ trait TarjontaComponent {
 
   class StubbedTarjontaService extends TarjontaService with JsonFormats {
     override def haku(oid: String)(implicit lang: Language.Language) = {
-      JsonFixtureMaps.findByKey[JValue]("/mockdata/haut.json", oid).flatMap(HakuParser.parseHaku(_)).map {h => Haku(h)}
+      val haku = JsonFixtureMaps.findByKey[JValue]("/mockdata/haut.json", oid).flatMap(HakuParser.parseHaku(_)).map {h => Haku(h)}
+      haku.map {h =>
+        val tulokset = ohjausparametritService.valintatulokset(oid)
+        h.copy(results = tulokset)
+      }
     }
   }
 
@@ -31,7 +35,7 @@ trait TarjontaComponent {
           case 200 =>
             parse(resultString).extractOpt[JValue].flatMap(HakuParser.parseHaku(_)).map { tarjontaHaku =>
               val tulokset = ohjausparametritService.valintatulokset(oid)
-              Haku(tarjontaHaku).copy(tulosaikataulu = tulokset)
+              Haku(tarjontaHaku).copy(results = tulokset)
             }
         }
       })
