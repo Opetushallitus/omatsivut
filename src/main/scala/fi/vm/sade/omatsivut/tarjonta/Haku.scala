@@ -19,7 +19,7 @@ object Hakuaika {
     Hakuaika(tarjontaHakuaika.hakuaikaId, tarjontaHakuaika.alkuPvm, tarjontaHakuaika.loppuPvm, new Interval(tarjontaHakuaika.alkuPvm, tarjontaHakuaika.loppuPvm).containsNow())
   }
 
-  def apply(id: String, start: Long, end: Long): Unit = {
+  def apply(id: String, start: Long, end: Long): Hakuaika = {
     Hakuaika(id, start, end, new Interval(start, end).containsNow())
   }
 }
