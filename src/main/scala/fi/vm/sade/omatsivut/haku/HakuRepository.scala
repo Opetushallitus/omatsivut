@@ -20,13 +20,10 @@ trait HakuRepositoryComponent {
   class RemoteHakuRepository extends HakuRepository with Logging {
     private val repository = springContext.applicationSystemService
 
-    def getHakuByApplication(application: Application)(implicit lang: Language.Language): Option[(ApplicationSystem, Haku)] = {
+    def getHakuByApplication(application: Application)(implicit lang: Language.Language): (Option[ApplicationSystem], Option[Haku]) = {
       application.getApplicationSystemId match {
-        case "" => None
-        case applicationSystemId =>
-          tryFind(applicationSystemId).map(appSystem => (appSystem, tarjontaService.haku(applicationSystemId)) match {
-            case (as, Some(haku)) => (as, haku)
-          })
+        case "" => (None, None)
+        case applicationSystemId => (tryFind(applicationSystemId), tarjontaService.haku(applicationSystemId))
       }
     }
 
@@ -52,7 +49,7 @@ trait HakuRepositoryComponent {
 }
 
 trait HakuRepository {
-  def getHakuByApplication(application: Application)(implicit lang: Language.Language): Option[(ApplicationSystem, Haku)]
+  def getHakuByApplication(application: Application)(implicit lang: Language.Language): (Option[ApplicationSystem], Option[Haku])
   def getApplicationPeriods(applicationSystemId: String): List[Hakuaika]
 }
 

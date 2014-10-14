@@ -83,14 +83,17 @@ trait HakemusRepositoryComponent {
             !application.getState.equals(Application.State.PASSIVE)
           }
         }.map(application => {
-          val hakuOption = timed(1000, "HakuRepository get haku"){
+          val (applicationSystemOption, hakuOption) = timed(1000, "HakuRepository get haku"){
             hakuRepository.getHakuByApplication(application)
           }
-          hakuOption.map { case (applicationSystem: ApplicationSystem, haku: Haku) => {
+          for {
+            haku <- hakuOption
+            applicationSystem <- applicationSystemOption
+          } yield {
             val hakemus = hakemusConverter.convertToHakemus(applicationSystem, haku, application)
             auditLogger.log(ShowHakemus(application.getPersonOid, hakemus.oid))
             hakemus
-          }}
+          }
         }).flatten.toList.sortBy[Long](_.received).reverse
       }
     }
