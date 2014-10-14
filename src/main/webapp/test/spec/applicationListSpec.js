@@ -174,20 +174,6 @@
       })
     })
 
-    describe("lisähaku", function() {
-
-      describe("lisähaun muokkaus hakuajan jälkeen", function() {
-        before(page.applyFixtureAndOpen({fixtureName:"lisahakuEnded"}))
-        it("ei ole mahdollista", function() {
-          hakemusLisaKevat2014WithForeignBaseEducation.preferencesForApplication().length.should.equal(0)
-        })
-
-        it("ohjeteksti päivittyy", function() {
-          hakemusLisaKevat2014WithForeignBaseEducation.applicationStatus().should.equal("Opiskelijavalinta on kesken.")
-        })
-      })
-    })
-
     describe("valintatulokset", function() {
       before(page.applyFixtureAndOpen({applicationOid: hakemusYhteishakuKevat2013WithForeignBaseEducationId}))
 
