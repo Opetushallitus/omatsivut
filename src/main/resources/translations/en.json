@@ -34,9 +34,12 @@
       "VarallaPvm": "On a reserve place.__varasija__. Reserve places are filled until __varasijaPvm__.",
       "Peruutettu": "Cancelled",
       "Perunut": "You have cancelled the study place",
-      "Hylatty": "Not accepted",
       "Peruuntunut": "Cancelled automatically",
-      "VarasijaltaHyvaksytty": "Accepted from reserve place"
+      "VarasijaltaHyvaksytty": "Accepted from reserve place",
+      "Vastaanottanut": "You have confirmed the study place",
+      "Hylatty": "Not accepted",
+      "EhdollisestiVastaanottanut": "You have confirmed the study place conditionally",
+      "EiVastaanotettuMaaraAikana": "You have not confirmed the study place within the set time"
     }
   },
 
@@ -63,17 +66,6 @@
     "no": "No",
     "rememberSendAttachments": "Remember to send the <a>attachments</a>.",
     "applicationIsInPostProcessing": "Your application is being processed. If you want to make any changes, please try again later.",
-
-    "resultState": {
-      "Kesken": "Student admission process is unfinished",
-      "Hylatty": "You have not received a study place",
-      "Vastaanottanut": "You have confirmed the study place__aika__: __opiskelupaikka__.",
-      "EhdollisestiVastaanottanut": "You have confirmed the study place conditionally__aika__: __opiskelupaikka__.",
-      "EiVastaanotettuMaaraAikana": "You have not confirmed the study place within the set time: __opiskelupaikka__.",
-      "Perunut": "You have cancelled the application__aika__.",
-      "Peruutettu": "The application has been cancelled__aika__.",
-      "Peruuntunut": "The application has been cancelled"
-    },
 
     "acceptEducation": {
       "received": "Study place granted: __opetuspiste__ - __koulutus__",

@@ -32,9 +32,8 @@
             </span>
         </span>
     </p>
-    <p class="application-status result-status" ng-if="resultStatus" ng-bind="resultStatus"></p>
 
-    <hakutoiveen-vastaanotto application-oid="application.oid" haku="application.haku" hakutoiveet="application.vastaanotettavatHakutoiveet()" update-application="updateApplicationAfterPost">
+    <hakutoiveen-vastaanotto application-oid="application.oid" haku="application.haku" hakutoiveet="application.vastaanotettavatHakutoiveet()" callback="hakutoiveVastaanotettu">
     </hakutoiveen-vastaanotto>
 </div>
 

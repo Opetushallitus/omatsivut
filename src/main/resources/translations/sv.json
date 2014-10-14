@@ -34,9 +34,12 @@
       "VarallaPvm": "__reservplats___. på reservplats. Reservplatser fylls ända till __varasijaPvm__.",
       "Peruutettu": "Annullerats",
       "Perunut": "Du har annullerat studieplatsen",
-      "Hylatty": "Icke godkänd",
-      "Peruuntunut": "Annullerad automatiskt",
-      "VarasijaltaHyvaksytty": "Godkänd från reservplats"
+      "Peruuntunut": "Ansökan har blivit annullerad",
+      "VarasijaltaHyvaksytty": "Godkänd från reservplats",
+      "Vastaanottanut": "Du har tagit emot studieplatsen",
+      "Hylatty": "Du har inte fått någon studieplats",
+      "EhdollisestiVastaanottanut": "Du har tagit emot studieplatsen villkorligt",
+      "EiVastaanotettuMaaraAikana": "Du har inte tagit emot studieplatsen inom utsatt tid"
     }
   },
 
@@ -63,17 +66,6 @@
     "no": "Nej",
     "rememberSendAttachments": "Kom ihåg att skicka ansökningsblankettens <a>bilagor</a>.",
     "applicationIsInPostProcessing": "Din ansökan bearbetas fortfarande. Om du vill ändra dina ansökningsmäl, var god försök igen senare.",
-
-    "resultState": {
-      "Kesken": "Studerandeantagningen oavslutad",
-      "Hylatty": "Du har inte fått någon studieplats",
-      "Vastaanottanut": "Du har tagit emot studieplatsen__aika__: __opiskelupaikka__.",
-      "EhdollisestiVastaanottanut": "Du har tagit emot studieplatsen villkorligt__aika__: __opiskelupaikka__.",
-      "EiVastaanotettuMaaraAikana": "Du har inte tagit emot studieplatsen inom utsatt tid: __opiskelupaikka__.",
-      "Perunut": "Du har annullerat ansökan__aika__.",
-      "Peruutettu": "Ansökan har annullerats__aika__.",
-      "Peruuntunut": "Ansökan har blivit annullerad"
-    },
 
     "acceptEducation": {
       "received": "Studieplats beviljad: __opetuspiste__ - __koulutus__",

@@ -6,7 +6,7 @@ module.exports = function(listApp) {
         applicationOid: '&applicationOid',
         haku: '&haku',
         hakutoiveet: '&hakutoiveet',
-        updateApplication: '=updateApplication'
+        callback: '=callback'
       },
       templateUrl: 'templates/hakutoiveenVastaanotto.html',
       link: function (scope, element, attrs) {
@@ -32,7 +32,7 @@ module.exports = function(listApp) {
           function onSuccess(updatedApplication) {
             scope.ajaxPending = false
             scope.error = ""
-            scope.updateApplication(updatedApplication)
+            scope.callback(hakutoive, updatedApplication)
           }
 
           function onError(err) {

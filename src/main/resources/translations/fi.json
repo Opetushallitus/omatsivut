@@ -34,9 +34,12 @@
       "VarallaPvm": "__varasija__. varasijalla. Varasijoja täytetään __varasijaPvm__ asti.",
       "Peruutettu": "Peruutettu",
       "Perunut": "Peruit opiskelupaikan",
-      "Hylatty": "Hylätty",
       "Peruuntunut": "Peruuntunut automaattisesti",
-      "VarasijaltaHyvaksytty": "Hyväksytty varasijalta"
+      "VarasijaltaHyvaksytty": "Hyväksytty varasijalta",
+      "Vastaanottanut": "Olet ottanut paikan vastaan",
+      "Hylatty": "Et saanut opiskelupaikkaa.",
+      "EhdollisestiVastaanottanut": "Olet ottanut paikan vastaan ehdollisesti",
+      "EiVastaanotettuMaaraAikana": "Et ottanut opiskelupaikkaa vastaan määräaikaan mennessä"
     }
   },
 
@@ -63,17 +66,6 @@
     "no": "Ei",
     "rememberSendAttachments": "Muista lähettää hakemuksen <a>liitteet</a>.",
     "applicationIsInPostProcessing": "Hakemuksesi on vielä käsiteltävänä. Jos haluat muuttaa hakutoiveitasi, yritä myöhemmin uudelleen.",
-
-    "resultState": {
-      "Kesken": "Opiskelijavalinta on kesken",
-      "Hylatty": "Et saanut opiskelupaikkaa.",
-      "Vastaanottanut": "Olet ottanut opiskelupaikan vastaan__aika__: __opiskelupaikka__.",
-      "EhdollisestiVastaanottanut": "Olet ottanut ehdollisesti vastaan opiskelupaikan__aika__: __opiskelupaikka__.",
-      "EiVastaanotettuMaaraAikana": "Et ottanut opiskelupaikkaa vastaan määräaikaan mennessä: __opiskelupaikka__.",
-      "Perunut": "Olet perunut opiskelupaikan__aika__.",
-      "Peruutettu": "Hakemus on peruutettu__aika__.",
-      "Peruuntunut": "Hakemus on peruuntunut."
-    },
 
     "acceptEducation": {
       "received": "Opiskelupaikka myönnetty: __opetuspiste__ - __koulutus__",

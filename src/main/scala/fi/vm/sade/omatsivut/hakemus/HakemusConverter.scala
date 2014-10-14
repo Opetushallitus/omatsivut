@@ -47,7 +47,7 @@ trait HakemusConverterComponent {
       } else {
         if (!haku.applicationPeriods.head.active) {
           val valintatulos = convertToValintatulos(applicationSystem, application, hakutoiveet)
-          HakuPaattynyt(valintatulos = valintatulos, resultStatus = resultStatus(valintatulos))
+          HakuPaattynyt(valintatulos = valintatulos)
         } else {
           application.getState.toString match {
             case "ACTIVE" => Active()
@@ -60,25 +60,6 @@ trait HakemusConverterComponent {
           }
         }
       }
-    }
-
-    private def resultStatus(valintatulos: Option[Valintatulos]): Option[ResultStatus] = {
-      valintatulos.flatMap(tulos => {
-        vastaanottotieto(tulos.hakutoiveet) match {
-          case Some(vastaanotettu) => Some(ResultStatus(vastaanotettu.vastaanottotila, vastaanotettu.viimeisinValintatuloksenMuutos, Some(vastaanotettu.opetuspiste.name + " - " + vastaanotettu.koulutus.name)))
-          case None => {
-            if(tulos.hakutoiveet.exists(isKesken(_)) || tulos.hakutoiveet.exists(isHyvaksytty(_))) {
-              tulos.hakutoiveet.find(isVastaanotettavissa(_)) match {
-                case Some(vastaanotettavissa) => None
-                case None => Some(ResultStatus())
-              }
-            }
-            else {
-              Some(ResultStatus(ResultState.withName(tulos.hakutoiveet.head.tila.toString())))
-            }
-          }
-        }
-      })
     }
 
     private def isKesken(hakutoiveenValintatulos: HakutoiveenValintatulos) = {

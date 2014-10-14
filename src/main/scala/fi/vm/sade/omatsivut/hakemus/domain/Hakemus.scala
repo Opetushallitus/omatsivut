@@ -49,7 +49,7 @@ sealed trait HakemuksenTila {
 case class Submitted(id: String = "SUBMITTED") extends HakemuksenTila // Alkutila, ei editoitatissa
 case class PostProcessing(id: String = "POSTPROCESSING") extends HakemuksenTila // Taustaprosessointi kesken, ei editoitavissa
 case class Active(id: String = "ACTIVE") extends HakemuksenTila // Aktiivinen, editoitavissa
-case class HakuPaattynyt(id: String = "HAKUPAATTYNYT", valintatulos: Option[Valintatulos] = None, resultStatus: Option[ResultStatus]) extends HakemuksenTila // Haku päättynyt
+case class HakuPaattynyt(id: String = "HAKUPAATTYNYT", valintatulos: Option[Valintatulos] = None) extends HakemuksenTila // Haku päättynyt
 case class Passive(id: String = "PASSIVE") extends HakemuksenTila // Passiivinen/poistettu
 case class Incomplete(id: String = "INCOMPLETE") extends HakemuksenTila // Tietoja puuttuu
 
@@ -57,12 +57,6 @@ object ResultState extends Enumeration {
   type ResultState = Value
   val VASTAANOTTANUT, EI_VASTAANOTETTU_MAARA_AIKANA, EHDOLLISESTI_VASTAANOTTANUT, PERUUTETTU, PERUNUT, HYLATTY, PERUUNTUNUT, KESKEN = Value
 }
-
-case class ResultStatus (
-                          state: ResultState = ResultState.KESKEN,
-                          changeTime: Option[Long] = None,
-                          opiskelupaikka: Option[String] = None
-)
 
 case class Valintatulos(hakutoiveet: List[HakutoiveenValintatulos])
 case class HakutoiveenValintatulos(

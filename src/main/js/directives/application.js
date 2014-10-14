@@ -21,7 +21,6 @@ module.exports = function(listApp) {
           $scope.hasChanged = false
           $scope.isSaveable = true
           $scope.isValidating = false
-          $scope.resultStatus = getResultStatus(hakemus)
         }
 
         updateHakemus($scope.application)
@@ -50,19 +49,6 @@ module.exports = function(listApp) {
             return localization("label.applicationUpdated")
         }
 
-        function getResultStatus(application) {
-          if (application.state && application.state.resultStatus != null) {
-              var status = application.state.resultStatus
-
-              if (status.state != "KESKEN") {
-                return localization("message.resultState." + util.underscoreToCamelCase(status.state), {
-                  aika: status.changeTime == null ? "" : " " + formatTimestamp(status.changeTime),
-                  opiskelupaikka: status.opiskelupaikka == null ? "" : status.opiskelupaikka
-                })
-              }
-          }
-        }
-
         $scope.$watch("application.getHakutoiveWatchCollection()", function(hakutoiveet, oldHakutoiveet) {
           // Skip initial values angular style
           if (!_.isEqual(hakutoiveet, oldHakutoiveet)) {
@@ -81,11 +67,11 @@ module.exports = function(listApp) {
           validateHakutoiveet(false)
         })
 
-        $scope.updateApplicationAfterPost = function(updated) {
+        $scope.hakutoiveVastaanotettu = function(hakutoive, updated) {
           $scope.application.mergeSavedApplication(updated)
           $timeout(function() { // Don't display until dialog has faded out
-            $scope.resultStatus = getResultStatus($scope.application)
-          }, 500)
+            $scope.$broadcast("hakutoive-vastaanotettu", hakutoive)
+          }, 0)
         }
 
         function applicationChanged() {
