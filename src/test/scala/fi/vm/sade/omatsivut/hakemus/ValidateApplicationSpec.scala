@@ -64,27 +64,10 @@ class ValidateApplicationSpec extends HakemusApiSpecification with FixturePerson
       }
     }
 
-    "return application period of first preference if application type is 'LISÄHAKU'" in {
-      withHakemus(TestFixture.hakemusLisahaku) { hakemus =>
-        validate(hakemus) { (errors, structuredQuestions, applicationPeriods) =>
-          applicationPeriods must_== List(TestFixture.hakemusLisahaku_hakuaikaForPreference)
-        }
-      }
-    }
-
     "return application period of application system if application type is not 'LISÄHAKU'" in {
       withHakemus(hakemusYhteishakuKevat2014WithForeignBaseEducationId) { hakemus =>
         validate(hakemus) { (errors, structuredQuestions, applicationPeriods) =>
           applicationPeriods must_== List(TestFixture.hakemus2_hakuaika)
-        }
-      }
-    }
-
-    "update application period when the first preference is changed in 'LISÄHAKU'" in {
-      withHakemus(TestFixture.hakemusLisahaku) { hakemus =>
-        val modified = addHakutoive(TestFixture.ammattistarttiAhlman)(removeHakutoive(hakemus))
-        validate(modified) { (_, _, applicationPeriods) =>
-          applicationPeriods must_== List(TestFixture.hakemusLisahaku_hakuaikaDefault)
         }
       }
     }

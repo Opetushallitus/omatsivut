@@ -40,12 +40,6 @@ class GetApplicationsSpec extends HakemusApiSpecification with FixturePerson {
         hakemus.haku.hakuajat.head must_== TestFixture.hakemus2_hakuaika
       }
     }
-
-    "use preference's application period when application type is 'LISÄHAKU'" in {
-      withHakemus(TestFixture.hakemusLisahaku) { hakemus =>
-        hakemus.haku.hakuajat.head must_== TestFixture.hakemusLisahaku_hakuaikaForPreference
-      }
-    }
   }
 
   addServlet(componentRegistry.newApplicationsServlet, "/*")
