@@ -175,19 +175,6 @@
     })
 
     describe("lisähaku", function() {
-      it("hakuaika haetaan hakukohteelta", function() {
-        hakemusLisaKevat2014WithForeignBaseEducation.applicationStatus().should.equal("Hakuaika päättyy perjantaina 28. elokuuta 2054 klo 14.19")
-      })
-
-      describe("hakuajan päivittyminen", function() {
-        before(
-          replacePreference(hakemusLisaKevat2014WithForeignBaseEducation, 0, "Ahlman")
-        )
-
-        it("hakuaika päivittyy kun hakutoive muuttuu", function() {
-          hakemusLisaKevat2014WithForeignBaseEducation.applicationStatus().should.equal("Hakuaika päättyy keskiviikkona 1. joulukuuta 2100 klo 07.00")
-        })
-      })
 
       describe("lisähaun muokkaus hakuajan jälkeen", function() {
         before(page.applyFixtureAndOpen({fixtureName:"lisahakuEnded"}))
