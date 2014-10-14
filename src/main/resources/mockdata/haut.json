@@ -648,7 +648,7 @@
                 "1.2.246.562.20.89100672511"
             ],
             "nimi": {
-                "kieli_sv": "Högskolornas gemensamma ansökan hösten 2014",
+                "kieli_sv": "Lisähaku kevään 2014 yhteishaussa vapaaksi jääneille paikoille samma på svenska",
                 "kieli_en": "Joint application to higher education autumn 2014",
                 "kieli_fi": "Korkeakoulujen yhteishaku syksy 2014"
             },
@@ -3953,7 +3953,7 @@
             "nimi": {
                 "kieli_sv": "Ansökan sommaren 2014 till förberedande utbildningar efter grundskolan",
                 "kieli_en": "",
-                "kieli_fi": "Perusopetuksen jälkeisen valmistavan koulutuksen kesän 2014 haku"
+                "kieli_fi": "Perusopetuksen jälkeisen valmistavan koulutuksen kesän 2014 haku MUOKATTU"
             },
             "maxHakukohdes": 3,
             "organisaatioOids": [
