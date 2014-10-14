@@ -105,12 +105,5 @@ class UpdateApplicationSpec extends HakemusApiSpecification with FixturePerson {
         status must_== 403
       }
     }
-
-    "reject update of 'LISÄHAKU' application after application period" in {
-      setupFixture("lisahakuEnded")
-      modifyHakemus(hakemusLisahaku)((hakemus) => hakemus) { hakemus =>
-        status must_== 403
-      }
-    }
   }
 }

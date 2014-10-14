@@ -17,7 +17,6 @@ class FixtureImporter(val applicationDAO: ApplicationDAO, val mongoTemplate: Mon
   def applyOverrides(fixtureName: String = "") {
     fixtureName match {
       case "peruskoulu" => new PeruskouluFixture(applicationDAO).apply
-      case "lisahakuEnded" => new LisahakuEndedFixture(applicationDAO).apply
       case "passiveApplication" => new ApplicationStateFixture(applicationDAO).setState(Application.State.PASSIVE)
       case "incompleteApplication" => new ApplicationStateFixture(applicationDAO).setState(Application.State.INCOMPLETE)
       case "submittedApplication" => new ApplicationStateFixture(applicationDAO).setState(Application.State.SUBMITTED)
