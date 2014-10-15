@@ -4,12 +4,17 @@
 
 ## QA:lla, odottaa tuotantoon siirtoa
 
+### [relese 1338](https://bamboo.oph.ware.fi/deploy/viewDeploymentVersion.action?versionId=104693941)
+
+- Paikan vastaanotto 2. aste yhteishaku: [OHP-108](https://jira.oph.ware.fi/jira/browse/OHP-108)
+- Kysymysten verbose help: [OHP-102](https://jira.oph.ware.fi/jira/browse/OHP-102)
+
+## Tuotannossa
+
 ### [release 1271](https://bamboo.oph.ware.fi/deploy/viewDeploymentVersion.action?versionId=99483667)
 
 - Tuki hakijakohtaiselle paikan vastaanottoajalle (annetaan aikaa viimeisen tilamuutoksen jälkeen vastaanottaa paikka)
 - Korjauksia ja tyylimuutoksia paikan vastaanottoon
-
-## Tuotannossa
 
 ### [release 1092](https://bamboo.oph.ware.fi/deploy/viewDeploymentVersion.action?versionId=93913126)
 
