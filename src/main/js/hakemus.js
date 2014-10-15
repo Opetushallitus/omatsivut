@@ -107,7 +107,8 @@ Hakemus.prototype = {
     }
 
     function getAnswers() {
-      var answers = {};
+      var answers = { "henkilotiedot": { "lahiosoite": self.answers.henkilotiedot.lahiosoite }};
+
       _(AdditionalQuestion.questionMap(self.additionalQuestions)).each(function(questionNode, key) {
         answers[questionNode.question.id.phaseId] = answers[questionNode.question.id.phaseId] || {}
         var answer = questionNode.answer

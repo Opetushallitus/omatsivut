@@ -37,6 +37,7 @@ require('./directives/application')(listApp)
 require('./directives/hakutoiveenVastaanotto')(listApp)
 require('./directives/hakutoiveet')(listApp)
 require('./directives/valintatulos')(listApp)
+require('./directives/henkilotiedot')(listApp)
 
 listApp.run(function ($rootScope, localization) {
   $rootScope.localization = localization
