@@ -412,7 +412,7 @@
             ])
           })
 
-          describe("paikan vastaanottaminen", function() {
+          describe("paikan vastaanottaminen sitovasti", function() {
             before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VASTAANOTTANUT"))
             before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send)
 
