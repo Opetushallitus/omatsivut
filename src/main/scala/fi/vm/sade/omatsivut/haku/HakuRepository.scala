@@ -2,6 +2,7 @@ package fi.vm.sade.omatsivut.haku
 
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
+import fi.vm.sade.haku.oppija.lomake.domain.elements.Element
 import fi.vm.sade.omatsivut.config.SpringContextComponent
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.koulutusinformaatio.{KoulutusInformaatioComponent, KoulutusInformaatioService}
@@ -20,17 +21,17 @@ trait HakuRepositoryComponent {
   class RemoteHakuRepository extends HakuRepository with Logging {
     private val repository = springContext.applicationSystemService
 
-    def getHakuByApplication(application: Application)(implicit lang: Language.Language): (Option[ApplicationSystem], Option[Haku]) = {
+    def getHakuByApplication(application: Application)(implicit lang: Language.Language): (Option[Lomake], Option[Haku]) = {
       application.getApplicationSystemId match {
         case "" => (None, None)
         case applicationSystemId => (tryFind(applicationSystemId), tarjontaService.haku(applicationSystemId, lang))
       }
     }
 
-    private def tryFind(applicationSystemOid: String): Option[ApplicationSystem] = {
+    private def tryFind(applicationSystemOid: String): Option[Lomake] = {
       try {
         Some(timed(1000, "Application system service"){
-          repository.getApplicationSystem(applicationSystemOid)
+          Lomake(repository.getApplicationSystem(applicationSystemOid))
         })
       } catch {
         case e: Exception =>
@@ -49,7 +50,15 @@ trait HakuRepositoryComponent {
 }
 
 trait HakuRepository {
-  def getHakuByApplication(application: Application)(implicit lang: Language.Language): (Option[ApplicationSystem], Option[Haku])
+  def getHakuByApplication(application: Application)(implicit lang: Language.Language): (Option[Lomake], Option[Haku])
   def getApplicationPeriods(applicationSystemId: String)(implicit lang: Language.Language) : List[Hakuaika]
 }
 
+case class Lomake(oid: String, additionalInformation: List[Element])
+object Lomake {
+  import scala.collection.JavaConverters._
+
+  def apply(applicationSystem: ApplicationSystem): Lomake = {
+    new Lomake(applicationSystem.getId, applicationSystem.getAdditionalInformationElements.asScala.toList)
+  }
+}

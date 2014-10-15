@@ -7,7 +7,7 @@ import fi.vm.sade.omatsivut.config.SpringContextComponent
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.domain.Language.Language
 import fi.vm.sade.omatsivut.hakemus.domain._
-import fi.vm.sade.omatsivut.haku.{HakuRepository, HakuRepositoryComponent}
+import fi.vm.sade.omatsivut.haku.{Lomake, HakuRepository, HakuRepositoryComponent}
 import fi.vm.sade.omatsivut.tarjonta.{Haku, TarjontaComponent}
 import fi.vm.sade.omatsivut.util.Timer.timed
 
@@ -49,7 +49,7 @@ trait HakemusRepositoryComponent {
             dao.update(applicationQuery, application)
           }
           auditLogger.log(UpdateHakemus(userOid, hakemus.oid, originalAnswers, application.getAnswers.toMap.mapValues(_.toMap)))
-          hakemusConverter.convertToHakemus(applicationSystem, haku, application)
+          hakemusConverter.convertToHakemus(Lomake(applicationSystem), haku, application)
         }
       }
     }
@@ -88,9 +88,9 @@ trait HakemusRepositoryComponent {
           }
           for {
             haku <- hakuOption
-            applicationSystem <- applicationSystemOption
+            lomake <- applicationSystemOption
           } yield {
-            val hakemus = hakemusConverter.convertToHakemus(applicationSystem, haku, application)
+            val hakemus = hakemusConverter.convertToHakemus(lomake, haku, application)
             auditLogger.log(ShowHakemus(application.getPersonOid, hakemus.oid))
             hakemus
           }
