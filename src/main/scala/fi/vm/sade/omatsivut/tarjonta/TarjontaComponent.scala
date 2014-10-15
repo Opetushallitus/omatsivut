@@ -26,8 +26,8 @@ trait TarjontaComponent {
   }
 
   object CachedRemoteTarjontaService {
-    def apply(config: RemoteApplicationConfig, casTicketUrl: String)(implicit appConfig: AppConfig): TarjontaService = {
-      val service = new RemoteTarjontaService(config, casTicketUrl)
+    def apply(implicit appConfig: AppConfig): TarjontaService = {
+      val service = new RemoteTarjontaService()
       val tarjontaMemo = TTLOptionalMemoize.memoize(service.haku _, 60 * 60)
 
       new TarjontaService {
@@ -36,23 +36,20 @@ trait TarjontaComponent {
     }
   }
 
-  class RemoteTarjontaService(val config: RemoteApplicationConfig, val casTicketUrl: String)(implicit appConfig: AppConfig) extends TarjontaService with JsonFormats with CasTicketRequiring {
+  class RemoteTarjontaService(implicit appConfig: AppConfig) extends TarjontaService with JsonFormats {
     import org.json4s.jackson.JsonMethods._
 
     override def haku(oid: String, lang: Language.Language) : Option[Haku] = {
-      withServiceTicket(serviceTicket => {
-        val (responseCode, _, resultString) =
-          DefaultHttpClient.httpGet(appConfig.settings.tarjontaUrl + "/haku/" + oid)
-            .param("ticket", serviceTicket)
-            .responseWithHeaders()
-        responseCode match {
-          case 200 =>
-            parse(resultString).extractOpt[JValue].flatMap(HakuParser.parseHaku(_)).map { tarjontaHaku =>
-              val tulokset = ohjausparametritService.valintatulokset(oid)
-              Haku(tarjontaHaku, lang).copy(results = tulokset)
-            }
-        }
-      })
+      val (responseCode, _, resultString) =
+        DefaultHttpClient.httpGet(appConfig.settings.tarjontaUrl + "/haku/" + oid)
+          .responseWithHeaders()
+      responseCode match {
+        case 200 =>
+          parse(resultString).extractOpt[JValue].flatMap(HakuParser.parseHaku(_)).map { tarjontaHaku =>
+            val tulokset = ohjausparametritService.valintatulokset(oid)
+            Haku(tarjontaHaku, lang).copy(results = tulokset)
+          }
+      }
     }
   }
 }

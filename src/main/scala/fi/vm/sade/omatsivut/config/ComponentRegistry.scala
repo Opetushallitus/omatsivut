@@ -59,7 +59,7 @@ class ComponentRegistry(val config: AppConfig)
 
   private def configureTarjontaService : TarjontaService = config match {
     case _ : StubbedExternalDeps => new StubbedTarjontaService()
-    case _ => CachedRemoteTarjontaService(config.settings.authenticationServiceConfig, config.settings.casTicketUrl)(config)
+    case _ => CachedRemoteTarjontaService(config)
   }
 
   private lazy val runningLogger = new RunnableLogger
