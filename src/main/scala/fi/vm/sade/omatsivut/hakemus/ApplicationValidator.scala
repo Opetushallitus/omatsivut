@@ -4,6 +4,7 @@ import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.hakemus.it.dao.ApplicationDAO
 import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
 import fi.vm.sade.haku.oppija.lomake.validation.{ElementTreeValidator, ValidationInput, ValidationResult}
+import fi.vm.sade.haku.virkailija.lomakkeenhallinta.hakulomakepohja.phase.henkilotiedot.HenkilotiedotPhase
 import fi.vm.sade.omatsivut.config.SpringContextComponent
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
@@ -11,7 +12,6 @@ import fi.vm.sade.omatsivut.hakemus.domain._
 import fi.vm.sade.omatsivut.haku.AddedQuestionFinder
 import fi.vm.sade.omatsivut.haku.domain.{AnswerId, QuestionNode}
 import fi.vm.sade.omatsivut.util.Logging
-
 import scala.collection.JavaConversions._
 
 trait ApplicationValidatorComponent {
@@ -76,7 +76,10 @@ trait ApplicationValidatorComponent {
           }
       }
       val unknownAnswers: List[(String, String, String)] = flatAnswers
-        .filterNot { case (phaseId, questionId, _) => acceptedAnswerIds.contains(AnswerId(phaseId, questionId))}
+        .filterNot {
+          case (HenkilotiedotPhase.PHASE_ID_HENKILOTIEDOT, questionId, _) if List(HenkilotiedotPhase.QUESTION_ID_LAHIOSOITE, HenkilotiedotPhase.QUESTION_ID_POSTINUMERO, HenkilotiedotPhase.QUESTION_ID_SAHKOPOSTI).contains(questionId) || questionId.startsWith(HenkilotiedotPhase.QUESTION_ID_PREFIX_PUHELINNUMERO) => true
+          case (phaseId, questionId, _) => acceptedAnswerIds.contains(AnswerId(phaseId, questionId))
+        }
       unknownAnswers
         .map{ case (phaseId, questionId, answer) =>
           ValidationError(questionId, "unknown answer id")
