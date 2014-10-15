@@ -4,7 +4,7 @@
 
 ## QA:lla, odottaa tuotantoon siirtoa
 
-### [relese 1338](https://bamboo.oph.ware.fi/deploy/viewDeploymentVersion.action?versionId=104693941)
+### [release 1338](https://bamboo.oph.ware.fi/deploy/viewDeploymentVersion.action?versionId=104693941)
 
 - Paikan vastaanotto 2. aste yhteishaku: [OHP-108](https://jira.oph.ware.fi/jira/browse/OHP-108)
 - Kysymysten verbose help: [OHP-102](https://jira.oph.ware.fi/jira/browse/OHP-102)
