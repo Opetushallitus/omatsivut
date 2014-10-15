@@ -73,7 +73,7 @@ class ComponentRegistry(val config: AppConfig)
   val hakuRepository: HakuRepository = new RemoteHakuRepository
   val hakemusRepository: HakemusRepository = new RemoteHakemusRepository
   val hakemusConverter: HakemusConverter = new HakemusConverter
-  val tarjontaService: TarjontaService = new StubbedTarjontaService
+  val tarjontaService: TarjontaService = configureTarjontaService
 
   def newApplicationValidator: ApplicationValidator = new ApplicationValidator
   def newHakemusPreviewGenerator(language: Language): HakemusPreviewGenerator = new HakemusPreviewGenerator()(language)
