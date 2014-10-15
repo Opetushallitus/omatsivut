@@ -16,7 +16,7 @@ class ScalatraBootstrap extends LifeCycle {
   override def init(context: ServletContext) {
     componentRegistry.start
 
-    context.mount(componentRegistry.newApplicationsServlet, ScalatraPaths.applications)
+    context.mount(componentRegistry.newApplicationsServlet, "/api/applications")
     context.mount(new TranslationServlet, "/translations")
     context.mount(componentRegistry.newKoulutusServlet, ScalatraPaths.koulutusinformaatio)
     context.mount(componentRegistry.newSwaggerServlet, "/swagger/*")

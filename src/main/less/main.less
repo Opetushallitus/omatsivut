@@ -285,6 +285,7 @@ button.delete-btn:not(.confirm) {
 .result-list {
   border-collapse: collapse;
   width: 100%;
+  line-height: 125%;
 
   th {
     .section-heading-font(@font-color);
@@ -308,12 +309,12 @@ button.delete-btn:not(.confirm) {
 
     &:last-child {
       vertical-align: top;
+      font-style: italic;
     }
   }
 
   tr.canceled {
     color: @font-color-light;
-    font-style: italic;
   }
 
   tr.confirmed {
