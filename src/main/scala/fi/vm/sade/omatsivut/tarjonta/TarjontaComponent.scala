@@ -16,8 +16,8 @@ trait TarjontaComponent {
   this: OhjausparametritComponent =>
 
   class StubbedTarjontaService extends TarjontaService with JsonFormats {
-    override def haku(oid: String)(implicit lang: Language.Language) = {
-      val haku = JsonFixtureMaps.findByKey[JValue]("/mockdata/haut.json", oid).flatMap(HakuParser.parseHaku(_)).map {h => Haku(h)}
+    override def haku(oid: String, lang: Language.Language) = {
+      val haku = JsonFixtureMaps.findByKey[JValue]("/mockdata/haut.json", oid).flatMap(HakuParser.parseHaku(_)).map {h => Haku(h, lang)}
       haku.map {h =>
         val tulokset = ohjausparametritService.valintatulokset(oid)
         h.copy(results = tulokset)
@@ -31,7 +31,7 @@ trait TarjontaComponent {
       val tarjontaMemo = TTLOptionalMemoize.memoize(service.haku _, 60 * 60)
 
       new TarjontaService {
-        override def haku(oid: String)(implicit lang: Language): Option[Haku] = tarjontaMemo(oid)
+        override def haku(oid: String, lang: Language): Option[Haku] = tarjontaMemo(oid, lang)
       }
     }
   }
@@ -39,7 +39,7 @@ trait TarjontaComponent {
   class RemoteTarjontaService(val config: RemoteApplicationConfig, val casTicketUrl: String)(implicit appConfig: AppConfig) extends TarjontaService with JsonFormats with CasTicketRequiring {
     import org.json4s.jackson.JsonMethods._
 
-    override def haku(oid: String)(implicit lang: Language.Language) : Option[Haku] = {
+    override def haku(oid: String, lang: Language.Language) : Option[Haku] = {
       withServiceTicket(serviceTicket => {
         val (responseCode, _, resultString) =
           DefaultHttpClient.httpGet(appConfig.settings.tarjontaUrl + "/haku/" + oid)
@@ -49,7 +49,7 @@ trait TarjontaComponent {
           case 200 =>
             parse(resultString).extractOpt[JValue].flatMap(HakuParser.parseHaku(_)).map { tarjontaHaku =>
               val tulokset = ohjausparametritService.valintatulokset(oid)
-              Haku(tarjontaHaku).copy(results = tulokset)
+              Haku(tarjontaHaku, lang).copy(results = tulokset)
             }
         }
       })
@@ -70,5 +70,5 @@ private object HakuParser extends JsonFormats {
 }
 
 trait TarjontaService {
-  def haku(oid: String)(implicit lang: Language.Language) : Option[Haku]
+  def haku(oid: String, lang: Language.Language) : Option[Haku]
 }

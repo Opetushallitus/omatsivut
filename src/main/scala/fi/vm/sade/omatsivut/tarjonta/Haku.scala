@@ -5,7 +5,7 @@ import fi.vm.sade.omatsivut.ohjausparametrit.domain.Tulosaikataulu
 import org.joda.time.Interval
 
 object Haku {
-  def apply(tarjontaHaku: TarjontaHaku)(implicit lang: Language) : Haku = {
+  def apply(tarjontaHaku: TarjontaHaku, lang: Language) : Haku = {
     Haku(tarjontaHaku.oid, tarjontaHaku.nimi("kieli_" + lang.toString), tarjontaHaku.hakuaikas.map(h => Hakuaika(h)), HaunTyyppi(tarjontaHaku).toString, isKorkeakouluhaku(tarjontaHaku))
   }
 

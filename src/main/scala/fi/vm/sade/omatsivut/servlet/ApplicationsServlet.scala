@@ -67,7 +67,7 @@ trait ApplicationsServletContainer {
       val updated = Serialization.read[HakemusMuutos](content)
       val applicationSystem = applicationSystemService.getApplicationSystem(updated.hakuOid)
       val haku = timed(1000, "Tarjonta fetch Application"){
-        tarjontaService.haku(applicationSystem.getId)
+        tarjontaService.haku(applicationSystem.getId, language)
       }
       val errors = applicationValidator.validate(applicationSystem)(updated)
       if(errors.isEmpty) {

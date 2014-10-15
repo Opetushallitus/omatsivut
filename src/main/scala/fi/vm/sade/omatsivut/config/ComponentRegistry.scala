@@ -57,6 +57,10 @@ class ComponentRegistry(val config: AppConfig)
     case _ => new RemoteAuthenticationInfoService(config.settings.authenticationServiceConfig, config.settings.casTicketUrl)
   }
 
+  private def configureTarjontaService : TarjontaService = config match {
+    case _ : StubbedExternalDeps => new StubbedTarjontaService()
+    case _ => CachedRemoteTarjontaService(config.settings.authenticationServiceConfig, config.settings.casTicketUrl)(config)
+  }
 
   private lazy val runningLogger = new RunnableLogger
   private lazy val pool = Executors.newSingleThreadExecutor

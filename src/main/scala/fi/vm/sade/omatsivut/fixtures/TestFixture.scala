@@ -45,7 +45,7 @@ object TestFixture {
     }
   }
 
-  def haku(implicit lang: Language.Language) = componentRegistry.tarjontaService.haku(applicationSystemNivelKesa2013Oid).get
+  def haku(implicit lang: Language.Language) = componentRegistry.tarjontaService.haku(applicationSystemNivelKesa2013Oid, lang).get
   def hakemusMuutos(implicit lang: Language.Language) = {
     componentRegistry.hakemusConverter.convertToHakemus(applicationSystemNivelKesa2013, haku, applicationNivelKesa2013WithPeruskouluBaseEducationApp).toHakemusMuutos
   }
