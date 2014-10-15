@@ -1,20 +1,19 @@
 package fi.vm.sade.omatsivut.hakemus
 
 import java.util
+
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
-import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
 import fi.vm.sade.omatsivut.hakemus.domain._
-import fi.vm.sade.omatsivut.haku.Lomake
+import fi.vm.sade.omatsivut.haku.domain.Lomake
 import fi.vm.sade.omatsivut.tarjonta.Haku
-import fi.vm.sade.omatsivut.valintatulokset.ValintatulosServiceComponent
-import scala.collection.JavaConverters._
-import scala.util.Try
-import fi.vm.sade.omatsivut.valintatulokset.Vastaanottoaikataulu
+import fi.vm.sade.omatsivut.valintatulokset.{ValintatulosServiceComponent, Vastaanottoaikataulu}
 import org.joda.time.LocalDateTime
+
 import scala.collection.JavaConversions._
+import scala.util.Try
 
 trait HakemusConverterComponent {
   this: ValintatulosServiceComponent =>

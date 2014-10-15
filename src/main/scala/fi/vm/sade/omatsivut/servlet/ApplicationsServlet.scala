@@ -1,27 +1,23 @@
 package fi.vm.sade.omatsivut.servlet
 
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
-import fi.vm.sade.omatsivut.auditlog.{AuditLoggerComponent, AuditLogger}
+import fi.vm.sade.omatsivut.auditlog.{AuditLogger, AuditLoggerComponent, SaveVastaanotto}
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.config.{OmatSivutSpringContext, SpringContextComponent}
 import fi.vm.sade.omatsivut.hakemus._
 import fi.vm.sade.omatsivut.hakemus.domain.{HakemusMuutos, ValidationError, _}
-import fi.vm.sade.omatsivut.haku.domain.QuestionNode
-import fi.vm.sade.omatsivut.haku.{Lomake, HakuRepository, HakuRepositoryComponent}
+import fi.vm.sade.omatsivut.haku.domain.{Lomake, QuestionNode}
+import fi.vm.sade.omatsivut.haku.{HakuRepository, HakuRepositoryComponent}
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.security.Authentication
 import fi.vm.sade.omatsivut.tarjonta.Hakuaika
 import fi.vm.sade.omatsivut.util.Timer._
-import fi.vm.sade.omatsivut.valintatulokset.{Vastaanotto, ValintatulosService, ValintatulosServiceComponent}
+import fi.vm.sade.omatsivut.valintatulokset.{ValintatulosService, ValintatulosServiceComponent, Vastaanotto}
 import org.json4s.jackson.Serialization
 import org.scalatra.json._
 import org.scalatra.swagger.SwaggerSupportSyntax.OperationBuilder
 import org.scalatra.swagger._
 import org.scalatra.{BadRequest, Forbidden, NotFound, Ok}
-import org.scalatra.ActionResult
-import org.scalatra.ActionResult
-import fi.vm.sade.omatsivut.auditlog.AuditEvent
-import fi.vm.sade.omatsivut.auditlog.SaveVastaanotto
 
 trait ApplicationsServletContainer {
   this: HakuRepositoryComponent with

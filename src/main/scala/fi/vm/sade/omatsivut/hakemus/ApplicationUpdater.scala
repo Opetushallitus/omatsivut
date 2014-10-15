@@ -3,13 +3,12 @@ package fi.vm.sade.omatsivut.hakemus
 import java.util.Date
 
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
-import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
 import fi.vm.sade.omatsivut.hakemus.domain.HakemusMuutos
-import fi.vm.sade.omatsivut.haku.domain.{AnswerId, QuestionId}
-import fi.vm.sade.omatsivut.haku.{Lomake, AddedQuestionFinder, ElementWrapper, FormQuestionFinder}
+import fi.vm.sade.omatsivut.haku.domain.{Lomake, AnswerId, QuestionId}
+import fi.vm.sade.omatsivut.haku.{AddedQuestionFinder, ElementWrapper, FormQuestionFinder}
 
 import scala.collection.JavaConversions._
 

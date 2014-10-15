@@ -5,6 +5,7 @@ import fi.vm.sade.omatsivut.fixtures.TestFixture._
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
 import fi.vm.sade.omatsivut.hakemus.{ApplicationUpdater, HakutoiveetConverter}
+import fi.vm.sade.omatsivut.haku.domain.Lomake
 import org.specs2.mutable.Specification
 
 class AddedQuestionFinderSpec extends Specification {

@@ -2,14 +2,13 @@ package fi.vm.sade.omatsivut.hakemus
 
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.hakemus.it.dao.ApplicationDAO
-import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
 import fi.vm.sade.haku.oppija.lomake.validation.{ElementTreeValidator, ValidationInput, ValidationResult}
 import fi.vm.sade.omatsivut.config.SpringContextComponent
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
 import fi.vm.sade.omatsivut.hakemus.domain._
-import fi.vm.sade.omatsivut.haku.{Lomake, AddedQuestionFinder}
-import fi.vm.sade.omatsivut.haku.domain.{AnswerId, QuestionNode}
+import fi.vm.sade.omatsivut.haku.AddedQuestionFinder
+import fi.vm.sade.omatsivut.haku.domain.{AnswerId, Lomake, QuestionNode}
 import fi.vm.sade.omatsivut.util.Logging
 
 import scala.collection.JavaConversions._
