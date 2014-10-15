@@ -44,14 +44,14 @@ trait HakemusApiSpecification extends ScalatraTestSupport {
   }
 
   def withApplications[T](f: (List[Hakemus] => T))(implicit personOid: PersonOid): T = {
-    authGet("/applications") {
+    authGet("/api/applications") {
       val applications: List[Hakemus] = Serialization.read[List[Hakemus]](body)
       f(applications)
     }
   }
 
   def saveHakemus[T](hakemus: Hakemus)(f: => T)(implicit personOid: PersonOid): T = {
-    authPut("/applications/" + hakemus.oid, Serialization.write(hakemus.toHakemusMuutos)) {
+    authPut("/api/applications/" + hakemus.oid, Serialization.write(hakemus.toHakemusMuutos)) {
       f
     }
   }
