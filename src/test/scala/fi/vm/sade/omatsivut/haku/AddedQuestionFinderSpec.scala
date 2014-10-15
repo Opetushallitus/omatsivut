@@ -1,8 +1,6 @@
 package fi.vm.sade.omatsivut.haku
 
-import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
 import fi.vm.sade.omatsivut.domain.Language
-import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.omatsivut.fixtures.TestFixture._
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
@@ -25,8 +23,8 @@ class AddedQuestionFinderSpec extends Specification {
     }
 
     "Report zero additional questions when re-ordering hakutoiveet" in {
-      val answers1 = ApplicationUpdater.getAllUpdatedAnswersForApplication(as)(applicationNivelKesa2013WithPeruskouluBaseEducationApp, hakemusMuutos)
-      val answers2 = ApplicationUpdater.getAllUpdatedAnswersForApplication(as)(applicationNivelKesa2013WithPeruskouluBaseEducationApp, hakemusMuutos.copy(
+      val answers1 = ApplicationUpdater.getAllUpdatedAnswersForApplication(lomake)(applicationNivelKesa2013WithPeruskouluBaseEducationApp, hakemusMuutos)
+      val answers2 = ApplicationUpdater.getAllUpdatedAnswersForApplication(lomake)(applicationNivelKesa2013WithPeruskouluBaseEducationApp, hakemusMuutos.copy(
         hakutoiveet = hakemusMuutos.hakutoiveet.reverse
       ))
       val addedQuestions = findAddedQuestions(answers1, answers2)
@@ -38,9 +36,9 @@ class AddedQuestionFinderSpec extends Specification {
   }
 
   def findAddedQuestions(newAnswers: Answers, oldAnswers: Answers) = {
-    AddedQuestionFinder.findAddedQuestions(as, newAnswers, oldAnswers).toList
+    AddedQuestionFinder.findAddedQuestions(lomake, newAnswers, oldAnswers).toList
   }
 
-  val as: ApplicationSystem = applicationSystemNivelKesa2013
+  val lomake = Lomake(applicationSystemNivelKesa2013)
   val answersWithNewHakutoive = Map(ApplicationUpdater.preferencePhaseKey -> HakutoiveetConverter.convertToAnswers(List(ammattistartti), Hakemus.emptyAnswers ))
 }

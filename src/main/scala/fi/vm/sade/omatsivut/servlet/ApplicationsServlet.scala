@@ -7,7 +7,7 @@ import fi.vm.sade.omatsivut.config.{OmatSivutSpringContext, SpringContextCompone
 import fi.vm.sade.omatsivut.hakemus._
 import fi.vm.sade.omatsivut.hakemus.domain.{HakemusMuutos, ValidationError, _}
 import fi.vm.sade.omatsivut.haku.domain.QuestionNode
-import fi.vm.sade.omatsivut.haku.{HakuRepository, HakuRepositoryComponent}
+import fi.vm.sade.omatsivut.haku.{Lomake, HakuRepository, HakuRepositoryComponent}
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.security.Authentication
 import fi.vm.sade.omatsivut.tarjonta.Hakuaika
@@ -65,9 +65,9 @@ trait ApplicationsServletContainer {
     put("/:oid", operation(putApplicationsSwagger)) {
       val content: String = request.body
       val updated = Serialization.read[HakemusMuutos](content)
-      val applicationSystem = applicationSystemService.getApplicationSystem(updated.hakuOid)
+      val applicationSystem = Lomake(applicationSystemService.getApplicationSystem(updated.hakuOid))
       val haku = timed(1000, "Tarjonta fetch Application"){
-        tarjontaService.haku(applicationSystem.getId, language)
+        tarjontaService.haku(applicationSystem.oid, language)
       }
       val errors = applicationValidator.validate(applicationSystem)(updated)
       if(errors.isEmpty) {
@@ -88,10 +88,10 @@ trait ApplicationsServletContainer {
     )
     post("/validate/:oid", operation(validateApplicationsSwagger)) {
       val muutos = Serialization.read[HakemusMuutos](request.body)
-      val applicationSystem = applicationSystemService.getApplicationSystem(muutos.hakuOid)
+      val applicationSystem = Lomake(applicationSystemService.getApplicationSystem(muutos.hakuOid))
       val questionsOf: List[String] = paramOption("questionsOf").getOrElse("").split(',').toList
       val (errors: List[ValidationError], questions: List[QuestionNode], updatedApplication: Application) = applicationValidator.validateAndFindQuestions(applicationSystem)(muutos, questionsOf, personOid())
-      ValidationResult(errors, questions, hakuRepository.getApplicationPeriods(applicationSystem.getId))
+      ValidationResult(errors, questions, hakuRepository.getApplicationPeriods(applicationSystem.oid))
     }
 
 

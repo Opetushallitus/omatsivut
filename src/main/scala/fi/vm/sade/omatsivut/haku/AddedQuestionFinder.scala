@@ -12,8 +12,8 @@ import fi.vm.sade.omatsivut.haku.domain.{QuestionGroup, QuestionLeafNode, Questi
 object AddedQuestionFinder {
   val preferencePhaseKey = OppijaConstants.PHASE_APPLICATION_OPTIONS
 
-  def findAddedQuestions(applicationSystem: ApplicationSystem, newAnswers: Answers, oldAnswers: Answers)(implicit lang: Language.Language): Set[QuestionLeafNode] = {
-    val form = applicationSystem.getForm
+  def findAddedQuestions(lomake: Lomake, newAnswers: Answers, oldAnswers: Answers)(implicit lang: Language.Language): Set[QuestionLeafNode] = {
+    val form = lomake.form
     val oldAnswersFlat: Map[String, String] = FlatAnswers.flatten(oldAnswers)
     val oldQuestions = FormQuestionFinder.findQuestionsFromElements(Set(ElementWrapper.wrapFiltered(form, oldAnswersFlat)))
     val newAnswersFlat: Map[String, String] = FlatAnswers.flatten(newAnswers)
@@ -33,8 +33,8 @@ object AddedQuestionFinder {
     newHakemus.hakutoiveet.map(getHakutoive)
   }
 
-  def findQuestions(applicationSystem: ApplicationSystem)(storedApplication: Application, hakemus: HakemusMuutos, newKoulutusIds: List[String])(implicit lang: Language.Language) = {
-    val filteredForm: ElementWrapper = ElementWrapper.wrapFiltered(applicationSystem.getForm, FlatAnswers.flatten(ApplicationUpdater.getAllAnswersForApplication(applicationSystem, storedApplication.clone(), hakemus)))
+  def findQuestions(applicationSystem: Lomake)(storedApplication: Application, hakemus: HakemusMuutos, newKoulutusIds: List[String])(implicit lang: Language.Language) = {
+    val filteredForm: ElementWrapper = ElementWrapper.wrapFiltered(applicationSystem.form, FlatAnswers.flatten(ApplicationUpdater.getAllAnswersForApplication(applicationSystem, storedApplication.clone(), hakemus)))
 
     val questionsPerHakutoive: List[QuestionNode] = hakemus.hakutoiveet.zipWithIndex.flatMap { case (hakutoive, index) =>
       hakutoive.get("Koulutus-id") match {
@@ -58,12 +58,12 @@ object AddedQuestionFinder {
     withoutDuplicates(questionsPerHakutoive) ::: duplicates
   }
 
-  private def findQuestionsByHakutoive(applicationSystem: ApplicationSystem, storedApplication: Application, newHakemus: HakemusMuutos, hakutoive: Hakutoive)(implicit lang: Language.Language): Set[QuestionLeafNode] = {
+  private def findQuestionsByHakutoive(lomake: Lomake, storedApplication: Application, newHakemus: HakemusMuutos, hakutoive: Hakutoive)(implicit lang: Language.Language): Set[QuestionLeafNode] = {
     val onlyOneHakutoive = getOnlyAskedHakutoiveAsList(newHakemus, hakutoive)
-    val currentAnswersWithOneHakutoive = ApplicationUpdater.getAllUpdatedAnswersForApplication(applicationSystem)(storedApplication, newHakemus.copy(hakutoiveet = onlyOneHakutoive))
+    val currentAnswersWithOneHakutoive = ApplicationUpdater.getAllUpdatedAnswersForApplication(lomake)(storedApplication, newHakemus.copy(hakutoiveet = onlyOneHakutoive))
     val noHakutoive = getOnlyAskedHakutoiveAsList(newHakemus, Map())
-    val emptyAnswersWithNoHakutoive = ApplicationUpdater.getAllUpdatedAnswersForApplication(applicationSystem)(storedApplication, newHakemus.copy(hakutoiveet = noHakutoive).copy(answers = Hakemus.emptyAnswers))
-    findAddedQuestions(applicationSystem, currentAnswersWithOneHakutoive, emptyAnswersWithNoHakutoive)
+    val emptyAnswersWithNoHakutoive = ApplicationUpdater.getAllUpdatedAnswersForApplication(lomake)(storedApplication, newHakemus.copy(hakutoiveet = noHakutoive).copy(answers = Hakemus.emptyAnswers))
+    findAddedQuestions(lomake, currentAnswersWithOneHakutoive, emptyAnswersWithNoHakutoive)
   }
 
   private def getDuplicateQuestions(questions: List[QuestionNode]) = {

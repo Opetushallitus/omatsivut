@@ -8,7 +8,7 @@ import fi.vm.sade.omatsivut.config.SpringContextComponent
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
 import fi.vm.sade.omatsivut.hakemus.domain._
-import fi.vm.sade.omatsivut.haku.AddedQuestionFinder
+import fi.vm.sade.omatsivut.haku.{Lomake, AddedQuestionFinder}
 import fi.vm.sade.omatsivut.haku.domain.{AnswerId, QuestionNode}
 import fi.vm.sade.omatsivut.util.Logging
 
@@ -24,30 +24,30 @@ trait ApplicationValidatorComponent {
     private val dao: ApplicationDAO = springContext.applicationDAO
     private val validator: ElementTreeValidator = springContext.validator
 
-    def validate(applicationSystem: ApplicationSystem)(hakemus: HakemusMuutos)(implicit lang: Language.Language): List[ValidationError] = {
+    def validate(lomake: Lomake)(hakemus: HakemusMuutos)(implicit lang: Language.Language): List[ValidationError] = {
       val storedApplication = hakemusRepository.findStoredApplicationByOid(hakemus.oid)
-      val updatedApplication = update(hakemus, applicationSystem, storedApplication)
-      validateHakutoiveetAndAnswers(updatedApplication, storedApplication, applicationSystem) ++ errorsForUnknownAnswers(applicationSystem, hakemus)
+      val updatedApplication = update(hakemus, lomake, storedApplication)
+      validateHakutoiveetAndAnswers(updatedApplication, storedApplication, lomake) ++ errorsForUnknownAnswers(lomake, hakemus)
     }
 
-    def validateAndFindQuestions(applicationSystem: ApplicationSystem)(hakemus: HakemusMuutos, newKoulutusIds: List[String], personOid: String)(implicit lang: Language.Language): (List[ValidationError], List[QuestionNode], Application) = {
+    def validateAndFindQuestions(lomake: Lomake)(hakemus: HakemusMuutos, newKoulutusIds: List[String], personOid: String)(implicit lang: Language.Language): (List[ValidationError], List[QuestionNode], Application) = {
       withErrorLogging {
         val storedApplication = hakemusRepository.findStoredApplicationByOid(hakemus.oid)
         if (storedApplication.getPersonOid != personOid) throw new IllegalArgumentException("personId mismatch")
-        val updatedApplication = update(hakemus, applicationSystem, storedApplication)
-        val validationErrors: List[ValidationError] = validateHakutoiveetAndAnswers(updatedApplication, storedApplication, applicationSystem)
-        val questions = AddedQuestionFinder.findQuestions(applicationSystem)(storedApplication, hakemus, newKoulutusIds)
+        val updatedApplication = update(hakemus, lomake, storedApplication)
+        val validationErrors: List[ValidationError] = validateHakutoiveetAndAnswers(updatedApplication, storedApplication, lomake)
+        val questions = AddedQuestionFinder.findQuestions(lomake)(storedApplication, hakemus, newKoulutusIds)
         (validationErrors, questions, updatedApplication)
       } ("Error validating application: " + hakemus.oid)
     }
 
-    private def validateHakutoiveetAndAnswers(updatedApplication: Application, storedApplication: Application, applicationSystem: ApplicationSystem)(implicit lang: Language.Language): List[ValidationError] = {
+    private def validateHakutoiveetAndAnswers(updatedApplication: Application, storedApplication: Application, lomake: Lomake)(implicit lang: Language.Language): List[ValidationError] = {
       if (isIncomplete(storedApplication)) {
-        val errorsBeforeUpdate = validateAndConvertErrors(storedApplication, applicationSystem)
-        val errorsAfterUpdate: List[ValidationError] = validateAndConvertErrors(updatedApplication, applicationSystem)
+        val errorsBeforeUpdate = validateAndConvertErrors(storedApplication, lomake)
+        val errorsAfterUpdate: List[ValidationError] = validateAndConvertErrors(updatedApplication, lomake)
         errorsAfterUpdate.filter(!errorsBeforeUpdate.contains(_))
       } else {
-        validateAndConvertErrors(updatedApplication, applicationSystem)
+        validateAndConvertErrors(updatedApplication, lomake)
       }
     }
 
@@ -55,19 +55,19 @@ trait ApplicationValidatorComponent {
       application.getState == Application.State.INCOMPLETE
     }
 
-    private def update(hakemus: HakemusMuutos, applicationSystem: ApplicationSystem, application: Application)(implicit lang: Language.Language): Application = {
-      ApplicationUpdater.update(applicationSystem)(application.clone(), hakemus) // application is mutated
+    private def update(hakemus: HakemusMuutos, lomake: Lomake, application: Application)(implicit lang: Language.Language): Application = {
+      ApplicationUpdater.update(lomake)(application.clone(), hakemus) // application is mutated
     }
 
-    private def validateAndConvertErrors(application: Application, appSystem: ApplicationSystem)(implicit lang: Language.Language) = {
+    private def validateAndConvertErrors(application: Application, appSystem: Lomake)(implicit lang: Language.Language) = {
       val result = validator.validate(convertToValidationInput(appSystem, application))
       convertoToValidationErrors(result)
     }
 
-    private def errorsForUnknownAnswers(applicationSystem: ApplicationSystem, hakemus: HakemusMuutos)(implicit lang: Language.Language): List[ValidationError] = {
+    private def errorsForUnknownAnswers(lomake: Lomake, hakemus: HakemusMuutos)(implicit lang: Language.Language): List[ValidationError] = {
       val application = hakemusRepository.findStoredApplicationByOid(hakemus.oid)
-      val allAnswers: Answers = ApplicationUpdater.getAllAnswersForApplication(applicationSystem, application, hakemus)
-      val acceptedAnswerIds: Seq[AnswerId] = AddedQuestionFinder.findAddedQuestions(applicationSystem, allAnswers, Hakemus.emptyAnswers).flatMap(_.answerIds).toList
+      val allAnswers: Answers = ApplicationUpdater.getAllAnswersForApplication(lomake, application, hakemus)
+      val acceptedAnswerIds: Seq[AnswerId] = AddedQuestionFinder.findAddedQuestions(lomake, allAnswers, Hakemus.emptyAnswers).flatMap(_.answerIds).toList
 
       val flatAnswers: List[(String, String, String)] = hakemus.answers.toList.flatMap {
         case (phaseId, groupAnswers) =>
@@ -89,8 +89,8 @@ trait ApplicationValidatorComponent {
       }.toList
     }
 
-    private def convertToValidationInput(applicationSystem: ApplicationSystem, application: Application): ValidationInput = {
-      new ValidationInput(applicationSystem.getForm, application.getVastauksetMerged, application.getOid, applicationSystem.getId)
+    private def convertToValidationInput(lomake: Lomake, application: Application): ValidationInput = {
+      new ValidationInput(lomake.form, application.getVastauksetMerged, application.getOid, lomake.oid)
     }
   }
 }

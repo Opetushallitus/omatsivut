@@ -2,7 +2,7 @@ package fi.vm.sade.omatsivut.haku
 
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
-import fi.vm.sade.haku.oppija.lomake.domain.elements.Element
+import fi.vm.sade.haku.oppija.lomake.domain.elements.{Form, Element}
 import fi.vm.sade.omatsivut.config.SpringContextComponent
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.koulutusinformaatio.{KoulutusInformaatioComponent, KoulutusInformaatioService}
@@ -54,11 +54,11 @@ trait HakuRepository {
   def getApplicationPeriods(applicationSystemId: String)(implicit lang: Language.Language) : List[Hakuaika]
 }
 
-case class Lomake(oid: String, additionalInformation: List[Element])
+case class Lomake(oid: String, additionalInformation: List[Element], form: Form)
 object Lomake {
   import scala.collection.JavaConverters._
 
   def apply(applicationSystem: ApplicationSystem): Lomake = {
-    new Lomake(applicationSystem.getId, applicationSystem.getAdditionalInformationElements.asScala.toList)
+    new Lomake(applicationSystem.getId, applicationSystem.getAdditionalInformationElements.asScala.toList, applicationSystem.getForm)
   }
 }
