@@ -1,5 +1,6 @@
 package fi.vm.sade.omatsivut.tarjonta
 
+import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.config.RemoteApplicationConfig
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.fixtures.JsonFixtureMaps
@@ -22,13 +23,13 @@ trait TarjontaComponent {
     }
   }
 
-  class RemoteTarjontaService(val config: RemoteApplicationConfig, val casTicketUrl: String) extends TarjontaService with JsonFormats with CasTicketRequiring {
+  class RemoteTarjontaService(val config: RemoteApplicationConfig, val casTicketUrl: String)(implicit appConfig: AppConfig) extends TarjontaService with JsonFormats with CasTicketRequiring {
     import org.json4s.jackson.JsonMethods._
 
     override def haku(oid: String)(implicit lang: Language.Language) : Option[Haku] = {
       withServiceTicket(serviceTicket => {
         val (responseCode, _, resultString) =
-          DefaultHttpClient.httpGet("https://itest-virkailija.oph.ware.fi/tarjonta-service/rest/v1/haku/" + oid)
+          DefaultHttpClient.httpGet(appConfig.settings.tarjontaUrl + "/haku/" + oid)
             .param("ticket", serviceTicket)
             .responseWithHeaders()
         responseCode match {

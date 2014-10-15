@@ -36,6 +36,7 @@ case class ApplicationSettings(config: Config) {
   val koulutusinformaatioLopUrl = config.getString("omatsivut.koulutusinformaatio.lop.url")
 
   val ohjausparametritUrl = config.getString("omatsivut.ohjausparametrit.url")
+  val tarjontaUrl = config.getString("omatsivut.tarjonta.url")
 
   val aesKey = config.getString("omatsivut.crypto.aes.key")
   val hmacKey = config.getString("omatsivut.crypto.hmac.key")
