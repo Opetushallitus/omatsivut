@@ -18,7 +18,7 @@ class HakemusPreviewSpec extends HakemusApiSpecification with FixturePerson {
     "generate application preview" in {
 
       new FixtureImporter(dao, mongoTemplate).applyOverrides("peruskoulu")
-      authGet(ScalatraPaths.applications + "/applications/preview/" + hakemusYhteishakuKevat2014WithForeignBaseEducationId) {
+      authGet("/api" + "/applications/preview/" + hakemusYhteishakuKevat2014WithForeignBaseEducationId) {
         response.getContentType() must_== "text/html; charset=UTF-8"
 
         body must contain("""<label>Vastaanotettu</label><span>25.06.2014 15:52</span>""")
@@ -43,14 +43,14 @@ class HakemusPreviewSpec extends HakemusApiSpecification with FixturePerson {
     }
 
     "support additional questions per preference" in {
-      authGet(ScalatraPaths.applications + "/applications/preview/" + TestFixture.hakemusWithAtheleteQuestions) {
+      authGet("/api" + "/applications/preview/" + TestFixture.hakemusWithAtheleteQuestions) {
         println(prettyPrintHtml(body))
         body must contain("""<div class="question"><label>Haetko urheilijan ammatilliseen koulutukseen?</label><span class="answer">Kyllä</span></div><div class="question"><label>Haluaisitko suorittaa lukion ja/tai ylioppilastutkinnon samaan aikaan kuin ammatillisen perustutkinnon?</label><span class="answer">Kyllä</span></div>""")
       }
     }
 
     "support grade grid" in {
-      authGet(ScalatraPaths.applications + "/applications/preview/" + TestFixture.hakemusWithGradeGridAndDancePreference) {
+      authGet("/api" + "/applications/preview/" + TestFixture.hakemusWithGradeGridAndDancePreference) {
         body must contain("""<tr><td id="PK_A1_column1">A1-kieli</td><td id="PK_A1_column2">englanti</td><td id="PK_A1_column3">9</td><td id="PK_A1_column4">Ei arvosanaa</td><td id="PK_A1_column5">Ei arvosanaa</td></tr>""")
         body must contain("""<tr><td id="PK_MA_column1" colspan="2">Matematiikka</td><td id="PK_MA_column3">9</td><td id="PK_MA_column4">Ei arvosanaa</td><td id="PK_MA_column5">Ei arvosanaa</td></tr>""")
       }
@@ -58,14 +58,14 @@ class HakemusPreviewSpec extends HakemusApiSpecification with FixturePerson {
 
     "support grade grid from grade 10" in {
       new FixtureImporter(dao, mongoTemplate).applyOverrides("kymppiluokka")
-      authGet(ScalatraPaths.applications + "/applications/preview/" + hakemusYhteishakuKevat2014WithForeignBaseEducationId) {
+      authGet("/api" + "/applications/preview/" + hakemusYhteishakuKevat2014WithForeignBaseEducationId) {
         body must contain("""<tr><td id="PK_B1_column1">B1-kieli</td><td id="PK_B1_column2">englanti</td><td id="PK_B1_column3">10(9)</td><td id="PK_B1_column4">Ei arvosanaa</td><td id="PK_B1_column5">Ei arvosanaa</td></tr>""")
         body must contain("""<tr><td id="PK_MA_column1" colspan="2">Matematiikka</td><td id="PK_MA_column3">10(9)</td><td id="PK_MA_column4">Ei arvosanaa</td><td id="PK_MA_column5">Ei arvosanaa</td></tr>""")
       }
     }
 
     "support athlete additional information" in {
-      authGet(ScalatraPaths.applications + "/applications/preview/" + TestFixture.hakemusWithAtheleteQuestions) {
+      authGet("/api" + "/applications/preview/" + TestFixture.hakemusWithAtheleteQuestions) {
         println(prettyPrintHtml(body))
         body must contain("""Muistathan täyttää myös urheilijan lisätietolomakkeen ja palauttaa sen oppilaitokseen, johon haet.""")
         body must contain("""<a href="http://www.sport.fi/urheiluoppilaitoshaku" target="_blank">http://www.sport.fi/urheiluoppilaitoshaku (pdf-tiedosto, avautuu uuteen välilehteen)</a>""")
@@ -73,7 +73,7 @@ class HakemusPreviewSpec extends HakemusApiSpecification with FixturePerson {
     }
 
     "support dance additional information" in {
-      authGet(ScalatraPaths.applications + "/applications/preview/" + TestFixture.hakemusWithGradeGridAndDancePreference) {
+      authGet("/api" + "/applications/preview/" + TestFixture.hakemusWithGradeGridAndDancePreference) {
         body must contain("""Hait musiikki-, tanssi- tai liikunta-alan koulutukseen. Muista tarkistaa oppilaitoksen nettisivuilta, pitääkö sinun täyttää myös oppilaitoksen oma lisätietolomake.""")
       }
     }
@@ -93,6 +93,6 @@ class HakemusPreviewSpec extends HakemusApiSpecification with FixturePerson {
     }
   }
 
-  addServlet(componentRegistry.newApplicationsServlet, ScalatraPaths.applications)
+  addServlet(componentRegistry.newApplicationsServlet, "/api")
   addServlet(componentRegistry.newKoulutusServlet, ScalatraPaths.koulutusinformaatio)
 }
