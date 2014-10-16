@@ -54,7 +54,7 @@ module.exports = function(listApp) {
 
       var questionQueryParam = newHakutoiveet.length > 0 ? "?questionsOf=" + newHakutoiveet : ""
 
-      var responsePromise = $http.post("/omatsivut/api/applications/validate/" + application.oid + questionQueryParam, application.toJson())
+      var responsePromise = $http.post("/omatsivut/secure/applications/validate/" + application.oid + questionQueryParam, application.toJson())
       responsePromise.success(function(data, status, headers, config) {
         if (data.errors.length === 0) {
           success({

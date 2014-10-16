@@ -1,7 +1,7 @@
 import javax.servlet.ServletContext
 
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
-import fi.vm.sade.omatsivut.config.{ComponentRegistry, AppConfig, OmatSivutSpringContext, ScalatraPaths}
+import fi.vm.sade.omatsivut.config.{ComponentRegistry, AppConfig, OmatSivutSpringContext}
 import fi.vm.sade.omatsivut.servlet._
 import fi.vm.sade.omatsivut.servlet.session.{LoginServlet, SessionServlet}
 import fi.vm.sade.omatsivut.servlet.testing.FakeShibbolethServlet
@@ -16,9 +16,9 @@ class ScalatraBootstrap extends LifeCycle {
   override def init(context: ServletContext) {
     componentRegistry.start
 
-    context.mount(componentRegistry.newApplicationsServlet, "/api/applications")
+    context.mount(componentRegistry.newApplicationsServlet, "/secure/applications")
     context.mount(new TranslationServlet, "/translations")
-    context.mount(componentRegistry.newKoulutusServlet, ScalatraPaths.koulutusinformaatio)
+    context.mount(componentRegistry.newKoulutusServlet, "/koulutusinformaatio")
     context.mount(componentRegistry.newSwaggerServlet, "/swagger/*")
     context.mount(componentRegistry.newSecuredSessionServlet, "/secure")
     context.mount(new SessionServlet(config), "/session")

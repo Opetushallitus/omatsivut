@@ -5,7 +5,7 @@ function ApiDocsPage() {
     openPage: apiDocsPage,
     
     endpoints: function () {
-      return S("#api_endpoint_list>li")
+      return S("#applications_endpoint_list>li")
         .map(function () {
           return {
             method: $(this).find(".http_method>a").text().trim(),

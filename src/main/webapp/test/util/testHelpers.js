@@ -140,7 +140,7 @@ util = {
 
 db = {
   getApplications: function() {
-    return Q($.get("/omatsivut/api/applications"))
+    return Q($.get("/omatsivut/secure/applications"))
   },
 
   getPreferences: function() {
