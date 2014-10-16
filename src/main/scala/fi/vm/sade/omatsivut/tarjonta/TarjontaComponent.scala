@@ -10,6 +10,7 @@ import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.memoize.TTLOptionalMemoize
 import fi.vm.sade.omatsivut.ohjausparametrit.OhjausparametritComponent
 import fi.vm.sade.omatsivut.security.CasTicketRequiring
+import fi.vm.sade.omatsivut.util.Timer._
 import org.json4s.JsonAST.JValue
 
 trait TarjontaComponent {
@@ -40,15 +41,17 @@ trait TarjontaComponent {
     import org.json4s.jackson.JsonMethods._
 
     override def haku(oid: String, lang: Language.Language) : Option[Haku] = {
-      val (responseCode, _, resultString) =
-        DefaultHttpClient.httpGet(appConfig.settings.tarjontaUrl + "/haku/" + oid)
-          .responseWithHeaders()
-      responseCode match {
-        case 200 =>
-          parse(resultString).extractOpt[JValue].flatMap(HakuParser.parseHaku(_)).map { tarjontaHaku =>
-            val tulokset = ohjausparametritService.valintatulokset(oid)
-            Haku(tarjontaHaku, lang).copy(results = tulokset)
-          }
+      timed(1000, "Tarjonta fetch haku"){
+        val (responseCode, _, resultString) =
+          DefaultHttpClient.httpGet(appConfig.settings.tarjontaUrl + "/haku/" + oid)
+            .responseWithHeaders()
+        responseCode match {
+          case 200 =>
+            parse(resultString).extractOpt[JValue].flatMap(HakuParser.parseHaku(_)).map { tarjontaHaku =>
+              val tulokset = ohjausparametritService.valintatulokset(oid)
+              Haku(tarjontaHaku, lang).copy(results = tulokset)
+            }
+        }
       }
     }
   }

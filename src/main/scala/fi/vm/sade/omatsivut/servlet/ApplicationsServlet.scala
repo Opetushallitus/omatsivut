@@ -17,7 +17,7 @@ import org.json4s.jackson.Serialization
 import org.scalatra.json._
 import org.scalatra.swagger.SwaggerSupportSyntax.OperationBuilder
 import org.scalatra.swagger._
-import org.scalatra.{BadRequest, Forbidden, NotFound, Ok}
+import org.scalatra._
 
 trait ApplicationsServletContainer {
   this: HakuRepositoryComponent with
@@ -35,7 +35,6 @@ trait ApplicationsServletContainer {
 
   class ApplicationsServlet(val appConfig: AppConfig)(implicit val swagger: Swagger) extends OmatSivutServletBase with JacksonJsonSupport with JsonFormats with SwaggerSupport with Authentication {
     override def applicationName = Some("secure/applications")
-    private val applicationSystemService = springContext.applicationSystemService
     private val applicationValidator: ApplicationValidator = newApplicationValidator
     override val authAuditLogger: AuditLogger = auditLogger
 
@@ -61,18 +60,23 @@ trait ApplicationsServletContainer {
     put("/:oid", operation(putApplicationsSwagger)) {
       val content: String = request.body
       val updated = Serialization.read[HakemusMuutos](content)
-      val applicationSystem = Lomake(applicationSystemService.getApplicationSystem(updated.hakuOid))
-      val haku = timed(1000, "Tarjonta fetch Application"){
-        tarjontaService.haku(applicationSystem.oid, language)
-      }
-      val errors = applicationValidator.validate(applicationSystem)(updated)
-      if(errors.isEmpty) {
-        hakemusRepository.updateHakemus(applicationSystem, haku.get)(updated, personOid()) match {
-          case Some(saved) => Ok(saved)
-          case None => Forbidden()
+      val response = for {
+        lomake <- hakuRepository.getLomakeById(updated.hakuOid)
+        haku <- tarjontaService.haku(lomake.oid, language)
+      } yield {
+        val errors = applicationValidator.validate(lomake)(updated)
+        if(errors.isEmpty) {
+          hakemusRepository.updateHakemus(lomake, haku)(updated, personOid()) match {
+            case Some(saved) => Ok(saved)
+            case None => Forbidden()
+          }
+        } else {
+          BadRequest(errors)
         }
-      } else {
-        BadRequest(errors)
+      }
+      response match {
+        case Some(res) => res
+        case _ => InternalServerError()
       }
     }
 
@@ -84,10 +88,15 @@ trait ApplicationsServletContainer {
     )
     post("/validate/:oid", operation(validateApplicationsSwagger)) {
       val muutos = Serialization.read[HakemusMuutos](request.body)
-      val applicationSystem = Lomake(applicationSystemService.getApplicationSystem(muutos.hakuOid))
-      val questionsOf: List[String] = paramOption("questionsOf").getOrElse("").split(',').toList
-      val (errors: List[ValidationError], questions: List[QuestionNode], updatedApplication: Application) = applicationValidator.validateAndFindQuestions(applicationSystem)(muutos, questionsOf, personOid())
-      ValidationResult(errors, questions, hakuRepository.getApplicationPeriods(applicationSystem.oid))
+      val lomakeOpt = hakuRepository.getLomakeById(muutos.hakuOid)
+      lomakeOpt match {
+        case Some(lomake) => {
+          val questionsOf: List[String] = paramOption("questionsOf").getOrElse("").split(',').toList
+          val (errors: List[ValidationError], questions: List[QuestionNode], updatedApplication: Application) = applicationValidator.validateAndFindQuestions(lomake)(muutos, questionsOf, personOid())
+          ValidationResult(errors, questions, hakuRepository.getApplicationPeriods(lomake.oid))
+        }
+        case _ => InternalServerError()
+      }
     }
 
 
