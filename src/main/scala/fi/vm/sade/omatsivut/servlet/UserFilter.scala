@@ -16,8 +16,8 @@ class UserFilter extends Filter with AuthCookieParsing {
     Timer.timed(blockname = "doFilter") {
       val httpRequest: HttpServletRequest = request.asInstanceOf[HttpServletRequest]
       shibbolethCookieInRequest(httpRequest) match {
-        case Some(credentials) if (personOidOption(httpRequest).isEmpty) =>
-          println("SHIBBO: " + credentials)
+        case Some(_) if (personOidOption(httpRequest).isEmpty) =>
+          response.setContentType("text/html;charset=UTF-8")
           IOUtils.copy(request.getServletContext.getResourceAsStream("/no-applications.html"), response.getOutputStream)
           response.getOutputStream.flush()
         case _ =>
