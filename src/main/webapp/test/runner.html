@@ -13,9 +13,10 @@
 <script src="lib/q.js"></script>
 <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 <script>
+    var testTimeout = 60000
     mocha.ui('bdd')
     mocha.reporter('html')
-    mocha.timeout(60000)
+    mocha.timeout(testTimeout)
 </script>
 <script src="util/testHelpers.js"></script>
 <script src="page/apiDocsPage.js"></script>
