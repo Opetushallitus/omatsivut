@@ -2,7 +2,7 @@ package fi.vm.sade.omatsivut.hakemus
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.omatsivut.domain.Language.Language
 import fi.vm.sade.omatsivut.hakemus.domain.{Hakemus, HakemusMuutos}
-import fi.vm.sade.omatsivut.haku.domain.Lomake
+import fi.vm.sade.omatsivut.lomake.domain.Lomake
 import fi.vm.sade.omatsivut.tarjonta.Haku
 
 trait HakemusRepository {

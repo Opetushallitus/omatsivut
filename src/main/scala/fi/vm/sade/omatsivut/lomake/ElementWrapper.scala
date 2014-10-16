@@ -1,4 +1,4 @@
-package fi.vm.sade.omatsivut.haku
+package fi.vm.sade.omatsivut.lomake
 
 import fi.vm.sade.haku.oppija.lomake.domain.I18nText
 import fi.vm.sade.haku.oppija.lomake.domain.elements._

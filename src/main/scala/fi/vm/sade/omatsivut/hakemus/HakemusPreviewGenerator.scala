@@ -12,7 +12,7 @@ import fi.vm.sade.haku.oppija.lomake.domain.rules.{AddElementRule, RelatedQuesti
 import fi.vm.sade.omatsivut.config.{OmatSivutSpringContext, SpringContextComponent}
 import fi.vm.sade.omatsivut.domain.{Address, Attachment, Language}
 import fi.vm.sade.omatsivut.hakemus.FlatAnswers.FlatAnswers
-import fi.vm.sade.omatsivut.haku.{ElementWrapper, OptionWrapper}
+import fi.vm.sade.omatsivut.lomake.{ElementWrapper, OptionWrapper}
 import fi.vm.sade.omatsivut.localization.Translations
 import fi.vm.sade.omatsivut.servlet.ServerContaxtPath
 import fi.vm.sade.omatsivut.util.Logging

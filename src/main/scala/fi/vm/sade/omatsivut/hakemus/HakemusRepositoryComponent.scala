@@ -6,15 +6,15 @@ import fi.vm.sade.omatsivut.config.SpringContextComponent
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.domain.Language.Language
 import fi.vm.sade.omatsivut.hakemus.domain._
-import fi.vm.sade.omatsivut.haku.domain.Lomake
-import fi.vm.sade.omatsivut.haku.{HakuRepository, HakuRepositoryComponent}
+import fi.vm.sade.omatsivut.lomake.domain.Lomake
+import fi.vm.sade.omatsivut.lomake.{LomakeRepository, LomakeRepositoryComponent}
 import fi.vm.sade.omatsivut.tarjonta.{Haku, TarjontaComponent}
 import fi.vm.sade.omatsivut.util.Timer.timed
 
 trait HakemusRepositoryComponent {
-  this: HakuRepositoryComponent with HakemusConverterComponent with SpringContextComponent with AuditLoggerComponent with TarjontaComponent =>
+  this: LomakeRepositoryComponent with HakemusConverterComponent with SpringContextComponent with AuditLoggerComponent with TarjontaComponent =>
 
-  val hakuRepository: HakuRepository
+  val hakuRepository: LomakeRepository
 
   class RemoteHakemusRepository extends HakemusRepository {
     import scala.collection.JavaConversions._
@@ -22,7 +22,7 @@ trait HakemusRepositoryComponent {
     private val applicationService = springContext.applicationService
 
     private def canUpdate(lomake: Lomake, application: Application, userOid: String)(implicit lang: Language.Language): Boolean = {
-      val applicationPeriods = hakuRepository.getApplicationPeriods(lomake.oid)
+      val applicationPeriods = hakuRepository.applicationPeriodsByOid(lomake.oid)
       val isActiveHakuPeriod = applicationPeriods.exists(_.active)
       val stateUpdateable = application.getState == Application.State.ACTIVE || application.getState == Application.State.INCOMPLETE
       val inPostProcessing = !(application.getRedoPostProcess() == Application.PostProcessingState.DONE || application.getRedoPostProcess() == null)
@@ -38,7 +38,7 @@ trait HakemusRepositoryComponent {
       timed(1000, "Application update"){
         applicationJavaObject.filter(application => canUpdate(lomake, application, userOid)).map { application =>
           val originalAnswers: Hakemus.Answers = application.getAnswers.toMap.mapValues(_.toMap)
-          ApplicationUpdater.update(lomake)(application, hakemus)
+          ApplicationUpdater.update(lomake, application, hakemus)
           timed(1000, "ApplicationService: update preference based data"){
             applicationService.updatePreferenceBasedData(application)
           }
@@ -84,7 +84,7 @@ trait HakemusRepositoryComponent {
           }
         }.map(application => {
           val (applicationSystemOption, hakuOption) = timed(1000, "HakuRepository get haku"){
-            hakuRepository.getHakuByApplication(application)
+            hakuRepository.lomakeAndHakuByApplication(application)
           }
           for {
             haku <- hakuOption

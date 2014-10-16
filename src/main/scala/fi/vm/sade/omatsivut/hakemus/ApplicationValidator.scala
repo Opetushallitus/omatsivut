@@ -8,8 +8,8 @@ import fi.vm.sade.omatsivut.config.SpringContextComponent
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
 import fi.vm.sade.omatsivut.hakemus.domain._
-import fi.vm.sade.omatsivut.haku.AddedQuestionFinder
-import fi.vm.sade.omatsivut.haku.domain.{AnswerId, Lomake, QuestionNode}
+import fi.vm.sade.omatsivut.lomake.AddedQuestionFinder
+import fi.vm.sade.omatsivut.lomake.domain.{AnswerId, Lomake, QuestionNode}
 import fi.vm.sade.omatsivut.util.Logging
 import scala.collection.JavaConversions._
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
@@ -24,13 +24,13 @@ trait ApplicationValidatorComponent {
     private val dao: ApplicationDAO = springContext.applicationDAO
     private val validator: ElementTreeValidator = springContext.validator
 
-    def validate(lomake: Lomake)(hakemus: HakemusMuutos)(implicit lang: Language.Language): List[ValidationError] = {
+    def validate(lomake: Lomake, hakemus: HakemusMuutos)(implicit lang: Language.Language): List[ValidationError] = {
       val storedApplication = hakemusRepository.findStoredApplicationByOid(hakemus.oid)
       val updatedApplication = update(hakemus, lomake, storedApplication)
       validateHakutoiveetAndAnswers(updatedApplication, storedApplication, lomake) ++ errorsForUnknownAnswers(lomake, hakemus)
     }
 
-    def validateAndFindQuestions(lomake: Lomake)(hakemus: HakemusMuutos, newKoulutusIds: List[String], personOid: String)(implicit lang: Language.Language): (List[ValidationError], List[QuestionNode], Application) = {
+    def validateAndFindQuestions(lomake: Lomake, hakemus: HakemusMuutos, newKoulutusIds: List[String], personOid: String)(implicit lang: Language.Language): (List[ValidationError], List[QuestionNode], Application) = {
       withErrorLogging {
         val storedApplication = hakemusRepository.findStoredApplicationByOid(hakemus.oid)
         if (storedApplication.getPersonOid != personOid) throw new IllegalArgumentException("personId mismatch")
@@ -56,7 +56,7 @@ trait ApplicationValidatorComponent {
     }
 
     private def update(hakemus: HakemusMuutos, lomake: Lomake, application: Application)(implicit lang: Language.Language): Application = {
-      ApplicationUpdater.update(lomake)(application.clone(), hakemus) // application is mutated
+      ApplicationUpdater.update(lomake, application.clone(), hakemus) // application is mutated
     }
 
     private def validateAndConvertErrors(application: Application, appSystem: Lomake)(implicit lang: Language.Language) = {

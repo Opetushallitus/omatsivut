@@ -1,11 +1,11 @@
-package fi.vm.sade.omatsivut.haku
+package fi.vm.sade.omatsivut.lomake
 
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.fixtures.TestFixture._
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
 import fi.vm.sade.omatsivut.hakemus.{ApplicationUpdater, HakutoiveetConverter}
-import fi.vm.sade.omatsivut.haku.domain.Lomake
+import fi.vm.sade.omatsivut.lomake.domain.Lomake
 import org.specs2.mutable.Specification
 
 class AddedQuestionFinderSpec extends Specification {
@@ -24,8 +24,8 @@ class AddedQuestionFinderSpec extends Specification {
     }
 
     "Report zero additional questions when re-ordering hakutoiveet" in {
-      val answers1 = ApplicationUpdater.getAllUpdatedAnswersForApplication(lomake)(applicationNivelKesa2013WithPeruskouluBaseEducationApp, hakemusMuutos)
-      val answers2 = ApplicationUpdater.getAllUpdatedAnswersForApplication(lomake)(applicationNivelKesa2013WithPeruskouluBaseEducationApp, hakemusMuutos.copy(
+      val answers1 = ApplicationUpdater.getAllUpdatedAnswersForApplication(lomake, applicationNivelKesa2013WithPeruskouluBaseEducationApp, hakemusMuutos)
+      val answers2 = ApplicationUpdater.getAllUpdatedAnswersForApplication(lomake, applicationNivelKesa2013WithPeruskouluBaseEducationApp, hakemusMuutos.copy(
         hakutoiveet = hakemusMuutos.hakutoiveet.reverse
       ))
       val addedQuestions = findAddedQuestions(answers1, answers2)
