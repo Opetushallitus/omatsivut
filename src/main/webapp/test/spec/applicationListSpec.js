@@ -1572,9 +1572,9 @@
 
       describe("tekstikentän tyhjennysnappi", function() {
         it("toimii", function () {
-          hakemusKorkeakoulu.yhteystiedot().get("Lähiosoite").val().should.not.equal("")
-          return hakemusKorkeakoulu.yhteystiedot().get("Lähiosoite").clear().then(function () {
-            hakemusKorkeakoulu.yhteystiedot().get("Lähiosoite").val().should.equal("")
+          hakemusKorkeakoulu.yhteystiedot().getRow("Lähiosoite").val().should.not.equal("")
+          return hakemusKorkeakoulu.yhteystiedot().getRow("Lähiosoite").clear().then(function () {
+            hakemusKorkeakoulu.yhteystiedot().getRow("Lähiosoite").val().should.equal("")
           })
         })
       })
