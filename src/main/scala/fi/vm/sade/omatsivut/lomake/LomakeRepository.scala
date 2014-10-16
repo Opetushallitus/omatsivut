@@ -1,9 +1,9 @@
-package fi.vm.sade.omatsivut.haku
+package fi.vm.sade.omatsivut.lomake
 
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.omatsivut.config.SpringContextComponent
 import fi.vm.sade.omatsivut.domain.Language
-import fi.vm.sade.omatsivut.haku.domain.Lomake
+import fi.vm.sade.omatsivut.lomake.domain.Lomake
 import fi.vm.sade.omatsivut.koulutusinformaatio.{KoulutusInformaatioComponent, KoulutusInformaatioService}
 import fi.vm.sade.omatsivut.ohjausparametrit.{OhjausparametritComponent, OhjausparametritService}
 import fi.vm.sade.omatsivut.tarjonta.{Haku, Hakuaika, TarjontaComponent, TarjontaService}

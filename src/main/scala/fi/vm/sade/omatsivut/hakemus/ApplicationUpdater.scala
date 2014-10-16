@@ -7,8 +7,8 @@ import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
 import fi.vm.sade.omatsivut.hakemus.domain.HakemusMuutos
-import fi.vm.sade.omatsivut.haku.domain.{Lomake, AnswerId, QuestionId}
-import fi.vm.sade.omatsivut.haku.{AddedQuestionFinder, ElementWrapper, FormQuestionFinder}
+import fi.vm.sade.omatsivut.lomake.domain.{Lomake, AnswerId, QuestionId}
+import fi.vm.sade.omatsivut.lomake.{AddedQuestionFinder, ElementWrapper, FormQuestionFinder}
 
 import scala.collection.JavaConversions._
 

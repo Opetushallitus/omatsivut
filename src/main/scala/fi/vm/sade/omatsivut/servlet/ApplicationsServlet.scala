@@ -6,8 +6,8 @@ import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.config.{OmatSivutSpringContext, SpringContextComponent}
 import fi.vm.sade.omatsivut.hakemus._
 import fi.vm.sade.omatsivut.hakemus.domain.{HakemusMuutos, ValidationError, _}
-import fi.vm.sade.omatsivut.haku.domain.QuestionNode
-import fi.vm.sade.omatsivut.haku.{LomakeRepository, LomakeRepositoryComponent}
+import fi.vm.sade.omatsivut.lomake.domain.QuestionNode
+import fi.vm.sade.omatsivut.lomake.{LomakeRepository, LomakeRepositoryComponent}
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.security.Authentication
 import fi.vm.sade.omatsivut.tarjonta.Hakuaika

@@ -8,7 +8,7 @@ import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.hakemus.domain.ApplicationAttachment
 import fi.vm.sade.haku.oppija.hakemus.domain.util.AttachmentUtil
 import fi.vm.sade.omatsivut.domain.{Address, Attachment, Language}
-import fi.vm.sade.omatsivut.haku.ElementWrapper
+import fi.vm.sade.omatsivut.lomake.ElementWrapper
 
 object AttachmentConverter {
 

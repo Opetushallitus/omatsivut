@@ -6,8 +6,8 @@ import fi.vm.sade.omatsivut.config.SpringContextComponent
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.domain.Language.Language
 import fi.vm.sade.omatsivut.hakemus.domain._
-import fi.vm.sade.omatsivut.haku.domain.Lomake
-import fi.vm.sade.omatsivut.haku.{LomakeRepository, LomakeRepositoryComponent}
+import fi.vm.sade.omatsivut.lomake.domain.Lomake
+import fi.vm.sade.omatsivut.lomake.{LomakeRepository, LomakeRepositoryComponent}
 import fi.vm.sade.omatsivut.tarjonta.{Haku, TarjontaComponent}
 import fi.vm.sade.omatsivut.util.Timer.timed
 

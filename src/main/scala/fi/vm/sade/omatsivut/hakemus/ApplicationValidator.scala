@@ -7,8 +7,8 @@ import fi.vm.sade.omatsivut.config.SpringContextComponent
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
 import fi.vm.sade.omatsivut.hakemus.domain._
-import fi.vm.sade.omatsivut.haku.AddedQuestionFinder
-import fi.vm.sade.omatsivut.haku.domain.{AnswerId, Lomake, QuestionNode}
+import fi.vm.sade.omatsivut.lomake.AddedQuestionFinder
+import fi.vm.sade.omatsivut.lomake.domain.{AnswerId, Lomake, QuestionNode}
 import fi.vm.sade.omatsivut.util.Logging
 
 import scala.collection.JavaConversions._
