@@ -63,7 +63,7 @@ trait ApplicationsServletContainer {
         lomake <- hakuRepository.lomakeByOid(updated.hakuOid)
         haku <- tarjontaService.haku(lomake.oid, language)
       } yield {
-        val errors = applicationValidator.validate(lomake)(updated)
+        val errors = applicationValidator.validate(lomake, updated)
         if(errors.isEmpty) {
           hakemusRepository.updateHakemus(lomake, haku)(updated, personOid()) match {
             case Some(saved) => Ok(saved)
@@ -91,7 +91,7 @@ trait ApplicationsServletContainer {
       lomakeOpt match {
         case Some(lomake) => {
           val questionsOf: List[String] = paramOption("questionsOf").getOrElse("").split(',').toList
-          val (errors: List[ValidationError], questions: List[QuestionNode], updatedApplication: Application) = applicationValidator.validateAndFindQuestions(lomake)(muutos, questionsOf, personOid())
+          val (errors: List[ValidationError], questions: List[QuestionNode], updatedApplication: Application) = applicationValidator.validateAndFindQuestions(lomake, muutos, questionsOf, personOid())
           ValidationResult(errors, questions, hakuRepository.applicationPeriodsByOid(lomake.oid))
         }
         case _ => InternalServerError()

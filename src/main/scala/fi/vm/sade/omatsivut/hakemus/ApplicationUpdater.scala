@@ -18,8 +18,8 @@ object ApplicationUpdater {
   /**
    * NOTE this method mutates the application, so call with application.clone(), if it is not wanted.
    */
-  def update(lomake: Lomake)(application: Application, hakemus: HakemusMuutos)(implicit lang: Language.Language) = {
-    val updatedAnswers = getUpdatedAnswersForApplication(lomake)(application, hakemus)
+  def update(lomake: Lomake, application: Application, hakemus: HakemusMuutos)(implicit lang: Language.Language) = {
+    val updatedAnswers = getUpdatedAnswersForApplication(lomake, application, hakemus)
     updatedAnswers.foreach { case (phaseId, phaseAnswers) =>
       application.addVaiheenVastaukset(phaseId, phaseAnswers)
     }
@@ -27,21 +27,21 @@ object ApplicationUpdater {
     application
   }
 
-  private def getUpdatedAnswersForApplication(lomake: Lomake)(application: Application, hakemus: HakemusMuutos)(implicit lang: Language.Language): Answers = {
-    val allAnswers = getAllUpdatedAnswersForApplication(lomake)(application, hakemus)
+  private def getUpdatedAnswersForApplication(lomake: Lomake, application: Application, hakemus: HakemusMuutos)(implicit lang: Language.Language): Answers = {
+    val allAnswers = getAllUpdatedAnswersForApplication(lomake, application, hakemus)
     val removedAnswerIds = getRemovedAnswerIds(lomake, application, hakemus)
 
-    applyHiddenValues(lomake)(pruneOrphanedAnswers(removedAnswerIds, allAnswers))
+    applyHiddenValues(lomake, pruneOrphanedAnswers(removedAnswerIds, allAnswers))
   }
 
-  private def applyHiddenValues(lomake: Lomake)(allAnswers: Answers): Answers = {
+  private def applyHiddenValues(lomake: Lomake, allAnswers: Answers): Answers = {
     val vals: Set[(QuestionId, String)] = FormQuestionFinder.findHiddenValues(ElementWrapper.wrapFiltered(lomake.form, FlatAnswers.flatten(allAnswers)))
     vals.foldLeft(allAnswers) { case (answers: Answers, (question: QuestionId, answer: String)) =>
         updateSingleAnswer(answers, question, answer)
     }
   }
 
-  def getAllUpdatedAnswersForApplication(lomake: Lomake)(application: Application, hakemus: HakemusMuutos): Answers = {
+  def getAllUpdatedAnswersForApplication(lomake: Lomake, application: Application, hakemus: HakemusMuutos): Answers = {
     allAnswersFromApplication(application).filterKeys(_ != preferencePhaseKey) ++ updatedAnswersForHakuToiveet(lomake, application, hakemus) ++ updatedAnswersForOtherPhases(application, hakemus)
   }
 

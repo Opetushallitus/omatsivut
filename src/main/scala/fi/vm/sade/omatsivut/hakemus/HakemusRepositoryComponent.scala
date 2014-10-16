@@ -38,7 +38,7 @@ trait HakemusRepositoryComponent {
       timed(1000, "Application update"){
         applicationJavaObject.filter(application => canUpdate(lomake, application, userOid)).map { application =>
           val originalAnswers: Hakemus.Answers = application.getAnswers.toMap.mapValues(_.toMap)
-          ApplicationUpdater.update(lomake)(application, hakemus)
+          ApplicationUpdater.update(lomake, application, hakemus)
           timed(1000, "ApplicationService: update preference based data"){
             applicationService.updatePreferenceBasedData(application)
           }

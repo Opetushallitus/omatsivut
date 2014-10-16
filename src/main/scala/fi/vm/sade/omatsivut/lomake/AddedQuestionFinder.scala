@@ -59,9 +59,9 @@ object AddedQuestionFinder {
 
   private def findQuestionsByHakutoive(lomake: Lomake, storedApplication: Application, newHakemus: HakemusMuutos, hakutoive: Hakutoive)(implicit lang: Language.Language): Set[QuestionLeafNode] = {
     val onlyOneHakutoive = getOnlyAskedHakutoiveAsList(newHakemus, hakutoive)
-    val currentAnswersWithOneHakutoive = ApplicationUpdater.getAllUpdatedAnswersForApplication(lomake)(storedApplication, newHakemus.copy(hakutoiveet = onlyOneHakutoive))
+    val currentAnswersWithOneHakutoive = ApplicationUpdater.getAllUpdatedAnswersForApplication(lomake, storedApplication, newHakemus.copy(hakutoiveet = onlyOneHakutoive))
     val noHakutoive = getOnlyAskedHakutoiveAsList(newHakemus, Map())
-    val emptyAnswersWithNoHakutoive = ApplicationUpdater.getAllUpdatedAnswersForApplication(lomake)(storedApplication, newHakemus.copy(hakutoiveet = noHakutoive).copy(answers = Hakemus.emptyAnswers))
+    val emptyAnswersWithNoHakutoive = ApplicationUpdater.getAllUpdatedAnswersForApplication(lomake, storedApplication, newHakemus.copy(hakutoiveet = noHakutoive).copy(answers = Hakemus.emptyAnswers))
     findAddedQuestions(lomake, currentAnswersWithOneHakutoive, emptyAnswersWithNoHakutoive)
   }
 
