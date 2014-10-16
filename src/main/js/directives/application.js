@@ -11,7 +11,7 @@ module.exports = function(listApp) {
       },
       templateUrl: 'templates/application.html',
 
-      link: function ($scope, element, attrs) {
+      link: function ($scope, $element, attrs) {
         $scope.localization = localization
         var applicationValidatorBounced = debounce(applicationValidator(), settings.modelDebounce)
 
@@ -147,8 +147,9 @@ module.exports = function(listApp) {
           setStatusMessage("", "pending")
 
           function onSuccess(savedApplication) {
-            $scope.$emit("highlight-save", $scope.application.getChangedItems())
+            highlightSavedItems($scope.application.getChangedItems())
             $scope.application.mergeSavedApplication(savedApplication)
+            $scope.form.$setPristine()
             $scope.hasChanged = false
             setStatusMessage(localization("message.changesSaved"), "success")
             updateValidationMessages([])
@@ -174,6 +175,22 @@ module.exports = function(listApp) {
             if (err.status == 400) // Validointivirhe
               updateValidationMessages(err.data)
           }
+        }
+
+        function highlightSavedItems(indexes) {
+          var items = $element.find(".preference-list-item")
+
+          _.each(indexes, function(index) {
+            items.eq(index).addClass("saved")
+          })
+
+          $element.find(".timestamp-row").addClass("saved")
+          $element.find(".yhteystiedot .ng-dirty").addClass("saved") // edited contact details
+
+          window.setTimeout(function() {
+            $element.find(".saved").removeClass("saved")
+            $(".timestamp-row").removeClass("saved")
+          }, 3000)
         }
 
         function updateValidationMessages(errors, skipQuestions) {

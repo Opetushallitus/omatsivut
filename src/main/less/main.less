@@ -112,6 +112,7 @@ input[type="text"], textarea {
   border-radius: 4px;
   font-size: @body-font-size;
   height: 2 * @body-font-size;
+  transition: background-color 1000ms;
 
   &:focus {
     background: @input-focus-background;
@@ -119,6 +120,10 @@ input[type="text"], textarea {
 
   &:hover {
     background: @input-hover-background;
+  }
+
+  &.saved {
+    background-color: @save-highlight-timestamp-color;
   }
 }
 
@@ -279,7 +284,6 @@ button.delete-btn:not(.confirm) {
   &.saved {
     background-color: @save-highlight-timestamp-color;
   }
-
 }
 
 .result-list {
