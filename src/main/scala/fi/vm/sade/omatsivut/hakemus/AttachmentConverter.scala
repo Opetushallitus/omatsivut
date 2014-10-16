@@ -1,17 +1,12 @@
 package fi.vm.sade.omatsivut.hakemus
 
-import fi.vm.sade.haku.oppija.lomake.domain.elements.Element
+import fi.vm.sade.haku.oppija.hakemus.domain.{Application, ApplicationAttachment}
+import fi.vm.sade.haku.oppija.hakemus.domain.util.AttachmentUtil
+import fi.vm.sade.omatsivut.domain.{Address, Attachment, Language}
 
 import scala.collection.JavaConversions._
 
-import fi.vm.sade.haku.oppija.hakemus.domain.Application
-import fi.vm.sade.haku.oppija.hakemus.domain.ApplicationAttachment
-import fi.vm.sade.haku.oppija.hakemus.domain.util.AttachmentUtil
-import fi.vm.sade.omatsivut.domain.{Address, Attachment, Language}
-import fi.vm.sade.omatsivut.lomake.ElementWrapper
-
 object AttachmentConverter {
-
   def getAttachments(application: Application)(implicit language: Language.Language): List[Attachment] = {
     val attachmentInfo = AttachmentUtil.resolveAttachments(application)
     attachmentInfo.toList.map(convertToAttachment(_))
@@ -29,14 +24,6 @@ object AttachmentConverter {
           )
   }
 
-  def requiresAdditionalInfo(additionalInformationElements: List[Element], application: Application): Boolean = {
-    !AttachmentUtil.resolveAttachments(application).isEmpty() ||
-    !(for(addInfo <- additionalInformationElements)
-      yield ElementWrapper.wrapFiltered(addInfo, application.getVastauksetMerged().toMap)
-    ).filterNot(_.children.isEmpty).isEmpty
-  }
-
-
   private def convertToAddress(address: fi.vm.sade.haku.oppija.hakemus.domain.Address): Address = {
     Address(
          Option(address.getStreetAddress()),
@@ -45,5 +32,4 @@ object AttachmentConverter {
          Option(address.getPostOffice())
        )
   }
-
 }

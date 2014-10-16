@@ -38,7 +38,7 @@ trait HakemusConverterComponent {
         haku,
         EducationBackground(koulutusTaustaAnswers.get(baseEducationKey), !Try {koulutusTaustaAnswers.get("ammatillinenTutkintoSuoritettu").toBoolean}.getOrElse(false)),
         application.clone().getAnswers.toMap.mapValues { phaseAnswers => phaseAnswers.toMap },
-        AttachmentConverter.requiresAdditionalInfo(lomake.additionalInformation, application)
+        lomake.requiresAdditionalInfo(application)
       )
     }
 
