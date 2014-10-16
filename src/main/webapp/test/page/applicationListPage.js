@@ -174,10 +174,10 @@ function ApplicationListPage() {
       yhteystiedot: function() {
         var application = getApplicationElement(applicationIndex)
         return {
-          get: function(id) {
+          getRow: function(id) {
             function element() {
-              var item = $(_(application.find("henkilotiedot label")).find(function (item) {
-                return $(item).text().indexOf(id) >= 0
+              var item = S(_(application.find("henkilotiedot label")).find(function (item) {
+                return S(item).text().indexOf(id) >= 0
               }))
               return item.find("input")
             }
@@ -356,8 +356,11 @@ function ApplicationListPage() {
         return wait.forAngular()
       },
 
-      val: function() {
-        return el().val()
+      val: function(newValue) {
+        if (newValue == null)
+          return el().val()
+        else
+          el().val(newValue).change()
       }
     }
   }

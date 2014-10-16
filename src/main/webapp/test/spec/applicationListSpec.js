@@ -1568,18 +1568,47 @@
     })
 
     describe("Henkilötietojen muokkaus", function() {
+      before(page.applyFixtureAndOpen({applicationOid: hakemusKorkeakouluId}))
+
       describe("tekstikentän tyhjennysnappi", function() {
-        before(page.applyFixtureAndOpen({applicationOid: hakemusKorkeakouluId}))
-        it("toimii", function() {
+        it("toimii", function () {
           hakemusKorkeakoulu.yhteystiedot().get("Lähiosoite").val().should.not.equal("")
-          return hakemusKorkeakoulu.yhteystiedot().get("Lähiosoite").clear().then(function() {
+          return hakemusKorkeakoulu.yhteystiedot().get("Lähiosoite").clear().then(function () {
             hakemusKorkeakoulu.yhteystiedot().get("Lähiosoite").val().should.equal("")
           })
         })
+      })
+
+      describe("tietojen muokkaus", function() {
+        var newData = {
+          "Sähköposti": "joku@jossain.fi",
+          "Matkapuhelinnumero": "0401234987",
+          "Lähiosoite": "uusi katu",
+          "Postinumero": "00500"
+        }
+
+        before(function() {
+          _(newData).each(function(val, id) {
+            hakemusKorkeakoulu.yhteystiedot().getRow(id).val(val)
+          })
+          return wait.forAngular()
+        })
 
         it("lomake menee 'muokattu'-tilaan", function() {
-          return wait.forAngular().then(function() {
-            hakemusKorkeakoulu.saveButton().isEnabled().should.be.true
+          hakemusKorkeakoulu.saveButton().isEnabled().should.be.true
+        })
+
+        describe("muutosten tallennus", function() {
+          before(
+            hakemusKorkeakoulu.saveWaitSuccess,
+            function() { S("input").remove() },
+            page.openPage()
+          )
+
+          it("tiedot tallentuvat", function() {
+            _(newData).each(function(val, id) {
+              hakemusKorkeakoulu.yhteystiedot().getRow(id).val().should.equal(val)
+            })
           })
         })
       })
