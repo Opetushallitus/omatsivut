@@ -6,21 +6,20 @@ import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.config.{OmatSivutSpringContext, SpringContextComponent}
 import fi.vm.sade.omatsivut.hakemus._
 import fi.vm.sade.omatsivut.hakemus.domain.{HakemusMuutos, ValidationError, _}
-import fi.vm.sade.omatsivut.haku.domain.{Lomake, QuestionNode}
-import fi.vm.sade.omatsivut.haku.{HakuRepository, HakuRepositoryComponent}
+import fi.vm.sade.omatsivut.haku.domain.QuestionNode
+import fi.vm.sade.omatsivut.haku.{LomakeRepository, LomakeRepositoryComponent}
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.security.Authentication
 import fi.vm.sade.omatsivut.tarjonta.Hakuaika
-import fi.vm.sade.omatsivut.util.Timer._
 import fi.vm.sade.omatsivut.valintatulokset.{ValintatulosService, ValintatulosServiceComponent, Vastaanotto}
 import org.json4s.jackson.Serialization
+import org.scalatra._
 import org.scalatra.json._
 import org.scalatra.swagger.SwaggerSupportSyntax.OperationBuilder
 import org.scalatra.swagger._
-import org.scalatra._
 
 trait ApplicationsServletContainer {
-  this: HakuRepositoryComponent with
+  this: LomakeRepositoryComponent with
     HakemusRepositoryComponent with
     ValintatulosServiceComponent with
     ApplicationValidatorComponent with
@@ -28,7 +27,7 @@ trait ApplicationsServletContainer {
     SpringContextComponent with
     AuditLoggerComponent =>
 
-  val hakuRepository: HakuRepository
+  val hakuRepository: LomakeRepository
   val hakemusRepository: HakemusRepository
   val springContext: OmatSivutSpringContext
   val valintatulosService: ValintatulosService
@@ -61,7 +60,7 @@ trait ApplicationsServletContainer {
       val content: String = request.body
       val updated = Serialization.read[HakemusMuutos](content)
       val response = for {
-        lomake <- hakuRepository.getLomakeById(updated.hakuOid)
+        lomake <- hakuRepository.lomakeByOid(updated.hakuOid)
         haku <- tarjontaService.haku(lomake.oid, language)
       } yield {
         val errors = applicationValidator.validate(lomake)(updated)
@@ -88,12 +87,12 @@ trait ApplicationsServletContainer {
     )
     post("/validate/:oid", operation(validateApplicationsSwagger)) {
       val muutos = Serialization.read[HakemusMuutos](request.body)
-      val lomakeOpt = hakuRepository.getLomakeById(muutos.hakuOid)
+      val lomakeOpt = hakuRepository.lomakeByOid(muutos.hakuOid)
       lomakeOpt match {
         case Some(lomake) => {
           val questionsOf: List[String] = paramOption("questionsOf").getOrElse("").split(',').toList
           val (errors: List[ValidationError], questions: List[QuestionNode], updatedApplication: Application) = applicationValidator.validateAndFindQuestions(lomake)(muutos, questionsOf, personOid())
-          ValidationResult(errors, questions, hakuRepository.getApplicationPeriods(lomake.oid))
+          ValidationResult(errors, questions, hakuRepository.applicationPeriodsByOid(lomake.oid))
         }
         case _ => InternalServerError()
       }
