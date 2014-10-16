@@ -1567,14 +1567,19 @@
       })
     })
 
-    describe("Käyttöliittymäkomponentit", function() {
-      page.applyFixtureAndOpen({applicationOid: hakemusKorkeakoulu})
-
+    describe("Henkilötietojen muokkaus", function() {
       describe("tekstikentän tyhjennysnappi", function() {
+        before(page.applyFixtureAndOpen({applicationOid: hakemusKorkeakouluId}))
         it("toimii", function() {
           hakemusKorkeakoulu.yhteystiedot().get("Lähiosoite").val().should.not.equal("")
           return hakemusKorkeakoulu.yhteystiedot().get("Lähiosoite").clear().then(function() {
             hakemusKorkeakoulu.yhteystiedot().get("Lähiosoite").val().should.equal("")
+          })
+        })
+
+        it("lomake menee 'muokattu'-tilaan", function() {
+          return wait.forAngular().then(function() {
+            hakemusKorkeakoulu.saveButton().isEnabled().should.be.true
           })
         })
       })

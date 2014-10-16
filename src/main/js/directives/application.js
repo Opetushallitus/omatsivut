@@ -63,6 +63,12 @@ module.exports = function(listApp) {
           }
         }, true)
 
+        $scope.$watch("application.answers.henkilotiedot", function(answers, oldAnswers) {
+          if (!_.isEqual(oldAnswers, answers)) {
+            applicationChanged()
+          }
+        }, true)
+
         $scope.$on("questionAnswered", function() {
           validateHakutoiveet(false)
         })
