@@ -171,6 +171,21 @@ function ApplicationListPage() {
           }).toArray()
       },
 
+      yhteystiedot: function() {
+        var application = getApplicationElement(applicationIndex)
+        return {
+          get: function(id) {
+            function element() {
+              var item = $(_(application.find("henkilotiedot label")).find(function (item) {
+                return $(item).text().indexOf(id) >= 0
+              }))
+              return item.find("input")
+            }
+            return YhteystietoRow(element)
+          }
+        }
+      },
+
       vastaanotettavia: function() {
         return getApplicationElement(applicationIndex).find(".hakutoiveenVastaanotto").length
       },
@@ -330,6 +345,19 @@ function ApplicationListPage() {
         return S("#hakemus-list>li").eq(applicationIndex)
       } else {
         return S('#hakemus-list>li[data-oid="' + applicationIndex + '"]')
+      }
+    }
+  }
+
+  function YhteystietoRow(el) {
+    return {
+      clear: function() {
+        el().prev(".clear-btn").click()
+        return wait.forAngular()
+      },
+
+      val: function() {
+        return el().val()
       }
     }
   }

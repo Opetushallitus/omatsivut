@@ -1566,6 +1566,19 @@
         })
       })
     })
+
+    describe("Käyttöliittymäkomponentit", function() {
+      page.applyFixtureAndOpen({applicationOid: hakemusKorkeakoulu})
+
+      describe("tekstikentän tyhjennysnappi", function() {
+        it("toimii", function() {
+          hakemusKorkeakoulu.yhteystiedot().get("Lähiosoite").val().should.not.equal("")
+          return hakemusKorkeakoulu.yhteystiedot().get("Lähiosoite").clear().then(function() {
+            hakemusKorkeakoulu.yhteystiedot().get("Lähiosoite").val().should.equal("")
+          })
+        })
+      })
+    })
   })
 
   function replacePreference(hakemus, index, searchString, koulutusIndex) {

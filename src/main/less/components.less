@@ -47,3 +47,23 @@
   top: -19px;
   border-bottom: 10px solid #feedbd;
 }
+
+.clearable-input {
+  position: relative;
+
+  input {
+    padding-right: 17px;
+  }
+
+  .clear-btn {
+    position: absolute;
+    right: 5px;
+  }
+
+  .clear-btn:before {
+    content: "\00D7";
+    color: @font-color-light;
+    line-height: 26px;
+    cursor: pointer;
+  }
+}
