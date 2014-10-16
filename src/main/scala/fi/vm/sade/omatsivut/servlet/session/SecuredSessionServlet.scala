@@ -13,9 +13,6 @@ import org.scalatra.Cookie
 import scala.collection.JavaConverters._
 
 trait SecuredSessionServletContainer {
-  this: AuditLoggerComponent with AuthenticationInfoComponent =>
-
-  val authenticationInfoService: AuthenticationInfoService
   val auditLogger: AuditLogger
 
   class SecuredSessionServlet(val appConfig: AppConfig) extends OmatSivutServletBase with AuthCookieParsing with ShibbolethPaths {

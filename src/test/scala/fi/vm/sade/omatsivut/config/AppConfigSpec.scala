@@ -2,7 +2,6 @@ package fi.vm.sade.omatsivut.config
 
 import fi.vm.sade.omatsivut.config.AppConfig.{AppConfig, ExampleTemplatedProps}
 import fi.vm.sade.omatsivut.mongo.EmbeddedMongo
-import fi.vm.sade.omatsivut.security.AuthenticationInfoService
 import org.specs2.mutable.Specification
 
 class AppConfigSpec extends Specification {
