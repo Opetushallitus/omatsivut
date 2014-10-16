@@ -13,6 +13,7 @@ import fi.vm.sade.omatsivut.haku.AddedQuestionFinder
 import fi.vm.sade.omatsivut.haku.domain.{AnswerId, QuestionNode}
 import fi.vm.sade.omatsivut.util.Logging
 import scala.collection.JavaConversions._
+import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 
 trait ApplicationValidatorComponent {
   this: SpringContextComponent with HakemusRepositoryComponent =>
@@ -77,7 +78,7 @@ trait ApplicationValidatorComponent {
       }
       val unknownAnswers: List[(String, String, String)] = flatAnswers
         .filterNot {
-          case (HenkilotiedotPhase.PHASE_ID_HENKILOTIEDOT, questionId, _) if List(HenkilotiedotPhase.QUESTION_ID_LAHIOSOITE, HenkilotiedotPhase.QUESTION_ID_POSTINUMERO, HenkilotiedotPhase.QUESTION_ID_SAHKOPOSTI).contains(questionId) || questionId.startsWith(HenkilotiedotPhase.QUESTION_ID_PREFIX_PUHELINNUMERO) => true
+          case (OppijaConstants.PHASE_PERSONAL, questionId, _) if List(OppijaConstants.ELEMENT_ID_ADDRESS, OppijaConstants.ELEMENT_ID_POSTAL_NUMBER, OppijaConstants.ELEMENT_ID_EMAIL).contains(questionId) || questionId.startsWith(OppijaConstants.ELEMENT_ID_PREFIX_PHONENUMBER) => true
           case (phaseId, questionId, _) => acceptedAnswerIds.contains(AnswerId(phaseId, questionId))
         }
       unknownAnswers
