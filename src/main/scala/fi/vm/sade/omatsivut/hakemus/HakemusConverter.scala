@@ -1,19 +1,19 @@
 package fi.vm.sade.omatsivut.hakemus
 
 import java.util
+
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
-import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
 import fi.vm.sade.omatsivut.hakemus.domain._
+import fi.vm.sade.omatsivut.haku.domain.Lomake
 import fi.vm.sade.omatsivut.tarjonta.Haku
-import fi.vm.sade.omatsivut.valintatulokset.ValintatulosServiceComponent
-import scala.collection.JavaConverters._
-import scala.util.Try
-import fi.vm.sade.omatsivut.valintatulokset.Vastaanottoaikataulu
+import fi.vm.sade.omatsivut.valintatulokset.{ValintatulosServiceComponent, Vastaanottoaikataulu}
 import org.joda.time.LocalDateTime
+
 import scala.collection.JavaConversions._
+import scala.util.Try
 
 trait HakemusConverterComponent {
   this: ValintatulosServiceComponent =>
@@ -25,7 +25,7 @@ trait HakemusConverterComponent {
     val baseEducationKey = OppijaConstants.ELEMENT_ID_BASE_EDUCATION
     val preferencePhaseKey = OppijaConstants.PHASE_APPLICATION_OPTIONS
 
-    def convertToHakemus(applicationSystem: ApplicationSystem, haku: Haku, application: Application)(implicit lang: Language.Language) = {
+    def convertToHakemus(lomake: Lomake, haku: Haku, application: Application)(implicit lang: Language.Language) = {
       val koulutusTaustaAnswers: util.Map[String, String] = application.getAnswers.get(educationPhaseKey)
       val receivedTime =  application.getReceived.getTime
       val hakutoiveet = convertHakuToiveet(application)
@@ -33,12 +33,12 @@ trait HakemusConverterComponent {
         application.getOid,
         receivedTime,
         Option(application.getUpdated).map(_.getTime).getOrElse(receivedTime),
-        tila(applicationSystem.getId, haku, application, hakutoiveet),
+        tila(lomake.oid, haku, application, hakutoiveet),
         hakutoiveet,
         haku,
         EducationBackground(koulutusTaustaAnswers.get(baseEducationKey), !Try {koulutusTaustaAnswers.get("ammatillinenTutkintoSuoritettu").toBoolean}.getOrElse(false)),
         application.clone().getAnswers.toMap.mapValues { phaseAnswers => phaseAnswers.toMap },
-        AttachmentConverter.requiresAdditionalInfo(applicationSystem.getAdditionalInformationElements.asScala.toList, application)
+        AttachmentConverter.requiresAdditionalInfo(lomake.additionalInformation, application)
       )
     }
 

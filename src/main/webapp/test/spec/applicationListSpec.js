@@ -695,7 +695,7 @@
       )
 
       describe("Lisäkysymykset", function() {
-        before(function() { mockAjax.respondOnce("POST", "/omatsivut/api/applications/validate/1.2.246.562.11.00000877107", 400, "") })
+        before(function() { mockAjax.respondOnce("POST", "/omatsivut/secure/applications/validate/1.2.246.562.11.00000877107", 400, "") })
 
         it("haun epäonnistuminen näytetään käyttäjälle", function() {
           // In current implementation move will trigger validation API call
@@ -708,7 +708,7 @@
       })
 
       describe("Jos tulee validaatiovirhe hakutoiveesta", function() {
-        before(function() { mockAjax.respondOnce("POST", "/omatsivut/api/applications/validate/1.2.246.562.11.00000877107", 200, '{"errors":[{"key":"preference1-Koulutus","message":"Testi virhe."}],"questions":[{"title":"Etelä-Savon ammattiopisto,  Otavankatu 4 - Ammattistartti","questions":[{"title":"Hakutoiveet - Hakutoiveet","questions":[{"id":{"phaseId":"hakutoiveet","questionId":"539ecf15e4b09a485311aac9"},"title":"Testikysymys, avaoin vastaus kenttä (pakollinen)?","help":"100 merkkiä max (kolmella kielellä kysymys)","required":true,"maxlength":100,"questionType":"Text"}]}]}],"applicationPeriods":[{"start":1404190831839,"end":4131320431839,"active":true}]}')})
+        before(function() { mockAjax.respondOnce("POST", "/omatsivut/secure/applications/validate/1.2.246.562.11.00000877107", 200, '{"errors":[{"key":"preference1-Koulutus","message":"Testi virhe."}],"questions":[{"title":"Etelä-Savon ammattiopisto,  Otavankatu 4 - Ammattistartti","questions":[{"title":"Hakutoiveet - Hakutoiveet","questions":[{"id":{"phaseId":"hakutoiveet","questionId":"539ecf15e4b09a485311aac9"},"title":"Testikysymys, avaoin vastaus kenttä (pakollinen)?","help":"100 merkkiä max (kolmella kielellä kysymys)","required":true,"maxlength":100,"questionType":"Text"}]}]}],"applicationPeriods":[{"start":1404190831839,"end":4131320431839,"active":true}]}')})
         before(
             hakemusNivelKesa2013WithPeruskouluBaseEducation.getPreference(0).moveDown,
             function() { return hakemusNivelKesa2013WithPeruskouluBaseEducation.saveError().length > 0 }
@@ -748,7 +748,7 @@
 
         describe("kun server ei vastaa", function() {
           before(
-              function() { mockAjax.respondOnce("POST", "/omatsivut/api/applications/vastaanota/1.2.246.562.5.2013080813081926341928/1.2.246.562.11.00000441369", 400, "") },
+              function() { mockAjax.respondOnce("POST", "/omatsivut/secure/applications/vastaanota/1.2.246.562.5.2013080813081926341928/1.2.246.562.11.00000441369", 400, "") },
               hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VASTAANOTTANUT"),
               hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send
             )
@@ -762,7 +762,7 @@
 
         describe("kun session on vanhentunut", function() {
           before(
-            function() { mockAjax.respondOnce("POST", "/omatsivut/api/applications/vastaanota/1.2.246.562.5.2013080813081926341928/1.2.246.562.11.00000441369", 401, "") },
+            function() { mockAjax.respondOnce("POST", "/omatsivut/secure/applications/vastaanota/1.2.246.562.5.2013080813081926341928/1.2.246.562.11.00000441369", 401, "") },
             hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VASTAANOTTANUT"),
             hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send
           )
@@ -773,7 +773,7 @@
 
         describe("kun serveriltä tulee odottamaton virhe", function() {
           before(
-            function() { mockAjax.respondOnce("POST", "/omatsivut/api/applications/vastaanota/1.2.246.562.5.2013080813081926341928/1.2.246.562.11.00000441369", 500, "") },
+            function() { mockAjax.respondOnce("POST", "/omatsivut/secure/applications/vastaanota/1.2.246.562.5.2013080813081926341928/1.2.246.562.11.00000441369", 500, "") },
             hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VASTAANOTTANUT"),
             hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send
           )
@@ -785,7 +785,7 @@
 
       describe("Tallennus", function() {
         describe("kun tapahtuu palvelinvirhe", function() {
-          before(function() { mockAjax.respondOnce("PUT", "/omatsivut/api/applications/1.2.246.562.11.00000877107", 400, "") })
+          before(function() { mockAjax.respondOnce("PUT", "/omatsivut/secure/applications/1.2.246.562.11.00000877107", 400, "") })
 
           it("virheilmoitus näkyy oikein", function() {
             return hakemusNivelKesa2013WithPeruskouluBaseEducation.getPreference(0).moveDown()
@@ -804,7 +804,7 @@
         })
 
         describe("kun istunto on vanhentunut", function() {
-          before(function() { mockAjax.respondOnce("PUT", "/omatsivut/api/applications/1.2.246.562.11.00000877107", 401, "") })
+          before(function() { mockAjax.respondOnce("PUT", "/omatsivut/secure/applications/1.2.246.562.11.00000877107", 401, "") })
 
           it("virheilmoitus näkyy oikein", function() {
             return hakemusNivelKesa2013WithPeruskouluBaseEducation.getPreference(0).moveDown()
@@ -817,7 +817,7 @@
 
         describe("Kun tallennuksessa esiintyy odottamaton validointivirhe", function() {
           before(function () {
-            mockAjax.respondOnce("PUT", "/omatsivut/api/applications/1.2.246.562.11.00000877107", 400, '[{"key":"asdfqwer", "message": "something went wrong"}]')
+            mockAjax.respondOnce("PUT", "/omatsivut/secure/applications/1.2.246.562.11.00000877107", 400, '[{"key":"asdfqwer", "message": "something went wrong"}]')
           })
 
           it("virheilmoitus näkyy oikein", function () {
@@ -1535,7 +1535,7 @@
         it("linkki avaa esikatselusivun", function() {
           hakemusYhteishakuKevat2014WithForeignBaseEducation.previewLink().text().should.equal("Näytä hakemus")
           hakemusYhteishakuKevat2014WithForeignBaseEducation.previewLink().hasClass("disabled").should.equal(false)
-          hakemusYhteishakuKevat2014WithForeignBaseEducation.previewLink().attr("href").should.equal("/omatsivut/api/applications/preview/1.2.246.562.11.00000441368")
+          hakemusYhteishakuKevat2014WithForeignBaseEducation.previewLink().attr("href").should.equal("/omatsivut/secure/applications/preview/1.2.246.562.11.00000441368")
         })
       })
       describe("Kun hakemusta on muokattu", function() {

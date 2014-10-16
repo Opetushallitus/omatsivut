@@ -2,12 +2,12 @@
 
 <div class="timestamp-row">
     <i aria-hidden="true" class="icon-doc-text"></i>
-    <a class="preview" ng-href="/omatsivut/api/applications/preview/{{application.oid}}" ng-class="{disabled: hasChanged || statusMessageType=='pending' || isValidating}" target="_blank">{{ localization('button.showApplication') }}</a>
+    <a class="preview" ng-href="/omatsivut/secure/applications/preview/{{application.oid}}" ng-class="{disabled: hasChanged || statusMessageType=='pending' || isValidating}" target="_blank">{{ localization('button.showApplication') }}</a>
     <span class="timestamp" ng-if="application.isPeriodActive()" ng-class="{disabled: hasChanged || statusMessageType=='pending' || isValidating}">
         ({{ timestampLabel() }} <time datetime="{{ application.updated | date:'yyyy-MM-ddTHH:mmZ' }}">{{ formatTimestamp(application.updated) }}</time>)
     </span>
     <div callout="attachments">
-        <localized-link key="message.rememberSendAttachments" href="{{ '/omatsivut/api/applications/preview/' + application.oid + '#liitteet'}}" target="_blank"></localized-link>
+        <localized-link key="message.rememberSendAttachments" href="{{ '/omatsivut/secure/applications/preview/' + application.oid + '#liitteet'}}" target="_blank"></localized-link>
     </div>
 </div>
 

@@ -1,12 +1,12 @@
 package fi.vm.sade.omatsivut.hakemus
 
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
-import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
 import fi.vm.sade.omatsivut.auditlog._
 import fi.vm.sade.omatsivut.config.SpringContextComponent
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.domain.Language.Language
 import fi.vm.sade.omatsivut.hakemus.domain._
+import fi.vm.sade.omatsivut.haku.domain.Lomake
 import fi.vm.sade.omatsivut.haku.{HakuRepository, HakuRepositoryComponent}
 import fi.vm.sade.omatsivut.tarjonta.{Haku, TarjontaComponent}
 import fi.vm.sade.omatsivut.util.Timer.timed
@@ -21,24 +21,24 @@ trait HakemusRepositoryComponent {
     private val dao = springContext.applicationDAO
     private val applicationService = springContext.applicationService
 
-    private def canUpdate(applicationSystem: ApplicationSystem, application: Application, userOid: String)(implicit lang: Language.Language): Boolean = {
-      val applicationPeriods = hakuRepository.getApplicationPeriods(applicationSystem.getId)
+    private def canUpdate(lomake: Lomake, application: Application, userOid: String)(implicit lang: Language.Language): Boolean = {
+      val applicationPeriods = hakuRepository.getApplicationPeriods(lomake.oid)
       val isActiveHakuPeriod = applicationPeriods.exists(_.active)
       val stateUpdateable = application.getState == Application.State.ACTIVE || application.getState == Application.State.INCOMPLETE
       val inPostProcessing = !(application.getRedoPostProcess() == Application.PostProcessingState.DONE || application.getRedoPostProcess() == null)
       isActiveHakuPeriod && stateUpdateable && !inPostProcessing && userOid == application.getPersonOid
     }
 
-    override def updateHakemus(applicationSystem: ApplicationSystem, haku: Haku)(hakemus: HakemusMuutos, userOid: String)(implicit lang: Language.Language): Option[Hakemus] = {
+    override def updateHakemus(lomake: Lomake, haku: Haku)(hakemus: HakemusMuutos, userOid: String)(implicit lang: Language.Language): Option[Hakemus] = {
       val applicationQuery: Application = new Application().setOid(hakemus.oid)
       val applicationJavaObject: Option[Application] = timed(1000, "Application fetch DAO"){
         dao.find(applicationQuery).toList.headOption
       }
 
       timed(1000, "Application update"){
-        applicationJavaObject.filter(application => canUpdate(applicationSystem, application, userOid)).map { application =>
+        applicationJavaObject.filter(application => canUpdate(lomake, application, userOid)).map { application =>
           val originalAnswers: Hakemus.Answers = application.getAnswers.toMap.mapValues(_.toMap)
-          ApplicationUpdater.update(applicationSystem)(application, hakemus)
+          ApplicationUpdater.update(lomake)(application, hakemus)
           timed(1000, "ApplicationService: update preference based data"){
             applicationService.updatePreferenceBasedData(application)
           }
@@ -49,7 +49,7 @@ trait HakemusRepositoryComponent {
             dao.update(applicationQuery, application)
           }
           auditLogger.log(UpdateHakemus(userOid, hakemus.oid, originalAnswers, application.getAnswers.toMap.mapValues(_.toMap)))
-          hakemusConverter.convertToHakemus(applicationSystem, haku, application)
+          hakemusConverter.convertToHakemus(lomake, haku, application)
         }
       }
     }
@@ -88,9 +88,9 @@ trait HakemusRepositoryComponent {
           }
           for {
             haku <- hakuOption
-            applicationSystem <- applicationSystemOption
+            lomake <- applicationSystemOption
           } yield {
-            val hakemus = hakemusConverter.convertToHakemus(applicationSystem, haku, application)
+            val hakemus = hakemusConverter.convertToHakemus(lomake, haku, application)
             auditLogger.log(ShowHakemus(application.getPersonOid, hakemus.oid))
             hakemus
           }

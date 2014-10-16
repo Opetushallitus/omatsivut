@@ -4,6 +4,7 @@ import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.omatsivut.config.{AppConfig, ComponentRegistry, OmatSivutSpringContext}
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
+import fi.vm.sade.omatsivut.haku.domain.Lomake
 import fi.vm.sade.omatsivut.tarjonta.Hakuaika
 
 import scala.collection.JavaConversions._
@@ -47,7 +48,7 @@ object TestFixture {
 
   def haku(implicit lang: Language.Language) = componentRegistry.tarjontaService.haku(applicationSystemNivelKesa2013Oid, lang).get
   def hakemusMuutos(implicit lang: Language.Language) = {
-    componentRegistry.hakemusConverter.convertToHakemus(applicationSystemNivelKesa2013, haku, applicationNivelKesa2013WithPeruskouluBaseEducationApp).toHakemusMuutos
+    componentRegistry.hakemusConverter.convertToHakemus(Lomake(applicationSystemNivelKesa2013), haku, applicationNivelKesa2013WithPeruskouluBaseEducationApp).toHakemusMuutos
   }
 
   val ammattistartti: Hakutoive = JsonFixtureMaps.findByKey[Hakutoive]("/mockdata/hakutoiveet.json", "1.2.246.562.14.2014030415375012208392").get
