@@ -2,8 +2,7 @@ package fi.vm.sade.omatsivut.auditlog
 
 import fi.vm.sade.log.model.Tapahtuma
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus.Answers
-import fi.vm.sade.omatsivut.security.CookieCredentials
-import fi.vm.sade.omatsivut.hakemus.domain.Valintatulos
+import fi.vm.sade.omatsivut.security.AuthInfo
 import fi.vm.sade.omatsivut.valintatulokset.Vastaanotto
 
 sealed trait AuditEvent {
@@ -13,15 +12,16 @@ sealed trait AuditEvent {
   def toLogMessage: String
 }
 
-case class Login(credentials: CookieCredentials, target: String = "Session") extends AuditEvent {
+// TODO: logiviestit ajan tasasalle
+case class Login(credentials: AuthInfo, target: String = "Session") extends AuditEvent {
   def toTapahtuma = Tapahtuma.createTRACE(systemName, target, toLogMessage, System.currentTimeMillis())
   def toLogMessage = "Luotu eväste sisällöllä: " + credentials.toString
 }
-case class Logout(credentials: CookieCredentials, target: String = "Session") extends AuditEvent {
+case class Logout(credentials: AuthInfo, target: String = "Session") extends AuditEvent {
   def toTapahtuma = Tapahtuma.createTRACE(systemName, target, toLogMessage, System.currentTimeMillis())
   def toLogMessage = "Käyttäjä kirjautui ulos: " + credentials.toString
 }
-case class SessionTimeout(credentials: CookieCredentials, target: String = "Session") extends AuditEvent {
+case class SessionTimeout(credentials: AuthInfo, target: String = "Session") extends AuditEvent {
   def toTapahtuma = Tapahtuma.createTRACE(systemName, target, toLogMessage, System.currentTimeMillis())
   def toLogMessage = "Poistettu eväste sisällöllä: " + credentials.toString
 }
