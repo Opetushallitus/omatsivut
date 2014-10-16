@@ -16,7 +16,7 @@ function S(selector) {
 }
 
 wait = {
-  maxWaitMs: 10000,
+  maxWaitMs: testTimeout,
   waitIntervalMs: 10,
   until: function(condition, count) {
     return function() {
@@ -27,7 +27,7 @@ wait = {
         if (condition()) {
           deferred.resolve()
         } else if (remaining === 0) {
-          deferred.reject("timeout")
+          deferred.reject("timeout of " + wait.maxWaitMs + " in wait.until")
         } else {
           setTimeout(function() {
             waitLoop(remaining-1)
