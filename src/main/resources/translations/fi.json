@@ -26,6 +26,10 @@
     "resultsFinal": "Valintatilanne (Lopullinen)",
     "resultsPending": "Valintatilanne (Kesken)",
     "contactDetails": "Yhteystiedot",
+    "email": "Sähköposti",
+    "mobilePhone": "Matkapuhelinnumero",
+    "streetAddress": "Lähiosoite",
+    "postalCode": "Postinumero",
 
     "resultState": {
       "Hyvaksytty": "Hyväksytty",

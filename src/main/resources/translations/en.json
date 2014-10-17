@@ -26,6 +26,10 @@
     "resultsFinal": "Lopullinen",
     "resultsPending": "Kesken",
     "contactDetails": "Contact details",
+    "email": "E-mail",
+    "mobilePhone": "Mobile phone",
+    "streetAddress": "Address",
+    "postalCode": "Postal code",
 
     "resultState": {
       "Hyvaksytty": "Accepted",

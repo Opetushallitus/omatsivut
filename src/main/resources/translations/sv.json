@@ -26,6 +26,10 @@
     "resultsFinal": "Lopullinen",
     "resultsPending": "Kesken",
     "contactDetails": "Kontaktinformation",
+    "email": "E-post",
+    "mobilePhone": "Mobilnummer",
+    "streetAddress": "Adress",
+    "postalCode": "Postnummer",
 
     "resultState": {
       "Hyvaksytty": "Godkänd",
