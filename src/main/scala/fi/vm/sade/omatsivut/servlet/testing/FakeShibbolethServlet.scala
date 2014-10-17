@@ -1,5 +1,7 @@
 package fi.vm.sade.omatsivut.servlet.testing
 
+import javax.servlet.http.{Cookie, HttpServletResponse, HttpServletRequest}
+
 import fi.vm.sade.omatsivut.config.AppConfig
 import AppConfig.AppConfig
 import fi.vm.sade.omatsivut.security.AuthCookieParsing
@@ -18,6 +20,18 @@ class FakeShibbolethServlet(val appConfig: AppConfig) extends OmatSivutServletBa
     get("/Login*") {
       redirectToFakeLogin
     }
+  }
+
+  private def tellBrowserToDeleteShibbolethCookie(req: HttpServletRequest, res: HttpServletResponse) {
+    tellBrowserToDeleteCookie(res, reqCookie(req, {_.getName.startsWith("_shibsession_")}))
+  }
+
+  private def tellBrowserToDeleteCookie(res: HttpServletResponse, cookie: Option[Cookie]) = {
+    cookie.map(c => {
+      c.setPath("/")
+      c.setMaxAge(0)
+      res.addCookie(c)
+    })
   }
 
   def redirectToFakeLogin {

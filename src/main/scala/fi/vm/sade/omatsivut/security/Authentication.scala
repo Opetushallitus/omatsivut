@@ -15,19 +15,9 @@ trait Authentication extends OmatSivutServletBase with AuthCookieParsing with Lo
 
   def personOid() = personOidOption(request).getOrElse(sys.error("Unauthenticated account"))
 
-  def validateCredentials(credentials: ShibbolethCookie, req: HttpServletRequest) = {
-    true
-  }
-
   before() {
     shibbolethCookieInRequest(request) match {
-      case Some(cookie) if validateCredentials(cookie, request) => true
-      case Some(cookie) => {
-        logger.info("Cookie was invalid: " + cookie)
-        //authAuditLogger.log(SessionTimeout(cookie)) // TODO: onko relevanttia?
-        //tellBrowserToDeleteAuthCookie(request, response)
-        halt(status = 401, headers = Map("WWW-Authenticate" -> "SecureCookie"))
-      }
+      case Some(cookie) => true
       case None => {
         halt(status = 401, headers = Map("WWW-Authenticate" -> "SecureCookie"))
       }
@@ -46,39 +36,25 @@ trait AuthCookieParsing extends Logging {
     }
   }
 
-  private def reqCookie(req: HttpServletRequest, matcher: (Cookie) => Boolean) = {
-    for {
-      cookies <- Option(req.getCookies)
-      cookie <- cookies.find(matcher)
-    } yield cookie
-  }
-
-  private def tellBrowserToDeleteCookie(res: HttpServletResponse, cookie: Option[Cookie]) = {
-    cookie.map(c => {
-      c.setPath("/")
-      c.setMaxAge(0)
-      res.addCookie(c)
-    })
+  def shibbolethCookieInRequest(req: HttpServletRequest): Option[ShibbolethCookie] = {
+    reqCookie(req, c => c.getName.startsWith("_shibsession_")).map(ShibbolethCookie.fromCookie(_))
   }
 
   protected def headerOption(name: String, request: HttpServletRequest): Option[String] = {
     Option(request.getHeader(name))
   }
 
-  def tellBrowserToDeleteShibbolethCookie(req: HttpServletRequest, res: HttpServletResponse) {
-    tellBrowserToDeleteCookie(res, reqCookie(req, {_.getName.startsWith("_shibsession_")}))
-  }
-
-  def shibbolethCookieInRequest(req: HttpServletRequest): Option[ShibbolethCookie] = {
-    try {
-      val requestCookie = req.getCookies.filter(c => c.getName.startsWith("_shibsession_"))(0)
-      Some(ShibbolethCookie.fromCookie(requestCookie))
-    } catch {
-      case e: Exception => None
-    }
+  protected def reqCookie(req: HttpServletRequest, matcher: (Cookie) => Boolean) = {
+    for {
+      cookies <- Option(req.getCookies)
+      cookie <- cookies.find(matcher)
+    } yield cookie
   }
 }
 
+case class ShibbolethCookie(name: String, value: String) {
+  override def toString = name + "=" + value
+}
 object ShibbolethCookie {
   def fromCookie(cookie: Cookie) = {
     ShibbolethCookie(cookie.getName, cookie.getValue)
@@ -90,10 +66,6 @@ object ShibbolethCookie {
 }
 
 case class AuthInfo() // placeholder. TODO: what to convey to logging?
-
-case class ShibbolethCookie(name: String, value: String) {
-  override def toString = name + "=" + value
-}
 
 object FakeAuthentication {
   val oidCookie = "omatsivut-fake-oid"
