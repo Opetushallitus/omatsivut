@@ -11,7 +11,7 @@ class FakeShibbolethFilter extends ScalatraFilter with Logging {
     val requestWrapper = new HttpServletRequestWrapper(request) {
       override def getHeader(name: String): String = {
         if(name == "oid") {
-          FakeAuthentication.fakeOidInRequest(request).get
+          FakeAuthentication.fakeOidInRequest(request).getOrElse(super.getHeader(name))
         } else {
           super.getHeader(name)
         }
