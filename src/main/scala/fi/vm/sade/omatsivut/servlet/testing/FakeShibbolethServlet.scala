@@ -8,18 +8,16 @@ import fi.vm.sade.omatsivut.security.AuthCookieParsing
 import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
 
 class FakeShibbolethServlet(val appConfig: AppConfig) extends OmatSivutServletBase with AuthCookieParsing  {
-  if(appConfig.usesFakeAuthentication){
-    get("/Logout") {
-      tellBrowserToDeleteShibbolethCookie(request, response)
-      paramOption("return") match {
-        case Some(url) => response.redirect(url)
-        case _ => redirectToFakeLogin
-      }
+  get("/Logout") {
+    tellBrowserToDeleteShibbolethCookie(request, response)
+    paramOption("return") match {
+      case Some(url) => response.redirect(url)
+      case _ => redirectToFakeLogin
     }
+  }
 
-    get("/Login*") {
-      redirectToFakeLogin
-    }
+  get("/Login*") {
+    redirectToFakeLogin
   }
 
   private def tellBrowserToDeleteShibbolethCookie(req: HttpServletRequest, res: HttpServletResponse) {

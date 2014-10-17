@@ -27,11 +27,7 @@ trait AuthCookieParsing extends Logging {
   def appConfig: AppConfig
 
   def personOidOption(request: HttpServletRequest): Option[String] = {
-    if (appConfig.usesFakeAuthentication) {
-      FakeAuthentication.fakeOidInRequest(request)
-    } else {
-      headerOption("oid", request)
-    }
+    headerOption("oid", request)
   }
 
   def shibbolethCookieInRequest(req: HttpServletRequest): Option[ShibbolethCookie] = {
