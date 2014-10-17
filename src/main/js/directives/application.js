@@ -58,12 +58,6 @@ module.exports = function(listApp) {
         }, true)
 
         $scope.$watch("application.getAnswerWatchCollection()", function(answers, oldAnswers) {
-          if (!_.isEqual(oldAnswers, [])) {
-            applicationChanged()
-          }
-        }, true)
-
-        $scope.$watch("application.answers.henkilotiedot", function(answers, oldAnswers) {
           if (!_.isEqual(oldAnswers, answers)) {
             applicationChanged()
           }

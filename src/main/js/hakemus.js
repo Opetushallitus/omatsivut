@@ -1,11 +1,26 @@
 var Hakutoive = require('./hakutoive')
-var AdditionalQuestion = require('./additionalQuestion').AdditionalQuestion
+var Question = require('./question').Question
 var util = require('./util')
 
+function copy(json) { return $.extend(true, {}, json) }
+
 function Hakemus(json) {
-  _.extend(this, json)
-  this.hakutoiveet = _(this.hakutoiveet).map(function(hakutoive) { return new Hakutoive(hakutoive) })
+  this.oid = json.oid
+  this.updated = json.updated
+  this.haku = copy(json.haku)
+  this.state = copy(json.state)
+  this.educationBackground = copy(json.educationBackground)
+
+  this.hakutoiveet = _(json.hakutoiveet).map(function(hakutoive) { return new Hakutoive(hakutoive) })
   this.additionalQuestions = null
+  this.henkilotiedot = convertHenkilotiedot(json.answers.henkilotiedot)
+}
+
+function convertHenkilotiedot(json) {
+  return _(json).reduce(function(memo, val, key) {
+    memo[key] = new Question({ id: key }, val)
+    return memo
+  } , {} )
 }
 
 function updatePreferenceQuestionIds(manipulationF) {
@@ -16,11 +31,11 @@ function updatePreferenceQuestionIds(manipulationF) {
     return _.object(indexes)
   }).call(this)
 
-  _(AdditionalQuestion.questionMap(this.additionalQuestions)).each(function(question, id) {
+  _(Question.questionMap(this.additionalQuestions)).each(function(question, id) {
     var questionIdParts = /^(preference)(\d+)([-_].+)/.exec(id)
     if (questionIdParts != null) {
       var newId = questionIdParts[1] + newIndexes[questionIdParts[2]] + questionIdParts[3]
-      question.question.id.questionId = newId
+      question.id.questionId = newId
     }
   })
 }
@@ -108,23 +123,25 @@ Hakemus.prototype = {
 
     function getAnswers() {
       var answers = { "henkilotiedot": {
-        "lahiosoite": self.answers.henkilotiedot.lahiosoite,
-        "Sähköposti": self.answers.henkilotiedot["Sähköposti"],
-        "Postinumero": self.answers.henkilotiedot.Postinumero,
-        "matkapuhelinnumero1": self.answers.henkilotiedot.matkapuhelinnumero1
+        "lahiosoite": self.henkilotiedot.lahiosoite.answer,
+        "Sähköposti": self.henkilotiedot["Sähköposti"].answer,
+        "Postinumero": self.henkilotiedot.Postinumero.answer,
+        "matkapuhelinnumero1": self.henkilotiedot.matkapuhelinnumero1.answer
       }};
 
-      _(AdditionalQuestion.questionMap(self.additionalQuestions)).each(function(questionNode, key) {
-        answers[questionNode.question.id.phaseId] = answers[questionNode.question.id.phaseId] || {}
+      _(Question.questionMap(self.additionalQuestions)).each(function(questionNode, key) {
+        answers[questionNode.id.phaseId] = answers[questionNode.id.phaseId] || {}
         var answer = questionNode.answer
         if (_.isObject(answer)) {
           _(answer).each(function(val, key) {
-            answers[questionNode.question.id.phaseId][key] = val
+            answers[questionNode.id.phaseId][key] = val
           })
         } else {
-          answers[questionNode.question.id.phaseId][questionNode.question.id.questionId] = answer
+          answers[questionNode.id.phaseId][questionNode.id.questionId] = answer
         }
       })
+
+
 
       return answers
     }
@@ -178,11 +195,13 @@ Hakemus.prototype = {
   },
 
   getAnswerWatchCollection: function() {
-    return _(AdditionalQuestion.questionMap(this.additionalQuestions)).map(function(item, key) { return item.answer })
+    var answersToAdditionalQuestions =  _(Question.questionMap(this.additionalQuestions)).map(function(item, key) { return item.answer })
+    var otherAnswers = _(this.henkilotiedot).map(function(item) { return item.answer })
+    return answersToAdditionalQuestions.concat(otherAnswers)
   },
 
   getOptionAnswerWatchCollection: function() {
-    return _(AdditionalQuestion.questionMap(this.additionalQuestions)).filter(function(item) {return item.question.options != null}).map(function(item, key) { return item.answer })
+    return _(Question.questionMap(this.additionalQuestions)).filter(function(item) {return item.options != null}).map(function(item, key) { return item.answer })
   },
 
   getChangedItems: function() {
@@ -205,8 +224,8 @@ Hakemus.prototype = {
 
   importQuestions: function(questions) {
     this.additionalQuestions = (function mergeOldAnswers(old, questions) {
-      var oldQuestions = AdditionalQuestion.questionMap(old)
-      _(AdditionalQuestion.questionMap(questions)).each(function(newQuestion, id) {
+      var oldQuestions = Question.questionMap(old)
+      _(Question.questionMap(questions)).each(function(newQuestion, id) {
         if (oldQuestions[id] != null)
           newQuestion.answer = oldQuestions[id].answer
       })
@@ -216,8 +235,8 @@ Hakemus.prototype = {
 
   updateValidationMessages: function(errors, skipQuestions) {
     var errorMap = util.mapArray(errors, "key", "message")
-    var questionMap = AdditionalQuestion.questionMap(this.additionalQuestions)
     var hakutoiveMap = Hakutoive.hakutoiveMap(this.hakutoiveet)
+    var questionMap = _.extend({}, Question.questionMap(this.additionalQuestions), this.henkilotiedot)
     var unhandled = []
 
     clearErrors()

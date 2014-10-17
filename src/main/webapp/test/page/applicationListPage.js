@@ -361,6 +361,10 @@ function ApplicationListPage() {
           return el().val()
         else
           el().val(newValue).change()
+      },
+
+      error: function() {
+        return el().closest(".value-column").find(".validation-message").text()
       }
     }
   }
@@ -372,7 +376,7 @@ function ApplicationListPage() {
           return {
             title: $(this).find(".title").text(),
             validationMessage: $(this).find(".validation-message").text(),
-            id: testFrame().angular.element($(this).parent()).scope().questionNode.question.id.questionId
+            id: testFrame().angular.element($(this).parent()).scope().questionNode.id.questionId
 
           }
         }).toArray()

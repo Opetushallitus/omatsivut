@@ -1,5 +1,5 @@
-var QuestionItem = require('./additionalQuestion').AdditionalQuestion
-var QuestionGroup = require('./additionalQuestion').AdditionalQuestionGroup
+var Question = require('./question').Question
+var QuestionGroup = require('./question').QuestionGroup
 
 module.exports = function(listApp) {
   listApp.factory("applicationValidator", ["$http", function($http) {
@@ -39,7 +39,7 @@ module.exports = function(listApp) {
           if (questionNode.questions != null) {
             results.questionNodes.push(convertToItems(questionNode.questions, new QuestionGroup(questionNode.title)))
           } else {
-            results.questionNodes.push(new QuestionItem(questionNode, questionNode.required ? ["*"] : []))
+            results.questionNodes.push(Question.fromJson(questionNode))
           }
         })
         return results

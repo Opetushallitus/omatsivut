@@ -1,20 +1,29 @@
 <div class="yhteystiedot">
     <label>
         <div class="label-column">Sähköposti:</div>
-        <div class="value-column"><input type="text" ng-model="yhteystiedot['Sähköposti']" clearable-input /></div>
+        <div class="value-column">
+            <input type="text" ng-model="yhteystiedot['Sähköposti'].answer" clearable-input />
+            <span class="validation-message error">{{ yhteystiedot['Sähköposti'].errors.join(', ') }}</span>
+        </div>
     </label>
 
     <label>
         <div class="label-column">Matkapuhelinnumero:</div>
-        <div class="value-column"> <input type="text" ng-model="yhteystiedot['matkapuhelinnumero1']" clearable-input /></div>
+        <div class="value-column"> <input type="text" ng-model="yhteystiedot['matkapuhelinnumero1'].answer" clearable-input />
+            <span class="validation-message error">{{ yhteystiedot['matkapuhelinnumero1'].errors.join(', ') }}</span>
+        </div>
     </label>
 
     <label>
         <div class="label-column">Lähiosoite:</div>
-        <div class="value-column"> <input type="text" ng-model="yhteystiedot['lahiosoite']" clearable-input /></div>
+        <div class="value-column"> <input type="text" ng-model="yhteystiedot['lahiosoite'].answer" clearable-input />
+            <span class="validation-message error">{{ yhteystiedot['lahiosoite'].errors.join(', ') }}</span>
+        </div>
     </label>
     <label>
         <div class="label-column">Postinumero:</div>
-        <div class="value-column"> <input type="text" ng-model="yhteystiedot['Postinumero']" clearable-input /></div>
+        <div class="value-column"> <input type="text" ng-model="yhteystiedot['Postinumero'].answer" clearable-input />
+            <span class="validation-message error">{{ yhteystiedot['Postinumero'].errors.join(', ') }}</span>
+        </div>
     </label>
 </div>

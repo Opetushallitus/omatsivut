@@ -1579,7 +1579,7 @@
         })
       })
 
-      describe("tietojen muokkaus", function() {
+      describe("kun tietoja muokataan", function() {
         var newData = {
           "Sähköposti": "joku@jossain.fi",
           "Matkapuhelinnumero": "0401234987",
@@ -1587,18 +1587,28 @@
           "Postinumero": "00500"
         }
 
-        before(function() {
-          _(newData).each(function(val, id) {
-            hakemusKorkeakoulu.yhteystiedot().getRow(id).val(val)
-          })
-          return wait.forAngular()
-        })
+        var invalidData = {
+          "Sähköposti": "joku@",
+          "Matkapuhelinnumero": "0401234987a",
+          "Lähiosoite": "",
+          "Postinumero": "00500a"
+        }
 
+        function setData(data) {
+          return function() {
+            _(data).each(function(val, id) {
+              hakemusKorkeakoulu.yhteystiedot().getRow(id).val(val)
+            })
+            return wait.forAngular()
+          }
+        }
+
+        before(setData(newData))
         it("lomake menee 'muokattu'-tilaan", function() {
           hakemusKorkeakoulu.saveButton().isEnabled().should.be.true
         })
 
-        describe("muutosten tallennus", function() {
+        describe("tallennusnapin painamisen jälkeen", function() {
           before(
             hakemusKorkeakoulu.saveWaitSuccess,
             function() { S("input").remove() },
@@ -1609,6 +1619,17 @@
             _(newData).each(function(val, id) {
               hakemusKorkeakoulu.yhteystiedot().getRow(id).val().should.equal(val)
             })
+          })
+        })
+
+        describe("virheellisen tiedon tallentamisen jälkeen", function() {
+          before(setData(invalidData), hakemusKorkeakoulu.saveWaitError)
+
+          it("validointivirheet näkyvät", function() {
+            hakemusKorkeakoulu.yhteystiedot().getRow("Sähköposti").error().should.equal("Virheellinen arvo")
+            hakemusKorkeakoulu.yhteystiedot().getRow("Matkapuhelinnumero").error().should.equal("Virheellinen arvo")
+            hakemusKorkeakoulu.yhteystiedot().getRow("Lähiosoite").error().should.equal("Pakollinen tieto.")
+            hakemusKorkeakoulu.yhteystiedot().getRow("Postinumero").error().should.equal("Virheellinen arvo")
           })
         })
       })

@@ -14,30 +14,30 @@
     </div>
 
     <div ng-switch-when="false" class="question">
-        <label class="title">{{questionNode.question.title}}</label>
+        <label class="title">{{questionNode.title}}</label>
         <span class="validation-message error">{{ questionNode.errors.join(', ') }}</span>
-        <i class="icon-info-circled verboseHelp" ng-if="questionNode.question.verboseHelp" title="{{questionNode.question.verboseHelp}}"></i>
-        <div class="instruction helptext" ng-if="questionNode.question.help" ng-bind-html="questionNode.question.help"></div>
+        <i class="icon-info-circled verboseHelp" ng-if="questionNode.verboseHelp" title="{{questionNode.verboseHelp}}"></i>
+        <div class="instruction helptext" ng-if="questionNode.help" ng-bind-html="questionNode.help"></div>
 
-        <span class="answer" ng-switch="questionNode.question.questionType">
+        <span class="answer" ng-switch="questionNode.questionType">
             <input type="text" ng-switch-when="Text"
                    ng-model="questionNode.answer"
-                   maxlength="{{questionNode.question.maxlength}}"/>
+                   maxlength="{{questionNode.maxlength}}"/>
             <textarea ng-switch-when="TextArea"
                       ng-model="questionNode.answer"
-                      maxlength="{{questionNode.question.maxlength}}"
-                      rows="{{questionNode.question.rows}}"
-                      cols="{{questionNode.question.cols}}"
+                      maxlength="{{questionNode.maxlength}}"
+                      rows="{{questionNode.rows}}"
+                      cols="{{questionNode.cols}}"
                     />
             <select ng-switch-when="Dropdown"
                     ng-model="questionNode.answer"
-                    ng-options="option.value as option.title for option in questionNode.question.options"
+                    ng-options="option.value as option.title for option in questionNode.options"
                     ng-change="questionAnswered()">
             </select>
 
             <div ng-switch-when="Radio">
-                <label class="radio-button-item" ng-repeat="option in questionNode.question.options">
-                    <input name="{{questionNode.question.id.questionId}}" type="radio"
+                <label class="radio-button-item" ng-repeat="option in questionNode.options">
+                    <input name="{{questionNode.id.questionId}}" type="radio"
                            ng-model="questionNode.answer"
                            ng-change="questionAnswered()"
                            value={{option.value}} /> {{option.title }}
@@ -45,7 +45,7 @@
             </div>
 
             <div ng-switch-when="Checkbox">
-                <label class="radio-button-item" ng-repeat="option in questionNode.question.options">
+                <label class="radio-button-item" ng-repeat="option in questionNode.options">
                     <input type="checkbox" ng-model="questionNode.answer[option.value]">
                     {{option.title }}
                 </label>
