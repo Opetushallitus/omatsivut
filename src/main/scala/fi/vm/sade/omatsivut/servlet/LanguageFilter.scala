@@ -1,25 +1,20 @@
 package fi.vm.sade.omatsivut.servlet
 
-import javax.servlet._
-import javax.servlet.http.Cookie
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
+import javax.servlet.http.{Cookie, HttpServletRequest, HttpServletResponse}
+
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.util.Logging
+import org.scalatra.ScalatraFilter
 
-class LanguageFilter extends Filter with Logging{
-
+class LanguageFilter extends ScalatraFilter with Logging{
   val cookieName = "i18next"
   val cookieMaxAge = 60 * 60 * 24 * 1800
 
-  import collection.JavaConversions._
-
-  def doFilter(req: ServletRequest, res: ServletResponse, filterChain: FilterChain) {
-    checkLanguage(req.asInstanceOf[HttpServletRequest], res.asInstanceOf[HttpServletResponse])
-    filterChain.doFilter(req, res)
+  before() {
+    checkLanguage(request, response)
   }
 
-  def checkLanguage(request: HttpServletRequest, response: HttpServletResponse) {
+  private def checkLanguage(request: HttpServletRequest, response: HttpServletResponse) {
     val (lang: Language.Language, setCookie: Boolean) = chooseLanguage(Option(request.getParameter("lang")), Option(request.getCookies()))
     if(setCookie) {
       addCookie(response, lang)
@@ -54,16 +49,10 @@ class LanguageFilter extends Filter with Logging{
     } yield lang
   }
 
-  def addCookie(response: HttpServletResponse, lang: Language.Language) {
+  private def addCookie(response: HttpServletResponse, lang: Language.Language) {
     val cookie = new Cookie(cookieName, lang.toString())
     cookie.setMaxAge(cookieMaxAge)
     cookie.setPath("/")
     response.addCookie(cookie)
-  }
-
-  def init(filterConfig: FilterConfig) {
-  }
-
-  def destroy {
   }
 }

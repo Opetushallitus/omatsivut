@@ -27,6 +27,10 @@ class ScalatraBootstrap extends LifeCycle with Logging {
 
     context.addFilter("UserFilter", new UserFilter(config))
       .addMappingForUrlPatterns(util.EnumSet.allOf(classOf[DispatcherType]), true, "/index.html", "/")
+    context.addFilter("CacheControl", new CacheControlFilter)
+      .addMappingForUrlPatterns(util.EnumSet.allOf(classOf[DispatcherType]), true, "/*")
+    context.addFilter("Language", new LanguageFilter)
+      .addMappingForUrlPatterns(util.EnumSet.allOf(classOf[DispatcherType]), true, "/*")
 
     context.mount(componentRegistry.newApplicationsServlet, "/secure/applications")
     context.mount(new TranslationServlet, "/translations")
