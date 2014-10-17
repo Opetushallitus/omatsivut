@@ -19,7 +19,7 @@ trait SecuredSessionServletContainer {
     get("/initsession") {
       personOidOption(request.asInstanceOf[HttpServletRequest]) match {
         case (Some(oid)) => {
-          auditLogger.log(Login(AuthInfo()))
+          auditLogger.log(Login(authInfo(request)))
           response.redirect(redirectUri)
         }
         case _ => redirectToShibbolethLogin(response, appConfig.authContext.ssoContextPath)

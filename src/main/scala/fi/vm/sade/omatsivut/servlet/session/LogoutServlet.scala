@@ -20,7 +20,7 @@ trait LogoutServletContainer {
     }
 
     def sendLogOut {
-      //auditLogger.log(Logout(credentials)) // TODO: do this
+      auditLogger.log(Logout(authInfo(request)))
       redirectToShibbolethLogout(request, response)
     }
 

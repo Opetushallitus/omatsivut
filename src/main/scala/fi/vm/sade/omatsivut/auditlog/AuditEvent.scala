@@ -12,18 +12,13 @@ sealed trait AuditEvent {
   def toLogMessage: String
 }
 
-// TODO: logiviestit ajan tasasalle
-case class Login(credentials: AuthInfo, target: String = "Session") extends AuditEvent {
+case class Login(authInfo: AuthInfo, target: String = "Session") extends AuditEvent {
   def toTapahtuma = Tapahtuma.createTRACE(systemName, target, toLogMessage, System.currentTimeMillis())
-  def toLogMessage = "Luotu eväste sisällöllä: " + credentials.toString
+  def toLogMessage = "Käyttäjä kirjautui sisään: " + authInfo.toString
 }
-case class Logout(credentials: AuthInfo, target: String = "Session") extends AuditEvent {
+case class Logout(authInfo: AuthInfo, target: String = "Session") extends AuditEvent {
   def toTapahtuma = Tapahtuma.createTRACE(systemName, target, toLogMessage, System.currentTimeMillis())
-  def toLogMessage = "Käyttäjä kirjautui ulos: " + credentials.toString
-}
-case class SessionTimeout(credentials: AuthInfo, target: String = "Session") extends AuditEvent {
-  def toTapahtuma = Tapahtuma.createTRACE(systemName, target, toLogMessage, System.currentTimeMillis())
-  def toLogMessage = "Poistettu eväste sisällöllä: " + credentials.toString
+  def toLogMessage = "Käyttäjä kirjautui ulos: " + authInfo.toString
 }
 case class ShowHakemus(userOid: String, hakemusOid: String, target: String = "Hakemus") extends AuditEvent {
   def toTapahtuma = Tapahtuma.createREAD(systemName, userOid, target, toLogMessage)

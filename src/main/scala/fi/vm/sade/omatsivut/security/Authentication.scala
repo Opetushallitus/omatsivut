@@ -1,13 +1,11 @@
 package fi.vm.sade.omatsivut.security
 
-import javax.servlet.http.{Cookie, HttpServletRequest, HttpServletResponse}
+import javax.servlet.http.{Cookie, HttpServletRequest}
 
-import fi.vm.sade.omatsivut.auditlog.{AuditLogger, SessionTimeout}
+import fi.vm.sade.omatsivut.auditlog.AuditLogger
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
-import fi.vm.sade.omatsivut.util.{Timer, Logging}
-import org.joda.time.DateTime
-import org.scalatra.ScalatraBase
+import fi.vm.sade.omatsivut.util.Logging
 
 trait Authentication extends OmatSivutServletBase with AuthCookieParsing with Logging {
   val appConfig: AppConfig
@@ -40,6 +38,10 @@ trait AuthCookieParsing extends Logging {
     reqCookie(req, c => c.getName.startsWith("_shibsession_")).map(ShibbolethCookie.fromCookie(_))
   }
 
+  def authInfo(request: HttpServletRequest) = {
+    AuthInfo(personOidOption(request), shibbolethCookieInRequest(request))
+  }
+
   protected def headerOption(name: String, request: HttpServletRequest): Option[String] = {
     Option(request.getHeader(name))
   }
@@ -65,7 +67,9 @@ object ShibbolethCookie {
   }
 }
 
-case class AuthInfo() // placeholder. TODO: what to convey to logging?
+case class AuthInfo(personOid: Option[String], shibbolethCookie: Option[ShibbolethCookie]) {
+  override def toString = "oid=" + personOid.getOrElse("") + ", " + shibbolethCookie.map(_.toString).getOrElse("(no shibboleth cookie)")
+}
 
 object FakeAuthentication {
   val oidCookie = "omatsivut-fake-oid"
