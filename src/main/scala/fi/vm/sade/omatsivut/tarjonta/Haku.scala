@@ -4,6 +4,7 @@ import fi.vm.sade.omatsivut.domain.Language.Language
 import fi.vm.sade.omatsivut.ohjausparametrit.domain.Tulosaikataulu
 import org.joda.time.Interval
 
+case class Haku(oid: String, name: String, applicationPeriods: List[Hakuaika], tyyppi: String, korkeakouluHaku: Boolean, results: Option[Tulosaikataulu] = None)
 object Haku {
   def apply(tarjontaHaku: TarjontaHaku, lang: Language) : Haku = {
     Haku(tarjontaHaku.oid, tarjontaHaku.nimi("kieli_" + lang.toString), tarjontaHaku.hakuaikas.map(h => Hakuaika(h)), HaunTyyppi(tarjontaHaku).toString, isKorkeakouluhaku(tarjontaHaku))
@@ -14,6 +15,7 @@ object Haku {
   }
 }
 
+case class Hakuaika(id: String, start: Long, end: Long, active: Boolean)
 object Hakuaika {
   def apply(tarjontaHakuaika: TarjontaHakuaika) : Hakuaika = {
     Hakuaika(tarjontaHakuaika.hakuaikaId, tarjontaHakuaika.alkuPvm, tarjontaHakuaika.loppuPvm, new Interval(tarjontaHakuaika.alkuPvm, tarjontaHakuaika.loppuPvm).containsNow())
@@ -23,9 +25,6 @@ object Hakuaika {
     Hakuaika(id, start, end, new Interval(start, end).containsNow())
   }
 }
-
-case class Haku(oid: String, name: String, applicationPeriods: List[Hakuaika], tyyppi: String, korkeakouluHaku: Boolean, results: Option[Tulosaikataulu] = None)
-case class Hakuaika(id: String, start: Long, end: Long, active: Boolean)
 
 object HaunTyyppi extends Enumeration {
   type HaunTyyppi = Value
