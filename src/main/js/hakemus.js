@@ -2,8 +2,6 @@ var Hakutoive = require('./hakutoive')
 var Question = require('./question').Question
 var util = require('./util')
 
-function copy(json) { return $.extend(true, {}, json) }
-
 function Hakemus(json) {
   this.oid = json.oid
   this.updated = json.updated
@@ -11,16 +9,23 @@ function Hakemus(json) {
   this.state = copy(json.state)
   this.educationBackground = copy(json.educationBackground)
 
-  this.hakutoiveet = _(json.hakutoiveet).map(function(hakutoive) { return new Hakutoive(hakutoive) })
-  this.additionalQuestions = null
+  this.hakutoiveet = convertHakutoiveet(json.hakutoiveet)
   this.henkilotiedot = convertHenkilotiedot(json.answers.henkilotiedot)
+  this.additionalQuestions = { questionNodes: [] }
 }
 
+function copy(json) { return $.extend(true, {}, json) }
+
 function convertHenkilotiedot(json) {
-  return _(json).reduce(function(memo, val, key) {
-    memo[key] = new Question({ id: key }, val)
+  var fields = ["Sähköposti", "matkapuhelinnumero1", "lahiosoite", "Postinumero"]
+  return _(fields).reduce(function(memo, key) {
+    memo[key] = new Question({ id: key }, json[key])
     return memo
   } , {} )
+}
+
+function convertHakutoiveet(hakutoiveet) {
+  return _(hakutoiveet).map(function(hakutoive) { return new Hakutoive(hakutoive) })
 }
 
 function updatePreferenceQuestionIds(manipulationF) {
@@ -68,7 +73,7 @@ Hakemus.prototype = {
     )
   },
 
-  canMoveTo: function(from, to) {
+  canMovePreference: function(from, to) {
     var lastFilledItem = (function getLastFilled(hakutoiveet) {
       for (var i=hakutoiveet.length-1; i>=0; i--)
         if (hakutoiveet[i].hasData())
@@ -122,14 +127,12 @@ Hakemus.prototype = {
     }
 
     function getAnswers() {
-      var answers = { "henkilotiedot": {
-        "lahiosoite": self.henkilotiedot.lahiosoite.answer,
-        "Sähköposti": self.henkilotiedot["Sähköposti"].answer,
-        "Postinumero": self.henkilotiedot.Postinumero.answer,
-        "matkapuhelinnumero1": self.henkilotiedot.matkapuhelinnumero1.answer
-      }};
+      var contactDetails = _(self.henkilotiedot).reduce(function(answers, question, id) {
+        answers.henkilotiedot[id] = question.answer
+        return answers
+      }, { henkilotiedot: {}})
 
-      _(Question.questionMap(self.additionalQuestions)).each(function(questionNode, key) {
+      var additionalQuestionAnswers = _(Question.questionMap(self.additionalQuestions)).reduce(function(answers, questionNode) {
         answers[questionNode.id.phaseId] = answers[questionNode.id.phaseId] || {}
         var answer = questionNode.answer
         if (_.isObject(answer)) {
@@ -139,11 +142,10 @@ Hakemus.prototype = {
         } else {
           answers[questionNode.id.phaseId][questionNode.id.questionId] = answer
         }
-      })
+        return answers
+      }, {})
 
-
-
-      return answers
+      return _.extend({}, contactDetails, additionalQuestionAnswers)
     }
 
     function removeFalseBooleans(obj) {
@@ -181,27 +183,6 @@ Hakemus.prototype = {
       }) && !_(this.hakutoiveet.slice(0, this.lastIndexWithData() + 1)).any(function(hakutoive) {
         return !hakutoive.hasData()
       })
-  },
-
-  getHakutoiveWatchCollection: function() {
-    return _(this.hakutoiveet).map(function(hakutoive) {
-      return {
-        "Koulutus": hakutoive.data["Koulutus"],
-        "Koulutus-id": hakutoive.data["Koulutus-id"],
-        "Opetuspiste": hakutoive.data["Opetuspiste"],
-        "Opetuspiste-id": hakutoive.data["Opetuspiste-id"]
-      }
-    })
-  },
-
-  getAnswerWatchCollection: function() {
-    var answersToAdditionalQuestions =  _(Question.questionMap(this.additionalQuestions)).map(function(item, key) { return item.answer })
-    var otherAnswers = _(this.henkilotiedot).map(function(item) { return item.answer })
-    return answersToAdditionalQuestions.concat(otherAnswers)
-  },
-
-  getOptionAnswerWatchCollection: function() {
-    return _(Question.questionMap(this.additionalQuestions)).filter(function(item) {return item.options != null}).map(function(item, key) { return item.answer })
   },
 
   getChangedItems: function() {

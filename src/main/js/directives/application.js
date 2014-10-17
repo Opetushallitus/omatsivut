@@ -1,6 +1,7 @@
 var Hakemus = require("../hakemus")
 var Hakutoive = require("../hakutoive")
 var util = require("../util")
+var Question = require("../question").Question
 
 module.exports = function(listApp) {
   listApp.directive("application", ["$http", "$sce", "restResources", "applicationValidator", "settings", "debounce", "localization", "$timeout", function ($http, $sce, restResources, applicationValidator, settings, debounce, localization, $timeout) {
@@ -49,7 +50,24 @@ module.exports = function(listApp) {
             return localization("label.applicationUpdated")
         }
 
-        $scope.$watch("application.getHakutoiveWatchCollection()", function(hakutoiveet, oldHakutoiveet) {
+        $scope.getHakutoiveWatchCollection = function() {
+          return _(this.application.hakutoiveet).map(function(hakutoive) {
+            return {
+              "Koulutus": hakutoive.data["Koulutus"],
+              "Koulutus-id": hakutoive.data["Koulutus-id"],
+              "Opetuspiste": hakutoive.data["Opetuspiste"],
+              "Opetuspiste-id": hakutoive.data["Opetuspiste-id"]
+            }
+          })
+        }
+
+        $scope.getAnswerWatchCollection = function() {
+          var answersToAdditionalQuestions =  _(Question.questionMap(this.application.additionalQuestions)).map(function(item, key) { return item.answer })
+          var otherAnswers = _(this.application.henkilotiedot).map(function(item) { return item.answer })
+          return answersToAdditionalQuestions.concat(otherAnswers)
+        }
+
+        $scope.$watch("getHakutoiveWatchCollection()", function(hakutoiveet, oldHakutoiveet) {
           // Skip initial values angular style
           if (!_.isEqual(hakutoiveet, oldHakutoiveet)) {
             applicationChanged()
@@ -57,7 +75,7 @@ module.exports = function(listApp) {
           }
         }, true)
 
-        $scope.$watch("application.getAnswerWatchCollection()", function(answers, oldAnswers) {
+        $scope.$watch("getAnswerWatchCollection()", function(answers, oldAnswers) {
           if (!_.isEqual(oldAnswers, answers)) {
             applicationChanged()
           }
