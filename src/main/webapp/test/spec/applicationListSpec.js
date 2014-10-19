@@ -163,6 +163,14 @@
         ])
       })
 
+      it("hakuaika näkyy", function() {
+        hakemusNivelKesa2013WithPeruskouluBaseEducation.applicationStatus().should.equal("Hakuaika päättyy keskiviikkona 1. joulukuuta 2100 klo 07.00")
+      })
+
+      it("tallennusaikaleima näkyy", function() {
+        hakemusNivelKesa2013WithPeruskouluBaseEducation.changesSavedTimestamp().should.match(/\(Hakemusta muokattu \d+\..*?\d+ klo \d+\.\d+\)/)
+      })
+
       describe("haun tyyppi", function() {
         before(hakemusNivelKesa2013WithPeruskouluBaseEducation.convertToKorkeakouluhaku)
         it ("korkeakouluhaussa käytetään eri tekstejä", function() {

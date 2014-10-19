@@ -274,7 +274,7 @@ function ApplicationListPage() {
       },
 
       changesSavedTimestamp: function () {
-        return getApplicationElement().find(".timestamp").text()
+        return getApplicationElement().find(".timestamp").text().trim()
       },
 
       applicationStatus: function() {

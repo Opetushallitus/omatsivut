@@ -5,7 +5,7 @@
         <i aria-hidden="true" class="icon-doc-text"></i>
         <a class="preview" ng-href="/omatsivut/secure/applications/preview/{{application.oid}}" ng-class="{disabled: form.$dirty|| statusMessageType=='pending' || isValidating}" target="_blank">{{ localization('button.showApplication') }}</a>
         <span class="timestamp" ng-if="application.isPeriodActive()" ng-class="{disabled: form.$dirty || statusMessageType=='pending' || isValidating}">
-            ({{ timestampLabel() }} <time datetime="{{ application.updated | date:'yyyy-MM-ddTHH:mmZ' }}">{{ formatTimestamp(application.updated) }}</time>)
+            ({{ timestampLabel() }} <time formatted-time="application.updated" format="LLL" />)
         </span>
         <div callout="attachments">
             <localized-link key="message.rememberSendAttachments" href="{{ '/omatsivut/secure/applications/preview/' + application.oid + '#liitteet'}}" target="_blank"></localized-link>
@@ -15,7 +15,7 @@
     <div ng-if="application.isPeriodActive()" role="presentation">
         <p class="application-status">
             <span class="italic">
-                {{ localization('label.applicationPeriodEnds') }} <time datetime="{{ application.haku.applicationPeriods[0].end | date:'yyyy-MM-ddTHH:mmZ' }}">{{ formatApplicationPeriod(application.haku.applicationPeriods[0].end) }}</time>
+                {{ localization('label.applicationPeriodEnds') }} <time formatted-time="application.haku.applicationPeriods[0].end" format="LLLL"/>
             </span>
         </p>
 
@@ -29,7 +29,7 @@
             <span class="italic">
                 {{ localization('label.applicationPeriodEnded') }}
                 <span ng-if="application.haku.results.julkistus">
-                    {{ localization('label.resultsPublishedDate') }} {{ formatDate(application.haku.results.julkistus.end) }}.
+                    {{ localization('label.resultsPublishedDate') }} <time formatted-time="application.haku.results.julkistus.end" format="LL" />.
                 </span>
             </span>
         </p>

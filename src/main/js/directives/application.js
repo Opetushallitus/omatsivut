@@ -19,21 +19,6 @@ module.exports = function(listApp) {
         $scope.isSaveable = true
         $scope.isValidating = false
 
-        $scope.formatTimestamp = function(dt) {
-          return moment(dt).format('LLL').replace(/,/g, "")
-        }
-
-        $scope.formatApplicationPeriod = function(dt) {
-          return moment(dt).format('LLLL').replace(/,/g, "")
-        }
-
-        $scope.formatDate = function(dt) {
-          if (dt == null)
-            return ""
-          else
-            return moment(dt).format('LL').replace(/,/g, "")
-        }
-
         $scope.timestampLabel = function() {
           if ($scope.application.received == $scope.application.updated)
             return localization("label.applicationReceived")
