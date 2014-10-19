@@ -112,7 +112,6 @@ input[type="text"], textarea {
   border-radius: 4px;
   font-size: @body-font-size;
   height: 2 * @body-font-size;
-  transition: background-color 1000ms;
 
   &:focus {
     background: @input-focus-background;
@@ -125,6 +124,10 @@ input[type="text"], textarea {
   &.saved {
     background-color: @save-highlight-timestamp-color;
   }
+}
+
+.with-bg-transition() {
+  transition: background-color 1000ms;
 }
 
 input, textarea {
@@ -641,6 +644,10 @@ a.disabled {
 
 .yhteystiedot {
   margin-top: 10px;
+
+  input {
+    .with-bg-transition();
+  }
 
   label {
     display: block;
