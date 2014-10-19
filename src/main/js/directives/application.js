@@ -15,22 +15,13 @@ module.exports = function(listApp) {
       link: function ($scope, $element, attrs) {
         $scope.localization = localization
         var applicationValidatorBounced = debounce(applicationValidator(), settings.modelDebounce)
+        $scope.applicationPeriod = $scope.application.haku.applicationPeriods[0]
+        $scope.isSaveable = true
+        $scope.isValidating = false
 
-        function updateHakemus(hakemus) {
-          $scope.application = hakemus
-          $scope.applicationPeriod = $scope.application.haku.applicationPeriods[0]
-          $scope.hasChanged = false
-          $scope.isSaveable = true
-          $scope.isValidating = false
-        }
-
-        updateHakemus($scope.application)
-
-        function formatTimestamp(dt) {
+        $scope.formatTimestamp = function(dt) {
           return moment(dt).format('LLL').replace(/,/g, "")
         }
-
-        $scope.formatTimestamp = formatTimestamp
 
         $scope.formatApplicationPeriod = function(dt) {
           return moment(dt).format('LLLL').replace(/,/g, "")
@@ -50,8 +41,8 @@ module.exports = function(listApp) {
             return localization("label.applicationUpdated")
         }
 
-        $scope.getHakutoiveWatchCollection = function() {
-          return _(this.application.hakutoiveet).map(function(hakutoive) {
+        function getHakutoiveet() {
+          return _($scope.application.hakutoiveet).map(function(hakutoive) {
             return {
               "Koulutus": hakutoive.data["Koulutus"],
               "Koulutus-id": hakutoive.data["Koulutus-id"],
@@ -61,13 +52,13 @@ module.exports = function(listApp) {
           })
         }
 
-        $scope.getAnswerWatchCollection = function() {
-          var answersToAdditionalQuestions =  _(Question.questionMap(this.application.additionalQuestions)).map(function(item, key) { return item.answer })
-          var otherAnswers = _(this.application.henkilotiedot).map(function(item) { return item.answer })
+        function getAnswers() {
+          var answersToAdditionalQuestions =  _(Question.questionMap($scope.application.additionalQuestions)).map(function(item, key) { return item.answer })
+          var otherAnswers = _($scope.application.henkilotiedot).map(function(item) { return item.answer })
           return answersToAdditionalQuestions.concat(otherAnswers)
         }
 
-        $scope.$watch("getHakutoiveWatchCollection()", function(hakutoiveet, oldHakutoiveet) {
+        $scope.$watch(getHakutoiveet, function(hakutoiveet, oldHakutoiveet) {
           // Skip initial values angular style
           if (!_.isEqual(hakutoiveet, oldHakutoiveet)) {
             applicationChanged()
@@ -75,7 +66,7 @@ module.exports = function(listApp) {
           }
         }, true)
 
-        $scope.$watch("getAnswerWatchCollection()", function(answers, oldAnswers) {
+        $scope.$watch(getAnswers, function(answers, oldAnswers) {
           if (!_.isEqual(oldAnswers, answers)) {
             applicationChanged()
           }
@@ -87,13 +78,13 @@ module.exports = function(listApp) {
 
         $scope.hakutoiveVastaanotettu = function(hakutoive, updated) {
           $scope.application.mergeSavedApplication(updated)
-          $timeout(function() { // Don't display until dialog has faded out
+          $timeout(function() {
             $scope.$broadcast("hakutoive-vastaanotettu", hakutoive)
           }, 0)
         }
 
         function applicationChanged() {
-          $scope.hasChanged = true
+          $scope.form.$setDirty()
           if ($scope.statusMessageType == "success")
             setStatusMessage("")
         }
@@ -159,13 +150,11 @@ module.exports = function(listApp) {
           setStatusMessage("", "pending")
 
           function onSuccess(savedApplication) {
-            highlightSavedItems($scope.application.getChangedItems())
+            highlightSavedItems($scope.application.getChangedPreferences())
             $scope.application.mergeSavedApplication(savedApplication)
             $scope.form.$setPristine()
-            $scope.hasChanged = false
             setStatusMessage(localization("message.changesSaved"), "success")
             updateValidationMessages([])
-
             $scope.$broadcast("show-callout", "attachments", savedApplication.requiresAdditionalInfo === true)
           }
 

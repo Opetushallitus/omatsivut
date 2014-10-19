@@ -185,7 +185,7 @@ Hakemus.prototype = {
       })
   },
 
-  getChangedItems: function() {
+  getChangedPreferences: function() {
     return _(this.hakutoiveet).chain()
       .map(function(hakutoive, index) { return hakutoive.isModified ? index : null })
       .without(null)
