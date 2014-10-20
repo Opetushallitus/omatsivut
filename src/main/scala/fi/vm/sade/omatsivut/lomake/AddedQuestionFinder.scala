@@ -1,4 +1,4 @@
-package fi.vm.sade.omatsivut.haku
+package fi.vm.sade.omatsivut.lomake
 
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
@@ -6,7 +6,7 @@ import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
 import fi.vm.sade.omatsivut.hakemus.domain._
 import fi.vm.sade.omatsivut.hakemus.{FlatAnswers, ApplicationUpdater, HakutoiveetConverter}
-import fi.vm.sade.omatsivut.haku.domain.{Lomake, QuestionGroup, QuestionLeafNode, QuestionNode}
+import fi.vm.sade.omatsivut.lomake.domain.{Lomake, QuestionGroup, QuestionLeafNode, QuestionNode}
 
 object AddedQuestionFinder {
   val preferencePhaseKey = OppijaConstants.PHASE_APPLICATION_OPTIONS
@@ -59,9 +59,9 @@ object AddedQuestionFinder {
 
   private def findQuestionsByHakutoive(lomake: Lomake, storedApplication: Application, newHakemus: HakemusMuutos, hakutoive: Hakutoive)(implicit lang: Language.Language): Set[QuestionLeafNode] = {
     val onlyOneHakutoive = getOnlyAskedHakutoiveAsList(newHakemus, hakutoive)
-    val currentAnswersWithOneHakutoive = ApplicationUpdater.getAllUpdatedAnswersForApplication(lomake)(storedApplication, newHakemus.copy(hakutoiveet = onlyOneHakutoive))
+    val currentAnswersWithOneHakutoive = ApplicationUpdater.getAllUpdatedAnswersForApplication(lomake, storedApplication, newHakemus.copy(hakutoiveet = onlyOneHakutoive))
     val noHakutoive = getOnlyAskedHakutoiveAsList(newHakemus, Map())
-    val emptyAnswersWithNoHakutoive = ApplicationUpdater.getAllUpdatedAnswersForApplication(lomake)(storedApplication, newHakemus.copy(hakutoiveet = noHakutoive).copy(answers = Hakemus.emptyAnswers))
+    val emptyAnswersWithNoHakutoive = ApplicationUpdater.getAllUpdatedAnswersForApplication(lomake, storedApplication, newHakemus.copy(hakutoiveet = noHakutoive).copy(answers = Hakemus.emptyAnswers))
     findAddedQuestions(lomake, currentAnswersWithOneHakutoive, emptyAnswersWithNoHakutoive)
   }
 

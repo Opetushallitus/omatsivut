@@ -7,7 +7,7 @@ import fi.vm.sade.omatsivut.config.AppConfig._
 import fi.vm.sade.omatsivut.domain.Language.Language
 import fi.vm.sade.omatsivut.fixtures.FixtureImporter
 import fi.vm.sade.omatsivut.hakemus._
-import fi.vm.sade.omatsivut.haku.{HakuRepository, HakuRepositoryComponent}
+import fi.vm.sade.omatsivut.lomake.{LomakeRepository, LomakeRepositoryComponent}
 import fi.vm.sade.omatsivut.koulutusinformaatio.{KoulutusInformaatioComponent, KoulutusInformaatioService}
 import fi.vm.sade.omatsivut.ohjausparametrit.{OhjausparametritComponent, OhjausparametritService}
 import fi.vm.sade.omatsivut.servlet.session.{LogoutServletContainer, SecuredSessionServletContainer}
@@ -20,7 +20,7 @@ class ComponentRegistry(val config: AppConfig)
   extends SpringContextComponent with
           KoulutusInformaatioComponent with
           OhjausparametritComponent with
-          HakuRepositoryComponent with
+          LomakeRepositoryComponent with
           HakemusRepositoryComponent with
           ValintatulosServiceComponent with
           AuditLoggerComponent with
@@ -60,7 +60,7 @@ class ComponentRegistry(val config: AppConfig)
   val ohjausparametritService: OhjausparametritService = configureOhjausparametritService
   val valintatulosService: ValintatulosService = configureValintatulosService
   val auditLogger: AuditLogger = new AuditLoggerFacade(runningLogger)
-  val hakuRepository: HakuRepository = new RemoteHakuRepository
+  val hakuRepository: LomakeRepository = new RemoteLomakeRepository
   val hakemusRepository: HakemusRepository = new RemoteHakemusRepository
   val hakemusConverter: HakemusConverter = new HakemusConverter
   val tarjontaService: TarjontaService = configureTarjontaService
