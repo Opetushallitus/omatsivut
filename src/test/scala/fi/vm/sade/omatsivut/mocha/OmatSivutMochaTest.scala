@@ -1,7 +1,6 @@
 package fi.vm.sade.omatsivut.mocha
 
-import fi.vm.sade.omatsivut.{JettyLauncher, TomcatRunner}
-import fi.vm.sade.omatsivut.config.{ComponentRegistry, AppConfig}
+import fi.vm.sade.omatsivut.JettyLauncher
 import org.specs2.mutable.Specification
 
 class OmatSivutMochaTest extends Specification {
