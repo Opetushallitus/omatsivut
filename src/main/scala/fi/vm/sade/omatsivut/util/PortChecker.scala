@@ -13,4 +13,7 @@ object PortChecker {
       case e:IOException => true
     }
   }
+  def findFreeLocalPort(basePort: Int = 8080) = {
+    (basePort to (basePort + 2000)).find(isFreeLocalPort(_)).get
+  }
 }
