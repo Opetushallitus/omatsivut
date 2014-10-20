@@ -10,6 +10,7 @@ import fi.vm.sade.haku.virkailija.authentication.impl.AuthenticationServiceMockI
 import fi.vm.sade.log.client.Logger
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.mongo.OmatSivutMongoConfiguration
+import fi.vm.sade.omatsivut.util.Logging
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation._
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer
@@ -33,12 +34,12 @@ class OmatSivutSpringContext(context: ApplicationContext) {
   def auditLogger = context.getBean(classOf[Logger])
 }
 
-object OmatSivutSpringContext {
+object OmatSivutSpringContext extends Logging {
   def check {}
 
   def createApplicationContext(configuration: AppConfig): AnnotationConfigApplicationContext = {
     val appContext: AnnotationConfigApplicationContext = new AnnotationConfigApplicationContext
-    println("Using spring configuration " + configuration.springConfiguration)
+    logger.info("Using spring configuration " + configuration.springConfiguration)
     appContext.getEnvironment.setActiveProfiles(configuration.springConfiguration.profile)
     customPropertiesHack(appContext, configuration)
     appContext.register(configuration.springConfiguration.getClass)

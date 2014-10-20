@@ -2,9 +2,9 @@ package fi.vm.sade.omatsivut
 
 import java.nio.file.{Paths, Files}
 
-import fi.vm.sade.omatsivut.util.PortChecker
+import fi.vm.sade.omatsivut.util.{Logging, PortChecker}
 
-object ValintatulosServiceRunner {
+object ValintatulosServiceRunner extends Logging {
   import sys.process._
   val valintatulosPort = 8097
   val searchPaths = List("./valinta-tulos-service", "../valinta-tulos-service")
@@ -14,7 +14,7 @@ object ValintatulosServiceRunner {
     if (currentRunner == None && PortChecker.isFreeLocalPort(valintatulosPort)) {
       findValintatulosService match {
         case Some(path) => {
-          println("Starting valinta-tulos-service from " + path)
+          logger.info("Starting valinta-tulos-service from " + path)
           val cwd = new java.io.File(path)
           val javaHome = System.getProperty("JAVA8_HOME", "")
           Process(List("./sbt", "test:compile"), cwd, "JAVA_HOME" -> javaHome).!
@@ -25,7 +25,7 @@ object ValintatulosServiceRunner {
           currentRunner = Some(process)
         }
         case _ =>
-          println("******* valinta-tulos-service not found ********")
+          logger.error("******* valinta-tulos-service not found ********")
       }
     }
   }
