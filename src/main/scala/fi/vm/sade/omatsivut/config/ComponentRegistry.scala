@@ -7,6 +7,7 @@ import fi.vm.sade.omatsivut.config.AppConfig._
 import fi.vm.sade.omatsivut.domain.Language.Language
 import fi.vm.sade.omatsivut.fixtures.{FixtureImporter, TestFixture}
 import fi.vm.sade.omatsivut.hakemus._
+import fi.vm.sade.omatsivut.koodisto.{KoodistoService, KoodistoComponent}
 import fi.vm.sade.omatsivut.lomake.{LomakeRepository, LomakeRepositoryComponent}
 import fi.vm.sade.omatsivut.koulutusinformaatio.{KoulutusInformaatioComponent, KoulutusInformaatioService}
 import fi.vm.sade.omatsivut.ohjausparametrit.{OhjausparametritComponent, OhjausparametritService}
@@ -34,7 +35,8 @@ class ComponentRegistry(val config: AppConfig)
           SecuredSessionServletContainer with
           LogoutServletContainer with
           TestHelperServletContainer with
-          TarjontaComponent {
+          TarjontaComponent with
+          KoodistoComponent {
 
   implicit val swagger = new OmatSivutSwagger
 
@@ -74,6 +76,7 @@ class ComponentRegistry(val config: AppConfig)
   val hakemusRepository: HakemusRepository = new RemoteHakemusRepository
   val hakemusConverter: HakemusConverter = new HakemusConverter
   val tarjontaService: TarjontaService = configureTarjontaService
+  val koodistoService: KoodistoService = new RemoteKoodistoService(config)
 
   def newApplicationValidator: ApplicationValidator = new ApplicationValidator
   def newHakemusPreviewGenerator(language: Language): HakemusPreviewGenerator = new HakemusPreviewGenerator()(language)

@@ -101,6 +101,7 @@ cas.user-search-base=ou\=people
 cas.user-search-filter=(|(mail\={0})(uid\={0}))
 customAttribute.webservice.url.backend=https://{{host_virkailija}}/authentication-service/services/customAttributeService
 flyway.initOnMigrate=true
+cas.service.koodisto-service=https://{{host_virkailija}}/koodisto-service
 koodi.public.webservice.url.backend=https://{{host_virkailija}}/koodisto-service/services/koodiService
 koodisto.public.webservice.url.backend=https://{{host_virkailija}}/koodisto-service/services/koodistoService
 jpa.schemaUpdate=validate
