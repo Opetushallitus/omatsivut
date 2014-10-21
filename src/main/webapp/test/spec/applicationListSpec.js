@@ -1557,13 +1557,30 @@
     describe("Liitepyyntölinkki", function() {
       before(page.applyFixtureAndOpen({}))
       describe("Jos tallennettuun hakemukseen liittyy lisätietopyyntöjä", function() {
-        before(
+        describe("Jos hakukohteita muokataan", function() {
+          before(
             replacePreference(hakemusKorkeakoulu, 1, "Diakonia-ammattikorkeakoulu, Järvenpää"),
-            (function() { hakemusKorkeakoulu.questionsForApplication().enterAnswer(2, "Vastaus") } ),
+            (function () {
+              hakemusKorkeakoulu.questionsForApplication().enterAnswer(2, "Vastaus")
+            } ),
             hakemusKorkeakoulu.saveWaitSuccess
-        )
-        it("liitepyyntö näytetään", function() {
-          hakemusKorkeakoulu.calloutText().should.equal("Muista lähettää hakemuksen liitteet.")
+          )
+          it("liitepyyntö näytetään", function () {
+            hakemusKorkeakoulu.calloutText().should.equal("Muista lähettää hakemuksen liitteet.")
+          })
+        })
+
+        describe("Jos vain yhteystietoja muutetaan", function() {
+          before(
+            function() { return hakemusKorkeakoulu.yhteystiedot().getRow("Lähiosoite").val("test") },
+            hakemusKorkeakoulu.saveWaitSuccess
+          )
+
+          it("liitepyyntöjä ei näytetä", function() {
+            return wait.until(function() {
+              return hakemusKorkeakoulu.calloutText() == ""
+            })()
+          })
         })
       })
 

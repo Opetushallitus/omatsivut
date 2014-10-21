@@ -136,11 +136,11 @@ module.exports = function(listApp) {
 
           function onSuccess(savedApplication) {
             highlightSavedItems($scope.application.getChangedPreferences())
+            $scope.$broadcast("show-callout", "attachments", savedApplication.requiresAdditionalInfo === true && $scope.application.getChangedPreferences().length > 0)
             $scope.application.mergeSavedApplication(savedApplication)
             $scope.form.$setPristine()
             setStatusMessage(localization("message.changesSaved"), "success")
             updateValidationMessages([])
-            $scope.$broadcast("show-callout", "attachments", savedApplication.requiresAdditionalInfo === true)
           }
 
           function onError(err) {
