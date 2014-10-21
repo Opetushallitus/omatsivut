@@ -7,7 +7,7 @@ import org.scalatra.servlet.ScalatraListener
 
 object JettyLauncher {
   def main(args: Array[String]) {
-    new JettyLauncher(8080).start.join
+    new JettyLauncher(System.getProperty("omatsivut.port", "8080").toInt).start.join
   }
 }
 

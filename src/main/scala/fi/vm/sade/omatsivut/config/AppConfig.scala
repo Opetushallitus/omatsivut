@@ -1,6 +1,7 @@
 package fi.vm.sade.omatsivut.config
 
 import com.typesafe.config.Config
+import fi.vm.sade.omatsivut.ValintatulosServiceRunner
 import fi.vm.sade.omatsivut.mongo.{EmbeddedMongo, MongoServer}
 import fi.vm.sade.omatsivut.security.{AuthenticationContext, ProductionAuthenticationContext, TestAuthenticationContext}
 import fi.vm.sade.omatsivut.util.Logging
@@ -79,7 +80,7 @@ object AppConfig extends Logging {
     }
 
     override lazy val settings = ConfigTemplateProcessor.createSettings(templateAttributesFile)
-      .withOverride("omatsivut.valinta-tulos-service.url", "http://localhost:8097/valinta-tulos-service")
+      .withOverride("omatsivut.valinta-tulos-service.url", "http://localhost:"+ ValintatulosServiceRunner.valintatulosPort+"/valinta-tulos-service")
       .withOverride("mongo.db.name", "hakulomake")
       .withOverride("mongodb.oppija.uri", "mongodb://localhost:" + EmbeddedMongo.port)
   }

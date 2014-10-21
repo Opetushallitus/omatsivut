@@ -1,6 +1,6 @@
 package fi.vm.sade.omatsivut.mocha
 
-import fi.vm.sade.omatsivut.JettyLauncher
+import fi.vm.sade.omatsivut.{ValintatulosServiceRunner, JettyLauncher}
 import fi.vm.sade.omatsivut.mongo.EmbeddedMongo
 import fi.vm.sade.omatsivut.util.PortChecker
 import org.specs2.mutable.Specification
@@ -11,6 +11,7 @@ class OmatSivutMochaTest extends Specification {
   "Mocha tests" in {
     System.setProperty("omatsivut.profile", "it")
     val omatSivutPort: Int = PortChecker.findFreeLocalPort
+    ValintatulosServiceRunner.valintatulosPort = PortChecker.findFreeLocalPort
     EmbeddedMongo.port = PortChecker.findFreeLocalPort
 
     new JettyLauncher(omatSivutPort).withJettyAndValintatulosService {
