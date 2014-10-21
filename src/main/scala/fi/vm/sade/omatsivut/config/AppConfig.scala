@@ -72,6 +72,7 @@ object AppConfig extends Logging {
 
     override def onStart {
       mongo = EmbeddedMongo.start
+      ValintatulosServiceRunner.start
     }
 
     override def onStop {

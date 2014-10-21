@@ -33,12 +33,4 @@ class JettyLauncher(port: Int) {
       server.stop
     }
   }
-
-  def withJettyAndValintatulosService[T](block: => T) = {
-    withJetty {
-      ValintatulosServiceRunner.withValintatulosService {
-        block
-      }
-    }
-  }
 }

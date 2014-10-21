@@ -8,7 +8,8 @@ import fi.vm.sade.omatsivut.util.{Logging, PortChecker}
 object ValintatulosServiceRunner extends Logging {
   import scala.sys.process._
 
-  var valintatulosPort = 8097
+  var valintatulosPort = sys.props.getOrElse("valintatulos.port", PortChecker.findFreeLocalPort.toString).toInt
+
   val searchPaths = List("./valinta-tulos-service", "../valinta-tulos-service")
   var currentRunner: Option[scala.sys.process.Process] = None
 
@@ -38,11 +39,6 @@ object ValintatulosServiceRunner extends Logging {
   def stop = this.synchronized {
     logger.info("Stoping valinta-tulos-service")
     currentRunner.foreach(_.destroy)
-  }
-
-  def withValintatulosService[T](block: => T) = {
-    start
-    block
   }
 
   private def findValintatulosService = {
