@@ -23,14 +23,18 @@ object ValintatulosServiceRunner extends Logging {
             Thread.sleep(1000)
           }
           currentRunner = Some(process)
+          sys.addShutdownHook { ValintatulosServiceRunner.stop }
         }
         case _ =>
           logger.error("******* valinta-tulos-service not found ********")
       }
+    } else {
+      logger.info("Not starting valinta-tulos-service: seems to be running on port " + valintatulosPort)
     }
   }
 
   def stop = this.synchronized {
+    logger.info("Stoping valinta-tulos-service")
     currentRunner.foreach(_.destroy)
   }
 
