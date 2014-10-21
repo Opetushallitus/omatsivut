@@ -6,7 +6,7 @@ import fi.vm.sade.omatsivut.fixtures.FixtureImporter
 import fi.vm.sade.omatsivut.security.{AuthenticationCipher, ShibbolethCookie}
 import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
 import fi.vm.sade.omatsivut.util.Timer
-import fi.vm.sade.omatsivut.valintatulokset.ValintatulosServiceComponent
+import fi.vm.sade.omatsivut.valintatulokset.{RemoteValintatulosService, ValintatulosServiceComponent}
 import org.scalatra.{Cookie, CookieOptions}
 
 trait TestHelperServletContainer {
@@ -33,6 +33,11 @@ trait TestHelperServletContainer {
         Timer.timed(100, "Apply fixtures"){
           new FixtureImporter(springContext.applicationDAO, springContext.mongoTemplate).applyFixtures(fixtureName, "application/"+applicationOid+".json")
         }
+      }
+
+      put("/fixtures/valintatulos/apply") {
+        val query = request.queryString
+        new RemoteValintatulosService(appConfig.settings.valintaTulosServiceUrl).applyFixtureWithQuery(query)
       }
     }
 
