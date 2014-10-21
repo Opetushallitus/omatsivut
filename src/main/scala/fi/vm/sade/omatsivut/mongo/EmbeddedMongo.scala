@@ -8,7 +8,7 @@ import de.flapdoodle.embed.process.runtime.Network
 import fi.vm.sade.omatsivut.util.PortChecker
 
 object EmbeddedMongo {
-  val port = 28018
+  var port = System.getProperty("omatsivut.embeddedmongo.port", "28018").toInt
 
   def start = {
     if (PortChecker.isFreeLocalPort(port)) {

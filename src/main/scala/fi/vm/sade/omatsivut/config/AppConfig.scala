@@ -81,7 +81,7 @@ object AppConfig extends Logging {
     override lazy val settings = ConfigTemplateProcessor.createSettings(templateAttributesFile)
       .withOverride("omatsivut.valinta-tulos-service.url", "http://localhost:8097/valinta-tulos-service")
       .withOverride("mongo.db.name", "hakulomake")
-      .withOverride("mongodb.oppija.uri", "mongodb://localhost:28018")
+      .withOverride("mongodb.oppija.uri", "mongodb://localhost:" + EmbeddedMongo.port)
   }
 
   class ITWithValintaTulosService extends IT {
