@@ -52,9 +52,7 @@ trait AuthCookieParsing extends Logging {
   }
 
   def credentialsOption(request: HttpServletRequest): Option[CookieCredentials] = {
-    Timer.timed(blockname = "credentialsOption") {
-      parseCredentials(request, new AuthenticationCipher(appConfig.settings.aesKey, appConfig.settings.hmacKey))
-    }
+    parseCredentials(request, new AuthenticationCipher(appConfig.settings.aesKey, appConfig.settings.hmacKey))
   }
 
   private def reqCookie(req: HttpServletRequest, matcher: (Cookie) => Boolean) = {

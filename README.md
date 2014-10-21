@@ -36,7 +36,7 @@ Generoi projekti Eclipseen:
 
 ### Käynnistä sovellus IDEAsta/Eclipsestä
 
-Aja TomcatRunner-luokka. Jotta impersonointi/autentikoinnin ohitus onnistuu, anna parametri `-Domatsivut.profile=it`.
+Aja JettyLauncher-luokka. Jotta impersonointi/autentikoinnin ohitus onnistuu, anna parametri `-Domatsivut.profile=it`.
 
 ### Offline-käyttö (skipRaamit)
 

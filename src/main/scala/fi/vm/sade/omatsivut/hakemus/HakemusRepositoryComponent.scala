@@ -43,7 +43,7 @@ trait HakemusRepositoryComponent {
             applicationService.updatePreferenceBasedData(application)
           }
           timed(1000, "ApplicationService: update authorization Meta"){
-            applicationService.updateAuthorizationMeta(application, false)
+            applicationService.updateAuthorizationMeta(application)
           }
           timed(1000, "Application update DAO"){
             dao.update(applicationQuery, application)
