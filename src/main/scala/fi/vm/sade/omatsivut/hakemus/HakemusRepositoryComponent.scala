@@ -1,6 +1,9 @@
 package fi.vm.sade.omatsivut.hakemus
 
+import java.util
+
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
+import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 import fi.vm.sade.omatsivut.auditlog._
 import fi.vm.sade.omatsivut.config.SpringContextComponent
 import fi.vm.sade.omatsivut.domain.Language
@@ -8,11 +11,13 @@ import fi.vm.sade.omatsivut.domain.Language.Language
 import fi.vm.sade.omatsivut.hakemus.domain._
 import fi.vm.sade.omatsivut.lomake.domain.Lomake
 import fi.vm.sade.omatsivut.lomake.{LomakeRepository, LomakeRepositoryComponent}
+import fi.vm.sade.omatsivut.ohjausparametrit.OhjausparametritComponent
 import fi.vm.sade.omatsivut.tarjonta.{Haku, TarjontaComponent}
-import fi.vm.sade.omatsivut.util.Timer.timed
+import fi.vm.sade.omatsivut.util.Timer._
+import org.joda.time.LocalDateTime
 
 trait HakemusRepositoryComponent {
-  this: LomakeRepositoryComponent with HakemusConverterComponent with SpringContextComponent with AuditLoggerComponent with TarjontaComponent =>
+  this: LomakeRepositoryComponent with HakemusConverterComponent with SpringContextComponent with AuditLoggerComponent with TarjontaComponent with OhjausparametritComponent =>
 
   val hakuRepository: LomakeRepository
 
@@ -21,12 +26,41 @@ trait HakemusRepositoryComponent {
     private val dao = springContext.applicationDAO
     private val applicationService = springContext.applicationService
 
-    private def canUpdate(lomake: Lomake, application: Application, userOid: String)(implicit lang: Language.Language): Boolean = {
+    private def canUpdate(lomake: Lomake, originalApplication: Application, updatedApplication: Application, userOid: String)(implicit lang: Language.Language): Boolean = {
+      val stateUpdateable = originalApplication.getState == Application.State.ACTIVE || originalApplication.getState == Application.State.INCOMPLETE
+      val inPostProcessing = !(originalApplication.getRedoPostProcess() == Application.PostProcessingState.DONE || originalApplication.getRedoPostProcess() == null)
+      (isActiveHakuPeriod(lomake) || hasOnlyContactInfoChangesAndApplicationRoundHasNotEnded(lomake, originalApplication, updatedApplication)) &&
+      stateUpdateable &&
+      !inPostProcessing &&
+      userOid == originalApplication.getPersonOid
+    }
+
+    private def isActiveHakuPeriod(lomake: Lomake)(implicit lang: Language.Language) = {
       val applicationPeriods = hakuRepository.applicationPeriodsByOid(lomake.oid)
-      val isActiveHakuPeriod = applicationPeriods.exists(_.active)
-      val stateUpdateable = application.getState == Application.State.ACTIVE || application.getState == Application.State.INCOMPLETE
-      val inPostProcessing = !(application.getRedoPostProcess() == Application.PostProcessingState.DONE || application.getRedoPostProcess() == null)
-      isActiveHakuPeriod && stateUpdateable && !inPostProcessing && userOid == application.getPersonOid
+      applicationPeriods.exists(_.active)
+    }
+
+    private def hasOnlyContactInfoChangesAndApplicationRoundHasNotEnded(lomake: Lomake, originalApplication: Application, updatedApplication: Application): Boolean = {
+      val oldAnswers = originalApplication.getVastauksetMerged()
+      val newAnswers = updatedApplication.getVastauksetMerged()
+      val allKeys = oldAnswers.keySet() ++ newAnswers.keySet()
+      new LocalDateTime().isBefore(ohjausparametritService.haunAikataulu(lomake.oid).flatMap(_.hakukierrosPaattyy).map(new LocalDateTime(_ : Long)).getOrElse(new LocalDateTime().plusYears(100))) && allKeys.filter(
+        key => {
+          val oldValue = oldAnswers.getOrElse(key, "")
+          val newValue = newAnswers.getOrElse(key, "")
+          if(oldValue.equals(newValue)) {
+            false
+          }
+          else {
+            !isContactInformationChange(key)
+          }
+        }
+      ).isEmpty
+    }
+
+    private def isContactInformationChange(key: String): Boolean = {
+      List(OppijaConstants.ELEMENT_ID_ADDRESS, OppijaConstants.ELEMENT_ID_EMAIL, OppijaConstants.ELEMENT_ID_POSTAL_NUMBER).contains(key) ||
+      key.startsWith(OppijaConstants.ELEMENT_ID_PREFIX_PHONENUMBER)
     }
 
     override def updateHakemus(lomake: Lomake, haku: Haku)(hakemus: HakemusMuutos, userOid: String)(implicit lang: Language.Language): Option[Hakemus] = {
@@ -36,24 +70,30 @@ trait HakemusRepositoryComponent {
       }
 
       timed(1000, "Application update"){
-        applicationJavaObject.filter(application => canUpdate(lomake, application, userOid)).map { application =>
-          val originalAnswers: Hakemus.Answers = application.getAnswers.toMap.mapValues(_.toMap)
-          ApplicationUpdater.update(lomake, application, hakemus)
-          timed(1000, "ApplicationService: update preference based data"){
-            applicationService.updatePreferenceBasedData(application)
-          }
-          timed(1000, "ApplicationService: update authorization Meta"){
-            applicationService.updateAuthorizationMeta(application)
-          }
+        applicationJavaObject.map(updateApplication(lomake, _, hakemus)).filter {
+          case (originalApplication: Application, application: Application) => canUpdate(lomake, originalApplication, application, userOid)
+        }.map {
+          case (originalApplication, application) =>
           timed(1000, "Application update DAO"){
             dao.update(applicationQuery, application)
           }
-          auditLogger.log(UpdateHakemus(userOid, hakemus.oid, originalAnswers, application.getAnswers.toMap.mapValues(_.toMap)))
+          auditLogger.log(UpdateHakemus(userOid, hakemus.oid, originalApplication.getAnswers.toMap.mapValues(_.toMap), application.getAnswers.toMap.mapValues(_.toMap)))
           hakemusConverter.convertToHakemus(lomake, haku, application)
         }
       }
     }
 
+    private def updateApplication(lomake: Lomake, application: Application, hakemus: HakemusMuutos)(implicit lang: Language.Language): (Application, Application) = {
+      val originalApplication = application.clone()
+      ApplicationUpdater.update(lomake, application, hakemus)
+      timed(1000, "ApplicationService: update preference based data"){
+        applicationService.updatePreferenceBasedData(application)
+      }
+      timed(1000, "ApplicationService: update authorization Meta"){
+        applicationService.updateAuthorizationMeta(application)
+      }
+      (originalApplication, application)
+    }
 
     override def findStoredApplicationByOid(oid: String): Application = {
       val applications = timed(1000, "Application fetch DAO"){

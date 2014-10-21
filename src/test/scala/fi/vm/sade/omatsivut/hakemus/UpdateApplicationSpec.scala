@@ -1,13 +1,13 @@
 package fi.vm.sade.omatsivut.hakemus
 
-import fi.vm.sade.omatsivut.PersonOid
+import fi.vm.sade.omatsivut.{TimeWarp, PersonOid}
 import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.fixtures.TestFixture._
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus
 import org.json4s._
 import org.json4s.jackson.JsonMethods
 
-class UpdateApplicationSpec extends HakemusApiSpecification with FixturePerson {
+class UpdateApplicationSpec extends HakemusApiSpecification with FixturePerson with TimeWarp {
   override implicit lazy val appConfig = new AppConfig.IT
   sequential
 
@@ -86,9 +86,28 @@ class UpdateApplicationSpec extends HakemusApiSpecification with FixturePerson {
       }
     }
 
-    "reject update of application with invalid application period" in {
-      modifyHakemus(inactiveHakemus)((hakemus) => hakemus) { hakemus =>
+    "allow updating of contact info after application period end, but before application round end" in {
+      withFixedDateTime("1.10.2014 12:01") {
+        modifyHakemus(inactiveHakemus)(answerExtraQuestion(personalInfoPhaseKey, addressKey, "uusi osoite")) { hakemus =>
+          status must_== 200
+          withSavedApplication(hakemus) { application =>
+            application.getPhaseAnswers(personalInfoPhaseKey).get(addressKey) must_== "uusi osoite"
+          }
+        }
+      }
+    }
+
+    "do not allow updating of other info after application period end, but before application round end" in {
+      withFixedDateTime("1.10.2014 12:01") {
+        modifyHakemus(inactiveHakemus)(addHakutoive(Map("Koulutus-id" -> "1.2.246.562.5.16303028778"))) { hakemus =>
           status must_== 403
+        }
+      }
+    }
+
+    "reject update of application after application round end" in {
+      modifyHakemus(inactiveHakemus)(answerExtraQuestion(personalInfoPhaseKey, addressKey, "uusi osoite2")) { hakemus =>
+        status must_== 403
       }
     }
 
