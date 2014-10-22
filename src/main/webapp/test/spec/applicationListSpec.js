@@ -1596,71 +1596,101 @@
     })
 
     describe("Henkilötietojen muokkaus", function() {
-      before(page.applyFixtureAndOpen({applicationOid: hakemusKorkeakouluId}))
 
-      describe("tekstikentän tyhjennysnappi", function() {
-        it("toimii", function () {
-          hakemusKorkeakoulu.yhteystiedot().getRow("Lähiosoite").val().should.not.equal("")
-          return hakemusKorkeakoulu.yhteystiedot().getRow("Lähiosoite").clear().then(function () {
-            hakemusKorkeakoulu.yhteystiedot().getRow("Lähiosoite").val().should.equal("")
-          })
+      describe("jos hakukierroksen päättymispäivä on menneisyydessä", function() {
+        before(page.applyFixtureAndOpen({applicationOid: hakemusNivelKesa2013WithPeruskouluBaseEducationId}))
+        it("ei ole mahdollista", function () {
+          expect(hakemusNivelKesa2013WithPeruskouluBaseEducation.yhteystiedot().getRow("Sähköposti").val()).to.be.undefined
+          expect(hakemusNivelKesa2013WithPeruskouluBaseEducation.yhteystiedot().getRow("Matkapuhelinnumero").val()).to.be.undefined
+          expect(hakemusNivelKesa2013WithPeruskouluBaseEducation.yhteystiedot().getRow("Lähiosoite").val()).to.be.undefined
+          expect(hakemusNivelKesa2013WithPeruskouluBaseEducation.yhteystiedot().getRow("Postinumero").val()).to.be.undefined
         })
       })
 
-      describe("kun tietoja muokataan", function() {
-        var newData = {
-          "Sähköposti": "joku@jossain.fi",
-          "Matkapuhelinnumero": "0401234987",
-          "Lähiosoite": "uusi katu",
-          "Postinumero": "00500"
-        }
+      describe("jos hakukierroksen päättymispäivä on tulevaisuudessa", function() {
+        before(page.applyFixtureAndOpen({applicationOid: hakemusYhteishakuKevat2013WithForeignBaseEducationId}))
+        it("on mahdollista", function () {
+          hakemusYhteishakuKevat2013WithForeignBaseEducation.yhteystiedot().getRow("Sähköposti").val().should.equal("")
+          hakemusYhteishakuKevat2013WithForeignBaseEducation.yhteystiedot().getRow("Matkapuhelinnumero").val().should.equal("")
+          hakemusYhteishakuKevat2013WithForeignBaseEducation.yhteystiedot().getRow("Lähiosoite").val().should.equal("foobartie 1")
+          hakemusYhteishakuKevat2013WithForeignBaseEducation.yhteystiedot().getRow("Postinumero").val().should.equal("00100")
+        })
+      })
 
-        var invalidData = {
-          "Sähköposti": "joku@",
-          "Matkapuhelinnumero": "0401234987a",
-          "Lähiosoite": "",
-          "Postinumero": "00500a"
-        }
+      describe("jos ei ole hakukierroksen päättymispäivää", function() {
+        before(page.applyFixtureAndOpen({applicationOid: hakemusKorkeakouluId}))
+        it("on mahdollista", function () {
+          hakemusKorkeakoulu.yhteystiedot().getRow("Sähköposti").val().should.equal("")
+          hakemusKorkeakoulu.yhteystiedot().getRow("Matkapuhelinnumero").val().should.equal("")
+          hakemusKorkeakoulu.yhteystiedot().getRow("Lähiosoite").val().should.equal("Testikatu 4")
+          hakemusKorkeakoulu.yhteystiedot().getRow("Postinumero").val().should.equal("00100")
+        })
 
-        function setData(data) {
-          return function() {
-            _(data).each(function(val, id) {
-              hakemusKorkeakoulu.yhteystiedot().getRow(id).val(val)
+        describe("tekstikentän tyhjennysnappi", function() {
+          it("toimii", function () {
+            hakemusKorkeakoulu.yhteystiedot().getRow("Lähiosoite").val().should.not.equal("")
+            return hakemusKorkeakoulu.yhteystiedot().getRow("Lähiosoite").clear().then(function () {
+              hakemusKorkeakoulu.yhteystiedot().getRow("Lähiosoite").val().should.equal("")
             })
-            return wait.forAngular()
+          })
+        })
+
+        describe("kun tietoja muokataan", function() {
+          var newData = {
+            "Sähköposti": "joku@jossain.fi",
+            "Matkapuhelinnumero": "0401234987",
+            "Lähiosoite": "uusi katu",
+            "Postinumero": "00500"
           }
-        }
 
-        before(setData(newData))
-        it("lomake menee 'muokattu'-tilaan", function() {
-          hakemusKorkeakoulu.saveButton().isEnabled().should.be.true
-        })
+          var invalidData = {
+            "Sähköposti": "joku@",
+            "Matkapuhelinnumero": "0401234987a",
+            "Lähiosoite": "",
+            "Postinumero": "00500a"
+          }
 
-        describe("tallennusnapin painamisen jälkeen", function() {
-          before(
-            hakemusKorkeakoulu.saveWaitSuccess,
-            function() { S("input").remove() },
-            page.openPage()
-          )
+          function setData(data) {
+            return function() {
+              _(data).each(function(val, id) {
+                hakemusKorkeakoulu.yhteystiedot().getRow(id).val(val)
+              })
+              return wait.forAngular()
+            }
+          }
 
-          it("tiedot tallentuvat", function() {
-            _(newData).each(function(val, id) {
-              hakemusKorkeakoulu.yhteystiedot().getRow(id).val().should.equal(val)
+          before(setData(newData))
+          it("lomake menee 'muokattu'-tilaan", function() {
+            hakemusKorkeakoulu.saveButton().isEnabled().should.be.true
+          })
+
+          describe("tallennusnapin painamisen jälkeen", function() {
+            before(
+              hakemusKorkeakoulu.saveWaitSuccess,
+              function() { S("input").remove() },
+              page.openPage()
+            )
+
+            it("tiedot tallentuvat", function() {
+              _(newData).each(function(val, id) {
+                hakemusKorkeakoulu.yhteystiedot().getRow(id).val().should.equal(val)
+              })
+            })
+          })
+
+          describe("virheellisen tiedon tallentamisen jälkeen", function() {
+            before(setData(invalidData), hakemusKorkeakoulu.saveWaitError)
+
+            it("validointivirheet näkyvät", function() {
+              hakemusKorkeakoulu.yhteystiedot().getRow("Sähköposti").error().should.equal("Virheellinen arvo")
+              hakemusKorkeakoulu.yhteystiedot().getRow("Matkapuhelinnumero").error().should.equal("Virheellinen arvo")
+              hakemusKorkeakoulu.yhteystiedot().getRow("Lähiosoite").error().should.equal("Pakollinen tieto.")
+              hakemusKorkeakoulu.yhteystiedot().getRow("Postinumero").error().should.equal("Virheellinen arvo")
             })
           })
         })
-
-        describe("virheellisen tiedon tallentamisen jälkeen", function() {
-          before(setData(invalidData), hakemusKorkeakoulu.saveWaitError)
-
-          it("validointivirheet näkyvät", function() {
-            hakemusKorkeakoulu.yhteystiedot().getRow("Sähköposti").error().should.equal("Virheellinen arvo")
-            hakemusKorkeakoulu.yhteystiedot().getRow("Matkapuhelinnumero").error().should.equal("Virheellinen arvo")
-            hakemusKorkeakoulu.yhteystiedot().getRow("Lähiosoite").error().should.equal("Pakollinen tieto.")
-            hakemusKorkeakoulu.yhteystiedot().getRow("Postinumero").error().should.equal("Virheellinen arvo")
-          })
-        })
       })
+
     })
   })
 

@@ -101,6 +101,10 @@ Hakemus.prototype = {
     return this.state && this.state.valintatulos ? this.state.valintatulos.hakutoiveet : []
   },
 
+  showHenkilotiedot: function() {
+    return this.haku.aikataulu.hakukierrosPaattyy == null || this.haku.aikataulu.hakukierrosPaattyy > Date.now()
+  },
+
   vastaanotettavatHakutoiveet: function() {
     return _(this.valintatulosHakutoiveet()).filter(function(hakutoive) {
       return hakutoive.vastaanotettavuustila === "VASTAANOTETTAVISSA_SITOVASTI" || hakutoive.vastaanotettavuustila === "VASTAANOTETTAVISSA_EHDOLLISESTI"
