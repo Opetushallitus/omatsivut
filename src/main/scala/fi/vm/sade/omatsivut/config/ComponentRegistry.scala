@@ -14,7 +14,7 @@ import fi.vm.sade.omatsivut.ohjausparametrit.{OhjausparametritComponent, Ohjausp
 import fi.vm.sade.omatsivut.security.{AuthenticationInfoComponent, AuthenticationInfoService}
 import fi.vm.sade.omatsivut.servlet.session.{LogoutServletContainer, SecuredSessionServletContainer}
 import fi.vm.sade.omatsivut.servlet.testing.TestHelperServletContainer
-import fi.vm.sade.omatsivut.servlet.{SwaggerServlet, OmatSivutSwagger, KoulutusServletContainer, ApplicationsServletContainer}
+import fi.vm.sade.omatsivut.servlet._
 import fi.vm.sade.omatsivut.tarjonta.{TarjontaService, TarjontaComponent}
 import fi.vm.sade.omatsivut.valintatulokset._
 
@@ -35,6 +35,7 @@ class ComponentRegistry(val config: AppConfig)
           SecuredSessionServletContainer with
           LogoutServletContainer with
           TestHelperServletContainer with
+          KoodistoServletContainer with
           TarjontaComponent with
           KoodistoComponent {
 
@@ -86,6 +87,7 @@ class ComponentRegistry(val config: AppConfig)
   def newLogoutServlet = new LogoutServlet(config)
   def newTestHelperServlet = new TestHelperServlet(config)
   def newSwaggerServlet = new SwaggerServlet
+  def newKoodistoServlet = new KoodistoServlet
 
   def start {
     try {

@@ -16,8 +16,10 @@ trait KoodistoComponent {
     lazy val client = new CachingKoodistoClient(appConfig.settings.koodistoUrl)
     lazy val service = new KoodistoServiceImpl(client, springContext.organizationService)
 
-    def postOffices(implicit lang: Language) = {
-      service.getPostOffices.asScala.map((office: fi.vm.sade.haku.oppija.lomake.domain.elements.questions.Option) => (office.getValue, office.getI18nText.getTranslations().get(lang.toString))).toMap
+    def postOffices = {
+      service.getPostOffices.asScala.map { (office: fi.vm.sade.haku.oppija.lomake.domain.elements.questions.Option) =>
+        (office.getValue, office.getI18nText.getTranslations().asScala.toMap)
+      }.toMap
     }
   }
 }
