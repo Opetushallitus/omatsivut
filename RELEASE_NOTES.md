@@ -6,7 +6,7 @@
 
 ### [release 1411](https://bamboo.oph.ware.fi/deploy/viewDeploymentVersion.action?versionId=107774073)
 
-- Tulevia muutoksia valmistelevia refactorointeja, ei toiminnallisia muutoksia
+- Tulevia muutoksia valmistelevia refactorointeja (mm. haun tiedot haetaan nyt tarjonnasta eikä oteta hakemukselta). Ei toiminnallisia muutoksia
 
 ## Tuotannossa
 
