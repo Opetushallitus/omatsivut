@@ -64,8 +64,8 @@ class UpdateApplicationSpec extends HakemusApiSpecification with FixturePerson {
     "apply hiddenValues on the form" in {
       def removeDiscretionaryFlags(hakemus: Hakemus) = {
         // remove the discretionary flag to be able to test that it is automatically applied from the form
-        hakemus.copy(hakutoiveet = hakemus.hakutoiveet.map {hakutoive =>
-          hakutoive - "discretionary"
+        hakemus.copy(hakutoiveet = hakemus.hakutoiveet.map { t =>
+          t.copy(hakemusData = t.hakemusData.map(_ - "discretionary"))
         })
       }
       modifyHakemus(hakemusYhteishakuKevat2014WithForeignBaseEducationId)(removeDiscretionaryFlags) { hakemus =>
