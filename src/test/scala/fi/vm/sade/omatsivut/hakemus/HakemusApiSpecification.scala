@@ -18,8 +18,8 @@ import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.fixtures.FixtureImporter
 import fi.vm.sade.omatsivut.fixtures.TestFixture._
-import fi.vm.sade.omatsivut.hakemus.domain.{Active, HakemuksenTila, Hakemus}
-import fi.vm.sade.omatsivut.hakemus.domain.Hakemus.{Answers, Hakutoive}
+import fi.vm.sade.omatsivut.hakemus.domain.{Hakutoive, Active, HakemuksenTila, Hakemus}
+import fi.vm.sade.omatsivut.hakemus.domain.Hakemus.{Answers, HakutoiveData}
 import fi.vm.sade.omatsivut.json.JsonFormats
 import org.json4s.jackson.Serialization
 import fi.vm.sade.omatsivut.fixtures.TestFixture._
@@ -46,7 +46,8 @@ trait HakemusApiSpecification extends ScalatraTestSupport {
 
   def withApplications[T](f: (List[Hakemus] => T))(implicit personOid: PersonOid): T = {
     authGet("/secure/applications") {
-      val applications: List[Hakemus] = Serialization.read[List[Hakemus]](body)
+      val b = body
+      val applications: List[Hakemus] = Serialization.read[List[Hakemus]](b)
       f(applications)
     }
   }
@@ -80,10 +81,9 @@ trait HakemusApiSpecification extends ScalatraTestSupport {
   }
 
   def addHakutoive(hakutoive: Hakutoive)(hakemus: Hakemus) = {
-    val emptyIndex = hakemus.hakutoiveet.indexWhere(_.isEmpty)
+    val emptyIndex = hakemus.hakutoiveet.indexWhere(_.hakemusData.isEmpty)
     hakemus.copy(hakutoiveet = hakemus.hakutoiveet.patch(emptyIndex, List(hakutoive), 1))
   }
-
 
   def withSavedApplication[T](hakemus: Hakemus)(f: Application => T): T = {
     val application = dao.find(new Application().setOid(hakemus.oid)).get(0)

@@ -20,8 +20,8 @@ object AddedQuestionFinder {
     newQuestions.diff(oldQuestions)
   }
 
-  private def getOnlyAskedHakutoiveAsList(newHakemus: HakemusMuutos, hakutoive: Hakutoive): List[Hakutoive] = {
-    def getHakutoive(listItem: Hakutoive): Hakutoive = {
+  private def getOnlyAskedHakutoiveAsList(newHakemus: HakemusMuutos, hakutoive: HakutoiveData): List[HakutoiveData] = {
+    def getHakutoive(listItem: HakutoiveData): HakutoiveData = {
       if(listItem == hakutoive) {
         hakutoive
       }
@@ -57,7 +57,7 @@ object AddedQuestionFinder {
     withoutDuplicates(questionsPerHakutoive) ::: duplicates
   }
 
-  private def findQuestionsByHakutoive(lomake: Lomake, storedApplication: Application, newHakemus: HakemusMuutos, hakutoive: Hakutoive)(implicit lang: Language.Language): Set[QuestionLeafNode] = {
+  private def findQuestionsByHakutoive(lomake: Lomake, storedApplication: Application, newHakemus: HakemusMuutos, hakutoive: HakutoiveData)(implicit lang: Language.Language): Set[QuestionLeafNode] = {
     val onlyOneHakutoive = getOnlyAskedHakutoiveAsList(newHakemus, hakutoive)
     val currentAnswersWithOneHakutoive = ApplicationUpdater.getAllUpdatedAnswersForApplication(lomake, storedApplication, newHakemus.copy(hakutoiveet = onlyOneHakutoive))
     val noHakutoive = getOnlyAskedHakutoiveAsList(newHakemus, Map())

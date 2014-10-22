@@ -1,7 +1,7 @@
 var util = require('./util')
 
 function Hakutoive(json) {
-  this.data = json
+  this.importJson(json)
   this.isModified = false
   this.isNew = _.isEmpty(json)
   this.addedDuringCurrentSession = _.isEmpty(json)
@@ -14,7 +14,9 @@ Hakutoive.prototype = {
   },
 
   importJson: function(json) {
-    this.data = json
+      this.data = json.hakemusData || {}
+      this.hakuaikaId = json.hakuaikaId
+      this.kohdekohtainenHakuaika = json.kohdekohtainenHakuaika
   },
 
   clear: function() {

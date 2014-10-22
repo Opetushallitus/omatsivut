@@ -73,7 +73,7 @@ private object TarjontaParser extends JsonFormats {
     for {
       obj <- (json \ "result").toOption
       oid = (obj \ "oid").extract[String]
-      hakuaikaId = (obj \ "hakuaikaId").extract[String]
+      hakuaikaId = (obj \ "hakuaikaId").extractOpt[String]
       hakuaika = createHakuaika((obj \ "hakuaikaAlkuPvm").extractOpt[Long], (obj \ "hakuaikaLoppuPvm").extractOpt[Long])
     } yield Hakukohde(oid, hakuaikaId, hakuaika)
   }

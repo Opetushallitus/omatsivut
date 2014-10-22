@@ -26,7 +26,7 @@ object Hakuaika {
   }
 }
 
-case class Hakukohde(oid: String, hakuaikaId: String, kohteenHakuaika: Option[KohteenHakuaika])
+case class Hakukohde(oid: String, hakuaikaId: Option[String], kohteenHakuaika: Option[KohteenHakuaika])
 case class KohteenHakuaika(start: Long, end: Long, active: Boolean)
 object KohteenHakuaika {
   def apply(start: Long, end: Long) : KohteenHakuaika = KohteenHakuaika(start, end, new Interval(start, end).containsNow())

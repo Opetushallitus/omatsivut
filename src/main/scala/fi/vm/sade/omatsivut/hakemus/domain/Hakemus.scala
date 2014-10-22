@@ -4,11 +4,11 @@ import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
 import fi.vm.sade.omatsivut.hakemus.domain.ResultState.ResultState
 import fi.vm.sade.omatsivut.hakemus.domain.HakutoiveenValintatulosTila.HakutoiveenValintatulosTila
 import fi.vm.sade.omatsivut.hakemus.domain.VastaanotettavuusTila.VastaanotettavuusTila
-import fi.vm.sade.omatsivut.tarjonta.Haku
+import fi.vm.sade.omatsivut.tarjonta.{KohteenHakuaika, Haku}
 
 object Hakemus {
   type Answers = Map[String, Map[String, String]]
-  type Hakutoive = Map[String, String]
+  type HakutoiveData = Map[String, String]
 
   val emptyAnswers = Map.empty.asInstanceOf[Map[String, Map[String, String]]]
 }
@@ -23,13 +23,19 @@ case class Hakemus(
                     answers: Answers,
                     requiresAdditionalInfo: Boolean
                   ) extends HakemuksenTunniste {
-  def toHakemusMuutos = HakemusMuutos(oid, haku.oid, hakutoiveet, answers)
+
+  def toHakemusMuutos = HakemusMuutos(oid, haku.oid, hakutoiveet.map(_.hakemusData.getOrElse(Map.empty)), answers)
+}
+
+case class Hakutoive(val hakemusData: Option[HakutoiveData], hakuaikaId: Option[String] = None, kohdekohtainenHakuaika: Option[KohteenHakuaika] = None)
+object Hakutoive {
+  def empty = Hakutoive(None)
 }
 
 case class HakemusMuutos (
                     oid: String,
                     hakuOid: String,
-                    hakutoiveet: List[Hakutoive] = Nil,
+                    hakutoiveet: List[HakutoiveData] = Nil,
                     answers: Answers
                     ) extends HakemuksenTunniste
 

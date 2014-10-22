@@ -3,7 +3,7 @@ package fi.vm.sade.omatsivut.hakemus
 import fi.vm.sade.omatsivut.{TimeWarp, PersonOid}
 import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.fixtures.TestFixture._
-import fi.vm.sade.omatsivut.hakemus.domain.Hakemus
+import fi.vm.sade.omatsivut.hakemus.domain.{Hakutoive, Hakemus}
 import org.json4s._
 import org.json4s.jackson.JsonMethods
 
@@ -64,8 +64,8 @@ class UpdateApplicationSpec extends HakemusApiSpecification with FixturePerson w
     "apply hiddenValues on the form" in {
       def removeDiscretionaryFlags(hakemus: Hakemus) = {
         // remove the discretionary flag to be able to test that it is automatically applied from the form
-        hakemus.copy(hakutoiveet = hakemus.hakutoiveet.map {hakutoive =>
-          hakutoive - "discretionary"
+        hakemus.copy(hakutoiveet = hakemus.hakutoiveet.map { t =>
+          t.copy(hakemusData = t.hakemusData.map(_ - "discretionary"))
         })
       }
       modifyHakemus(hakemusYhteishakuKevat2014WithForeignBaseEducationId)(removeDiscretionaryFlags) { hakemus =>
@@ -99,7 +99,7 @@ class UpdateApplicationSpec extends HakemusApiSpecification with FixturePerson w
 
     "do not allow updating of other info after application period end, but before application round end" in {
       withFixedDateTime("1.10.2014 12:01") {
-        modifyHakemus(inactiveHakemus)(addHakutoive(Map("Koulutus-id" -> "1.2.246.562.5.16303028778"))) { hakemus =>
+        modifyHakemus(inactiveHakemus)(addHakutoive(Hakutoive(Some(Map("Koulutus-id" -> "1.2.246.562.5.16303028778"))))) { hakemus =>
           status must_== 403
         }
       }
