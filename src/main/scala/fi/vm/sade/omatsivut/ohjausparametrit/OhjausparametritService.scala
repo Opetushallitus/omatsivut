@@ -5,7 +5,7 @@ import fi.vm.sade.omatsivut.fixtures.JsonFixtureMaps
 import fi.vm.sade.omatsivut.http.DefaultHttpClient
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.memoize.TTLOptionalMemoize
-import fi.vm.sade.omatsivut.ohjausparametrit.domain.{HaunAikataulu, Julkistus}
+import fi.vm.sade.omatsivut.ohjausparametrit.domain.{HaunAikataulu, TulostenJulkistus}
 import org.json4s.JsonAST.JValue
 
 
@@ -50,12 +50,12 @@ trait OhjausparametritComponent {
         obj <- (json \ "PH_VTJH").toOption
         start <- (obj \ "dateStart").extractOpt[Long]
         end <- (obj \ "dateEnd").extractOpt[Long]
-      } yield Julkistus(start, end)
-      val hakuKierrosPaattyy = for {
+      } yield TulostenJulkistus(start, end)
+      val hakukierrosPaattyy = for {
         obj <- (json \ "PH_HKP").toOption
         end <- (obj \ "date").extractOpt[Long]
       } yield end
-      Some(HaunAikataulu(julkistus, hakuKierrosPaattyy))
+      Some(HaunAikataulu(julkistus, hakukierrosPaattyy))
     }
   }
 }

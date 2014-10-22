@@ -17,8 +17,8 @@ trait TarjontaComponent {
     override def haku(oid: String, lang: Language.Language) = {
       val haku = JsonFixtureMaps.findByKey[JValue]("/mockdata/haut.json", oid).flatMap(TarjontaParser.parseHaku).map {h => Haku(h, lang)}
       haku.map {h =>
-        val tulokset = ohjausparametritService.haunAikataulu(oid)
-        h.copy(results = tulokset)
+        val haunAikataulu = ohjausparametritService.haunAikataulu(oid)
+        h.copy(aikataulu = haunAikataulu)
       }
     }
 
@@ -45,8 +45,8 @@ trait TarjontaComponent {
 
     override def haku(oid: String, lang: Language.Language) : Option[Haku] = {
       withHttpGet("Tarjonta fetch haku", appConfig.settings.tarjontaUrl + "/haku/" + oid, {_.flatMap(TarjontaParser.parseHaku).map({ tarjontaHaku =>
-          val tulokset = ohjausparametritService.haunAikataulu(oid)
-          Haku(tarjontaHaku, lang).copy(results = tulokset)
+          val haunAikataulu = ohjausparametritService.haunAikataulu(oid)
+          Haku(tarjontaHaku, lang).copy(aikataulu = haunAikataulu)
         })}
       )
     }
