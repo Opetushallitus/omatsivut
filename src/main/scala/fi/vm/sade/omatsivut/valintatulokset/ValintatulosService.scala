@@ -46,10 +46,14 @@ class RemoteValintatulosService(valintatulosServiceUrl: String) extends Valintat
   import org.json4s.jackson.JsonMethods._
 
   def applyFixture(fixture: String) {
-    val url = valintatulosServiceUrl + "/util/fixtures/apply?fixturename="+fixture
+    applyFixtureWithQuery("fixturename="+fixture)
+  }
+
+  def applyFixtureWithQuery(query: String) {
+    val url = valintatulosServiceUrl + "/util/fixtures/apply?" + query
     DefaultHttpClient.httpPut(url).responseWithHeaders match {
       case (200, _, resultString) =>
-        logger.info("Using valinta-tulos-service fixture: " + fixture)
+        logger.info("Using valinta-tulos-service fixture: " + query)
       case (errorCode, _, resultString) =>
         logger.error("Response code " + errorCode + " applying fixtures at " + url)
     }

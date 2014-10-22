@@ -173,7 +173,7 @@ fixtures = {
         query = query +"&haku=" + otherFixtures.haku
       }
     }
-    return Q($.ajax("http://localhost:8097/valinta-tulos-service/util/fixtures/apply?fixturename=" + fixtureName + query, { type: "PUT" }))
+    return Q($.ajax("/omatsivut/util/fixtures/valintatulos/apply?fixturename=" + fixtureName + query, { type: "PUT" }))
   }
 }
 

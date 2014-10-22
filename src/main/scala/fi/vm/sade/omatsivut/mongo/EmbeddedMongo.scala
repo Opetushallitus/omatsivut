@@ -5,15 +5,17 @@ import de.flapdoodle.embed.mongo.distribution.Version
 import de.flapdoodle.embed.mongo.{Command, MongodStarter}
 import de.flapdoodle.embed.process.config.io.ProcessOutput
 import de.flapdoodle.embed.process.runtime.Network
-import fi.vm.sade.omatsivut.util.PortChecker
+import fi.vm.sade.omatsivut.util.{Logging, PortChecker}
 
-object EmbeddedMongo {
-  var port = System.getProperty("omatsivut.embeddedmongo.port", "28018").toInt
+object EmbeddedMongo extends Logging {
+  val port = System.getProperty("omatsivut.embeddedmongo.port", PortChecker.findFreeLocalPort.toString).toInt
 
   def start = {
     if (PortChecker.isFreeLocalPort(port)) {
+      logger.info("Starting embedded mongo on port " + port)
       Some(new MongoServer(port))
     } else {
+      logger.info("Not starting embedded mongo, seems to be running on port " + port)
       None
     }
   }

@@ -14,14 +14,12 @@ class UserFilter extends Filter with AuthCookieParsing {
   override def init(filterConfig: FilterConfig) {}
 
   override def doFilter(request: ServletRequest, response: ServletResponse, chain: FilterChain) {
-    Timer.timed(blockname = "doFilter") {
-      credentialsOption(request.asInstanceOf[HttpServletRequest]) match {
-        case Some(credentials) if (credentials.oidMissing) =>
-          IOUtils.copy(request.getServletContext.getResourceAsStream("/no-applications.html"), response.getOutputStream)
-          response.getOutputStream.flush()
-        case _ =>
-          chain.doFilter(request, response)
-      }
+    credentialsOption(request.asInstanceOf[HttpServletRequest]) match {
+      case Some(credentials) if (credentials.oidMissing) =>
+        IOUtils.copy(request.getServletContext.getResourceAsStream("/no-applications.html"), response.getOutputStream)
+        response.getOutputStream.flush()
+      case _ =>
+        chain.doFilter(request, response)
     }
   }
 
