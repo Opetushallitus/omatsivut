@@ -21,12 +21,13 @@ class ScalatraBootstrap extends LifeCycle with Logging {
     if(config.usesFakeAuthentication) {
       logger.info("Using fake authentication")
       context.addFilter("FakeShibboleth", new FakeShibbolethFilter)
-        .addMappingForUrlPatterns(util.EnumSet.allOf(classOf[DispatcherType]), true,  "/index.html", "/secure/*")
+        .addMappingForUrlPatterns(util.EnumSet.allOf(classOf[DispatcherType]), true,  "/", "/index.html", "/secure/*")
       context.mount(new FakeShibbolethServlet(config), "/Shibboleth.sso")
     }
 
     context.addFilter("UserFilter", new UserFilter(config))
       .addMappingForUrlPatterns(util.EnumSet.allOf(classOf[DispatcherType]), true, "/index.html", "/")
+
     context.addFilter("CacheControl", new CacheControlFilter)
       .addMappingForUrlPatterns(util.EnumSet.allOf(classOf[DispatcherType]), true, "/*")
     context.addFilter("Language", new LanguageFilter)
