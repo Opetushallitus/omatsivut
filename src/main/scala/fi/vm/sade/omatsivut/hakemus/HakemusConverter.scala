@@ -7,6 +7,7 @@ import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
 import fi.vm.sade.omatsivut.hakemus.domain._
+import fi.vm.sade.omatsivut.koodisto.KoodistoComponent
 import fi.vm.sade.omatsivut.lomake.domain.Lomake
 import fi.vm.sade.omatsivut.tarjonta.{TarjontaService, TarjontaComponent, Haku}
 import fi.vm.sade.omatsivut.valintatulokset.{ValintatulosServiceComponent, Vastaanottoaikataulu}
@@ -16,7 +17,7 @@ import scala.collection.JavaConversions._
 import scala.util.Try
 
 trait HakemusConverterComponent {
-  this: ValintatulosServiceComponent with TarjontaComponent =>
+  this: ValintatulosServiceComponent with KoodistoComponent with TarjontaComponent =>
 
   val hakemusConverter: HakemusConverter
   val tarjontaService: TarjontaService
@@ -30,6 +31,7 @@ trait HakemusConverterComponent {
       val koulutusTaustaAnswers: util.Map[String, String] = application.getAnswers.get(educationPhaseKey)
       val receivedTime =  application.getReceived.getTime
       val hakutoiveet = convertHakuToiveet(application)
+      val answers = application.clone().getAnswers.toMap.mapValues { phaseAnswers => phaseAnswers.toMap }
 
       def hakutoiveDataToHakutoive(data: HakutoiveData): Hakutoive = {
         data.isEmpty match {
@@ -48,7 +50,8 @@ trait HakemusConverterComponent {
         hakutoiveet.map(hakutoiveDataToHakutoive),
         haku,
         EducationBackground(koulutusTaustaAnswers.get(baseEducationKey), !Try {koulutusTaustaAnswers.get("ammatillinenTutkintoSuoritettu").toBoolean}.getOrElse(false)),
-        application.clone().getAnswers.toMap.mapValues { phaseAnswers => phaseAnswers.toMap },
+        answers,
+        answers.get("henkilotiedot").flatMap(_.get("Postinumero")).map(koodistoService.postOffice).map(_.get(lang.toString)) ,
         lomake.requiresAdditionalInfo(application)
       )
     }
@@ -163,6 +166,5 @@ trait HakemusConverterComponent {
     private def convertHakuToiveet(application: Application): List[HakutoiveData] = {
       HakutoiveetConverter.convertFromAnswers(application.getAnswers.toMap.mapValues(_.toMap))
     }
-
   }
 }

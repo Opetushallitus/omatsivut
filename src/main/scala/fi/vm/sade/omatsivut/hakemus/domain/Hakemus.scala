@@ -21,6 +21,7 @@ case class Hakemus(
                     haku: Haku,
                     educationBackground: EducationBackground,
                     answers: Answers,
+                    postOffice: Option[String],
                     requiresAdditionalInfo: Boolean
                   ) extends HakemuksenTunniste {
 

@@ -17,7 +17,14 @@ class TTLOptionalMemoize[-T, +R](f: T => Option[R], lifetimeSeconds: Long) exten
   }
 }
 
+class TTLOptionalMemoizeNoArgs[R](f: () => Option[R], lifetimeSeconds: Long) extends (() => Option[R]) {
+  val func = new TTLOptionalMemoize( (a:Unit) => f(), lifetimeSeconds)
+  def apply(): Option[R] = func.apply(())
+}
+
 object TTLOptionalMemoize {
+  def memoize[T](f: () => Option[T], lifetime: Long) = new TTLOptionalMemoizeNoArgs(f, lifetime)
+
   def memoize[T, R](f: T => Option[R], lifetime: Long): (T => Option[R]) = new TTLOptionalMemoize(f, lifetime)
 
   def memoize[T1, T2, R](f: (T1, T2) => Option[R], lifetime: Long): ((T1, T2) => Option[R]) =

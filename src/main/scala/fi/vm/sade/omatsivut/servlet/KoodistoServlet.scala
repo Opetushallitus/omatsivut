@@ -18,8 +18,7 @@ trait KoodistoServletContainer {
     }
 
     get("/postitoimipaikka/:postalCode") {
-      val offices = koodistoService.postOffices
-      val office = offices.get(params("postalCode"))
+      val office = koodistoService.postOffice(params("postalCode"))
       checkNotFound(office.map((translations: Map[String, String]) => PostOffice(params("postalCode"), translations.getOrElse(language.toString, ""))))
     }
 
