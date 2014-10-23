@@ -26,10 +26,6 @@ trait OmatSivutServletBase extends ScalatraServlet with Logging {
     }
   }
 
-  protected def headerOption(name: String): Option[String] = {
-    Option(request.getHeader(name))
-  }
-
   protected def paramOption(name: String): Option[String] = {
     try {
       Option(params(name))

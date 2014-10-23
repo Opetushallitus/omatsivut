@@ -11,8 +11,6 @@ class UpdateApplicationSpec extends HakemusApiSpecification with FixturePerson w
   override implicit lazy val appConfig = new AppConfig.IT
   sequential
 
-  addServlet(componentRegistry.newApplicationsServlet, "/secure/applications")
-
   "PUT /application/:oid" should {
     "reject application with empty hakutoiveet" in {
       modifyHakemus(hakemusNivelKesa2013WithPeruskouluBaseEducationId) { hakemus => hakemus.copy(hakutoiveet = Nil) } { _ =>
