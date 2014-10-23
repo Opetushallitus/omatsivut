@@ -12,7 +12,6 @@ import org.json4s.jackson.{JsonMethods, Serialization}
 
 class ValidateApplicationSpec extends HakemusApiSpecification with FixturePerson {
   override lazy val appConfig = new AppConfig.IT
-  addServlet(componentRegistry.newApplicationsServlet, "/secure/applications")
 
   sequential
 
@@ -74,7 +73,7 @@ class ValidateApplicationSpec extends HakemusApiSpecification with FixturePerson
   }
 
   def validate[T](hakemus:Hakemus, questionsOf: Option[String] = None)(f: (List[ValidationError], List[QuestionNode], List[Hakuaika]) => T)(implicit personOid: PersonOid) = {
-    authPost("/secure/applications/validate/" + hakemus.oid + (questionsOf match {
+    authPost("secure/applications/validate/" + hakemus.oid + (questionsOf match {
         case Some(value) =>  "?questionsOf=" + value
         case None => ""}), Serialization.write(hakemus.toHakemusMuutos)) {
       val result: JValue = JsonMethods.parse(body)

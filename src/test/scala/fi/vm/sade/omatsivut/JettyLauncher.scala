@@ -11,7 +11,7 @@ object JettyLauncher {
   }
 }
 
-class JettyLauncher(port: Int) {
+class JettyLauncher(val port: Int) {
   val server = new Server(port)
   val context = new WebAppContext()
   context.setResourceBase("src/main/webapp")

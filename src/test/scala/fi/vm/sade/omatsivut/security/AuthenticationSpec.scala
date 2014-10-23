@@ -7,17 +7,16 @@ import fi.vm.sade.omatsivut.hakemus.FixturePerson
 
 class AuthenticationSpec extends ScalatraTestSupport with FixturePerson {
   override lazy val appConfig = new AppConfig.IT
-  addServlet(componentRegistry.newApplicationsServlet, "/secure/applications")
 
   "GET /applications" should {
     "return 401 if not authenticated" in {
-      get("/secure/applications") {
+      get("secure/applications") {
         status must_== 401
       }
     }
 
     "return 200 with proper credentials" in {
-      authGet("/secure/applications") {
+      authGet("secure/applications") {
         status must_== 200
       }
     }

@@ -3,13 +3,20 @@ package fi.vm.sade.omatsivut
 import fi.vm.sade.omatsivut.config.{AppConfig, ComponentRegistry}
 import fi.vm.sade.omatsivut.security.{FakeAuthentication, AuthenticationCipher, ShibbolethCookie}
 import fi.vm.sade.omatsivut.servlet.OmatSivutSwagger
+import fi.vm.sade.omatsivut.util.PortChecker
+import org.scalatra.test.HttpComponentsClient
 import org.scalatra.test.specs2.MutableScalatraSpec
+import org.specs2.mutable.Specification
 import org.specs2.specification.{Fragments, Step}
 
-trait ScalatraTestSupport extends MutableScalatraSpec {
+trait ScalatraTestSupport extends Specification with HttpComponentsClient {
   implicit val swagger = new OmatSivutSwagger
   lazy val appConfig = AppConfigSetup.create
   lazy val componentRegistry = new ComponentRegistry(appConfig)
+  System.setProperty("omatsivut.profile", "it") // TODO: not nice, but how to convey this to Scalatrabootstrap?
+  lazy val jettyLauncher = new JettyLauncher(PortChecker.findFreeLocalPort)
+
+  def baseUrl = "http://localhost:" + jettyLauncher.port + "/omatsivut"
 
   def authGet[A](uri: String)(f: => A)(implicit personOid: PersonOid): A = {
     get(uri, headers = authHeaders(personOid.oid))(f)
@@ -28,7 +35,7 @@ trait ScalatraTestSupport extends MutableScalatraSpec {
     Map("Cookie" -> (FakeAuthentication.oidCookie + "=" + oid + "; " + shibbolethCookie))
   }
 
-  override def map(fs: => Fragments) = Step(componentRegistry.start) ^ super.map(fs)
+  override def map(fs: => Fragments) = Step(jettyLauncher.start) ^ super.map(fs)
 }
 
 object AppConfigSetup {
