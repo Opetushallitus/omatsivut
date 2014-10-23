@@ -1,9 +1,9 @@
-<form name="form" novalidate>
+<div role="presentation">
     <h2>{{application.haku.name }}</h2>
 
     <div class="timestamp-row">
         <i aria-hidden="true" class="icon-doc-text"></i>
-        <a class="preview" ng-href="/omatsivut/secure/applications/preview/{{application.oid}}" ng-class="{disabled: form.$dirty|| statusMessageType=='pending' || isValidating}" target="_blank">{{ localization('button.showApplication') }}</a>
+        <a class="preview" ng-href="/omatsivut/secure/applications/preview/{{application.oid}}" ng-class="{disabled: applicationForm.$dirty|| statusMessageType=='pending' || isValidating}" target="_blank">{{ localization('button.showApplication') }}</a>
         <span class="timestamp" ng-if="application.isPeriodActive()" ng-class="{disabled: form.$dirty || statusMessageType=='pending' || isValidating}">
             ({{ timestampLabel() }} <time formatted-time="application.updated" format="LLL" />)
         </span>
@@ -42,30 +42,32 @@
         <valintatulos data="application.state.valintatulos" final="application.allResultsAvailable()"></valintatulos>
     </section>
 
-    <section class="application-section" ng-if="application.state.id == 'ACTIVE' || application.state.id == 'INCOMPLETE'">
-        <header class="application-section-heading">
-            {{ localization('label.preferences') }}
-            <button class="float-right save-btn" ng-disabled="shouldSaveButtonBeDisabled()" ng-click="saveApplication()">{{ localization('button.save') }}</button>
-            <span role="status" class="status-message float-right" ng-class="statusMessageStyleModifier()" ng-bind="statusMessage"></span>
-        </header>
+    <form name="applicationForm" novalidate>
+      <section class="application-section" ng-if="application.state.id == 'ACTIVE' || application.state.id == 'INCOMPLETE'">
+          <header class="application-section-heading">
+              {{ localization('label.preferences') }}
+              <button class="float-right save-btn" ng-disabled="shouldSaveButtonBeDisabled()" ng-click="saveApplication()">{{ localization('button.save') }}</button>
+              <span role="status" class="status-message float-right" ng-class="statusMessageStyleModifier()" ng-bind="statusMessage"></span>
+          </header>
 
-        <hakutoiveet application="application" preference-moved="preferenceMoved">
-        </hakutoiveet>
-    </section>
+          <hakutoiveet application="application" preference-moved="preferenceMoved">
+          </hakutoiveet>
+      </section>
 
-    <section class="application-section additional-questions" ng-if="application.additionalQuestions.questionNodes.length > 0">
-        <question question-node="application.additionalQuestions" application="application" class="questions" level="-1">
-        </question>
-    </section>
+      <section class="application-section additional-questions" ng-if="application.additionalQuestions.questionNodes.length > 0">
+          <question question-node="application.additionalQuestions" application="application" class="questions" level="-1">
+          </question>
+      </section>
 
-    <section class="application-section" ng-if="application.showHenkilotiedot()">
-        <header class="application-section-heading">
-            {{ localization('label.contactDetails') }}
-            <button ng-if="application.state.id == 'HAKUPAATTYNYT'" class="float-right save-btn" ng-disabled="shouldSaveButtonBeDisabled()" ng-click="saveApplication()">{{ localization('button.save') }}</button>
-            <span ng-if="application.state.id == 'HAKUPAATTYNYT'" role="status" class="status-message float-right" ng-class="statusMessageStyleModifier()" ng-bind="statusMessage"></span>
-        </header>
+      <section class="application-section" ng-if="application.showHenkilotiedot()">
+          <header class="application-section-heading">
+              {{ localization('label.contactDetails') }}
+              <button ng-if="application.state.id == 'HAKUPAATTYNYT'" class="float-right save-btn" ng-disabled="shouldSaveButtonBeDisabled()" ng-click="saveApplication()">{{ localization('button.save') }}</button>
+              <span ng-if="application.state.id == 'HAKUPAATTYNYT'" role="status" class="status-message float-right" ng-class="statusMessageStyleModifier()" ng-bind="statusMessage"></span>
+          </header>
 
-        <henkilotiedot application="application">
-        </henkilotiedot>
-    </section>
-</form>
+          <henkilotiedot application="application">
+          </henkilotiedot>
+      </section>
+    </form>
+</div>

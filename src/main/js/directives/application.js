@@ -27,7 +27,7 @@ module.exports = function(listApp) {
         }
 
         $scope.shouldSaveButtonBeDisabled = function() {
-          return $scope.form.$pristine || $scope.statusMessageType=='pending' || !$scope.isSaveable || $scope.isValidating
+          return $scope.applicationForm.$pristine || $scope.statusMessageType=='pending' || !$scope.isSaveable || $scope.isValidating
         }
 
         $scope.statusMessageStyleModifier = function() {
@@ -77,7 +77,7 @@ module.exports = function(listApp) {
         }
 
         function applicationChanged() {
-          $scope.form.$setDirty()
+          $scope.applicationForm.$setDirty()
           if ($scope.statusMessageType == "success")
             setStatusMessage("")
         }
@@ -146,7 +146,7 @@ module.exports = function(listApp) {
             highlightSavedItems($scope.application.getChangedPreferences())
             $scope.$broadcast("show-callout", "attachments", savedApplication.requiresAdditionalInfo === true && $scope.application.getChangedPreferences().length > 0)
             $scope.application.mergeSavedApplication(savedApplication)
-            $scope.form.$setPristine()
+            $scope.applicationForm.$setPristine()
             setStatusMessage(localization("message.changesSaved"), "success")
             updateValidationMessages([])
           }
