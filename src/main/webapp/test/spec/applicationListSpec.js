@@ -1513,19 +1513,22 @@
         dbEnd.hakutoiveet.should.deep.equal(_.flatten([_.rest(dbStart.hakutoiveet), {}]))
       })
       endToEndTest("lisäys", "hakutoiveen voi lisätä", replacePreference(hakemusYhteishakuKevat2014WithForeignBaseEducation, 2, "Turun"), function(dbStart, dbEnd) {
-        var newOne = { 'Opetuspiste-id': '1.2.246.562.10.49832689993',
-            Opetuspiste: 'Turun Kristillinen opisto',
-            Koulutus: 'Kymppiluokka',
-            'Koulutus-id-kaksoistutkinto': 'false',
-            'Koulutus-id-sora': 'false',
-            'Koulutus-id-vocational': 'true',
-            'Koulutus-id-attachments': 'false',
-            'Koulutus-id-lang': 'FI',
-            'Koulutus-id-aoIdentifier': '019',
-            'Koulutus-id-athlete': 'false',
-            'Koulutus-educationDegree': '22',
-            'Koulutus-id': '1.2.246.562.14.2014032812530780195965',
-            'Koulutus-id-educationcode': 'koulutus_020075' }
+          var newOne = {
+              hakemusData: { 'Opetuspiste-id': '1.2.246.562.10.49832689993',
+                  Opetuspiste: 'Turun Kristillinen opisto',
+                  Koulutus: 'Kymppiluokka',
+                  'Koulutus-id-kaksoistutkinto': 'false',
+                  'Koulutus-id-sora': 'false',
+                  'Koulutus-id-vocational': 'true',
+                  'Koulutus-id-attachments': 'false',
+                  'Koulutus-id-lang': 'FI',
+                  'Koulutus-id-aoIdentifier': '019',
+                  'Koulutus-id-athlete': 'false',
+                  'Koulutus-educationDegree': '22',
+                  'Koulutus-id': '1.2.246.562.14.2014032812530780195965',
+                  'Koulutus-id-educationcode': 'koulutus_020075' },
+              hakuaikaId: "211367"
+          }
         dbEnd.hakutoiveet.should.deep.equal(dbStart.hakutoiveet.slice(0, 2).concat(newOne).concat({}).concat({}))
       })
     })

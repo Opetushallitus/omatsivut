@@ -3,6 +3,8 @@ package fi.vm.sade.omatsivut.util
 import java.io.IOException
 import java.net.Socket
 
+import scala.util.Random
+
 object PortChecker {
   def isFreeLocalPort(port: Int): Boolean = {
     try {
@@ -13,7 +15,12 @@ object PortChecker {
       case e:IOException => true
     }
   }
-  def findFreeLocalPort(basePort: Int = 8080) = {
-    (basePort to (basePort + 2000)).find(isFreeLocalPort(_)).get
+  def findFreeLocalPort: Int = {
+    val port = new Random().nextInt(60000) + 1000
+    if (isFreeLocalPort(port)) {
+      port
+    } else {
+      findFreeLocalPort
+    }
   }
 }

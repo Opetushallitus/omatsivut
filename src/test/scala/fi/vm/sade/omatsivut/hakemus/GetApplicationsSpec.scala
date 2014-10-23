@@ -40,6 +40,16 @@ class GetApplicationsSpec extends HakemusApiSpecification with FixturePerson {
         hakemus.haku.applicationPeriods.head must_== TestFixture.hakemus2_hakuaika
       }
     }
+    "provide additional application period for application with athlete questions" in {
+      withHakemus(hakemusWithAtheleteQuestions) { hakemus =>
+        hakemus.hakutoiveet.head.kohdekohtainenHakuaika match {
+          case Some(aika) =>
+            aika.start must_== 1402898400000L
+            aika.end must_== 1407513600000L
+          case _ => ko("Application period doesn't match")
+        }
+      }
+    }
   }
 
   addServlet(componentRegistry.newApplicationsServlet, "/secure/applications")

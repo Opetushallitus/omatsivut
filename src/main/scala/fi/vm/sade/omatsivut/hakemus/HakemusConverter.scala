@@ -8,7 +8,7 @@ import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
 import fi.vm.sade.omatsivut.hakemus.domain._
 import fi.vm.sade.omatsivut.lomake.domain.Lomake
-import fi.vm.sade.omatsivut.tarjonta.Haku
+import fi.vm.sade.omatsivut.tarjonta.{TarjontaService, TarjontaComponent, Haku}
 import fi.vm.sade.omatsivut.valintatulokset.{ValintatulosServiceComponent, Vastaanottoaikataulu}
 import org.joda.time.LocalDateTime
 
@@ -16,9 +16,10 @@ import scala.collection.JavaConversions._
 import scala.util.Try
 
 trait HakemusConverterComponent {
-  this: ValintatulosServiceComponent =>
+  this: ValintatulosServiceComponent with TarjontaComponent =>
 
   val hakemusConverter: HakemusConverter
+  val tarjontaService: TarjontaService
 
   class HakemusConverter {
     val educationPhaseKey = OppijaConstants.PHASE_EDUCATION
@@ -29,12 +30,22 @@ trait HakemusConverterComponent {
       val koulutusTaustaAnswers: util.Map[String, String] = application.getAnswers.get(educationPhaseKey)
       val receivedTime =  application.getReceived.getTime
       val hakutoiveet = convertHakuToiveet(application)
+
+      def hakutoiveDataToHakutoive(data: HakutoiveData): Hakutoive = {
+        data.isEmpty match {
+          case true => Hakutoive.empty
+          case _ =>
+            val hakukohde = tarjontaService.hakukohde(data("Koulutus-id"))
+            Hakutoive(Some(data), hakukohde.flatMap(_.hakuaikaId), hakukohde.flatMap(_.kohteenHakuaika))
+        }
+      }
+
       Hakemus(
         application.getOid,
         receivedTime,
         Option(application.getUpdated).map(_.getTime).getOrElse(receivedTime),
         tila(lomake.oid, haku, application, hakutoiveet),
-        hakutoiveet,
+        hakutoiveet.map(hakutoiveDataToHakutoive),
         haku,
         EducationBackground(koulutusTaustaAnswers.get(baseEducationKey), !Try {koulutusTaustaAnswers.get("ammatillinenTutkintoSuoritettu").toBoolean}.getOrElse(false)),
         application.clone().getAnswers.toMap.mapValues { phaseAnswers => phaseAnswers.toMap },
@@ -42,7 +53,7 @@ trait HakemusConverterComponent {
       )
     }
 
-    def tila(applicationSystemId: String, haku: Haku, application: Application, hakutoiveet: List[Hakutoive])(implicit lang: Language.Language): HakemuksenTila = {
+    def tila(applicationSystemId: String, haku: Haku, application: Application, hakutoiveet: List[HakutoiveData])(implicit lang: Language.Language): HakemuksenTila = {
       if (isPostProcessing(application)) {
         PostProcessing()
       } else {
@@ -94,7 +105,7 @@ trait HakemusConverterComponent {
       hakutoiveenValintatulos.vastaanotettavuustila == VastaanotettavuusTila.VASTAANOTETTAVISSA_SITOVASTI
     }
 
-    private def convertToValintatulos(applicationSystemId: String, application: Application, hakutoiveet: List[Hakutoive])(implicit lang: Language.Language): Option[Valintatulos] = {
+    private def convertToValintatulos(applicationSystemId: String, application: Application, hakutoiveet: List[HakutoiveData])(implicit lang: Language.Language): Option[Valintatulos] = {
       def findKoulutus(oid: String): Koulutus = {
         hakutoiveet.find(_.get("Koulutus-id") == Some(oid)).map{ hakutoive => Koulutus(oid, hakutoive("Koulutus"))}.getOrElse(Koulutus(oid, oid))
       }
@@ -149,7 +160,7 @@ trait HakemusConverterComponent {
       !(state == Application.PostProcessingState.DONE || state == null)
     }
 
-    private def convertHakuToiveet(application: Application): List[Hakutoive] = {
+    private def convertHakuToiveet(application: Application): List[HakutoiveData] = {
       HakutoiveetConverter.convertFromAnswers(application.getAnswers.toMap.mapValues(_.toMap))
     }
 

@@ -4,12 +4,16 @@
 
 ## QA:lla, odottaa tuotantoon siirtoa
 
+### [release 1411](https://bamboo.oph.ware.fi/deploy/viewDeploymentVersion.action?versionId=107774073)
+
+- Tulevia muutoksia valmistelevia refactorointeja (mm. haun tiedot haetaan nyt tarjonnasta eikä oteta hakemukselta). Ei toiminnallisia muutoksia
+
+## Tuotannossa
+
 ### [release 1338](https://bamboo.oph.ware.fi/deploy/viewDeploymentVersion.action?versionId=104693941)
 
 - Paikan vastaanotto 2. aste yhteishaku: [OHP-108](https://jira.oph.ware.fi/jira/browse/OHP-108)
 - Kysymysten verbose help: [OHP-102](https://jira.oph.ware.fi/jira/browse/OHP-102)
-
-## Tuotannossa
 
 ### [release 1271](https://bamboo.oph.ware.fi/deploy/viewDeploymentVersion.action?versionId=99483667)
 

@@ -8,7 +8,7 @@ object HakutoiveetConverter {
   val hakutoiveetPhase: String = OppijaConstants.PHASE_APPLICATION_OPTIONS
   val koulutusId: String = "Koulutus-id"
 
-  def convertFromAnswers(answers: Answers): List[Hakutoive] = {
+  def convertFromAnswers(answers: Answers): List[HakutoiveData] = {
     groupPreferences(answers.getOrElse(hakutoiveetPhase , Map()))
       .toList
       .map(shortenNames)
@@ -17,7 +17,7 @@ object HakutoiveetConverter {
       .map((m) => m.filterKeys { Set("priority").contains(_) == false})
   }
 
-  def convertToAnswers(hakutoiveet: List[Hakutoive], answers: Answers): Map[String, String] = {
+  def convertToAnswers(hakutoiveet: List[HakutoiveData], answers: Answers): Map[String, String] = {
     val hakutoiveetAnswers = answers.getOrElse(hakutoiveetPhase, Map())
     hakutoiveetAnswers.filterKeys(s => !s.startsWith(HakutoiveetConverter.preferenceKeyPrefix)) ++
     hakutoiveet.zipWithIndex.flatMap {
@@ -30,14 +30,14 @@ object HakutoiveetConverter {
     }.toMap[String, String]
   }
 
-  def updateAnswers(hakutoiveet: List[Hakutoive], answers: Answers, previousAnswers: Answers): Map[String, String] = {
+  def updateAnswers(hakutoiveet: List[HakutoiveData], answers: Answers, previousAnswers: Answers): Map[String, String] = {
     val previousHakutoiveetAnswers = previousAnswers.getOrElse(hakutoiveetPhase, Map())
     val hakutoiveetWithoutOldPreferences = previousHakutoiveetAnswers.filterKeys(s => !s.startsWith(HakutoiveetConverter.preferenceKeyPrefix))
     val updatedHakutoiveet = hakutoiveetWithoutOldPreferences ++ convertToAnswers(hakutoiveet, answers)
     updatedHakutoiveet
   }
 
-  def answersContainHakutoive(answers: Map[String, String], hakutoive: Hakutoive) = {
+  def answersContainHakutoive(answers: Map[String, String], hakutoive: HakutoiveData) = {
     (hakutoive.get("Opetuspiste-id"), hakutoive.get(koulutusId)) match {
       case (Some(opetusPiste), Some(koulutus)) =>
         val flatAnswers = answers.toList.map {
@@ -48,7 +48,7 @@ object HakutoiveetConverter {
     }
   }
 
-  def describe(hakutoive: Hakutoive) = {
+  def describe(hakutoive: HakutoiveData) = {
     hakutoive.getOrElse("Opetuspiste", "") + " - " + hakutoive.getOrElse("Koulutus", "")
   }
 
