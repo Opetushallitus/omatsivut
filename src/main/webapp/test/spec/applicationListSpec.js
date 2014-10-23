@@ -1637,6 +1637,38 @@
           })
         })
 
+        describe("postitoimipaikka", function() {
+          it("näkyy oikein", function() {
+            hakemusKorkeakoulu.yhteystiedot().postitoimipaikka().should.equal("HELSINKI")
+          })
+
+          describe("jos postinumeron muuttaa epävalidiksi", function() {
+            before(function() { hakemusKorkeakoulu.yhteystiedot().getRow("Postinumero").val("0050") })
+            it("postitoimipaikka häviää näkyvistä", function() {
+              return wait.until(function() { return hakemusKorkeakoulu.yhteystiedot().postitoimipaikka() === "" })()
+            })
+
+            describe("epävalidin postitoimipaikan tallennus", function() {
+              before(hakemusKorkeakoulu.saveWaitError)
+              it("epäonnistuu", function() {
+                hakemusKorkeakoulu.yhteystiedot().getRow("Postinumero").error().should.equal("Virheellinen arvo")
+              })
+
+              describe("validin numeron syöttämisen jälkeen", function() {
+                before(function() { hakemusKorkeakoulu.yhteystiedot().getRow("Postinumero").val("90650") })
+
+                it("postitoimipaikka päivittyy", function() {
+                  return wait.until(function() { return hakemusKorkeakoulu.yhteystiedot().postitoimipaikka() === "OULU" })()
+                })
+
+                it("validaatiovirhe häviää näkyvistä", function() {
+                  return wait.until(function() { return hakemusKorkeakoulu.yhteystiedot().getRow("Postinumero").error() === "" })()
+                })
+              })
+            })
+          })
+        })
+
         describe("kun tietoja muokataan", function() {
           var newData = {
             "Sähköposti": "joku@jossain.fi",

@@ -15,6 +15,7 @@ module.exports = function(listApp) {
         }
       }),
 
+      postOffice: $resource("/omatsivut/koodisto/postitoimipaikka/:postalCode"),
       koulutukset: $resource("/omatsivut/koulutusinformaatio/koulutukset/:asId/:opetuspisteId"),
       opetuspisteet: $resource("/omatsivut/koulutusinformaatio/opetuspisteet/:query")
     }

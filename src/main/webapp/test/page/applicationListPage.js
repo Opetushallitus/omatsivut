@@ -182,6 +182,10 @@ function ApplicationListPage() {
               return item.find("input")
             }
             return YhteystietoRow(element)
+          },
+
+          postitoimipaikka: function() {
+            return application.find("[ng-bind='application.calculatedValues.postOffice']").text()
           }
         }
       },

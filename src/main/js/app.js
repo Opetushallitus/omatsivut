@@ -25,6 +25,7 @@ require('./restResources')(listApp)
 
 require('./applicationValidator')(listApp)
 require('./settings')(listApp, testMode())
+require('./angularBacon')(listApp)
 
 require('./directives/callout')(listApp)
 require('./directives/confirm')(listApp)
