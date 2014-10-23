@@ -5,16 +5,15 @@ import java.util.concurrent.Executors
 import fi.vm.sade.omatsivut.auditlog.{AuditLogger, AuditLoggerComponent}
 import fi.vm.sade.omatsivut.config.AppConfig._
 import fi.vm.sade.omatsivut.domain.Language.Language
-import fi.vm.sade.omatsivut.fixtures.{FixtureImporter, TestFixture}
+import fi.vm.sade.omatsivut.fixtures.FixtureImporter
 import fi.vm.sade.omatsivut.hakemus._
 import fi.vm.sade.omatsivut.lomake.{LomakeRepository, LomakeRepositoryComponent}
 import fi.vm.sade.omatsivut.koulutusinformaatio.{KoulutusInformaatioComponent, KoulutusInformaatioService}
 import fi.vm.sade.omatsivut.ohjausparametrit.{OhjausparametritComponent, OhjausparametritService}
-import fi.vm.sade.omatsivut.security.{AuthenticationInfoComponent, AuthenticationInfoService}
 import fi.vm.sade.omatsivut.servlet.session.{LogoutServletContainer, SecuredSessionServletContainer}
 import fi.vm.sade.omatsivut.servlet.testing.TestHelperServletContainer
-import fi.vm.sade.omatsivut.servlet.{SwaggerServlet, OmatSivutSwagger, KoulutusServletContainer, ApplicationsServletContainer}
-import fi.vm.sade.omatsivut.tarjonta.{TarjontaService, TarjontaComponent}
+import fi.vm.sade.omatsivut.servlet.{ApplicationsServletContainer, KoulutusServletContainer, OmatSivutSwagger, SwaggerServlet}
+import fi.vm.sade.omatsivut.tarjonta.{TarjontaComponent, TarjontaService}
 import fi.vm.sade.omatsivut.valintatulokset._
 
 class ComponentRegistry(val config: AppConfig)
@@ -25,7 +24,6 @@ class ComponentRegistry(val config: AppConfig)
           HakemusRepositoryComponent with
           ValintatulosServiceComponent with
           AuditLoggerComponent with
-          AuthenticationInfoComponent with
           ApplicationValidatorComponent with
           HakemusPreviewGeneratorComponent with
           HakemusConverterComponent with
@@ -50,13 +48,6 @@ class ComponentRegistry(val config: AppConfig)
 
   private def configureValintatulosService: ValintatulosService = new RemoteValintatulosService(config.settings.valintaTulosServiceUrl)
 
-  private def configureAuthenticationInfoService: AuthenticationInfoService = config match {
-    case x: MockAuthentication => new AuthenticationInfoService {
-      def getHenkiloOID(hetu: String) = TestFixture.persons.get(hetu)
-    }
-    case _ => new RemoteAuthenticationInfoService(config.settings.authenticationServiceConfig, config.settings.casTicketUrl)
-  }
-
   private def configureTarjontaService : TarjontaService = config match {
     case _ : StubbedExternalDeps => new StubbedTarjontaService()
     case _ => CachedRemoteTarjontaService(config)
@@ -68,7 +59,6 @@ class ComponentRegistry(val config: AppConfig)
   val koulutusInformaatioService: KoulutusInformaatioService = configureKoulutusInformaatioService
   val ohjausparametritService: OhjausparametritService = configureOhjausparametritService
   val valintatulosService: ValintatulosService = configureValintatulosService
-  val authenticationInfoService: AuthenticationInfoService = configureAuthenticationInfoService
   val auditLogger: AuditLogger = new AuditLoggerFacade(runningLogger)
   val hakuRepository: LomakeRepository = new RemoteLomakeRepository
   val hakemusRepository: HakemusRepository = new RemoteHakemusRepository

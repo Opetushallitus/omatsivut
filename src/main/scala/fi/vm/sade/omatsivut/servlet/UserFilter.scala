@@ -1,27 +1,23 @@
 package fi.vm.sade.omatsivut.servlet
 
-import javax.servlet._
 import javax.servlet.http.HttpServletRequest
 
-import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
-import fi.vm.sade.omatsivut.security.{CookieCredentials, AuthCookieParsing}
-import fi.vm.sade.omatsivut.util.Timer
+import fi.vm.sade.omatsivut.security.AuthCookieParsing
 import org.apache.commons.io.IOUtils
+import org.scalatra.ScalatraFilter
 
-class UserFilter extends Filter with AuthCookieParsing {
-  implicit lazy val appConfig = AppConfig.fromSystemProperty
-  override def init(filterConfig: FilterConfig) {}
-
-  override def doFilter(request: ServletRequest, response: ServletResponse, chain: FilterChain) {
-    credentialsOption(request.asInstanceOf[HttpServletRequest]) match {
-      case Some(credentials) if (credentials.oidMissing) =>
+class UserFilter(val appConfig: AppConfig) extends ScalatraFilter with AuthCookieParsing {
+  before() {
+    val httpRequest: HttpServletRequest = request
+    shibbolethCookieInRequest(httpRequest) match {
+      case Some(_) if (personOidOption(httpRequest).isEmpty) =>
+        response.setContentType("text/html;charset=UTF-8")
         IOUtils.copy(request.getServletContext.getResourceAsStream("/no-applications.html"), response.getOutputStream)
         response.getOutputStream.flush()
+        halt()
       case _ =>
-        chain.doFilter(request, response)
     }
   }
 
-  override def destroy() {}
 }
