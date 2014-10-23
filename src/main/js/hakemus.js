@@ -12,6 +12,9 @@ function Hakemus(json) {
   this.hakutoiveet = convertHakutoiveet(json.hakutoiveet)
   this.henkilotiedot = convertHenkilotiedot(json.answers.henkilotiedot)
   this.additionalQuestions = { questionNodes: [] }
+  this.calculatedValues = {
+    postOffice: json.postOffice
+  }
 }
 
 function copy(json) { return $.extend(true, {}, json) }
@@ -21,7 +24,7 @@ function convertHenkilotiedot(json) {
   return _(fields).reduce(function(memo, key) {
     memo[key] = new Question({ id: key }, json[key])
     return memo
-  } , {} )
+  } , {})
 }
 
 function convertHakutoiveet(hakutoiveet) {

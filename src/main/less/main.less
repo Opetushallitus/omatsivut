@@ -649,6 +649,11 @@ a.disabled {
     .with-bg-transition();
   }
 
+  .clearable-input {
+    margin-right: 5px;
+  }
+
+
   label {
     display: block;
     margin-bottom: 10px;
@@ -664,9 +669,16 @@ a.disabled {
 
   .value-column {
     display: inline-block;
-    width:400px;
     input {
       width: 100%;
+    }
+
+    .clearable-input {
+      width: 240px;
+    }
+
+    &.postalCode .clearable-input {
+      width: 75px;
     }
   }
 }

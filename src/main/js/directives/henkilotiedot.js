@@ -3,12 +3,12 @@ module.exports = function(listApp) {
     return {
       restrict: 'E',
       scope: {
-        yhteystiedot: '=data'
+        application: '=application'
       },
       templateUrl: 'templates/henkilotiedot.html',
       link: function ($scope, element, attrs) {
         $scope.localization = localization
-
+        $scope.yhteystiedot = $scope.application.henkilotiedot
       }
     }
   }])
