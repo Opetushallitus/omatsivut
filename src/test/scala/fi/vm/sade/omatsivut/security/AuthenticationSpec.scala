@@ -1,8 +1,7 @@
 package fi.vm.sade.omatsivut.security
 
-import fi.vm.sade.omatsivut.config.AppConfig
-import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.omatsivut.ScalatraTestSupport
+import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.hakemus.FixturePerson
 
 class AuthenticationSpec extends ScalatraTestSupport with FixturePerson {
