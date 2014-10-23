@@ -55,19 +55,22 @@ Myös mocha-testien onnistunut ajo edellyttää paikallisesti ajossa olevaa vali
 
 ## SBT-buildi
 
-### Yksikkötestit
+### Testit
+
+Näin ajat testit komentoriviltä.
 
 `./sbt test`
+
+Komento ajaa kaikki testit, mukaan lukien yksikkötestit, REST-palvelujen testit, mocha-selaintestit.
 
 ### War-paketointi
 
 `./sbt package`
 
-### Käännä ja käynnistä (aina muutosten yhteydessä automaattisesti) ##
+### Käännä ja käynnistä komentoriviltä
 
 ```sh
-$ ./sbt
-> ~container:start
+`./sbt "test:run-main fi.vm.sade.omatsivut.JettyLauncher" -Domatsivut.profile=it`
 ```
 
 ## Fronttidevaus
