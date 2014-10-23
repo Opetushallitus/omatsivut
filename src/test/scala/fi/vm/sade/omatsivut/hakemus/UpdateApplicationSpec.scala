@@ -87,26 +87,22 @@ class UpdateApplicationSpec extends HakemusApiSpecification with FixturePerson w
     }
 
     "allow updating of contact info after application period end, but before application round end" in {
-      withFixedDateTime("1.10.2014 12:01") {
-        modifyHakemus(inactiveHakemus)(answerExtraQuestion(personalInfoPhaseKey, addressKey, "uusi osoite")) { hakemus =>
-          status must_== 200
-          withSavedApplication(hakemus) { application =>
-            application.getPhaseAnswers(personalInfoPhaseKey).get(addressKey) must_== "uusi osoite"
-          }
+      modifyHakemus(inactiveHakemusWithApplicationRoundNotEndedId)(answerExtraQuestion(personalInfoPhaseKey, addressKey, "uusi osoite")) { hakemus =>
+        status must_== 200
+        withSavedApplication(hakemus) { application =>
+          application.getPhaseAnswers(personalInfoPhaseKey).get(addressKey) must_== "uusi osoite"
         }
       }
     }
 
     "do not allow updating of other info after application period end, but before application round end" in {
-      withFixedDateTime("1.10.2014 12:01") {
-        modifyHakemus(inactiveHakemus)(addHakutoive(Hakutoive(Some(Map("Koulutus-id" -> "1.2.246.562.5.16303028778"))))) { hakemus =>
-          status must_== 403
-        }
+      modifyHakemus(inactiveHakemusWithApplicationRoundNotEndedId)(addHakutoive(Hakutoive(Some(Map("Koulutus-id" -> "1.2.246.562.5.16303028778"))))) { hakemus =>
+        status must_== 403
       }
     }
 
     "reject update of application after application round end" in {
-      modifyHakemus(inactiveHakemus)(answerExtraQuestion(personalInfoPhaseKey, addressKey, "uusi osoite2")) { hakemus =>
+      modifyHakemus(inactiveHakemusWithApplicationRoundEndedId)(answerExtraQuestion(personalInfoPhaseKey, addressKey, "uusi osoite2")) { hakemus =>
         status must_== 403
       }
     }

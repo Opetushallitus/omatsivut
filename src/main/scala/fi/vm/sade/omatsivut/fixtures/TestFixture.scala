@@ -15,7 +15,8 @@ object TestFixture {
   val hakemusWithAtheleteQuestions = "1.2.246.562.11.00000441371"
   val hakemusLisahaku = hakemusWithAtheleteQuestions
   val hakemusWithGradeGridAndDancePreference = "1.2.246.562.11.00000855417"
-  val inactiveHakemus = "1.2.246.562.11.00000441369"
+  val inactiveHakemusWithApplicationRoundNotEndedId = "1.2.246.562.11.00000441369"
+  val inactiveHakemusWithApplicationRoundEndedId = "1.2.246.562.11.00000441370"
   val applicationSystemNivelKesa2013Oid = "1.2.246.562.5.2014022711042555034240"
   val applicationSystemKorkeakouluSyksy2014Oid = "1.2.246.562.29.173465377510"
   val testHetu =  "010101-123N"

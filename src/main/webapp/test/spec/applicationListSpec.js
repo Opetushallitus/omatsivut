@@ -8,6 +8,8 @@
   var hakemusLisaKevat2014WithForeignBaseEducation = page.getApplication(hakemusLisaKevat2014WithForeignBaseEducationId)
   var hakemusYhteishakuKevat2013WithForeignBaseEducationId = "1.2.246.562.11.00000441369"
   var hakemusYhteishakuKevat2013WithForeignBaseEducation = page.getApplication(hakemusYhteishakuKevat2013WithForeignBaseEducationId)
+  var hakemusYhteishakuKevat2013WithApplicationRoundEndedId = "1.2.246.562.11.00000441370"
+  var hakemusYhteishakuKevat2013WithApplicationRoundEnded = page.getApplication(hakemusYhteishakuKevat2013WithApplicationRoundEndedId)
   var hakemusIncompleteId = "1.2.246.562.11.00000855417"
   var hakemusIncomplete = page.getApplication(hakemusIncompleteId)
   var hakemusKorkeakouluId = "1.2.246.562.11.00000877699"
@@ -1598,12 +1600,12 @@
     describe("Henkilötietojen muokkaus", function() {
 
       describe("jos hakukierroksen päättymispäivä on menneisyydessä", function() {
-        before(page.applyFixtureAndOpen({applicationOid: hakemusNivelKesa2013WithPeruskouluBaseEducationId}))
+        before(page.applyFixtureAndOpen({applicationOid: hakemusYhteishakuKevat2013WithApplicationRoundEndedId}))
         it("ei ole mahdollista", function () {
-          expect(hakemusNivelKesa2013WithPeruskouluBaseEducation.yhteystiedot().getRow("Sähköposti").val()).to.be.undefined
-          expect(hakemusNivelKesa2013WithPeruskouluBaseEducation.yhteystiedot().getRow("Matkapuhelinnumero").val()).to.be.undefined
-          expect(hakemusNivelKesa2013WithPeruskouluBaseEducation.yhteystiedot().getRow("Lähiosoite").val()).to.be.undefined
-          expect(hakemusNivelKesa2013WithPeruskouluBaseEducation.yhteystiedot().getRow("Postinumero").val()).to.be.undefined
+          expect(hakemusYhteishakuKevat2013WithApplicationRoundEnded.yhteystiedot().getRow("Sähköposti").val()).to.be.undefined
+          expect(hakemusYhteishakuKevat2013WithApplicationRoundEnded.yhteystiedot().getRow("Matkapuhelinnumero").val()).to.be.undefined
+          expect(hakemusYhteishakuKevat2013WithApplicationRoundEnded.yhteystiedot().getRow("Lähiosoite").val()).to.be.undefined
+          expect(hakemusYhteishakuKevat2013WithApplicationRoundEnded.yhteystiedot().getRow("Postinumero").val()).to.be.undefined
         })
       })
 
