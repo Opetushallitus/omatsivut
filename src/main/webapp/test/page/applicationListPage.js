@@ -136,7 +136,7 @@ function ApplicationListPage() {
 
       isSavingState: function (isSaving) {
         return function () {
-          return (getApplicationElement().find(".ajax-spinner").length > 0) === isSaving
+          return (getApplicationElement().find("form[name='applicationForm'] .ajax-spinner").length > 0) === isSaving
         }
       },
 
