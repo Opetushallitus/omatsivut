@@ -10,13 +10,17 @@ import fi.vm.sade.omatsivut.util.Logging
 import org.scalatra._
 
 class ScalatraBootstrap extends LifeCycle with Logging {
-  val config: AppConfig = AppConfig.fromSystemProperty
-  val componentRegistry: ComponentRegistry = new ComponentRegistry(config)
+
+  var globalRegistry: Option[ComponentRegistry] = None
 
   OmatSivutSpringContext.check
 
   override def init(context: ServletContext) {
+    val config: AppConfig = AppConfig.fromOptionalString(Option(context.getAttribute("omatsivut.profile").asInstanceOf[String]))
+    val componentRegistry = new ComponentRegistry(config)
+
     componentRegistry.start
+    globalRegistry = Some(componentRegistry)
 
     if(config.usesFakeAuthentication) {
       logger.info("Using fake authentication")
@@ -46,7 +50,7 @@ class ScalatraBootstrap extends LifeCycle with Logging {
   }
 
   override def destroy(context: ServletContext) = {
-    componentRegistry.stop
+    globalRegistry.foreach(_.stop)
     super.destroy(context)
   }
 }

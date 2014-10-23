@@ -13,8 +13,7 @@ trait ScalatraTestSupport extends Specification with HttpComponentsClient {
   implicit val swagger = new OmatSivutSwagger
   lazy val appConfig = AppConfigSetup.create
   lazy val componentRegistry = new ComponentRegistry(appConfig)
-  System.setProperty("omatsivut.profile", "it") // TODO: not nice, but how to convey this to Scalatrabootstrap?
-  lazy val jettyLauncher = new JettyLauncher(PortChecker.findFreeLocalPort)
+  lazy val jettyLauncher = new JettyLauncher(PortChecker.findFreeLocalPort, Some("it"))
 
   def baseUrl = "http://localhost:" + jettyLauncher.port + "/omatsivut"
 

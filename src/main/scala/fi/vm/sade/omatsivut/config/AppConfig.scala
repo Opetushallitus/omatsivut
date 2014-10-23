@@ -12,7 +12,14 @@ object AppConfig extends Logging {
   def getProfileProperty() = System.getProperty("omatsivut.profile", "default")
 
   def fromSystemProperty: AppConfig = {
-    val profile: String = getProfileProperty
+    fromString(getProfileProperty)
+  }
+
+  def fromOptionalString(profile: Option[String]) = {
+    fromString(profile.getOrElse(getProfileProperty))
+  }
+
+  def fromString(profile: String): AppConfig = {
     logger.info("Using omatsivut.profile=" + profile)
     profile match {
       case "default" => new Default
