@@ -26,6 +26,14 @@ module.exports = function(listApp) {
             return localization("label.applicationUpdated")
         }
 
+        $scope.shouldSaveButtonBeDisabled = function() {
+          return $scope.form.$pristine || $scope.statusMessageType=='pending' || !$scope.isSaveable || $scope.isValidating
+        }
+
+        $scope.statusMessageStyleModifier = function() {
+          return {'ajax-spinner': $scope.statusMessageType=='pending', error: $scope.statusMessageType=='error'}
+        }
+
         function getHakutoiveet() {
           return _($scope.application.hakutoiveet).map(function(hakutoive) {
             return {
