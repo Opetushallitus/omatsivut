@@ -1603,8 +1603,21 @@
           hakemusYhteishakuKevat2013WithForeignBaseEducation.yhteystiedot().getRow("Postinumero").val().should.equal("00100")
         })
 
+        describe("jos annetaan vastaanottotieto", function() {
+          before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VASTAANOTTANUT"))
+
+          it("vastaanottonappi on enabloitu", function () {
+            hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).confirmButtonEnabled().should.be.true
+          })
+
+          it("tallennanappi ei ole enabloitu", function () {
+            hakemusYhteishakuKevat2013WithForeignBaseEducation.saveButton().isEnabled().should.be.false
+          })
+        })
+
         describe("kun tietoja muokataan", function() {
           before(setData(hakemusYhteishakuKevat2013WithForeignBaseEducation, newData))
+
           it("lomake menee 'muokattu'-tilaan", function() {
             hakemusYhteishakuKevat2013WithForeignBaseEducation.saveButton().isEnabled().should.be.true
           })
