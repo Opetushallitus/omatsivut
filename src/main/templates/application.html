@@ -42,8 +42,8 @@
         <valintatulos data="application.state.valintatulos" final="application.allResultsAvailable()"></valintatulos>
     </section>
 
-    <form name="applicationForm" novalidate>
-      <section class="application-section" ng-if="application.state.id == 'ACTIVE' || application.state.id == 'INCOMPLETE'">
+    <form name="applicationForm" novalidate >
+      <section class="application-section" ng-if="application.editHakutoiveetEnabled()">
           <header class="application-section-heading">
               {{ localization('label.preferences') }}
               <button class="float-right save-btn" ng-disabled="shouldSaveButtonBeDisabled()" ng-click="saveApplication()">{{ localization('button.save') }}</button>
@@ -54,12 +54,12 @@
           </hakutoiveet>
       </section>
 
-      <section class="application-section additional-questions" ng-if="application.additionalQuestions.questionNodes.length > 0">
+      <section class="application-section additional-questions" ng-if="application.editHakutoiveetEnabled() && application.additionalQuestions.questionNodes.length > 0">
           <question question-node="application.additionalQuestions" application="application" class="questions" level="-1">
           </question>
       </section>
 
-      <section class="application-section" ng-if="application.showHenkilotiedot()">
+      <section class="application-section" ng-if="application.editHenkilotiedotEnabled()">
           <header class="application-section-heading">
               {{ localization('label.contactDetails') }}
               <button ng-if="application.state.id == 'HAKUKAUSIPAATTYNYT'" class="float-right save-btn" ng-disabled="shouldSaveButtonBeDisabled()" ng-click="saveApplication()">{{ localization('button.save') }}</button>

@@ -104,8 +104,12 @@ Hakemus.prototype = {
     return this.state && this.state.valintatulos ? this.state.valintatulos.hakutoiveet : []
   },
 
-  showHenkilotiedot: function() {
-    return this.state && this.state.id != "HAKUKIERROSPAATTYNYT"
+  editHakutoiveetEnabled: function() {
+    return this.state && (this.state.id == 'ACTIVE' || this.state.id == 'INCOMPLETE')
+  },
+
+  editHenkilotiedotEnabled: function() {
+    return this.editHakutoiveetEnabled() || (this.state && this.state.id == "HAKUKAUSIPAATTYNYT")
   },
 
   vastaanotettavatHakutoiveet: function() {
