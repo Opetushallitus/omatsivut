@@ -20,11 +20,11 @@ case class Logout(authInfo: AuthInfo, target: String = "Session") extends AuditE
   def toTapahtuma = Tapahtuma.createTRACE(systemName, target, toLogMessage, System.currentTimeMillis())
   def toLogMessage = "Käyttäjä kirjautui ulos: " + authInfo.toString
 }
-case class ShowHakemus(userOid: String, hakemusOid: String, target: String = "Hakemus") extends AuditEvent {
+case class ShowHakemus(userOid: String, hakemusOid: String, hakuOid: String, target: String = "Hakemus") extends AuditEvent {
   def toTapahtuma = Tapahtuma.createREAD(systemName, userOid, target, toLogMessage)
-  def toLogMessage = "Haettu hakemus: " + hakemusOid + ", oppija " + userOid
+  def toLogMessage = "Haettu haun " + hakuOid + " hakemus: " + hakemusOid + ", oppija " + userOid
 }
-case class UpdateHakemus(userOid: String, hakemusOid: String, originalAnswers: Answers, updatedAnswers: Answers, target: String = "Hakemus") extends AuditEvent {
+case class UpdateHakemus(userOid: String, hakemusOid: String, hakuOid: String, originalAnswers: Answers, updatedAnswers: Answers, target: String = "Hakemus") extends AuditEvent {
   def toTapahtuma = {
     val tapahtuma = Tapahtuma.createUPDATE(systemName, userOid, target, toLogMessage)
     val phaseIds = originalAnswers.keySet ++ updatedAnswers.keySet
@@ -47,9 +47,9 @@ case class UpdateHakemus(userOid: String, hakemusOid: String, originalAnswers: A
     }
   }
 
-  def toLogMessage = "Tallennettu päivitetty hakemus: " + hakemusOid + ", oppija " + userOid
+  def toLogMessage = "Tallennettu päivitetty hakemus haussa " + hakuOid + ": " + hakemusOid + ", oppija " + userOid
 }
-case class SaveVastaanotto(userOid: String, hakemusOid: String, vastaanotto: Vastaanotto, target: String = "Vastaanottotila") extends AuditEvent {
+case class SaveVastaanotto(userOid: String, hakemusOid: String, hakuOid: String, vastaanotto: Vastaanotto, target: String = "Vastaanottotila") extends AuditEvent {
   def toTapahtuma = Tapahtuma.createUPDATE(systemName, userOid, target, toLogMessage)
-  def toLogMessage = "Tallennettu vastaanottotieto: " + vastaanotto.tila + " oppijan " + userOid + " hakemuksen " + hakemusOid + " hakukohteen " + vastaanotto.hakukohdeOid
+  def toLogMessage = "Tallennettu vastaanottotieto haussa " + hakuOid + ": " + vastaanotto.tila + " oppijan " + userOid + " hakemuksen " + hakemusOid + " hakukohteen " + vastaanotto.hakukohdeOid
 }

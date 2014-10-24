@@ -77,7 +77,7 @@ trait HakemusRepositoryComponent {
           timed(1000, "Application update DAO"){
             dao.update(applicationQuery, application)
           }
-          auditLogger.log(UpdateHakemus(userOid, hakemus.oid, originalApplication.getAnswers.toMap.mapValues(_.toMap), application.getAnswers.toMap.mapValues(_.toMap)))
+          auditLogger.log(UpdateHakemus(userOid, hakemus.oid, haku.oid, originalApplication.getAnswers.toMap.mapValues(_.toMap), application.getAnswers.toMap.mapValues(_.toMap)))
           hakemusConverter.convertToHakemus(lomake, haku, application)
         }
       }
@@ -131,7 +131,7 @@ trait HakemusRepositoryComponent {
             lomake <- applicationSystemOption
           } yield {
             val hakemus = hakemusConverter.convertToHakemus(lomake, haku, application)
-            auditLogger.log(ShowHakemus(application.getPersonOid, hakemus.oid))
+            auditLogger.log(ShowHakemus(application.getPersonOid, hakemus.oid, haku.oid))
             hakemus
           }
         }).flatten.toList.sortBy[Long](_.received).reverse

@@ -131,7 +131,7 @@ trait ApplicationsServletContainer {
         val selite = "Muokkaus Omat Sivut -palvelussa"
         val vastaanotto = Vastaanotto(clientVastaanotto.hakukohdeOid, clientVastaanotto.tila, muokkaaja, selite)
         if(valintatulosService.vastaanota(hakemusOid, hakuOid, vastaanotto)) {
-          auditLogger.log(SaveVastaanotto(personOid(), hakemusOid, vastaanotto))
+          auditLogger.log(SaveVastaanotto(personOid(), hakemusOid, hakuOid, vastaanotto))
         } else {
           response.setStatus(500)
         }
