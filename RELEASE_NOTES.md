@@ -7,9 +7,9 @@
 ### [release 1454](https://bamboo.oph.ware.fi/deploy/viewDeploymentVersion.action?versionId=107774159)
 
 - Shibboleth muutos: [OHP-106](https://jira.oph.ware.fi/jira/browse/OHP-106)
-- Tulevia muutoksia valmistelevia refaktorointeja. mm.:
+- Vielä keskeneräisiä storyjä ([OHP-110](https://jira.oph.ware.fi/jira/browse/OHP-110) && [OHP-115](https://jira.oph.ware.fi/jira/browse/OHP-115)) valmistelevia muutoksia. mm.:
   * haun tiedot haetaan nyt tarjonnasta eikä oteta hakemukselta
-  * haun oid tallenetaan audit lokiin
+  * myös haun oid tallennetaan hakemuksen muutoksissa audit lokiin
 
 ## Tuotannossa
 
