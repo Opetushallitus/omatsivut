@@ -43,7 +43,7 @@
       "Peruuntunut": "Cancelled automatically",
       "VarasijaltaHyvaksytty": "Accepted from reserve place",
       "Vastaanottanut": "You have confirmed the study place",
-      "Hylatty": "Not accepted",
+      "Hylatty": "You have not received a study place",
       "EhdollisestiVastaanottanut": "You have confirmed the study place conditionally",
       "EiVastaanotettuMaaraAikana": "You have not confirmed the study place within the set time"
     }
