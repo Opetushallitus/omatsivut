@@ -1664,9 +1664,6 @@
             before(page.reloadPage())
 
             it("muutokset peruuntuvat", function() {
-              hakemusYhteishakuKevat2013WithForeignBaseEducation.yhteystiedot().getRow("Sähköposti").val().should.equal("")
-              hakemusYhteishakuKevat2013WithForeignBaseEducation.yhteystiedot().getRow("Matkapuhelinnumero").val().should.equal("")
-              hakemusYhteishakuKevat2013WithForeignBaseEducation.yhteystiedot().getRow("Lähiosoite").val().should.equal("foobartie 1")
               hakemusYhteishakuKevat2013WithForeignBaseEducation.yhteystiedot().getRow("Postinumero").val().should.equal("00100")
             })
           })
