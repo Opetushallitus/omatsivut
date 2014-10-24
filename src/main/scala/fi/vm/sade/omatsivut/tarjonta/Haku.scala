@@ -15,21 +15,18 @@ object Haku {
   }
 }
 
-case class Hakuaika(id: String, start: Long, end: Long, active: Boolean)
+case class Hakuaika(id: String, start: Long, end: Long) {
+  def active = new Interval(start, end).containsNow()
+}
 object Hakuaika {
   def apply(tarjontaHakuaika: TarjontaHakuaika) : Hakuaika = {
-    Hakuaika(tarjontaHakuaika.hakuaikaId, tarjontaHakuaika.alkuPvm, tarjontaHakuaika.loppuPvm, new Interval(tarjontaHakuaika.alkuPvm, tarjontaHakuaika.loppuPvm).containsNow())
-  }
-
-  def apply(id: String, start: Long, end: Long): Hakuaika = {
-    Hakuaika(id, start, end, new Interval(start, end).containsNow())
+    Hakuaika(tarjontaHakuaika.hakuaikaId, tarjontaHakuaika.alkuPvm, tarjontaHakuaika.loppuPvm)
   }
 }
 
 case class Hakukohde(oid: String, hakuaikaId: Option[String], kohteenHakuaika: Option[KohteenHakuaika])
-case class KohteenHakuaika(start: Long, end: Long, active: Boolean)
-object KohteenHakuaika {
-  def apply(start: Long, end: Long) : KohteenHakuaika = KohteenHakuaika(start, end, new Interval(start, end).containsNow())
+case class KohteenHakuaika(start: Long, end: Long) {
+  def active = new Interval(start, end).containsNow()
 }
 
 object HaunTyyppi extends Enumeration {
