@@ -1648,14 +1648,27 @@
           })
         })
 
-        describe("virheellisen tiedon tallentamisen jälkeen", function() {
+        describe("virheellisen tiedon tallennusyrityksen jälkeen", function() {
           before(setData(hakemusYhteishakuKevat2013WithForeignBaseEducation, invalidData), hakemusYhteishakuKevat2013WithForeignBaseEducation.saveWaitError)
 
-          it("validointivirheet näkyvät", function() {
-            hakemusYhteishakuKevat2013WithForeignBaseEducation.yhteystiedot().getRow("Sähköposti").error().should.equal("Virheellinen arvo")
-            hakemusYhteishakuKevat2013WithForeignBaseEducation.yhteystiedot().getRow("Matkapuhelinnumero").error().should.equal("Virheellinen arvo")
-            hakemusYhteishakuKevat2013WithForeignBaseEducation.yhteystiedot().getRow("Lähiosoite").error().should.equal("Pakollinen tieto.")
-            hakemusYhteishakuKevat2013WithForeignBaseEducation.yhteystiedot().getRow("Postinumero").error().should.equal("Virheellinen arvo")
+          describe("validointivirheet", function() {
+            it("validointivirheet näkyvät", function() {
+              hakemusYhteishakuKevat2013WithForeignBaseEducation.yhteystiedot().getRow("Sähköposti").error().should.equal("Virheellinen arvo")
+              hakemusYhteishakuKevat2013WithForeignBaseEducation.yhteystiedot().getRow("Matkapuhelinnumero").error().should.equal("Virheellinen arvo")
+              hakemusYhteishakuKevat2013WithForeignBaseEducation.yhteystiedot().getRow("Lähiosoite").error().should.equal("Pakollinen tieto.")
+              hakemusYhteishakuKevat2013WithForeignBaseEducation.yhteystiedot().getRow("Postinumero").error().should.equal("Virheellinen arvo")
+            })
+          })
+
+          describe("kun sivun lataa uudelleen", function() {
+            before(page.reloadPage())
+
+            it("muutokset peruuntuvat", function() {
+              hakemusYhteishakuKevat2013WithForeignBaseEducation.yhteystiedot().getRow("Sähköposti").val().should.equal("")
+              hakemusYhteishakuKevat2013WithForeignBaseEducation.yhteystiedot().getRow("Matkapuhelinnumero").val().should.equal("")
+              hakemusYhteishakuKevat2013WithForeignBaseEducation.yhteystiedot().getRow("Lähiosoite").val().should.equal("foobartie 1")
+              hakemusYhteishakuKevat2013WithForeignBaseEducation.yhteystiedot().getRow("Postinumero").val().should.equal("00100")
+            })
           })
         })
       })
