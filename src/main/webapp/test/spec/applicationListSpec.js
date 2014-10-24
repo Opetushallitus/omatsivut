@@ -1771,7 +1771,7 @@
           })
         })
 
-        describe("Jos vain yhteystietoja muutetaan", function() {
+        describe.skip("Jos vain yhteystietoja muutetaan", function() {
           before(
             function() { return hakemusKorkeakoulu.yhteystiedot().getRow("Lähiosoite").val("test") },
             hakemusKorkeakoulu.saveWaitSuccess
