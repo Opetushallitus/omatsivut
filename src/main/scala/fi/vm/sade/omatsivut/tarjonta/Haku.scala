@@ -15,12 +15,14 @@ object Haku {
   }
 }
 
-case class Hakuaika(id: String, start: Long, end: Long) {
-  val active = new Interval(start, end).containsNow()
-}
+case class Hakuaika(id: String, start: Long, end: Long, active: Boolean)
+
 object Hakuaika {
   def apply(tarjontaHakuaika: TarjontaHakuaika) : Hakuaika = {
     Hakuaika(tarjontaHakuaika.hakuaikaId, tarjontaHakuaika.alkuPvm, tarjontaHakuaika.loppuPvm)
+  }
+  def apply(id: String, start: Long, end: Long) : Hakuaika = {
+    Hakuaika(id, start, end, new Interval(start, end).containsNow())
   }
 }
 
