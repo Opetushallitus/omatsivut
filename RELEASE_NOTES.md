@@ -4,9 +4,12 @@
 
 ## QA:lla, odottaa tuotantoon siirtoa
 
-### [release 1411](https://bamboo.oph.ware.fi/deploy/viewDeploymentVersion.action?versionId=107774073)
+### [release 1454](https://bamboo.oph.ware.fi/deploy/viewDeploymentVersion.action?versionId=107774159)
 
-- Tulevia muutoksia valmistelevia refactorointeja (mm. haun tiedot haetaan nyt tarjonnasta eikä oteta hakemukselta). Ei toiminnallisia muutoksia
+- Tulevia muutoksia valmistelevia refaktorointeja. mm.:
+  * haun tiedot haetaan nyt tarjonnasta eikä oteta hakemukselta
+  * haun oid tallenetaan audit lokiin
+- Ei toiminnallisia muutoksia
 
 ## Tuotannossa
 
