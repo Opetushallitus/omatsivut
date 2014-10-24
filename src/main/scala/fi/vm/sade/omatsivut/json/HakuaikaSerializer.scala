@@ -5,8 +5,7 @@ import org.json4s._
 
 class HakuaikaSerializer extends CustomSerializer[Hakuaika](format => (
   {
-    case _ =>
-      throw new NotImplementedError()
+    case obj : JObject => obj.extract[Hakuaika](JsonFormats.genericFormats, Manifest.classType(classOf[Hakuaika]))
   },
   {
     case x: Hakuaika =>
@@ -20,8 +19,7 @@ class HakuaikaSerializer extends CustomSerializer[Hakuaika](format => (
 
 class KohteenHakuaikaSerializer extends CustomSerializer[KohteenHakuaika](format => (
   {
-    case _ =>
-      throw new NotImplementedError()
+    case obj : JObject => obj.extract[KohteenHakuaika](JsonFormats.genericFormats, Manifest.classType(classOf[KohteenHakuaika]))
   },
   {
     case x: KohteenHakuaika =>

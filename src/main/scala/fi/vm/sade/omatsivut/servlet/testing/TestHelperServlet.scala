@@ -5,12 +5,13 @@ import fi.vm.sade.omatsivut.config.SpringContextComponent
 import fi.vm.sade.omatsivut.fixtures.{FixtureImporter, TestFixture}
 import fi.vm.sade.omatsivut.security.{AuthenticationCipher, FakeAuthentication, ShibbolethCookie}
 import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
+import fi.vm.sade.omatsivut.tarjonta.TarjontaComponent
 import fi.vm.sade.omatsivut.util.Timer
 import fi.vm.sade.omatsivut.valintatulokset.{RemoteValintatulosService, ValintatulosServiceComponent}
 import org.scalatra.{Cookie, CookieOptions}
 
 trait TestHelperServletContainer {
-  this: ValintatulosServiceComponent with SpringContextComponent =>
+  this: ValintatulosServiceComponent with SpringContextComponent with TarjontaComponent =>
 
   def newTestHelperServlet: TestHelperServlet
 
@@ -40,6 +41,20 @@ trait TestHelperServletContainer {
       put("/fixtures/valintatulos/apply") {
         val query = request.queryString
         new RemoteValintatulosService(appConfig.settings.valintaTulosServiceUrl).applyFixtureWithQuery(query)
+      }
+
+      put("/fixtures/haku/:oid/overrideStart/:timestamp") {
+        tarjontaService match {
+          case service: StubbedTarjontaService =>
+            service.modifyHaunAlkuaika(params("oid"), params("timestamp").toLong)
+        }
+      }
+
+      put("/fixtures/haku/:oid/resetStart") {
+        tarjontaService match {
+          case service: StubbedTarjontaService =>
+            service.resetHaunAlkuaika(params("oid"))
+        }
       }
     }
 

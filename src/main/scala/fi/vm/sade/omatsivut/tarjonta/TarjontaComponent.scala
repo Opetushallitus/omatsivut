@@ -8,22 +8,87 @@ import fi.vm.sade.omatsivut.http.HttpCall
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.memoize.TTLOptionalMemoize
 import fi.vm.sade.omatsivut.ohjausparametrit.OhjausparametritComponent
+import fi.vm.sade.omatsivut.ohjausparametrit.domain.HaunAikataulu
+import fi.vm.sade.omatsivut.util.Logging
 import org.json4s.JsonAST.JValue
+
+import scala.collection.mutable
 
 trait TarjontaComponent {
   this: OhjausparametritComponent =>
 
+  val tarjontaService: TarjontaService
+
   class StubbedTarjontaService extends TarjontaService with JsonFormats {
+
+    private val timeOverrides = mutable.Map[String, Long]()
+
+    private def parseHaku(oid: String, lang: Language.Language) = {
+      JsonFixtureMaps.findByKey[JValue]("/mockdata/haut.json", oid).flatMap(TarjontaParser.parseHaku).map {h => Haku(h, lang)}
+    }
+
     override def haku(oid: String, lang: Language.Language) = {
-      val haku = JsonFixtureMaps.findByKey[JValue]("/mockdata/haut.json", oid).flatMap(TarjontaParser.parseHaku).map {h => Haku(h, lang)}
+      val haku = parseHaku(oid, lang)
       haku.map {h =>
         val haunAikataulu = ohjausparametritService.haunAikataulu(oid)
-        h.copy(aikataulu = haunAikataulu)
+        if(timeOverrides.contains(oid)) {
+          h.copy(applicationPeriods = changeHakuajat(h), aikataulu = changeAikataulu(h, h.aikataulu))
+        } else {
+          h.copy(aikataulu = haunAikataulu)
+        }
       }
     }
 
     override def hakukohde(oid: String): Option[Hakukohde] = {
-      JsonFixtureMaps.findByKey[JValue]("/mockdata/hakukohteet.json", oid).flatMap(TarjontaParser.parseHakukohde)
+      val json = JsonFixtureMaps.findByKey[JValue]("/mockdata/hakukohteet.json", oid)
+      json.flatMap(TarjontaParser.parseHakukohde).map { hakukohde =>
+        val hakuOid = json match {
+          case Some(v) => (v \ "result" \ "hakuOid").extract[String]
+          case _ => ""
+        }
+        if(timeOverrides.contains(hakuOid)){
+          hakukohde.copy(kohteenHakuaika = hakukohde.kohteenHakuaika.map { aika =>
+            val haku : Option[Haku] = parseHaku(hakuOid, Language.fi)
+            changeKohteenHakuaika(haku, aika)
+          })
+        } else {
+          hakukohde
+        }
+      }
+    }
+
+    private def changeKohteenHakuaika(haku: Option[Haku], aika: KohteenHakuaika): KohteenHakuaika = {
+      haku match {
+        case Some(h) => KohteenHakuaika(changeTimestamp(h, aika.start), changeTimestamp(h, aika.end))
+        case _ => aika
+      }
+    }
+
+    def resetHaunAlkuaika(hakuOid: String): Unit = {
+      timeOverrides -= hakuOid
+    }
+
+    def modifyHaunAlkuaika(hakuOid: String, alkuaika: Long) {
+      timeOverrides.put(hakuOid, alkuaika)
+    }
+
+    private def changeHakuajat(haku: Haku) = {
+      haku.applicationPeriods.map { aika =>
+        aika.copy(start = changeTimestamp(haku, aika.start), end = changeTimestamp(haku, aika.end))
+      }
+    }
+
+    private def changeAikataulu(haku: Haku, aikataulu: Option[HaunAikataulu]) = {
+      aikataulu.map { at =>
+        val julkistus = at.julkistus.map(j => j.copy(start = changeTimestamp(haku, j.start), end = changeTimestamp(haku, j.end)))
+        HaunAikataulu(julkistus, at.hakukierrosPaattyy.map {changeTimestamp(haku, _)})
+      }
+    }
+
+    private def changeTimestamp(haku: Haku, timestamp: Long) : Long = {
+      val start = timeOverrides(haku.oid)
+      val originalStart = haku.applicationPeriods.minBy(_.start).start
+      start + (timestamp - originalStart)
     }
   }
 
