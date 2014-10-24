@@ -10,7 +10,7 @@
 
   "label": {
     "applicationPeriodEnds": "Ansökningstiden slutar",
-    "applicationPeriodEnded": "Ansökan har avslutats",
+    "applicationPeriodEnded": "Studerandeantagningen oavslutad",
     "applicationRoundEnded": "Ansökan har avslutats",
     "applicationReceived": "Ansökningsblankett inlämnad",
     "applicationUpdated": "Senast bearbetad",
@@ -24,8 +24,8 @@
     "resultsPublishedDate": "Resultaten från ansökan publiceras senast",
     "questionGroupWithTitle": "Tillägsfrågor",
     "questionGroupWithoutTitle": "Andra tillägsfrågor",
-    "resultsFinal": "Lopullinen",
-    "resultsPending": "Kesken",
+    "resultsFinal": "Slutlig",
+    "resultsPending": "Oavslutad",
     "contactDetails": "Kontaktinformation",
     "email": "E-post",
     "mobilePhone": "Mobilnummer",
