@@ -168,7 +168,9 @@ Hakemus.prototype = {
 
   mergeSavedApplication: function(savedApplication) {
     this.updated = savedApplication.updated
-    this.state = $.extend(true, {}, savedApplication.state)
+
+    if (!_.isEqual(util.withoutAngularFields(this.state), savedApplication.state))
+      this.state = $.extend(true, {}, savedApplication.state)
 
     for (var i=0; i<this.hakutoiveet.length && i<savedApplication.hakutoiveet.length; i++) {
       hakutoive = this.hakutoiveet[i]
