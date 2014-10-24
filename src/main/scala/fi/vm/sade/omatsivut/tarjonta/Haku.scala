@@ -16,7 +16,7 @@ object Haku {
 }
 
 case class Hakuaika(id: String, start: Long, end: Long) {
-  def active = new Interval(start, end).containsNow()
+  val active = new Interval(start, end).containsNow()
 }
 object Hakuaika {
   def apply(tarjontaHakuaika: TarjontaHakuaika) : Hakuaika = {
@@ -26,7 +26,7 @@ object Hakuaika {
 
 case class Hakukohde(oid: String, hakuaikaId: Option[String], kohteenHakuaika: Option[KohteenHakuaika])
 case class KohteenHakuaika(start: Long, end: Long) {
-  def active = new Interval(start, end).containsNow()
+  val active = new Interval(start, end).containsNow()
 }
 
 object HaunTyyppi extends Enumeration {
