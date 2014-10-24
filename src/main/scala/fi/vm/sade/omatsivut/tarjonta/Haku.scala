@@ -11,7 +11,7 @@ object Haku {
   }
 
   private def isKorkeakouluhaku(tarjontaHaku: TarjontaHaku) = {
-    tarjontaHaku.kohdejoukkoUri == "haunkohdejoukko_12"
+    tarjontaHaku.kohdejoukkoUri.contains("haunkohdejoukko_12")
   }
 }
 
