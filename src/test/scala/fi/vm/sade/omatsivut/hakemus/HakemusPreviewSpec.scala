@@ -1,6 +1,7 @@
 package fi.vm.sade.omatsivut.hakemus
 
 import fi.vm.sade.haku.oppija.hakemus.it.dao.ApplicationDAO
+import fi.vm.sade.omatsivut.PersonOid
 import fi.vm.sade.omatsivut.config.{AppConfig, OmatSivutSpringContext}
 import fi.vm.sade.omatsivut.fixtures.TestFixture._
 import fi.vm.sade.omatsivut.fixtures.{FixtureImporter, TestFixture}
@@ -19,6 +20,7 @@ class HakemusPreviewSpec extends HakemusApiSpecification with FixturePerson {
 
       new FixtureImporter(dao, mongoTemplate).applyOverrides("peruskoulu")
       authGet("secure/applications/preview/" + hakemusYhteishakuKevat2014WithForeignBaseEducationId) {
+        response.status must_== 200
         response.getContentType() must_== "text/html; charset=UTF-8"
 
         body must contain("""<label>Vastaanotettu</label><span>25.06.2014 15:52</span>""")
@@ -40,6 +42,12 @@ class HakemusPreviewSpec extends HakemusApiSpecification with FixturePerson {
         body must contain("""<td><div>Kallion lukio Lukion ilmaisutaitolinja</div><div>PL 3805</div><div>00099</div><div>HELSINGIN KAUPUNKI</div></td>""")
         body must contain("""<td><div>Salon Lukio Lukio</div><div>Kaherinkatu 2</div><div>24130</div><div>SALO</div></td>""")
       }
+    }
+
+    "reject access to other person's data" in {
+      authGet("secure/applications/preview/" + hakemusYhteishakuKevat2014WithForeignBaseEducationId) {
+        response.status must_== 404
+      }(PersonOid("watwat"))
     }
 
     "support additional questions per preference" in {

@@ -1,11 +1,10 @@
 package fi.vm.sade.omatsivut
 
 import fi.vm.sade.omatsivut.config.{AppConfig, ComponentRegistry}
-import fi.vm.sade.omatsivut.security.{FakeAuthentication, AuthenticationCipher, ShibbolethCookie}
+import fi.vm.sade.omatsivut.security.{FakeAuthentication, ShibbolethCookie}
 import fi.vm.sade.omatsivut.servlet.OmatSivutSwagger
 import fi.vm.sade.omatsivut.util.PortChecker
 import org.scalatra.test.HttpComponentsClient
-import org.scalatra.test.specs2.MutableScalatraSpec
 import org.specs2.mutable.Specification
 import org.specs2.specification.{Fragments, Step}
 
