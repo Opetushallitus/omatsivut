@@ -62,7 +62,13 @@ trait HakemusConverterComponent {
       } else {
         if (!haku.applicationPeriods.head.active) {
           val valintatulos = convertToValintatulos(applicationSystemId, application, hakutoiveet)
-          HakuPaattynyt(valintatulos = valintatulos)
+          val now = new LocalDateTime()
+          if(haku.aikataulu.flatMap(_.hakukierrosPaattyy).map(new LocalDateTime(_)).getOrElse(now.plusYears(100)).isBefore(now)) {
+            HakukierrosPaattynyt(valintatulos = valintatulos)
+          }
+          else {
+            HakukausiPaattynyt(valintatulos = valintatulos)
+          }
         } else {
           application.getState.toString match {
             case "ACTIVE" => Active()

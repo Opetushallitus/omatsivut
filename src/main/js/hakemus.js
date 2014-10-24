@@ -105,7 +105,7 @@ Hakemus.prototype = {
   },
 
   showHenkilotiedot: function() {
-    return this.haku.aikataulu.hakukierrosPaattyy == null || this.haku.aikataulu.hakukierrosPaattyy > Date.now()
+    return this.state && this.state.id != "HAKUKIERROSPAATTYNYT"
   },
 
   vastaanotettavatHakutoiveet: function() {
