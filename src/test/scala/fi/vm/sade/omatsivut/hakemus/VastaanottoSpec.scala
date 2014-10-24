@@ -1,8 +1,7 @@
 package fi.vm.sade.omatsivut.hakemus
 
-import fi.vm.sade.omatsivut.{ValintatulosServiceRunner, PersonOid}
+import fi.vm.sade.omatsivut.PersonOid
 import fi.vm.sade.omatsivut.config.AppConfig
-import fi.vm.sade.omatsivut.hakemus.domain.{Hakemus, HakuPaattynyt}
 import fi.vm.sade.omatsivut.servlet.ClientSideVastaanotto
 import fi.vm.sade.omatsivut.valintatulokset.RemoteValintatulosService
 import org.json4s.jackson._
