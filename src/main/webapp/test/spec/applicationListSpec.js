@@ -1680,7 +1680,7 @@
 
         describe("postitoimipaikka", function() {
           it("näkyy oikein", function() {
-            hakemusKorkeakoulu.yhteystiedot().postitoimipaikka().should.equal("HELSINKI")
+            hakemusKorkeakoulu.yhteystiedot().postitoimipaikka().should.equal("Helsinki")
           })
 
           describe("jos postinumeron muuttaa epävalidiksi", function() {
@@ -1696,10 +1696,10 @@
               })
 
               describe("validin numeron syöttämisen jälkeen", function() {
-                before(function() { hakemusKorkeakoulu.yhteystiedot().getRow("Postinumero").val("90650") })
+                before(function() { hakemusKorkeakoulu.yhteystiedot().getRow("Postinumero").val("02100") })
 
                 it("postitoimipaikka päivittyy", function() {
-                  return wait.until(function() { return hakemusKorkeakoulu.yhteystiedot().postitoimipaikka() === "OULU" })()
+                  return wait.until(function() { return hakemusKorkeakoulu.yhteystiedot().postitoimipaikka() === "Espoo" })()
                 })
 
                 it("validaatiovirhe häviää näkyvistä", function() {

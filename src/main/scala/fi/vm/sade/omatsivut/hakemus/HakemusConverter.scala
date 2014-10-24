@@ -51,7 +51,10 @@ trait HakemusConverterComponent {
         haku,
         EducationBackground(koulutusTaustaAnswers.get(baseEducationKey), !Try {koulutusTaustaAnswers.get("ammatillinenTutkintoSuoritettu").toBoolean}.getOrElse(false)),
         answers,
-        answers.get("henkilotiedot").flatMap(_.get("Postinumero")).map(koodistoService.postOffice).map(_.get(lang.toString)) ,
+        answers.get("henkilotiedot")
+          .flatMap(_.get("Postinumero"))
+          .flatMap(koodistoService.postOffice)
+          .flatMap((translations: Map[String,String]) => translations.get(lang.toString)),
         lomake.requiresAdditionalInfo(application)
       )
     }

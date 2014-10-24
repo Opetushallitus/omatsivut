@@ -56,6 +56,11 @@ class ComponentRegistry(val config: AppConfig)
     case _ => CachedRemoteTarjontaService(config)
   }
 
+  private def configureKoodistoService: KoodistoService = config match {
+    case _: StubbedExternalDeps => new StubbedKoodistoService
+    case _ => new RemoteKoodistoService(config)
+  }
+
   private lazy val runningLogger = new RunnableLogger
   private lazy val pool = Executors.newSingleThreadExecutor
   lazy val springContext = new OmatSivutSpringContext(OmatSivutSpringContext.createApplicationContext(config))
@@ -67,7 +72,7 @@ class ComponentRegistry(val config: AppConfig)
   val hakemusRepository: HakemusRepository = new RemoteHakemusRepository
   val hakemusConverter: HakemusConverter = new HakemusConverter
   val tarjontaService: TarjontaService = configureTarjontaService
-  val koodistoService: KoodistoService = new RemoteKoodistoService(config)
+  val koodistoService: KoodistoService = configureKoodistoService
 
   def newApplicationValidator: ApplicationValidator = new ApplicationValidator
   def newHakemusPreviewGenerator(language: Language): HakemusPreviewGenerator = new HakemusPreviewGenerator()(language)
