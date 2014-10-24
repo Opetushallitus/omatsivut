@@ -1570,7 +1570,7 @@
       })
     })
 
-    describe("Henkilötietojen muokkaus", function() {
+    describe.skip("Henkilötietojen muokkaus", function() {
 
       var newData = {
         "Sähköposti": "joku@jossain.fi",

@@ -109,7 +109,7 @@ Hakemus.prototype = {
   },
 
   editHenkilotiedotEnabled: function() {
-    return this.editHakutoiveetEnabled() || (this.state && this.state.id == "HAKUKAUSIPAATTYNYT")
+    return false && (this.editHakutoiveetEnabled() || (this.state && this.state.id == "HAKUKAUSIPAATTYNYT"))
   },
 
   vastaanotettavatHakutoiveet: function() {
