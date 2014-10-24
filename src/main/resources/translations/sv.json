@@ -11,6 +11,7 @@
   "label": {
     "applicationPeriodEnds": "Ansökningstiden slutar",
     "applicationPeriodEnded": "Ansökan har avslutats",
+    "applicationRoundEnded": "Ansökan har avslutats",
     "applicationReceived": "Ansökningsblankett inlämnad",
     "applicationUpdated": "Senast bearbetad",
     "preferences": "Ansökningsönskemål",

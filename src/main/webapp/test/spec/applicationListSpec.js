@@ -585,6 +585,17 @@
 
       describe("vanhat hakemukset", function() {
 
+        describe("jos ei ole valintatuloksia ja hakukierros on päättynyt", function() {
+          before(page.applyFixtureAndOpen({}))
+          it("hakemusta ei voi muokata", function () {
+            hakemusYhteishakuKevat2013WithApplicationRoundEnded.preferencesForApplication().length.should.equal(0)
+          })
+
+          it("kerrotaan että haku on päättynyt", function () {
+            hakemusYhteishakuKevat2013WithApplicationRoundEnded.applicationStatus().should.equal("Haku on päättynyt.")
+          })
+        })
+
         describe("jos ei ole vastaanottotietoa ja ylin hakutoive on hylätty", function() {
           before(page.applyValintatulosFixtureAndOpen("hylatty-julkaistavissa-valmis"))
           it("hakemusta ei voi muokata", function () {

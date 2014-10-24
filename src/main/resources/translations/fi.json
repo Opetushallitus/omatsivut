@@ -11,6 +11,7 @@
   "label": {
     "applicationPeriodEnds": "Hakuaika päättyy",
     "applicationPeriodEnded": "Opiskelijavalinta on kesken.",
+    "applicationRoundEnded": "Haku on päättynyt.",
     "applicationReceived": "Hakemus jätetty",
     "applicationUpdated": "Hakemusta muokattu",
     "preferences": "Hakutoiveet",

@@ -25,12 +25,18 @@
     </div>
 
     <div ng-if="!application.isPeriodActive()" role="presentation">
-        <p class="application-status" ng-if="!application.allResultsAvailable() && application.vastaanotettavatHakutoiveet().length == 0">
+        <p class="application-status" ng-if="application.state.id != 'HAKUKIERROSPAATTYNYT' && !application.allResultsAvailable() && application.vastaanotettavatHakutoiveet().length == 0">
             <span class="italic">
                 {{ localization('label.applicationPeriodEnded') }}
                 <span ng-if="application.haku.aikataulu.julkistus">
                     {{ localization('label.resultsPublishedDate') }} <time formatted-time="application.haku.aikataulu.julkistus.end" format="LL" />.
                 </span>
+            </span>
+        </p>
+
+        <p class="application-status" ng-if="application.state.id == 'HAKUKIERROSPAATTYNYT'">
+            <span class="italic">
+                {{ localization('label.applicationRoundEnded') }}
             </span>
         </p>
 
