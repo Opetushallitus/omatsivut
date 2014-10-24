@@ -1570,7 +1570,7 @@
       })
     })
 
-    describe.skip("Henkilötietojen muokkaus", function() {
+    describe("Henkilötietojen muokkaus", function() {
 
       var newData = {
         "Sähköposti": "joku@jossain.fi",
@@ -1771,7 +1771,7 @@
           })
         })
 
-        describe.skip("Jos vain yhteystietoja muutetaan", function() {
+        describe("Jos vain yhteystietoja muutetaan", function() {
           before(
             function() { return hakemusKorkeakoulu.yhteystiedot().getRow("Lähiosoite").val("test") },
             hakemusKorkeakoulu.saveWaitSuccess
