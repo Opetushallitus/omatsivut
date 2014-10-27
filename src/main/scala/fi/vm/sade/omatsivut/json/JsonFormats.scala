@@ -6,7 +6,7 @@ import org.json4s.ext.EnumNameSerializer
 
 object JsonFormats {
   val genericFormats = DefaultFormats ++ org.json4s.ext.JodaTimeSerializers.all
-  val jsonFormats: Formats = JsonFormats.genericFormats ++ List(new QuestionNodeSerializer, new HakemusMuutosSerializer, new EnumNameSerializer(HakutoiveenValintatulosTila), new HakuaikaSerializer, new KohteenHakuaikaSerializer)
+  val jsonFormats: Formats = JsonFormats.genericFormats ++ List(new QuestionNodeSerializer, new HakemusMuutosSerializer, new EnumNameSerializer(HakutoiveenValintatulosTila), new HakuSerializer, new KohteenHakuaikaSerializer)
 }
 
 trait JsonFormats {

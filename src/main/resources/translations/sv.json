@@ -9,7 +9,10 @@
   },
 
   "label": {
-    "applicationPeriodEnds": "Ansökningstiden slutar",
+    "applicationPeriod": "Ansökningstiden",
+    "applicationPeriodActive": "Pågående",
+    "applicationPeriodPassed": "Ansökan har avslutats",
+    "applicationPeriodNotStarted": "Ansökan har inte börjat",
     "applicationPeriodEnded": "Studerandeantagningen oavslutad",
     "applicationRoundEnded": "Ansökan har avslutats",
     "applicationReceived": "Ansökningsblankett inlämnad",

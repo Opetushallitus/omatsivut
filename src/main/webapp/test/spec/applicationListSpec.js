@@ -166,7 +166,7 @@
       })
 
       it("hakuaika näkyy", function() {
-        hakemusNivelKesa2013WithPeruskouluBaseEducation.applicationStatus().should.equal("Hakuaika päättyy keskiviikkona 1. joulukuuta 2100 klo 07.00")
+        hakemusNivelKesa2013WithPeruskouluBaseEducation.applicationStatus().should.equal("Hakuaika 1. heinäkuuta 2014 klo 08.00 - 1. joulukuuta 2100 klo 07.00 Haku käynnissä")
       })
 
       it("tallennusaikaleima näkyy", function() {

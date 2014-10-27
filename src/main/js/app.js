@@ -40,6 +40,7 @@ require('./directives/hakutoiveenVastaanotto')(listApp)
 require('./directives/hakutoiveet')(listApp)
 require('./directives/valintatulos')(listApp)
 require('./directives/henkilotiedot')(listApp)
+require('./directives/applicationPeriods')(listApp)
 require('./directives/clearableInput')(listApp)
 
 listApp.run(function ($rootScope, localization) {

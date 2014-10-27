@@ -12,11 +12,9 @@
         </div>
     </div>
 
-    <div ng-if="application.isPeriodActive()" role="presentation">
+    <div ng-if="application.haku.active" role="presentation">
         <p class="application-status">
-            <span class="italic">
-                {{ localization('label.applicationPeriodEnds') }} <time formatted-time="application.haku.applicationPeriods[0].end" format="LLLL"/>
-            </span>
+            <application-periods data="application.haku.applicationPeriods" />
         </p>
 
         <p class="application-state-message" ng-if="application.state.id == 'POSTPROCESSING' || application.state.id == 'SUBMITTED'">
@@ -24,7 +22,7 @@
         </p>
     </div>
 
-    <div ng-if="!application.isPeriodActive()" role="presentation">
+    <div ng-if="!application.haku.active" role="presentation">
         <p class="application-status" ng-if="application.state.id != 'HAKUKIERROSPAATTYNYT' && !application.allResultsAvailable() && application.vastaanotettavatHakutoiveet().length == 0">
             <span class="italic">
                 {{ localization('label.applicationPeriodEnded') }}

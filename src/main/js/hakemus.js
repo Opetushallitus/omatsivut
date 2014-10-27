@@ -87,10 +87,6 @@ Hakemus.prototype = {
     return this.hakutoiveet[from].hasData() && from >= 0 && to <= lastFilledItem && to >= 0
   },
 
-  isPeriodActive: function() {
-    return this.haku.applicationPeriods[0].active
-  },
-
   allResultsAvailable: function() {
     return !this.hasResultState(["KESKEN", "VARALLA"]) && this.valintatulosHakutoiveet().length > 0
   },

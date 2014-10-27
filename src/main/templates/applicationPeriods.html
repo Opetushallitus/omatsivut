@@ -1,0 +1,8 @@
+<ul class="application-periods">
+    <li ng-repeat="applicationPeriod in periods()" ng-class="{inactive: !applicationPeriod.active}">
+        {{ applicationPeriodString($index) }}
+        <time formatted-time="applicationPeriod.start" format="LLL"/> -
+        <time formatted-time="applicationPeriod.end" format="LLL"/>
+        <span class="application-period-status">{{ statusString(applicationPeriod) }}</span>
+    </li>
+</ul>

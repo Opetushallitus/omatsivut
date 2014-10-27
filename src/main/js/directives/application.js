@@ -15,7 +15,6 @@ module.exports = function(listApp) {
       link: function ($scope, $element, attrs) {
         $scope.localization = localization
         var applicationValidatorBounced = debounce(applicationValidator(), settings.modelDebounce)
-        $scope.applicationPeriod = $scope.application.haku.applicationPeriods[0]
         $scope.isSaveable = true
         $scope.isValidating = false
 

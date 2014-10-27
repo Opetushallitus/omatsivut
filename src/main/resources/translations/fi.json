@@ -9,7 +9,10 @@
   },
 
   "label": {
-    "applicationPeriodEnds": "Hakuaika päättyy",
+    "applicationPeriod": "Hakuaika",
+    "applicationPeriodActive": "Haku käynnissä",
+    "applicationPeriodPassed": "Hakuaika päättynyt",
+    "applicationPeriodNotStarted": "Hakuaika ei alkanut",
     "applicationPeriodEnded": "Opiskelijavalinta on kesken.",
     "applicationRoundEnded": "Haku on päättynyt.",
     "applicationReceived": "Hakemus jätetty",
