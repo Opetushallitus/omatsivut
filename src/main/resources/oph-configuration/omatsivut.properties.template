@@ -24,6 +24,7 @@ omatsivut.crypto.hmac.key={{omatsivut_crypto_hmac_key}}
 
 omatsivut.cas.ticket.url={{omatsivut_cas_ticket_url}}
 omatsivut.oppija-raamit.url={{oppija_raamit_url}}
+omatsivut.piwik.url=https://{{host_oppija}}/wp/wp-content/themes/ophver3/js/piwik.js
 omatsivut.authentication-service.url=https://{{host_virkailija}}/authentication-service
 omatsivut.authentication-service.username={{omatsivut_authentication_service_username}}
 omatsivut.authentication-service.password={{omatsivut_authentication_service_password}}

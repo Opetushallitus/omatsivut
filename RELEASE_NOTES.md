@@ -4,11 +4,14 @@
 
 ## QA:lla, odottaa tuotantoon siirtoa
 
-### [release 1411](https://bamboo.oph.ware.fi/deploy/viewDeploymentVersion.action?versionId=107774073)
-
-- Tulevia muutoksia valmistelevia refactorointeja (mm. haun tiedot haetaan nyt tarjonnasta eikä oteta hakemukselta). Ei toiminnallisia muutoksia
-
 ## Tuotannossa
+
+### [release 1454](https://bamboo.oph.ware.fi/deploy/viewDeploymentVersion.action?versionId=107774159)
+
+- Shibboleth muutos: [OHP-106](https://jira.oph.ware.fi/jira/browse/OHP-106)
+- Vielä keskeneräisiä storyjä ([OHP-110](https://jira.oph.ware.fi/jira/browse/OHP-110) & [OHP-115](https://jira.oph.ware.fi/jira/browse/OHP-115)) valmistelevia muutoksia. mm.:
+  * haun tiedot haetaan nyt tarjonnasta eikä oteta hakemukselta
+  * myös haun oid tallennetaan hakemuksen muutoksissa audit lokiin
 
 ### [release 1338](https://bamboo.oph.ware.fi/deploy/viewDeploymentVersion.action?versionId=104693941)
 
