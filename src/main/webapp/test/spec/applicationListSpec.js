@@ -1671,6 +1671,61 @@
         })
       })
 
+      describe("jos hakijan asuinmaa on muu kuin suomi", function() {
+        before(page.applyFixtureAndOpen({applicationOid: hakemusLisaKevat2014WithForeignBaseEducationId}))
+        it("on mahdollista muokata vain sähköpostia ja puhelinnumeroa", function () {
+          hakemusLisaKevat2014WithForeignBaseEducation.yhteystiedot().getRow("Sähköposti").val().should.equal("")
+          hakemusLisaKevat2014WithForeignBaseEducation.yhteystiedot().getRow("Matkapuhelinnumero").val().should.equal("")
+          expect(hakemusLisaKevat2014WithForeignBaseEducation.yhteystiedot().getRow("Lähiosoite").val()).to.be.undefined
+          expect(hakemusLisaKevat2014WithForeignBaseEducation.yhteystiedot().getRow("Postinumero").val()).to.be.undefined
+        })
+
+        describe("kun tietoja muokataan", function() {
+          before(setData(hakemusLisaKevat2014WithForeignBaseEducation, newData))
+
+          it("lomake menee 'muokattu'-tilaan", function() {
+            hakemusLisaKevat2014WithForeignBaseEducation.saveButton().isEnabled().should.be.true
+          })
+
+          describe("tallennusnapin painamisen jälkeen", function() {
+            before(
+              hakemusLisaKevat2014WithForeignBaseEducation.saveWaitSuccess,
+              function() { S("input").remove() },
+              page.openPage()
+            )
+
+            it("tiedot tallentuvat", function() {
+              _(newData).each(function(val, id) {
+                hakemusLisaKevat2014WithForeignBaseEducation.yhteystiedot().getRow("Sähköposti").val().should.equal("joku@jossain.fi")
+                hakemusLisaKevat2014WithForeignBaseEducation.yhteystiedot().getRow("Matkapuhelinnumero").val().should.equal("0401234987")
+                expect(hakemusLisaKevat2014WithForeignBaseEducation.yhteystiedot().getRow("Lähiosoite").val()).to.be.undefined
+                expect(hakemusLisaKevat2014WithForeignBaseEducation.yhteystiedot().getRow("Postinumero").val()).to.be.undefined
+              })
+            })
+          })
+        })
+
+        describe("virheellisen tiedon tallennusyrityksen jälkeen", function() {
+          before(page.applyFixtureAndOpen({}))
+          before(setData(hakemusLisaKevat2014WithForeignBaseEducation, invalidData), hakemusLisaKevat2014WithForeignBaseEducation.saveWaitError)
+
+          describe("validointivirheet", function() {
+            it("validointivirheet näkyvät", function() {
+              hakemusLisaKevat2014WithForeignBaseEducation.yhteystiedot().getRow("Sähköposti").error().should.equal("Virheellinen arvo")
+              hakemusLisaKevat2014WithForeignBaseEducation.yhteystiedot().getRow("Matkapuhelinnumero").error().should.equal("Virheellinen arvo")
+            })
+          })
+
+          describe("kun sivun lataa uudelleen", function() {
+            before(page.reloadPage())
+
+            it("muutokset peruuntuvat", function() {
+              hakemusLisaKevat2014WithForeignBaseEducation.yhteystiedot().getRow("Sähköposti").val().should.equal("")
+            })
+          })
+        })
+      })
+
       describe("jos ei ole hakukierroksen päättymispäivää", function() {
         before(page.applyFixtureAndOpen({applicationOid: hakemusKorkeakouluId}))
         it("on mahdollista", function () {

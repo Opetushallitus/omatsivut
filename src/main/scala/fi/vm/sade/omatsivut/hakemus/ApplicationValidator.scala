@@ -77,7 +77,7 @@ trait ApplicationValidatorComponent {
       }
       val unknownAnswers: List[(String, String, String)] = flatAnswers
         .filterNot {
-          case (OppijaConstants.PHASE_PERSONAL, questionId, _) if List(OppijaConstants.ELEMENT_ID_ADDRESS, OppijaConstants.ELEMENT_ID_POSTAL_NUMBER, OppijaConstants.ELEMENT_ID_EMAIL).contains(questionId) || questionId.startsWith(OppijaConstants.ELEMENT_ID_PREFIX_PHONENUMBER) => true
+          case (OppijaConstants.PHASE_PERSONAL, questionId, _) if List(OppijaConstants.ELEMENT_ID_FIN_ADDRESS, OppijaConstants.ELEMENT_ID_FIN_POSTAL_NUMBER, OppijaConstants.ELEMENT_ID_EMAIL, OppijaConstants.ELEMENT_ID_COUNTRY_OF_RESIDENCY).contains(questionId) || questionId.startsWith(OppijaConstants.ELEMENT_ID_PREFIX_PHONENUMBER) => true
           case (phaseId, questionId, _) => acceptedAnswerIds.contains(AnswerId(phaseId, questionId))
         }
       unknownAnswers
