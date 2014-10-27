@@ -92,7 +92,7 @@ trait ApplicationsServletContainer {
         case Some(lomake) => {
           val questionsOf: List[String] = paramOption("questionsOf").getOrElse("").split(',').toList
           val (errors: List[ValidationError], questions: List[QuestionNode], updatedApplication: Application) = applicationValidator.validateAndFindQuestions(lomake, muutos, questionsOf, personOid())
-          ValidationResult(errors, questions, hakuRepository.applicationPeriodsByOid(lomake.oid))
+          ValidationResult(errors, questions)
         }
         case _ => InternalServerError()
       }
@@ -143,5 +143,5 @@ trait ApplicationsServletContainer {
 
 case class ClientSideVastaanotto(hakukohdeOid: String, tila: String)
 
-case class ValidationResult(errors: List[ValidationError], questions: List[QuestionNode], applicationPeriods: List[Hakuaika])
+case class ValidationResult(errors: List[ValidationError], questions: List[QuestionNode])
 

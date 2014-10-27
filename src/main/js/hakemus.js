@@ -182,7 +182,6 @@ Hakemus.prototype = {
 
   mergeValidationResult: function(validationResult) {
     this.importQuestions(validationResult.questions)
-    this.haku.applicationPeriods = validationResult.applicationPeriods
   },
 
   validatePreferences: function() {
