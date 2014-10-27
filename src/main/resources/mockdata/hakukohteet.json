@@ -1470,5 +1470,128 @@
             "soraKuvausKielet": [ ],
             "organisaatioRyhmaOids": [ ]
         }
+    },
+    "1.2.246.562.20.85668637847": {
+        "result": {
+            "modified": 1400051898676,
+            "modifiedBy": "1.2.246.562.24.41575394116",
+            "oid": "1.2.246.562.20.85668637847",
+            "version": 1,
+            "hakukohteenNimet": {
+                "kieli_sv": "Folkmusik 5,5-årig utbildning",
+                "kieli_en": "Folk Music 5.5-year education",
+                "kieli_fi": "Kansanmusiikki 5,5-vuotinen koulutus"
+            },
+            "tarjoajaNimet": {
+                "fi": "Taideyliopisto,  Sibelius-Akatamia",
+                "sv": "Konstuniversitetet, Sibelius-Akademin",
+                "en": "University of the Arts Helsinki, Sibelius Academy"
+            },
+            "koulutusmoduuliToteutusTarjoajatiedot": {
+                "1.2.246.562.17.76005410287": {
+                    "tarjoajaOids": [ "1.2.246.562.10.78522729439" ]
+                }
+            },
+            "tarjoajaOids": [ "1.2.246.562.10.78522729439" ],
+            "hakuOid": "1.2.246.562.29.95390561488",
+            "hakuaikaId": "220208",
+            "hakukelpoisuusvaatimusUris": [ "pohjakoulutusvaatimuskorkeakoulut_123", "pohjakoulutusvaatimuskorkeakoulut_106" ],
+            "hakukohdeKoulutusOids": [ "1.2.246.562.17.76005410287" ],
+            "alinHyvaksyttavaKeskiarvo": 0.0,
+            "alinValintaPistemaara": 0,
+            "ylinValintapistemaara": 0,
+            "aloituspaikatLkm": 1,
+            "edellisenVuodenHakijatLkm": 0,
+            "valintojenAloituspaikatLkm": 0,
+            "tila": "LUONNOS",
+            "ulkoinenTunniste": "p7",
+            "koulutusAsteTyyppi": "KORKEAKOULUTUS",
+            "toteutusTyyppi": "KORKEAKOULUTUS",
+            "lisatiedot": {
+                "kieli_sv": "",
+                "kieli_en": "",
+                "kieli_fi": ""
+            },
+            "hakukelpoisuusVaatimusKuvaukset": {
+                "kieli_sv": "",
+                "kieli_en": "",
+                "kieli_fi": ""
+            },
+            "aloituspaikatKuvaukset": {
+                "kieli_fi": "1"
+            },
+            "kaytetaanJarjestelmanValintaPalvelua": false,
+            "kaytetaanHaunPaattymisenAikaa": false,
+            "kaytetaanHakukohdekohtaistaHakuaikaa": false,
+            "hakukohteenLiitteet": [ ],
+            "valintakokeet": [ ],
+            "kaksoisTutkinto": false,
+            "opetusKielet": [ "kieli_en", "kieli_fi", "kieli_sv" ],
+            "valintaPerusteKuvausKielet": [ ],
+            "soraKuvausKielet": [ ],
+            "organisaatioRyhmaOids": [ ]
+        }
+    },
+    "1.2.246.562.20.40828730156": {
+        "result": {
+            "modified": 1407231181945,
+            "modifiedBy": "1.2.246.562.24.39416280469",
+            "oid": "1.2.246.562.20.40828730156",
+            "version": 1,
+            "hakukohteenNimet": {
+                "kieli_sv": "Musikvetenskap, kandidatexamen i humanistiska vetenskaper och filosofie magister",
+                "kieli_fi": "Musiikkitiede, humanististen tieteiden kandidaatti ja filosofian maisteri"
+            },
+            "tarjoajaNimet": {
+                "fi": "Helsingin yliopisto, Humanistinen tiedekunta",
+                "sv": "Helsingfors universitet, Humanistiska fakulteten",
+                "en": "University of Helsinki, Faculty of Arts"
+            },
+            "koulutusmoduuliToteutusTarjoajatiedot": {
+                "1.2.246.562.17.34678731463": {
+                    "tarjoajaOids": [ "1.2.246.562.10.61397511793" ]
+                },
+                "1.2.246.562.17.38147917348": {
+                    "tarjoajaOids": [ "1.2.246.562.10.61397511793" ]
+                }
+            },
+            "tarjoajaOids": [ "1.2.246.562.10.61397511793" ],
+            "hakuOid": "1.2.246.562.29.95390561488",
+            "hakuaikaId": "220207",
+            "hakukelpoisuusvaatimusUris": [ "pohjakoulutusvaatimuskorkeakoulut_123" ],
+            "hakukohdeKoulutusOids": [ "1.2.246.562.17.34678731463", "1.2.246.562.17.38147917348" ],
+            "alinHyvaksyttavaKeskiarvo": 0.0,
+            "alinValintaPistemaara": 0,
+            "ylinValintapistemaara": 0,
+            "aloituspaikatLkm": 15,
+            "edellisenVuodenHakijatLkm": 0,
+            "valintojenAloituspaikatLkm": 0,
+            "tila": "LUONNOS",
+            "koulutusAsteTyyppi": "KORKEAKOULUTUS",
+            "toteutusTyyppi": "KORKEAKOULUTUS",
+            "lisatiedot": {
+                "kieli_sv": "",
+                "kieli_en": "",
+                "kieli_fi": ""
+            },
+            "hakukelpoisuusVaatimusKuvaukset": {
+                "kieli_sv": "",
+                "kieli_en": "",
+                "kieli_fi": ""
+            },
+            "aloituspaikatKuvaukset": {
+                "kieli_fi": "15"
+            },
+            "kaytetaanJarjestelmanValintaPalvelua": true,
+            "kaytetaanHaunPaattymisenAikaa": false,
+            "kaytetaanHakukohdekohtaistaHakuaikaa": false,
+            "hakukohteenLiitteet": [ ],
+            "valintakokeet": [ ],
+            "kaksoisTutkinto": false,
+            "opetusKielet": [ "kieli_fi" ],
+            "valintaPerusteKuvausKielet": [ ],
+            "soraKuvausKielet": [ ],
+            "organisaatioRyhmaOids": [ ]
+        }
     }
 }
