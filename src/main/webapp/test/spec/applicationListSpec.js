@@ -51,16 +51,16 @@
   })
 
   describe('Kun käyttäjän oid puuttuu', function () {
-    function oidNotFoundPageVisible() {
-      return S(".no-applications").is(":visible")
+    function infoBoxIsVisible() {
+      return S(".info").is(":visible")
     }
 
     before(function (done) {
-      session.init("091094-970D","fi").then(page.openPage(oidNotFoundPageVisible)).done(done)
+      session.init("091094-970D","fi").then(page.openPage(infoBoxIsVisible)).done(done)
     })
 
     it("näytetään ilmoitus", function() {
-      expect(S("h1").text()).to.equal("Henkilötunnuksellasi ei löytynyt hakemuksia")
+      expect(S(".info").text()).to.contain("emme löytäneet hakemuksia henkilötunnuksellasi")
     })
   })
 

@@ -34,6 +34,10 @@ module.exports = function(listApp) {
             case 401:
               document.location.replace("/omatsivut/login")
               break;
+            case 404:
+              $scope.applicationStatusMessage = "errorPage.noApplicationsFound.text"
+              $scope.applicationStatusMessageType = "info"
+              break;
             default:
               $scope.applicationStatusMessage = "error.loadingFailed"
               $scope.applicationStatusMessageType = "error"
