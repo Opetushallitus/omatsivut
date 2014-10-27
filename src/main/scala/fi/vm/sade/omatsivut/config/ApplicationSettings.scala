@@ -29,6 +29,8 @@ case class ApplicationSettings(config: Config) {
 
   val raamitUrl = config.getString("omatsivut.oppija-raamit.url")
 
+  val piwikUrl = config.getString("omatsivut.piwik.url")
+
   val authenticationServiceConfig = getRemoteApplicationConfig(config.getConfig("omatsivut.authentication-service"))
 
   val valintaTulosServiceUrl = config.getString("omatsivut.valinta-tulos-service.url")
