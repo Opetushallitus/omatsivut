@@ -8,7 +8,7 @@ import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
 import fi.vm.sade.omatsivut.tarjonta.TarjontaComponent
 import fi.vm.sade.omatsivut.util.Timer
 import fi.vm.sade.omatsivut.valintatulokset.{RemoteValintatulosService, ValintatulosServiceComponent}
-import org.scalatra.{Cookie, CookieOptions}
+import org.scalatra.{InternalServerError, Ok, Cookie, CookieOptions}
 
 trait TestHelperServletContainer {
   this: ValintatulosServiceComponent with SpringContextComponent with TarjontaComponent =>
@@ -36,24 +36,32 @@ trait TestHelperServletContainer {
         Timer.timed(100, "Apply fixtures"){
           new FixtureImporter(springContext.applicationDAO, springContext.mongoTemplate).applyFixtures(fixtureName, "application/"+applicationOid+".json")
         }
+        Ok
       }
 
       put("/fixtures/valintatulos/apply") {
         val query = request.queryString
         new RemoteValintatulosService(appConfig.settings.valintaTulosServiceUrl).applyFixtureWithQuery(query)
+        Ok
       }
 
       put("/fixtures/haku/:oid/overrideStart/:timestamp") {
         tarjontaService match {
-          case service: StubbedTarjontaService =>
+          case service: StubbedTarjontaService => {
             service.modifyHaunAlkuaika(params("oid"), params("timestamp").toLong)
+            Ok
+          }
+          case _ => InternalServerError
         }
       }
 
       put("/fixtures/haku/:oid/resetStart") {
         tarjontaService match {
-          case service: StubbedTarjontaService =>
+          case service: StubbedTarjontaService => {
             service.resetHaunAlkuaika(params("oid"))
+            Ok
+          }
+          case _ => InternalServerError
         }
       }
     }
