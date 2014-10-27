@@ -6,6 +6,9 @@ import fi.vm.sade.omatsivut.auditlog.AuditLogger
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
 import fi.vm.sade.omatsivut.util.Logging
+import org.json4s.JsonDSL._
+import org.json4s.jackson.JsonMethods._
+import org.scalatra.{Unauthorized, NotFound}
 
 trait Authentication extends OmatSivutServletBase with AuthCookieParsing with Logging {
   val appConfig: AppConfig
@@ -15,10 +18,11 @@ trait Authentication extends OmatSivutServletBase with AuthCookieParsing with Lo
 
   before() {
     shibbolethCookieInRequest(request) match {
-      case Some(cookie) => true
-      case None => {
-        halt(status = 401, headers = Map("WWW-Authenticate" -> "SecureCookie"))
+      case Some(cookie) => personOidOption(request) match {
+        case Some(oid) if !oid.isEmpty => true
+        case _ => halt(NotFound(render("error" -> "no oid was present")))
       }
+      case _ => halt(Unauthorized(render("error" -> "unauthorized")))
     }
   }
 }
