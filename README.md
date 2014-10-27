@@ -15,15 +15,6 @@ Ennen ajamista aja nämä:
     npm install
     node_modules/gulp/bin/gulp.js compile
 
-### Käännä ja käynnistä sovellus ##
-
-```sh
-$ ./sbt
-> ~container:start
-```
-
-Avaa selaimessa [http://localhost:8080/omatsivut/](http://localhost:8080/omatsivut/).
-
 ### Generoi IDE-projekti
 
 Generoi projekti Eclipseen:
@@ -72,6 +63,8 @@ Komento ajaa kaikki testit, mukaan lukien yksikkötestit, REST-palvelujen testit
 ```sh
 `./sbt "test:run-main fi.vm.sade.omatsivut.JettyLauncher" -Domatsivut.profile=it`
 ```
+
+Avaa selaimessa [http://localhost:8080/omatsivut/](http://localhost:8080/omatsivut/).
 
 ## Fronttidevaus
 
