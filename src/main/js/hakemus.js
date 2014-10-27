@@ -84,7 +84,11 @@ Hakemus.prototype = {
       return -1
     })(this.hakutoiveet)
 
-    return this.hakutoiveet[from].hasData() && from >= 0 && to <= lastFilledItem && to >= 0
+    return !this.preferenceLocked(from) && this.hakutoiveet[from].hasData() && from >= 0 && to <= lastFilledItem && to >= 0
+  },
+  
+  preferenceLocked: function(index) {
+    return false // TODO
   },
 
   allResultsAvailable: function() {
