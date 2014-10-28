@@ -80,6 +80,10 @@ function ApplicationListPage() {
         return _(texts).chain().compact().flatten().value().join("")
       })
 
+    },
+
+    piwikScriptSrc: function() {
+        return S("#apply-piwik").attr("src")
     }
   }
 

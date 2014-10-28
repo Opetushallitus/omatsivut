@@ -28,10 +28,6 @@ class ScalatraBootstrap extends LifeCycle with Logging {
         .addMappingForUrlPatterns(util.EnumSet.allOf(classOf[DispatcherType]), true,  "/", "/index.html", "/secure/*")
       context.mount(new FakeShibbolethServlet(config), "/Shibboleth.sso")
     }
-
-    context.addFilter("UserFilter", new UserFilter(config))
-      .addMappingForUrlPatterns(util.EnumSet.allOf(classOf[DispatcherType]), true, "/index.html", "/")
-
     context.addFilter("CacheControl", new CacheControlFilter)
       .addMappingForUrlPatterns(util.EnumSet.allOf(classOf[DispatcherType]), true, "/*")
     context.addFilter("Language", new LanguageFilter)
@@ -45,6 +41,7 @@ class ScalatraBootstrap extends LifeCycle with Logging {
     context.mount(componentRegistry.newSecuredSessionServlet, "/secure")
     context.mount(new SessionServlet(config), "/session")
     context.mount(new RaamitServlet(config), "/raamit")
+    context.mount(new PiwikServlet(config), "/piwik")
     context.mount(new LoginServlet(config), "/login")
     context.mount(componentRegistry.newLogoutServlet, "/logout")
     context.mount(componentRegistry.newTestHelperServlet, "/util")

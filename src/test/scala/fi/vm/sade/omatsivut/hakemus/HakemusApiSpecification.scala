@@ -35,7 +35,7 @@ trait HakemusApiSpecification extends ScalatraTestSupport {
   val preferencesPhaseKey: String = OppijaConstants.PHASE_APPLICATION_OPTIONS
   val skillsetPhaseKey: String = OppijaConstants.PHASE_GRADES
   val ssnKey: String = OppijaConstants.ELEMENT_ID_SOCIAL_SECURITY_NUMBER
-  val addressKey: String = OppijaConstants.ELEMENT_ID_ADDRESS
+  val addressKey: String = OppijaConstants.ELEMENT_ID_FIN_ADDRESS
 
   def withHakemus[T](oid: String)(f: (Hakemus => T))(implicit personOid: PersonOid): T = {
     withApplications { applications =>

@@ -177,9 +177,18 @@ trait HakemusPreviewGeneratorComponent {
         }
         else {
           div(`class` := "question")(
-            label(raw(question)),
+            previewLabel(question),
             span(`class` := "answer")(answer)
           ) :: Nil
+        }
+      }
+
+      def previewLabel(question: String) = {
+        if(question.isEmpty) {
+          label(raw("&nbsp;"))
+        }
+        else {
+          label(raw(question))
         }
       }
 

@@ -20,7 +20,7 @@ function Hakemus(json) {
 function copy(json) { return $.extend(true, {}, json) }
 
 function convertHenkilotiedot(json) {
-  var fields = ["Sähköposti", "matkapuhelinnumero1", "lahiosoite", "Postinumero"]
+  var fields = ["Sähköposti", "matkapuhelinnumero1", "asuinmaa", "lahiosoite", "Postinumero"]
   return _(fields).reduce(function(memo, key) {
     memo[key] = new Question({ id: key }, json[key])
     return memo
@@ -109,7 +109,7 @@ Hakemus.prototype = {
   },
 
   editHenkilotiedotEnabled: function() {
-    return false && (this.editHakutoiveetEnabled() || (this.state && this.state.id == "HAKUKAUSIPAATTYNYT"))
+    return this.editHakutoiveetEnabled() || (this.state && this.state.id == "HAKUKAUSIPAATTYNYT")
   },
 
   vastaanotettavatHakutoiveet: function() {

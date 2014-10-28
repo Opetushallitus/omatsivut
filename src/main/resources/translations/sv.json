@@ -27,12 +27,12 @@
     "resultsPublishedDate": "Resultaten från ansökan publiceras senast",
     "questionGroupWithTitle": "Tillägsfrågor",
     "questionGroupWithoutTitle": "Andra tillägsfrågor",
-    "resultsFinal": "Slutlig",
-    "resultsPending": "Oavslutad",
+    "resultsFinal": "Antagningssituation (Slutlig)",
+    "resultsPending": "Antagningssituation (På gång)",
     "contactDetails": "Kontaktinformation",
     "email": "E-post",
-    "mobilePhone": "Mobilnummer",
-    "streetAddress": "Adress",
+    "mobilePhone": "Mobiltelefonnummer",
+    "streetAddress": "Näradress",
     "postalCode": "Postnummer",
 
     "resultState": {
