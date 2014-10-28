@@ -67,7 +67,7 @@ trait ApplicationsServletContainer {
         if(errors.isEmpty) {
           hakemusRepository.updateHakemus(lomake, haku)(updated, personOid()) match {
             case Some(saved) => Ok(saved)
-            case None => Forbidden()
+            case None => Forbidden("error" -> "Forbidden")
           }
         } else {
           BadRequest(errors)
@@ -75,7 +75,7 @@ trait ApplicationsServletContainer {
       }
       response match {
         case Some(res) => res
-        case _ => InternalServerError()
+        case _ => InternalServerError("error" -> "Internal service unavailable")
       }
     }
 
@@ -94,7 +94,7 @@ trait ApplicationsServletContainer {
           val (errors: List[ValidationError], questions: List[QuestionNode], updatedApplication: Application) = applicationValidator.validateAndFindQuestions(lomake, muutos, questionsOf, personOid())
           ValidationResult(errors, questions, hakuRepository.applicationPeriodsByOid(lomake.oid))
         }
-        case _ => InternalServerError()
+        case _ => InternalServerError("error" -> "Internal service unavailable")
       }
     }
 
@@ -109,7 +109,7 @@ trait ApplicationsServletContainer {
           contentType = formats("html")
           Ok(previewHtml)
         case None =>
-          NotFound()
+          NotFound("error" -> "Not found")
       }
     }
 
@@ -123,8 +123,7 @@ trait ApplicationsServletContainer {
       val hakemusOid = params("hakemusOid")
       val hakuOid = params("hakuOid")
       if (!hakemusRepository.exists(personOid(), hakuOid, hakemusOid)) {
-        response.setStatus(404)
-        "Not found"
+        NotFound("error" -> "Not found")
       } else {
         val clientVastaanotto = Serialization.read[ClientSideVastaanotto](request.body)
         val muokkaaja: String = "henkilö:" + personOid()
@@ -132,10 +131,13 @@ trait ApplicationsServletContainer {
         val vastaanotto = Vastaanotto(clientVastaanotto.hakukohdeOid, clientVastaanotto.tila, muokkaaja, selite)
         if(valintatulosService.vastaanota(hakemusOid, hakuOid, vastaanotto)) {
           auditLogger.log(SaveVastaanotto(personOid(), hakemusOid, hakuOid, vastaanotto))
+          hakemusRepository.getHakemus(personOid(), hakemusOid) match {
+            case Some(hakemus) => hakemus
+            case _ => NotFound("error" -> "Not found")
+          }
         } else {
-          response.setStatus(500)
+          InternalServerError("error" -> "Not receivable")
         }
-        hakemusRepository.getHakemus(personOid(), hakemusOid)
       }
     }
   }
