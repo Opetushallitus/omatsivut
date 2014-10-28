@@ -27,7 +27,6 @@ trait ApplicationsServletContainer {
     SpringContextComponent with
     AuditLoggerComponent =>
 
-  val hakuRepository: LomakeRepository
   val hakemusRepository: HakemusRepository
   val springContext: OmatSivutSpringContext
   val valintatulosService: ValintatulosService
@@ -60,7 +59,7 @@ trait ApplicationsServletContainer {
       val content: String = request.body
       val updated = Serialization.read[HakemusMuutos](content)
       val response = for {
-        lomake <- hakuRepository.lomakeByOid(updated.hakuOid)
+        lomake <- lomakeRepository.lomakeByOid(updated.hakuOid)
         haku <- tarjontaService.haku(lomake.oid, language)
       } yield {
         val errors = applicationValidator.validate(lomake, updated)
@@ -87,12 +86,12 @@ trait ApplicationsServletContainer {
     )
     post("/validate/:oid", operation(validateApplicationsSwagger)) {
       val muutos = Serialization.read[HakemusMuutos](request.body)
-      val lomakeOpt = hakuRepository.lomakeByOid(muutos.hakuOid)
+      val lomakeOpt = lomakeRepository.lomakeByOid(muutos.hakuOid)
       lomakeOpt match {
         case Some(lomake) => {
           val questionsOf: List[String] = paramOption("questionsOf").getOrElse("").split(',').toList
           val (errors: List[ValidationError], questions: List[QuestionNode], updatedApplication: Application) = applicationValidator.validateAndFindQuestions(lomake, muutos, questionsOf, personOid())
-          ValidationResult(errors, questions, hakuRepository.applicationPeriodsByOid(lomake.oid))
+          ValidationResult(errors, questions, lomakeRepository.applicationPeriodsByOid(lomake.oid))
         }
         case _ => InternalServerError("error" -> "Internal service unavailable")
       }
