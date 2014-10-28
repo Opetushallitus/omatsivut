@@ -184,10 +184,52 @@
       })
     })
 
+    describe("jos monta hakuaikaa", function() {
+      describe("kun hakuaika on aktiivinen", function() {
+        it.skip("hakuaikalistaus näkyy oikein", function() {
+        })
+
+        it.skip("hakutoiveet ovat muokattavissa", function() {
+        })
+      })
+
+      describe("kun ollaan hakuaikojen välissä", function() {
+        it.skip("hakuaikalistaus näkyy oikein", function() {
+        })
+
+        it.skip("listaa ei voi muokata", function() {
+        })
+
+        it.skip("lista on näkyvissä", function() {
+        })
+      })
+
+      describe("toisella hakuajalla", function() {
+        it.skip("ensimmäisen hakuajan hakutoiveet on lukittu", function() {
+        })
+
+        it.skip("toisen hakuajan toiveita voi lisätä", function() {
+        })
+      })
+    })
+
+    describe("hakutoivekohtaiset hakuajat", function() {
+      it.skip("hakutoive lukittuu hakutoivekohtaisen hakuajan jälkeen", function() {
+      })
+
+      it.skip("hakutoivetta ei voi lisätä jos sen hakuaika on ummessa", function() {
+      })
+    })
+
     describe("valintatulokset", function() {
       before(page.applyFixtureAndOpen({applicationOid: hakemusYhteishakuKevat2013WithForeignBaseEducationId}))
 
       var hakuaikatieto = "Opiskelijavalinta on kesken. Tulokset julkaistaan viimeistään 11. kesäkuuta 2014."
+
+      describe("jos jonkun hakutoiveen hakuaika on päättynyt ennen muita ja sen tulokset ovat jo saatavilla", function() {
+        it.skip("sekä tuloslistaus että hakutoiveet ovat näkyvissä", function() {
+        })
+      })
 
       describe("kun valintatuloksia ei ole julkaistu", function() {
         before(page.applyValintatulosFixtureAndOpen("ei-tuloksia"))
