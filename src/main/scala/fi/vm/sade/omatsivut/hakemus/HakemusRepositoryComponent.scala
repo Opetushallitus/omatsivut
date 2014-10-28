@@ -17,6 +17,8 @@ import org.joda.time.LocalDateTime
 trait HakemusRepositoryComponent {
   this: LomakeRepositoryComponent with HakemusConverterComponent with SpringContextComponent with AuditLoggerComponent with TarjontaComponent with OhjausparametritComponent =>
 
+  val hakemusRepository: HakemusRepository
+
   class RemoteHakemusRepository extends HakemusRepository {
     import scala.collection.JavaConversions._
     private val dao = springContext.applicationDAO

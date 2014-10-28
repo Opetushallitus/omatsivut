@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory
 trait AuditLoggerComponent {
   this: SpringContextComponent =>
 
-  val springContext: OmatSivutSpringContext
   val auditLogger: AuditLogger
 
   class AuditLoggerFacade(runningLogger: RunnableLogger) extends AuditLogger {

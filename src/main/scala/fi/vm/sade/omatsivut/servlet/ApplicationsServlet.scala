@@ -27,10 +27,6 @@ trait ApplicationsServletContainer {
     SpringContextComponent with
     AuditLoggerComponent =>
 
-  val hakemusRepository: HakemusRepository
-  val springContext: OmatSivutSpringContext
-  val valintatulosService: ValintatulosService
-
   class ApplicationsServlet(val appConfig: AppConfig)(implicit val swagger: Swagger) extends OmatSivutServletBase with JacksonJsonSupport with JsonFormats with SwaggerSupport with Authentication {
     override def applicationName = Some("secure/applications")
     private val applicationValidator: ApplicationValidator = newApplicationValidator

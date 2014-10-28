@@ -17,7 +17,6 @@ import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 trait ApplicationValidatorComponent {
   this: SpringContextComponent with HakemusRepositoryComponent =>
 
-  val hakemusRepository: HakemusRepository
   def newApplicationValidator: ApplicationValidator
 
   class ApplicationValidator extends Logging {
