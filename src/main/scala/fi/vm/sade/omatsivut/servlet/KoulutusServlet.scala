@@ -3,6 +3,7 @@ package fi.vm.sade.omatsivut.servlet
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.koulutusinformaatio.{KoulutusInformaatioComponent, KoulutusInformaatioService}
+import org.scalatra.NotFound
 import org.scalatra.json.JacksonJsonSupport
 import org.scalatra.swagger.{Swagger, SwaggerSupport}
 
@@ -33,7 +34,7 @@ trait KoulutusServletContainer {
     private def checkNotFound[A](result: Option[A]) = {
       result match {
         case Some(x) => x
-        case _ => response.setStatus(404)
+        case _ => NotFound("error" -> "Not found")
       }
     }
   }

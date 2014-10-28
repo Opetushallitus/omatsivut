@@ -2,6 +2,7 @@ package fi.vm.sade.omatsivut.servlet
 
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.koodisto.{KoodistoService, KoodistoComponent}
+import org.scalatra.NotFound
 import org.scalatra.json.JacksonJsonSupport
 import org.scalatra.swagger.{SwaggerSupport, Swagger}
 
@@ -27,7 +28,7 @@ trait KoodistoServletContainer {
     private def checkNotFound[A](result: Option[A]) = {
       result match {
         case Some(x) => x
-        case _ => response.setStatus(404);
+        case _ => NotFound("error" -> "Not found")
       }
     }
   }
