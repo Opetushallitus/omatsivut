@@ -9,7 +9,6 @@ import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.memoize.TTLOptionalMemoize
 import fi.vm.sade.omatsivut.ohjausparametrit.OhjausparametritComponent
 import fi.vm.sade.omatsivut.ohjausparametrit.domain.HaunAikataulu
-import fi.vm.sade.omatsivut.util.Logging
 import org.json4s.JsonAST.JValue
 
 import scala.collection.mutable
@@ -122,34 +121,8 @@ trait TarjontaComponent {
   }
 }
 
-case class TarjontaHaku(oid: String, hakuaikas: List[TarjontaHakuaika], hakutapaUri: String, hakutyyppiUri: String, kohdejoukkoUri: String, usePriority: Boolean, nimi: Map[String, String])
-case class TarjontaHakuaika(hakuaikaId: String, alkuPvm: Long, loppuPvm: Long)
 
-private object TarjontaParser extends JsonFormats {
 
-  def parseHaku(json: JValue) = {
-    for {
-      obj <- (json \ "result").toOption
-      h <- obj.extractOpt[TarjontaHaku]
-    } yield h
-  }
-
-  def parseHakukohde(json: JValue) = {
-    for {
-      obj <- (json \ "result").toOption
-      oid = (obj \ "oid").extract[String]
-      hakuaikaId = (obj \ "hakuaikaId").extractOpt[String]
-      hakuaika = createHakuaika((obj \ "hakuaikaAlkuPvm").extractOpt[Long], (obj \ "hakuaikaLoppuPvm").extractOpt[Long])
-    } yield Hakukohde(oid, hakuaikaId, hakuaika)
-  }
-
-  private def createHakuaika(hakuaikaAlkuPvm: Option[Long], hakuaikaLoppuPvm: Option[Long]) : Option[KohteenHakuaika] = {
-    (hakuaikaAlkuPvm, hakuaikaLoppuPvm) match {
-      case (Some(a), Some(l)) => Some(KohteenHakuaika(a, l))
-      case _ => None
-    }
-  }
-}
 
 trait TarjontaService {
   def haku(oid: String, lang: Language.Language) : Option[Haku]

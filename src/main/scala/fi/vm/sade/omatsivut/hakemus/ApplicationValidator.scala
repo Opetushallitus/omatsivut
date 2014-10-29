@@ -44,6 +44,7 @@ trait ApplicationValidatorComponent {
       if (isIncomplete(storedApplication)) {
         val errorsBeforeUpdate = validateAndConvertErrors(storedApplication, lomake)
         val errorsAfterUpdate: List[ValidationError] = validateAndConvertErrors(updatedApplication, lomake)
+        // add errors from moving wrong HakuToive
         errorsAfterUpdate.filter(!errorsBeforeUpdate.contains(_))
       } else {
         validateAndConvertErrors(updatedApplication, lomake)
