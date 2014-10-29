@@ -1,7 +1,7 @@
 package fi.vm.sade.omatsivut.tarjonta
 
-object HaunTyyppi extends Enumeration {
-  type HaunTyyppi = Value
+object HakuTyyppi extends Enumeration {
+  type HakuTyyppi = Value
   val Yhteishaku = Value("YHTEISHAKU")
   val Erillishaku = Value("ERILLISHAKU")
   val JatkuvaHaku = Value("JATKUVA_HAKU")
