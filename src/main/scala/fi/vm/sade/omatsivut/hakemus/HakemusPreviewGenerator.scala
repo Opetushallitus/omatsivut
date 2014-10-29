@@ -356,6 +356,8 @@ trait HakemusPreviewGeneratorComponent {
           attachmentsAnchor()
           :::
           attachmentsInfoPreview()
+          ,
+          script(`type` := "text/javascript", src := "/omatsivut/piwik/load")
         )
       )
     }
