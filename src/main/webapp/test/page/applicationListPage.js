@@ -33,6 +33,11 @@ function ApplicationListPage() {
             }
             return session.init(testHetu, params.lang)
           })
+          .then(function() {
+            if (params.overrideStart != null) {
+              return fixtures.setApplicationStart(params.applicationOid, params.overrideStart)
+            }
+          })
           .then(api.reloadPage())
       }
     },
@@ -323,13 +328,18 @@ function ApplicationListPage() {
       calloutText: function() {
         var callout = getApplicationElement().find("div[callout]:visible")
         return callout.text().trim()
+      },
+
+      isEditable: function() {
+        return this.saveButton().isVisible() && _(preferencesForApplication()).any(function(preference) { return preference.isEditable() })
       }
     }
     return api
 
     function preferencesForApplication(filter) {
+      filter = filter || function() { return true }
       var application = getApplicationElement(applicationIndex)
-      return application.find(".preference-list-item")
+      return application.find(".preference-list-item:visible")
         .map(function () {
           var el = this
           return PreferenceItem(function () {
@@ -507,8 +517,11 @@ function ApplicationListPage() {
       isEditable: function() {
         return el().find("input").is(":visible")
       },
+      isLocked: function() {
+        return !this.canRemove() && !this.isMovable()
+      },
       isMovable: function() {
-        return this.arrowDown().isEnabled() && this.arrowUp().isEnabled()
+        return this.arrowDown().isEnabled() || this.arrowUp().isEnabled()
       },
       isLoadingHakukohde: function() {
         return el().find(".ajax-spinner-small").is(":visible") && el().find(".koulutus select").is(":not(:visible)")
@@ -580,6 +593,9 @@ function ApplicationListPage() {
       },
       isEnabled: function () {
         return !el().prop("disabled")
+      },
+      isVisible: function() {
+        return el().is(":visible")
       },
       click: function () {
         el().click()

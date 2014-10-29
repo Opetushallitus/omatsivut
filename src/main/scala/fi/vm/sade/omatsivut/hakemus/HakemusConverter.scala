@@ -63,7 +63,7 @@ trait HakemusConverterComponent {
       if (isPostProcessing(application)) {
         PostProcessing()
       } else {
-        if (!haku.applicationPeriods.head.active) {
+        if (!haku.active) {
           val valintatulos = convertToValintatulos(applicationSystemId, application, hakutoiveet)
           val now = new LocalDateTime()
           if(haku.aikataulu.flatMap(_.hakukierrosPaattyy).map(new LocalDateTime(_)).getOrElse(now.plusYears(100)).isBefore(now)) {

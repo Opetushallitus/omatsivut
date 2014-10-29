@@ -174,6 +174,13 @@ fixtures = {
       }
     }
     return Q($.ajax("/omatsivut/util/fixtures/valintatulos/apply?fixturename=" + fixtureName + query, { type: "PUT" }))
+  },
+
+  setApplicationStart: function(applicationId, startTime) {
+    return db.getApplications().then(function(applications) {
+      var hakuOid = _(applications).find(function(application) { return application.oid === applicationId }).haku.oid
+      return Q($.ajax("/omatsivut/util/fixtures/haku/" + hakuOid + "/overrideStart/" + startTime, { type: "PUT" }))
+    })
   }
 }
 

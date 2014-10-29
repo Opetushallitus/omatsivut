@@ -88,7 +88,18 @@ Hakemus.prototype = {
   },
   
   preferenceLocked: function(index) {
-    return false // TODO
+    var hakuaikaId = this.hakutoiveet[index].hakuaikaId
+    var self = this
+
+    function findApplicationPeriod(applicationPeriodId) {
+      return _(self.haku.applicationPeriods).find(function(period) { return period.id === applicationPeriodId })
+    }
+
+    if (!_.isEmpty(hakuaikaId)) {
+      return !findApplicationPeriod(hakuaikaId).active
+    } else {
+      return !this.haku.active
+    }
   },
 
   allResultsAvailable: function() {
@@ -102,6 +113,10 @@ Hakemus.prototype = {
 
   valintatulosHakutoiveet: function() {
     return this.state && this.state.valintatulos ? this.state.valintatulos.hakutoiveet : []
+  },
+
+  applicationPeriodsInactive: function() {
+    return _(this.haku.applicationPeriods).every(function(period) { return !period.active })
   },
 
   editHakutoiveetEnabled: function() {
@@ -205,7 +220,7 @@ Hakemus.prototype = {
   },
 
   isEditable: function(index) {
-    return index <= this.lastIndexWithData() + 1
+    return !this.applicationPeriodsInactive() &&  index <= this.lastIndexWithData() + 1
   },
 
   lastIndexWithData: function() {

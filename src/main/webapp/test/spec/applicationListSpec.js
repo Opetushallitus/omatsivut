@@ -14,6 +14,8 @@
   var hakemusIncomplete = page.getApplication(hakemusIncompleteId)
   var hakemusKorkeakouluId = "1.2.246.562.11.00000877699"
   var hakemusKorkeakoulu = page.getApplication(hakemusKorkeakouluId)
+  var hakemusKorkeakouluKevatId = "1.2.246.562.11.00000877687"
+  var hakemusKorkeakouluKevat = page.getApplication(hakemusKorkeakouluKevatId)
 
   afterEach(function() {
     expect(window.uiError || null).to.be.null
@@ -185,27 +187,45 @@
     })
 
     describe("jos monta hakuaikaa", function() {
-      describe("kun hakuaika on aktiivinen", function() {
-        it.skip("hakuaikalistaus näkyy oikein", function() {
+      describe("kun ensimmäinen hakuaika on aktiivinen", function() {
+        before(page.applyFixtureAndOpen({applicationOid: hakemusKorkeakouluKevatId, overrideStart: daysFromNow(0) }))
+
+        it("hakuaikalistaus näkyy oikein", function() {
+          hakemusKorkeakouluKevat.applicationStatus().should.match(hakuajat("Haku käynnissä", "Hakuaika ei alkanut"))
         })
 
-        it.skip("hakutoiveet ovat muokattavissa", function() {
+        it("hakutoiveet ovat muokattavissa", function() {
+          hakemusKorkeakouluKevat.isEditable().should.be.true
         })
       })
 
       describe("kun ollaan hakuaikojen välissä", function() {
-        it.skip("hakuaikalistaus näkyy oikein", function() {
+        before(page.applyFixtureAndOpen({applicationOid: hakemusKorkeakouluKevatId, overrideStart: daysFromNow(-30)}))
+        it("hakuaikalistaus näkyy oikein", function() {
+          hakemusKorkeakouluKevat.applicationStatus().should.match(hakuajat("Hakuaika päättynyt", "Hakuaika ei alkanut"))
         })
 
-        it.skip("listaa ei voi muokata", function() {
+        it("listaa ei voi muokata", function() {
+          hakemusKorkeakouluKevat.isEditable().should.be.false
         })
 
-        it.skip("lista on näkyvissä", function() {
+        it("lista on näkyvissä", function() {
+          expect(hakemusKorkeakouluKevat.preferencesForApplication()).to.not.be.empty
         })
       })
 
       describe("toisella hakuajalla", function() {
-        it.skip("ensimmäisen hakuajan hakutoiveet on lukittu", function() {
+        before(page.applyFixtureAndOpen({applicationOid: hakemusKorkeakouluKevatId, overrideStart: daysFromNow(-70)}))
+        it("hakuaikalistaus näkyy oikein", function() {
+          hakemusKorkeakouluKevat.applicationStatus().should.match(hakuajat("Hakuaika päättynyt", "Haku käynnissä"))
+        })
+
+        it("ensimmäisen hakuajan hakutoiveet on lukittu", function() {
+          hakemusKorkeakouluKevat.getPreference(0).isLocked().should.be.true
+          hakemusKorkeakouluKevat.getPreference(1).isLocked().should.be.false
+        })
+
+        it.skip("ensimmäisen hakuajan toiveita ei voi lisätä", function() {
         })
 
         it.skip("toisen hakuajan toiveita voi lisätä", function() {
@@ -1954,5 +1974,17 @@
 
   function diffKeys(arr1, arr2) {
     return _.flatten([_.difference(arr1, arr2), _.difference(arr2, arr1)])
+  }
+
+  function daysFromNow(days) {
+    return new Date().getTime()+days*24*60*60*1000
+  }
+
+  function hakuajat() {
+    var regexp = _(arguments).map(function(text) {
+      var index = arguments.length > 1 ? "\\d\\. " : ""
+      return index + "Hakuaika \\d+.*?\\d{4} klo .*? - \\d+.*?\\d{4} klo .*?" + text
+    }).join(" ")
+    return new RegExp("^" + regexp + "$", "i")
   }
 })()

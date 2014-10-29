@@ -15,7 +15,7 @@ module.exports = function(listApp) {
           if ($scope.periods().length === 1)
             return localization("label.applicationPeriod")
           else
-            return (index+1) + " " + localization("label.applicationPeriod").toLowerCase()
+            return (index+1) + ". " + localization("label.applicationPeriod").toLowerCase()
         }
 
         $scope.statusString = function(period) {
