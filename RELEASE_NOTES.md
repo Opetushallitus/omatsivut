@@ -4,7 +4,7 @@
 
 ## QA:lla, odottaa tuotantoon siirtoa
 
-### [release-1506](https://bamboo.oph.ware.fi/deploy/viewDeploymentVersion.action?versionId=107774261)
+### [release-1536](https://bamboo.oph.ware.fi/deploy/viewDeploymentVersion.action?versionId=107774338)
 
 - Hakemuksen yhteystietojen muokkaus [OHP-115](https://jira.oph.ware.fi/jira/browse/OHP-115)
 - Piwik web-analytiikka käyttöön [OHP-104](https://jira.oph.ware.fi/jira/browse/OHP-104)
