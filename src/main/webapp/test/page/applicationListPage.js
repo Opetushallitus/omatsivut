@@ -300,12 +300,6 @@ function ApplicationListPage() {
         return getApplicationElement().find(".result-list th.ng-binding").text().trim()
       },
 
-      convertToKorkeakouluhaku: function() {
-        modifyApplicationScope(function(scope) {
-          scope.application.haku.korkeakouluhaku = true
-        })
-      },
-
       labels: function() {
         return getApplicationElement().find("label").map(function() {
           return $(this).text().split(":")[0].trim() }
