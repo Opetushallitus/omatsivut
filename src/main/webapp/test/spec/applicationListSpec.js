@@ -1610,7 +1610,7 @@
                   'Koulutus-educationDegree': '22',
                   'Koulutus-id': '1.2.246.562.14.2014032812530780195965',
                   'Koulutus-id-educationcode': 'koulutus_020075' },
-              hakuaikaId: "211367"
+              hakuaikaId: "5474"
           }
         dbEnd.hakutoiveet.should.deep.equal(dbStart.hakutoiveet.slice(0, 2).concat(newOne).concat({}).concat({}))
       })

@@ -237,7 +237,7 @@
             "jarjestelmanHakulomake": true,
             "hakuaikas": [
                 {
-                    "hakuaikaId": "219502",
+                    "hakuaikaId": "5474",
                     "nimi": "",
                     "alkuPvm": 1372654831000,
                     "loppuPvm": 1375279200000
@@ -458,7 +458,7 @@
         "jarjestelmanHakulomake": true,
         "hakuaikas": [
           {
-            "hakuaikaId": "219502",
+            "hakuaikaId": "5474",
             "nimi": "",
             "alkuPvm": 1372654831000,
             "loppuPvm": 1375279200000
@@ -679,7 +679,7 @@
             "jarjestelmanHakulomake": true,
             "hakuaikas": [
                 {
-                    "hakuaikaId": "219502",
+                    "hakuaikaId": "5474",
                     "nimi": "",
                     "alkuPvm": 1404190831839,
                     "loppuPvm": 4131320431839
@@ -3932,7 +3932,7 @@
             "jarjestelmanHakulomake": true,
             "hakuaikas": [
                 {
-                    "hakuaikaId": "211367",
+                    "hakuaikaId": "5474",
                     "alkuPvm": 1404190831839,
                     "loppuPvm": 4131320431839,
                     "nimet": {
@@ -4203,7 +4203,7 @@
             "jarjestelmanHakulomake": true,
             "hakuaikas": [
                 {
-                    "hakuaikaId": "379551",
+                    "hakuaikaId": "5474",
                     "nimi": "HAKUAIKA",
                     "alkuPvm": 1411534807344,
                     "loppuPvm": 1415019645772
