@@ -26,8 +26,8 @@ object TestFixture {
 
   val persons = Map((testHetu, personOid),
                     (testHetuWithNoApplications, "1.2.246.562.24.79213463339"))
-  val appConfig = new AppConfig.IT
-  val componentRegistry = new ComponentRegistry(appConfig)
+  lazy val appConfig = new AppConfig.IT
+  lazy val componentRegistry = new ComponentRegistry(appConfig)
 
   lazy val (applicationSystemNivelKesa2013, applicationNivelKesa2013WithPeruskouluBaseEducationApp) = {
     withConfig(new ComponentRegistry(appConfig), { registry =>

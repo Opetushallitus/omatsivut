@@ -176,9 +176,8 @@
       })
 
       describe("haun tyyppi", function() {
-        before(hakemusNivelKesa2013WithPeruskouluBaseEducation.convertToKorkeakouluhaku)
         it ("korkeakouluhaussa käytetään eri tekstejä", function() {
-          hakemusNivelKesa2013WithPeruskouluBaseEducation.labels()[0].should.equal("Korkeakoulu")
+          hakemusKorkeakoulu.labels()[0].should.equal("Korkeakoulu")
           hakemusNivelKesa2013WithPeruskouluBaseEducation.labels()[1].should.equal("Hakukohde")
           hakemusYhteishakuKevat2014WithForeignBaseEducation.labels()[0].should.equal("Opetuspiste")
           hakemusYhteishakuKevat2014WithForeignBaseEducation.labels()[1].should.equal("Hakukohde")

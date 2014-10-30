@@ -13,6 +13,7 @@ import fi.vm.sade.omatsivut.util.Timer.timed
 trait LomakeRepositoryComponent {
   this: OhjausparametritComponent with KoulutusInformaatioComponent with SpringContextComponent with TarjontaComponent =>
 
+  val lomakeRepository: LomakeRepository
   val ohjausparametritService: OhjausparametritService
   val koulutusInformaatioService: KoulutusInformaatioService
   val tarjontaService: TarjontaService

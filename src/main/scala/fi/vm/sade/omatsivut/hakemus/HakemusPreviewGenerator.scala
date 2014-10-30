@@ -22,8 +22,6 @@ import scalatags.Text.TypedTag
 trait HakemusPreviewGeneratorComponent {
   this: SpringContextComponent with HakemusConverterComponent =>
 
-  val springContext: OmatSivutSpringContext
-
   def newHakemusPreviewGenerator(language: Language.Language): HakemusPreviewGenerator
 
   class HakemusPreviewGenerator(implicit val language: Language.Language) extends Logging {
@@ -358,6 +356,8 @@ trait HakemusPreviewGeneratorComponent {
           attachmentsAnchor()
           :::
           attachmentsInfoPreview()
+          ,
+          script(`type` := "text/javascript", src := "/omatsivut/piwik/load")
         )
       )
     }

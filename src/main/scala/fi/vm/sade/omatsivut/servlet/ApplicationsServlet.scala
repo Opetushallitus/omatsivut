@@ -27,11 +27,6 @@ trait ApplicationsServletContainer {
     SpringContextComponent with
     AuditLoggerComponent =>
 
-  val hakuRepository: LomakeRepository
-  val hakemusRepository: HakemusRepository
-  val springContext: OmatSivutSpringContext
-  val valintatulosService: ValintatulosService
-
   class ApplicationsServlet(val appConfig: AppConfig)(implicit val swagger: Swagger) extends OmatSivutServletBase with JacksonJsonSupport with JsonFormats with SwaggerSupport with Authentication {
     override def applicationName = Some("secure/applications")
     private val applicationValidator: ApplicationValidator = newApplicationValidator
@@ -60,14 +55,14 @@ trait ApplicationsServletContainer {
       val content: String = request.body
       val updated = Serialization.read[HakemusMuutos](content)
       val response = for {
-        lomake <- hakuRepository.lomakeByOid(updated.hakuOid)
+        lomake <- lomakeRepository.lomakeByOid(updated.hakuOid)
         haku <- tarjontaService.haku(lomake.oid, language)
       } yield {
         val errors = applicationValidator.validate(lomake, updated)
         if(errors.isEmpty) {
           hakemusRepository.updateHakemus(lomake, haku)(updated, personOid()) match {
             case Some(saved) => Ok(saved)
-            case None => Forbidden()
+            case None => Forbidden("error" -> "Forbidden")
           }
         } else {
           BadRequest(errors)
@@ -75,7 +70,7 @@ trait ApplicationsServletContainer {
       }
       response match {
         case Some(res) => res
-        case _ => InternalServerError()
+        case _ => InternalServerError("error" -> "Internal service unavailable")
       }
     }
 
@@ -87,14 +82,14 @@ trait ApplicationsServletContainer {
     )
     post("/validate/:oid", operation(validateApplicationsSwagger)) {
       val muutos = Serialization.read[HakemusMuutos](request.body)
-      val lomakeOpt = hakuRepository.lomakeByOid(muutos.hakuOid)
+      val lomakeOpt = lomakeRepository.lomakeByOid(muutos.hakuOid)
       lomakeOpt match {
         case Some(lomake) => {
           val questionsOf: List[String] = paramOption("questionsOf").getOrElse("").split(',').toList
           val (errors: List[ValidationError], questions: List[QuestionNode], updatedApplication: Application) = applicationValidator.validateAndFindQuestions(lomake, muutos, questionsOf, personOid())
           ValidationResult(errors, questions)
         }
-        case _ => InternalServerError()
+        case _ => InternalServerError("error" -> "Internal service unavailable")
       }
     }
 
@@ -109,7 +104,7 @@ trait ApplicationsServletContainer {
           contentType = formats("html")
           Ok(previewHtml)
         case None =>
-          NotFound()
+          NotFound("error" -> "Not found")
       }
     }
 
@@ -123,8 +118,7 @@ trait ApplicationsServletContainer {
       val hakemusOid = params("hakemusOid")
       val hakuOid = params("hakuOid")
       if (!hakemusRepository.exists(personOid(), hakuOid, hakemusOid)) {
-        response.setStatus(404)
-        "Not found"
+        NotFound("error" -> "Not found")
       } else {
         val clientVastaanotto = Serialization.read[ClientSideVastaanotto](request.body)
         val muokkaaja: String = "henkilö:" + personOid()
@@ -132,10 +126,13 @@ trait ApplicationsServletContainer {
         val vastaanotto = Vastaanotto(clientVastaanotto.hakukohdeOid, clientVastaanotto.tila, muokkaaja, selite)
         if(valintatulosService.vastaanota(hakemusOid, hakuOid, vastaanotto)) {
           auditLogger.log(SaveVastaanotto(personOid(), hakemusOid, hakuOid, vastaanotto))
+          hakemusRepository.getHakemus(personOid(), hakemusOid) match {
+            case Some(hakemus) => hakemus
+            case _ => NotFound("error" -> "Not found")
+          }
         } else {
-          response.setStatus(500)
+          InternalServerError("error" -> "Not receivable")
         }
-        hakemusRepository.getHakemus(personOid(), hakemusOid)
       }
     }
   }

@@ -1,7 +1,5 @@
 package fi.vm.sade.omatsivut.hakemus
 
-import java.util
-
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 import fi.vm.sade.omatsivut.auditlog._
@@ -9,8 +7,8 @@ import fi.vm.sade.omatsivut.config.SpringContextComponent
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.domain.Language.Language
 import fi.vm.sade.omatsivut.hakemus.domain._
+import fi.vm.sade.omatsivut.lomake.LomakeRepositoryComponent
 import fi.vm.sade.omatsivut.lomake.domain.Lomake
-import fi.vm.sade.omatsivut.lomake.{LomakeRepository, LomakeRepositoryComponent}
 import fi.vm.sade.omatsivut.ohjausparametrit.OhjausparametritComponent
 import fi.vm.sade.omatsivut.tarjonta.{Haku, TarjontaComponent}
 import fi.vm.sade.omatsivut.util.Timer._
@@ -19,7 +17,7 @@ import org.joda.time.LocalDateTime
 trait HakemusRepositoryComponent {
   this: LomakeRepositoryComponent with HakemusConverterComponent with SpringContextComponent with AuditLoggerComponent with TarjontaComponent with OhjausparametritComponent =>
 
-  val hakuRepository: LomakeRepository
+  val hakemusRepository: HakemusRepository
 
   class RemoteHakemusRepository extends HakemusRepository {
     import scala.collection.JavaConversions._
@@ -36,7 +34,7 @@ trait HakemusRepositoryComponent {
     }
 
     private def isActiveHakuPeriod(lomake: Lomake)(implicit lang: Language.Language) = {
-      val applicationPeriods = hakuRepository.applicationPeriodsByOid(lomake.oid)
+      val applicationPeriods = lomakeRepository.applicationPeriodsByOid(lomake.oid)
       applicationPeriods.exists(_.active)
     }
 
@@ -124,7 +122,7 @@ trait HakemusRepositoryComponent {
           }
         }.map(application => {
           val (applicationSystemOption, hakuOption) = timed(1000, "HakuRepository get haku"){
-            hakuRepository.lomakeAndHakuByApplication(application)
+            lomakeRepository.lomakeAndHakuByApplication(application)
           }
           for {
             haku <- hakuOption
