@@ -1593,5 +1593,66 @@
             "soraKuvausKielet": [ ],
             "organisaatioRyhmaOids": [ ]
         }
+    },
+    "1.2.246.562.20.48556982121": {
+      "result" : {
+        "modified" : 1402646121403,
+        "modifiedBy" : "1.2.246.562.24.65394547667",
+        "oid" : "1.2.246.562.20.48556982121",
+        "version" : 3,
+        "hakukohteenNimet" : {
+          "kieli_sv" : "",
+          "kieli_en" : "",
+          "kieli_fi" : "Näyttelijäntyön koulutusohjelma"
+        },
+        "tarjoajaNimet" : {
+          "fi" : "Taideyliopisto,  Teatterikorkeakoulu",
+          "sv" : "Konstuniversitetet, Teaterhögskolan",
+          "en" : "University of the Arts Helsinki, Theatre Academy"
+        },
+        "koulutusmoduuliToteutusTarjoajatiedot" : {
+          "1.2.246.562.17.67659706591" : {
+            "tarjoajaOids" : [ "1.2.246.562.10.25716924136" ]
+          }
+        },
+        "tarjoajaOids" : [ "1.2.246.562.10.25716924136" ],
+        "hakuOid" : "1.2.246.562.29.95390561488",
+        "hakuaikaId" : "220208",
+        "hakukelpoisuusvaatimusUris" : [ "pohjakoulutusvaatimuskorkeakoulut_106" ],
+        "hakukohdeKoulutusOids" : [ "1.2.246.562.17.67659706591" ],
+        "alinHyvaksyttavaKeskiarvo" : 0.0,
+        "alinValintaPistemaara" : 0,
+        "ylinValintapistemaara" : 0,
+        "aloituspaikatLkm" : 12,
+        "edellisenVuodenHakijatLkm" : 0,
+        "valintojenAloituspaikatLkm" : 0,
+        "tila" : "LUONNOS",
+        "ulkoinenTunniste" : "N",
+        "koulutusAsteTyyppi" : "KORKEAKOULUTUS",
+        "toteutusTyyppi" : "KORKEAKOULUTUS",
+        "lisatiedot" : {
+          "kieli_sv" : "",
+          "kieli_en" : "",
+          "kieli_fi" : ""
+        },
+        "hakukelpoisuusVaatimusKuvaukset" : {
+          "kieli_sv" : "",
+          "kieli_en" : "",
+          "kieli_fi" : ""
+        },
+        "aloituspaikatKuvaukset" : {
+          "kieli_fi" : "12"
+        },
+        "kaytetaanJarjestelmanValintaPalvelua" : false,
+        "kaytetaanHaunPaattymisenAikaa" : false,
+        "kaytetaanHakukohdekohtaistaHakuaikaa" : false,
+        "hakukohteenLiitteet" : [ ],
+        "valintakokeet" : [ ],
+        "kaksoisTutkinto" : false,
+        "opetusKielet" : [ "kieli_fi" ],
+        "valintaPerusteKuvausKielet" : [ ],
+        "soraKuvausKielet" : [ ],
+        "organisaatioRyhmaOids" : [ ]
+      }
     }
 }
