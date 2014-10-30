@@ -4,6 +4,7 @@ import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.domain.Language.Language
 import fi.vm.sade.omatsivut.fixtures.JsonFixtureMaps
+import fi.vm.sade.omatsivut.hakemus.domain.Hakemus
 import fi.vm.sade.omatsivut.http.HttpCall
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.memoize.TTLOptionalMemoize
@@ -127,4 +128,12 @@ trait TarjontaComponent {
 trait TarjontaService {
   def haku(oid: String, lang: Language.Language) : Option[Haku]
   def hakukohde(oid: String) : Option[Hakukohde]
+
+  def inactiveHakuToiveet(hakutoiveet: List[Hakemus.HakutoiveData], haku: Haku) = {
+    val hakukohteet = hakutoiveet.flatMap(entry => entry.get("Koulutus-id").flatMap(hakukohde))
+    hakukohteet.filter(hakukohde => hakukohde.kohteenHakuaika match {
+      case Some(aika) => !aika.active
+      case _ => haku.applicationPeriods.find(_.id == hakukohde.hakuaikaId).exists(!_.active)
+    })
+  }
 }

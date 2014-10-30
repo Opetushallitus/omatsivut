@@ -45,7 +45,7 @@ class GetApplicationsSpec extends HakemusApiSpecification with FixturePerson {
         hakemus.hakutoiveet.head.kohdekohtainenHakuaika match {
           case Some(aika) =>
             aika.start must_== 1404290831839L
-            aika.end must_== 1407513600000L
+            aika.end must_== 4507513600000L
           case _ => ko("Application period doesn't match")
         }
       }

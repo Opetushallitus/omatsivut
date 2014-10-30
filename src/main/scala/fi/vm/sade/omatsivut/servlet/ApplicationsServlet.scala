@@ -3,15 +3,14 @@ package fi.vm.sade.omatsivut.servlet
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.omatsivut.auditlog.{AuditLogger, AuditLoggerComponent, SaveVastaanotto}
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
-import fi.vm.sade.omatsivut.config.{OmatSivutSpringContext, SpringContextComponent}
+import fi.vm.sade.omatsivut.config.SpringContextComponent
 import fi.vm.sade.omatsivut.hakemus._
 import fi.vm.sade.omatsivut.hakemus.domain.{HakemusMuutos, ValidationError, _}
-import fi.vm.sade.omatsivut.lomake.domain.QuestionNode
-import fi.vm.sade.omatsivut.lomake.{LomakeRepository, LomakeRepositoryComponent}
 import fi.vm.sade.omatsivut.json.JsonFormats
+import fi.vm.sade.omatsivut.lomake.LomakeRepositoryComponent
+import fi.vm.sade.omatsivut.lomake.domain.QuestionNode
 import fi.vm.sade.omatsivut.security.Authentication
-import fi.vm.sade.omatsivut.tarjonta.Hakuaika
-import fi.vm.sade.omatsivut.valintatulokset.{ValintatulosService, ValintatulosServiceComponent, Vastaanotto}
+import fi.vm.sade.omatsivut.valintatulokset.{ValintatulosServiceComponent, Vastaanotto}
 import org.json4s.jackson.Serialization
 import org.scalatra._
 import org.scalatra.json._
@@ -58,7 +57,7 @@ trait ApplicationsServletContainer {
         lomake <- lomakeRepository.lomakeByOid(updated.hakuOid)
         haku <- tarjontaService.haku(lomake.oid, language)
       } yield {
-        val errors = applicationValidator.validate(lomake, updated)
+        val errors = applicationValidator.validate(lomake, updated, haku)
         if(errors.isEmpty) {
           hakemusRepository.updateHakemus(lomake, haku)(updated, personOid()) match {
             case Some(saved) => Ok(saved)
@@ -68,10 +67,7 @@ trait ApplicationsServletContainer {
           BadRequest(errors)
         }
       }
-      response match {
-        case Some(res) => res
-        case _ => InternalServerError("error" -> "Internal service unavailable")
-      }
+      response.getOrElse(InternalServerError("error" -> "Internal service unavailable"))
     }
 
     val validateApplicationsSwagger = (apiOperation[ValidationResult]("validateApplication")
@@ -92,7 +88,6 @@ trait ApplicationsServletContainer {
         case _ => InternalServerError("error" -> "Internal service unavailable")
       }
     }
-
 
     val previewApplicationSwagger: OperationBuilder = (apiOperation[String]("previewApplication")
       summary "Hakemuksen esikatselu HTML-muodossa"

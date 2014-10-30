@@ -10,12 +10,13 @@ import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
 import fi.vm.sade.omatsivut.hakemus.domain._
 import fi.vm.sade.omatsivut.lomake.AddedQuestionFinder
 import fi.vm.sade.omatsivut.lomake.domain.{AnswerId, Lomake, QuestionNode}
+import fi.vm.sade.omatsivut.tarjonta.{Haku, Hakukohde, TarjontaComponent}
 import fi.vm.sade.omatsivut.util.Logging
 
 import scala.collection.JavaConversions._
 
 trait ApplicationValidatorComponent {
-  this: SpringContextComponent with HakemusRepositoryComponent =>
+  this: SpringContextComponent with HakemusRepositoryComponent with TarjontaComponent =>
 
   def newApplicationValidator: ApplicationValidator
 
@@ -23,10 +24,12 @@ trait ApplicationValidatorComponent {
     private val dao: ApplicationDAO = springContext.applicationDAO
     private val validator: ElementTreeValidator = springContext.validator
 
-    def validate(lomake: Lomake, hakemusMuutos: HakemusMuutos)(implicit lang: Language.Language): List[ValidationError] = {
+    def validate(lomake: Lomake, hakemusMuutos: HakemusMuutos, haku: Haku)(implicit lang: Language.Language): List[ValidationError] = {
       val storedApplication = hakemusRepository.findStoredApplicationByOid(hakemusMuutos.oid)
       val updatedApplication = update(hakemusMuutos, lomake, storedApplication)
-      validateHakutoiveetAndAnswers(updatedApplication, storedApplication, lomake) ++ errorsForUnknownAnswers(lomake, hakemusMuutos)
+      validateHakutoiveetAndAnswers(updatedApplication, storedApplication, lomake) ++
+        errorsForUnknownAnswers(lomake, hakemusMuutos) ++
+        errorsForMovingInactiveHakuToive(updatedApplication, storedApplication, haku)
     }
 
     def validateAndFindQuestions(lomake: Lomake, hakemusMuutos: HakemusMuutos, newKoulutusIds: List[String], personOid: String)(implicit lang: Language.Language): (List[ValidationError], List[QuestionNode], Application) = {
@@ -61,6 +64,16 @@ trait ApplicationValidatorComponent {
     private def validateAndConvertErrors(application: Application, appSystem: Lomake)(implicit lang: Language.Language) = {
       val result = validator.validate(convertToValidationInput(appSystem, application))
       convertoToValidationErrors(result)
+    }
+
+    private def errorsForMovingInactiveHakuToive(updatedApplication: Application, storedApplication: Application, haku: Haku): List[ValidationError] = {
+      val oldHakuToiveet = HakutoiveetConverter.convertFromAnswers(storedApplication.getAnswers.toMap.mapValues(_.toMap))
+      val newHakuToiveet = HakutoiveetConverter.convertFromAnswers(updatedApplication.getAnswers.toMap.mapValues(_.toMap))
+      val oldInactiveHakuToiveet: List[Hakukohde] = tarjontaService.inactiveHakuToiveet(oldHakuToiveet, haku)
+      val newInactiveHakuToiveet: List[Hakukohde] = tarjontaService.inactiveHakuToiveet(newHakuToiveet, haku)
+      if(oldInactiveHakuToiveet.nonEmpty) println("olds :" + oldInactiveHakuToiveet)
+      if(newInactiveHakuToiveet.nonEmpty) println("news :" + newInactiveHakuToiveet)
+      if (oldInactiveHakuToiveet == newInactiveHakuToiveet) List() else List(new ValidationError("Koulutus-id", "Lukittua hakutoivetta ei voi siirtää"))
     }
 
     private def errorsForUnknownAnswers(lomake: Lomake, hakemusMuutos: HakemusMuutos)(implicit lang: Language.Language): List[ValidationError] = {
