@@ -3,7 +3,7 @@ package fi.vm.sade.omatsivut.hakemus
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.hakemus.it.dao.ApplicationDAO
 import fi.vm.sade.haku.oppija.lomake.validation.{ElementTreeValidator, ValidationInput, ValidationResult}
-import fi.vm.sade.haku.virkailija.lomakkeenhallinta.hakulomakepohja.phase.henkilotiedot.HenkilotiedotPhase
+import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 import fi.vm.sade.omatsivut.config.SpringContextComponent
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
@@ -11,8 +11,8 @@ import fi.vm.sade.omatsivut.hakemus.domain._
 import fi.vm.sade.omatsivut.lomake.AddedQuestionFinder
 import fi.vm.sade.omatsivut.lomake.domain.{AnswerId, Lomake, QuestionNode}
 import fi.vm.sade.omatsivut.util.Logging
+
 import scala.collection.JavaConversions._
-import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 
 trait ApplicationValidatorComponent {
   this: SpringContextComponent with HakemusRepositoryComponent =>
@@ -23,28 +23,27 @@ trait ApplicationValidatorComponent {
     private val dao: ApplicationDAO = springContext.applicationDAO
     private val validator: ElementTreeValidator = springContext.validator
 
-    def validate(lomake: Lomake, hakemus: HakemusMuutos)(implicit lang: Language.Language): List[ValidationError] = {
-      val storedApplication = hakemusRepository.findStoredApplicationByOid(hakemus.oid)
-      val updatedApplication = update(hakemus, lomake, storedApplication)
-      validateHakutoiveetAndAnswers(updatedApplication, storedApplication, lomake) ++ errorsForUnknownAnswers(lomake, hakemus)
+    def validate(lomake: Lomake, hakemusMuutos: HakemusMuutos)(implicit lang: Language.Language): List[ValidationError] = {
+      val storedApplication = hakemusRepository.findStoredApplicationByOid(hakemusMuutos.oid)
+      val updatedApplication = update(hakemusMuutos, lomake, storedApplication)
+      validateHakutoiveetAndAnswers(updatedApplication, storedApplication, lomake) ++ errorsForUnknownAnswers(lomake, hakemusMuutos)
     }
 
-    def validateAndFindQuestions(lomake: Lomake, hakemus: HakemusMuutos, newKoulutusIds: List[String], personOid: String)(implicit lang: Language.Language): (List[ValidationError], List[QuestionNode], Application) = {
+    def validateAndFindQuestions(lomake: Lomake, hakemusMuutos: HakemusMuutos, newKoulutusIds: List[String], personOid: String)(implicit lang: Language.Language): (List[ValidationError], List[QuestionNode], Application) = {
       withErrorLogging {
-        val storedApplication = hakemusRepository.findStoredApplicationByOid(hakemus.oid)
+        val storedApplication = hakemusRepository.findStoredApplicationByOid(hakemusMuutos.oid)
         if (storedApplication.getPersonOid != personOid) throw new IllegalArgumentException("personId mismatch")
-        val updatedApplication = update(hakemus, lomake, storedApplication)
+        val updatedApplication = update(hakemusMuutos, lomake, storedApplication)
         val validationErrors: List[ValidationError] = validateHakutoiveetAndAnswers(updatedApplication, storedApplication, lomake)
-        val questions = AddedQuestionFinder.findQuestions(lomake)(storedApplication, hakemus, newKoulutusIds)
+        val questions = AddedQuestionFinder.findQuestions(lomake)(storedApplication, hakemusMuutos, newKoulutusIds)
         (validationErrors, questions, updatedApplication)
-      } ("Error validating application: " + hakemus.oid)
+      } ("Error validating application: " + hakemusMuutos.oid)
     }
 
     private def validateHakutoiveetAndAnswers(updatedApplication: Application, storedApplication: Application, lomake: Lomake)(implicit lang: Language.Language): List[ValidationError] = {
       if (isIncomplete(storedApplication)) {
         val errorsBeforeUpdate = validateAndConvertErrors(storedApplication, lomake)
         val errorsAfterUpdate: List[ValidationError] = validateAndConvertErrors(updatedApplication, lomake)
-        // add errors from moving wrong HakuToive
         errorsAfterUpdate.filter(!errorsBeforeUpdate.contains(_))
       } else {
         validateAndConvertErrors(updatedApplication, lomake)
@@ -55,8 +54,8 @@ trait ApplicationValidatorComponent {
       application.getState == Application.State.INCOMPLETE
     }
 
-    private def update(hakemus: HakemusMuutos, lomake: Lomake, application: Application)(implicit lang: Language.Language): Application = {
-      ApplicationUpdater.update(lomake, application.clone(), hakemus) // application is mutated
+    private def update(hakemusMuutos: HakemusMuutos, lomake: Lomake, application: Application)(implicit lang: Language.Language): Application = {
+      ApplicationUpdater.update(lomake, application.clone(), hakemusMuutos) // application is mutated
     }
 
     private def validateAndConvertErrors(application: Application, appSystem: Lomake)(implicit lang: Language.Language) = {
@@ -64,12 +63,12 @@ trait ApplicationValidatorComponent {
       convertoToValidationErrors(result)
     }
 
-    private def errorsForUnknownAnswers(lomake: Lomake, hakemus: HakemusMuutos)(implicit lang: Language.Language): List[ValidationError] = {
-      val application = hakemusRepository.findStoredApplicationByOid(hakemus.oid)
-      val allAnswers: Answers = ApplicationUpdater.getAllAnswersForApplication(lomake, application, hakemus)
+    private def errorsForUnknownAnswers(lomake: Lomake, hakemusMuutos: HakemusMuutos)(implicit lang: Language.Language): List[ValidationError] = {
+      val application = hakemusRepository.findStoredApplicationByOid(hakemusMuutos.oid)
+      val allAnswers: Answers = ApplicationUpdater.getAllAnswersForApplication(lomake, application, hakemusMuutos)
       val acceptedAnswerIds: Seq[AnswerId] = AddedQuestionFinder.findAddedQuestions(lomake, allAnswers, Hakemus.emptyAnswers).flatMap(_.answerIds).toList
 
-      val flatAnswers: List[(String, String, String)] = hakemus.answers.toList.flatMap {
+      val flatAnswers: List[(String, String, String)] = hakemusMuutos.answers.toList.flatMap {
         case (phaseId, groupAnswers) =>
           groupAnswers.toList.map { case (questionId, answer) =>
             (phaseId, questionId, answer)
