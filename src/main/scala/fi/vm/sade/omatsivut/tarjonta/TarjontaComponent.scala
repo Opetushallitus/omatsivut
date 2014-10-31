@@ -133,7 +133,7 @@ trait TarjontaService {
     val hakukohteet = hakutoiveet.flatMap(entry => entry.get("Koulutus-id").flatMap(hakukohde))
     hakukohteet.filter(hakukohde => hakukohde.kohteenHakuaika match {
       case Some(aika) => !aika.active
-      case _ => hakukohde.hakuaikaId.map((hakuaikaId: String) => haku.applicationPeriods.find(_.id == hakuaikaId).exists(!_.active)).getOrElse(false)
+      case _ => hakukohde.hakuaikaId.map((hakuaikaId: String) => haku.applicationPeriods.find(_.id == hakuaikaId).exists(!_.active)).getOrElse(!haku.active)
     })
   }
   }
