@@ -1724,8 +1724,160 @@
       "valintaPerusteKuvausKielet": [ ],
       "soraKuvausKielet": [ ],
       "organisaatioRyhmaOids": [ ]
-    },
-    "status": "OK",
-    "accessRights": { }
+    }
+  },
+  "1.2.246.562.14.2014022408541751568934":
+  {
+      "result" : {
+          "modified" : 1393225390765,
+          "modifiedBy" : "1.2.246.562.24.72707010680",
+          "oid" : "1.2.246.562.14.2014022408541751568934",
+          "version" : 1,
+          "hakukohteenNimi" : "Tuotteen suunnittelun ja valmistuksen koulutusohjelma, er (Käsi- ja taideteollisuusalan perustutkinto), Syksy 2014, valmis",
+          "hakukohteenNimiUri" : "hakukohteet_162#1",
+          "tarjoajaNimet" : {
+              "fi" : "Aitoon koulutuskeskus"
+          },
+          "koulutusmoduuliToteutusTarjoajatiedot" : {
+              "1.2.246.562.5.2014022408400819838751" : {
+                  "tarjoajaOids" : [ "1.2.246.562.10.81044480515" ]
+              }
+          },
+          "tarjoajaOids" : [ "1.2.246.562.10.81044480515" ],
+          "hakuOid" : "1.2.246.562.5.2013112910452702965370",
+          "hakuaikaId" : "164630",
+          "hakukelpoisuusvaatimusUris" : [ ],
+          "hakukohdeKoulutusOids" : [ "1.2.246.562.5.2014022408400819838751" ],
+          "hakuaikaAlkuPvm" : 1392360165561,
+          "hakuaikaLoppuPvm" : 1394805600000,
+          "alinHyvaksyttavaKeskiarvo" : 0.0,
+          "alinValintaPistemaara" : 0,
+          "ylinValintapistemaara" : 0,
+          "aloituspaikatLkm" : 2,
+          "edellisenVuodenHakijatLkm" : 0,
+          "valintojenAloituspaikatLkm" : 2,
+          "sahkoinenToimitusOsoite" : "",
+          "tila" : "JULKAISTU",
+          "koulutusAsteTyyppi" : "AMMATILLINEN_PERUSKOULUTUS",
+          "toteutusTyyppi" : "AMMATILLINEN_PERUSKOULUTUS_ERITYISOPETUKSENA",
+          "koulutuslaji" : "N",
+          "lisatiedot" : {
+              "kieli_fi#1" : "<p>Haku suoraan oppilaitokseen</p>"
+          },
+          "valintaperusteKuvaukset" : {
+              "kieli_fi#1" : ""
+          },
+          "soraKuvaukset" : { },
+          "hakukelpoisuusVaatimusKuvaukset" : { },
+          "aloituspaikatKuvaukset" : { },
+          "kaytetaanJarjestelmanValintaPalvelua" : false,
+          "kaytetaanHaunPaattymisenAikaa" : false,
+          "kaytetaanHakukohdekohtaistaHakuaikaa" : false,
+          "hakukohteenLiitteet" : [ ],
+          "liitteidenToimitusOsoite" : {
+              "version" : 0,
+              "osoiterivi1" : "Tulikalliontie 54",
+              "postinumero" : "posti_36720",
+              "postitoimipaikka" : "AITOO"
+          },
+          "valintakokeet" : [ ],
+          "kaksoisTutkinto" : false,
+          "opetusKielet" : [ "kieli_fi" ],
+          "valintaPerusteKuvausKielet" : [ ],
+          "soraKuvausKielet" : [ ],
+          "organisaatioRyhmaOids" : [ ]
+      }
+  },
+  "1.2.246.562.14.2013120515524070995659":
+  {
+      "result" : {
+          "modified" : 1392278017560,
+          "modifiedBy" : "1.2.246.562.24.76879463608",
+          "oid" : "1.2.246.562.14.2013120515524070995659",
+          "version" : 7,
+          "hakukohteenNimi" : "Liiketalouden perustutkinto, er, Kevät 2014, valmis",
+          "hakukohteenNimiUri" : "hakukohteet_430#1",
+          "tarjoajaNimet" : {
+              "fi" : "Kiipulan ammattiopisto,  Lahden toimipaikka"
+          },
+          "koulutusmoduuliToteutusTarjoajatiedot" : {
+              "1.2.246.562.5.2013091113203335212546" : {
+                  "tarjoajaOids" : [ "1.2.246.562.10.36082741939" ]
+              }
+          },
+          "tarjoajaOids" : [ "1.2.246.562.10.36082741939" ],
+          "hakuOid" : "1.2.246.562.5.2013112910452702965370",
+          "hakuaikaId" : "164630",
+          "hakukelpoisuusvaatimusUris" : [ ],
+          "hakukohdeKoulutusOids" : [ "1.2.246.562.5.2013091113203335212546" ],
+          "hakuaikaAlkuPvm" : 1389564000000,
+          "hakuaikaLoppuPvm" : 1394806500000,
+          "alinHyvaksyttavaKeskiarvo" : 0.0,
+          "alinValintaPistemaara" : 0,
+          "ylinValintapistemaara" : 0,
+          "aloituspaikatLkm" : 4,
+          "edellisenVuodenHakijatLkm" : 0,
+          "valintojenAloituspaikatLkm" : 4,
+          "sahkoinenToimitusOsoite" : "",
+          "tila" : "JULKAISTU",
+          "koulutusAsteTyyppi" : "AMMATILLINEN_PERUSKOULUTUS",
+          "toteutusTyyppi" : "AMMATILLINEN_PERUSKOULUTUS_ERITYISOPETUKSENA",
+          "koulutuslaji" : "N",
+          "lisatiedot" : {
+              "kieli_fi#1" : "<p>Opiskelijaksi haetaan Kiipulan ammattiopiston omalla hakulomakkeella. Hakuohjeita ja hakulomakkeen saat seuraavasta linkistä: <a href=\"http://www.kiipula.fi/fi/erityisopetus/hakeminen\">http://www.kiipula.fi/fi/erityisopetus/hakeminen</a>.</p>"
+          },
+          "valintaperusteKuvaukset" : {
+              "kieli_fi#1" : "<p>Valitsemme koulutukseen ensisijaisesti opinnoissaan paljon ohjausta ja tukea tarvitsevia nuoria, jotka ovat vailla ammatillista koulutusta.</p>"
+          },
+          "soraKuvaukset" : { },
+          "hakukelpoisuusVaatimusKuvaukset" : { },
+          "aloituspaikatKuvaukset" : { },
+          "kaytetaanJarjestelmanValintaPalvelua" : false,
+          "kaytetaanHaunPaattymisenAikaa" : false,
+          "kaytetaanHakukohdekohtaistaHakuaikaa" : false,
+          "hakukohteenLiitteet" : [ {
+              "oid" : "188678",
+              "version" : 0,
+              "liitteenNimi" : "Todistukset",
+              "liitteenKuvaukset" : {
+                  "kieli_fi#1" : "<p>Koulu- ja työtodistukset</p>"
+              },
+              "toimitettavaMennessa" : 1394806512015,
+              "liitteenToimitusOsoite" : {
+                  "version" : 0,
+                  "osoiterivi1" : "13 ",
+                  "postinumero" : "posti_14201",
+                  "postinumeroArvo" : "14201",
+                  "postitoimipaikka" : "TURENKI"
+              }
+          }, {
+              "oid" : "188674",
+              "version" : 0,
+              "liitteenNimi" : "Lausunnot",
+              "liitteenKuvaukset" : {
+                  "kieli_fi#1" : "<p>Lääkärin B-lausunto (alle 6 kk vanha)</p>"
+              },
+              "toimitettavaMennessa" : 1394806522506,
+              "liitteenToimitusOsoite" : {
+                  "version" : 0,
+                  "osoiterivi1" : "13 ",
+                  "postinumero" : "posti_14201",
+                  "postinumeroArvo" : "14201",
+                  "postitoimipaikka" : "TURENKI"
+              }
+          } ],
+          "liitteidenToimitusOsoite" : {
+              "version" : 0,
+              "osoiterivi1" : "13 ",
+              "postinumero" : "posti_14201",
+              "postitoimipaikka" : "TURENKI"
+          },
+          "valintakokeet" : [ ],
+          "kaksoisTutkinto" : false,
+          "opetusKielet" : [ "kieli_fi" ],
+          "valintaPerusteKuvausKielet" : [ ],
+          "soraKuvausKielet" : [ ],
+          "organisaatioRyhmaOids" : [ ]
+      }
   }
 }
