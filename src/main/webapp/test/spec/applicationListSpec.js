@@ -196,6 +196,9 @@
         it("hakutoiveet ovat muokattavissa", function() {
           hakemusKorkeakouluKevat.isEditable().should.be.true
         })
+
+        it.skip("toisen hakuajan toiveita ei voi lisätä", function() {
+        })
       })
 
       describe("kun ollaan hakuaikojen välissä", function() {

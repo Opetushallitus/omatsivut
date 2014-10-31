@@ -332,6 +332,25 @@
       "applicationEndDate": 1409224751000
     }
   ],
+  "1.2.246.562.10.25716924136": [
+    {
+      "id": "1.2.246.562.20.91527858939",
+      "name": "Äänisuunnittelun koulutusohjelma",
+      "aoIdentifier": null,
+      "educationDegree": "koulutusasteoph2002_63",
+      "childLONames": [ ],
+      "sora": false,
+      "teachingLanguages": [
+        "FI"
+      ],
+      "athleteEducation": false,
+      "kaksoistutkinto": false,
+      "vocational": false,
+      "educationCodeUri": "koulutus_622501",
+      "organizationGroups": [ ],
+      "attachments": null
+    }
+  ],
   "1.2.246.562.10.2014050812360137079853": [
     {
       "id":"1.2.246.562.20.94964838901",
