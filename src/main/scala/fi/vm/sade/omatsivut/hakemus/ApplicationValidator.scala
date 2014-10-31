@@ -71,8 +71,6 @@ trait ApplicationValidatorComponent {
       val newHakuToiveet = HakutoiveetConverter.convertFromAnswers(updatedApplication.getAnswers.toMap.mapValues(_.toMap))
       val oldInactiveHakuToiveet: List[Hakukohde] = tarjontaService.inactiveHakuToiveet(oldHakuToiveet, haku)
       val newInactiveHakuToiveet: List[Hakukohde] = tarjontaService.inactiveHakuToiveet(newHakuToiveet, haku)
-      if(oldInactiveHakuToiveet.nonEmpty) println("olds :" + oldInactiveHakuToiveet)
-      if(newInactiveHakuToiveet.nonEmpty) println("news :" + newInactiveHakuToiveet)
       if (oldInactiveHakuToiveet == newInactiveHakuToiveet) List() else List(new ValidationError("Koulutus-id", "Lukittua hakutoivetta ei voi siirtää"))
     }
 
