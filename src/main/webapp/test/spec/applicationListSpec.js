@@ -227,7 +227,12 @@
           hakemusKorkeakouluKevat.getPreference(1).isLocked().should.be.false
         })
 
-        it.skip("ensimmäisen hakuajan toiveita ei voi lisätä", function() {
+        describe("ensimmäisen hakuajan toiveen lisäys", function() {
+          before(replacePreference(hakemusKorkeakouluKevat, 3, "Taideyliopisto"))
+          before(hakemusKorkeakouluKevat.saveWaitError)
+          it("aiheuttaa virheen", function() {
+            hakemusKorkeakouluKevat.getPreference(3).errorMessage().should.equal("Hakukohteen hakuaika ei ole voimassa")
+          })
         })
 
         it.skip("toisen hakuajan toiveita voi lisätä", function() {
