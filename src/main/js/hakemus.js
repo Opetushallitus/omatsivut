@@ -92,7 +92,7 @@ Hakemus.prototype = {
     var self = this
 
     function findApplicationPeriod(applicationPeriodId) {
-      return _(self.haku.applicationPeriods).find(function(period) { return period.id === applicationPeriodId })
+      return _(self.haku.applicationPeriods).find(function(period) { return period.id === applicationPeriodId }) || {}
     }
 
     if (!_.isEmpty(hakuaikaId)) {
