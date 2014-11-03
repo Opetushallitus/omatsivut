@@ -20,7 +20,6 @@ trait TarjontaComponent {
   val tarjontaService: TarjontaService
 
   class StubbedTarjontaService extends TarjontaService with JsonFormats {
-
     private val timeOverrides = mutable.Map[String, Long]()
 
     private def parseHaku(oid: String, lang: Language.Language) = {
@@ -107,7 +106,6 @@ trait TarjontaComponent {
   }
 
   class RemoteTarjontaService(implicit appConfig: AppConfig) extends TarjontaService with HttpCall {
-
     override def haku(oid: String, lang: Language.Language) : Option[Haku] = {
       withHttpGet("Tarjonta fetch haku", appConfig.settings.tarjontaUrl + "/haku/" + oid, {_.flatMap(TarjontaParser.parseHaku).map({ tarjontaHaku =>
           val haunAikataulu = ohjausparametritService.haunAikataulu(oid)
@@ -122,9 +120,6 @@ trait TarjontaComponent {
   }
 }
 
-
-
-
 trait TarjontaService {
   def haku(oid: String, lang: Language.Language) : Option[Haku]
   def hakukohde(oid: String) : Option[Hakukohde]
@@ -136,4 +131,4 @@ trait TarjontaService {
       case _ => hakukohde.hakuaikaId.map((hakuaikaId: String) => haku.applicationPeriods.find(_.id == hakuaikaId).exists(!_.active)).getOrElse(!haku.active)
     })
   }
-  }
+}
