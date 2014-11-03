@@ -71,7 +71,17 @@ trait ApplicationValidatorComponent {
       val newHakuToiveet = HakutoiveetConverter.convertFromAnswers(updatedApplication.getAnswers.toMap.mapValues(_.toMap))
       val oldInactiveHakuToiveet: List[Hakukohde] = tarjontaService.inactiveHakuToiveet(oldHakuToiveet, haku)
       val newInactiveHakuToiveet: List[Hakukohde] = tarjontaService.inactiveHakuToiveet(newHakuToiveet, haku)
-      if (oldInactiveHakuToiveet == newInactiveHakuToiveet) List() else List(new ValidationError("Koulutus-id", "Lukittua hakutoivetta ei voi siirtää"))
+      val newHakutoiveetWithIndex = newHakuToiveet.zipWithIndex
+
+      val modifiedInActiveHakutoiveet = newInactiveHakuToiveet.filter(!oldInactiveHakuToiveet.contains(_))
+
+      val notAllowedIndexes = modifiedInActiveHakutoiveet.flatMap { hakukohde =>
+        newHakutoiveetWithIndex.find { case (hakutoive: HakutoiveData, index: Int) =>
+          hakutoive.get("Koulutus-id").map { _ == hakukohde.oid }.getOrElse(false)
+        }.map(_._2)
+      }
+
+      notAllowedIndexes.map((index) => new ValidationError("preference"+(index+1) + "-Koulutus", "Hakukohteen hakuaika ei ole voimassa"))
     }
 
     private def errorsForUnknownAnswers(lomake: Lomake, hakemusMuutos: HakemusMuutos)(implicit lang: Language.Language): List[ValidationError] = {
