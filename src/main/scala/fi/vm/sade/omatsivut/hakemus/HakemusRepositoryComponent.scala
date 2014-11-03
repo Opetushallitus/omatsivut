@@ -121,12 +121,12 @@ trait HakemusRepositoryComponent {
             !application.getState.equals(Application.State.PASSIVE)
           }
         }.map(application => {
-          val (applicationSystemOption, hakuOption) = timed(1000, "HakuRepository get haku"){
+          val (lomakeOption, hakuOption) = timed(1000, "LomakeRepository get lomake"){
             lomakeRepository.lomakeAndHakuByApplication(application)
           }
           for {
             haku <- hakuOption
-            lomake <- applicationSystemOption
+            lomake <- lomakeOption
           } yield {
             val hakemus = hakemusConverter.convertToHakemus(lomake, haku, application)
             auditLogger.log(ShowHakemus(application.getPersonOid, hakemus.oid, haku.oid))
