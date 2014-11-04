@@ -30,7 +30,7 @@ trait ApplicationValidatorComponent {
       val updatedApplication = update(hakemusMuutos, lomake, storedApplication)
       validateHakutoiveetAndAnswers(updatedApplication, storedApplication, lomake) ++
         errorsForUnknownAnswers(lomake, hakemusMuutos) ++
-        errorsForMovingInactiveHakuToive(updatedApplication, storedApplication, haku)
+        errorsForEditingInactiveHakuToive(updatedApplication, storedApplication, haku)
     }
 
     def validateAndFindQuestions(lomake: Lomake, hakemusMuutos: HakemusMuutos, newKoulutusIds: List[String], personOid: String)(implicit lang: Language.Language): (List[ValidationError], List[QuestionNode], Application) = {
@@ -67,22 +67,32 @@ trait ApplicationValidatorComponent {
       convertoToValidationErrors(result)
     }
 
-    private def errorsForMovingInactiveHakuToive(updatedApplication: Application, storedApplication: Application, haku: Haku)(implicit lang: Language.Language): List[ValidationError] = {
+    private def errorsForEditingInactiveHakuToive(updatedApplication: Application, storedApplication: Application, haku: Haku)(implicit lang: Language.Language): List[ValidationError] = {
       val oldHakuToiveet = HakutoiveetConverter.convertFromAnswers(storedApplication.getAnswers.toMap.mapValues(_.toMap))
       val newHakuToiveet = HakutoiveetConverter.convertFromAnswers(updatedApplication.getAnswers.toMap.mapValues(_.toMap))
       val oldInactiveHakuToiveet: List[Hakukohde] = tarjontaService.inactiveHakuToiveet(oldHakuToiveet, haku)
       val newInactiveHakuToiveet: List[Hakukohde] = tarjontaService.inactiveHakuToiveet(newHakuToiveet, haku)
       val newHakutoiveetWithIndex = newHakuToiveet.zipWithIndex
 
-      val modifiedInActiveHakutoiveet = newInactiveHakuToiveet.filter(!oldInactiveHakuToiveet.contains(_))
+      val addedInActiveHakutoiveet = newInactiveHakuToiveet.filter(!oldInactiveHakuToiveet.contains(_))
 
-      val notAllowedIndexes = modifiedInActiveHakutoiveet.flatMap { hakukohde =>
+      val errorsForAdded = (addedInActiveHakutoiveet.flatMap { hakukohde =>
         newHakutoiveetWithIndex.find { case (hakutoive: HakutoiveData, index: Int) =>
           hakutoive.get("Koulutus-id").map { _ == hakukohde.oid }.getOrElse(false)
         }.map(_._2)
-      }
+      }.map((index) => new ValidationError("preference"+(index+1) + "-Koulutus", Translations.getTranslation("error", "applicationPeriodNotActive")))
+      )
 
-      notAllowedIndexes.map((index) => new ValidationError("preference"+(index+1) + "-Koulutus", Translations.getTranslation("error", "applicationPeriodNotActive")))
+      val errorsForOtherModifications =
+        if (newInactiveHakuToiveet != oldInactiveHakuToiveet)
+          List(new ValidationError("koulutus-id", Translations.getTranslation("error", "applicationPeriodNotActive")))
+        else
+          List.empty
+
+      if (errorsForAdded.size != 0)
+        errorsForAdded
+      else
+        errorsForOtherModifications
     }
 
     private def errorsForUnknownAnswers(lomake: Lomake, hakemusMuutos: HakemusMuutos)(implicit lang: Language.Language): List[ValidationError] = {

@@ -1,5 +1,7 @@
 package fi.vm.sade.omatsivut.hakemus
 
+import java.util.Date
+
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.hakemus.it.dao.ApplicationDAO
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
@@ -60,6 +62,13 @@ trait HakemusApiSpecification extends ScalatraTestSupport {
 
   def setupFixture(fixtureName: String)(implicit appConfig: AppConfig) = {
     new FixtureImporter(dao, springContext.mongoTemplate).applyFixtures(fixtureName)
+  }
+
+  def setApplicationStart(applicationId: String, daysFromNow: Long)(implicit personOid: PersonOid) = {
+    withApplications { applications =>
+      val hakuOid = applications.find(_.oid == applicationId).map(_.haku.oid).get
+      put("util/fixtures/haku/" + hakuOid + "/overrideStart/" + (new Date().getTime + daysFromNow*24*60*60*1000), Iterable.empty) { }
+    }
   }
 
   def modifyHakemus[T](oid: String)(modification: (Hakemus => Hakemus))(f: Hakemus => T)(implicit personOid: PersonOid): T = {

@@ -118,5 +118,35 @@ class UpdateApplicationSpec extends HakemusApiSpecification with FixturePerson w
         status must_== 403
       }
     }
+
+    "allow reordering application preferences if application period is active" in {
+      setupFixture(hakemusKorkeakoulutKevat2014Id)
+      setApplicationStart(hakemusKorkeakoulutKevat2014Id, 0)
+      modifyHakemus (hakemusKorkeakoulutKevat2014Id){ hakemus =>
+        hakemus.copy(hakutoiveet = List(hakemus.hakutoiveet(1), hakemus.hakutoiveet(0)) ++ hakemus.hakutoiveet.slice(2, hakemus.hakutoiveet.length))
+      } { hakemus =>
+        status must_== 200
+      }
+    }
+
+    "reject reordering application preferences is application period has passed" in {
+      setupFixture(hakemusKorkeakoulutKevat2014Id)
+      setApplicationStart(hakemusKorkeakoulutKevat2014Id, -70)
+      modifyHakemus (hakemusKorkeakoulutKevat2014Id){ hakemus =>
+        hakemus.copy(hakutoiveet = hakemus.hakutoiveet.slice(0,3).reverse ++ hakemus.hakutoiveet.slice(3, hakemus.hakutoiveet.length))
+      } { hakemus =>
+        status must_== 400
+      }
+    }
+
+    "reject removing application preferences is application period has passed" in {
+      setupFixture(hakemusKorkeakoulutKevat2014Id)
+      setApplicationStart(hakemusKorkeakoulutKevat2014Id, -70)
+      modifyHakemus (hakemusKorkeakoulutKevat2014Id){ hakemus =>
+        hakemus.copy(hakutoiveet = hakemus.hakutoiveet.tail)
+      } { hakemus =>
+        status must_== 400
+      }
+    }
   }
 }
