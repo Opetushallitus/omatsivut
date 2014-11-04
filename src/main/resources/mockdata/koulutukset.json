@@ -351,6 +351,45 @@
       "attachments": null
     }
   ],
+  "1.2.246.562.10.61397511793": [
+    {
+      "id": "1.2.246.562.20.40828730156",
+      "name": "Musiikkitiede, humanististen tieteiden kandidaatti ja filosofian maisteri",
+      "aoIdentifier": null,
+      "educationDegree": "koulutusasteoph2002_72",
+      "childLONames": [ ],
+      "sora": false,
+      "teachingLanguages": [
+        "FI"
+      ],
+      "athleteEducation": false,
+      "kaksoistutkinto": false,
+      "vocational": false,
+      "educationCodeUri": "koulutus_726502",
+      "organizationGroups": [ ],
+      "attachments": null
+    }
+  ],
+  "1.2.246.562.10.39920288212": [
+    {
+      "id": "1.2.246.562.20.35798482663",
+      "name": "Informaatioverkostot, tekniikan kandidaatti ja diplomi-insinööri",
+      "aoIdentifier": null,
+      "educationDegree": "koulutusasteoph2002_63",
+      "childLONames": [ ],
+      "sora": false,
+      "teachingLanguages": [
+        "SV",
+        "FI"
+      ],
+      "athleteEducation": false,
+      "kaksoistutkinto": false,
+      "vocational": false,
+      "educationCodeUri": "koulutus_655301",
+      "organizationGroups": [ ],
+      "attachments": null
+    }
+  ],
   "1.2.246.562.10.2014050812360137079853": [
     {
       "id":"1.2.246.562.20.94964838901",

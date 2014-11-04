@@ -197,7 +197,19 @@
           hakemusKorkeakouluKevat.isEditable().should.be.true
         })
 
-        it.skip("toisen hakuajan toiveita ei voi lisätä", function() {
+        describe("ensimmäisen hakuajan toiveen lisäys", function() {
+          before(replacePreference(hakemusKorkeakouluKevat, 3, "Taideyliopisto"))
+          before(hakemusKorkeakouluKevat.saveWaitSuccess)
+          it("onnistuu", function() {
+          })
+        })
+
+        describe("toisen hakuajan toiveen lisäys", function() {
+          before(replacePreference(hakemusKorkeakouluKevat, 3, "Aalto-yliopisto"))
+          before(hakemusKorkeakouluKevat.saveWaitError)
+          it("epäonnistuu", function() {
+            hakemusKorkeakouluKevat.getPreference(3).errorMessage().should.equal("Haku ei ole käynnissä.")
+          })
         })
       })
 
@@ -240,7 +252,12 @@
           })
         })
 
-        it.skip("toisen hakuajan toiveita voi lisätä", function() {
+        describe("toisen hakuajan toiveen lisäys", function() {
+          before(hakemusKorkeakouluKevat.getPreference(1).remove)
+          before(replacePreference(hakemusKorkeakouluKevat, 2, "Helsingin yliopisto, Humanistinen tiedekunta"))
+          before(hakemusKorkeakouluKevat.saveWaitSuccess)
+          it("onnistuu", function() {
+          })
         })
       })
     })
@@ -766,19 +783,21 @@
 
       describe("incomplete-tilassa oleva hakemus", function() {
         before(page.applyFixtureAndOpen({applicationOid: hakemusIncompleteId}))
+
         it("hakemusta voi muokata", function() {
           hakemusIncomplete.preferencesForApplication().length.should.not.equal(0)
         })
 
-        it("muokkaus ei aiheuta validaatiovirhettä", function() {
-          return hakemusIncomplete.getPreference(0).moveDown()
-            .then(function() {
-              hakemusIncomplete.statusMessage().should.equal("Muista tallentaa muutokset")
-            })
-        })
+        describe("muokkaus", function() {
+          before(hakemusIncomplete.getPreference(0).moveDown)
 
-        it("tallennus ei aiheuta virhettä", function() {
-          return hakemusIncomplete.saveWaitSuccess()
+          it("ei aiheuta validaatiovirhettä", function() {
+            hakemusIncomplete.statusMessage().should.equal("Muista tallentaa muutokset")
+          })
+
+          it("tallennus ei aiheuta virhettä", function() {
+            return hakemusIncomplete.saveWaitSuccess()
+          })
         })
       })
     })

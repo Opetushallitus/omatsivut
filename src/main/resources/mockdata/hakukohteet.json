@@ -1879,5 +1879,65 @@
           "soraKuvausKielet" : [ ],
           "organisaatioRyhmaOids" : [ ]
       }
+  },
+  "1.2.246.562.20.35798482663": {
+    "result": {
+      "modified": 1415095207393,
+      "modifiedBy": "1.2.246.562.24.00000000001",
+      "oid": "1.2.246.562.20.35798482663",
+      "version": 2,
+      "hakukohteenNimet": {
+        "kieli_sv": "Informationsnätverk, teknologie kandidat- och diplomingenjörexamen",
+        "kieli_en": "",
+        "kieli_fi": "Informaatioverkostot, tekniikan kandidaatti ja diplomi-insinööri"
+      },
+      "tarjoajaNimet": {
+        "fi": "Aalto-yliopisto, Perustieteiden korkeakoulu",
+        "sv": "Aalto-universitetet, Högskolan för teknikvetenskaper",
+        "en": "Aalto University, School of Science"
+      },
+      "koulutusmoduuliToteutusTarjoajatiedot": {
+        "1.2.246.562.17.29569410615": {
+          "tarjoajaOids": [ "1.2.246.562.10.39920288212" ]
+        }
+      },
+      "tarjoajaOids": [ "1.2.246.562.10.39920288212" ],
+      "hakuOid": "1.2.246.562.29.95390561488",
+      "hakuaikaId": "220207",
+      "hakukelpoisuusvaatimusUris": [ "pohjakoulutusvaatimuskorkeakoulut_123" ],
+      "hakukohdeKoulutusOids": [ "1.2.246.562.17.29569410615" ],
+      "alinHyvaksyttavaKeskiarvo": 0.0,
+      "alinValintaPistemaara": 0,
+      "ylinValintapistemaara": 0,
+      "aloituspaikatLkm": 45,
+      "edellisenVuodenHakijatLkm": 0,
+      "valintojenAloituspaikatLkm": 0,
+      "tila": "JULKAISTU",
+      "koulutusAsteTyyppi": "KORKEAKOULUTUS",
+      "toteutusTyyppi": "KORKEAKOULUTUS",
+      "lisatiedot": {
+        "kieli_sv": "",
+        "kieli_en": "",
+        "kieli_fi": ""
+      },
+      "hakukelpoisuusVaatimusKuvaukset": {
+        "kieli_sv": "",
+        "kieli_en": "",
+        "kieli_fi": ""
+      },
+      "aloituspaikatKuvaukset": {
+        "kieli_fi": "45"
+      },
+      "kaytetaanJarjestelmanValintaPalvelua": false,
+      "kaytetaanHaunPaattymisenAikaa": false,
+      "kaytetaanHakukohdekohtaistaHakuaikaa": false,
+      "hakukohteenLiitteet": [ ],
+      "valintakokeet": [ ],
+      "kaksoisTutkinto": false,
+      "opetusKielet": [ "kieli_fi", "kieli_sv" ],
+      "valintaPerusteKuvausKielet": [ ],
+      "soraKuvausKielet": [ ],
+      "organisaatioRyhmaOids": [ ]
+    }
   }
 }
