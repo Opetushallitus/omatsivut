@@ -1420,7 +1420,7 @@
         describe("Kun tallennetaan vastaamatta pakollisiin kysymyksiin", function() {
           before(hakemusNivelKesa2013WithPeruskouluBaseEducation.saveWaitError)
           it("näytetään tallennusvirhe", function() {
-            hakemusNivelKesa2013WithPeruskouluBaseEducation.saveError().should.equal("Ei tallennettu - vastaa ensin kaikkiin lisäkysymyksiin.")
+            hakemusNivelKesa2013WithPeruskouluBaseEducation.saveError().should.equal("Ei tallennettu - tarkista syöttämäsi tiedot.")
           })
 
           it("näytetään kaikki validaatiovirheet", function() {
