@@ -659,6 +659,36 @@
       })
     })
 
+    describe("Ilmoittautuminen", function() {
+      before(page.applyFixtureAndOpen({applicationOid: hakemusYhteishakuKevat2013WithForeignBaseEducationId}))
+      describe("jos on ottanut paikan vastaan yliopistohaussa", function() {
+        before(page.applyValintatulosFixtureAndOpen("hyvaksytty-vastaanottanut"))
+        describe("Oili-ilmoittautumislinkki", function () {
+          it("Näytetään", function() {
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].tila).to.equal('Opiskelupaikka vastaanotettu')
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.ilmoittautuminen().visible).to.equal(true)
+          })
+        })
+      })
+      describe("Jos on saanut paikan, muttei vielä ottanut sitä vastaan", function() {
+        before(page.applyValintatulosFixtureAndOpen("hyvaksytty-kaikkiin"))
+
+        describe("Oili-ilmoittautumislinkki", function () {
+          it("Piilotetaan", function() {
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.ilmoittautuminen().visible).to.equal(false)
+          })
+        })
+      })
+      describe("Jos on ottanut paikan vastaan 2. asteen haussa", function() {
+        before(page.applyValintatulosFixtureAndOpen("hyvaksytty-vastaanottanut", {"haku": "toinen-aste-yhteishaku"}))
+        describe("Oili-ilmoittautumislinkki", function () {
+          it("Piilotetaan", function() {
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.ilmoittautuminen().visible).to.equal(false)
+          })
+        })
+      })
+    })
+
     describe("hakemuksen tila", function() {
       describe("passiivinen hakemus", function() {
         before(page.applyFixtureAndOpen({fixtureName:"passiveApplication"}))
@@ -1160,7 +1190,7 @@
       it("kysymykset näytetään", function() {
         var questionTitles = hakemusKorkeakoulu.questionsForApplication().titles()
         expect(questionTitles).to.deep.equal([
-          'Tällä alalla on terveydentilavaatimuksia, jotka voivat olla opiskelijaksi ottamisen esteenä. Onko sinulla terveydellisiä tekijöitä, jotka voivat olla opiskelijaksi ottamisen esteenä?',
+          'Tällä alalla on terveydentilavaatimuksia, jotka vOilit olla opiskelijaksi ottamisen esteenä. Onko sinulla terveydellisiä tekijöitä, jotka vOilit olla opiskelijaksi ottamisen esteenä?',
           'Tässä koulutuksessa opiskelijaksi ottamisen esteenä voi olla aiempi päätös opiskeluoikeuden peruuttamisessa. Onko opiskeluoikeutesi aiemmin peruutettu terveydentilasi tai muiden henkilöiden turvallisuuden vaarantamisen takia?',
           'Haluaisitko suorittaa lukion ja/tai ylioppilastutkinnon samaan aikaan kuin ammatillisen perustutkinnon?'
           ])

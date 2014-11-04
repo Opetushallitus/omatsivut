@@ -111,7 +111,6 @@ function ApplicationListPage() {
 
   function Application(applicationIndex) {
     var api = {
-
       saveWaitSuccess: function() {
         modifyApplicationScope(function(scope) { scope.application.updated = 0 })
         return wait.until(api.saveButton().isEnabled)()
@@ -173,6 +172,14 @@ function ApplicationListPage() {
               tila: el.find("[ng-bind='valintatulosText(tulos)']").text().trim()
             }
           }).toArray()
+      },
+
+      ilmoittautuminen: function() {
+        var el = getApplicationElement(applicationIndex).find(".ilmoittautuminen")
+        return {
+          visible: el.is(":visible"),
+          linkUrl: el.find("a").attr("href")
+        }
       },
 
       yhteystiedot: function() {

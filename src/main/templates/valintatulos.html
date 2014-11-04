@@ -1,3 +1,7 @@
+<section class="ilmoittautuminen" ng-repeat="tulos in valintatulos().hakutoiveet" ng-if="tulos.ilmoittautumistila.ilmoittauduttavissa && tulos.ilmoittautumistila.ilmoittautumistapa.url">
+    <header>Tee vielä ilmoittautuminen</header>
+    <a href="{{ tulos.ilmoittautumistila.ilmoittautumistapa.url }}">Siirry ilmoittautumaan &gt;</a>
+</section>
 <table class="result-list">
     <thead>
         <th>{{ status }}</th>

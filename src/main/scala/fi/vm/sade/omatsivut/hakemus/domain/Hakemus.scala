@@ -5,6 +5,7 @@ import fi.vm.sade.omatsivut.hakemus.domain.ResultState.ResultState
 import fi.vm.sade.omatsivut.hakemus.domain.HakutoiveenValintatulosTila.HakutoiveenValintatulosTila
 import fi.vm.sade.omatsivut.hakemus.domain.VastaanotettavuusTila.VastaanotettavuusTila
 import fi.vm.sade.omatsivut.tarjonta.{KohteenHakuaika, Haku}
+import fi.vm.sade.omatsivut.valintatulokset.HakutoiveenIlmoittautumistila
 
 object Hakemus {
   type Answers = Map[String, Map[String, String]]
@@ -72,7 +73,7 @@ case class HakutoiveenValintatulos(
                                     vastaanotettavuustila: VastaanotettavuusTila,
                                     vastaanotettavissaAsti: Option[Long],
                                     viimeisinValintatuloksenMuutos: Option[Long],
-                                    ilmoittautumistila: Option[String],
+                                    ilmoittautumistila: Option[HakutoiveenIlmoittautumistila],
                                     jonosija: Option[Int],
                                     varasijojaTaytetaanAsti: Option[Long],
                                     varasijanumero: Option[Int],

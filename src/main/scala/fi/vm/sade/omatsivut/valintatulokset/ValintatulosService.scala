@@ -20,7 +20,7 @@ case class HakutoiveenValintatulos(hakukohdeOid: String,
                                    tarjoajaOid: String,
                                    valintatila: String,
                                    vastaanottotila: Option[String],
-                                   ilmoittautumistila: Option[String],
+                                   ilmoittautumistila: Option[HakutoiveenIlmoittautumistila],
                                    vastaanotettavuustila: String,
                                    viimeisinValintatuloksenMuutos: Option[Date],
                                    jonosija: Option[Int],
@@ -28,6 +28,19 @@ case class HakutoiveenValintatulos(hakukohdeOid: String,
                                    varasijojaTaytetaanAsti: Option[Date],
                                    varasijanumero: Option[Int],
                                    tilanKuvaukset: Map[String, String])
+
+case class HakutoiveenIlmoittautumistila(
+                                          ilmoittautumisaika: Ilmoittautumisaika,
+                                          ilmoittautumistapa: Option[Ilmoittautumistapa],
+                                          ilmoittautumistila: String,
+                                          ilmoittauduttavissa: Boolean
+                                          )
+case class Ilmoittautumistapa(
+  nimi: Option[Map[String, String]],
+  url: Option[String]
+)
+
+case class Ilmoittautumisaika(alku: Option[Date], loppu: Option[Date], aktiivinen: Boolean)
 
 case class Vastaanotto(hakukohdeOid: String, tila: String, muokkaaja: String, selite: String)
 
