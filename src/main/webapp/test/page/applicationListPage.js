@@ -343,6 +343,12 @@ function ApplicationListPage() {
     }
 
     function getApplicationElement() {
+      var el = doGetApplicationElement()
+      if (el.get(0)) el.get(0).scrollIntoView()
+      return el
+    }
+
+    function doGetApplicationElement() {
       if (typeof applicationIndex == "number") {
         return S("#hakemus-list>li").eq(applicationIndex)
       } else {
