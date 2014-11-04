@@ -4,11 +4,11 @@
 
 ## QA:lla, odottaa tuotantoon siirtoa
 
+## Tuotannossa
+
 ### [release-1648](https://bamboo.oph.ware.fi/deploy/viewDeploymentVersion.action?versionId=109477953)
 
-- Korjattu application system cache Hakemus-api:ssa (HAKU-BM-242)[https://bamboo.oph.ware.fi/browse/HAKU-BM-242] (OVT-8894)[https://jira.oph.ware.fi/jira/browse/OVT-8894]
-
-## Tuotannossa
+- Korjattu application system cache Hakemus-api:ssa [HAKU-BM-242](https://bamboo.oph.ware.fi/browse/HAKU-BM-242) [OVT-8894](https://jira.oph.ware.fi/jira/browse/OVT-8894)
 
 ### [release-1536](https://bamboo.oph.ware.fi/deploy/viewDeploymentVersion.action?versionId=107774338)
 
