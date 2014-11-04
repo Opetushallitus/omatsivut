@@ -8,6 +8,7 @@ import fi.vm.sade.omatsivut.config.SpringContextComponent
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
 import fi.vm.sade.omatsivut.hakemus.domain._
+import fi.vm.sade.omatsivut.localization.Translations
 import fi.vm.sade.omatsivut.lomake.AddedQuestionFinder
 import fi.vm.sade.omatsivut.lomake.domain.{AnswerId, Lomake, QuestionNode}
 import fi.vm.sade.omatsivut.tarjonta.{Haku, Hakukohde, TarjontaComponent}
@@ -66,7 +67,7 @@ trait ApplicationValidatorComponent {
       convertoToValidationErrors(result)
     }
 
-    private def errorsForMovingInactiveHakuToive(updatedApplication: Application, storedApplication: Application, haku: Haku): List[ValidationError] = {
+    private def errorsForMovingInactiveHakuToive(updatedApplication: Application, storedApplication: Application, haku: Haku)(implicit lang: Language.Language): List[ValidationError] = {
       val oldHakuToiveet = HakutoiveetConverter.convertFromAnswers(storedApplication.getAnswers.toMap.mapValues(_.toMap))
       val newHakuToiveet = HakutoiveetConverter.convertFromAnswers(updatedApplication.getAnswers.toMap.mapValues(_.toMap))
       val oldInactiveHakuToiveet: List[Hakukohde] = tarjontaService.inactiveHakuToiveet(oldHakuToiveet, haku)
@@ -81,7 +82,7 @@ trait ApplicationValidatorComponent {
         }.map(_._2)
       }
 
-      notAllowedIndexes.map((index) => new ValidationError("preference"+(index+1) + "-Koulutus", "Hakukohteen hakuaika ei ole voimassa"))
+      notAllowedIndexes.map((index) => new ValidationError("preference"+(index+1) + "-Koulutus", Translations.getTranslation("error", "applicationPeriodNotActive")))
     }
 
     private def errorsForUnknownAnswers(lomake: Lomake, hakemusMuutos: HakemusMuutos)(implicit lang: Language.Language): List[ValidationError] = {

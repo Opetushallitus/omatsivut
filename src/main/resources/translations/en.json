@@ -94,6 +94,7 @@
     "saveFailed": "Save failed. Try again later.",
     "saveFailed_sessionExpired": "Save failed because your session has expired. Please log in.",
     "saveFailed_validationError": "Could not save application - Please fill in all required information.",
+    "applicationPeriodNotActive": "You can't apply at this time.",
     "serverError": "Unexpected error. Contact administrator."
   },
 

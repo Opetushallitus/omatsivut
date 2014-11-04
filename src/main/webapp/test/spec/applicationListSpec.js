@@ -231,7 +231,7 @@
           before(replacePreference(hakemusKorkeakouluKevat, 3, "Taideyliopisto"))
           before(hakemusKorkeakouluKevat.saveWaitError)
           it("aiheuttaa virheen", function() {
-            hakemusKorkeakouluKevat.getPreference(3).errorMessage().should.equal("Hakukohteen hakuaika ei ole voimassa")
+            hakemusKorkeakouluKevat.getPreference(3).errorMessage().should.equal("Haku ei ole käynnissä.")
           })
         })
 

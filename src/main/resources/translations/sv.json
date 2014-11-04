@@ -93,6 +93,7 @@
     "saveFailed": "Sparandet misslyckades. Försök på nytt senare.",
     "saveFailed_sessionExpired": "Sparandet misslyckades för att sessionen har föråldrats. Logga in på nytt.",
     "saveFailed_validationError": "Sparades inte – svara först på alla tilläggsfrågor.",
+    "applicationPeriodNotActive": "Haku ei ole käynnissä.",
     "serverError": "Ett oväntat fel inträffade. Var vänlig och kontakta administrationen."
   },
 
