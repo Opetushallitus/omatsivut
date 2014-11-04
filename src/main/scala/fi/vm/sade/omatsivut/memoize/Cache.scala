@@ -1,6 +1,6 @@
 package fi.vm.sade.omatsivut.memoize
 
-import com.google.common.cache.{Cache => GuavaCache, CacheBuilder}
+import com.google.common.cache.{Cache => GuavaCache, CacheStats, CacheBuilder}
 import java.util.concurrent.{Callable, TimeUnit}
 
 sealed trait Caching[K , V] {
@@ -35,6 +35,10 @@ class Cache[K, V](cache: GuavaCache[K,V]) extends Caching[K, V] {
   def size: Long = {
     cache.size()
   }
+
+  def stats: CacheStats = {
+    cache.stats()
+  }
 }
 
 object TTLCache {
@@ -49,6 +53,7 @@ object TTLCache {
     val ttlCache: GuavaCache[K, V] =
       CacheBuilder
         .newBuilder()
+        .recordStats()
         .expireAfterWrite(duration, TimeUnit.SECONDS)
         .maximumSize(maxSize)
         .build().asInstanceOf[GuavaCache[K, V]]
