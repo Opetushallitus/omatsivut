@@ -214,6 +214,11 @@
         it("lista on näkyvissä", function() {
           expect(hakemusKorkeakouluKevat.preferencesForApplication()).to.not.be.empty
         })
+
+        it("yhteystietoja voi muokata", function() {
+          hakemusKorkeakouluKevat.yhteystiedot().isVisible().should.be.true
+          hakemusKorkeakouluKevat.yhteystiedot().saveButton().isVisible().should.be.true
+        })
       })
 
       describe("toisella hakuajalla", function() {

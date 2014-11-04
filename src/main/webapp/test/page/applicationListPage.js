@@ -195,6 +195,17 @@ function ApplicationListPage() {
 
           postitoimipaikka: function() {
             return application.find("[ng-bind='application.calculatedValues.postOffice']").text()
+          },
+
+          isVisible: function() {
+            return application.find(".yhteystiedot").is(":visible")
+          },
+
+          saveButton: function() {
+            function element() {
+              return application.find("henkilotiedot").parent().find("button")
+            }
+            return Button(element)
           }
         }
       },
