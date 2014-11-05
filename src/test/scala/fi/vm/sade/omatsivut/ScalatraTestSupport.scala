@@ -12,9 +12,8 @@ trait ScalatraTestSupport extends Specification with HttpComponentsClient {
   implicit val swagger = new OmatSivutSwagger
   lazy val appConfig = AppConfigSetup.create
   lazy val componentRegistry = new ComponentRegistry(appConfig)
-  lazy val jettyLauncher = new JettyLauncher(PortChecker.findFreeLocalPort, Some("it"))
 
-  def baseUrl = "http://localhost:" + jettyLauncher.port + "/omatsivut"
+  def baseUrl = "http://localhost:" + SharedJetty.port + "/omatsivut"
 
   def authGet[A](uri: String)(f: => A)(implicit personOid: PersonOid): A = {
     get(uri, headers = authHeaders(personOid.oid))(f)
@@ -33,7 +32,17 @@ trait ScalatraTestSupport extends Specification with HttpComponentsClient {
     Map("Cookie" -> (FakeAuthentication.oidCookie + "=" + oid + "; " + shibbolethCookie))
   }
 
-  override def map(fs: => Fragments) = Step(jettyLauncher.start) ^ super.map(fs)
+  override def map(fs: => Fragments) = Step(SharedJetty.start) ^ super.map(fs)
+}
+
+object SharedJetty {
+  private lazy val jettyLauncher = new JettyLauncher(PortChecker.findFreeLocalPort, Some("it"))
+
+  def port = jettyLauncher.port
+
+  def start {
+    jettyLauncher.start
+  }
 }
 
 object AppConfigSetup {
