@@ -16,6 +16,8 @@
   var hakemusKorkeakoulu = page.getApplication(hakemusKorkeakouluId)
   var hakemusKorkeakouluKevatId = "1.2.246.562.11.00000877687"
   var hakemusKorkeakouluKevat = page.getApplication(hakemusKorkeakouluKevatId)
+  var hakemusErityisopetuksenaId = "1.2.246.562.11.00000877688"
+  var hakemusErityisopetuksena = page.getApplication(hakemusErityisopetuksenaId)
 
   afterEach(function() {
     expect(window.uiError || null).to.be.null
@@ -263,7 +265,17 @@
     })
 
     describe("hakutoivekohtaiset hakuajat", function() {
+      before(page.applyFixtureAndOpen({applicationOid: hakemusErityisopetuksenaId, overrideStart: daysFromNow(0)}))
+      it("ovat näkyvissä", function() {
+        var date = "\\d+\\. .*?\\d{4} klo \\d\\d\\.\\d\\d"
+        var dateRange = new RegExp("^" + date + " - " + date + "$")
+        hakemusErityisopetuksena.getPreference(0).hakuaika().should.match(dateRange)
+        hakemusErityisopetuksena.getPreference(1).hakuaika().should.match(dateRange)
+        hakemusErityisopetuksena.getPreference(2).hakuaika().should.equal("")
+      })
+
       it.skip("hakutoive lukittuu hakutoivekohtaisen hakuajan jälkeen", function() {
+
       })
 
       it.skip("hakutoivetta ei voi lisätä jos sen hakuaika on ummessa", function() {
