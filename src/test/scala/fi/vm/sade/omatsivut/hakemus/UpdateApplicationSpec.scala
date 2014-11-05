@@ -129,7 +129,7 @@ class UpdateApplicationSpec extends HakemusApiSpecification with FixturePerson w
       }
     }
 
-    "reject reordering application preferences is application period has passed" in {
+    "reject reordering application preferences if application period has passed" in {
       setupFixture(hakemusKorkeakoulutKevat2014Id)
       setApplicationStart(hakemusKorkeakoulutKevat2014Id, -70)
       modifyHakemus (hakemusKorkeakoulutKevat2014Id){ hakemus =>
@@ -139,10 +139,30 @@ class UpdateApplicationSpec extends HakemusApiSpecification with FixturePerson w
       }
     }
 
-    "reject removing application preferences is application period has passed" in {
+    "reject removing application preferences if application period has passed" in {
       setupFixture(hakemusKorkeakoulutKevat2014Id)
       setApplicationStart(hakemusKorkeakoulutKevat2014Id, -70)
       modifyHakemus (hakemusKorkeakoulutKevat2014Id){ hakemus =>
+        hakemus.copy(hakutoiveet = hakemus.hakutoiveet.tail)
+      } { hakemus =>
+        status must_== 400
+      }
+    }
+
+    "reject reordering application preferences if hakutoive specific application period has passed" in {
+      setupFixture(hakemusErityisopetuksenaId)
+      setApplicationStart(hakemusErityisopetuksenaId, 0)
+      modifyHakemus (hakemusErityisopetuksenaId) { hakemus =>
+        hakemus.copy(hakutoiveet = hakemus.hakutoiveet.slice(0,2).reverse ++ hakemus.hakutoiveet.slice(2, hakemus.hakutoiveet.length))
+      } { hakemus =>
+        status must_== 400
+      }
+    }
+
+    "reject removing application preferences if hakutoive specific application period has passed" in {
+      setupFixture(hakemusErityisopetuksenaId)
+      setApplicationStart(hakemusErityisopetuksenaId, 0)
+      modifyHakemus (hakemusErityisopetuksenaId) { hakemus =>
         hakemus.copy(hakutoiveet = hakemus.hakutoiveet.tail)
       } { hakemus =>
         status must_== 400
