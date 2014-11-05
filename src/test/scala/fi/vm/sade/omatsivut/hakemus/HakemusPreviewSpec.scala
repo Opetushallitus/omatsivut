@@ -9,16 +9,14 @@ import org.xml.sax.SAXParseException
 
 class HakemusPreviewSpec extends HakemusApiSpecification with FixturePerson {
   override lazy val appConfig = new AppConfig.IT
-  private val springContext: OmatSivutSpringContext = componentRegistry.springContext
-  private val dao: ApplicationDAO = springContext.applicationDAO
-  private val mongoTemplate = springContext.mongoTemplate
 
   sequential
 
   "GET /secure/applications/preview/:oid" should {
+
     "generate application preview" in {
 
-      new FixtureImporter(dao, mongoTemplate).applyOverrides("peruskoulu")
+      fixtureImporter.applyOverrides("peruskoulu")
       authGet("secure/applications/preview/" + hakemusYhteishakuKevat2014WithForeignBaseEducationId) {
         response.status must_== 200
         response.getContentType() must_== "text/html; charset=UTF-8"
@@ -67,7 +65,7 @@ class HakemusPreviewSpec extends HakemusApiSpecification with FixturePerson {
     }
 
     "support grade grid from grade 10" in {
-      new FixtureImporter(dao, mongoTemplate).applyOverrides("kymppiluokka")
+      fixtureImporter.applyOverrides("kymppiluokka")
       authGet("secure/applications/preview/" + hakemusYhteishakuKevat2014WithForeignBaseEducationId) {
         body must contain("""<tr><td id="PK_B1_column1">B1-kieli</td><td id="PK_B1_column2">englanti</td><td id="PK_B1_column3">10(9)</td><td id="PK_B1_column4">Ei arvosanaa</td><td id="PK_B1_column5">Ei arvosanaa</td></tr>""")
         body must contain("""<tr><td id="PK_MA_column1" colspan="2">Matematiikka</td><td id="PK_MA_column3">10(9)</td><td id="PK_MA_column4">Ei arvosanaa</td><td id="PK_MA_column5">Ei arvosanaa</td></tr>""")
