@@ -88,14 +88,17 @@ Hakemus.prototype = {
   },
   
   preferenceLocked: function(index) {
-    var hakuaikaId = this.hakutoiveet[index].hakuaikaId
+    var hakutoive = this.hakutoiveet[index]
+    var hakuaikaId = hakutoive.hakuaikaId
     var self = this
 
     function findApplicationPeriod(applicationPeriodId) {
       return _(self.haku.applicationPeriods).find(function(period) { return period.id === applicationPeriodId }) || {}
     }
 
-    if (!_.isEmpty(hakuaikaId)) {
+    if (!_.isEmpty(hakutoive.kohdekohtainenHakuaika)) {
+      return !hakutoive.kohdekohtainenHakuaika.active
+    } else if (!_.isEmpty(hakuaikaId)) {
       return !findApplicationPeriod(hakuaikaId).active
     } else {
       return !this.haku.active

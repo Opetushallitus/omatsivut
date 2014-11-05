@@ -274,8 +274,9 @@
         hakemusErityisopetuksena.getPreference(2).hakuaika().should.equal("")
       })
 
-      it.skip("hakutoive lukittuu hakutoivekohtaisen hakuajan jälkeen", function() {
-
+      it("hakutoive lukittuu hakutoivekohtaisen hakuajan jälkeen", function() {
+        hakemusErityisopetuksena.getPreference(0).isLocked().should.be.true
+        hakemusErityisopetuksena.getPreference(1).isLocked().should.be.true
       })
 
       it.skip("hakutoivetta ei voi lisätä jos sen hakuaika on ummessa", function() {
