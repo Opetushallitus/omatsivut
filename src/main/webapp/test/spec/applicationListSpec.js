@@ -671,11 +671,20 @@
         })
       })
       describe("Jos on saanut paikan, muttei vielä ottanut sitä vastaan", function() {
-        before(page.applyValintatulosFixtureAndOpen("hyvaksytty-kaikkiin"))
+        before(page.applyValintatulosFixtureAndOpen("hyvaksytty-kesken-julkaistavissa"))
 
         describe("Oili-ilmoittautumislinkki", function () {
           it("Piilotetaan", function() {
             expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.ilmoittautuminen().visible).to.equal(false)
+          })
+        })
+
+        describe("Kun paikka otetaan vastaan", function() {
+          before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VASTAANOTTANUT"))
+          before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send)
+
+          it("Oili-linkki tulee näkyviin", function() {
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.ilmoittautuminen().visible).to.equal(true)
           })
         })
       })
