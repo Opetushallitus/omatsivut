@@ -1190,7 +1190,7 @@
       it("kysymykset näytetään", function() {
         var questionTitles = hakemusKorkeakoulu.questionsForApplication().titles()
         expect(questionTitles).to.deep.equal([
-          'Tällä alalla on terveydentilavaatimuksia, jotka vOilit olla opiskelijaksi ottamisen esteenä. Onko sinulla terveydellisiä tekijöitä, jotka vOilit olla opiskelijaksi ottamisen esteenä?',
+          'Tällä alalla on terveydentilavaatimuksia, jotka voivat olla opiskelijaksi ottamisen esteenä. Onko sinulla terveydellisiä tekijöitä, jotka voivat olla opiskelijaksi ottamisen esteenä?',
           'Tässä koulutuksessa opiskelijaksi ottamisen esteenä voi olla aiempi päätös opiskeluoikeuden peruuttamisessa. Onko opiskeluoikeutesi aiemmin peruutettu terveydentilasi tai muiden henkilöiden turvallisuuden vaarantamisen takia?',
           'Haluaisitko suorittaa lukion ja/tai ylioppilastutkinnon samaan aikaan kuin ammatillisen perustutkinnon?'
           ])
