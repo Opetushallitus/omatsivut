@@ -113,5 +113,10 @@
     "mutual_subject": "Yhteinen oppiaine",
     "optional_subject": "Valinnainen oppiaine",
     "second_optional_subject": "Toinen valinnainen oppiaine"
+  },
+
+  "registration": {
+    "pleaseRegister": "Ilmoittaudu lukukaudelle",
+    "goToRegistration": "Siirry ilmoittautumaan"
   }
 }

@@ -113,5 +113,10 @@
     "mutual_subject": "A subject common to all students",
     "optional_subject": "An optional subject",
     "second_optional_subject": "Another optional subject"
+  },
+
+  "registration": {
+    "pleaseRegister": "Please register",
+    "goToRegistration": "Go to registration"
   }
 }
