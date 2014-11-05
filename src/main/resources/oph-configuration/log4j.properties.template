@@ -31,7 +31,7 @@ log4j.appender.Audit.MaxBackupIndex=20
 log4j.logger.fi.vm.sade.omatsivut=INFO
 # By default hide these spammers by default
 log4j.logger.org.apache.cxf=ERROR
-log4j.logger.org.springframework=ERROR
+log4j.logger.org.springframework=WARN
 log4j.logger.org.vaadin=ERROR
 log4j.logger.javax.sql=ERROR
 log4j.logger.org.apache.activemq=INFO

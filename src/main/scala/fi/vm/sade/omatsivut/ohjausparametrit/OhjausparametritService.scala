@@ -21,7 +21,7 @@ trait OhjausparametritComponent {
   object CachedRemoteOhjausparametritService {
     def apply(implicit appConfig: AppConfig): OhjausparametritService = {
       val service = new RemoteOhjausparametritService()
-      val haunAikatauluMemo = TTLOptionalMemoize.memoize(service.haunAikataulu _, 60 * 60)
+      val haunAikatauluMemo = TTLOptionalMemoize.memoize(service.haunAikataulu _, "ohjausparametrit haun aikataulu", 60 * 60)
 
       new OhjausparametritService() {
         override def haunAikataulu(asId: String) = haunAikatauluMemo(asId)

@@ -14,7 +14,7 @@ trait KoodistoService {
 
   def postOffice(postalCode: String) = officesMemo().get.get(postalCode)
 
-  private val officesMemo = TTLOptionalMemoize.memoize(getOffices _, cacheTimeSec)
+  private val officesMemo = TTLOptionalMemoize.memoize(getOffices _, "koodisto offices", cacheTimeSec)
   val service: fi.vm.sade.haku.virkailija.lomakkeenhallinta.koodisto.KoodistoService
 
   private def getOffices() : Option[Map[String, Map[String, String]]] = {

@@ -1944,7 +1944,7 @@
 
   describe("Piwik", function() {
     before(page.applyFixtureAndOpen({}))
-    it("on integroitu hakumussivulle", function() {
+    it("on integroitu hakemussivulle", function() {
         expect(page.piwikScriptSrc()).to.include("/wp/wp-content/themes/ophver3/js/piwik.js")
     })
   })
