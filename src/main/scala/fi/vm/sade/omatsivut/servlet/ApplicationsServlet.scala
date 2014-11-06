@@ -10,6 +10,7 @@ import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.lomake.LomakeRepositoryComponent
 import fi.vm.sade.omatsivut.lomake.domain.QuestionNode
 import fi.vm.sade.omatsivut.security.Authentication
+import fi.vm.sade.omatsivut.tarjonta.Hakukohde
 import fi.vm.sade.omatsivut.valintatulokset.{ValintatulosServiceComponent, Vastaanotto}
 import org.json4s.jackson.Serialization
 import org.scalatra._
@@ -82,8 +83,8 @@ trait ApplicationsServletContainer {
       lomakeOpt match {
         case Some(lomake) => {
           val questionsOf: List[String] = paramOption("questionsOf").getOrElse("").split(',').toList
-          val (errors: List[ValidationError], questions: List[QuestionNode], updatedApplication: Application) = applicationValidator.validateAndFindQuestions(lomake, muutos, questionsOf, personOid())
-          ValidationResult(errors, questions)
+          val (errors: List[ValidationError], questions: List[QuestionNode], updatedApplication: Application, hakutoiveet: List[Option[Hakukohde]]) = applicationValidator.validateAndFindQuestions(lomake, muutos, questionsOf, personOid())
+          ValidationResult(errors, questions, hakutoiveet)
         }
         case _ => InternalServerError("error" -> "Internal service unavailable")
       }
@@ -135,5 +136,5 @@ trait ApplicationsServletContainer {
 
 case class ClientSideVastaanotto(hakukohdeOid: String, tila: String)
 
-case class ValidationResult(errors: List[ValidationError], questions: List[QuestionNode])
+case class ValidationResult(errors: List[ValidationError], questions: List[QuestionNode], hakukohteet: List[Option[Hakukohde]])
 

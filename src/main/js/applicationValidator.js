@@ -58,13 +58,15 @@ module.exports = function(listApp) {
       responsePromise.success(function(data, status, headers, config) {
         if (data.errors.length === 0) {
           success({
-            questions: getQuestions(data)
+            questions: getQuestions(data),
+            response: data
           })
         } else {
           error({
             statusCode: 200,
             errors: data.errors,
-            questions: getQuestions(data)
+            questions: getQuestions(data),
+            response: data
           })
         }
       })
@@ -73,7 +75,8 @@ module.exports = function(listApp) {
         error({
           errors: [],
           statusCode: status,
-          isSaveable: true
+          isSaveable: true,
+          response: data
         })
       })
     }

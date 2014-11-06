@@ -96,7 +96,9 @@ Hakemus.prototype = {
       return _(self.haku.applicationPeriods).find(function(period) { return period.id === applicationPeriodId }) || {}
     }
 
-    if (!_.isEmpty(hakutoive.kohdekohtainenHakuaika)) {
+    if (hakutoive.addedDuringCurrentSession) {
+      return false
+    } else if (!_.isEmpty(hakutoive.kohdekohtainenHakuaika)) {
       return !hakutoive.kohdekohtainenHakuaika.active
     } else if (!_.isEmpty(hakuaikaId)) {
       return !findApplicationPeriod(hakuaikaId).active
@@ -204,6 +206,15 @@ Hakemus.prototype = {
 
   mergeValidationResult: function(validationResult) {
     this.importQuestions(validationResult.questions)
+    this.importHakuajat(validationResult.response.hakukohteet)
+  },
+
+  importHakuajat: function(hakukohteet) {
+    if (hakukohteet != null) {
+      for (var i = 0; i < this.hakutoiveet.length && i < hakukohteet.length; i++) {
+        this.hakutoiveet[i].kohdekohtainenHakuaika = hakukohteet[i].kohteenHakuaika
+      }
+    }
   },
 
   validatePreferences: function() {
