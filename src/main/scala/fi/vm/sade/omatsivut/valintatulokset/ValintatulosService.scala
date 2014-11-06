@@ -40,7 +40,7 @@ case class Ilmoittautumistapa(
   url: Option[String]
 )
 
-case class Ilmoittautumisaika(alku: Option[Date], loppu: Option[Date], aktiivinen: Boolean)
+case class Ilmoittautumisaika(alku: Option[Date], loppu: Option[Date])
 
 case class Vastaanotto(hakukohdeOid: String, tila: String, muokkaaja: String, selite: String)
 

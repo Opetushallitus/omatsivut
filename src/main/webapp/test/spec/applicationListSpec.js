@@ -336,7 +336,7 @@
           describe("ennen valintaa", function() {
             it("vastausaika näkyy", function () {
               expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).info()).to.deep.equal([
-                "Vastaa sitovasti viimeistään 10. tammikuuta 2100 klo 12.00"
+                "Vastaa sitovasti viimeistään 10. tammikuuta 2100 klo 10.00"
               ])
             })
 
@@ -389,7 +389,7 @@
           describe("ennen vastaanottoa", function() {
             it("vastausaika näkyy", function () {
               expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).info()).to.deep.equal([
-                "Vastaa sitovasti viimeistään 11. tammikuuta 2042 klo 19.05"
+                "Vastaa sitovasti viimeistään 11. tammikuuta 2042 klo 16.05"
               ])
             })
           })
@@ -417,7 +417,7 @@
 
           it("vastausaika näkyy", function() {
             expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).info()).to.deep.equal([
-                  "Vastaa sitovasti viimeistään 10. tammikuuta 2100 klo 12.00"
+                  "Vastaa sitovasti viimeistään 10. tammikuuta 2100 klo 10.00"
             ])
           })
 
@@ -460,7 +460,7 @@
 
           it("vastausaika näkyy", function() {
             expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).info()).to.deep.equal([
-                  "Vastaa sitovasti viimeistään 10. tammikuuta 2100 klo 12.00"
+                  "Vastaa sitovasti viimeistään 10. tammikuuta 2100 klo 10.00"
             ])
           })
 
