@@ -287,12 +287,22 @@
         })
       })
 
-      describe("hakutoiveen lisääminen kun haku on käynnissä", function() {
+      describe("kun haku on käynnissä", function() {
         before(function() { fixtures.setApplicationStart(hakemusErityisopetuksenaId, daysFromNow(-30)) })
-        before(replacePreference(hakemusErityisopetuksena, 2, "Kiipulan ammattiopisto"))
-        before(hakemusErityisopetuksena.saveWaitSuccess)
 
-        it("onnistuu", function() {
+        describe("hakutoiveen lisääminen", function() {
+          before(replacePreference(hakemusErityisopetuksena, 2, "Kiipulan ammattiopisto"))
+          before(hakemusErityisopetuksena.saveWaitSuccess)
+
+          it("onnistuu", function () {
+          })
+        })
+
+        describe("hakutoiveen poisto", function() {
+          before(hakemusErityisopetuksena.getPreference(1).remove)
+          before(hakemusErityisopetuksena.saveWaitSuccess)
+          it("onnistuu", function() {
+          })
         })
       })
     })
