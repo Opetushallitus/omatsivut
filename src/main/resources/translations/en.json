@@ -24,6 +24,7 @@
     "location_university": "Location",
     "education": "Study programme",
     "education_university": "Study programme",
+    "applicationPeriodForEducation": "Application period",
     "chooseLocation": "First choose location",
     "resultsPublishedDate": "Results will be published by",
     "questionGroupWithTitle": "Additional questions",

@@ -23,6 +23,7 @@
     "location_university": "Korkeakoulu",
     "education": "Hakukohde",
     "education_university": "Hakukohde",
+    "applicationPeriodForEducation": "Kohteen hakuaika",
     "chooseLocation": "Valitse ensin opetuspiste",
     "resultsPublishedDate": "Tulokset julkaistaan viimeistään",
     "questionGroupWithTitle": "Lisäkysymykset",

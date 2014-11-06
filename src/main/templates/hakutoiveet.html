@@ -43,7 +43,7 @@
             </div>
             <div class="row hakuaika" ng-if="hakutoive.kohdekohtainenHakuaika != null">
                 <label>
-                    <div class="label-column">Kohteen hakuaika:</div>
+                    <div class="label-column">{{ localization('label.applicationPeriodForEducation') }}:</div>
                     <div class="value-column">
                         <time formatted-time="hakutoive.kohdekohtainenHakuaika.start" format="LLL" /> -
                         <time formatted-time="hakutoive.kohdekohtainenHakuaika.end" format="LLL" />
