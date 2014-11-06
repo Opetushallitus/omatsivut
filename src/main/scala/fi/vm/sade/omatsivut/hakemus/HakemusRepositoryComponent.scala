@@ -26,7 +26,7 @@ trait HakemusRepositoryComponent {
 
     private def canUpdate(lomake: Lomake, originalApplication: Application, updatedApplication: Application, userOid: String)(implicit lang: Language.Language): Boolean = {
       val stateUpdateable = originalApplication.getState == Application.State.ACTIVE || originalApplication.getState == Application.State.INCOMPLETE
-      val inPostProcessing = !(originalApplication.getRedoPostProcess() == Application.PostProcessingState.DONE || originalApplication.getRedoPostProcess() == null)
+      val inPostProcessing = !(originalApplication.getRedoPostProcess == Application.PostProcessingState.DONE || originalApplication.getRedoPostProcess() == null)
       (isActiveHakuPeriod(lomake) || hasOnlyContactInfoChangesAndApplicationRoundHasNotEnded(lomake, originalApplication, updatedApplication)) &&
       stateUpdateable &&
       !inPostProcessing &&
@@ -39,8 +39,8 @@ trait HakemusRepositoryComponent {
     }
 
     private def hasOnlyContactInfoChangesAndApplicationRoundHasNotEnded(lomake: Lomake, originalApplication: Application, updatedApplication: Application): Boolean = {
-      val oldAnswers = originalApplication.getVastauksetMerged()
-      val newAnswers = updatedApplication.getVastauksetMerged()
+      val oldAnswers = originalApplication.getVastauksetMerged
+      val newAnswers = updatedApplication.getVastauksetMerged
       val allKeys = oldAnswers.keySet() ++ newAnswers.keySet()
       new LocalDateTime().isBefore(ohjausparametritService.haunAikataulu(lomake.oid).flatMap(_.hakukierrosPaattyy).map(new LocalDateTime(_ : Long)).getOrElse(new LocalDateTime().plusYears(100))) && allKeys.filter(
         key => {
