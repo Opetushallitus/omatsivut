@@ -347,7 +347,7 @@ button.delete-btn:not(.confirm) {
   font-style: italic;
 }
 
-.hakutoiveenVastaanotto {
+.hakutoiveenVastaanotto, .ilmoittautuminen {
   padding: 20px;
   margin: 10px 0px;
   background: #f2f8fa;
@@ -373,6 +373,16 @@ button.delete-btn:not(.confirm) {
 
   &.ng-leave-active {
     opacity: 0;
+  }
+
+  &.ng-enter {
+    opacity: 0;
+    -webkit-transition:2s all;
+    transition:2s all;
+  }
+
+  &.ng-enter-active {
+    opacity: 1;
   }
 }
 

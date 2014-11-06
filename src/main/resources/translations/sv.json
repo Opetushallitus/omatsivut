@@ -117,5 +117,10 @@
     "mutual_subject": "Gemensamt ämne",
     "optional_subject": "Valfritt ämne",
     "second_optional_subject": "Det andra valfria ämnet"
+  },
+
+  "registration": {
+    "pleaseRegister": "Registrera dig",
+    "goToRegistration": "Registrera"
   }
 }

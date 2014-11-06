@@ -1,3 +1,7 @@
+<section class="ilmoittautuminen" ng-repeat="tulos in valintatulos().hakutoiveet" ng-if="tulos.ilmoittautumistila.ilmoittauduttavissa && tulos.ilmoittautumistila.ilmoittautumistapa.url">
+    <h2 class="light">{{ localization('registration.pleaseRegister') }}</h2>
+    <a href="{{ tulos.ilmoittautumistila.ilmoittautumistapa.url }}">{{ localization('registration.goToRegistration') }}</a>
+</section>
 <table class="result-list">
     <thead>
         <th>{{ status }}</th>

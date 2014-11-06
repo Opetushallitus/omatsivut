@@ -465,7 +465,7 @@
           describe("ennen valintaa", function() {
             it("vastausaika näkyy", function () {
               expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).info()).to.deep.equal([
-                "Vastaa sitovasti viimeistään 10. tammikuuta 2100 klo 12.00"
+                "Vastaa sitovasti viimeistään 10. tammikuuta 2100 klo 10.00"
               ])
             })
 
@@ -518,7 +518,7 @@
           describe("ennen vastaanottoa", function() {
             it("vastausaika näkyy", function () {
               expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).info()).to.deep.equal([
-                "Vastaa sitovasti viimeistään 11. tammikuuta 2042 klo 19.05"
+                "Vastaa sitovasti viimeistään 11. tammikuuta 2042 klo 16.05"
               ])
             })
           })
@@ -546,7 +546,7 @@
 
           it("vastausaika näkyy", function() {
             expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).info()).to.deep.equal([
-                  "Vastaa sitovasti viimeistään 10. tammikuuta 2100 klo 12.00"
+                  "Vastaa sitovasti viimeistään 10. tammikuuta 2100 klo 10.00"
             ])
           })
 
@@ -589,7 +589,7 @@
 
           it("vastausaika näkyy", function() {
             expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).info()).to.deep.equal([
-                  "Vastaa sitovasti viimeistään 10. tammikuuta 2100 klo 12.00"
+                  "Vastaa sitovasti viimeistään 10. tammikuuta 2100 klo 10.00"
             ])
           })
 
@@ -783,6 +783,45 @@
             expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].tila).to.equal('Et ottanut opiskelupaikkaa vastaan määräaikaan mennessä')
             expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[1].hakukohde).to.equal('Salon lukio Lukio')
             expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[1].tila).to.equal('Peruuntunut')
+          })
+        })
+      })
+    })
+
+    describe("Ilmoittautuminen", function() {
+      before(page.applyFixtureAndOpen({applicationOid: hakemusYhteishakuKevat2013WithForeignBaseEducationId}))
+      describe("jos on ottanut paikan vastaan yliopistohaussa", function() {
+        before(page.applyValintatulosFixtureAndOpen("hyvaksytty-vastaanottanut"))
+        describe("Oili-ilmoittautumislinkki", function () {
+          it("Näytetään", function() {
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].tila).to.equal('Opiskelupaikka vastaanotettu')
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.ilmoittautuminen().visible).to.equal(true)
+          })
+        })
+      })
+      describe("Jos on saanut paikan, muttei vielä ottanut sitä vastaan", function() {
+        before(page.applyValintatulosFixtureAndOpen("hyvaksytty-kesken-julkaistavissa"))
+
+        describe("Oili-ilmoittautumislinkki", function () {
+          it("Piilotetaan", function() {
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.ilmoittautuminen().visible).to.equal(false)
+          })
+        })
+
+        describe("Kun paikka otetaan vastaan", function() {
+          before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VASTAANOTTANUT"))
+          before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send)
+
+          it("Oili-linkki tulee näkyviin", function() {
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.ilmoittautuminen().visible).to.equal(true)
+          })
+        })
+      })
+      describe("Jos on ottanut paikan vastaan 2. asteen haussa", function() {
+        before(page.applyValintatulosFixtureAndOpen("hyvaksytty-vastaanottanut", {"haku": "toinen-aste-yhteishaku"}))
+        describe("Oili-ilmoittautumislinkki", function () {
+          it("Piilotetaan", function() {
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.ilmoittautuminen().visible).to.equal(false)
           })
         })
       })

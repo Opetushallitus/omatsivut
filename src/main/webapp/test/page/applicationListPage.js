@@ -116,7 +116,6 @@ function ApplicationListPage() {
 
   function Application(applicationIndex) {
     var api = {
-
       saveWaitSuccess: function() {
         modifyApplicationScope(function(scope) { scope.application.updated = 0 })
         return wait.until(api.saveButton().isEnabled)()
@@ -178,6 +177,14 @@ function ApplicationListPage() {
               tila: el.find("[ng-bind='valintatulosText(tulos)']").text().trim()
             }
           }).toArray()
+      },
+
+      ilmoittautuminen: function() {
+        var el = getApplicationElement(applicationIndex).find(".ilmoittautuminen")
+        return {
+          visible: el.is(":visible"),
+          linkUrl: el.find("a").attr("href")
+        }
       },
 
       yhteystiedot: function() {
@@ -364,6 +371,12 @@ function ApplicationListPage() {
     }
 
     function getApplicationElement() {
+      var el = doGetApplicationElement()
+      if (el.get(0)) el.get(0).scrollIntoView()
+      return el
+    }
+
+    function doGetApplicationElement() {
       if (typeof applicationIndex == "number") {
         return S("#hakemus-list>li").eq(applicationIndex)
       } else {

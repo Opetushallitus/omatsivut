@@ -33,6 +33,8 @@ trait HakemusApiSpecification extends ScalatraTestSupport {
   private val springContext: OmatSivutSpringContext = componentRegistry.springContext
   private val dao: ApplicationDAO = springContext.applicationDAO
 
+  lazy val fixtureImporter: FixtureImporter = new FixtureImporter(dao, springContext.mongoTemplate)
+
   val personalInfoPhaseKey: String = OppijaConstants.PHASE_PERSONAL
   val preferencesPhaseKey: String = OppijaConstants.PHASE_APPLICATION_OPTIONS
   val skillsetPhaseKey: String = OppijaConstants.PHASE_GRADES

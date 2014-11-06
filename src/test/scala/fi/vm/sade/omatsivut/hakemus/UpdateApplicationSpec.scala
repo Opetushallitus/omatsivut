@@ -1,5 +1,6 @@
 package fi.vm.sade.omatsivut.hakemus
 
+import fi.vm.sade.omatsivut.fixtures.FixtureImporter
 import fi.vm.sade.omatsivut.{TimeWarp, PersonOid}
 import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.fixtures.TestFixture._
@@ -60,6 +61,8 @@ class UpdateApplicationSpec extends HakemusApiSpecification with FixturePerson w
     }
 
     "apply hiddenValues on the form" in {
+      fixtureImporter.applyFixtures()
+
       def removeDiscretionaryFlags(hakemus: Hakemus) = {
         // remove the discretionary flag to be able to test that it is automatically applied from the form
         hakemus.copy(hakutoiveet = hakemus.hakutoiveet.map { t =>
