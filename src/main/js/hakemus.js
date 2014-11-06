@@ -204,11 +204,6 @@ Hakemus.prototype = {
     }
   },
 
-  mergeValidationResult: function(validationResult) {
-    this.importQuestions(validationResult.questions)
-    this.importHakuajat(validationResult.response.hakukohteet)
-  },
-
   importHakuajat: function(hakukohteet) {
     if (hakukohteet != null) {
       for (var i = 0; i < this.hakutoiveet.length && i < hakukohteet.length; i++) {

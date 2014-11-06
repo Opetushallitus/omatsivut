@@ -33,15 +33,19 @@ trait ApplicationValidatorComponent {
         errorsForEditingInactiveHakuToive(updatedApplication, storedApplication, haku)
     }
 
-    def validateAndFindQuestions(lomake: Lomake, hakemusMuutos: HakemusMuutos, newKoulutusIds: List[String], personOid: String)(implicit lang: Language.Language): (List[ValidationError], List[QuestionNode], Application, List[Option[Hakukohde]]) = {
+    def validateAndFindQuestions(lomake: Lomake, hakemusMuutos: HakemusMuutos, haku: Haku, newKoulutusIds: List[String], personOid: String)(implicit lang: Language.Language): (List[ValidationError], List[QuestionNode], Application, List[Hakukohde]) = {
       withErrorLogging {
         val storedApplication = hakemusRepository.findStoredApplicationByOid(hakemusMuutos.oid)
         if (storedApplication.getPersonOid != personOid) throw new IllegalArgumentException("personId mismatch")
         val updatedApplication = update(hakemusMuutos, lomake, storedApplication)
-        val validationErrors: List[ValidationError] = validateHakutoiveetAndAnswers(updatedApplication, storedApplication, lomake)
+        val validationErrors: List[ValidationError] = validateHakutoiveetAndAnswers(updatedApplication, storedApplication, lomake) ++
+          errorsForEditingInactiveHakuToive(updatedApplication, storedApplication, haku)
+
         val questions = AddedQuestionFinder.findQuestions(lomake)(storedApplication, hakemusMuutos, newKoulutusIds)
         val hakutoiveet = HakutoiveetConverter.convertFromAnswers(updatedApplication.getAnswers.toMap.mapValues(_.toMap))
-        val hakuajat = hakutoiveet.map(hakutoiveData => hakutoiveData.get("Koulutus-id").map(tarjontaService.hakukohde(_)).getOrElse(None))
+        val hakuajat = hakutoiveet.map(hakutoiveData => hakutoiveData.get("Koulutus-id").map { koulutusId =>
+          tarjontaService.hakukohde(koulutusId).getOrElse(Hakukohde(koulutusId, None, None))
+        }.getOrElse(Hakukohde("", None, None)))
 
         (validationErrors, questions, updatedApplication, hakuajat)
       } ("Error validating application: " + hakemusMuutos.oid)

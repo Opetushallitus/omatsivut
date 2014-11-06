@@ -80,10 +80,11 @@ trait ApplicationsServletContainer {
     post("/validate/:oid", operation(validateApplicationsSwagger)) {
       val muutos = Serialization.read[HakemusMuutos](request.body)
       val lomakeOpt = lomakeRepository.lomakeByOid(muutos.hakuOid)
-      lomakeOpt match {
-        case Some(lomake) => {
+      val hakuOpt = tarjontaService.haku(muutos.hakuOid, language)
+      (lomakeOpt, hakuOpt) match {
+        case (Some(lomake), Some(haku)) => {
           val questionsOf: List[String] = paramOption("questionsOf").getOrElse("").split(',').toList
-          val (errors: List[ValidationError], questions: List[QuestionNode], updatedApplication: Application, hakutoiveet: List[Option[Hakukohde]]) = applicationValidator.validateAndFindQuestions(lomake, muutos, questionsOf, personOid())
+          val (errors: List[ValidationError], questions: List[QuestionNode], updatedApplication: Application, hakutoiveet: List[Hakukohde]) = applicationValidator.validateAndFindQuestions(lomake, muutos, haku, questionsOf, personOid())
           ValidationResult(errors, questions, hakutoiveet)
         }
         case _ => InternalServerError("error" -> "Internal service unavailable")
@@ -136,5 +137,5 @@ trait ApplicationsServletContainer {
 
 case class ClientSideVastaanotto(hakukohdeOid: String, tila: String)
 
-case class ValidationResult(errors: List[ValidationError], questions: List[QuestionNode], hakukohteet: List[Option[Hakukohde]])
+case class ValidationResult(errors: List[ValidationError], questions: List[QuestionNode], hakukohteet: List[Hakukohde])
 

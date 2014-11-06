@@ -88,6 +88,7 @@ Hakutoive.prototype = {
       if (key.indexOf("$")!==0 && key != "Opetuspiste")
         delete self.data[key]
     })
+    delete this.kohdekohtainenHakuaika
   },
 
   isValid: function() {

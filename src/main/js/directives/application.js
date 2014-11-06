@@ -92,7 +92,8 @@ module.exports = function(listApp) {
             setStatusMessage(localization("message.validationOk"), "info")
             $scope.isSaveable = true
             setValidatingIndicator(false)
-            $scope.application.mergeValidationResult(data)
+            $scope.application.importQuestions(data.questions)
+            $scope.application.importHakuajat(data.response.hakukohteet)
             updateValidationMessages([], skipQuestions)
           }
 
@@ -118,7 +119,10 @@ module.exports = function(listApp) {
             var updateQuestions = data.questions != null && !Hakutoive.hasHakutoiveErrors(data.errors)
 
             if (updateQuestions) // frontside validation does not include questions -> don't update
-              $scope.application.mergeValidationResult(data)
+              $scope.application.importQuestions(data.questions)
+
+            if (data.response != null)
+              $scope.application.importHakuajat(data.response.hakukohteet)
 
             updateValidationMessages(data.errors, skipQuestions)
           }
