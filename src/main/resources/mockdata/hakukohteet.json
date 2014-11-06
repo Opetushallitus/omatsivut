@@ -1939,5 +1939,100 @@
       "soraKuvausKielet": [ ],
       "organisaatioRyhmaOids": [ ]
     }
+  },
+  "1.2.246.562.14.2013120511174558582514": {
+    "result" : {
+      "modified" : 1392278156015,
+      "modifiedBy" : "1.2.246.562.24.76879463608",
+      "oid" : "1.2.246.562.14.2013120511174558582514",
+      "version" : 7,
+      "hakukohteenNimi" : "Metsäalan perustutkinto, er, Kevät 2014, valmis",
+      "hakukohteenNimiUri" : "hakukohteet_962#1",
+      "tarjoajaNimet" : {
+        "fi" : "Kiipulan ammattiopisto, Kiipulan toimipaikka"
+      },
+      "koulutusmoduuliToteutusTarjoajatiedot" : {
+        "1.2.246.562.5.2013091114430026659428" : {
+          "tarjoajaOids" : [ "1.2.246.562.10.19001332592" ]
+        }
+      },
+      "tarjoajaOids" : [ "1.2.246.562.10.19001332592" ],
+      "hakuOid" : "1.2.246.562.5.2013112910452702965370",
+      "hakuaikaId" : "164630",
+      "hakukelpoisuusvaatimusUris" : [ ],
+      "hakukohdeKoulutusOids" : [ "1.2.246.562.5.2013091114430026659428" ],
+      "hakuaikaAlkuPvm" : 1389564000000,
+      "hakuaikaLoppuPvm" : 1394806500000,
+      "alinHyvaksyttavaKeskiarvo" : 0.0,
+      "alinValintaPistemaara" : 0,
+      "ylinValintapistemaara" : 0,
+      "aloituspaikatLkm" : 6,
+      "edellisenVuodenHakijatLkm" : 0,
+      "valintojenAloituspaikatLkm" : 6,
+      "sahkoinenToimitusOsoite" : "",
+      "soraKuvausKoodiUri" : "sorakuvaus_2#1",
+      "tila" : "JULKAISTU",
+      "koulutusAsteTyyppi" : "AMMATILLINEN_PERUSKOULUTUS",
+      "toteutusTyyppi" : "AMMATILLINEN_PERUSKOULUTUS_ERITYISOPETUKSENA",
+      "koulutuslaji" : "N",
+      "lisatiedot" : {
+        "kieli_fi#1" : "<p>Opiskelijaksi haetaan Kiipulan ammattiopiston omalla hakulomakkeella. Hakuohjeita ja hakulomakkeen saat seuraavasta linkistä: <a href=\"http://www.kiipula.fi/fi/erityisopetus/hakeminen\">http://www.kiipula.fi/fi/erityisopetus/hakeminen</a>.</p>"
+      },
+      "valintaperusteKuvaukset" : {
+        "kieli_fi#1" : "<p>Valitsemme koulutukseen ensisijaisesti opinnoissaan paljon ohjausta ja tukea tarvitsevia nuoria, jotka ovat vailla ammatillista koulutusta.</p>"
+      },
+      "soraKuvaukset" : {
+        "kieli_fi#1" : "<p>Opiskelijaksi hakeutuvan terveydentilaan tai toimintakykyyn liittyvä seikka ei saa olla esteenä opiskelijaksi ottamiselle.</p> <p>Opiskelijaksi ei kuitenkaan voida ottaa sitä, joka ei ole kykenevä opintoihin liittyviin käytännön tehtäviin tai työssäoppimiseen,  jos opintoihin liittyvät turvallisuusvaatimukset sitä edellyttävät ja jos estettä ei voida kohtuullisin toimin poistaa. Henkilön terveydentilan tai toimintakyvyn osalta tulee arvioida mahdollisten sairauksien aiheuttamat rajoitteet ja sairauksien yksilöllinen hoitotilanne.</p> <p> </p> <p>TEKNIIKAN JA LIIKENTEEN ALA</p> <p>Logistiikan perustutkinto; kuljetuspalvelujen koulutusohjelma ja lentoasemapalvelujen koulutusohjelma</p> <p>Rakennusalan perustutkinto; maanrakennuskoneenkuljetuksen koulutusohjelma</p> <p>• insuliinihoitoinen diabetes</p> <p>• epilepsia tai muut tasapainoelimistön sairaudet ja toimintahäiriöt</p> <p>• sellainen näön tai kuulon heikkous, jota ei voida korjata apuvälineillä</p> <p>• sydän- ja verenkiertoelinten sairaus</p> <p>• fyysisen kuormituksen sietoa ja ulkotyössä selviytymistä rajoittava hengityselinten sairaus</p> <p>• tuki- ja liikuntaelimistön sairaus</p> <p>• munuaissairaudet</p> <p>• psyykkinen sairaus, joka estää käytännön tehtäviin tai työssäoppimiseen osallistumisen päihteiden ongelmakäyttö tai päihderiippuvuus</p>",
+        "kieli_sv#1" : "<p>Ditt hälsotillstånd eller din funktionsförmåga behöver inte vara ett hinder för antagning som studerande. Men du kan inte antas som studerande om du på grund av din hälsa eller funktionsförmåga inte kan genomföra praktiska uppgifter eller inlärning i arbetet i anslutning till studierna och om dessa hinder inte kan undanröjas med rimliga åtgärder. De begränsningar som eventuella sjukdomar medför och den individuella vårdsituationen i fråga om sjukdomarna bedöms individuellt.</p> <p>Dessa faktorer kan utgöra hinder för antagning som studerande till följande grundexamina inom teknik och kommunikation:</p> <p>Grundexamen i logistik</p> <p>- utbildningsprogrammet för transportservice, chaufför, busschaufför och kombinationsfordonsförare</p> <p>- utbildningsprogrammet för flygplatsservice, flygplatsarbetare</p> <p>Grundexamen inom byggnadsbranschen</p> <p>- utbildningsprogrammet för schaktningsmaskintransport, schaktningsmaskinförare</p> <p>• diabetes som behandlas med insulin</p> <p>• epilepsi eller andra sjukdomar och funktionsstörningar som inverkar på balansorganet</p> <p>• en syn- eller hörselnedsättning som inte kan korrigeras med hjälpmedel</p> <p>• hjärt-kärlsjukdom</p> <p>• sjukdom i andningsorganen som begränsar förmågan att klara av fysisk belastning och utomhusarbete</p> <p>• sjukdom i stöd- och rörelseorganen</p> <p>• njursjukdomar</p> <p>• en psykisk sjukdom som förhindrar deltagande i praktiska uppgifter eller inlärning i arbetet</p> <p>• missbruk eller beroende av berusningsmedel.</p> <p>Grundexamen inom skogsbranschen</p> <p>- utbildningsprogrammet för körning av skogsmaskiner, skogsmaskinsförare</p> <p>Grundexamen i natur och miljö</p> <p>- utbildningsprogrammet för miljö, miljövårdare</p> <p>• diabetes som behandlas med insulin</p> <p>• epilepsi eller andra sjukdomar och funktionsstörningar som inverkar på balansorganet</p> <p>• en syn- eller hörselnedsättning som inte kan korrigeras med hjälpmedel</p> <p>• hjärt-kärlsjukdom</p> <p>• sjukdom i andningsorganen som begränsar förmågan att klara av fysisk belastning och utomhusarbete</p> <p>• sjukdom i stöd- och rörelseorganen</p> <p>• njursjukdomar</p> <p>• en psykisk sjukdom som förhindrar deltagande i praktiska uppgifter eller inlärning i arbetet</p> <p>• missbruk eller beroende av berusningsmedel</p>"
+      },
+      "hakukelpoisuusVaatimusKuvaukset" : { },
+      "aloituspaikatKuvaukset" : { },
+      "kaytetaanJarjestelmanValintaPalvelua" : false,
+      "kaytetaanHaunPaattymisenAikaa" : false,
+      "kaytetaanHakukohdekohtaistaHakuaikaa" : false,
+      "hakukohteenLiitteet" : [ {
+        "oid" : "188858",
+        "version" : 0,
+        "liitteenNimi" : "Lausunnot",
+        "liitteenKuvaukset" : {
+          "kieli_fi#1" : "<p>Lääkärin B-lausunto (alle 6 kk vanha)</p>"
+        },
+        "toimitettavaMennessa" : 1394806509271,
+        "liitteenToimitusOsoite" : {
+          "version" : 0,
+          "osoiterivi1" : "13 ",
+          "postinumero" : "posti_14201",
+          "postinumeroArvo" : "14201",
+          "postitoimipaikka" : "TURENKI"
+        }
+      }, {
+        "oid" : "188855",
+        "version" : 0,
+        "liitteenNimi" : "Todistukset",
+        "liitteenKuvaukset" : {
+          "kieli_fi#1" : "<p>Koulu- ja työtodistukset</p>"
+        },
+        "toimitettavaMennessa" : 1394806555835,
+        "liitteenToimitusOsoite" : {
+          "version" : 0,
+          "osoiterivi1" : "13 ",
+          "postinumero" : "posti_14201",
+          "postinumeroArvo" : "14201",
+          "postitoimipaikka" : "TURENKI"
+        }
+      } ],
+      "liitteidenToimitusOsoite" : {
+        "version" : 0,
+        "osoiterivi1" : "13 ",
+        "postinumero" : "posti_14201",
+        "postitoimipaikka" : "TURENKI"
+      },
+      "valintakokeet" : [ ],
+      "kaksoisTutkinto" : false,
+      "opetusKielet" : [ "kieli_fi" ],
+      "valintaPerusteKuvausKielet" : [ ],
+      "soraKuvausKielet" : [ ],
+      "organisaatioRyhmaOids" : [ ]
+    }
   }
 }

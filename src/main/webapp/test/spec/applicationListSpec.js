@@ -279,7 +279,21 @@
         hakemusErityisopetuksena.getPreference(1).isLocked().should.be.true
       })
 
-      it.skip("hakutoivetta ei voi lisätä jos sen hakuaika on ummessa", function() {
+      describe("hakutoiveen lisääminen kun sen haku ei ole käynnissä", function() {
+        before(replacePreference(hakemusErityisopetuksena, 2, "Kiipulan ammattiopisto"))
+        before(hakemusErityisopetuksena.saveWaitError)
+        it("epäonnistuu", function() {
+          hakemusErityisopetuksena.getPreference(2).errorMessage().should.equal("Haku ei ole käynnissä.")
+        })
+      })
+
+      describe("hakutoiveen lisääminen kun haku on käynnissä", function() {
+        before(function() { fixtures.setApplicationStart(hakemusErityisopetuksenaId, daysFromNow(-30)) })
+        before(replacePreference(hakemusErityisopetuksena, 2, "Kiipulan ammattiopisto"))
+        before(hakemusErityisopetuksena.saveWaitSuccess)
+
+        it("onnistuu", function() {
+        })
       })
     })
 

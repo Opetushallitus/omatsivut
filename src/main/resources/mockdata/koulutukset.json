@@ -390,6 +390,52 @@
       "attachments": null
     }
   ],
+  "1.2.246.562.10.19001332592": [
+    {
+      "id": "1.2.246.562.14.2013120511174558582514",
+      "name": "Metsäalan perustutkinto, er",
+      "aoIdentifier": "962",
+      "educationDegree": null,
+      "childLONames": [
+        "Metsätalous, metsuri-metsäpalvelujen tuottaja"
+      ],
+      "sora": true,
+      "teachingLanguages": [
+        "FI"
+      ],
+      "athleteEducation": false,
+      "kaksoistutkinto": false,
+      "vocational": true,
+      "educationCodeUri": "koulutus_361301",
+      "organizationGroups": [ ],
+      "attachments": [
+        {
+          "dueDate": 1394806509271,
+          "type": "Lausunnot",
+          "descreption": "<p>Lääkärin B-lausunto (alle 6 kk vanha)</p>",
+          "address": {
+            "streetAddress": "13 ",
+            "streetAddress2": null,
+            "postalCode": "14201",
+            "postOffice": "TURENKI"
+          },
+          "emailAddr": null
+        },
+        {
+          "dueDate": 1394806555835,
+          "type": "Todistukset",
+          "descreption": "<p>Koulu- ja työtodistukset</p>",
+          "address": {
+            "streetAddress": "13 ",
+            "streetAddress2": null,
+            "postalCode": "14201",
+            "postOffice": "TURENKI"
+          },
+          "emailAddr": null
+        }
+      ]
+    }
+  ],
   "1.2.246.562.10.2014050812360137079853": [
     {
       "id":"1.2.246.562.20.94964838901",
