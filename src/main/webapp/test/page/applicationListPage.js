@@ -81,10 +81,6 @@ function ApplicationListPage() {
       })
 
     },
-
-    piwikScriptSrc: function() {
-        return S("#apply-piwik").attr("src")
-    }
   }
 
   function applicationPageVisible() {

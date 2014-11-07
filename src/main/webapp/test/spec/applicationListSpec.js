@@ -1910,14 +1910,6 @@
     })
   })
 
-  describe("Piwik", function() {
-    before(page.applyFixtureAndOpen({}))
-    it("on integroitu hakemussivulle", function() {
-        expect(page.piwikScriptSrc()).to.include("/wp/wp-content/themes/ophver3/js/piwik.js")
-    })
-  })
-
-
   function replacePreference(hakemus, index, searchString, koulutusIndex) {
     koulutusIndex = koulutusIndex || 0
     return function() {
