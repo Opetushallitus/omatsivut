@@ -116,7 +116,7 @@
   },
 
   "registration": {
-    "pleaseRegister": "Please register",
+    "pleaseRegister": "Please register: __opetuspiste__ - __koulutus__",
     "goToRegistration": "Go to registration"
   }
 }

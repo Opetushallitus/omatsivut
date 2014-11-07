@@ -174,11 +174,16 @@ function ApplicationListPage() {
           }).toArray()
       },
 
-      ilmoittautuminen: function() {
-        var el = getApplicationElement(applicationIndex).find(".ilmoittautuminen")
+      ilmoittautuminen: function(index) {
+        var el = getApplicationElement(applicationIndex).find(".ilmoittautuminen").eq(index)
         return {
           visible: el.is(":visible"),
-          linkUrl: el.find("a").attr("href")
+          linkUrl: el.find("a").attr("href"),
+          title: function() {
+            return el.find("h2").map(function() {
+              return $(this).text().trim()
+            }).toArray()
+          }
         }
       },
 

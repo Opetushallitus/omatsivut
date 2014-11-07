@@ -116,7 +116,7 @@
   },
 
   "registration": {
-    "pleaseRegister": "Registrera dig",
+    "pleaseRegister": "Registrera dig: __opetuspiste__ - __koulutus__",
     "goToRegistration": "Registrera"
   }
 }

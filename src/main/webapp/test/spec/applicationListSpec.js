@@ -666,7 +666,7 @@
         describe("Oili-ilmoittautumislinkki", function () {
           it("Näytetään", function() {
             expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].tila).to.equal('Opiskelupaikka vastaanotettu')
-            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.ilmoittautuminen().visible).to.equal(true)
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.ilmoittautuminen(0).visible).to.equal(true)
           })
         })
       })
@@ -675,7 +675,7 @@
 
         describe("Oili-ilmoittautumislinkki", function () {
           it("Piilotetaan", function() {
-            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.ilmoittautuminen().visible).to.equal(false)
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.ilmoittautuminen(0).visible).to.equal(false)
           })
         })
 
@@ -684,7 +684,30 @@
           before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send)
 
           it("Oili-linkki tulee näkyviin", function() {
-            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.ilmoittautuminen().visible).to.equal(true)
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.ilmoittautuminen(0).visible).to.equal(true)
+          })
+        })
+      })
+      describe("Jos on saanut kaksi paikkaa kk erillishaussa", function() {
+        before(page.applyValintatulosFixtureAndOpen("hyvaksytty-kaikkiin", {"haku": "korkeakoulu-erillishaku"}))
+
+        describe("Kun ensimmäinen paikka otetaan vastaan", function() {
+          before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VASTAANOTTANUT"))
+          before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send)
+
+          it("Oili-linkki tulee näkyviin ja toinen paikka on yhä mahdollista vastaanottaa", function() {
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).title()).to.deep.equal([ 'Opiskelupaikka myönnetty: Kallion lukio - Lukio' ])
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.ilmoittautuminen(0).title()).to.deep.equal([ 'Ilmoittaudu lukukaudelle: Kallion lukio - Lukion ilmaisutaitolinja' ])
+          })
+
+          describe("Kun toinen paikka otetaan vastaan", function() {
+            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VASTAANOTTANUT"))
+            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send)
+
+            it("Näkyy oili linkki molemmille paikoille", function() {
+              expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.ilmoittautuminen(0).title()).to.deep.equal([ 'Ilmoittaudu lukukaudelle: Kallion lukio - Lukion ilmaisutaitolinja' ])
+              expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.ilmoittautuminen(1).title()).to.deep.equal([ 'Ilmoittaudu lukukaudelle: Kallion lukio - Lukio' ])
+            })
           })
         })
       })
@@ -692,7 +715,7 @@
         before(page.applyValintatulosFixtureAndOpen("hyvaksytty-vastaanottanut", {"haku": "toinen-aste-yhteishaku"}))
         describe("Oili-ilmoittautumislinkki", function () {
           it("Piilotetaan", function() {
-            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.ilmoittautuminen().visible).to.equal(false)
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.ilmoittautuminen(0).visible).to.equal(false)
           })
         })
       })
