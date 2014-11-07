@@ -138,6 +138,11 @@ input, textarea {
   }
 }
 
+input[disabled] {
+  background: transparent;
+  box-shadow: none;
+}
+
 button, a {
   &:focus {
     outline: 1px solid @input-focus-border !important;
@@ -402,53 +407,63 @@ button.delete-btn:not(.confirm) {
 }
 
 .preference-list-item {
-  height: 140px;
-  width: 100%;
-  padding: 10px 0px 10px 20px;
   border-bottom: 1px solid @border-color;
 
   &:last-child {
     border-bottom: 0;
   }
 
+  max-height: 200px;
+  overflow: hidden;
+
+  width: 100%;
+
   &.saved {
     background: @save-highlight-question-color;
   }
 
-  & > .item-content:first-child {
+  .preference-list-item-layout {
+    display: table;
+    padding: 10px 0px 10px 0px;
+
+    .item-content {
+      display: table-cell;
+      vertical-align: middle;
+    }
+  }
+
+  // Numero
+
+  .item-content:first-child {
     font-size: 36px;
-    line-height: 80px;
     width: 10%;
-    float: left;
+    text-align: center;
     position: relative;
-    margin-top: 20px;
+    padding-right: 10px;
   }
 
-  &.inactive > .item-content:first-child {
-    margin-top: 0;
+  .sort-arrow-down {
+    .arrow-button(@arrow-down);
+    margin-top: 10px;
   }
 
-  & > .item-content:nth-child(2) {
+  .sort-arrow-up {
+    .arrow-button(@arrow-up);
+    margin-bottom: 10px;
+  }
+
+  .row-number {
+    padding-left: 7px;
+  }
+
+  // Opetuspiste
+
+  .item-content:nth-child(2) {
     width: 75%;
-    float: left;
-    position: relative;
-    height: 100%;
+    padding: 10px 0px;
 
-    .row {
-      width: 100%;
-      position: absolute;
-
-      &.opetuspiste {
-        top: 10px;
-      }
-
-      &.koulutus {
-        top: 50px;
-      }
-
-      &.hakuaika {
-        top: 90px;
-      }
+    .row+.row {
+      margin-top: 15px;
     }
 
     .label-column {
@@ -468,41 +483,21 @@ button.delete-btn:not(.confirm) {
     }
   }
 
-  & > .item-content:last-child {
-    width: 15%;
-    float: right;
-    line-height: 80px;
-    text-align: right;
-  }
-
   label > span.label {
     width: 20%;
     display: inline-block;
     font-weight: bold;
   }
 
-  .sort-arrow-down {
-    .arrow-button(@arrow-down);
-    bottom: -10px;
-    left: -13px;
-    position: absolute;
+  // Remove
+
+  .item-content:last-child {
+    width: 15%;
+    line-height: 80px;
+    text-align: right;
   }
 
-  .sort-arrow-up {
-    .arrow-button(@arrow-up);
-    top: -10px;
-    left: -13px;
-    position: absolute;
-  }
-
-  input[disabled] {
-    background: transparent;
-    box-shadow: none;
-  }
-
-  &:last-child.inactive {
-    border-bottom: 1px dashed @border-color;
-  }
+  // Inactive row
 
   &.inactive {
     opacity: 0.5;
@@ -512,18 +507,18 @@ button.delete-btn:not(.confirm) {
     border-bottom: 1px dashed @border-color;
 
     .item-content:first-child {
-      display: inline-block;
+      display: table-cell;
+      vertical-align: middle;
+      text-align: left;
+      padding-left: 23px;
     }
 
     button, .item-content {
       display: none;
-      height: 40px;
-      line-height: 40px;
     }
 
     .row-number {
       font-size: 18px;
-      padding-left: 7px;
       display: block;
     }
   }
