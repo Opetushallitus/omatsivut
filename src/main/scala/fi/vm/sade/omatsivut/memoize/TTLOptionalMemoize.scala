@@ -36,20 +36,20 @@ class TTLOptionalMemoizeNoArgs[R](f: () => Option[R], name: String, lifetimeSeco
 }
 
 object TTLOptionalMemoize {
-  def memoize[T](f: () => Option[T], name: String, lifetime: Long, maxSize: Integer = 32) = new TTLOptionalMemoizeNoArgs(f, name, lifetime, maxSize)
+  def memoize[T](f: () => Option[T], name: String, lifetime: Long, maxSize: Integer) = new TTLOptionalMemoizeNoArgs(f, name, lifetime, maxSize)
 
-  def memoize[T, R](f: T => Option[R], name: String, lifetime: Long, maxSize: Integer = 32): (T => Option[R]) = new TTLOptionalMemoize(f, name, lifetime, maxSize)
+  def memoize[T, R](f: T => Option[R], name: String, lifetime: Long, maxSize: Integer): (T => Option[R]) = new TTLOptionalMemoize(f, name, lifetime, maxSize)
 
-  def memoize[T1, T2, R](f: (T1, T2) => Option[R], name: String, lifetime: Long, maxSize: Integer = 32): ((T1, T2) => Option[R]) =
+  def memoize[T1, T2, R](f: (T1, T2) => Option[R], name: String, lifetime: Long, maxSize: Integer): ((T1, T2) => Option[R]) =
     Function.untupled(memoize(f.tupled, name, lifetime, maxSize))
 
-  def memoize[T1, T2, T3, R](f: (T1, T2, T3) => Option[R], name: String, lifetime: Long, maxSize: Integer = 32): ((T1, T2, T3) => Option[R]) =
+  def memoize[T1, T2, T3, R](f: (T1, T2, T3) => Option[R], name: String, lifetime: Long, maxSize: Integer): ((T1, T2, T3) => Option[R]) =
     Function.untupled(memoize(f.tupled, name, lifetime, maxSize))
 
-  def memoize[T1, T2, T3, T4, T5, R](f: (T1, T2, T3, T4, T5) => Option[R], name: String, lifetime: Long, maxSize: Integer = 32): ((T1, T2, T3, T4, T5) => Option[R]) =
+  def memoize[T1, T2, T3, T4, T5, R](f: (T1, T2, T3, T4, T5) => Option[R], name: String, lifetime: Long, maxSize: Integer): ((T1, T2, T3, T4, T5) => Option[R]) =
     Function.untupled(memoize(f.tupled, name, lifetime, maxSize))
 
-  def Y[T, R](f: (T => Option[R]) => T => Option[R], name: String, lifetime: Long, maxSize: Integer = 32): (T => Option[R]) = {
+  def Y[T, R](f: (T => Option[R]) => T => Option[R], name: String, lifetime: Long, maxSize: Integer): (T => Option[R]) = {
     lazy val yf: (T => Option[R]) = memoize(f(yf)(_), name, lifetime, maxSize)
     yf
   }
