@@ -61,14 +61,26 @@ object OmatSivutSpringContext extends Logging {
   }
 
   @Configuration
-  @ComponentScan(basePackages = Array("fi.vm.sade.haku"))
+  @ComponentScan(basePackages = Array(
+    "fi.vm.sade.haku.oppija.common",
+    "fi.vm.sade.haku.oppija.hakemus",
+    "fi.vm.sade.haku.oppija.lomake",
+    "fi.vm.sade.haku.oppija.repository",
+    "fi.vm.sade.haku.virkailija"))
+  @Import(Array(classOf[OmatSivutMongoConfiguration], classOf[OmatSivutCacheConfiguration]))
   @ImportResource(Array("/META-INF/spring/logger-mock-context.xml"))
   class Dev extends OmatSivutConfiguration {
     val profile = "dev"
   }
 
   @Configuration
-  @ComponentScan(basePackages = Array("fi.vm.sade.haku"))
+  @ComponentScan(basePackages = Array(
+    "fi.vm.sade.haku.oppija.common",
+    "fi.vm.sade.haku.oppija.hakemus",
+    "fi.vm.sade.haku.oppija.lomake",
+    "fi.vm.sade.haku.oppija.repository",
+    "fi.vm.sade.haku.virkailija"))
+  @Import(Array(classOf[OmatSivutMongoConfiguration], classOf[OmatSivutCacheConfiguration]))
   @ImportResource(Array("/META-INF/spring/logger-context.xml",
                         "/META-INF/spring/context/dao-context.xml",
                         "/META-INF/spring/context/service-context.xml"
