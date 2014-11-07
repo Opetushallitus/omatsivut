@@ -94,9 +94,8 @@ trait TarjontaComponent {
   object CachedRemoteTarjontaService {
     def apply(implicit appConfig: AppConfig): TarjontaService = {
       val service = new RemoteTarjontaService()
-      val hakuMemo = TTLOptionalMemoize.memoize(service.haku _, "tarjonta haku", 60 * 60)
-      val hakukohdeMemo = TTLOptionalMemoize.memoize(service.hakukohde _, "tarjonta hakukohde", 60 * 60)
-
+      val hakuMemo = TTLOptionalMemoize.memoize(service.haku _, "tarjonta haku", 60 * 60, 64)
+      val hakukohdeMemo = TTLOptionalMemoize.memoize(service.hakukohde _, "tarjonta hakukohde", 60 * 60, 256)
 
       new TarjontaService {
         override def haku(oid: String, lang: Language): Option[Haku] = hakuMemo(oid, lang)
@@ -106,7 +105,6 @@ trait TarjontaComponent {
   }
 
   class RemoteTarjontaService(implicit appConfig: AppConfig) extends TarjontaService with HttpCall {
-
     override def haku(oid: String, lang: Language.Language) : Option[Haku] = {
       withHttpGet("Tarjonta fetch haku", appConfig.settings.tarjontaUrl + "/haku/" + oid, {_.flatMap(TarjontaParser.parseHaku).map({ tarjontaHaku =>
           val haunAikataulu = ohjausparametritService.haunAikataulu(oid)
@@ -120,9 +118,6 @@ trait TarjontaComponent {
     }
   }
 }
-
-
-
 
 trait TarjontaService {
   def haku(oid: String, lang: Language.Language) : Option[Haku]
