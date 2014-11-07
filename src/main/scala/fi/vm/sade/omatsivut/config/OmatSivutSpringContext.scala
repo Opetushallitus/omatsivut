@@ -90,7 +90,7 @@ object OmatSivutSpringContext extends Logging {
     "fi.vm.sade.haku.oppija.common.organisaatio"
   ))
   @ImportResource(Array("/META-INF/spring/logger-context.xml"))
-  @Import(Array(classOf[OmatSivutMongoConfiguration]))
+  @Import(Array(classOf[OmatSivutMongoConfiguration], classOf[OmatSivutCacheConfiguration]))
   class Default extends OmatSivutConfiguration {
     val profile = "default"
 
