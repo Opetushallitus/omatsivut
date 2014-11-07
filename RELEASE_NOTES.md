@@ -4,13 +4,13 @@
 
 ## QA:lla, odottaa tuotantoon siirtoa
 
+## Tuotannossa
+
 ### [release-1711](https://bamboo.oph.ware.fi/deploy/viewDeploymentVersion.action?versionId=109478162)
 
 - Tulostetaan lokiin cache statistiikkaa
 - Linkki Oiliin (korkeakoulujen läsnoloilmoittaumiseen) [OHP-107](https://jira.oph.ware.fi/jira/browse/OHP-107)
   * tulee näkyviin vasta kun ilmoittautuminen enabloidaan valinta-tulos-service:n konfiguraatioista
-
-## Tuotannossa
 
 ### [release-1648](https://bamboo.oph.ware.fi/deploy/viewDeploymentVersion.action?versionId=109477953)
 
