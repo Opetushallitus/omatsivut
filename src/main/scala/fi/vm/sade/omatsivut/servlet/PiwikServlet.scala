@@ -11,13 +11,23 @@ class PiwikServlet(val appConfig: AppConfig) extends OmatSivutServletBase {
     contentType = "application/javascript"
   }
 
+  private def onlyOnProductionAndQA(f: => String) = {
+    if (appConfig.settings.environment.isQA || appConfig.settings.environment.isProduction) {
+      f
+    } else {
+      "/*" + f + "*/"
+    }
+  }
+
   get("/*") {
-    """var piwik = document.getElementById('apply-piwik');
+    onlyOnProductionAndQA {
+"""var piwik = document.getElementById('apply-piwik');
 if (!piwik) {
   piwik = document.createElement('script');
   piwik.id = 'apply-piwik';
   piwik.src = '""" + appConfig.settings.piwikUrl +  """';
   document.getElementsByTagName("head")[0].appendChild(piwik);
 }"""
+    }
   }
 }

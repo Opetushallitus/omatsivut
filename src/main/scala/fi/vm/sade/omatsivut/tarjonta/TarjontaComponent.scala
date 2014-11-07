@@ -94,9 +94,8 @@ trait TarjontaComponent {
   object CachedRemoteTarjontaService {
     def apply(implicit appConfig: AppConfig): TarjontaService = {
       val service = new RemoteTarjontaService()
-      val hakuMemo = TTLOptionalMemoize.memoize(service.haku _, "tarjonta haku", 60 * 60)
-      val hakukohdeMemo = TTLOptionalMemoize.memoize(service.hakukohde _, "tarjonta hakukohde", 60 * 60)
-
+      val hakuMemo = TTLOptionalMemoize.memoize(service.haku _, "tarjonta haku", 60 * 60, 64)
+      val hakukohdeMemo = TTLOptionalMemoize.memoize(service.hakukohde _, "tarjonta hakukohde", 60 * 60, 256)
 
       new TarjontaService {
         override def haku(oid: String, lang: Language): Option[Haku] = hakuMemo(oid, lang)

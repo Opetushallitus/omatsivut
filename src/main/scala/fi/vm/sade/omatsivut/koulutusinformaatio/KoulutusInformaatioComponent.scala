@@ -29,9 +29,9 @@ trait KoulutusInformaatioComponent {
     def apply(implicit appConfig: AppConfig): KoulutusInformaatioService = {
       val service = new RemoteKoulutusService()
       val cacheTimeSec = 60*15
-      val opetuspisteetMemo = TTLOptionalMemoize.memoize(service.opetuspisteet _, "koulutusinformaatio opetuspisteet", cacheTimeSec)
-      val koulutusMemo = TTLOptionalMemoize.memoize(service.koulutus _, "koulutusinformaatio koulutus", cacheTimeSec)
-      val koulutuksetMemo = TTLOptionalMemoize.memoize(service.koulutukset _, "koulutusinformaatio koulutukset", cacheTimeSec)
+      val opetuspisteetMemo = TTLOptionalMemoize.memoize(service.opetuspisteet _, "koulutusinformaatio opetuspisteet", cacheTimeSec, 32)
+      val koulutusMemo = TTLOptionalMemoize.memoize(service.koulutus _, "koulutusinformaatio koulutus", cacheTimeSec, 32)
+      val koulutuksetMemo = TTLOptionalMemoize.memoize(service.koulutukset _, "koulutusinformaatio koulutukset", cacheTimeSec, 32)
 
       new KoulutusInformaatioService {
         def opetuspisteet(asId: String, query: String, lang: String): Option[List[Opetuspiste]] = opetuspisteetMemo(asId, query, lang)

@@ -121,7 +121,7 @@
   },
 
   "registration": {
-    "pleaseRegister": "Ilmoittaudu lukukaudelle",
+    "pleaseRegister": "Ilmoittaudu lukukaudelle: __opetuspiste__ - __koulutus__",
     "goToRegistration": "Siirry ilmoittautumaan"
   }
 }

@@ -6,6 +6,12 @@
 
 ## Tuotannossa
 
+### [release-1711](https://bamboo.oph.ware.fi/deploy/viewDeploymentVersion.action?versionId=109478162)
+
+- Tulostetaan lokiin cache statistiikkaa
+- Linkki Oiliin (korkeakoulujen läsnoloilmoittaumiseen) [OHP-107](https://jira.oph.ware.fi/jira/browse/OHP-107)
+  * tulee näkyviin vasta kun ilmoittautuminen enabloidaan valinta-tulos-service:n konfiguraatioista
+
 ### [release-1648](https://bamboo.oph.ware.fi/deploy/viewDeploymentVersion.action?versionId=109477953)
 
 - Korjattu application system cache Hakemus-api:ssa [HAKU-BM-242](https://bamboo.oph.ware.fi/browse/HAKU-BM-242) [OVT-8894](https://jira.oph.ware.fi/jira/browse/OVT-8894)

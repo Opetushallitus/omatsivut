@@ -68,11 +68,25 @@ function testMode() {
   return window.parent.location.href.indexOf("runner.html") > 0
 }
 
+function logExceptionToPiwik(msg) {
+  if (_paq) {
+    _paq.push(["trackEvent", document.domain + "/" + document.title, "Error", msg])
+  } else {
+    console.warning("Piwik not present")
+  }
+}
+
+window.onerror = function(errorMsg, url, lineNumber) {
+  logExceptionToPiwik(url + ":" + lineNumber + " " + errorMsg)
+}
+
 angular.module("exceptionOverride", []).factory("$exceptionHandler", function() {
   return function (exception) {
-    if (testMode())
+    if (testMode()) {
       throw exception
-    else
+    } else {
+      logExceptionToPiwik(exception.stack || exception.message)
       console.error(exception.stack)
+    }
   };
 })
