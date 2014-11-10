@@ -54,6 +54,15 @@ Näin ajat testit komentoriviltä.
 
 Komento ajaa kaikki testit, mukaan lukien yksikkötestit, REST-palvelujen testit, mocha-selaintestit.
 
+
+#### Yksikkötestit
+
+Jos haluat ajaa pelkät ykikkötestit niin aja:
+
+`./sbt unit:test`
+
+Se skippaa kaikki testit joissa on integration tag.
+
 ### War-paketointi
 
 `./sbt package`

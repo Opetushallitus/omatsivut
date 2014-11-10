@@ -23,6 +23,9 @@ object OmatsivutBuild extends Build {
   // task for running mocha tests
   lazy val mocha = taskKey[Int]("run phantomJS tests")
 
+  // task for running just unit tests
+  lazy val UnitTest = config("unit") extend(Test)
+
   if(!System.getProperty("java.version").startsWith(JavaVersion)) {
     throw new IllegalStateException("Wrong java version (required " + JavaVersion + "): " + System.getProperty("java.version"))
   }
@@ -102,10 +105,17 @@ object OmatsivutBuild extends Build {
         file("target") / defaultPath.getName
       },
       testOptions in Test := Seq(
-        Tests.Argument("junitxml", "console"),
-        Tests.Argument("exclude", "skipped")
+        Tests.Argument("junitxml", "console")
       )
     )
-  ).settings(net.virtualvoid.sbt.graph.Plugin.graphSettings: _*)
+  ).settings(
+    net.virtualvoid.sbt.graph.Plugin.graphSettings: _*
+  ).configs(UnitTest)
+  .settings(inConfig(UnitTest)(Defaults.testTasks): _*)
+  .settings(testOptions in UnitTest := Seq(
+      Tests.Argument("junitxml", "console"),
+      Tests.Argument("exclude", "integration")
+    )
+  )
   lazy val projectRef: ProjectReference = project
 }
