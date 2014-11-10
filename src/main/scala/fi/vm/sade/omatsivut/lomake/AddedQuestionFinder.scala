@@ -20,25 +20,13 @@ object AddedQuestionFinder {
     newQuestions.diff(oldQuestions)
   }
 
-  private def getOnlyAskedHakutoiveAsList(newHakemus: HakemusMuutos, hakutoive: HakutoiveData): List[HakutoiveData] = {
-    def getHakutoive(listItem: HakutoiveData): HakutoiveData = {
-      if(listItem == hakutoive) {
-        hakutoive
-      }
-      else {
-        Map()
-      }
-    }
-    newHakemus.hakutoiveet.map(getHakutoive)
-  }
-
-  def findQuestions(applicationSystem: Lomake)(storedApplication: Application, hakemusMuutos: HakemusMuutos, newKoulutusIds: List[String])(implicit lang: Language.Language) = {
+  def findQuestions(applicationSystem: Lomake)(storedApplication: Application, hakemusMuutos: HakemusLike, newKoulutusIds: List[String])(implicit lang: Language.Language): List[QuestionNode] = {
     val filteredForm: ElementWrapper = ElementWrapper.wrapFiltered(applicationSystem.form, FlatAnswers.flatten(ApplicationUpdater.getAllAnswersForApplication(applicationSystem, storedApplication.clone(), hakemusMuutos)))
 
-    val questionsPerHakutoive: List[QuestionNode] = hakemusMuutos.hakutoiveet.zipWithIndex.flatMap { case (hakutoive, index) =>
+    val questionsPerHakutoive: List[QuestionNode] = hakemusMuutos.preferences.zipWithIndex.flatMap { case (hakutoive, index) =>
       hakutoive.get("Koulutus-id") match {
-        case Some(koulutusId) if (newKoulutusIds.contains(koulutusId)) =>
-          val addedByHakutoive: Set[QuestionLeafNode] = AddedQuestionFinder.findQuestionsByHakutoive(applicationSystem, storedApplication, hakemusMuutos, hakutoive)
+        case Some(koulutusId) if newKoulutusIds.contains(koulutusId) =>
+          val addedByHakutoive: Set[QuestionLeafNode] = findQuestionsByHakutoive(applicationSystem, storedApplication, hakemusMuutos, hakutoive)
           val groupedQuestions: Seq[QuestionNode] = QuestionGrouper.groupQuestionsByStructure(filteredForm, addedByHakutoive)
 
           groupedQuestions match {
@@ -57,12 +45,24 @@ object AddedQuestionFinder {
     withoutDuplicates(questionsPerHakutoive) ::: duplicates
   }
 
-  private def findQuestionsByHakutoive(lomake: Lomake, storedApplication: Application, hakemusMuutos: HakemusMuutos, hakutoive: HakutoiveData)(implicit lang: Language.Language): Set[QuestionLeafNode] = {
-    val onlyOneHakutoive = getOnlyAskedHakutoiveAsList(hakemusMuutos, hakutoive)
-    val currentAnswersWithOneHakutoive = ApplicationUpdater.getAllUpdatedAnswersForApplication(lomake, storedApplication, hakemusMuutos.copy(hakutoiveet = onlyOneHakutoive))
-    val noHakutoive = getOnlyAskedHakutoiveAsList(hakemusMuutos, Map())
-    val emptyAnswersWithNoHakutoive = ApplicationUpdater.getAllUpdatedAnswersForApplication(lomake, storedApplication, hakemusMuutos.copy(hakutoiveet = noHakutoive).copy(answers = Hakemus.emptyAnswers))
+  private def findQuestionsByHakutoive(lomake: Lomake, storedApplication: Application, hakemus: HakemusLike, hakutoive: HakutoiveData)(implicit lang: Language.Language): Set[QuestionLeafNode] = {
+    val onlyOneHakutoive = removeAllOtherHakutoive(hakemus, hakutoive)
+    val currentAnswersWithOneHakutoive = ApplicationUpdater.getAllUpdatedAnswersForApplication(lomake, storedApplication, hakemus.answers, onlyOneHakutoive)
+    val noHakutoive = removeAllOtherHakutoive(hakemus, Map())
+    val emptyAnswersWithNoHakutoive = ApplicationUpdater.getAllUpdatedAnswersForApplication(lomake, storedApplication, Hakemus.emptyAnswers, noHakutoive)
     findAddedQuestions(lomake, currentAnswersWithOneHakutoive, emptyAnswersWithNoHakutoive)
+  }
+
+  private def removeAllOtherHakutoive(hakemus: HakemusLike, hakutoive: HakutoiveData): List[HakutoiveData] = {
+    def getHakutoive(listItem: HakutoiveData): HakutoiveData = {
+      if(listItem == hakutoive) {
+        hakutoive
+      }
+      else {
+        Map()
+      }
+    }
+    hakemus.preferences.map(getHakutoive)
   }
 
   private def getDuplicateQuestions(questions: List[QuestionNode]) = {

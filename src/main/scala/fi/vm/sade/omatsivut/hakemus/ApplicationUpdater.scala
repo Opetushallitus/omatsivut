@@ -6,7 +6,7 @@ import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
-import fi.vm.sade.omatsivut.hakemus.domain.HakemusMuutos
+import fi.vm.sade.omatsivut.hakemus.domain.{Hakemus, HakemusLike, HakemusMuutos}
 import fi.vm.sade.omatsivut.lomake.domain.{Lomake, AnswerId, QuestionId}
 import fi.vm.sade.omatsivut.lomake.{AddedQuestionFinder, ElementWrapper, FormQuestionFinder}
 
@@ -27,9 +27,9 @@ object ApplicationUpdater {
     application
   }
 
-  private def getUpdatedAnswersForApplication(lomake: Lomake, application: Application, hakemus: HakemusMuutos)(implicit lang: Language.Language): Answers = {
-    val allAnswers = getAllUpdatedAnswersForApplication(lomake, application, hakemus)
-    val removedAnswerIds = getRemovedAnswerIds(lomake, application, hakemus)
+  private def getUpdatedAnswersForApplication(lomake: Lomake, application: Application, hakemusMuutos: HakemusMuutos)(implicit lang: Language.Language): Answers = {
+    val allAnswers = getAllUpdatedAnswersForApplication(lomake, application, hakemusMuutos.answers, hakemusMuutos.preferences)
+    val removedAnswerIds = getRemovedAnswerIds(lomake, application, hakemusMuutos)
 
     applyHiddenValues(lomake, pruneOrphanedAnswers(removedAnswerIds, allAnswers))
   }
@@ -41,8 +41,10 @@ object ApplicationUpdater {
     }
   }
 
-  def getAllUpdatedAnswersForApplication(lomake: Lomake, application: Application, hakemus: HakemusMuutos): Answers = {
-    allAnswersFromApplication(application).filterKeys(_ != preferencePhaseKey) ++ updatedAnswersForHakuToiveet(lomake, application, hakemus) ++ updatedAnswersForOtherPhases(application, hakemus)
+  def getAllUpdatedAnswersForApplication(lomake: Lomake, application: Application, newAnswers: Hakemus.Answers, hakutoiveet: List[Hakemus.HakutoiveData]): Answers = {
+    allAnswersFromApplication(application).filterKeys(_ != preferencePhaseKey) ++
+      updatedAnswersForHakuToiveet(lomake, application, newAnswers, hakutoiveet) ++
+      updatedAnswersForOtherPhases(application, newAnswers)
   }
 
   private def updateSingleAnswer(answers: Answers, question: QuestionId, answer: String) = {
@@ -70,27 +72,28 @@ object ApplicationUpdater {
     removedQuestions.flatMap(_.answerIds)
   }
 
-  def getAllAnswersForApplication(lomake: Lomake, application: Application, hakemus: HakemusMuutos): Answers = {
-    allAnswersFromApplication(application) ++ updatedAnswersForHakuToiveet(lomake, application, hakemus) ++ updatedAnswersForOtherPhases(application, hakemus)
+  def getAllAnswersForApplication(lomake: Lomake, application: Application, hakemus: HakemusLike): Answers = {
+    allAnswersFromApplication(application) ++
+      updatedAnswersForHakuToiveet(lomake, application, hakemus.answers, hakemus.preferences) ++
+      updatedAnswersForOtherPhases(application, hakemus.answers)
   }
 
   def allAnswersFromApplication(application: Application) = {
     application.getAnswers.toMap.mapValues(_.toMap)
   }
 
-  private def updatedAnswersForOtherPhases(application: Application, hakemus: HakemusMuutos): Answers = {
-    val allOtherPhaseAnswers = hakemus.answers.filterKeys(phase => phase != preferencePhaseKey)
+  private def updatedAnswersForOtherPhases(application: Application, answers: Answers): Answers = {
+    val allOtherPhaseAnswers = answers.filterKeys(phase => phase != preferencePhaseKey)
     allOtherPhaseAnswers.map { case (phase, answers) =>
       val existingAnswers = application.getPhaseAnswers(phase).toMap
       (phase, existingAnswers ++ answers)
     }.toMap
   }
 
-  private def updatedAnswersForHakuToiveet(lomake: Lomake, application: Application, hakemus: HakemusMuutos): Answers = {
-    val newAnswers = hakemus.answers
+  private def updatedAnswersForHakuToiveet(lomake: Lomake, application: Application, newAnswers: Hakemus.Answers, hakutoiveet: List[Hakemus.HakutoiveData]): Answers = {
     val previousAnswers = allAnswersFromApplication(application)
 
-    val updatedAnswersForHakutoiveetPhase = HakutoiveetConverter.updateAnswers(hakemus.hakutoiveet, newAnswers, previousAnswers)
+    val updatedAnswersForHakutoiveetPhase = HakutoiveetConverter.updateAnswers(hakutoiveet, newAnswers, previousAnswers)
     Map(preferencePhaseKey -> updatedAnswersForHakutoiveetPhase)
   }
 }

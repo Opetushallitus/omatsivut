@@ -24,8 +24,8 @@ case class Hakemus(
                     answers: Answers,
                     postOffice: Option[String],
                     requiresAdditionalInfo: Boolean
-                  ) extends HakemuksenTunniste {
-
+                  ) extends HakemuksenTunniste with HakemusLike {
+  def preferences = hakutoiveet.map(_.hakemusData.getOrElse(Map.empty))
   def toHakemusMuutos = HakemusMuutos(oid, haku.oid, hakutoiveet.map(_.hakemusData.getOrElse(Map.empty)), answers)
 }
 
@@ -39,10 +39,17 @@ case class HakemusMuutos (
                     hakuOid: String,
                     hakutoiveet: List[HakutoiveData] = Nil,
                     answers: Answers
-                    ) extends HakemuksenTunniste
+                    ) extends HakemuksenTunniste with HakemusLike {
+  def preferences = hakutoiveet
+}
 
 trait HakemuksenTunniste {
   def oid: String
+}
+
+trait HakemusLike {
+  def preferences: List[HakutoiveData]
+  def answers: Answers
 }
 
 case class EducationBackground(baseEducation: String, vocational: Boolean)

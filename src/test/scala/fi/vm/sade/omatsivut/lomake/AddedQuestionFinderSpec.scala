@@ -24,10 +24,8 @@ class AddedQuestionFinderSpec extends Specification {
     }
 
     "Report zero additional questions when re-ordering hakutoiveet" in {
-      val answers1 = ApplicationUpdater.getAllUpdatedAnswersForApplication(lomake, applicationNivelKesa2013WithPeruskouluBaseEducationApp, hakemusMuutos)
-      val answers2 = ApplicationUpdater.getAllUpdatedAnswersForApplication(lomake, applicationNivelKesa2013WithPeruskouluBaseEducationApp, hakemusMuutos.copy(
-        hakutoiveet = hakemusMuutos.hakutoiveet.reverse
-      ))
+      val answers1 = ApplicationUpdater.getAllUpdatedAnswersForApplication(lomake, applicationNivelKesa2013WithPeruskouluBaseEducationApp, hakemusMuutos.answers, hakemusMuutos.preferences)
+      val answers2 = ApplicationUpdater.getAllUpdatedAnswersForApplication(lomake, applicationNivelKesa2013WithPeruskouluBaseEducationApp, hakemusMuutos.answers, hakemusMuutos.preferences.reverse)
       val addedQuestions = findAddedQuestions(answers1, answers2)
       val removedQuestions = findAddedQuestions(answers2, answers1)
       addedQuestions.length must_== 0
