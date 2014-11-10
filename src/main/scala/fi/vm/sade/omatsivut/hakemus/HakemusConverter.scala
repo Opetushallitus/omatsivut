@@ -1,6 +1,7 @@
 package fi.vm.sade.omatsivut.hakemus
 
 import java.util
+import java.util.Date
 
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
@@ -54,15 +55,18 @@ trait HakemusConverterComponent {
       if (isPostProcessing(application)) {
         PostProcessing()
       } else {
-        if (!haku.active) {
+        if (anyApplicationPeriodEnded(haku, hakutoiveet)) {
           val valintatulos = convertToValintatulos(applicationSystemId, application, hakutoiveet)
-          val now = new LocalDateTime()
-          if(haku.aikataulu.flatMap(_.hakukierrosPaattyy).map(new LocalDateTime(_)).getOrElse(now.plusYears(100)).isBefore(now)) {
+          val now = new LocalDateTime().toDate.getTime // Use LocalDateTime so that we can use TimeWarp in tests
+          if (haku.aikataulu.flatMap(_.hakukierrosPaattyy.map(_ < now)).getOrElse(false)) {
             HakukierrosPaattynyt(valintatulos = valintatulos)
           }
-          else {
+          else if (!haku.active) {
             HakukausiPaattynyt(valintatulos = valintatulos)
+          } else {
+            Active(valintatulos = valintatulos)
           }
+
         } else {
           application.getState.toString match {
             case "ACTIVE" => Active()
@@ -74,6 +78,13 @@ trait HakemusConverterComponent {
             }
           }
         }
+      }
+    }
+
+    private def anyApplicationPeriodEnded(haku: Haku, hakutoiveet: List[Hakutoive]) = {
+      val now = new LocalDateTime().toDate.getTime // Use LocalDateTime so that we can use TimeWarp in tests
+      haku.applicationPeriods.exists(_.end < now) || hakutoiveet.exists { hakutoive =>
+        hakutoive.kohdekohtainenHakuaika.map(_.end < now).getOrElse(false)
       }
     }
 

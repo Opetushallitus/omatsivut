@@ -317,11 +317,6 @@
 
       var hakuaikatieto = "Opiskelijavalinta on kesken. Tulokset julkaistaan viimeistään 11. kesäkuuta 2014."
 
-      describe("jos jonkun hakutoiveen hakuaika on päättynyt ennen muita ja sen tulokset ovat jo saatavilla", function() {
-        it.skip("sekä tuloslistaus että hakutoiveet ovat näkyvissä", function() {
-        })
-      })
-
       describe("kun valintatuloksia ei ole julkaistu", function() {
         before(page.applyValintatulosFixtureAndOpen("ei-tuloksia"))
         it("hakemusta ei voi muokata", function () {
@@ -460,6 +455,25 @@
           expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).title()).to.deep.equal([
                 "Opiskelupaikka myönnetty: Kallion lukio - Lukion ilmaisutaitolinja"
           ])
+        })
+      })
+
+      describe("monta hakuaikaa", function() {
+        before(page.applyFixtureAndOpen({applicationOid: hakemusErityisopetuksenaId}))
+        before(function() { fixtures.setApplicationStart(hakemusErityisopetuksenaId, daysFromNow(-90)) })
+        after(page.applyFixtureAndOpen({applicationOid: hakemusYhteishakuKevat2013WithForeignBaseEducationId}))
+
+        describe("jos jonkun hakutoiveen hakuaika on päättynyt ennen muita ja sen tulokset ovat jo saatavilla", function () {
+          before(page.applyValintatulosFixtureAndOpen("erillishaku-toinen-valmis", {"haku": "toinen-aste-erillishaku"}))
+          it("hakutoiveet ovat näkyvissä", function () {
+            hakemusErityisopetuksena.preferencesForApplication().length.should.equal(2)
+          })
+
+          it("tuloslistaus on näkyvissä", function() {
+            hakemusErityisopetuksena.resultTableTitle().should.equal("Valintatilanne (Kesken)")
+            expect(hakemusErityisopetuksena.valintatulokset()[0].tila).to.equal('Opiskelijavalinta kesken')
+            expect(hakemusErityisopetuksena.valintatulokset()[1].tila).to.equal('Hyväksytty')
+          })
         })
       })
 
