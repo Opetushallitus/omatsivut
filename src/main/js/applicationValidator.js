@@ -31,7 +31,7 @@ module.exports = function(listApp) {
       }
     }
 
-    function getQuestions(data) {
+    function getQuestions(data, application) {
       return convertToItems(data.questions, new QuestionGroup())
 
       function convertToItems(questions, results) {
@@ -39,7 +39,7 @@ module.exports = function(listApp) {
           if (questionNode.questions != null) {
             results.questionNodes.push(convertToItems(questionNode.questions, new QuestionGroup(questionNode.title)))
           } else {
-            results.questionNodes.push(Question.fromJson(questionNode))
+            results.questionNodes.push(Question.fromJson(questionNode, application.persistedAnswers))
           }
         })
         return results
@@ -58,14 +58,14 @@ module.exports = function(listApp) {
       responsePromise.success(function(data, status, headers, config) {
         if (data.errors.length === 0) {
           success({
-            questions: getQuestions(data),
+            questions: getQuestions(data, application),
             response: data
           })
         } else {
           error({
             statusCode: 200,
             errors: data.errors,
-            questions: getQuestions(data),
+            questions: getQuestions(data, application),
             response: data
           })
         }

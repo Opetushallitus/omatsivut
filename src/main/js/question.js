@@ -20,20 +20,15 @@ function params(obj) {
 
 function Question(question, answer, validationErrors) {
   _.extend(this, params(question))
-  this.answer = answer != null ? answer : initialValue(this)
+  this.answer = answer
   this.errors = validationErrors || []
 }
 
-Question.fromJson = function(json) {
-  return new Question(json, null, json.required ? ["*"] : [])
+Question.fromJson = function(json, persistedAnswers) {
+  return new Question(json, initialValue(json, persistedAnswers), json.required ? ["*"] : [])
 }
 
 Question.prototype = {
-  defaultValue: function() {
-    var defaultOption = _(this.options).find(function(option) { return option.default })
-    return defaultOption == null ? "" : defaultOption.value
-  },
-
   setErrors: function(errors) {
     this.errors = errors || []
   },
@@ -48,15 +43,33 @@ Question.questionMap = function(questions) {
   return util.indexBy(questions, function(node) { return node.id.questionId })
 }
 
-function initialValue(question) {
-  if (question.options != null) { // Aseta default-arvo vain monivalinnoille
+function initialValue(question, persistedAnswers) {
+  function defaultValue() {
+    var defaultOption = _(question.options).find(function(option) { return option.default })
+    return defaultOption == null ? "" : defaultOption.value
+  }
+  function getOldValue(questionId) {
+    var phaseAnswers = persistedAnswers[question.id.phaseId]
+    if(phaseAnswers == null || (question.id.phaseId == "hakutoiveet" && questionId.indexOf("preference") === 0)) {
+      return null
+    }
+    return phaseAnswers[questionId]
+  }
+
+  var oldAnswer = getOldValue(question.id.questionId)
+  if (question.options != null) {
     if (question.questionType == "Checkbox") {
       return _(question.options).chain().map(function(option) {
-        return [option.value, false]
+        oldAnswer = getOldValue(option.value)
+        return [option.value, oldAnswer == null ? false : Boolean(oldAnswer)]
       }).object().value()
     } else {
-      return question.defaultValue()
+      // Aseta default-arvo vain monivalinnoille
+      return oldAnswer == null ? defaultValue() : oldAnswer
     }
+  }
+  if(oldAnswer != null) {
+    return  oldAnswer
   }
 }
 

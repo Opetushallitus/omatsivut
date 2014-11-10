@@ -11,6 +11,7 @@ function Hakemus(json) {
 
   this.hakutoiveet = convertHakutoiveet(json.hakutoiveet)
   this.henkilotiedot = convertHenkilotiedot(json.answers.henkilotiedot)
+  this.persistedAnswers = json.answers
   this.additionalQuestions = { questionNodes: [] }
   this.calculatedValues = {
     postOffice: json.postOffice

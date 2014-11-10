@@ -1637,10 +1637,37 @@
             it("valitut hakutoiveet näytetään", function() {
               hakemusNivelKesa2013WithPeruskouluBaseEducation.getPreference(2).opetuspiste().should.equal("Etelä-Savon ammattiopisto,  Otavankatu 4")
             })
-            it("vastauksia ei näytetä", function() {
-              hakemusNivelKesa2013WithPeruskouluBaseEducation.questionsForApplication().count().should.equal(0)
+            describe("Ennen uusia muokkauksia", function() {
+              it("vastauksia ei näytetä", function() {
+                hakemusNivelKesa2013WithPeruskouluBaseEducation.questionsForApplication().count().should.equal(0)
+              })
+            })
+
+            describe("Kun lisätään hakutoive, jolla on samat lisäkysymykset, joihin on jo vastattu", function() {
+              before(
+                hakemusNivelKesa2013WithPeruskouluBaseEducation.getPreference(2).remove,
+                replacePreference(hakemusNivelKesa2013WithPeruskouluBaseEducation, 2, "Etelä-Savon ammattiopisto")
+              )
+
+              describe("ennen tallennusta", function() {
+                it("kysymykset näytetään uudelleen", function () {
+                  hakemusNivelKesa2013WithPeruskouluBaseEducation.questionsForApplication().count().should.equal(13)
+                  hakemusNivelKesa2013WithPeruskouluBaseEducation.questionsForApplication().getAnswer(0).should.equal("tekstivastaus 1")
+                  hakemusNivelKesa2013WithPeruskouluBaseEducation.questionsForApplication().getAnswer(1).should.equal("Vaihtoehto x 1")
+                })
+              })
+
+              describe("tallennus", function() {
+                before(hakemusNivelKesa2013WithPeruskouluBaseEducation.saveWaitSuccess)
+                it("onnistuu suoraan ilman validaatiovirheitä", function () {
+                  _.all(hakemusNivelKesa2013WithPeruskouluBaseEducation.questionsForApplication().validationMessages(), function(item) {
+                    return item == ""
+                  }).should.be.true
+                })
+              })
             })
           })
+
           describe("Kun poistetaan hakutoive, tallennetaan ja lisätään se uudelleen", function() {
             before(
               hakemusNivelKesa2013WithPeruskouluBaseEducation.getPreference(2).remove,
