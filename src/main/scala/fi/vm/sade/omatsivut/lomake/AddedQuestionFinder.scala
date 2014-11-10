@@ -32,13 +32,13 @@ object AddedQuestionFinder {
     newHakemus.hakutoiveet.map(getHakutoive)
   }
 
-  def findQuestions(applicationSystem: Lomake)(storedApplication: Application, hakemus: HakemusMuutos, newKoulutusIds: List[String])(implicit lang: Language.Language) = {
-    val filteredForm: ElementWrapper = ElementWrapper.wrapFiltered(applicationSystem.form, FlatAnswers.flatten(ApplicationUpdater.getAllAnswersForApplication(applicationSystem, storedApplication.clone(), hakemus)))
+  def findQuestions(applicationSystem: Lomake)(storedApplication: Application, hakemusMuutos: HakemusMuutos, newKoulutusIds: List[String])(implicit lang: Language.Language) = {
+    val filteredForm: ElementWrapper = ElementWrapper.wrapFiltered(applicationSystem.form, FlatAnswers.flatten(ApplicationUpdater.getAllAnswersForApplication(applicationSystem, storedApplication.clone(), hakemusMuutos)))
 
-    val questionsPerHakutoive: List[QuestionNode] = hakemus.hakutoiveet.zipWithIndex.flatMap { case (hakutoive, index) =>
+    val questionsPerHakutoive: List[QuestionNode] = hakemusMuutos.hakutoiveet.zipWithIndex.flatMap { case (hakutoive, index) =>
       hakutoive.get("Koulutus-id") match {
         case Some(koulutusId) if (newKoulutusIds.contains(koulutusId)) =>
-          val addedByHakutoive: Set[QuestionLeafNode] = AddedQuestionFinder.findQuestionsByHakutoive(applicationSystem, storedApplication, hakemus, hakutoive)
+          val addedByHakutoive: Set[QuestionLeafNode] = AddedQuestionFinder.findQuestionsByHakutoive(applicationSystem, storedApplication, hakemusMuutos, hakutoive)
           val groupedQuestions: Seq[QuestionNode] = QuestionGrouper.groupQuestionsByStructure(filteredForm, addedByHakutoive)
 
           groupedQuestions match {
@@ -57,11 +57,11 @@ object AddedQuestionFinder {
     withoutDuplicates(questionsPerHakutoive) ::: duplicates
   }
 
-  private def findQuestionsByHakutoive(lomake: Lomake, storedApplication: Application, newHakemus: HakemusMuutos, hakutoive: HakutoiveData)(implicit lang: Language.Language): Set[QuestionLeafNode] = {
-    val onlyOneHakutoive = getOnlyAskedHakutoiveAsList(newHakemus, hakutoive)
-    val currentAnswersWithOneHakutoive = ApplicationUpdater.getAllUpdatedAnswersForApplication(lomake, storedApplication, newHakemus.copy(hakutoiveet = onlyOneHakutoive))
-    val noHakutoive = getOnlyAskedHakutoiveAsList(newHakemus, Map())
-    val emptyAnswersWithNoHakutoive = ApplicationUpdater.getAllUpdatedAnswersForApplication(lomake, storedApplication, newHakemus.copy(hakutoiveet = noHakutoive).copy(answers = Hakemus.emptyAnswers))
+  private def findQuestionsByHakutoive(lomake: Lomake, storedApplication: Application, hakemusMuutos: HakemusMuutos, hakutoive: HakutoiveData)(implicit lang: Language.Language): Set[QuestionLeafNode] = {
+    val onlyOneHakutoive = getOnlyAskedHakutoiveAsList(hakemusMuutos, hakutoive)
+    val currentAnswersWithOneHakutoive = ApplicationUpdater.getAllUpdatedAnswersForApplication(lomake, storedApplication, hakemusMuutos.copy(hakutoiveet = onlyOneHakutoive))
+    val noHakutoive = getOnlyAskedHakutoiveAsList(hakemusMuutos, Map())
+    val emptyAnswersWithNoHakutoive = ApplicationUpdater.getAllUpdatedAnswersForApplication(lomake, storedApplication, hakemusMuutos.copy(hakutoiveet = noHakutoive).copy(answers = Hakemus.emptyAnswers))
     findAddedQuestions(lomake, currentAnswersWithOneHakutoive, emptyAnswersWithNoHakutoive)
   }
 
