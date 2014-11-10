@@ -69,10 +69,10 @@ function testMode() {
 }
 
 function logExceptionToPiwik(msg) {
-  if (_paq) {
-    _paq.push(["trackEvent", document.domain + "/" + document.title, "Error", msg])
+  if (typeof _paq === 'undefined' || _paq == null) {
+    console.warn("Piwik not present, cannot log: " + msg)
   } else {
-    console.warning("Piwik not present")
+    _paq.push(["trackEvent", document.domain + "/" + document.title, "Error", msg])
   }
 }
 
