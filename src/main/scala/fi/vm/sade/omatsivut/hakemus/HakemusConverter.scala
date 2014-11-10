@@ -30,24 +30,15 @@ trait HakemusConverterComponent {
     def convertToHakemus(lomake: Lomake, haku: Haku, application: Application)(implicit lang: Language.Language) = {
       val koulutusTaustaAnswers: util.Map[String, String] = application.getAnswers.get(educationPhaseKey)
       val receivedTime =  application.getReceived.getTime
-      val hakutoiveet = convertHakuToiveet(application)
       val answers = application.clone().getAnswers.toMap.mapValues { phaseAnswers => phaseAnswers.toMap }
-
-      def hakutoiveDataToHakutoive(data: HakutoiveData): Hakutoive = {
-        data.isEmpty match {
-          case true => Hakutoive.empty
-          case _ =>
-            val hakukohde = tarjontaService.hakukohde(data("Koulutus-id"))
-            Hakutoive(Some(data), hakukohde.flatMap(_.hakuaikaId), hakukohde.flatMap(_.kohteenHakuaika))
-        }
-      }
+      val hakutoiveet = convertHakuToiveet(application)
 
       Hakemus(
         application.getOid,
         receivedTime,
         Option(application.getUpdated).map(_.getTime).getOrElse(receivedTime),
         tila(lomake.oid, haku, application, hakutoiveet),
-        hakutoiveet.map(hakutoiveDataToHakutoive),
+        hakutoiveet,
         haku,
         EducationBackground(koulutusTaustaAnswers.get(baseEducationKey), !Try {koulutusTaustaAnswers.get("ammatillinenTutkintoSuoritettu").toBoolean}.getOrElse(false)),
         answers,
@@ -59,7 +50,7 @@ trait HakemusConverterComponent {
       )
     }
 
-    def tila(applicationSystemId: String, haku: Haku, application: Application, hakutoiveet: List[HakutoiveData])(implicit lang: Language.Language): HakemuksenTila = {
+    def tila(applicationSystemId: String, haku: Haku, application: Application, hakutoiveet: List[Hakutoive])(implicit lang: Language.Language): HakemuksenTila = {
       if (isPostProcessing(application)) {
         PostProcessing()
       } else {
@@ -117,14 +108,23 @@ trait HakemusConverterComponent {
       hakutoiveenValintatulos.vastaanotettavuustila == VastaanotettavuusTila.VASTAANOTETTAVISSA_SITOVASTI
     }
 
-    private def convertToValintatulos(applicationSystemId: String, application: Application, hakutoiveet: List[HakutoiveData])(implicit lang: Language.Language): Option[Valintatulos] = {
+    private def convertToValintatulos(applicationSystemId: String, application: Application, hakutoiveet: List[Hakutoive])(implicit lang: Language.Language): Option[Valintatulos] = {
       def findKoulutus(oid: String): Koulutus = {
-        hakutoiveet.find(_.get("Koulutus-id") == Some(oid)).map{ hakutoive => Koulutus(oid, hakutoive("Koulutus"))}.getOrElse(Koulutus(oid, oid))
+        val koulutus = (for {
+          hakemusData <- hakutoiveet.flatMap(_.hakemusData)
+          koulutusId <- hakemusData.get("Koulutus-id") if koulutusId == oid
+        } yield Koulutus(oid, hakemusData.getOrElse("Koulutus", oid))).headOption
+        koulutus.getOrElse(Koulutus(oid, oid))
       }
 
       def findOpetuspiste(oid: String): Opetuspiste = {
-        hakutoiveet.find(_.get("Opetuspiste-id") == Some(oid)).map{ hakutoive => Opetuspiste(oid, hakutoive("Opetuspiste"))}.getOrElse(Opetuspiste(oid, oid))
+        val opetuspiste = (for {
+          hakemusData <- hakutoiveet.flatMap(_.hakemusData)
+          opetuspisteId <- hakemusData.get("Opetuspiste-id") if opetuspisteId == oid
+        } yield Opetuspiste(oid, hakemusData.getOrElse("Opetuspiste", oid))).headOption
+        opetuspiste.getOrElse(Opetuspiste(oid, oid))
       }
+
       valintatulosService.getValintatulos(application.getOid, applicationSystemId).map { valintaTulos =>
         Valintatulos(valintaTulos.hakutoiveet.map { hakutoiveenTulos =>
           HakutoiveenValintatulos(
@@ -172,8 +172,16 @@ trait HakemusConverterComponent {
       !(state == Application.PostProcessingState.DONE || state == null)
     }
 
-    private def convertHakuToiveet(application: Application): List[HakutoiveData] = {
-      HakutoiveetConverter.convertFromAnswers(application.getAnswers.toMap.mapValues(_.toMap))
+    private def convertHakuToiveet(application: Application): List[Hakutoive] = {
+      def hakutoiveDataToHakutoive(data: HakutoiveData): Hakutoive = {
+        data.isEmpty match {
+          case true => Hakutoive.empty
+          case _ =>
+            val hakukohde = tarjontaService.hakukohde(data("Koulutus-id"))
+            Hakutoive(Some(data), hakukohde.flatMap(_.hakuaikaId), hakukohde.flatMap(_.kohteenHakuaika))
+        }
+      }
+      HakutoiveetConverter.convertFromAnswers(application.getAnswers.toMap.mapValues(_.toMap)).map(hakutoiveDataToHakutoive)
     }
   }
 }
