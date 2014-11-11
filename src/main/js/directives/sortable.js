@@ -6,14 +6,6 @@ module.exports = function(listApp) {
         el.css("transform", "translate3d(0px, " + offset + "px, 0px)")
       }
 
-      var moveDown = function(el) {
-        slide(el, el.outerHeight())
-      }
-
-      var moveUp = function(el) {
-        slide(el, -el.outerHeight())
-      }
-
       var resetSlide = function(el) {
         el.css({
           "transition": "",
