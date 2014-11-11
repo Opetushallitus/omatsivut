@@ -3,6 +3,9 @@
 @import "components.less";
 
 @import "templates/application.less";
+@import "templates/hakutoiveet.less";
+@import "templates/valintatulos.less";
+@import "templates/henkilotiedot.less";
 
 body {
   .body-font;
@@ -249,52 +252,6 @@ button.delete-btn:not(.confirm) {
   }
 }
 
-
-.result-list {
-  border-collapse: collapse;
-  width: 100%;
-  line-height: 125%;
-
-  th {
-    .section-heading-font(@font-color);
-    padding-bottom: 8px;
-    line-height: 20px;
-    border-bottom: 1px solid #bfe4f1;
-
-    &:first-child {
-      width: 70%;
-    }
-  }
-
-  td {
-    padding: 8px 0;
-    border-bottom: 1px solid #bfe4f1;
-    vertical-align: top;
-
-    &:first-child {
-      padding-right: 10px;
-    }
-
-    &:last-child {
-      vertical-align: top;
-      font-style: italic;
-    }
-  }
-
-  tr.canceled {
-    color: @font-color-light;
-  }
-
-  tr.confirmed {
-    color: #666;
-    font-weight: bold;
-  }
-}
-
-.result-status {
-  font-style: italic;
-}
-
 .hakutoiveenVastaanotto, .ilmoittautuminen {
   padding: 20px;
   margin: 10px 0px;
@@ -334,168 +291,7 @@ button.delete-btn:not(.confirm) {
   }
 }
 
-.preference-list {
-  position: relative;
-  .overlay {
-    display: none;
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    background: url(../img/ajax-loader.gif) rgba(255,255,255, 0.5) no-repeat center center;
-    z-index: 1;
-  }
-  &.validating .overlay {
-    display: block;
-  }
-}
 
-.preference-list-item {
-  border-bottom: 1px solid @border-color;
-
-  &:last-child {
-    border-bottom: 0;
-  }
-
-  max-height: 200px;
-  overflow: hidden;
-
-  width: 100%;
-
-  &.saved {
-    background: @save-highlight-question-color;
-  }
-
-  .preference-list-item-layout {
-    display: table;
-    padding: 10px 0px 10px 0px;
-
-    .item-content {
-      display: table-cell;
-      vertical-align: middle;
-    }
-  }
-
-  // Numero
-
-  .item-content:first-child {
-    font-size: 36px;
-    width: 10%;
-    text-align: center;
-    position: relative;
-    padding-right: 10px;
-  }
-
-  .sort-arrow-down {
-    .arrow-button(@arrow-down);
-    margin-top: 10px;
-  }
-
-  .sort-arrow-up {
-    .arrow-button(@arrow-up);
-    margin-bottom: 10px;
-  }
-
-  .row-number {
-    padding-left: 7px;
-  }
-
-  // Opetuspiste
-
-  .item-content:nth-child(2) {
-    width: 75%;
-    padding: 10px 0px;
-
-    .row+.row {
-      margin-top: 15px;
-    }
-
-    .label-column {
-      width: 25%;
-      display: inline-block;
-      font-weight: bold;
-    }
-
-    .value-column {
-      display: inline-block;
-      vertical-align: top;
-      width: 74%;
-    }
-
-    input, select {
-      width: 100%;
-    }
-  }
-
-  label > span.label {
-    width: 20%;
-    display: inline-block;
-    font-weight: bold;
-  }
-
-  // Remove
-
-  .item-content:last-child {
-    width: 15%;
-    line-height: 80px;
-    text-align: right;
-  }
-
-  // Inactive row
-
-  &.inactive {
-    opacity: 0.5;
-    height: 40px;
-    padding-top: 0;
-    padding-bottom: 0;
-    border-bottom: 1px dashed @border-color;
-
-    .item-content:first-child {
-      display: table-cell;
-      vertical-align: middle;
-      text-align: left;
-      padding-left: 23px;
-    }
-
-    button, .item-content {
-      display: none;
-    }
-
-    .row-number {
-      font-size: 18px;
-      display: block;
-    }
-  }
-}
-
-.preference-list-item {
-  transition: background-color 1000ms;
-
-  &.ng-leave {
-    -webkit-transition:0.5s all;
-    transition:0.5s all;
-    max-height: 120px;
-    overflow: hidden;
-  }
-
-  &.ng-leave-active {
-    max-height: 0px;
-    padding-top: 0px;
-    padding-bottom: 0px;
-  }
-
-  &.ng-enter {
-    -webkit-transition:0.5s all;
-    transition:0.5s all;
-    max-height: 0px;
-    overflow: hidden;
-    padding-top: 0px;
-    padding-bottom: 0px;
-  }
-
-  &.ng-enter-active {
-    max-height: 120px;
-  }
-}
 
 .question-group-indent {
   margin-left: 20px;
@@ -559,38 +355,6 @@ label.title {
   color: #444;
 }
 
-.badge {
-  font-size: 12px;
-  font-weight: normal;
-  display: inline-block;
-  line-height: 1.4em;
-  padding: 0 0.4em;
-  color: #ffffff;
-  vertical-align: baseline;
-  border-radius: 3px;
-  box-sizing: border-box;
-  -webkit-box-sizing: border-box;
-  background-color: @badge-background-blue;
-  text-align: left;
-
-  &.gray {
-    background-color: @badge-background-gray;
-  }
-
-  &.green {
-    background-color: @badge-background-green;
-  }
-
-  &.orange {
-    background-color: @badge-background-orange;
-  }
-
-  &.transparent {
-    background-color: rgba(0,0,0,0);
-    color: @font-color-light;
-  }
-}
-
 a.disabled {
   pointer-events: none;
   cursor: default;
@@ -604,55 +368,4 @@ a.disabled {
   }
 }
 
-.application-periods {
-  .inactive {
-    color: @font-color-light;
-  }
-
-  .application-period-status {
-    font-weight: bold;
-    font-style: italic;
-  }
-}
-
-.yhteystiedot {
-  margin-top: 10px;
-
-  input {
-    .with-bg-transition();
-  }
-
-  .clearable-input {
-    margin-right: 5px;
-  }
-
-
-  label {
-    display: block;
-    margin-bottom: 10px;
-  }
-
-  .label-column {
-    font-weight: bold;
-    display: inline-block;
-    width: 200px;
-    vertical-align: top;
-    line-height: 24px;
-  }
-
-  .value-column {
-    display: inline-block;
-    input {
-      width: 100%;
-    }
-
-    .clearable-input {
-      width: 240px;
-    }
-
-    &.postalCode .clearable-input {
-      width: 75px;
-    }
-  }
-}
 

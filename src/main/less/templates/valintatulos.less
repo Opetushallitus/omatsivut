@@ -1,0 +1,46 @@
+@import "../common.less";
+
+.result-list {
+  border-collapse: collapse;
+  width: 100%;
+  line-height: 125%;
+
+  th {
+    .section-heading-font(@font-color);
+    padding-bottom: 8px;
+    line-height: 20px;
+    border-bottom: 1px solid #bfe4f1;
+
+    &:first-child {
+      width: 70%;
+    }
+  }
+
+  td {
+    padding: 8px 0;
+    border-bottom: 1px solid #bfe4f1;
+    vertical-align: top;
+
+    &:first-child {
+      padding-right: 10px;
+    }
+
+    &:last-child {
+      vertical-align: top;
+      font-style: italic;
+    }
+  }
+
+  tr.canceled {
+    color: @font-color-light;
+  }
+
+  tr.confirmed {
+    color: #666;
+    font-weight: bold;
+  }
+}
+
+.result-status {
+  font-style: italic;
+}

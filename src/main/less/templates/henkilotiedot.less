@@ -1,0 +1,41 @@
+.yhteystiedot {
+  margin-top: 10px;
+
+  input {
+    .with-bg-transition();
+  }
+
+  .clearable-input {
+    margin-right: 5px;
+  }
+
+
+  label {
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  .label-column {
+    font-weight: bold;
+    display: inline-block;
+    width: 200px;
+    vertical-align: top;
+    line-height: 24px;
+  }
+
+  .value-column {
+    display: inline-block;
+    input {
+      width: 100%;
+    }
+
+    .clearable-input {
+      width: 240px;
+    }
+
+    &.postalCode .clearable-input {
+      width: 75px;
+    }
+  }
+}
+
