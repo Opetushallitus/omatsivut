@@ -52,9 +52,7 @@ module.exports = function(listApp) {
         .map(function(hakutoive) { return hakutoive.data["Koulutus-id"] })
         .compact().value().join(",")
 
-      var questionQueryParam = newHakutoiveet.length > 0 ? "?questionsOf=" + newHakutoiveet : ""
-
-      var responsePromise = $http.post("/omatsivut/secure/applications/validate/" + application.oid + questionQueryParam, application.toJson())
+      var responsePromise = $http.post("/omatsivut/secure/applications/validate/" + application.oid, application.toJson())
       responsePromise.success(function(data, status, headers, config) {
         if (data.errors.length === 0) {
           success({

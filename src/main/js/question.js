@@ -50,7 +50,7 @@ function initialValue(question, persistedAnswers) {
   }
   function getOldValue(questionId) {
     var phaseAnswers = persistedAnswers[question.id.phaseId]
-    if(phaseAnswers == null || (question.id.phaseId == "hakutoiveet" && questionId.indexOf("preference") === 0)) {
+    if(phaseAnswers == null) {
       return null
     }
     return phaseAnswers[questionId]

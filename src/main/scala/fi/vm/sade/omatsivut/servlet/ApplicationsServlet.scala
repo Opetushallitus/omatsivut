@@ -83,8 +83,7 @@ trait ApplicationsServletContainer {
       val hakuOpt = tarjontaService.haku(muutos.hakuOid, language)
       (lomakeOpt, hakuOpt) match {
         case (Some(lomake), Some(haku)) => {
-          val questionsOf: List[String] = paramOption("questionsOf").getOrElse("").split(',').toList
-          val (errors: List[ValidationError], questions: List[QuestionNode], updatedApplication: Application, hakutoiveet: List[Hakukohde]) = applicationValidator.validateAndFindQuestions(lomake, muutos, haku, questionsOf, personOid())
+          val (errors: List[ValidationError], questions: List[QuestionNode], updatedApplication: Application, hakutoiveet: List[Hakukohde]) = applicationValidator.validateAndFindQuestions(lomake, muutos, haku, personOid())
           ValidationResult(errors, questions, hakutoiveet)
         }
         case _ => InternalServerError("error" -> "Internal service unavailable")
