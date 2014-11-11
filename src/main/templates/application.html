@@ -22,8 +22,8 @@
         </div>
     </div>
 
-    <div ng-if="!application.haku.active" role="presentation">
-        <p class="application-status" ng-if="application.state.id != 'HAKUKIERROSPAATTYNYT' && !application.allResultsAvailable() && application.vastaanotettavatHakutoiveet().length == 0">
+    <div role="presentation">
+        <p class="application-status" ng-if="!application.haku.active && application.state.id != 'HAKUKIERROSPAATTYNYT' && !application.allResultsAvailable() && application.vastaanotettavatHakutoiveet().length == 0">
             <span class="italic">
                 {{ localization('label.applicationPeriodEnded') }}
                 <span ng-if="application.haku.aikataulu.julkistus">

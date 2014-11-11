@@ -452,7 +452,6 @@
       describe("monta hakuaikaa", function() {
         before(page.applyFixtureAndOpen({applicationOid: hakemusErityisopetuksenaId}))
         before(function() { fixtures.setApplicationStart(hakemusErityisopetuksenaId, daysFromNow(-90)) })
-        after(page.applyFixtureAndOpen({applicationOid: hakemusYhteishakuKevat2013WithForeignBaseEducationId}))
 
         describe("jos jonkun hakutoiveen hakuaika on päättynyt ennen muita ja sen tulokset ovat jo saatavilla", function () {
           before(page.applyValintatulosFixtureAndOpen("erillishaku-toinen-valmis", {"haku": "toinen-aste-erillishaku"}))
@@ -464,6 +463,17 @@
             hakemusErityisopetuksena.resultTableTitle().should.equal("Valintatilanne (Kesken)")
             expect(hakemusErityisopetuksena.valintatulokset()[0].tila).to.equal('Opiskelijavalinta kesken')
             expect(hakemusErityisopetuksena.valintatulokset()[1].tila).to.equal('Hyväksytty')
+          })
+
+          it("paikka on vastaanotettavissa", function() {
+            expect(hakemusErityisopetuksena.vastaanotto(0).visible()).to.equal(true)
+            expect(hakemusErityisopetuksena.vastaanotto(0).title()).to.deep.equal([ 'Opiskelupaikka myönnetty: Kiipulan ammattiopisto,  Lahden toimipaikka - Liiketalouden perustutkinto, er, Kevät 2014, valmis' ])
+          })
+        })
+
+        describe("testin tilan siivous", function () {
+          after(page.applyFixtureAndOpen({applicationOid: hakemusYhteishakuKevat2013WithForeignBaseEducationId}))
+          it("palautetaan vanha", function() {
           })
         })
       })
