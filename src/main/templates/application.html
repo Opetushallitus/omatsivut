@@ -1,25 +1,25 @@
 <div role="presentation">
-    <h2>{{application.haku.name }}</h2>
+    <div class="application-header">
+        <h2>{{application.haku.name }}</h2>
 
-    <div class="timestamp-row">
-        <i aria-hidden="true" class="icon-doc-text"></i>
-        <a class="preview" ng-href="/omatsivut/secure/applications/preview/{{application.oid}}" ng-class="{disabled: applicationForm.$dirty|| statusMessageType=='pending' || isValidating}" target="_blank">{{ localization('button.showApplication') }}</a>
-        <span class="timestamp" ng-class="{disabled: form.$dirty || statusMessageType=='pending' || isValidating}">
-            ({{ timestampLabel() }} <time formatted-time="application.updated" format="LLL" />)
-        </span>
-        <div callout="attachments">
-            <localized-link key="message.rememberSendAttachments" href="{{ '/omatsivut/secure/applications/preview/' + application.oid + '#liitteet'}}" target="_blank"></localized-link>
+        <application-periods haku="application.haku"></application-periods>
+
+        <div class="timestamp-row">
+            <i aria-hidden="true" class="icon-doc-text"></i>
+            <a class="preview" ng-href="/omatsivut/secure/applications/preview/{{application.oid}}" ng-class="{disabled: applicationForm.$dirty|| statusMessageType=='pending' || isValidating}" target="_blank">{{ localization('button.showApplication') }}</a>
+            <span class="timestamp" ng-class="{disabled: form.$dirty || statusMessageType=='pending' || isValidating}">
+                {{ timestampLabel() }} <time formatted-time="application.updated" format="LLL" />
+            </span>
+            <div callout="attachments">
+                <localized-link key="message.rememberSendAttachments" href="{{ '/omatsivut/secure/applications/preview/' + application.oid + '#liitteet'}}" target="_blank"></localized-link>
+            </div>
         </div>
-    </div>
 
-    <div ng-if="application.haku.active" role="presentation">
-        <p class="application-status">
-            <application-periods data="application.haku.applicationPeriods" />
-        </p>
-
-        <p class="application-state-message" ng-if="application.state.id == 'POSTPROCESSING' || application.state.id == 'SUBMITTED'">
-            {{ localization("message.applicationIsInPostProcessing") }}
-        </p>
+        <div ng-if="application.haku.active" role="presentation">
+            <p class="application-state-message" ng-if="application.state.id == 'POSTPROCESSING' || application.state.id == 'SUBMITTED'">
+                {{ localization("message.applicationIsInPostProcessing") }}
+            </p>
+        </div>
     </div>
 
     <div ng-if="!application.haku.active" role="presentation">

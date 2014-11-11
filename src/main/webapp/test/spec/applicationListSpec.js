@@ -170,11 +170,11 @@
       })
 
       it("hakuaika näkyy", function() {
-        hakemusNivelKesa2013WithPeruskouluBaseEducation.applicationStatus().should.equal("Hakuaika 1. heinäkuuta 2014 klo 08.00 - 1. joulukuuta 2100 klo 07.00 Haku käynnissä")
+        hakemusNivelKesa2013WithPeruskouluBaseEducation.applicationPeriods().should.equal("Hakuaika 1. heinäkuuta 2014 klo 08.00 - 1. joulukuuta 2100 klo 07.00 Haku käynnissä")
       })
 
       it("tallennusaikaleima näkyy", function() {
-        hakemusNivelKesa2013WithPeruskouluBaseEducation.changesSavedTimestamp().should.match(/\(Hakemusta muokattu \d+\..*?\d+ klo \d+\.\d+\)/)
+        hakemusNivelKesa2013WithPeruskouluBaseEducation.changesSavedTimestamp().should.match(/Hakemusta muokattu \d+\..*?\d+ klo \d+\.\d+/)
       })
 
       describe("haun tyyppi", function() {
@@ -192,7 +192,7 @@
         before(page.applyFixtureAndOpen({applicationOid: hakemusKorkeakouluKevatId, overrideStart: daysFromNow(0) }))
 
         it("hakuaikalistaus näkyy oikein", function() {
-          hakemusKorkeakouluKevat.applicationStatus().should.match(hakuajat("Haku käynnissä", "Hakuaika ei alkanut"))
+          hakemusKorkeakouluKevat.applicationPeriods().should.match(hakuajat("Haku käynnissä", "Hakuaika ei alkanut"))
         })
 
         it("hakutoiveet ovat muokattavissa", function() {
@@ -218,7 +218,7 @@
       describe("kun ollaan hakuaikojen välissä", function() {
         before(page.applyFixtureAndOpen({applicationOid: hakemusKorkeakouluKevatId, overrideStart: daysFromNow(-30)}))
         it("hakuaikalistaus näkyy oikein", function() {
-          hakemusKorkeakouluKevat.applicationStatus().should.match(hakuajat("Hakuaika päättynyt", "Hakuaika ei alkanut"))
+          hakemusKorkeakouluKevat.applicationPeriods().should.match(hakuajat("Hakuaika päättynyt", "Hakuaika ei alkanut"))
         })
 
         it("listaa ei voi muokata", function() {
@@ -238,7 +238,7 @@
       describe("toisella hakuajalla", function() {
         before(page.applyFixtureAndOpen({applicationOid: hakemusKorkeakouluKevatId, overrideStart: daysFromNow(-70)}))
         it("hakuaikalistaus näkyy oikein", function() {
-          hakemusKorkeakouluKevat.applicationStatus().should.match(hakuajat("Hakuaika päättynyt", "Haku käynnissä"))
+          hakemusKorkeakouluKevat.applicationPeriods().should.match(hakuajat("Hakuaika päättynyt", "Haku käynnissä"))
         })
 
         it("ensimmäisen hakuajan hakutoiveet on lukittu", function() {

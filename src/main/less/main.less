@@ -13,7 +13,7 @@ h1 {
 
 h2 {
   .sub-heading-font;
-  margin: 20px 0px 0px 0px;
+  margin: 20px 0px 8px 0px;
 
   &:first-child {
     margin-top: 0;
@@ -47,23 +47,30 @@ a {
 }
 
 .sidebar-menu {
-  font-weight: bold;
+  border-top: 1px solid @menu-border;
+  .menu-font();
+
   li {
     height: 40px;
     line-height: 40px;
     background: @menu-background;
-    padding-left: 55px;
+    padding-left: 40px;
+    margin-left: 12px;
   }
 
   li.sidebar-menu-top-level {
     background: white;
-    border-top: 2px solid @menu-background;
-    padding-left: 35px;
+    padding-left: 0px;
     position: relative;
+
     &:before {
-      content: url(../img/arrow-down.png);
-      position: absolute;
-      left: 10px;
+      content: "";
+      .triangle(@menu-triangle);
+      position: relative;
+      display: inline-block;
+      margin-left: 9px;
+      margin-right: 5px;
+      top: -2px;
     }
   }
 }
@@ -81,7 +88,6 @@ a {
   color: @font-color-light;
   font-style: italic;
 }
-
 
 .status-message {
   .body-font(@font-color-light);
@@ -237,6 +243,17 @@ button.delete-btn:not(.confirm) {
   display: inline-block;
 }
 
+@application-padding-left: 20px;
+
+.application-header {
+  background: @header-background;
+  padding: 17px @application-padding-left;
+
+  a {
+    color: @link-color-alt;
+  }
+}
+
 .application-section-heading {
   .section-heading-font();
   border-bottom: 1px solid @section-border-color;
@@ -276,7 +293,6 @@ button.delete-btn:not(.confirm) {
 
 .application-list-item {
   border: 1px solid @border-color;
-  padding: 20px;
 
   & + .application-list-item {
     margin-top: 50px;
@@ -297,13 +313,18 @@ button.delete-btn:not(.confirm) {
 }
 
 .timestamp-row {
-  margin-bottom: 10px;
+  margin-top: 10px;
   transition: background-color 1000ms;
   display: inline-block;
   position: relative;
 
   &.saved {
     background-color: @save-highlight-timestamp-color;
+  }
+
+  .timestamp {
+    color: @timestamp-color;
+    margin-left: 10px;
   }
 }
 

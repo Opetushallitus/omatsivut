@@ -5,12 +5,14 @@
 .heading-font() {
   font-family: 'PT Sans Narrow', 'Helvetica Neue', helvetica, arial, sans-serif;
   font-size: 22px;
-  font-weight: bold;
+  font-weight: normal;
+  text-transform: uppercase;
 }
 
 .sub-heading-font(@color: @font-color) {
   font-family: 'PT Sans Narrow', 'Helvetica Neue', helvetica, arial, sans-serif;
-  font-size: 18px;
+  letter-spacing: 0.7px;
+  font-size: 22px;
   font-weight: bold;
 }
 
@@ -27,6 +29,11 @@
   line-height: 20px;
   text-transform: none;
   letter-spacing: normal;
+}
+
+.menu-font() {
+  font-family: 'Helvetica Neue', helvetica, arial, sans-serif;
+  font-size: 14px;
 }
 
 // Symbols
@@ -57,14 +64,22 @@
   }
 }
 
+.triangle(@color){
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 5px 3px 0 3px;
+  border-color: @color transparent transparent transparent;
+}
+
 // Colors
 
-@font-color: #333;
+@font-color: #000;
 @font-color-light: #777;
 @font-color-disabled: #ccc;
 @status-text-color: #555;
 @error-color: #c9302c;
-@border-color: #dcdcdc;
+@border-color: #bce7f3;
 @section-border-color: #feba00;
 @input-background: white;
 @input-focus-background: white;
@@ -76,6 +91,9 @@
 @link-visited-color: #707070;
 @link-active-color: #06526b;
 @link-hover-color: #062B37;
+
+@link-color-alt: #0093ba;
+@timestamp-color: #999;
 
 @button-color: #333;
 @button-background: #feba00;
@@ -97,12 +115,16 @@
 @save-highlight-question-color: #f0fff2;
 @save-highlight-timestamp-color: #d9ffdd;
 
-@menu-background: #c2e6f3;
+@menu-background: #ebf8fb;
+@menu-border: @border-color;
+@menu-triangle: #3f9eb3;
 
 @badge-background-blue: rgba(20,158,203,1);
 @badge-background-gray: #999;
 @badge-background-green: rgba(82,154,90,1);
 @badge-background-orange: #f89406;
+
+@header-background: @menu-background;
 
 // Reset
 

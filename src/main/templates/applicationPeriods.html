@@ -1,4 +1,4 @@
-<ul class="application-periods">
+<ul class="application-periods" ng-if="haku().active">
     <li ng-repeat="applicationPeriod in periods()" ng-class="{inactive: !applicationPeriod.active}">
         {{ applicationPeriodString($index) }}
         <time formatted-time="applicationPeriod.start" format="LLL"/> -

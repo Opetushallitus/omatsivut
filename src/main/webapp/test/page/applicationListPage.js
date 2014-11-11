@@ -85,7 +85,7 @@ function ApplicationListPage() {
         return _(texts).chain().compact().flatten().value().join("")
       })
 
-    },
+    }
   }
 
   function applicationPageVisible() {
@@ -310,10 +310,11 @@ function ApplicationListPage() {
       },
 
       applicationStatus: function() {
-        function trimText() {
-          return $(this).text().replace(/(\r\n|\n|\r)/gm,"").replace(/\s+/g," ").trim()
-        }
         return getApplicationElement().find(".application-status").map(trimText).toArray().join(" ")
+      },
+
+      applicationPeriods: function() {
+        return getApplicationElement().find("application-periods").map(trimText).toArray().join(" ")
       },
 
       previewLink: function() {
@@ -654,5 +655,9 @@ function ApplicationListPage() {
     }
 
     return compareTrees(indexInTree(el1), indexInTree(el2))
+  }
+
+  function trimText() {
+    return $(this).text().replace(/(\r\n|\n|\r)/gm,"").replace(/\s+/g," ").trim()
   }
 }
