@@ -2,6 +2,8 @@
 @import "common.less";
 @import "components.less";
 
+@import "templates/application.less";
+
 body {
   .body-font;
 }
@@ -243,38 +245,6 @@ button.delete-btn:not(.confirm) {
   display: inline-block;
 }
 
-@application-padding-left: 20px;
-
-.application-header {
-  background: @header-background;
-  padding: 17px @application-padding-left;
-
-  a {
-    color: @link-color-alt;
-  }
-}
-
-.application-section-heading {
-  .section-heading-font();
-  border-bottom: 1px solid @section-border-color;
-  padding-bottom: 0px;
-  line-height: 40px;
-  letter-spacing: 0.12em;
-  position: relative;
-  overflow: auto;
-
-  .status-message {
-    max-width: 400px;
-    height: auto;
-    position: relative;
-  }
-
-  .ajax-spinner:after {
-    margin: 0;
-    position: absolute;
-    right: 0;
-  }
-}
 
 .application-list-status {
   padding: 20px;
@@ -291,42 +261,6 @@ button.delete-btn:not(.confirm) {
   }
 }
 
-.application-list-item {
-  border: 1px solid @border-color;
-
-  & + .application-list-item {
-    margin-top: 50px;
-  }
-}
-
-.application-status {
-  margin-bottom: 10px;
-}
-
-.application-state-message {
-  margin-top: 15px;
-  font-weight: bold;
-}
-
-.application-section {
-  margin-top: 0px;
-}
-
-.timestamp-row {
-  margin-top: 10px;
-  transition: background-color 1000ms;
-  display: inline-block;
-  position: relative;
-
-  &.saved {
-    background-color: @save-highlight-timestamp-color;
-  }
-
-  .timestamp {
-    color: @timestamp-color;
-    margin-left: 10px;
-  }
-}
 
 .result-list {
   border-collapse: collapse;
