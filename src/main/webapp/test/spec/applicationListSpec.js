@@ -176,15 +176,6 @@
       it("tallennusaikaleima näkyy", function() {
         hakemusNivelKesa2013WithPeruskouluBaseEducation.changesSavedTimestamp().should.match(/Hakemusta muokattu \d+\..*?\d+ klo \d+\.\d+/)
       })
-
-      describe("haun tyyppi", function() {
-        it ("korkeakouluhaussa käytetään eri tekstejä", function() {
-          hakemusKorkeakoulu.labels()[0].should.equal("Korkeakoulu")
-          hakemusNivelKesa2013WithPeruskouluBaseEducation.labels()[1].should.equal("Hakukohde")
-          hakemusYhteishakuKevat2014WithForeignBaseEducation.labels()[0].should.equal("Opetuspiste")
-          hakemusYhteishakuKevat2014WithForeignBaseEducation.labels()[1].should.equal("Hakukohde")
-        })
-      })
     })
 
     describe("jos monta hakuaikaa", function() {

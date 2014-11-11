@@ -16,16 +16,10 @@
 }
 
 .preference-list-item {
-  border-bottom: 1px solid @border-color;
-
-  &:last-child {
-    border-bottom: 0;
-  }
-
   max-height: 200px;
   overflow: hidden;
-
   width: 100%;
+  margin-bottom: 2px;
 
   &.saved {
     background: @save-highlight-question-color;
@@ -33,46 +27,73 @@
 
   .preference-list-item-layout {
     display: table;
-    padding: 10px 0px 10px 0px;
 
     .item-content {
       display: table-cell;
       vertical-align: middle;
+      background: #f5f5f5;
     }
   }
 
   // Numero
 
   .item-content:first-child {
-    font-size: 36px;
-    width: 10%;
+    font-size: 42px;
+    width: 85px;
     text-align: center;
+    background: #ebebeb;
+    color: #525252;
     position: relative;
-    padding-right: 10px;
+  }
+
+  .sort-arrow-container {
+    height: 44px;
+    position: absolute;
+    top: 50%;
+    margin-top: -22px;
+    display: inline-block;
+    right: 10px;
   }
 
   .sort-arrow-down {
-    .arrow-button(@arrow-down);
-    margin-top: 10px;
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    bottom: 0;
+    background: url("../img/sort-arrow-down.png") center center no-repeat #0093ba;
+    background-size: 7px 8px;
+
+    &[disabled] {
+      background-image: url("../img/sort-arrow-down-disabled.png");
+      background-color: #e0e0e0;
+    }
   }
 
   .sort-arrow-up {
-    .arrow-button(@arrow-up);
-    margin-bottom: 10px;
-  }
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    top: 0;
 
-  .row-number {
-    padding-left: 7px;
+    background: url("../img/sort-arrow-up.png") center center no-repeat #0093ba;
+    background-size: 7px 8px;
+
+    &[disabled] {
+      background-image: url("../img/sort-arrow-up-disabled.png");
+      background-color: #e0e0e0;
+    }
   }
 
   // Opetuspiste
 
   .item-content:nth-child(2) {
     width: 75%;
-    padding: 10px 0px;
+    padding: 15px 0px 15px 33px;
 
     .row+.row {
-      margin-top: 15px;
+      margin-top: 8px;
     }
 
     .label-column {
@@ -90,6 +111,16 @@
     input, select {
       width: 100%;
     }
+
+    .opetuspiste label {
+      .preference-font();
+    }
+
+    .hakuaika {
+      text-transform: uppercase;
+      color: #999;
+      font-size: 11px;
+    }
   }
 
   label > span.label {
@@ -102,27 +133,14 @@
 
   .item-content:last-child {
     width: 15%;
-    line-height: 80px;
     text-align: right;
+    padding-right: 10px;
   }
 
   // Inactive row
 
   &.inactive {
-    opacity: 0.5;
-    height: 40px;
-    padding-top: 0;
-    padding-bottom: 0;
-    border-bottom: 1px dashed @border-color;
-
-    .item-content:first-child {
-      display: table-cell;
-      vertical-align: middle;
-      text-align: left;
-      padding-left: 23px;
-    }
-
-    button, .item-content {
+    button, .item-content div {
       display: none;
     }
 
@@ -132,6 +150,8 @@
     }
   }
 }
+
+// Transitions
 
 .preference-list-item {
   transition: background-color 1000ms;
