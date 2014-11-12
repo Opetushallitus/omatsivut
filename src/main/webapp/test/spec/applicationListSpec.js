@@ -459,11 +459,13 @@
       })
 
       describe("monta hakuaikaa", function() {
-        before(page.applyFixtureAndOpen({applicationOid: hakemusErityisopetuksenaId}))
-        before(function() { fixtures.setApplicationStart(hakemusErityisopetuksenaId, daysFromNow(-90)) })
+        before(
+          page.applyFixtureAndOpen({applicationOid: hakemusErityisopetuksenaId}),
+          function() { fixtures.setApplicationStart(hakemusErityisopetuksenaId, daysFromNow(-90))},
+          page.applyValintatulosFixtureAndOpen("erillishaku-toinen-valmis", {"haku": "toinen-aste-erillishaku"})
+        )
 
         describe("jos jonkun hakutoiveen hakuaika on päättynyt ennen muita ja sen tulokset ovat jo saatavilla", function () {
-          before(page.applyValintatulosFixtureAndOpen("erillishaku-toinen-valmis", {"haku": "toinen-aste-erillishaku"}))
           it("hakutoiveet ovat näkyvissä", function () {
             hakemusErityisopetuksena.preferencesForApplication().length.should.equal(2)
           })
