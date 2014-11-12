@@ -4,6 +4,9 @@
 
 ## QA:lla, odottaa tuotantoon siirtoa
 
+### [release-1785](https://bamboo.oph.ware.fi/deploy/viewDeploymentVersion.action?versionId=110985364)
+- Tuki useammaella ja hakukohdekohtaisille hakuajoille [OHP-110](https://jira.oph.ware.fi/jira/browse/OHP-110)
+
 ## Tuotannossa
 
 ### [release-1711](https://bamboo.oph.ware.fi/deploy/viewDeploymentVersion.action?versionId=109478162)
