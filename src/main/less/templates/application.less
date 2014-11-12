@@ -14,9 +14,10 @@
   }
 }
 
-.application-header {
+section.application-header {
   background: @header-background;
   padding: 17px @application-padding-left;
+  margin: 0;
 
   a, a:visited {
     color: @link-color-alt;
@@ -43,8 +44,10 @@
   }
 }
 
-.application-status {
-  margin-bottom: 10px;
+section.application-status {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  font-style: italic;
 }
 
 .application-state-message {
@@ -54,6 +57,23 @@
 
 .application-section {
   margin-top: 0px;
+}
+
+section+section {
+  border-top: 1px solid @border-color-section;
+}
+
+section.hakutoiveet+section {
+  border-top: none;
+}
+
+section.application-status {
+  border-top: none;
+}
+
+section.application-valintatulos {
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 .application-section-heading {

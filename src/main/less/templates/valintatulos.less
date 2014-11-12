@@ -7,18 +7,18 @@
 
   th {
     .section-heading-font(@font-color);
+    font-weight: normal;
     padding-bottom: 8px;
     line-height: 20px;
-    border-bottom: 1px solid #bfe4f1;
 
-    &:first-child {
-      width: 70%;
+    .result-list-status {
+      text-transform: none;
+      color: @font-color-light;
     }
   }
 
   td {
-    padding: 8px 0;
-    border-bottom: 1px solid #bfe4f1;
+    padding: 4px 4px;
     vertical-align: top;
 
     &:first-child {
@@ -26,17 +26,21 @@
     }
 
     &:last-child {
+      width: 10px;
       vertical-align: top;
-      font-style: italic;
+      text-transform: uppercase;
+      padding-right: 10px;
     }
+
+    background: @table-background;
+    margin-bottom: 1px;
   }
 
-  tr.canceled {
-    color: @font-color-light;
+  tr+tr {
+    border-top: 3px solid white;
   }
 
-  tr.confirmed {
-    color: #666;
+  tr.accepted {
     font-weight: bold;
   }
 }

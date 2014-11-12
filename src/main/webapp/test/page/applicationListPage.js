@@ -335,10 +335,6 @@ function ApplicationListPage() {
         return getApplicationElement().length > 0
       },
 
-      applicationState: function() {
-        return getApplicationElement().find(".application-state-message").text().trim()
-      },
-
       calloutText: function() {
         var callout = getApplicationElement().find("div[callout]:visible")
         return callout.text().trim()
