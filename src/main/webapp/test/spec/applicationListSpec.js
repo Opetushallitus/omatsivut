@@ -258,13 +258,7 @@
     describe("hakutoivekohtaiset hakuajat", function() {
       before(page.applyFixtureAndOpen({applicationOid: hakemusErityisopetuksenaId, overrideStart: daysFromNow(0)}))
       var date = "\\d+\\. .*?\\d{4} klo \\d\\d\\.\\d\\d"
-      var dateRange = new RegExp("^" + date + " - " + date + "$")
-
-      it("ovat näkyvissä", function() {
-        hakemusErityisopetuksena.getPreference(0).hakuaika().should.match(dateRange)
-        hakemusErityisopetuksena.getPreference(1).hakuaika().should.match(dateRange)
-        hakemusErityisopetuksena.getPreference(2).hakuaika().should.equal("")
-      })
+      var dateRange = new RegExp("^Hakuaika päättyy " + date + "$")
 
       it("hakutoive lukittuu hakutoivekohtaisen hakuajan jälkeen", function() {
         hakemusErityisopetuksena.getPreference(0).isLocked().should.be.true

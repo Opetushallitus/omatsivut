@@ -559,7 +559,7 @@ function ApplicationListPage() {
         return el().find(".koulutus [ng-bind='hakutoive.data.Koulutus']").text()
       },
       hakuaika: function () {
-        return el().find(".hakuaika .value-column").text().trim().replace(/[\s\n]+/g, " ")
+        return el().find(".hakuaika").text().trim()
       },
       toString: function() {
         return api.opetuspiste() + " " + api.koulutus()
