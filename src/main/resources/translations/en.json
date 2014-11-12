@@ -11,9 +11,9 @@
   "label": {
     "applicationPeriod": "Application period",
     "applicationPeriodActive": "In progress",
+    "applicationPeriodEnds": "Application period will end",
     "applicationPeriodPassed": "Application period ended",
     "applicationPeriodNotStarted": "Application period not started",
-
     "applicationPeriodEnded": "Student admission process is unfinished.",
     "applicationRoundEnded": "Application round has ended.",
     "applicationReceived": "Application created",

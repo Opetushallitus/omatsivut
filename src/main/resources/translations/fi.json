@@ -11,6 +11,7 @@
   "label": {
     "applicationPeriod": "Hakuaika",
     "applicationPeriodActive": "Haku käynnissä",
+    "applicationPeriodEnds": "Hakuaika päättyy",
     "applicationPeriodPassed": "Hakuaika päättynyt",
     "applicationPeriodNotStarted": "Hakuaika ei alkanut",
     "applicationPeriodEnded": "Opiskelijavalinta on kesken.",
