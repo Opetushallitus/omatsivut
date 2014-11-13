@@ -33,6 +33,21 @@ Question.fromJson = function(json, persistedAnswers) {
   return new Question(json, initialValue(json, persistedAnswers), json.required ? ["*"] : [])
 }
 
+Question.getQuestions = function(jsonQuestions, application) {
+  return convertToItems(jsonQuestions, new QuestionGroup())
+
+  function convertToItems(questions, results) {
+    _(questions).each(function (questionNode) {
+      if (questionNode.questions != null) {
+        results.questionNodes.push(convertToItems(questionNode.questions, new QuestionGroup(questionNode.title)))
+      } else {
+        results.questionNodes.push(Question.fromJson(questionNode, application.persistedAnswers))
+      }
+    })
+    return results
+  }
+}
+
 Question.prototype = {
   setErrors: function(errors) {
     this.errors = errors || []

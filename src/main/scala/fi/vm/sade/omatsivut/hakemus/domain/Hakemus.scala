@@ -1,5 +1,6 @@
 package fi.vm.sade.omatsivut.hakemus.domain
 
+import fi.vm.sade.omatsivut.hakemus.FlatAnswers
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
 import fi.vm.sade.omatsivut.hakemus.domain.ResultState.ResultState
 import fi.vm.sade.omatsivut.hakemus.domain.HakutoiveenValintatulosTila.HakutoiveenValintatulosTila
@@ -24,7 +25,7 @@ case class Hakemus(
                     answers: Answers,
                     postOffice: Option[String],
                     requiresAdditionalInfo: Boolean
-                  ) extends HakemuksenTunniste with HakemusLike {
+                  ) extends HakemusLike {
   def preferences = hakutoiveet.map(_.hakemusData.getOrElse(Map.empty))
   def toHakemusMuutos = HakemusMuutos(oid, haku.oid, hakutoiveet.map(_.hakemusData.getOrElse(Map.empty)), answers)
 }
@@ -39,15 +40,12 @@ case class HakemusMuutos (
                     hakuOid: String,
                     hakutoiveet: List[HakutoiveData] = Nil,
                     answers: Answers
-                    ) extends HakemuksenTunniste with HakemusLike {
+                    ) extends HakemusLike {
   def preferences = hakutoiveet
 }
 
-trait HakemuksenTunniste {
-  def oid: String
-}
-
 trait HakemusLike {
+  def oid: String
   def preferences: List[HakutoiveData]
   def answers: Answers
 }

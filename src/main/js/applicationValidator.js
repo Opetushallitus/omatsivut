@@ -31,21 +31,6 @@ module.exports = function(listApp) {
       }
     }
 
-    function getQuestions(data, application) {
-      return convertToItems(data.questions, new QuestionGroup())
-
-      function convertToItems(questions, results) {
-        _(questions).each(function (questionNode) {
-          if (questionNode.questions != null) {
-            results.questionNodes.push(convertToItems(questionNode.questions, new QuestionGroup(questionNode.title)))
-          } else {
-            results.questionNodes.push(Question.fromJson(questionNode, application.persistedAnswers))
-          }
-        })
-        return results
-      }
-    }
-
     function validateBackend(application, success, error) {
       var newHakutoiveet = _(application.hakutoiveet).chain()
         .filter(function(hakutoive) { return hakutoive.addedDuringCurrentSession })
@@ -56,14 +41,14 @@ module.exports = function(listApp) {
       responsePromise.success(function(data, status, headers, config) {
         if (data.errors.length === 0) {
           success({
-            questions: getQuestions(data, application),
+            questions: Question.getQuestions(data.questions, application),
             response: data
           })
         } else {
           error({
             statusCode: 200,
             errors: data.errors,
-            questions: getQuestions(data, application),
+            questions: Question.getQuestions(data.questions, application),
             response: data
           })
         }

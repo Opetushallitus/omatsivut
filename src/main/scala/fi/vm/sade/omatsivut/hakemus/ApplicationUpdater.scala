@@ -6,7 +6,7 @@ import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
-import fi.vm.sade.omatsivut.hakemus.domain.{Hakemus, HakemusLike, HakemusMuutos}
+import fi.vm.sade.omatsivut.hakemus.domain.{HakemusLike, Hakemus, HakemusMuutos}
 import fi.vm.sade.omatsivut.lomake.domain.{Lomake, AnswerId, QuestionId}
 import fi.vm.sade.omatsivut.lomake.{AddedQuestionFinder, ElementWrapper, FormQuestionFinder}
 
@@ -18,7 +18,7 @@ object ApplicationUpdater {
   /**
    * NOTE this method mutates the application, so call with application.clone(), if it is not wanted.
    */
-  def update(lomake: Lomake, application: Application, hakemus: HakemusMuutos)(implicit lang: Language.Language) = {
+  def update(lomake: Lomake, application: Application, hakemus: HakemusLike)(implicit lang: Language.Language) = {
     val updatedAnswers = getUpdatedAnswersForApplication(lomake, application, hakemus)
     updatedAnswers.foreach { case (phaseId, phaseAnswers) =>
       application.addVaiheenVastaukset(phaseId, phaseAnswers)
@@ -27,9 +27,9 @@ object ApplicationUpdater {
     application
   }
 
-  private def getUpdatedAnswersForApplication(lomake: Lomake, application: Application, hakemusMuutos: HakemusMuutos)(implicit lang: Language.Language): Answers = {
-    val allAnswers = getAllUpdatedAnswersForApplication(lomake, application, hakemusMuutos.answers, hakemusMuutos.preferences)
-    val removedAnswerIds = getRemovedAnswerIds(lomake, application, hakemusMuutos)
+  private def getUpdatedAnswersForApplication(lomake: Lomake, application: Application, hakemus: HakemusLike)(implicit lang: Language.Language): Answers = {
+    val allAnswers = getAllUpdatedAnswersForApplication(lomake, application, hakemus.answers, hakemus.preferences)
+    val removedAnswerIds = getRemovedAnswerIds(lomake, application, hakemus)
 
     applyHiddenValues(lomake, pruneOrphanedAnswers(removedAnswerIds, allAnswers))
   }
@@ -64,7 +64,7 @@ object ApplicationUpdater {
     }
   }
 
-  private def getRemovedAnswerIds(lomake: Lomake, application: Application, hakemus: HakemusMuutos)(implicit lang: Language.Language): Seq[AnswerId] = {
+  private def getRemovedAnswerIds(lomake: Lomake, application: Application, hakemus: HakemusLike)(implicit lang: Language.Language): Seq[AnswerId] = {
     val allOldAnswers = allAnswersFromApplication(application)
     val allNewAnswers = getAllAnswersForApplication(lomake, application, hakemus)
 

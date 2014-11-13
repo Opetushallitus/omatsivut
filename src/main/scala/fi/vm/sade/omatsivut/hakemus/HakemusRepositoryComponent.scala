@@ -103,7 +103,7 @@ trait HakemusRepositoryComponent {
       application
     }
 
-    override def fetchHakemukset(personOid: String)(implicit lang: Language.Language): List[Hakemus] = {
+    override def fetchHakemukset(personOid: String)(implicit lang: Language.Language) = {
       fetchHakemukset(new Application().setPersonOid(personOid))
     }
 
@@ -130,9 +130,9 @@ trait HakemusRepositoryComponent {
           } yield {
             val hakemus = hakemusConverter.convertToHakemus(lomake, haku, application)
             auditLogger.log(ShowHakemus(application.getPersonOid, hakemus.oid, haku.oid))
-            hakemus
+            (haku, lomake, hakemus, application)
           }
-        }).flatten.toList.sortBy[Long](_.received).reverse
+        }).flatten.toList.sortBy[Long](_._3.received).reverse
       }
     }
 

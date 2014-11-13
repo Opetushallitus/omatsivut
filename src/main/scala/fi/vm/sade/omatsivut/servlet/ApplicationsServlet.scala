@@ -38,11 +38,13 @@ trait ApplicationsServletContainer {
       contentType = formats("json")
     }
 
-    val getApplicationsSwagger: OperationBuilder = (apiOperation[List[Hakemus]]("getApplications")
+    val getApplicationsSwagger: OperationBuilder = (apiOperation[List[HakemusInfo]]("getApplications")
       summary "Hae kirjautuneen oppijan hakemukset"
     )
     get("/", operation(getApplicationsSwagger)) {
-      hakemusRepository.fetchHakemukset(personOid())
+      hakemusRepository.fetchHakemukset(personOid()).map(hakemus => {
+        applicationValidator.validateAndFindQuestions(hakemus._1, hakemus._2, hakemus._3, hakemus._4, personOid())
+      })
     }
 
     val putApplicationsSwagger = (apiOperation[Hakemus]("putApplication")
@@ -71,9 +73,8 @@ trait ApplicationsServletContainer {
       response.getOrElse(InternalServerError("error" -> "Internal service unavailable"))
     }
 
-    val validateApplicationsSwagger = (apiOperation[ValidationResult]("validateApplication")
+    val validateApplicationsSwagger = (apiOperation[HakemusInfo]("validateApplication")
       summary "Tarkista hakemus ja palauta virheet sekä pyydettyjen kohteiden kysymykset"
-      parameter queryParam[String]("questionsOf").description("Hakukohteiden oidit joiden kysymykset halultaan. Pilkulla eroteltuna")
       parameter pathParam[String]("oid").description("Hakemuksen oid")
       parameter bodyParam[HakemusMuutos]("muutos").description("Päivitetty hakemus")
     )
@@ -83,8 +84,7 @@ trait ApplicationsServletContainer {
       val hakuOpt = tarjontaService.haku(muutos.hakuOid, language)
       (lomakeOpt, hakuOpt) match {
         case (Some(lomake), Some(haku)) => {
-          val (errors: List[ValidationError], questions: List[QuestionNode], updatedApplication: Application, hakutoiveet: List[Hakukohde]) = applicationValidator.validateAndFindQuestions(lomake, muutos, haku, personOid())
-          ValidationResult(errors, questions, hakutoiveet)
+          applicationValidator.validateAndFindQuestions(lomake, muutos, haku, personOid())
         }
         case _ => InternalServerError("error" -> "Internal service unavailable")
       }
@@ -136,5 +136,5 @@ trait ApplicationsServletContainer {
 
 case class ClientSideVastaanotto(hakukohdeOid: String, tila: String)
 
-case class ValidationResult(errors: List[ValidationError], questions: List[QuestionNode], hakukohteet: List[Hakukohde])
+case class HakemusInfo(hakemus: Hakemus, errors: List[ValidationError], questions: List[QuestionNode], hakukohteet: List[Hakukohde])
 

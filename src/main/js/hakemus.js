@@ -3,18 +3,18 @@ var Question = require('./question').Question
 var util = require('./util')
 
 function Hakemus(json) {
-  this.oid = json.oid
-  this.updated = json.updated
-  this.haku = copy(json.haku)
-  this.state = copy(json.state)
-  this.educationBackground = copy(json.educationBackground)
+  this.oid = json.hakemus.oid
+  this.updated = json.hakemus.updated
+  this.haku = copy(json.hakemus.haku)
+  this.state = copy(json.hakemus.state)
+  this.educationBackground = copy(json.hakemus.educationBackground)
 
-  this.hakutoiveet = convertHakutoiveet(json.hakutoiveet)
-  this.henkilotiedot = convertHenkilotiedot(json.answers.henkilotiedot)
-  this.persistedAnswers = json.answers
-  this.additionalQuestions = { questionNodes: [] }
+  this.hakutoiveet = convertHakutoiveet(json.hakemus.hakutoiveet)
+  this.henkilotiedot = convertHenkilotiedot(json.hakemus.answers.henkilotiedot)
+  this.persistedAnswers = json.hakemus.answers
+  this.additionalQuestions = Question.getQuestions(json.questions, this)
   this.calculatedValues = {
-    postOffice: json.postOffice
+    postOffice: json.hakemus.postOffice
   }
 }
 

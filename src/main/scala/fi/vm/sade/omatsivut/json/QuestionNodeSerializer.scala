@@ -17,7 +17,8 @@ class QuestionNodeSerializer extends Serializer[QuestionNode] {
         case Some("Radio") => json.extract[Radio]
         case Some("Checkbox") => json.extract[Checkbox]
         case Some("Dropdown") => json.extract[Dropdown]
-        case unknown => throw new MappingException("Unknown question type " + unknown)
+        case None => json.extract[Label]
+        case unknown => throw new MappingException("Unknown question type " + unknown + " of " + question)
       }
 
       case x => throw new MappingException("Can't convert " + x + " to QuestionNode")

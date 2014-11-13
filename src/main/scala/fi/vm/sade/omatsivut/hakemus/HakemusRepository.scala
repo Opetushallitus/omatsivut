@@ -8,7 +8,7 @@ import fi.vm.sade.omatsivut.tarjonta.Haku
 trait HakemusRepository {
   def updateHakemus(lomake: Lomake, haku: Haku)(hakemus: HakemusMuutos, userOid: String)(implicit lang: Language): Option[Hakemus]
   def findStoredApplicationByOid(oid: String): Application
-  def fetchHakemukset(personOid: String)(implicit lang: Language): List[Hakemus]
-  def getHakemus(personOid: String, hakemusOid: String)(implicit lang: Language): Option[Hakemus]
+  def fetchHakemukset(personOid: String)(implicit lang: Language): List[(Haku, Lomake, Hakemus, Application)]
+  def getHakemus(personOid: String, hakemusOid: String)(implicit lang: Language): Option[(Haku, Lomake, Hakemus, Application)]
   def exists(personOid: String, hakuOid: String, hakemusOid: String): Boolean
 }

@@ -7,6 +7,7 @@ import fi.vm.sade.haku.oppija.hakemus.it.dao.ApplicationDAO
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 import fi.vm.sade.omatsivut.fixtures.{FixtureImporter, TestFixture}
 import fi.vm.sade.omatsivut.json.{QuestionNodeSerializer, JsonFormats}
+import fi.vm.sade.omatsivut.servlet.HakemusInfo
 import org.json4s.JsonAST.JObject
 import org.json4s._
 import fi.vm.sade.omatsivut.fixtures.{FixtureImporter, TestFixture}
@@ -51,8 +52,8 @@ trait HakemusApiSpecification extends ScalatraTestSupport {
   def withApplications[T](f: (List[Hakemus] => T))(implicit personOid: PersonOid): T = {
     authGet("secure/applications") {
       val b = body
-      val applications: List[Hakemus] = Serialization.read[List[Hakemus]](b)
-      f(applications)
+      val applications: List[HakemusInfo] = Serialization.read[List[HakemusInfo]](b)
+      f(applications.map(_.hakemus))
     }
   }
 
