@@ -21,10 +21,6 @@
   width: 100%;
   margin-bottom: 2px;
 
-  &.saved {
-    background: @save-highlight-question-color;
-  }
-
   .preference-list-item-layout {
     display: table;
     width: 100%;
@@ -173,7 +169,15 @@
 // Transitions
 
 .preference-list-item {
-  transition: background-color 1000ms;
+  .item-content {
+    transition: background-color 1000ms;
+  }
+
+  &.saved {
+    .item-content {
+      background: @save-highlight-question-color;
+    }
+  }
 
   &.ng-leave {
     -webkit-transition:0.5s all;

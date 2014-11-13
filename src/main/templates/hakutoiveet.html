@@ -1,4 +1,4 @@
-<div class="preference-list" ng-class="{validating: isValidating}" sortable sortable-item=".preference-list-item" sortable-moved="movePreference">
+<div class="preference-list" ng-class="{validating: validating}" sortable sortable-item=".preference-list-item" sortable-moved="movePreference">
     <div class="overlay"></div>
     <div class="preference-list-item" aria-label="{{ ($index+1) + '. ' + hakutoive.data.Opetuspiste + ' - ' + hakutoive.data.Koulutus }}" ng-repeat="hakutoive in application.hakutoiveet" ng-controller="hakutoiveController" ng-class="{'inactive': isEditingDisabled() && hakutoive.isNew}">
         <div class="preference-list-item-layout">
