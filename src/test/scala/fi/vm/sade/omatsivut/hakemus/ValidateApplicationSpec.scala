@@ -48,7 +48,7 @@ class ValidateApplicationSpec extends HakemusApiSpecification with FixturePerson
 
     "get additional question correctly for old questions" in {
       withHakemus(TestFixture.hakemusWithGradeGridAndDancePreference) { hakemus =>
-        validate(hakemus, Some("1.2.246.562.5.31982630126,1.2.246.562.5.68672543292,1.2.246.562.14.2013102812460331191879" )) { (errors, structuredQuestions) =>
+        validate(hakemus) { (errors, structuredQuestions) =>
           status must_== 200
           QuestionNode.flatten(structuredQuestions).map(_.id) must_== List(
              QuestionId("hakutoiveet","preference1-discretionary"),
@@ -64,10 +64,8 @@ class ValidateApplicationSpec extends HakemusApiSpecification with FixturePerson
     }
   }
 
-  def validate[T](hakemus:Hakemus, questionsOf: Option[String] = None)(f: (List[ValidationError], List[QuestionNode]) => T)(implicit personOid: PersonOid) = {
-    authPost("secure/applications/validate/" + hakemus.oid + (questionsOf match {
-        case Some(value) =>  "?questionsOf=" + value
-        case None => ""}), Serialization.write(hakemus.toHakemusMuutos)) {
+  def validate[T](hakemus:Hakemus)(f: (List[ValidationError], List[QuestionNode]) => T)(implicit personOid: PersonOid) = {
+    authPost("secure/applications/validate/" + hakemus.oid, Serialization.write(hakemus.toHakemusMuutos)) {
       val result: JValue = JsonMethods.parse(body)
       val errors: List[ValidationError] = (result \ "errors").extract[List[ValidationError]]
       val structuredQuestions: List[QuestionNode] = (result \ "questions").extract[List[QuestionNode]]
