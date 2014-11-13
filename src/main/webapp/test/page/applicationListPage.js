@@ -164,13 +164,13 @@ function ApplicationListPage() {
 
       valintatulokset: function () {
         var application = getApplicationElement(applicationIndex)
-
+        var nbsp = /\u00A0/g
         return application.find(application.find(".result-list tr[ng-repeat]"))
           .map(function () {
             var el = $(this)
             return {
               hakukohde: el.find("[ng-bind='tulos.opetuspiste.name']").text() + " " + el.find("[ng-bind='tulos.koulutus.name']").text(),
-              tila: el.find("[ng-bind='valintatulosText(tulos)']").text().trim()
+              tila: el.find("[ng-bind='valintatulosText(tulos)']").text().trim().replace(nbsp, " ")
             }
           }).toArray()
       },

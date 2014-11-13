@@ -40,18 +40,18 @@
 
     "resultState": {
       "Hyvaksytty": "Godkänd",
-      "Kesken": "Studerandeantagningen oavslutad",
-      "HarkinnanvaraisestiHyvaksytty": "Godkänd enligt prövning",
-      "Varalla": "__reservplats__. på reservplats",
-      "VarallaPvm": "__reservplats___. på reservplats. Reservplatser fylls ända till __varasijaPvm__.",
+      "Kesken": "Studerandeantagningen\u00A0oavslutad",
+      "HarkinnanvaraisestiHyvaksytty": "Godkänd\u00A0enligt\u00A0prövning",
+      "Varalla": "__reservplats__.\u00A0på\u00A0reservplats",
+      "VarallaPvm": "__reservplats___.\u00A0på\u00A0reservplats. Reservplatser fylls ända till __varasijaPvm__.",
       "Peruutettu": "Annullerats",
-      "Perunut": "Du har annullerat studieplatsen",
-      "Peruuntunut": "Ansökan har blivit annullerad",
-      "VarasijaltaHyvaksytty": "Godkänd från reservplats",
-      "Vastaanottanut": "Du har tagit emot studieplatsen",
-      "Hylatty": "Du har inte fått någon studieplats",
-      "EhdollisestiVastaanottanut": "Du har tagit emot studieplatsen villkorligt",
-      "EiVastaanotettuMaaraAikana": "Du har inte tagit emot studieplatsen inom utsatt tid"
+      "Perunut": "Du\u00A0har\u00A0annullerat\u00A0studieplatsen",
+      "Peruuntunut": "Ansökan\u00A0har\u00A0blivit\u00A0annullerad",
+      "VarasijaltaHyvaksytty": "Godkänd\u00A0från\u00A0reservplats",
+      "Vastaanottanut": "Du\u00A0har\u00A0tagit\u00A0emot\u00A0studieplatsen",
+      "Hylatty": "Du\u00A0har\u00A0inte\u00A0fått\u00A0någon\u00A0studieplats",
+      "EhdollisestiVastaanottanut": "Du\u00A0har\u00A0tagit\u00A0emot studieplatsen villkorligt",
+      "EiVastaanotettuMaaraAikana": "Du\u00A0har\u00A0inte\u00A0tagit\u00A0emot studieplatsen inom utsatt tid"
     }
   },
 
