@@ -354,9 +354,9 @@
         })
 
         it("ilmoitetaan myönnetystä paikasta", function() {
-          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).title()).to.deep.equal([
-                "Opiskelupaikka myönnetty: Kallion lukio - Lukio"
-          ])
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).title()).to.deep.equal(
+            "Opiskelupaikka myönnetty Kallion lukio - Lukio"
+          )
         })
 
         it("paikka on vastaanotettavissa", function() {
@@ -437,9 +437,9 @@
       describe("kun lopulliset tulokset on julkaistu ja opiskelija on hyväksytty", function() {
         before(page.applyValintatulosFixtureAndOpen("hyvaksytty-kesken-julkaistavissa"))
         it("ilmoitetaan myönnetystä paikasta", function() {
-          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).title()).to.deep.equal([
-                "Opiskelupaikka myönnetty: Kallion lukio - Lukion ilmaisutaitolinja"
-          ])
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).title()).to.deep.equal(
+                "Opiskelupaikka myönnetty Kallion lukio - Lukion ilmaisutaitolinja"
+          )
         })
       })
 
@@ -461,7 +461,7 @@
 
           it("paikka on vastaanotettavissa", function() {
             expect(hakemusErityisopetuksena.vastaanotto(0).visible()).to.equal(true)
-            expect(hakemusErityisopetuksena.vastaanotto(0).title()).to.deep.equal([ 'Opiskelupaikka myönnetty: Kiipulan ammattiopisto,  Lahden toimipaikka - Liiketalouden perustutkinto, er, Kevät 2014, valmis' ])
+            expect(hakemusErityisopetuksena.vastaanotto(0).title()).to.equal("Opiskelupaikka myönnetty Kiipulan ammattiopisto, Lahden toimipaikka - Liiketalouden perustutkinto, er, Kevät 2014, valmis")
           })
         })
 
@@ -839,8 +839,8 @@
           before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send)
 
           it("Oili-linkki tulee näkyviin ja toinen paikka on yhä mahdollista vastaanottaa", function() {
-            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).title()).to.deep.equal([ 'Opiskelupaikka myönnetty: Kallion lukio - Lukio' ])
-            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.ilmoittautuminen(0).title()).to.deep.equal([ 'Ilmoittaudu lukukaudelle: Kallion lukio - Lukion ilmaisutaitolinja' ])
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).title()).to.equal('Opiskelupaikka myönnetty Kallion lukio - Lukio')
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.ilmoittautuminen(0).title()).to.equal('Ilmoittaudu lukukaudelle Kallion lukio - Lukion ilmaisutaitolinja')
           })
 
           describe("Kun toinen paikka otetaan vastaan", function() {
@@ -848,8 +848,8 @@
             before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send)
 
             it("Näkyy oili linkki molemmille paikoille", function() {
-              expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.ilmoittautuminen(0).title()).to.deep.equal([ 'Ilmoittaudu lukukaudelle: Kallion lukio - Lukion ilmaisutaitolinja' ])
-              expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.ilmoittautuminen(1).title()).to.deep.equal([ 'Ilmoittaudu lukukaudelle: Kallion lukio - Lukio' ])
+              expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.ilmoittautuminen(0).title()).to.equal('Ilmoittaudu lukukaudelle Kallion lukio - Lukion ilmaisutaitolinja')
+              expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.ilmoittautuminen(1).title()).to.equal('Ilmoittaudu lukukaudelle Kallion lukio - Lukio')
             })
           })
         })

@@ -17,18 +17,18 @@
     </section>
 
     <section class="application-status" role="presentation">
-        <div ng-if="!application.haku.active && application.state.id != 'HAKUKIERROSPAATTYNYT' && !application.allResultsAvailable() && application.vastaanotettavatHakutoiveet().length == 0">
+        <div class="application-status-item" ng-if="!application.haku.active && application.state.id != 'HAKUKIERROSPAATTYNYT' && !application.allResultsAvailable() && application.vastaanotettavatHakutoiveet().length == 0">
             {{ localization('label.applicationPeriodEnded') }}
             <span ng-if="application.haku.aikataulu.julkistus">
                 {{ localization('label.resultsPublishedDate') }} <time formatted-time="application.haku.aikataulu.julkistus.end" format="LL" />.
             </span>
         </div>
 
-        <div ng-if="application.state.id == 'HAKUKIERROSPAATTYNYT'">
+        <div class="application-status-item" ng-if="application.state.id == 'HAKUKIERROSPAATTYNYT'">
             {{ localization('label.applicationRoundEnded') }}
         </div>
 
-        <div ng-if="application.haku.active && (application.state.id == 'POSTPROCESSING' || application.state.id == 'SUBMITTED')">
+        <div class="application-status-item" ng-if="application.haku.active && (application.state.id == 'POSTPROCESSING' || application.state.id == 'SUBMITTED')">
             {{ localization("message.applicationIsInPostProcessing") }}
         </div>
     </section>
@@ -36,6 +36,11 @@
     <section class="hakutoiveen-vastaanotto" ng-if="application.vastaanotettavatHakutoiveet().length > 0">
         <hakutoiveen-vastaanotto application-oid="application.oid" haku="application.haku" hakutoiveet="application.vastaanotettavatHakutoiveet()" callback="hakutoiveVastaanotettu">
         </hakutoiveen-vastaanotto>
+    </section>
+
+    <section class="ilmoittautuminen" ng-if="application.ilmoittautumisLinkit().length > 0">
+        <ilmoittautuminen hakukohteet="application.ilmoittautumisLinkit()">
+        </ilmoittautuminen>
     </section>
 
     <form name="applicationForm" novalidate >

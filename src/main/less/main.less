@@ -6,6 +6,8 @@
 @import "templates/hakutoiveet.less";
 @import "templates/valintatulos.less";
 @import "templates/henkilotiedot.less";
+@import "templates/hakutoiveenVastaanotto.less";
+@import "templates/ilmoittautuminen.less";
 
 body {
   .body-font;
@@ -258,51 +260,6 @@ button.delete-btn:not(.confirm) {
   }
 }
 
-.hakutoiveenVastaanotto, .ilmoittautuminen {
-  padding: 10px 45px;
-  margin: 10px 0px;
-
-  .hakutoive-vastaanotettavissa {
-    color: #999;
-  }
-
-  .hakutoive-options {
-    margin: 10px 0px;
-  }
-
-  ul {
-    input {
-      margin: 5px 10px 5px 0px;
-    }
-  }
-
-  .status-message {
-    margin-left: 5px;
-  }
-
-  .hakutoiveenVastaanotto-caption {
-    .dialog-header-font();
-    strong {
-      .dialog-header-font-strong();
-      margin-right: 10px;
-    }
-  }
-}
-
-.thumb-up {
-  position: relative;
-  &:before {
-    content: "";
-    background: url("../img/thumb-up.png") center center no-repeat;
-    background-size: 42px 42px;
-    width: 42px;
-    height: 42px;
-    position: absolute;
-    left: -50px;
-    display: inline-block;
-    top: -11px;
-  }
-}
 
 .fade-transitions {
   &.ng-leave {

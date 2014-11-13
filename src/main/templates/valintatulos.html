@@ -1,13 +1,3 @@
-<section class="ilmoittautuminen fade-transitions" ng-repeat="tulos in valintatulos().hakutoiveet" ng-if="tulos.ilmoittautumistila.ilmoittauduttavissa && tulos.ilmoittautumistila.ilmoittautumistapa.url">
-    <h2 class="light">
-      {{ localization('registration.pleaseRegister', {
-        opetuspiste: tulos.opetuspiste.name,
-        koulutus: tulos.koulutus.name
-      })  }}
-    </h2>
-    <a href="{{ tulos.ilmoittautumistila.ilmoittautumistapa.url }}">{{ localization('registration.goToRegistration') }}</a>
-</section>
-
 <table class="result-list">
     <thead>
         <th>{{ localization('label.resultsCaption') }} <span class="result-list-status"> {{ status }}</span></th>

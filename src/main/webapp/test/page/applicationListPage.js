@@ -176,14 +176,12 @@ function ApplicationListPage() {
       },
 
       ilmoittautuminen: function(index) {
-        var el = getApplicationElement(applicationIndex).find(".ilmoittautuminen").eq(index)
+        var el = getApplicationElement(applicationIndex).find(".ilmoittautuminen-item").eq(index)
         return {
           visible: el.is(":visible"),
           linkUrl: el.find("a").attr("href"),
           title: function() {
-            return el.find("h2").map(function() {
-              return $(this).text().trim()
-            }).toArray()
+            return removeSpaces(el.find("header").text())
           }
         }
       },
@@ -232,9 +230,7 @@ function ApplicationListPage() {
           },
 
           title: function() {
-            return vastaanottoElement().find("h2").map(function() {
-              return $(this).text().trim()
-            }).toArray()
+            return removeSpaces(vastaanottoElement().find("header").text())
           },
 
           info: function() {
@@ -653,7 +649,11 @@ function ApplicationListPage() {
     return compareTrees(indexInTree(el1), indexInTree(el2))
   }
 
+  function removeSpaces(text) {
+    return text.replace(/(\r\n|\n|\r)/gm,"").replace(/\s+/g," ").trim()
+  }
+
   function trimText() {
-    return $(this).text().replace(/(\r\n|\n|\r)/gm,"").replace(/\s+/g," ").trim()
+    return removeSpaces($(this).text())
   }
 }
