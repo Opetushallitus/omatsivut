@@ -40,18 +40,18 @@
 
     "resultState": {
       "Hyvaksytty": "Hyväksytty",
-      "Kesken": "Opiskelijavalinta\u00A0kesken",
+      "Kesken": "Opiskelijavalinta_kesken",
       "HarkinnanvaraisestiHyvaksytty": "Hyväksytty",
       "Varalla": "__varasija__. varasijalla",
-      "VarallaPvm": "__varasija__.\u00A0varasijalla. Varasijoja täytetään __varasijaPvm__ asti.",
+      "VarallaPvm": "__varasija__._varasijalla. Varasijoja täytetään __varasijaPvm__ asti.",
       "Peruutettu": "Peruutettu",
-      "Perunut": "Peruit\u00A0opiskelupaikan",
+      "Perunut": "Peruit_opiskelupaikan",
       "Peruuntunut": "Peruuntunut",
-      "VarasijaltaHyvaksytty": "Hyväksytty\u00A0varasijalta",
-      "Vastaanottanut": "Opiskelupaikka\u00A0vastaanotettu",
-      "Hylatty": "Et\u00A0saanut\u00A0opiskelupaikkaa.",
-      "EhdollisestiVastaanottanut": "Opiskelupaikka\u00A0vastaanotettu ehdollisesti",
-      "EiVastaanotettuMaaraAikana": "Et\u00A0ottanut\u00A0opiskelupaikkaa\u00A0vastaan määräaikaan mennessä"
+      "VarasijaltaHyvaksytty": "Hyväksytty_varasijalta",
+      "Vastaanottanut": "Opiskelupaikka_vastaanotettu",
+      "Hylatty": "Et_saanut_opiskelupaikkaa.",
+      "EhdollisestiVastaanottanut": "Opiskelupaikka_vastaanotettu ehdollisesti",
+      "EiVastaanotettuMaaraAikana": "Et_ottanut_opiskelupaikkaa_vastaan määräaikaan mennessä"
     }
   },
 

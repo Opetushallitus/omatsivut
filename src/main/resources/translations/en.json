@@ -40,18 +40,18 @@
 
     "resultState": {
       "Hyvaksytty": "Accepted",
-      "Kesken": "Student\u00A0admission\u00A0process\u00A0unfinished",
-      "HarkinnanvaraisestiHyvaksytty": "Discretionary\u00A0admission",
-      "Varalla": "On\u00A0a\u00A0reserve\u00A0place\u00A0__varasija__.",
-      "VarallaPvm": "On\u00A0a\u00A0reserve\u00A0place.__varasija__. Reserve places are filled until __varasijaPvm__.",
+      "Kesken": "Student_admission_process_unfinished",
+      "HarkinnanvaraisestiHyvaksytty": "Discretionary_admission",
+      "Varalla": "On_a_reserve_place___varasija__.",
+      "VarallaPvm": "On_a_reserve_place.__varasija__. Reserve places are filled until __varasijaPvm__.",
       "Peruutettu": "Cancelled",
-      "Perunut": "You\u00A0have\u00A0cancelled\u00A0the study place",
-      "Peruuntunut": "Cancelled\u00A0automatically",
-      "VarasijaltaHyvaksytty": "Accepted\u00A0from\u00A0reserve place",
-      "Vastaanottanut": "You\u00A0have\u00A0confirmed\u00A0the study place",
-      "Hylatty": "You\u00A0have\u00A0not\u00A0received a study place",
-      "EhdollisestiVastaanottanut": "You\u00A0have\u00A0confirmed\u00A0the study place conditionally",
-      "EiVastaanotettuMaaraAikana": "You\u00A0have\u00A0not\u00A0confirmed\u00A0the study place within the set time"
+      "Perunut": "You_have_cancelled_the study place",
+      "Peruuntunut": "Cancelled_automatically",
+      "VarasijaltaHyvaksytty": "Accepted_from_reserve place",
+      "Vastaanottanut": "You_have_confirmed_the study place",
+      "Hylatty": "You_have_not_received a study place",
+      "EhdollisestiVastaanottanut": "You_have_confirmed_the study place conditionally",
+      "EiVastaanotettuMaaraAikana": "You_have_not_confirmed_the study place within the set time"
     }
   },
 
