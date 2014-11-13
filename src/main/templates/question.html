@@ -15,8 +15,8 @@
 
     <div ng-switch-when="false" class="question">
         <label class="title">{{questionNode.title}}</label>
-        <span class="validation-message error">{{ questionNode.errors.join(', ') }}</span>
         <i class="icon-info-circled verboseHelp" ng-if="questionNode.verboseHelp" title="{{questionNode.verboseHelp}}"></i>
+        <span class="validation-message error">{{ questionNode.errors.join(', ') }}</span>
         <div class="instruction helptext" ng-if="questionNode.help" ng-bind-html="questionNode.help"></div>
 
         <span class="answer" ng-switch="questionNode.questionType">
