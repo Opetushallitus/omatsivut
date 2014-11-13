@@ -13,7 +13,12 @@ function params(obj) {
   var questionParameters = _.extend({}, questionDefaults, obj)
   _(questionParameters).each(function(val, key) {
     if (val == null)
-      throw new Error("question parameter " + key + " null")
+      if(key == "title") {
+        questionParameters.title = "?"
+      }
+      else {
+        throw new Error("question parameter " + key + " null")
+      }
   })
   return questionParameters
 }
