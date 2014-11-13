@@ -1,4 +1,4 @@
-<section class="ilmoittautuminen" ng-repeat="tulos in valintatulos().hakutoiveet" ng-if="tulos.ilmoittautumistila.ilmoittauduttavissa && tulos.ilmoittautumistila.ilmoittautumistapa.url">
+<section class="ilmoittautuminen fade-transitions" ng-repeat="tulos in valintatulos().hakutoiveet" ng-if="tulos.ilmoittautumistila.ilmoittauduttavissa && tulos.ilmoittautumistila.ilmoittautumistapa.url">
     <h2 class="light">
       {{ localization('registration.pleaseRegister', {
         opetuspiste: tulos.opetuspiste.name,

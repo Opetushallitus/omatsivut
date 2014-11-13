@@ -259,9 +259,12 @@ button.delete-btn:not(.confirm) {
 }
 
 .hakutoiveenVastaanotto, .ilmoittautuminen {
-  padding: 20px;
+  padding: 10px 45px;
   margin: 10px 0px;
-  background: #f2f8fa;
+
+  .hakutoive-vastaanotettavissa {
+    color: #999;
+  }
 
   .hakutoive-options {
     margin: 10px 0px;
@@ -269,7 +272,7 @@ button.delete-btn:not(.confirm) {
 
   ul {
     input {
-      margin: 5px;
+      margin: 5px 10px 5px 0px;
     }
   }
 
@@ -277,6 +280,31 @@ button.delete-btn:not(.confirm) {
     margin-left: 5px;
   }
 
+  .hakutoiveenVastaanotto-caption {
+    .dialog-header-font();
+    strong {
+      .dialog-header-font-strong();
+      margin-right: 10px;
+    }
+  }
+}
+
+.thumb-up {
+  position: relative;
+  &:before {
+    content: "";
+    background: url("../img/thumb-up.png") center center no-repeat;
+    background-size: 42px 42px;
+    width: 42px;
+    height: 42px;
+    position: absolute;
+    left: -50px;
+    display: inline-block;
+    top: -11px;
+  }
+}
+
+.fade-transitions {
   &.ng-leave {
     -webkit-transition:0.5s all;
     transition:0.5s all;
@@ -296,7 +324,6 @@ button.delete-btn:not(.confirm) {
     opacity: 1;
   }
 }
-
 
 
 .question-group-indent {

@@ -80,7 +80,7 @@
     "applicationIsInPostProcessing": "Your application is being processed. If you want to make any changes, please try again later.",
 
     "acceptEducation": {
-      "received": "Study place granted: __opetuspiste__ - __koulutus__",
+      "received": "Study place granted",
       "latestAnswer": "Give a binding answer at the latest __aika__",
       "accept": "I confirm the granted study place",
       "conditionalAccept": "I confirm the granted study place if I do not receive a study place from any of my higher prioritized options.",

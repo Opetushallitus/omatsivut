@@ -80,7 +80,7 @@
     "applicationIsInPostProcessing": "Din ansökan bearbetas fortfarande. Om du vill ändra dina ansökningsmäl, var god försök igen senare.",
 
     "acceptEducation": {
-      "received": "Studieplats beviljad: __opetuspiste__ - __koulutus__",
+      "received": "Studieplats beviljad",
       "latestAnswer": "Ge bindande svar senast __aika__",
       "accept": "Jag tar emot den beviljade studieplatsen",
       "conditionalAccept": "Jag tar emot den beviljade studieplatsen, om jag inte får en plats från något av mina högre prioriserade.",

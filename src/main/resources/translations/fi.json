@@ -80,7 +80,7 @@
     "applicationIsInPostProcessing": "Hakemuksesi on vielä käsiteltävänä. Jos haluat muuttaa hakutoiveitasi, yritä myöhemmin uudelleen.",
 
     "acceptEducation": {
-      "received": "Opiskelupaikka myönnetty: __opetuspiste__ - __koulutus__",
+      "received": "Opiskelupaikka myönnetty",
       "latestAnswer": "Vastaa sitovasti viimeistään __aika__",
       "accept": "Otan myönnetyn opiskelupaikan vastaan",
       "conditionalAccept": "Otan myönnetyn opiskelupaikan vastaan, jos en saa paikkaa mistään mieluisammasta hakukohteestani",
