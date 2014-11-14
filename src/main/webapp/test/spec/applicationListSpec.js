@@ -1597,7 +1597,7 @@
           describe("Tietokanta", function() {
             it("sisältää tallennetut tiedot", function() {
               return db.getApplications().then(function(data) {
-                var answers = findApplicationById(data, hakemusNivelKesa2013WithPeruskouluBaseEducationId).answers
+                var answers = findApplicationById(data, hakemusNivelKesa2013WithPeruskouluBaseEducationId).hakemus.answers
                 var questions = hakemusNivelKesa2013WithPeruskouluBaseEducation.questionsForApplication().data()
 
                 answers.hakutoiveet[questions[0].id].should.equal("tekstivastaus 1")
