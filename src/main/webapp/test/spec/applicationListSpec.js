@@ -1373,10 +1373,10 @@
       )
 
       function answerSoraQuestions() {
-        return wait.until(function() { return hakemusKorkeakoulu.questionsForApplication().count() >= 2})()
-          .then(function() { hakemusKorkeakoulu.questionsForApplication().enterAnswer(0, "Kyllä") })
-          .then(function() { hakemusKorkeakoulu.questionsForApplication().enterAnswer(1, "Ei") })
-          .then(function() { hakemusKorkeakoulu.questionsForApplication().enterAnswer(2, "Kyllä") })
+        return wait.until(function() { return hakemusKorkeakoulu.questionsForApplication().count() >= 3})()
+          .then(function() { hakemusKorkeakoulu.questionsForApplication().enterAnswer(1, "Kyllä") })
+          .then(function() { hakemusKorkeakoulu.questionsForApplication().enterAnswer(2, "Ei") })
+          .then(function() { hakemusKorkeakoulu.questionsForApplication().enterAnswer(3, "Kyllä") })
           .then(wait.until(function() { return hakemusKorkeakoulu.saveError() == "" }))
           .then(wait.forAngular)
       }
@@ -1384,6 +1384,7 @@
       it("kysymykset näytetään", function() {
         var questionTitles = hakemusKorkeakoulu.questionsForApplication().titles()
         expect(questionTitles).to.deep.equal([
+          'Lukion päättötodistuksen keskiarvo',
           'Tällä alalla on terveydentilavaatimuksia, jotka voivat olla opiskelijaksi ottamisen esteenä. Onko sinulla terveydellisiä tekijöitä, jotka voivat olla opiskelijaksi ottamisen esteenä?',
           'Tässä koulutuksessa opiskelijaksi ottamisen esteenä voi olla aiempi päätös opiskeluoikeuden peruuttamisessa. Onko opiskeluoikeutesi aiemmin peruutettu terveydentilasi tai muiden henkilöiden turvallisuuden vaarantamisen takia?',
           'Haluaisitko suorittaa lukion ja/tai ylioppilastutkinnon samaan aikaan kuin ammatillisen perustutkinnon?'
@@ -1413,9 +1414,9 @@
           })
 
           it("vastaukset siirtyvät listan muokkauksen mukana", function() {
-            hakemusKorkeakoulu.questionsForApplication().getAnswer(0).should.equal("Kyllä")
-            hakemusKorkeakoulu.questionsForApplication().getAnswer(1).should.equal("Ei")
-            hakemusKorkeakoulu.questionsForApplication().getAnswer(2).should.equal("Kyllä")
+            hakemusKorkeakoulu.questionsForApplication().getAnswer(1).should.equal("Kyllä")
+            hakemusKorkeakoulu.questionsForApplication().getAnswer(2).should.equal("Ei")
+            hakemusKorkeakoulu.questionsForApplication().getAnswer(3).should.equal("Kyllä")
           })
         })
       })
