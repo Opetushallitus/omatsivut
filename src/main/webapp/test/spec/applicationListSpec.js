@@ -170,20 +170,11 @@
       })
 
       it("hakuaika näkyy", function() {
-        hakemusNivelKesa2013WithPeruskouluBaseEducation.applicationStatus().should.equal("Hakuaika 1. heinäkuuta 2014 klo 08.00 - 1. joulukuuta 2100 klo 07.00 Haku käynnissä")
+        hakemusNivelKesa2013WithPeruskouluBaseEducation.applicationPeriods().should.equal("Hakuaika päättyy 1. joulukuuta 2100 klo 07.00")
       })
 
       it("tallennusaikaleima näkyy", function() {
-        hakemusNivelKesa2013WithPeruskouluBaseEducation.changesSavedTimestamp().should.match(/\(Hakemusta muokattu \d+\..*?\d+ klo \d+\.\d+\)/)
-      })
-
-      describe("haun tyyppi", function() {
-        it ("korkeakouluhaussa käytetään eri tekstejä", function() {
-          hakemusKorkeakoulu.labels()[0].should.equal("Korkeakoulu")
-          hakemusNivelKesa2013WithPeruskouluBaseEducation.labels()[1].should.equal("Hakukohde")
-          hakemusYhteishakuKevat2014WithForeignBaseEducation.labels()[0].should.equal("Opetuspiste")
-          hakemusYhteishakuKevat2014WithForeignBaseEducation.labels()[1].should.equal("Hakukohde")
-        })
+        hakemusNivelKesa2013WithPeruskouluBaseEducation.changesSavedTimestamp().should.match(/Hakemusta muokattu \d+\..*?\d+ klo \d+\.\d+/)
       })
     })
 
@@ -192,7 +183,7 @@
         before(page.applyFixtureAndOpen({applicationOid: hakemusKorkeakouluKevatId, overrideStart: daysFromNow(0) }))
 
         it("hakuaikalistaus näkyy oikein", function() {
-          hakemusKorkeakouluKevat.applicationStatus().should.match(hakuajat("Haku käynnissä", "Hakuaika ei alkanut"))
+          hakemusKorkeakouluKevat.applicationPeriods().should.match(hakuajat("Haku käynnissä", "Hakuaika ei alkanut"))
         })
 
         it("hakutoiveet ovat muokattavissa", function() {
@@ -218,7 +209,7 @@
       describe("kun ollaan hakuaikojen välissä", function() {
         before(page.applyFixtureAndOpen({applicationOid: hakemusKorkeakouluKevatId, overrideStart: daysFromNow(-30)}))
         it("hakuaikalistaus näkyy oikein", function() {
-          hakemusKorkeakouluKevat.applicationStatus().should.match(hakuajat("Hakuaika päättynyt", "Hakuaika ei alkanut"))
+          hakemusKorkeakouluKevat.applicationPeriods().should.match(hakuajat("Hakuaika päättynyt", "Hakuaika ei alkanut"))
         })
 
         it("listaa ei voi muokata", function() {
@@ -238,7 +229,7 @@
       describe("toisella hakuajalla", function() {
         before(page.applyFixtureAndOpen({applicationOid: hakemusKorkeakouluKevatId, overrideStart: daysFromNow(-70)}))
         it("hakuaikalistaus näkyy oikein", function() {
-          hakemusKorkeakouluKevat.applicationStatus().should.match(hakuajat("Hakuaika päättynyt", "Haku käynnissä"))
+          hakemusKorkeakouluKevat.applicationPeriods().should.match(hakuajat("Hakuaika päättynyt", "Haku käynnissä"))
         })
 
         it("ensimmäisen hakuajan hakutoiveet on lukittu", function() {
@@ -267,13 +258,7 @@
     describe("hakutoivekohtaiset hakuajat", function() {
       before(page.applyFixtureAndOpen({applicationOid: hakemusErityisopetuksenaId, overrideStart: daysFromNow(0)}))
       var date = "\\d+\\. .*?\\d{4} klo \\d\\d\\.\\d\\d"
-      var dateRange = new RegExp("^" + date + " - " + date + "$")
-
-      it("ovat näkyvissä", function() {
-        hakemusErityisopetuksena.getPreference(0).hakuaika().should.match(dateRange)
-        hakemusErityisopetuksena.getPreference(1).hakuaika().should.match(dateRange)
-        hakemusErityisopetuksena.getPreference(2).hakuaika().should.equal("")
-      })
+      var dateRange = new RegExp("^Hakuaika päättyy " + date + "$")
 
       it("hakutoive lukittuu hakutoivekohtaisen hakuajan jälkeen", function() {
         hakemusErityisopetuksena.getPreference(0).isLocked().should.be.true
@@ -341,7 +326,7 @@
 
         it("hakuaikatieto näkyy", function() {
           hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal(hakuaikatieto)
-          hakemusYhteishakuKevat2013WithForeignBaseEducation.resultTableTitle().should.equal("Valintatilanne (Kesken)")
+          hakemusYhteishakuKevat2013WithForeignBaseEducation.resultTableTitle().should.equal("Valintatilanne  Kesken")
         })
 
         it("valintatulokset näytetään", function () {
@@ -369,9 +354,9 @@
         })
 
         it("ilmoitetaan myönnetystä paikasta", function() {
-          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).title()).to.deep.equal([
-                "Opiskelupaikka myönnetty: Kallion lukio - Lukio"
-          ])
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).title()).to.deep.equal(
+            "Opiskelupaikka myönnetty Kallion lukio - Lukio"
+          )
         })
 
         it("paikka on vastaanotettavissa", function() {
@@ -384,7 +369,7 @@
 
         it("hakuaikatieto näkyy", function() {
           hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal(hakuaikatieto)
-          hakemusYhteishakuKevat2013WithForeignBaseEducation.resultTableTitle().should.equal("Valintatilanne (Kesken)")
+          hakemusYhteishakuKevat2013WithForeignBaseEducation.resultTableTitle().should.equal("Valintatilanne  Kesken")
         })
 
         it("valintatulokset näytetään", function () {
@@ -402,7 +387,7 @@
 
         it("hakuaikatieto näkyy", function() {
           hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal(hakuaikatieto)
-          hakemusYhteishakuKevat2013WithForeignBaseEducation.resultTableTitle().should.equal("Valintatilanne (Kesken)")
+          hakemusYhteishakuKevat2013WithForeignBaseEducation.resultTableTitle().should.equal("Valintatilanne  Kesken")
         })
 
         it("valintatulokset näytetään", function () {
@@ -420,7 +405,7 @@
 
         it("hakuaikatieto näkyy", function() {
           hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal(hakuaikatieto)
-          hakemusYhteishakuKevat2013WithForeignBaseEducation.resultTableTitle().should.equal("Valintatilanne (Kesken)")
+          hakemusYhteishakuKevat2013WithForeignBaseEducation.resultTableTitle().should.equal("Valintatilanne  Kesken")
         })
 
         it("valintatulokset näytetään", function () {
@@ -452,9 +437,9 @@
       describe("kun lopulliset tulokset on julkaistu ja opiskelija on hyväksytty", function() {
         before(page.applyValintatulosFixtureAndOpen("hyvaksytty-kesken-julkaistavissa"))
         it("ilmoitetaan myönnetystä paikasta", function() {
-          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).title()).to.deep.equal([
-                "Opiskelupaikka myönnetty: Kallion lukio - Lukion ilmaisutaitolinja"
-          ])
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).title()).to.deep.equal(
+                "Opiskelupaikka myönnetty Kallion lukio - Lukion ilmaisutaitolinja"
+          )
         })
       })
 
@@ -471,14 +456,14 @@
           })
 
           it("tuloslistaus on näkyvissä", function() {
-            hakemusErityisopetuksena.resultTableTitle().should.equal("Valintatilanne (Kesken)")
+            hakemusErityisopetuksena.resultTableTitle().should.equal("Valintatilanne  Kesken")
             expect(hakemusErityisopetuksena.valintatulokset()[0].tila).to.equal('Opiskelijavalinta kesken')
             expect(hakemusErityisopetuksena.valintatulokset()[1].tila).to.equal('Hyväksytty')
           })
 
           it("paikka on vastaanotettavissa", function() {
             expect(hakemusErityisopetuksena.vastaanotto(0).visible()).to.equal(true)
-            expect(hakemusErityisopetuksena.vastaanotto(0).title()).to.deep.equal([ 'Opiskelupaikka myönnetty: Kiipulan ammattiopisto,  Lahden toimipaikka - Liiketalouden perustutkinto, er, Kevät 2014, valmis' ])
+            expect(hakemusErityisopetuksena.vastaanotto(0).title()).to.equal("Opiskelupaikka myönnetty Kiipulan ammattiopisto, Lahden toimipaikka - Liiketalouden perustutkinto, er, Kevät 2014, valmis")
           })
         })
 
@@ -856,8 +841,8 @@
           before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send)
 
           it("Oili-linkki tulee näkyviin ja toinen paikka on yhä mahdollista vastaanottaa", function() {
-            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).title()).to.deep.equal([ 'Opiskelupaikka myönnetty: Kallion lukio - Lukio' ])
-            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.ilmoittautuminen(0).title()).to.deep.equal([ 'Ilmoittaudu lukukaudelle: Kallion lukio - Lukion ilmaisutaitolinja' ])
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).title()).to.equal('Opiskelupaikka myönnetty Kallion lukio - Lukio')
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.ilmoittautuminen(0).title()).to.equal('Ilmoittaudu lukukaudelle Kallion lukio - Lukion ilmaisutaitolinja')
           })
 
           describe("Kun toinen paikka otetaan vastaan", function() {
@@ -865,8 +850,8 @@
             before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send)
 
             it("Näkyy oili linkki molemmille paikoille", function() {
-              expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.ilmoittautuminen(0).title()).to.deep.equal([ 'Ilmoittaudu lukukaudelle: Kallion lukio - Lukion ilmaisutaitolinja' ])
-              expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.ilmoittautuminen(1).title()).to.deep.equal([ 'Ilmoittaudu lukukaudelle: Kallion lukio - Lukio' ])
+              expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.ilmoittautuminen(0).title()).to.equal('Ilmoittaudu lukukaudelle Kallion lukio - Lukion ilmaisutaitolinja')
+              expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.ilmoittautuminen(1).title()).to.equal('Ilmoittaudu lukukaudelle Kallion lukio - Lukio')
             })
           })
         })
@@ -896,7 +881,7 @@
         })
 
         it("seliteteksti näkyy oikein", function() {
-          hakemusYhteishakuKevat2014WithForeignBaseEducation.applicationState().should.equal("Hakemuksesi on vielä käsiteltävänä. Jos haluat muuttaa hakutoiveitasi, yritä myöhemmin uudelleen.")
+          hakemusYhteishakuKevat2014WithForeignBaseEducation.applicationStatus().should.equal("Hakemuksesi on vielä käsiteltävänä. Jos haluat muuttaa hakutoiveitasi, yritä myöhemmin uudelleen.")
         })
       })
 
@@ -907,7 +892,7 @@
         })
 
         it("seliteteksti näkyy oikein", function() {
-          hakemusYhteishakuKevat2014WithForeignBaseEducation.applicationState().should.equal("Hakemuksesi on vielä käsiteltävänä. Jos haluat muuttaa hakutoiveitasi, yritä myöhemmin uudelleen.")
+          hakemusYhteishakuKevat2014WithForeignBaseEducation.applicationStatus().should.equal("Hakemuksesi on vielä käsiteltävänä. Jos haluat muuttaa hakutoiveitasi, yritä myöhemmin uudelleen.")
         })
       })
 

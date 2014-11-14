@@ -8,9 +8,10 @@ module.exports = function(listApp, resources) {
     }
 
     function replaceVars(value, vars) {
+      var NON_BREAKING_SPACE = "\u00A0"
       return _.reduce(vars, function(memo, val, key) {
         return memo.replace("__" + key + "__", val)
-      }, value)
+      }, value).replace(/_/g, NON_BREAKING_SPACE)
     }
 
     return function(key, vars) {

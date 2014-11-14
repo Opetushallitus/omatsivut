@@ -11,6 +11,7 @@
   "label": {
     "applicationPeriod": "Hakuaika",
     "applicationPeriodActive": "Haku käynnissä",
+    "applicationPeriodEnds": "Hakuaika päättyy",
     "applicationPeriodPassed": "Hakuaika päättynyt",
     "applicationPeriodNotStarted": "Hakuaika ei alkanut",
     "applicationPeriodEnded": "Opiskelijavalinta on kesken.",
@@ -24,12 +25,13 @@
     "education": "Hakukohde",
     "education_university": "Hakukohde",
     "applicationPeriodForEducation": "Kohteen hakuaika",
-    "chooseLocation": "Valitse ensin opetuspiste",
+    "chooseLocation": "Lisää hakukohde...",
     "resultsPublishedDate": "Tulokset julkaistaan viimeistään",
     "questionGroupWithTitle": "Lisäkysymykset",
     "questionGroupWithoutTitle": "Muut lisäkysymykset",
-    "resultsFinal": "Valintatilanne (Lopullinen)",
-    "resultsPending": "Valintatilanne (Kesken)",
+    "resultsCaption": "Valintatilanne",
+    "resultsFinal": "Lopullinen",
+    "resultsPending": "Kesken",
     "contactDetails": "Yhteystiedot",
     "email": "Sähköposti",
     "mobilePhone": "Matkapuhelinnumero",
@@ -38,18 +40,18 @@
 
     "resultState": {
       "Hyvaksytty": "Hyväksytty",
-      "Kesken": "Opiskelijavalinta kesken",
+      "Kesken": "Opiskelijavalinta_kesken",
       "HarkinnanvaraisestiHyvaksytty": "Hyväksytty",
       "Varalla": "__varasija__. varasijalla",
-      "VarallaPvm": "__varasija__. varasijalla. Varasijoja täytetään __varasijaPvm__ asti.",
+      "VarallaPvm": "__varasija__._varasijalla. Varasijoja täytetään __varasijaPvm__ asti.",
       "Peruutettu": "Peruutettu",
-      "Perunut": "Peruit opiskelupaikan",
+      "Perunut": "Peruit_opiskelupaikan",
       "Peruuntunut": "Peruuntunut",
-      "VarasijaltaHyvaksytty": "Hyväksytty varasijalta",
-      "Vastaanottanut": "Opiskelupaikka vastaanotettu",
-      "Hylatty": "Et saanut opiskelupaikkaa.",
-      "EhdollisestiVastaanottanut": "Opiskelupaikka vastaanotettu ehdollisesti",
-      "EiVastaanotettuMaaraAikana": "Et ottanut opiskelupaikkaa vastaan määräaikaan mennessä"
+      "VarasijaltaHyvaksytty": "Hyväksytty_varasijalta",
+      "Vastaanottanut": "Opiskelupaikka_vastaanotettu",
+      "Hylatty": "Et_saanut_opiskelupaikkaa.",
+      "EhdollisestiVastaanottanut": "Opiskelupaikka_vastaanotettu ehdollisesti",
+      "EiVastaanotettuMaaraAikana": "Et_ottanut_opiskelupaikkaa_vastaan määräaikaan mennessä"
     }
   },
 
@@ -78,7 +80,7 @@
     "applicationIsInPostProcessing": "Hakemuksesi on vielä käsiteltävänä. Jos haluat muuttaa hakutoiveitasi, yritä myöhemmin uudelleen.",
 
     "acceptEducation": {
-      "received": "Opiskelupaikka myönnetty: __opetuspiste__ - __koulutus__",
+      "received": "Opiskelupaikka myönnetty",
       "latestAnswer": "Vastaa sitovasti viimeistään __aika__",
       "accept": "Otan myönnetyn opiskelupaikan vastaan",
       "conditionalAccept": "Otan myönnetyn opiskelupaikan vastaan, jos en saa paikkaa mistään mieluisammasta hakukohteestani",
@@ -121,7 +123,7 @@
   },
 
   "registration": {
-    "pleaseRegister": "Ilmoittaudu lukukaudelle: __opetuspiste__ - __koulutus__",
+    "pleaseRegister": "Ilmoittaudu lukukaudelle",
     "goToRegistration": "Siirry ilmoittautumaan"
   }
 }

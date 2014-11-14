@@ -1,12 +1,11 @@
 <form name="vastaanottoForm" novalidate>
-  <div class="hakutoiveenVastaanotto" ng-repeat="hakutoive in hakutoiveet()">
-      <h2 class="light">
-          {{ localization('message.acceptEducation.received', {
-            opetuspiste: hakutoive.opetuspiste.name,
-            koulutus: hakutoive.koulutus.name
-          }) }}
-      </h2>
-      <div class="italic" ng-if="hakutoive.vastaanotettavissaAsti">
+  <div class="hakutoiveenVastaanotto fade-transitions" ng-repeat="hakutoive in hakutoiveet()">
+      <header class="hakutoiveenVastaanotto-caption thumb-up">
+          <strong>{{ localization('message.acceptEducation.received') }}</strong>
+           {{ hakutoive.opetuspiste.name }} - {{ hakutoive.koulutus.name }}
+      </header>
+
+      <div class="hakutoive-vastaanotettavissa" ng-if="hakutoive.vastaanotettavissaAsti">
            {{ localization('message.acceptEducation.latestAnswer', {
             aika: formatTimestamp(hakutoive.vastaanotettavissaAsti)
           }) }}

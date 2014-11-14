@@ -139,6 +139,14 @@ Hakemus.prototype = {
     })
   },
 
+  ilmoittautumisLinkit: function() {
+    return _(this.valintatulosHakutoiveet()).filter(function(tulos) {
+      return tulos.ilmoittautumistila != null &&
+        tulos.ilmoittautumistila.ilmoittauduttavissa &&
+        tulos.ilmoittautumistila.ilmoittautumistapa != null && tulos.ilmoittautumistila.ilmoittautumistapa.url
+    })
+  },
+
   hasResultState: function(resultStates) {
     if (!_.isArray(resultStates))
       resultStates = [resultStates]

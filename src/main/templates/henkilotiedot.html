@@ -1,6 +1,6 @@
 <div class="yhteystiedot">
     <label>
-        <div class="label-column">{{ localization("label.email")}}:</div>
+        <div class="label-column">{{ localization("label.email")}}</div>
         <div class="value-column">
             <input type="text" ng-model="yhteystiedot['Sähköposti'].answer" clearable-input />
             <span class="validation-message error">{{ yhteystiedot['Sähköposti'].errors.join(', ') }}</span>
@@ -8,7 +8,7 @@
     </label>
 
     <label>
-        <div class="label-column">{{ localization("label.mobilePhone")}}:</div>
+        <div class="label-column">{{ localization("label.mobilePhone")}}</div>
         <div class="value-column mobilePhone"> <input type="text" ng-model="yhteystiedot['matkapuhelinnumero1'].answer" clearable-input />
             <span class="validation-message error">{{ yhteystiedot['matkapuhelinnumero1'].errors.join(', ') }}</span>
         </div>
@@ -16,13 +16,13 @@
 
     <div role="presentation" ng-if="yhteystiedot['asuinmaa'].answer == 'FIN'">
       <label>
-          <div class="label-column">{{ localization("label.streetAddress")}}:</div>
+          <div class="label-column">{{ localization("label.streetAddress")}}</div>
           <div class="value-column"> <input type="text" ng-model="yhteystiedot['lahiosoite'].answer" clearable-input />
               <span class="validation-message error">{{ yhteystiedot['lahiosoite'].errors.join(', ') }}</span>
           </div>
       </label>
       <label>
-          <div class="label-column">{{ localization("label.postalCode")}}:</div>
+          <div class="label-column">{{ localization("label.postalCode")}}</div>
           <div class="value-column postalCode">
               <input type="text" ng-model="yhteystiedot['Postinumero'].answer" clearable-input />
               <span ng-bind="application.calculatedValues.postOffice"/>

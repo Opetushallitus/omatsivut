@@ -5,11 +5,12 @@ module.exports = function(listApp) {
     return {
       restrict: 'E',
       scope: {
-        periods: '&data'
+        haku: '&haku'
       },
       templateUrl: 'templates/applicationPeriods.html',
       link: function ($scope, element, attrs) {
         $scope.localization = localization
+        $scope.periods = function() { return $scope.haku().applicationPeriods }
 
         $scope.applicationPeriodString = function(index) {
           if ($scope.periods().length === 1)

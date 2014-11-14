@@ -6,7 +6,8 @@ module.exports = function(listApp) {
       restrict: 'E',
       scope: {
         application: "=application",
-        preferenceMoved: "=preferenceMoved"
+        preferenceMoved: "=preferenceMoved",
+        validating: "=validating"
       },
       templateUrl: 'templates/hakutoiveet.html',
 

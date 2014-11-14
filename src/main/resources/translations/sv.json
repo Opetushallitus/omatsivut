@@ -11,6 +11,7 @@
   "label": {
     "applicationPeriod": "Ansökningstiden",
     "applicationPeriodActive": "Pågående",
+    "applicationPeriodEnds": "Ansökan avslutas",
     "applicationPeriodPassed": "Ansökan har avslutats",
     "applicationPeriodNotStarted": "Ansökan har inte börjat",
     "applicationPeriodEnded": "Studerandeantagningen oavslutad",
@@ -24,12 +25,13 @@
     "education": "Utbildning",
     "education_university": "Utbildning",
     "applicationPeriodForEducation": "Ansökningstiden",
-    "chooseLocation": "Välj först undervisnigsställe",
+    "chooseLocation": "Välj undervisnigsställe...",
     "resultsPublishedDate": "Resultaten från ansökan publiceras senast",
     "questionGroupWithTitle": "Tillägsfrågor",
     "questionGroupWithoutTitle": "Andra tillägsfrågor",
-    "resultsFinal": "Antagningssituation (Slutlig)",
-    "resultsPending": "Antagningssituation (På gång)",
+    "resultsCaption": "Antagningssituation",
+    "resultsFinal": "Slutlig",
+    "resultsPending": "På gång",
     "contactDetails": "Kontaktinformation",
     "email": "E-post",
     "mobilePhone": "Mobiltelefonnummer",
@@ -38,18 +40,18 @@
 
     "resultState": {
       "Hyvaksytty": "Godkänd",
-      "Kesken": "Studerandeantagningen oavslutad",
-      "HarkinnanvaraisestiHyvaksytty": "Godkänd enligt prövning",
-      "Varalla": "__reservplats__. på reservplats",
-      "VarallaPvm": "__reservplats___. på reservplats. Reservplatser fylls ända till __varasijaPvm__.",
+      "Kesken": "Studerandeantagningen_oavslutad",
+      "HarkinnanvaraisestiHyvaksytty": "Godkänd_enligt_prövning",
+      "Varalla": "__reservplats__._på_reservplats",
+      "VarallaPvm": "__reservplats___._på_reservplats. Reservplatser fylls ända till __varasijaPvm__.",
       "Peruutettu": "Annullerats",
-      "Perunut": "Du har annullerat studieplatsen",
-      "Peruuntunut": "Ansökan har blivit annullerad",
-      "VarasijaltaHyvaksytty": "Godkänd från reservplats",
-      "Vastaanottanut": "Du har tagit emot studieplatsen",
-      "Hylatty": "Du har inte fått någon studieplats",
-      "EhdollisestiVastaanottanut": "Du har tagit emot studieplatsen villkorligt",
-      "EiVastaanotettuMaaraAikana": "Du har inte tagit emot studieplatsen inom utsatt tid"
+      "Perunut": "Du_har_annullerat_studieplatsen",
+      "Peruuntunut": "Ansökan_har_blivit_annullerad",
+      "VarasijaltaHyvaksytty": "Godkänd_från_reservplats",
+      "Vastaanottanut": "Du_har_tagit_emot_studieplatsen",
+      "Hylatty": "Du_har_inte_fått_någon_studieplats",
+      "EhdollisestiVastaanottanut": "Du_har_tagit_emot studieplatsen villkorligt",
+      "EiVastaanotettuMaaraAikana": "Du_har_inte_tagit_emot studieplatsen inom utsatt tid"
     }
   },
 
@@ -78,7 +80,7 @@
     "applicationIsInPostProcessing": "Din ansökan bearbetas fortfarande. Om du vill ändra dina ansökningsmäl, var god försök igen senare.",
 
     "acceptEducation": {
-      "received": "Studieplats beviljad: __opetuspiste__ - __koulutus__",
+      "received": "Studieplats beviljad",
       "latestAnswer": "Ge bindande svar senast __aika__",
       "accept": "Jag tar emot den beviljade studieplatsen",
       "conditionalAccept": "Jag tar emot den beviljade studieplatsen, om jag inte får en plats från något av mina högre prioriserade.",
@@ -121,7 +123,7 @@
   },
 
   "registration": {
-    "pleaseRegister": "Registrera dig: __opetuspiste__ - __koulutus__",
+    "pleaseRegister": "Registrera dig",
     "goToRegistration": "Registrera"
   }
 }

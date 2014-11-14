@@ -1,19 +1,10 @@
-<section class="ilmoittautuminen" ng-repeat="tulos in valintatulos().hakutoiveet" ng-if="tulos.ilmoittautumistila.ilmoittauduttavissa && tulos.ilmoittautumistila.ilmoittautumistapa.url">
-    <h2 class="light">
-      {{ localization('registration.pleaseRegister', {
-        opetuspiste: tulos.opetuspiste.name,
-        koulutus: tulos.koulutus.name
-      })  }}
-    </h2>
-    <a href="{{ tulos.ilmoittautumistila.ilmoittautumistapa.url }}">{{ localization('registration.goToRegistration') }}</a>
-</section>
 <table class="result-list">
     <thead>
-        <th>{{ status }}</th>
+        <th>{{ localization('label.resultsCaption') }} <span class="result-list-status"> {{ status }}</span></th>
         <th></th>
     </thead>
     <tbody>
-    <tr ng-repeat="tulos in valintatulos().hakutoiveet" ng-class="valintatulosColor(tulos)">
+    <tr ng-repeat="tulos in valintatulos().hakutoiveet" ng-class="valintatulosStyle(tulos)">
         <td>
             <span class="row-number">{{$index+1}}.</span>
             <span ng-bind="tulos.opetuspiste.name"></span> -

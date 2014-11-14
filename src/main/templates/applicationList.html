@@ -11,7 +11,7 @@
     </div>
 
     <ul id="hakemus-list" aria-label="{{ localization('title.omatHakemukset') }}" ng-cloak>
-        <li ng-repeat="application in applications" class="application-list-item" data-oid="{{application.oid}}">
+        <li ng-repeat="application in applications" class="application" data-oid="{{application.oid}}">
             <application application="application"></application>
         </li>
     </ul>

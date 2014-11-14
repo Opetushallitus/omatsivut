@@ -56,9 +56,9 @@ module.exports = function(listApp) {
           }
         }
 
-        $scope.valintatulosColor = function(valintatulos) {
-          if (valintatulos.tila == "PERUUNTUNUT")
-            return "canceled"
+        $scope.valintatulosStyle = function(valintatulos) {
+          if (valintatulos.tila == "HYVAKSYTTY" || valintatulos.tila == "HYVAKSYTTY_EHDOLLISESTI")
+            return "accepted"
         }
       }
     }
