@@ -29,8 +29,8 @@ function Question(question, answer, validationErrors) {
   this.errors = validationErrors || []
 }
 
-Question.fromJson = function(json, persistedAnswers) {
-  return new Question(json, initialValue(json, persistedAnswers), json.required ? ["*"] : [])
+Question.fromJson = function(json, application) {
+  return new Question(json, initialValue(json, application), json.required ? ["*"] : [])
 }
 
 Question.getQuestions = function(jsonQuestions, application) {
@@ -41,7 +41,7 @@ Question.getQuestions = function(jsonQuestions, application) {
       if (questionNode.questions != null) {
         results.questionNodes.push(convertToItems(questionNode.questions, new QuestionGroup(questionNode.title)))
       } else {
-        results.questionNodes.push(Question.fromJson(questionNode, application.persistedAnswers))
+        results.questionNodes.push(Question.fromJson(questionNode, application))
       }
     })
     return results
@@ -63,13 +63,17 @@ Question.questionMap = function(questions) {
   return util.indexBy(questions, function(node) { return node.id.questionId })
 }
 
-function initialValue(question, persistedAnswers) {
+function initialValue(question, application) {
   function defaultValue() {
     var defaultOption = _(question.options).find(function(option) { return option.default })
     return defaultOption == null ? "" : defaultOption.value
   }
   function getOldValue(questionId) {
-    var phaseAnswers = persistedAnswers[question.id.phaseId]
+    var questionIdParts = /^(preference)(\d+)([-_].+)/.exec(questionId)
+    if (questionIdParts != null && application.hakutoiveet[questionIdParts[2]] != null && application.hakutoiveet[questionIdParts[2]].isNew) {
+      return null
+    }
+    var phaseAnswers = application.persistedAnswers[question.id.phaseId]
     if(phaseAnswers == null) {
       return null
     }
