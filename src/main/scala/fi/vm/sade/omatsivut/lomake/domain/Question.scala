@@ -27,6 +27,7 @@ case class QuestionGroup(title: String, questions: List[QuestionNode]) extends Q
       case q: Question => List(q).filter(f)
       case q: QuestionGroup => q.filter(f) match {
         case QuestionGroup(_, Nil) => Nil
+        case QuestionGroup(_, list) if list.forall(_.isInstanceOf[TextNode]) => Nil
         case q:QuestionGroup => List(q)
       }
       case _ => Nil

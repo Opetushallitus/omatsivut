@@ -74,12 +74,19 @@ object AddedQuestionFinder {
   private def withoutDuplicates(questions: List[QuestionNode]) = {
     val duplicateIds = getDuplicateQuestions(questions).map(_.id).toSet
 
-    questions.map {
+    questions.flatMap {
       item => item match {
-        case group: QuestionGroup =>
-          group.filter { (question) => !duplicateIds.contains(question.id) }
+        case group: QuestionGroup => {
+          val filteredGroup = group.filter { (question) => !duplicateIds.contains(question.id) }
+          if(filteredGroup.questions.isEmpty) {
+            None
+          }
+          else {
+            Some(filteredGroup)
+          }
+        }
         case _ =>
-          item
+          Some(item)
       }
     }
   }
