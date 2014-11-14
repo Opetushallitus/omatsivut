@@ -56,65 +56,31 @@
   font-weight: normal;
 }
 
-// Symbols
-
-@arrow-down: "\25bc";
-@arrow-up: "\25b2";
-
-.arrow-button(@symbol) {
-  font-size: 25px;
-  color: @button-background;
-  cursor: pointer;
-  background: transparent;
-  border: none;
-  box-shadow: none;
-
-  &:before {
-    content: @symbol;
-  }
-  &:hover:before {
-    color: @button-hover-background-color;
-  }
-
-  &[disabled] {
-    cursor: default;
-    &:before {
-      color: #eee;
-    }
-  }
-}
-
-.triangle(@color){
-  width: 0;
-  height: 0;
-  border-style: solid;
-  border-width: 5px 3px 0 3px;
-  border-color: @color transparent transparent transparent;
-}
-
 // Colors
 
 @font-color: #000;
 @font-color-light: #777;
 @font-color-disabled: #ccc;
+
+@timestamp-color: #999;
 @status-text-color: #555;
 @error-color: #c9302c;
+
 @border-color: #bce7f3;
 @border-color-section: #d2d2d2;
-@section-border-color: #feba00;
+@preview-border-color: #feba00;
+
 @input-background: white;
-@input-focus-background: white;
-@input-hover-background: #fff5da;
 @input-border: #ccc;
+@input-focus-background: white;
 @input-focus-border: rgba(82, 168, 236, 0.8);
+@input-hover-background: #fff5da;
 
 @link-color: #06526b;
 @link-visited-color: #707070;
 @link-active-color: #06526b;
 @link-hover-color: #062B37;
-
 @link-color-alt: #0093ba;
-@timestamp-color: #999;
 
 @button-color: #000;
 @button-background: #ededed;
@@ -134,15 +100,10 @@
 
 @menu-background: #ebf8fb;
 @menu-border: @border-color;
-@menu-triangle: #3f9eb3;
-
-@badge-background-blue: rgba(20,158,203,1);
-@badge-background-gray: #999;
-@badge-background-green: rgba(82,154,90,1);
-@badge-background-orange: #f89406;
+@menu-triangle-color: #3f9eb3;
 
 @header-background: @menu-background;
-
+@icon-background-blue: rgba(20,158,203,1);
 @table-background: #f5f5f5;
 
 // Reset

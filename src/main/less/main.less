@@ -10,6 +10,8 @@
 @import "templates/ilmoittautuminen.less";
 @import "templates/applicationPeriods.less";
 
+// typography
+
 body {
   .body-font;
 }
@@ -26,11 +28,6 @@ h2 {
   &:first-child {
     margin-top: 0;
   }
-
-  &.light {
-    font-weight: normal;
-    margin-bottom: 3px;
-  }
 }
 
 a {
@@ -38,57 +35,6 @@ a {
   &:active { color: @link-active-color; }
   &:hover { color: @link-hover-color; }
   &:visited { color: @link-visited-color; }
-}
-
-.italic {
-  font-style: italic;
-}
-
-.container {
-  max-width: 1160px;
-  margin: 50px auto 100px auto;
-}
-
-.sidebar-column {
-  width: 275px;
-  position: absolute;
-}
-
-.sidebar-menu {
-  border-top: 1px solid @menu-border;
-  .menu-font();
-
-  li {
-    height: 40px;
-    line-height: 40px;
-    background: @menu-background;
-    padding-left: 40px;
-    margin-left: 12px;
-  }
-
-  li.sidebar-menu-top-level {
-    background: white;
-    padding-left: 0px;
-    position: relative;
-
-    &:before {
-      content: "";
-      .triangle(@menu-triangle);
-      position: relative;
-      display: inline-block;
-      margin-left: 9px;
-      margin-right: 5px;
-      top: -2px;
-    }
-  }
-}
-
-.content-column {
-  margin-left: 310px;
-}
-
-[ng\:cloak], [ng-cloak], .ng-cloak {
-  display: none !important;
 }
 
 .instruction {
@@ -117,6 +63,74 @@ a {
   }
 }
 
+// Layout
+
+.container {
+  max-width: 1160px;
+  margin: 50px auto 100px auto;
+}
+
+.sidebar-column {
+  width: 275px;
+  position: absolute;
+}
+
+.content-column {
+  margin-left: 310px;
+}
+
+[ng\:cloak], [ng-cloak], .ng-cloak {
+  display: none !important;
+}
+
+// Menu
+
+.sidebar-menu {
+  border-top: 1px solid @menu-border;
+  .menu-font();
+
+  li {
+    height: 40px;
+    line-height: 40px;
+    background: @menu-background;
+    padding-left: 40px;
+    margin-left: 12px;
+  }
+
+  li.sidebar-menu-top-level {
+    background: white;
+    padding-left: 0px;
+    position: relative;
+
+    &:before {
+      content: "";
+      .triangle-down(@menu-triangle-color);
+      position: relative;
+      display: inline-block;
+      margin-left: 9px;
+      margin-right: 5px;
+      top: -2px;
+    }
+  }
+}
+
+// Application list
+
+.application-list-status {
+  .body-font();
+
+  &.ajax-spinner:after {
+    vertical-align: -50%;
+  }
+
+  &.error {
+    color: @error-color;
+    border-color: @error-color;
+  }
+}
+
+// Forms
+
 input[type="text"], textarea {
   background: @input-background;
   color: @font-color;
@@ -140,10 +154,6 @@ input[type="text"], textarea {
   }
 }
 
-.with-bg-transition() {
-  transition: background-color 1000ms;
-}
-
 input, textarea {
   &:focus {
     border: 1px solid @input-focus-border !important;
@@ -157,16 +167,16 @@ input[disabled] {
   box-shadow: none;
 }
 
+textarea {
+  resize: none;
+  padding: 5px 10px;
+}
+
 button, a {
   &:focus {
     outline: 1px solid @input-focus-border !important;
     box-shadow: rgba(0, 0, 0, 0.0745098) 0px 1px 1px 0px inset, rgba(82, 168, 236, 0.6) 0px 0px 8px 0px !important;
   }
-}
-
-textarea {
-  resize: none;
-  padding: 5px 10px;
 }
 
 button {
@@ -223,9 +233,14 @@ button.delete-btn:not(.confirm) {
   }
 }
 
-.float-right {
-  float: right;
-  margin-left: 20px;
+// Symbols
+
+.triangle-down(@color){
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 5px 3px 0 3px;
+  border-color: @color transparent transparent transparent;
 }
 
 .ajax-spinner:after {
@@ -245,42 +260,7 @@ button.delete-btn:not(.confirm) {
   display: inline-block;
 }
 
-
-.application-list-status {
-  .body-font();
-
-  &.ajax-spinner:after {
-    vertical-align: -50%;
-  }
-
-  &.error {
-    color: @error-color;
-    border-color: @error-color;
-  }
-}
-
-
-.fade-transitions {
-  &.ng-leave {
-    -webkit-transition:0.5s all;
-    transition:0.5s all;
-  }
-
-  &.ng-leave-active {
-    opacity: 0;
-  }
-
-  &.ng-enter {
-    opacity: 0;
-    -webkit-transition:2s all;
-    transition:2s all;
-  }
-
-  &.ng-enter-active {
-    opacity: 1;
-  }
-}
-
+///
 
 .question-group-indent {
   margin-left: 20px;
@@ -352,9 +332,34 @@ a.disabled {
 
 .icon-info-circled {
   &.verboseHelp {
-    color: @badge-background-blue;
+    color: @icon-background-blue;
     cursor: help;
   }
 }
 
+// transitions
 
+.with-bg-transition() {
+  transition: background-color 1000ms;
+}
+
+.fade-transitions {
+  &.ng-leave {
+    -webkit-transition:0.5s all;
+    transition:0.5s all;
+  }
+
+  &.ng-leave-active {
+    opacity: 0;
+  }
+
+  &.ng-enter {
+    opacity: 0;
+    -webkit-transition:2s all;
+    transition:2s all;
+  }
+
+  &.ng-enter-active {
+    opacity: 1;
+  }
+}

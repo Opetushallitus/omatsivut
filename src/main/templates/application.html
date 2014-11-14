@@ -52,8 +52,8 @@
         <section class="application-section hakutoiveet" ng-if="application.editHakutoiveetEnabled()">
             <header class="application-section-heading">
                 {{ localization('label.preferences') }}
-                <button class="float-right save-btn" ng-hide="application.applicationPeriodsInactive()" ng-disabled="shouldSaveButtonBeDisabled()" ng-click="saveApplication()">{{ localization('button.save') }}</button>
-                <span role="status" class="status-message float-right" ng-class="statusMessageStyleModifier()" ng-bind="statusMessage"></span>
+                <button class="save-btn" ng-hide="application.applicationPeriodsInactive()" ng-disabled="shouldSaveButtonBeDisabled()" ng-click="saveApplication()">{{ localization('button.save') }}</button>
+                <span role="status" class="status-message" ng-class="statusMessageStyleModifier()" ng-bind="statusMessage"></span>
             </header>
 
               <hakutoiveet application="application" preference-moved="preferenceMoved" validating="isValidating">
@@ -68,8 +68,8 @@
         <section class="application-section henkilotiedot" ng-if="application.editHenkilotiedotEnabled()">
             <header class="application-section-heading">
                 {{ localization('label.contactDetails') }}
-                <button ng-if="!(application.editHakutoiveetEnabled() && !application.applicationPeriodsInactive())" class="float-right save-btn" ng-disabled="shouldSaveButtonBeDisabled()" ng-click="saveApplication()">{{ localization('button.save') }}</button>
-                <span ng-if="!(application.editHakutoiveetEnabled() && !application.applicationPeriodsInactive())" role="status" class="status-message float-right" ng-class="statusMessageStyleModifier()" ng-bind="statusMessage"></span>
+                <button ng-if="!(application.editHakutoiveetEnabled() && !application.applicationPeriodsInactive())" class="save-btn" ng-disabled="shouldSaveButtonBeDisabled()" ng-click="saveApplication()">{{ localization('button.save') }}</button>
+                <span ng-if="!(application.editHakutoiveetEnabled() && !application.applicationPeriodsInactive())" role="status" class="status-message" ng-class="statusMessageStyleModifier()" ng-bind="statusMessage"></span>
             </header>
 
             <henkilotiedot application="application">
