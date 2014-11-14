@@ -2068,7 +2068,7 @@
           before(
             replacePreference(hakemusKorkeakoulu, 1, "Diakonia-ammattikorkeakoulu, Järvenpää"),
             (function () {
-              hakemusKorkeakoulu.questionsForApplication().enterAnswer(2, "Vastaus")
+              hakemusKorkeakoulu.questionsForApplication().enterAnswer(1, "Vastaus")
             } ),
             hakemusKorkeakoulu.saveWaitSuccess
           )
