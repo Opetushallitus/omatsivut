@@ -50,35 +50,37 @@
     left: -10px;
   }
 
-  .sort-arrow-down {
+  .sort-arrow(@direction) {
     position: absolute;
     width: 20px;
     height: 20px;
     padding: 0;
-    bottom: 0;
-    background: url("../img/sort-arrow-down.png") center center no-repeat #0093ba;
+    background: url("../img/sort-arrow-@{direction}.png") center center no-repeat @sort-arrow-color;
     background-size: 7px 8px;
 
     &[disabled] {
-      background-image: url("../img/sort-arrow-down-disabled.png");
+      background-image: url("../img/sort-arrow-@{direction}-disabled.png");
       background-color: #e0e0e0;
+
+      &:hover {
+        background-color: #e0e0e0;
+        cursor: default;
+      }
+    }
+
+    &:hover {
+      background-color: @sort-arrow-hover-color;
     }
   }
 
+  .sort-arrow-down {
+    .sort-arrow("down");
+    bottom: 0;
+  }
+
   .sort-arrow-up {
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    padding: 0;
+    .sort-arrow("up");
     top: 0;
-
-    background: url("../img/sort-arrow-up.png") center center no-repeat #0093ba;
-    background-size: 7px 8px;
-
-    &[disabled] {
-      background-image: url("../img/sort-arrow-up-disabled.png");
-      background-color: #e0e0e0;
-    }
   }
 
   // Opetuspiste
