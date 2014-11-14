@@ -11,7 +11,6 @@ import fi.vm.sade.omatsivut.hakemus.domain._
 import fi.vm.sade.omatsivut.localization.Translations
 import fi.vm.sade.omatsivut.lomake.AddedQuestionFinder
 import fi.vm.sade.omatsivut.lomake.domain.{AnswerId, Lomake, QuestionNode}
-import fi.vm.sade.omatsivut.servlet.HakemusInfo
 import fi.vm.sade.omatsivut.tarjonta.{Haku, Hakukohde, TarjontaComponent}
 import fi.vm.sade.omatsivut.util.Logging
 
@@ -37,13 +36,13 @@ trait ApplicationValidatorComponent {
     def validateAndFindQuestions(lomake: Lomake, hakemusMuutos: HakemusMuutos, haku: Haku, personOid: String)(implicit lang: Language.Language): HakemusInfo = {
       withErrorLogging {
         val storedApplication = hakemusRepository.findStoredApplicationByOid(hakemusMuutos.oid)
-        validateAndFindQuestions(haku, lomake, hakemusMuutos, storedApplication, personOid)
+        if (storedApplication.getPersonOid != personOid) throw new IllegalArgumentException("personId mismatch")
+        validateAndFindQuestions(haku, lomake, hakemusMuutos, storedApplication)
       } ("Error validating application: " + hakemusMuutos.oid)
     }
 
-    def validateAndFindQuestions(haku: Haku, lomake: Lomake, newHakemus: HakemusLike, storedApplication: Application, personOid: String)(implicit lang: Language.Language): HakemusInfo = {
+    private[hakemus] def validateAndFindQuestions(haku: Haku, lomake: Lomake, newHakemus: HakemusLike, storedApplication: Application)(implicit lang: Language.Language): HakemusInfo = {
       withErrorLogging {
-        if (storedApplication.getPersonOid != personOid) throw new IllegalArgumentException("personId mismatch")
         val updatedApplication = update(newHakemus, lomake, storedApplication)
         val validationErrors: List[ValidationError] = validateHakutoiveetAndAnswers(updatedApplication, storedApplication, lomake) ++
           errorsForEditingInactiveHakuToive(updatedApplication, storedApplication, haku)

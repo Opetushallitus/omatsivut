@@ -69,7 +69,7 @@ module.exports = function(listApp) {
         })
 
         $scope.hakutoiveVastaanotettu = function(hakutoive, updated) {
-          $scope.application.mergeSavedApplication(updated)
+          $scope.application.mergeSavedApplication(updated.hakemus)
           $timeout(function() {
             $scope.$broadcast("hakutoive-vastaanotettu", hakutoive)
           }, 0)

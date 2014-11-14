@@ -15,7 +15,7 @@ import fi.vm.sade.omatsivut.util.Timer._
 import org.joda.time.LocalDateTime
 
 trait HakemusRepositoryComponent {
-  this: LomakeRepositoryComponent with HakemusConverterComponent with SpringContextComponent with AuditLoggerComponent with TarjontaComponent with OhjausparametritComponent =>
+  this: LomakeRepositoryComponent with ApplicationValidatorComponent with HakemusConverterComponent with SpringContextComponent with AuditLoggerComponent with TarjontaComponent with OhjausparametritComponent =>
 
   val hakemusRepository: HakemusRepository
 
@@ -23,6 +23,7 @@ trait HakemusRepositoryComponent {
     import scala.collection.JavaConversions._
     private val dao = springContext.applicationDAO
     private val applicationService = springContext.applicationService
+    private val applicationValidator: ApplicationValidator = newApplicationValidator
 
     private def canUpdate(lomake: Lomake, originalApplication: Application, updatedApplication: Application, userOid: String)(implicit lang: Language.Language): Boolean = {
       val stateUpdateable = originalApplication.getState == Application.State.ACTIVE || originalApplication.getState == Application.State.INCOMPLETE
@@ -130,9 +131,9 @@ trait HakemusRepositoryComponent {
           } yield {
             val hakemus = hakemusConverter.convertToHakemus(lomake, haku, application)
             auditLogger.log(ShowHakemus(application.getPersonOid, hakemus.oid, haku.oid))
-            (haku, lomake, hakemus, application)
+            applicationValidator.validateAndFindQuestions(haku, lomake, hakemus, application)
           }
-        }).flatten.toList.sortBy[Long](_._3.received).reverse
+        }).flatten.toList.sortBy[Long](_.hakemus.received).reverse
       }
     }
 

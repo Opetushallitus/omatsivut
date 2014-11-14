@@ -42,9 +42,7 @@ trait ApplicationsServletContainer {
       summary "Hae kirjautuneen oppijan hakemukset"
     )
     get("/", operation(getApplicationsSwagger)) {
-      hakemusRepository.fetchHakemukset(personOid()).map(hakemus => {
-        applicationValidator.validateAndFindQuestions(hakemus._1, hakemus._2, hakemus._3, hakemus._4, personOid())
-      })
+      hakemusRepository.fetchHakemukset(personOid())
     }
 
     val putApplicationsSwagger = (apiOperation[Hakemus]("putApplication")
@@ -135,6 +133,4 @@ trait ApplicationsServletContainer {
 }
 
 case class ClientSideVastaanotto(hakukohdeOid: String, tila: String)
-
-case class HakemusInfo(hakemus: Hakemus, errors: List[ValidationError], questions: List[QuestionNode], hakukohteet: List[Hakukohde])
 

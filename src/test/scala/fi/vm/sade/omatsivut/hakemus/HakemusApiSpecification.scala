@@ -7,7 +7,6 @@ import fi.vm.sade.haku.oppija.hakemus.it.dao.ApplicationDAO
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 import fi.vm.sade.omatsivut.fixtures.{FixtureImporter, TestFixture}
 import fi.vm.sade.omatsivut.json.{QuestionNodeSerializer, JsonFormats}
-import fi.vm.sade.omatsivut.servlet.HakemusInfo
 import org.json4s.JsonAST.JObject
 import org.json4s._
 import fi.vm.sade.omatsivut.fixtures.{FixtureImporter, TestFixture}
