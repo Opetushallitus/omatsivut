@@ -1773,15 +1773,15 @@
       endToEndTest("järjestys", "järjestys muuttuu nuolta klikkaamalla", function () {
         return hakemusYhteishakuKevat2014WithForeignBaseEducation.getPreference(1).moveDown()
       }, function (dbStart, dbEnd) {
-        dbStart.hakutoiveet[0].should.deep.equal(dbEnd.hakutoiveet[0])
-        dbStart.hakutoiveet[1].should.deep.equal(dbEnd.hakutoiveet[2])
-        dbStart.hakutoiveet[2].should.deep.equal(dbEnd.hakutoiveet[1])
+        dbStart.hakemus.hakutoiveet[0].should.deep.equal(dbEnd.hakemus.hakutoiveet[0])
+        dbStart.hakemus.hakutoiveet[1].should.deep.equal(dbEnd.hakemus.hakutoiveet[2])
+        dbStart.hakemus.hakutoiveet[2].should.deep.equal(dbEnd.hakemus.hakutoiveet[1])
       })
 
       endToEndTest("poisto", "hakutoiveen voi poistaa", function () {
         return hakemusYhteishakuKevat2014WithForeignBaseEducation.getPreference(0).remove()
       }, function (dbStart, dbEnd) {
-        dbEnd.hakutoiveet.should.deep.equal(_.flatten([_.rest(dbStart.hakutoiveet), {}]))
+        dbEnd.hakemus.hakutoiveet.should.deep.equal(_.flatten([_.rest(dbStart.hakemus.hakutoiveet), {}]))
       })
       endToEndTest("lisäys", "hakutoiveen voi lisätä", replacePreference(hakemusYhteishakuKevat2014WithForeignBaseEducation, 2, "Turun"), function(dbStart, dbEnd) {
           var newOne = {
@@ -1800,7 +1800,7 @@
                   'Koulutus-id-educationcode': 'koulutus_020075' },
               hakuaikaId: "5474"
           }
-        dbEnd.hakutoiveet.should.deep.equal(dbStart.hakutoiveet.slice(0, 2).concat(newOne).concat({}).concat({}))
+        dbEnd.hakemus.hakutoiveet.should.deep.equal(dbStart.hakemus.hakutoiveet.slice(0, 2).concat(newOne).concat({}).concat({}))
       })
     })
 
@@ -2149,7 +2149,7 @@
   }
 
   function findApplicationById(applications, id) {
-    return _.find(applications, function(a) { return a.oid == id })
+    return _.find(applications, function(a) { return a.hakemus.oid == id })
   }
 
   function diffKeys(arr1, arr2) {

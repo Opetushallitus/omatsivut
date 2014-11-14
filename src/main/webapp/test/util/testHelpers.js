@@ -145,7 +145,7 @@ db = {
 
   getPreferences: function() {
     return db.getApplications().then(function(data) {
-      return _.chain(data[0].hakutoiveet)
+      return _.chain(data[0].hakemus.hakutoiveet)
         .filter(function(item) { return !_.isEmpty(item["Koulutus-id"]) })
         .map(function(item) {
           return {
