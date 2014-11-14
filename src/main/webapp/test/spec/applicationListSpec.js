@@ -964,7 +964,11 @@
 
         it("uusia kysymyksiä ei näytetä käyttäjälle", function() {
             var questionTitles = hakemusNivelKesa2013WithPeruskouluBaseEducation.questionsForApplication().titles()
-            expect(questionTitles).to.deep.equal([])
+            expect(questionTitles).to.deep.equal([ 'Miksi haet kymppiluokalle?',
+              'Haen ensisijaisesti kielitukikympille?',
+              'Turun Kristillinen opisto',
+              'Päättötodistuksen kaikkien oppiaineiden keskiarvo?',
+              'Päättötodistukseni on' ])
         })
       })
 
