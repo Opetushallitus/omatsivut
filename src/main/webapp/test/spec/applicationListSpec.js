@@ -1442,17 +1442,17 @@
 
       function answerAoQuestions() {
         return wait.until(function() { return hakemusKorkeakoulu.questionsForApplication().count() >= 2})()
-          .then(function() { hakemusKorkeakoulu.questionsForApplication().enterAnswer(0, "8,78") })
-          .then(function() { hakemusKorkeakoulu.questionsForApplication().enterAnswer(2, "Ryhmä") })
+          .then(function() { hakemusKorkeakoulu.questionsForApplication().enterAnswer(1, "Ryhmä") })
+          .then(function() { hakemusKorkeakoulu.questionsForApplication().enterAnswer(2, "8,78") })
           .then(hakemusKorkeakoulu.saveWaitSuccess)
       }
 
       it("kysymykset näytetään", function() {
         var questionTitles = hakemusKorkeakoulu.questionsForApplication().titles()
         expect(questionTitles).to.deep.equal([
-          'Lukion päättötodistuksen keskiarvo',
           'Amk-osoiteryhmä',
-          'Testikysymys II'
+          'Testikysymys II',
+          'Lukion päättötodistuksen keskiarvo'
           ])
       })
 
