@@ -5,13 +5,20 @@ import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.omatsivut.fixtures.TestFixture._
 import fi.vm.sade.omatsivut.hakemus.domain._
-import fi.vm.sade.omatsivut.lomake.domain.{QuestionId, QuestionNode}
+import fi.vm.sade.omatsivut.lomake.domain.{Text, QuestionGroup, QuestionId, QuestionNode}
 import fi.vm.sade.omatsivut.tarjonta.Hakuaika
 import org.json4s._
 import org.json4s.jackson.{JsonMethods, Serialization}
 
 class ValidateApplicationSpec extends HakemusApiSpecification with FixturePerson {
   override lazy val appConfig = new AppConfig.IT
+  private val hakemusNivelKesa2013WithPeruskouluBaseEducationExtraQuestions = List(
+    "Miksi haet kymppiluokalle?",
+    "Haen ensisijaisesti kielitukikympille?",
+    "Turun Kristillinen opisto",
+    "Päättötodistuksen kaikkien oppiaineiden keskiarvo?",
+    "Päättötodistukseni on"
+  )
 
   sequential
 
@@ -21,7 +28,7 @@ class ValidateApplicationSpec extends HakemusApiSpecification with FixturePerson
         validate(hakemus) { (errors, structuredQuestions) =>
           status must_== 200
           errors must_== List()
-          structuredQuestions must_== List()
+          QuestionNode.flatten(structuredQuestions).map(_.title) must_== hakemusNivelKesa2013WithPeruskouluBaseEducationExtraQuestions
         }
       }
     }
@@ -41,7 +48,7 @@ class ValidateApplicationSpec extends HakemusApiSpecification with FixturePerson
         validate(newHakemus) { (errors, structuredQuestions) =>
           status must_== 200
           errors must_== List()
-          structuredQuestions must_== List()
+          QuestionNode.flatten(structuredQuestions).map(_.title) must_== hakemusNivelKesa2013WithPeruskouluBaseEducationExtraQuestions
         }
       }
     }
