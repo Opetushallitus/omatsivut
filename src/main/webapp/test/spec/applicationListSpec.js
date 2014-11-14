@@ -1655,8 +1655,10 @@
               hakemusNivelKesa2013WithPeruskouluBaseEducation.getPreference(2).opetuspiste().should.equal("Etelä-Savon ammattiopisto,  Otavankatu 4")
             })
             describe("Ennen uusia muokkauksia", function() {
-              it("vastauksia ei näytetä", function() {
-                hakemusNivelKesa2013WithPeruskouluBaseEducation.questionsForApplication().count().should.equal(0)
+              it("vanhat vastaukset näytetään", function() {
+                hakemusNivelKesa2013WithPeruskouluBaseEducation.questionsForApplication().count().should.equal(13)
+                hakemusNivelKesa2013WithPeruskouluBaseEducation.questionsForApplication().getAnswer(0).should.equal("tekstivastaus 1")
+                hakemusNivelKesa2013WithPeruskouluBaseEducation.questionsForApplication().getAnswer(1).should.equal("Vaihtoehto x 1")
               })
             })
 
