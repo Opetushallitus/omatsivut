@@ -1,62 +1,52 @@
-<div class="preference-list" ng-class="{validating: isValidating}" sortable sortable-item=".preference-list-item" sortable-moved="movePreference">
+<div class="preference-list" ng-class="{validating: validating}" sortable sortable-item=".preference-list-item" sortable-moved="movePreference">
     <div class="overlay"></div>
     <div class="preference-list-item" aria-label="{{ ($index+1) + '. ' + hakutoive.data.Opetuspiste + ' - ' + hakutoive.data.Koulutus }}" ng-repeat="hakutoive in application.hakutoiveet" ng-controller="hakutoiveController" ng-class="{'inactive': isEditingDisabled() && hakutoive.isNew}">
         <div class="preference-list-item-layout">
             <div class="item-content">
+                <span class="row-number">{{$index+1}}</span>
+            </div>
 
-                <button class="sort-arrow-up" aria-label="{{ localization('button.sortUp_ariaLabel') }}" ng-disabled="!application.canMovePreference($index, $index-1)" disable-click-focus></button>
-                <span class="row-number">{{$index+1}}.</span>
-                <button class="sort-arrow-down" aria-label="{{ localization('button.sortDown_ariaLabel') }}" ng-disabled="!application.canMovePreference($index, $index+1)" disable-click-focus></button>
-
+            <div class="item-content">
+                <div class="sort-arrow-container">
+                    <button class="sort-arrow-up" aria-label="{{ localization('button.sortUp_ariaLabel') }}" ng-disabled="!application.canMovePreference($index, $index-1)" disable-click-focus></button>
+                    <button class="sort-arrow-down" aria-label="{{ localization('button.sortDown_ariaLabel') }}" ng-disabled="!application.canMovePreference($index, $index+1)" disable-click-focus></button>
+                </div>
             </div>
 
             <div class="item-content">
                 <div class="row opetuspiste">
-                    <label>
-                        <div class="label-column">{{localization('label.location' + (application.haku.korkeakouluhaku ? '_university' : ''))}}:</div>
+                    <label ng-bind="hakutoive.data.Opetuspiste" ng-show="isEditingDisabled()"></label>
 
-                        <div class="value-column">
-                            <span ng-bind="hakutoive.data.Opetuspiste" ng-show="isEditingDisabled()"></span>
-
-                            <input type="text" placeholder="" ng-change="opetuspisteModified()"
-                                   ng-model="hakutoive.data.Opetuspiste"
-                                   typeahead="opetuspiste.name for opetuspiste in findOpetuspiste($viewValue)"
-                                   typeahead-loading="loadingLocations"
-                                   typeahead-on-select="opetuspisteValittu($item, $model, $label)"
-                                   ng-show="!isEditingDisabled()"/>
-                        </div>
-                    </label>
+                    <input type="text" ng-change="opetuspisteModified()"
+                           placeholder="{{localization('label.chooseLocation')}}"
+                           ng-model="hakutoive.data.Opetuspiste"
+                           typeahead="opetuspiste.name for opetuspiste in findOpetuspiste($viewValue)"
+                           typeahead-loading="loadingLocations"
+                           typeahead-on-select="opetuspisteValittu($item, $model, $label)"
+                           ng-show="!isEditingDisabled()"/>
                 </div>
+
                 <div class="row koulutus">
-                    <label>
-                        <div class="label-column">{{ localization('label.education' + (application.haku.korkeakouluhaku ? '_university' : '')) }}:</div>
+                    <span ng-bind="hakutoive.data.Koulutus" ng-show="isEditingDisabled()"></span>
 
-                        <div class="value-column">
-                            <span ng-bind="hakutoive.data.Koulutus" ng-show="isEditingDisabled()"></span>
-
-                            <select ng-model="valittuKoulutus"
-                                    ng-options="koulutus.name for koulutus in koulutusList"
-                                    ng-change="koulutusValittu($index)" ng-show="isKoulutusSelectable()">
-                            </select>
-                            <span class="instruction" ng-hide="isEditingDisabled() || hakutoive.hasOpetuspiste()">{{localization('label.chooseLocation')}}</span>
-                            <span class="validation-message error" ng-if="hakutoive.errors.length">{{hakutoive.errors.join(', ')}}</span>
-                            <span class="instruction ajax-spinner-small" ng-show="isLoadingKoulutusList()">{{ localization("message.loadingData") }}</span>
-                        </div>
-                    </label>
+                    <select ng-model="valittuKoulutus"
+                            ng-options="koulutus.name for koulutus in koulutusList"
+                            ng-change="koulutusValittu($index)" ng-show="isKoulutusSelectable()">
+                    </select>
+                    <span class="validation-message error" ng-if="hakutoive.errors.length">{{hakutoive.errors.join(', ')}}</span>
+                    <span class="instruction ajax-spinner-small" ng-show="isLoadingKoulutusList()">{{ localization("message.loadingData") }}</span>
                 </div>
-                <div class="row hakuaika" ng-if="hakutoive.kohdekohtainenHakuaika != null">
-                    <label>
-                        <div class="label-column">{{ localization('label.applicationPeriodForEducation') }}:</div>
-                        <div class="value-column">
-                            <time formatted-time="hakutoive.kohdekohtainenHakuaika.start" format="LLL" /> -
-                            <time formatted-time="hakutoive.kohdekohtainenHakuaika.end" format="LLL" />
-                        </div>
-                    </label>
+
+                <div class="row hakuaika" ng-if="hakutoive.kohdekohtainenHakuaika != null && !application.preferenceLocked($index)">
+                    {{ localization('label.applicationPeriodEnds') }} <time formatted-time="hakutoive.kohdekohtainenHakuaika.end" format="LLL" />
                 </div>
             </div>
 
             <div class="item-content">
-                <i class="icon-lock" title="{{localization('label.applicationPeriodPassed') }}" ng-show="application.preferenceLocked($index)"></i>
+                <div class="application-preference-locked" ng-if="application.preferenceLocked($index)">
+                    {{localization('label.applicationPeriodPassed') }}
+                </div>
+
                 <button ng-show="canRemovePreference($index)" class="delete-btn" disable-click-focus confirm confirm-text="{{localization('button.delete_confirm')}}" confirm-action="removeHakutoive($index)" aria-label="{{ localization('button.delete_ariaLabel') }}"></button>
             </div>
         </div>

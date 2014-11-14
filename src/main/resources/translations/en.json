@@ -11,9 +11,9 @@
   "label": {
     "applicationPeriod": "Application period",
     "applicationPeriodActive": "In progress",
+    "applicationPeriodEnds": "Application period will end",
     "applicationPeriodPassed": "Application period ended",
     "applicationPeriodNotStarted": "Application period not started",
-
     "applicationPeriodEnded": "Student admission process is unfinished.",
     "applicationRoundEnded": "Application round has ended.",
     "applicationReceived": "Application created",
@@ -25,12 +25,13 @@
     "education": "Study programme",
     "education_university": "Study programme",
     "applicationPeriodForEducation": "Application period",
-    "chooseLocation": "First choose location",
+    "chooseLocation": "Choose location...",
     "resultsPublishedDate": "Results will be published by",
     "questionGroupWithTitle": "Additional questions",
     "questionGroupWithoutTitle": "Other additional questions",
-    "resultsFinal": "Student selection status (Final)",
-    "resultsPending": "Student selection status (Ongoing)",
+    "resultsCaption": "Student selection status",
+    "resultsFinal": "Final",
+    "resultsPending": "Ongoing",
     "contactDetails": "Contact information",
     "email": "E-mail",
     "mobilePhone": "Mobile phone number",
@@ -39,18 +40,18 @@
 
     "resultState": {
       "Hyvaksytty": "Accepted",
-      "Kesken": "Student admission process unfinished",
-      "HarkinnanvaraisestiHyvaksytty": "Discretionary admission",
-      "Varalla": "On a reserve place __varasija__.",
-      "VarallaPvm": "On a reserve place.__varasija__. Reserve places are filled until __varasijaPvm__.",
+      "Kesken": "Student_admission_process_unfinished",
+      "HarkinnanvaraisestiHyvaksytty": "Discretionary_admission",
+      "Varalla": "On_a_reserve_place___varasija__.",
+      "VarallaPvm": "On_a_reserve_place.__varasija__. Reserve places are filled until __varasijaPvm__.",
       "Peruutettu": "Cancelled",
-      "Perunut": "You have cancelled the study place",
-      "Peruuntunut": "Cancelled automatically",
-      "VarasijaltaHyvaksytty": "Accepted from reserve place",
-      "Vastaanottanut": "You have confirmed the study place",
-      "Hylatty": "You have not received a study place",
-      "EhdollisestiVastaanottanut": "You have confirmed the study place conditionally",
-      "EiVastaanotettuMaaraAikana": "You have not confirmed the study place within the set time"
+      "Perunut": "You_have_cancelled_the study place",
+      "Peruuntunut": "Cancelled_automatically",
+      "VarasijaltaHyvaksytty": "Accepted_from_reserve place",
+      "Vastaanottanut": "You_have_confirmed_the study place",
+      "Hylatty": "You_have_not_received a study place",
+      "EhdollisestiVastaanottanut": "You_have_confirmed_the study place conditionally",
+      "EiVastaanotettuMaaraAikana": "You_have_not_confirmed_the study place within the set time"
     }
   },
 
@@ -79,7 +80,7 @@
     "applicationIsInPostProcessing": "Your application is being processed. If you want to make any changes, please try again later.",
 
     "acceptEducation": {
-      "received": "Study place granted: __opetuspiste__ - __koulutus__",
+      "received": "Study place granted",
       "latestAnswer": "Give a binding answer at the latest __aika__",
       "accept": "I confirm the granted study place",
       "conditionalAccept": "I confirm the granted study place if I do not receive a study place from any of my higher prioritized options.",
@@ -122,7 +123,7 @@
   },
 
   "registration": {
-    "pleaseRegister": "Please register: __opetuspiste__ - __koulutus__",
+    "pleaseRegister": "Please register",
     "goToRegistration": "Go to registration"
   }
 }

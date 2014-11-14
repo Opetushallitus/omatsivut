@@ -85,7 +85,7 @@ function ApplicationListPage() {
         return _(texts).chain().compact().flatten().value().join("")
       })
 
-    },
+    }
   }
 
   function applicationPageVisible() {
@@ -164,26 +164,24 @@ function ApplicationListPage() {
 
       valintatulokset: function () {
         var application = getApplicationElement(applicationIndex)
-
+        var nbsp = /\u00A0/g
         return application.find(application.find(".result-list tr[ng-repeat]"))
           .map(function () {
             var el = $(this)
             return {
               hakukohde: el.find("[ng-bind='tulos.opetuspiste.name']").text() + " " + el.find("[ng-bind='tulos.koulutus.name']").text(),
-              tila: el.find("[ng-bind='valintatulosText(tulos)']").text().trim()
+              tila: el.find("[ng-bind='valintatulosText(tulos)']").text().trim().replace(nbsp, " ")
             }
           }).toArray()
       },
 
       ilmoittautuminen: function(index) {
-        var el = getApplicationElement(applicationIndex).find(".ilmoittautuminen").eq(index)
+        var el = getApplicationElement(applicationIndex).find(".ilmoittautuminen-item").eq(index)
         return {
           visible: el.is(":visible"),
           linkUrl: el.find("a").attr("href"),
           title: function() {
-            return el.find("h2").map(function() {
-              return $(this).text().trim()
-            }).toArray()
+            return removeSpaces(el.find("header").text())
           }
         }
       },
@@ -232,9 +230,7 @@ function ApplicationListPage() {
           },
 
           title: function() {
-            return vastaanottoElement().find("h2").map(function() {
-              return $(this).text().trim()
-            }).toArray()
+            return removeSpaces(vastaanottoElement().find("header").text())
           },
 
           info: function() {
@@ -310,10 +306,11 @@ function ApplicationListPage() {
       },
 
       applicationStatus: function() {
-        function trimText() {
-          return $(this).text().replace(/(\r\n|\n|\r)/gm,"").replace(/\s+/g," ").trim()
-        }
         return getApplicationElement().find(".application-status").map(trimText).toArray().join(" ")
+      },
+
+      applicationPeriods: function() {
+        return getApplicationElement().find("application-periods").map(trimText).toArray().join(" ")
       },
 
       previewLink: function() {
@@ -332,10 +329,6 @@ function ApplicationListPage() {
 
       found: function() {
         return getApplicationElement().length > 0
-      },
-
-      applicationState: function() {
-        return getApplicationElement().find(".application-state-message").text().trim()
       },
 
       calloutText: function() {
@@ -558,7 +551,7 @@ function ApplicationListPage() {
         return el().find(".koulutus [ng-bind='hakutoive.data.Koulutus']").text()
       },
       hakuaika: function () {
-        return el().find(".hakuaika .value-column").text().trim().replace(/[\s\n]+/g, " ")
+        return el().find(".hakuaika").text().trim()
       },
       toString: function() {
         return api.opetuspiste() + " " + api.koulutus()
@@ -654,5 +647,13 @@ function ApplicationListPage() {
     }
 
     return compareTrees(indexInTree(el1), indexInTree(el2))
+  }
+
+  function removeSpaces(text) {
+    return text.replace(/(\r\n|\n|\r)/gm,"").replace(/\s+/g," ").trim()
+  }
+
+  function trimText() {
+    return removeSpaces($(this).text())
   }
 }

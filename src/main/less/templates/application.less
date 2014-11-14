@@ -1,0 +1,106 @@
+@import "../common.less";
+
+@application-padding-left: 20px;
+
+.application {
+  border: 1px solid @border-color;
+
+  & + .application {
+    margin-top: 50px;
+  }
+
+  section {
+    margin: 0px @application-padding-left;
+  }
+}
+
+section.application-header {
+  background: @header-background;
+  padding: 17px @application-padding-left;
+  margin: 0;
+
+  a, a:visited {
+    color: @link-color-alt;
+  }
+
+  a.disabled {
+    color: @timestamp-color;
+  }
+}
+
+.timestamp-row {
+  margin-top: 10px;
+  transition: background-color 1000ms;
+  display: inline-block;
+  position: relative;
+
+  &.saved {
+    background-color: @save-highlight-timestamp-color;
+  }
+
+  .timestamp {
+    color: @timestamp-color;
+    margin-left: 10px;
+  }
+}
+
+section.application-status {
+  font-style: italic;
+
+  .application-status-item {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+}
+
+.application-section {
+  margin-top: 0px;
+}
+
+section+section {
+  border-top: 1px solid @border-color-section;
+}
+
+section.hakutoiveet+section {
+  border-top: none;
+}
+
+section.application-status {
+  border-top: none;
+}
+
+section.application-valintatulos {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+section.hakutoiveen-vastaanotto, section.ilmoittautuminen {
+  border-bottom: 1px solid @border-color-section;
+  border-top: none;
+}
+
+.application-section-heading {
+  .section-heading-font();
+  padding-bottom: 0px;
+  line-height: 40px;
+  position: relative;
+  overflow: auto;
+
+  .status-message {
+    max-width: 400px;
+    height: auto;
+    position: relative;
+    float: right;
+  }
+
+  .save-btn {
+    float: right;
+    margin-left: 20px;
+  }
+
+  .ajax-spinner:after {
+    margin: 0;
+    position: absolute;
+    right: 0;
+  }
+}

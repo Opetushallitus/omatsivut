@@ -6,14 +6,6 @@ module.exports = function(listApp) {
         el.css("transform", "translate3d(0px, " + offset + "px, 0px)")
       }
 
-      var moveDown = function(el) {
-        slide(el, el.outerHeight())
-      }
-
-      var moveUp = function(el) {
-        slide(el, -el.outerHeight())
-      }
-
       var resetSlide = function(el) {
         el.css({
           "transition": "",
@@ -22,12 +14,14 @@ module.exports = function(listApp) {
       }
 
       var switchPlaces = function(element1, element2) {
+        var diffY = Math.abs(element1.offset().top - element2.offset().top)
+
         if (element1.index() < element2.index()) {
-          moveDown(element1)
-          moveUp(element2)
+          slide(element1, element2.outerHeight() + diffY-element1.outerHeight())
+          slide(element2, -diffY)
         } else {
-          moveUp(element1)
-          moveDown(element2)
+          slide(element2, element1.outerHeight() + diffY-element2.outerHeight())
+          slide(element1, -diffY)
         }
 
         setTimeout(function() {
