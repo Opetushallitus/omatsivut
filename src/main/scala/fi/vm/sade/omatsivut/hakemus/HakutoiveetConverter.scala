@@ -7,6 +7,7 @@ object HakutoiveetConverter {
   val preferenceKeyPrefix: String = "preference"
   val hakutoiveetPhase: String = OppijaConstants.PHASE_APPLICATION_OPTIONS
   val koulutusId: String = "Koulutus-id"
+  val opetuspisteId: String = "Opetuspiste-id"
 
   def convertFromAnswers(answers: Answers): List[HakutoiveData] = {
     groupPreferences(answers.getOrElse(hakutoiveetPhase , Map()))
@@ -22,10 +23,11 @@ object HakutoiveetConverter {
     hakutoiveetAnswers.filterKeys(s => !s.startsWith(HakutoiveetConverter.preferenceKeyPrefix)) ++
     hakutoiveet.zipWithIndex.flatMap {
       case (hakutoive, index) => {
-        Map((longKey(koulutusId, index), "")) ++
+        Map((longKey(koulutusId, index), ""), (longKey(opetuspisteId, index), "")) ++
+        hakutoiveetAnswers.filterKeys(_.startsWith((preferenceKeyPrefix + (index + 1)))) ++
         hakutoive.map {
           case (key, value) => (longKey(key, index), value)
-        } ++ hakutoiveetAnswers.filterKeys(_.startsWith((preferenceKeyPrefix + (index + 1))))
+        }
       }
     }.toMap[String, String]
   }
@@ -38,12 +40,12 @@ object HakutoiveetConverter {
   }
 
   def answersContainHakutoive(answers: Map[String, String], hakutoive: HakutoiveData) = {
-    (hakutoive.get("Opetuspiste-id"), hakutoive.get(koulutusId)) match {
+    (hakutoive.get(opetuspisteId), hakutoive.get(koulutusId)) match {
       case (Some(opetusPiste), Some(koulutus)) =>
         val flatAnswers = answers.toList.map {
           case (key, value) => (shortenKey(key), value)
         }
-        flatAnswers.contains(("Opetuspiste-id", opetusPiste)) && flatAnswers.contains("Koulutus-id", koulutus)
+        flatAnswers.contains((opetuspisteId, opetusPiste)) && flatAnswers.contains(koulutusId, koulutus)
       case _ => false
     }
   }
