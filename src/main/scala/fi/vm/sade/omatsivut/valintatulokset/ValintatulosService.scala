@@ -5,6 +5,7 @@ import java.util.Date
 import fi.vm.sade.omatsivut.http.{DefaultHttpClient}
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.util.{Logging}
+import fi.vm.sade.omatsivut.util.Timer.timed
 import org.json4s.JsonAST.JValue
 
 trait ValintatulosService {
@@ -77,7 +78,7 @@ class RemoteValintatulosService(valintatulosServiceUrl: String) extends Valintat
     val url = valintatulosServiceUrl + "/haku/"+hakuOid+"/hakemus/"+hakemusOid
     val request = DefaultHttpClient.httpGet(url)
 
-    request.responseWithHeaders match {
+    timed(1000, "ValintatulosService get"){request.responseWithHeaders} match {
       case (200, _, resultString) => {
         try {
           parse(resultString).extractOpt[JValue].map(_.extract[Valintatulos])
