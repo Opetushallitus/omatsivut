@@ -69,16 +69,19 @@ function testMode() {
   return window.parent.location.href.indexOf("runner.html") > 0
 }
 
-function logExceptionToPiwik(msg) {
+function logExceptionToPiwik(msg, data) {
   if (typeof _paq === 'undefined' || _paq == null) {
-    console.warn("Piwik not present, cannot log: " + msg)
+    console.warn("Piwik not present, cannot log: " + msg + "\n" + data)
   } else {
-    _paq.push(["trackEvent", document.domain + "/" + document.title, "Error", msg])
+    _paq.push(["trackEvent", document.location, msg, data])
   }
 }
 
-window.onerror = function(errorMsg, url, lineNumber) {
-  logExceptionToPiwik(url + ":" + lineNumber + " " + errorMsg)
+window.onerror = function(errorMsg, url, lineNumber, columnNumber, exception) {
+  var data = url + ":" + lineNumber
+  if (typeof columnNumber !== "undefined") data += ":" + columnNumber
+  if (typeof exception !==  "undefined") data += "\n" + exception.stack
+  logExceptionToPiwik(errorMsg, data)
 }
 
 angular.module("exceptionOverride", []).factory("$exceptionHandler", function() {
@@ -86,8 +89,7 @@ angular.module("exceptionOverride", []).factory("$exceptionHandler", function() 
     if (testMode()) {
       throw exception
     } else {
-      logExceptionToPiwik(exception.stack || exception.message)
-      console.error(exception.stack)
+      logExceptionToPiwik(exception.message, exception.stack)
     }
   };
 })
