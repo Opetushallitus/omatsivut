@@ -48,12 +48,8 @@ trait ApplicationValidatorComponent {
           errorsForEditingInactiveHakuToive(updatedApplication, storedApplication, haku)
 
         val questions = AddedQuestionFinder.findQuestions(lomake)(storedApplication, newHakemus)
-        val hakutoiveet = HakutoiveetConverter.convertFromAnswers(updatedApplication.getAnswers.toMap.mapValues(_.toMap))
-        val hakuajat = hakutoiveet.map(hakutoiveData => hakutoiveData.get("Koulutus-id").map { koulutusId =>
-          tarjontaService.hakukohde(koulutusId).getOrElse(Hakukohde(koulutusId, None, None))
-        }.getOrElse(Hakukohde("", None, None)))
 
-        HakemusInfo(hakemusConverter.convertToHakemus(lomake, haku, updatedApplication), validationErrors, questions, hakuajat)
+        HakemusInfo(hakemusConverter.convertToHakemus(lomake, haku, updatedApplication), validationErrors, questions)
       } ("Error validating application: " + newHakemus.oid)
     }
 

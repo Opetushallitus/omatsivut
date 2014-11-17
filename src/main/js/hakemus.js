@@ -216,7 +216,7 @@ Hakemus.prototype = {
   importHakuajat: function(hakukohteet) {
     if (hakukohteet != null) {
       for (var i = 0; i < this.hakutoiveet.length && i < hakukohteet.length; i++) {
-        this.hakutoiveet[i].kohdekohtainenHakuaika = hakukohteet[i].kohteenHakuaika
+        this.hakutoiveet[i].kohdekohtainenHakuaika = hakukohteet[i].kohdekohtainenHakuaika
       }
     }
   },

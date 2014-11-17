@@ -13,4 +13,4 @@ trait HakemusRepository {
   def exists(personOid: String, hakuOid: String, hakemusOid: String): Boolean
 }
 
-case class HakemusInfo(hakemus: Hakemus, errors: List[ValidationError], questions: List[QuestionNode], hakukohteet: List[Hakukohde])
+case class HakemusInfo(hakemus: Hakemus, errors: List[ValidationError], questions: List[QuestionNode])

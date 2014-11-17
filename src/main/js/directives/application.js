@@ -93,7 +93,7 @@ module.exports = function(listApp) {
             $scope.isSaveable = true
             setValidatingIndicator(false)
             $scope.application.importQuestions(data.questions)
-            $scope.application.importHakuajat(data.response.hakukohteet)
+            $scope.application.importHakuajat(data.response.hakemus.hakutoiveet)
             updateValidationMessages([], skipQuestions)
           }
 
@@ -121,8 +121,8 @@ module.exports = function(listApp) {
             if (updateQuestions) // frontside validation does not include questions -> don't update
               $scope.application.importQuestions(data.questions)
 
-            if (data.response != null)
-              $scope.application.importHakuajat(data.response.hakukohteet)
+            if (data.response != null && data.response.hakemus != null)
+              $scope.application.importHakuajat(data.response.hakemus.hakutoiveet)
 
             updateValidationMessages(data.errors, skipQuestions)
           }
