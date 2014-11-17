@@ -131,10 +131,14 @@ trait HakemusRepositoryComponent {
           } yield {
             val hakemus = hakemusConverter.convertToHakemus(lomake, haku, application)
             auditLogger.log(ShowHakemus(application.getPersonOid, hakemus.oid, haku.oid))
-            applicationValidator.validateAndFindQuestions(haku, lomake, hakemus, application)
+            applicationValidator.validateAndFindQuestions(haku, lomake, withNoPreferenceSpesificAnswers(hakemus), application)
           }
         }).flatten.toList.sortBy[Long](_.hakemus.received).reverse
       }
+    }
+
+    private def withNoPreferenceSpesificAnswers(hakemus: Hakemus): HakemusLike = {
+      hakemus.toHakemusMuutos.copy(answers = hakemus.answers.filterKeys(!_.equals(HakutoiveetConverter.hakutoiveetPhase)))
     }
 
     override def exists(personOid: String, hakuOid: String, hakemusOid: String) = {
