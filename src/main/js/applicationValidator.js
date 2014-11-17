@@ -32,10 +32,6 @@ module.exports = function(listApp) {
     }
 
     function validateBackend(application, success, error) {
-      var newHakutoiveet = _(application.hakutoiveet).chain()
-        .filter(function(hakutoive) { return hakutoive.addedDuringCurrentSession })
-        .map(function(hakutoive) { return hakutoive.data["Koulutus-id"] })
-        .compact().value().join(",")
 
       var responsePromise = $http.post("/omatsivut/secure/applications/validate/" + application.oid, application.toJson())
       responsePromise.success(function(data, status, headers, config) {
