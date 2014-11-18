@@ -4533,7 +4533,7 @@
                 "kieli_en" : "",
                 "kieli_fi" : "Haku erityisopetuksena järjestettäviin ammatillisiin perustutkintoihin"
              },
-             "maxHakukohdes" : 1,
+             "maxHakukohdes" : 5,
              "organisaatioOids" : [ "1.2.246.562.10.00000000001" ],
              "tarjoajaOids" : [ "1.2.246.562.10.00000000001" ],
              "usePriority" : true

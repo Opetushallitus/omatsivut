@@ -47,7 +47,7 @@ trait ApplicationValidatorComponent {
         val validationErrors: List[ValidationError] = validateHakutoiveetAndAnswers(updatedApplication, storedApplication, lomake) ++
           errorsForEditingInactiveHakuToive(updatedApplication, storedApplication, haku)
 
-        val questions = AddedQuestionFinder.findQuestions(lomake)(storedApplication, newHakemus)
+        val questions = AddedQuestionFinder.findQuestions(lomake)(storedApplication, newHakemus, tarjontaService.filterHakutoiveOidsByActivity(true, newHakemus.preferences, haku))
 
         HakemusInfo(hakemusConverter.convertToHakemus(lomake, haku, updatedApplication), validationErrors, questions)
       } ("Error validating application: " + newHakemus.oid)

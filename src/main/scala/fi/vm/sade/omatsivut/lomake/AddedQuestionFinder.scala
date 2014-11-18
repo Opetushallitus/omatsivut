@@ -20,12 +20,12 @@ object AddedQuestionFinder {
     newQuestions.diff(oldQuestions)
   }
 
-  def findQuestions(applicationSystem: Lomake)(storedApplication: Application, hakemusMuutos: HakemusLike)(implicit lang: Language.Language): List[QuestionNode] = {
+  def findQuestions(applicationSystem: Lomake)(storedApplication: Application, hakemusMuutos: HakemusLike, hakutoiveet: List[String])(implicit lang: Language.Language): List[QuestionNode] = {
     val filteredForm: ElementWrapper = ElementWrapper.wrapFiltered(applicationSystem.form, FlatAnswers.flatten(ApplicationUpdater.getAllAnswersForApplication(applicationSystem, storedApplication.clone(), hakemusMuutos)))
 
     val questionsPerHakutoive: List[QuestionNode] = hakemusMuutos.preferences.flatMap(hakutoive =>
       hakutoive.get("Koulutus-id") match {
-        case Some(koulutusId) =>
+        case Some(koulutusId) if hakutoiveet.contains(koulutusId) =>
           val addedByHakutoive: Set[QuestionLeafNode] = findQuestionsByHakutoive(applicationSystem, storedApplication, hakemusMuutos, hakutoive)
           val groupedQuestions: Seq[QuestionNode] = QuestionGrouper.groupQuestionsByStructure(filteredForm, addedByHakutoive)
 
