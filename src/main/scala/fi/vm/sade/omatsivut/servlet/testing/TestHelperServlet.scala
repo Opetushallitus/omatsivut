@@ -55,6 +55,26 @@ trait TestHelperServletContainer {
         }
       }
 
+      put("/fixtures/haku/:oid/invertPriority") {
+        tarjontaService match {
+          case service: StubbedTarjontaService => {
+            service.invertPriority(params("oid"))
+            Ok
+          }
+          case _ => InternalServerError
+        }
+      }
+
+      put("/fixtures/haku/:oid/resetPriority") {
+        tarjontaService match {
+          case service: StubbedTarjontaService => {
+            service.resetPriority(params("oid"))
+            Ok
+          }
+          case _ => InternalServerError
+        }
+      }
+
       put("/fixtures/haku/:oid/resetStart") {
         tarjontaService match {
           case service: StubbedTarjontaService => {

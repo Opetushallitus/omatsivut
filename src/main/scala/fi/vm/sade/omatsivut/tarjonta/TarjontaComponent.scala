@@ -21,6 +21,7 @@ trait TarjontaComponent {
 
   class StubbedTarjontaService extends TarjontaService with JsonFormats {
     private val timeOverrides = mutable.Map[String, Long]()
+    private val priorities = mutable.Set[String]()
 
     private def parseHaku(oid: String, lang: Language.Language) = {
       JsonFixtureMaps.findByKey[JValue]("/mockdata/haut.json", oid).flatMap(TarjontaParser.parseHaku).map {h => Haku(h, lang)}
@@ -28,7 +29,9 @@ trait TarjontaComponent {
 
     override def haku(oid: String, lang: Language.Language) = {
       val haku = parseHaku(oid, lang)
-      haku.map {h =>
+      haku.map { h =>
+        h.copy(usePriority = if(priorities.contains(oid)) !h.usePriority else h.usePriority)
+      }.map {h =>
         val haunAikataulu = ohjausparametritService.haunAikataulu(oid)
         if(timeOverrides.contains(oid)) {
           h.copy(applicationPeriods = changeHakuajat(h), aikataulu = changeAikataulu(h, h.aikataulu))
@@ -69,6 +72,14 @@ trait TarjontaComponent {
 
     def modifyHaunAlkuaika(hakuOid: String, alkuaika: Long) {
       timeOverrides.put(hakuOid, alkuaika)
+    }
+
+    def resetPriority(hakuOid: String): Unit = {
+      priorities -= hakuOid
+    }
+
+    def invertPriority(hakuOid: String): Unit = {
+      priorities.add(hakuOid)
     }
 
     private def changeHakuajat(haku: Haku) = {

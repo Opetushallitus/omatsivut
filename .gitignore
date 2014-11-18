@@ -90,3 +90,4 @@ activemq-data
 
 #gatling
 gatling/
+gradle/

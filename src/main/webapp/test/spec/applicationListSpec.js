@@ -1789,6 +1789,20 @@
       })
     })
 
+    describe("Kun käytetään hakua joka ei käytä priorisointia", function () {
+      before(
+          page.applyFixtureAndOpen({applicationOid: hakemusErityisopetuksenaId, invertPriority: true, overrideStart: daysFromNow(-30)})
+      )
+
+      it('Piilotetaan järjestysnumerot ja nuolet', function () {
+        hakemusErityisopetuksena.getPreference(0).isNotPrioritized().should.equal(true)
+        hakemusErityisopetuksena.getPreference(1).isNotPrioritized().should.equal(true)
+        hakemusErityisopetuksena.getPreference(1).canRemove().should.equal(true)
+      })
+
+      after(page.applyFixtureAndOpen({applicationOid: hakemusYhteishakuKevat2014WithForeignBaseEducationId}))
+    })
+
     describe("Näytä hakemus -linkki", function() {
       describe("Kun hakemusta ei ole muokattu", function() {
         it("linkki avaa esikatselusivun", function() {

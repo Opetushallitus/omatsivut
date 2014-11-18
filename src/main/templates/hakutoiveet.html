@@ -2,17 +2,17 @@
     <div class="overlay"></div>
     <div class="preference-list-item" aria-label="{{ ($index+1) + '. ' + hakutoive.data.Opetuspiste + ' - ' + hakutoive.data.Koulutus }}" ng-repeat="hakutoive in application.hakutoiveet" ng-controller="hakutoiveController" ng-class="{'inactive': isEditingDisabled() && hakutoive.isNew}">
         <div class="preference-list-item-layout">
-            <div class="item-content">
+
+            <div class="item-content" ng-show="application.haku.usePriority">
                 <span class="row-number">{{$index+1}}</span>
             </div>
 
             <div class="item-content">
-                <div class="sort-arrow-container">
+                <div class="sort-arrow-container" ng-show="application.haku.usePriority">
                     <button class="sort-arrow-up" aria-label="{{ localization('button.sortUp_ariaLabel') }}" ng-disabled="!application.canMovePreference($index, $index-1)" disable-click-focus></button>
                     <button class="sort-arrow-down" aria-label="{{ localization('button.sortDown_ariaLabel') }}" ng-disabled="!application.canMovePreference($index, $index+1)" disable-click-focus></button>
                 </div>
             </div>
-
             <div class="item-content">
                 <div class="row opetuspiste">
                     <label ng-bind="hakutoive.data.Opetuspiste" ng-show="isEditingDisabled()"></label>
