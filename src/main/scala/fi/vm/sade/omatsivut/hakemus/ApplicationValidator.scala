@@ -83,12 +83,11 @@ trait ApplicationValidatorComponent {
 
       val addedInActiveHakutoiveet = newInactiveHakuToiveet.filter(!oldInactiveHakuToiveet.contains(_))
 
-      val errorsForAdded = (addedInActiveHakutoiveet.flatMap { hakukohde =>
+      val errorsForAdded = addedInActiveHakutoiveet.flatMap { hakukohde =>
         newHakutoiveetWithIndex.find { case (hakutoive: HakutoiveData, index: Int) =>
           hakutoive.get("Koulutus-id").map { _ == hakukohde.oid }.getOrElse(false)
         }.map(_._2)
       }.map((index) => new ValidationError("preference"+(index+1) + "-Koulutus", Translations.getTranslation("error", "applicationPeriodNotActive")))
-      )
 
       val errorsForOtherModifications =
         if (newInactiveHakuToiveet != oldInactiveHakuToiveet)
