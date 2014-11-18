@@ -79,15 +79,15 @@ trait ApplicationValidatorComponent {
     private def errorsForEditingInactiveHakuToive(updatedApplication: Application, storedApplication: Application, haku: Haku)(implicit lang: Language.Language): List[ValidationError] = {
       val oldHakuToiveet = HakutoiveetConverter.convertFromAnswers(storedApplication.getAnswers.toMap.mapValues(_.toMap))
       val newHakuToiveet = HakutoiveetConverter.convertFromAnswers(updatedApplication.getAnswers.toMap.mapValues(_.toMap))
-      val oldInactiveHakuToiveet: List[Hakukohde] = tarjontaService.inactiveHakuToiveet(oldHakuToiveet, haku)
-      val newInactiveHakuToiveet: List[Hakukohde] = tarjontaService.inactiveHakuToiveet(newHakuToiveet, haku)
+      val oldInactiveHakuToiveet: List[String] = tarjontaService.filterHakutoiveOidsByActivity(false, oldHakuToiveet, haku)
+      val newInactiveHakuToiveet: List[String] = tarjontaService.filterHakutoiveOidsByActivity(false, newHakuToiveet, haku)
       val newHakutoiveetWithIndex = newHakuToiveet.zipWithIndex
 
       val addedInActiveHakutoiveet = newInactiveHakuToiveet.filter(!oldInactiveHakuToiveet.contains(_))
 
-      val errorsForAdded = (addedInActiveHakutoiveet.flatMap { hakukohde =>
+      val errorsForAdded = (addedInActiveHakutoiveet.flatMap { hakukohdeOid =>
         newHakutoiveetWithIndex.find { case (hakutoive: HakutoiveData, index: Int) =>
-          hakutoive.get("Koulutus-id").map { _ == hakukohde.oid }.getOrElse(false)
+          hakutoive.get("Koulutus-id").map { _ == hakukohdeOid }.getOrElse(false)
         }.map(_._2)
       }.map((index) => new ValidationError("preference"+(index+1) + "-Koulutus", Translations.getTranslation("error", "applicationPeriodNotActive")))
       )

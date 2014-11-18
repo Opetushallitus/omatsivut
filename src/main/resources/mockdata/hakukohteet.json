@@ -2034,5 +2034,35 @@
       "soraKuvausKielet" : [ ],
       "organisaatioRyhmaOids" : [ ]
     }
+  },
+  "1.2.246.562.20.60377543289": {
+    "result": {
+      "oid": "1.2.246.562.20.60377543289",
+      "hakukohteenNimi": "Maatalousalan perustutkinto, pk",
+      "hakuOid": "1.2.246.562.5.2013080813081926341927"
+    }
+  },
+  "1.2.246.562.20.97520172236": {
+    "result": {
+      "oid": "1.2.246.562.20.97520172236",
+      "hakukohteenNimi": "Sosiaali- ja terveysalan perustutkinto, pk",
+      "hakuOid": "1.2.246.562.29.173465377510"
+    }
+  },
+  "1.2.246.562.5.19132087818": {
+    "result": {
+      "oid": "1.2.246.562.5.19132087818",
+      "hakukohteenNimi": "Grundexamen i fiskeri, gr",
+      "hakuOid": "1.2.246.562.5.2014020613412490531399"
+    }
+  },
+  "1.2.246.562.20.60377543290": {
+    "result": {
+      "oid": "1.2.246.562.20.60377543290",
+      "hakukohteenNimi": "Maatalousalan perustutkinto aina auki, pk",
+      "hakuOid": "1.2.246.562.5.2013080813081926341928",
+      "hakuaikaAlkuPvm": 1404290831839,
+      "hakuaikaLoppuPvm": 4507513600000
+    }
   }
 }
