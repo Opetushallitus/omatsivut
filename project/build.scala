@@ -6,7 +6,6 @@ import scala.sys.process.Process
 import sbt._
 import Keys._
 import sbtbuildinfo.Plugin._
-import com.typesafe.sbteclipse.plugin.EclipsePlugin._
 import com.earldouglas.xsbtwebplugin.WebPlugin
 import com.earldouglas.xsbtwebplugin.PluginKeys._
 
@@ -52,10 +51,6 @@ object OmatsivutBuild extends Build {
       sourceGenerators in Compile <+= buildInfo,
       parallelExecution in Test := false,
       buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-      EclipseKeys.createSrc := EclipseCreateSrc.Default + EclipseCreateSrc.Managed + EclipseCreateSrc.Resource,
-      EclipseKeys.eclipseOutput := Some("target/eclipse"),
-      EclipseKeys.executionEnvironment := Some(EclipseExecutionEnvironment.JavaSE17),
-      EclipseKeys.projectFlavor := EclipseProjectFlavor.Scala,
       buildInfoPackage := "fi.vm.sade.omatsivut",
       libraryDependencies ++= Seq(
         "org.scalatra" %% "scalatra" % ScalatraVersion,
