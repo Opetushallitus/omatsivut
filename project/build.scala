@@ -1,13 +1,8 @@
-import java.io.IOException
-import java.net.Socket
-import java.nio.file.{Paths, Files}
-import com.earldouglas.xsbtwebplugin.PluginKeys.start
-import scala.sys.process.Process
-import sbt._
-import Keys._
-import sbtbuildinfo.Plugin._
-import com.earldouglas.xsbtwebplugin.WebPlugin
 import com.earldouglas.xsbtwebplugin.PluginKeys._
+import com.earldouglas.xsbtwebplugin.WebPlugin
+import sbt.Keys._
+import sbt._
+import sbtbuildinfo.Plugin._
 
 object OmatsivutBuild extends Build {
   val Organization = "fi.vm.sade"
@@ -23,7 +18,7 @@ object OmatsivutBuild extends Build {
   lazy val mocha = taskKey[Int]("run phantomJS tests")
 
   // task for running just unit tests
-  lazy val UnitTest = config("unit") extend(Test)
+  lazy val UnitTest = config("unit") extend Test
 
   if(!System.getProperty("java.version").startsWith(JavaVersion)) {
     throw new IllegalStateException("Wrong java version (required " + JavaVersion + "): " + System.getProperty("java.version"))
