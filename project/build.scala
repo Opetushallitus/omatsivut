@@ -15,7 +15,7 @@ object OmatsivutBuild extends Build {
   val Name = "omatsivut"
   val Version = "0.1.0-SNAPSHOT"
   val JavaVersion = "1.7"
-  val ScalaVersion = "2.11.1"
+  val ScalaVersion = "2.11.4"
   val ScalatraVersion = "2.3.0.RC3"
   val TomcatVersion = "7.0.22"
   val SpringVersion = "3.2.9.RELEASE"
@@ -45,7 +45,7 @@ object OmatsivutBuild extends Build {
       scalaVersion := ScalaVersion,
       javacOptions ++= Seq("-source", JavaVersion, "-target", JavaVersion),
       scalacOptions ++= Seq("-target:jvm-1.7", "-deprecation"),
-      resolvers += "Local Maven Repository" at "file://"+Path.userHome.absolutePath+"/.m2/repository",
+      resolvers += Resolver.mavenLocal,
       resolvers += Classpaths.typesafeReleases,
       resolvers += "oph-sade-artifactory-releases" at "http://penaali.hard.ware.fi/artifactory/oph-sade-release-local",
       resolvers += "oph-sade-artifactory-snapshots" at "http://penaali.hard.ware.fi/artifactory/oph-sade-snapshot-local",
