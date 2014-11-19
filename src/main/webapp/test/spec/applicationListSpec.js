@@ -256,6 +256,7 @@
     })
 
     describe("hakutoivekohtaiset hakuajat", function() {
+
       before(page.applyFixtureAndOpen({applicationOid: hakemusErityisopetuksenaId, overrideStart: daysFromNow(0)}))
       var date = "\\d+\\. .*?\\d{4} klo \\d\\d\\.\\d\\d"
       var dateRange = new RegExp("^Hakuaika päättyy " + date + "$")
@@ -266,8 +267,10 @@
       })
 
       describe("hakutoiveen lisääminen kun sen haku ei ole käynnissä", function() {
-        before(replacePreference(hakemusErityisopetuksena, 2, "Kiipulan ammattiopisto"))
-        before(hakemusErityisopetuksena.saveWaitError)
+        before(
+          replacePreference(hakemusErityisopetuksena, 2, "Kiipulan ammattiopisto"),
+          hakemusErityisopetuksena.saveWaitError
+        )
         it("epäonnistuu", function() {
           hakemusErityisopetuksena.getPreference(2).errorMessage().should.equal("Haku ei ole käynnissä.")
         })
@@ -280,11 +283,14 @@
       describe("kun haku on käynnissä", function() {
         before(function() { fixtures.setApplicationStart(hakemusErityisopetuksenaId, daysFromNow(-30)) })
         before(page.reloadPage())
+        before(
+          replacePreference(hakemusErityisopetuksena, 2, "Kiipulan ammattiopisto"),
+          function() { hakemusErityisopetuksena.questionsForApplication().enterAnswer(0, "Ei") },
+          function() { hakemusErityisopetuksena.questionsForApplication().enterAnswer(1, "Ei") },
+          hakemusErityisopetuksena.saveWaitSuccess
+        )
 
         describe("hakutoiveen lisääminen", function() {
-          before(replacePreference(hakemusErityisopetuksena, 2, "Kiipulan ammattiopisto"))
-          before(hakemusErityisopetuksena.saveWaitSuccess)
-
           it("onnistuu", function () {
           })
         })
@@ -292,9 +298,27 @@
         describe("hakutoiveen poisto", function() {
           before(hakemusErityisopetuksena.getPreference(1).remove)
           before(hakemusErityisopetuksena.saveWaitSuccess)
-          it("onnistuu", function() {
+
+          describe("toisen hakutoiveen poiston jälkeen", function() {
+            it("lisäkysymykset näkyvät yhä", function () {
+              var questionTitles = hakemusErityisopetuksena.questionsForApplication().titles()
+              expect(questionTitles).to.deep.equal([
+                'Tällä alalla on terveydentilavaatimuksia, jotka voivat olla opiskelijaksi ottamisen esteenä. Onko sinulla terveydellisiä tekijöitä, jotka voivat olla opiskelijaksi ottamisen esteenä?',
+                'Tässä koulutuksessa opiskelijaksi ottamisen esteenä voi olla aiempi päätös opiskeluoikeuden peruuttamisessa. Onko opiskeluoikeutesi aiemmin peruutettu terveydentilasi tai muiden henkilöiden turvallisuuden vaarantamisen takia?'
+              ])
+            })
+          })
+
+          describe("kun haku ei ole enää voimassa", function() {
+            before(function() { fixtures.setApplicationStart(hakemusErityisopetuksenaId, daysFromNow(0)) })
+            before(page.reloadPage())
+            it("lisäkymykset eivät näy", function() {
+              var questionTitles = hakemusErityisopetuksena.questionsForApplication().titles()
+              expect(questionTitles).to.deep.equal([])
+            })
           })
         })
+
       })
     })
 
