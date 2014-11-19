@@ -38,6 +38,11 @@ function ApplicationListPage() {
               return fixtures.setApplicationStart(params.applicationOid, params.overrideStart)
             }
           })
+          .then(function () {
+            if(params.invertPriority) {
+              return fixtures.setInvertedPriority(params.applicationOid)
+            }
+          })
           .then(api.reloadPage())
       }
     },
@@ -505,7 +510,10 @@ function ApplicationListPage() {
         return Button(function() { return el().find(".delete-btn") })
       },
       number: function () {
-        return el().find(".row-number").text()
+        return this.numberElement().text()
+      },
+      numberElement: function () {
+        return el().find(".row-number")
       },
       remove: function () {
         var parent = el().parent()
@@ -525,6 +533,9 @@ function ApplicationListPage() {
       },
       isDisabled: function () {
         return !this.arrowDown().isEnabled() && !this.arrowUp().isEnabled() && !api.canRemove()
+      },
+      isNotPrioritized: function () {
+        return !this.arrowDown().isVisible() && !this.arrowUp().isVisible() && !this.numberElement().is(":visible")
       },
       isEditable: function() {
         return el().find("input").is(":visible")

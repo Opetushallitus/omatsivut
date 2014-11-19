@@ -4,6 +4,9 @@
 
 ## QA:lla, odottaa tuotantoon siirtoa
 
+- Piwik korjaukset, virheiden logitus toimii paremmin
+- UI facelift
+
 ## Tuotannossa
 
 ### [release-1785](https://bamboo.oph.ware.fi/deploy/viewDeploymentVersion.action?versionId=110985364)

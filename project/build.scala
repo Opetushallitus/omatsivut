@@ -1,21 +1,15 @@
-import java.io.IOException
-import java.net.Socket
-import java.nio.file.{Paths, Files}
-import com.earldouglas.xsbtwebplugin.PluginKeys.start
-import scala.sys.process.Process
-import sbt._
-import Keys._
-import sbtbuildinfo.Plugin._
-import com.typesafe.sbteclipse.plugin.EclipsePlugin._
-import com.earldouglas.xsbtwebplugin.WebPlugin
 import com.earldouglas.xsbtwebplugin.PluginKeys._
+import com.earldouglas.xsbtwebplugin.WebPlugin
+import sbt.Keys._
+import sbt._
+import sbtbuildinfo.Plugin._
 
 object OmatsivutBuild extends Build {
   val Organization = "fi.vm.sade"
   val Name = "omatsivut"
   val Version = "0.1.0-SNAPSHOT"
   val JavaVersion = "1.7"
-  val ScalaVersion = "2.11.1"
+  val ScalaVersion = "2.11.4"
   val ScalatraVersion = "2.3.0.RC3"
   val TomcatVersion = "7.0.22"
   val SpringVersion = "3.2.9.RELEASE"
@@ -24,7 +18,7 @@ object OmatsivutBuild extends Build {
   lazy val mocha = taskKey[Int]("run phantomJS tests")
 
   // task for running just unit tests
-  lazy val UnitTest = config("unit") extend(Test)
+  lazy val UnitTest = config("unit") extend Test
 
   if(!System.getProperty("java.version").startsWith(JavaVersion)) {
     throw new IllegalStateException("Wrong java version (required " + JavaVersion + "): " + System.getProperty("java.version"))
@@ -45,17 +39,13 @@ object OmatsivutBuild extends Build {
       scalaVersion := ScalaVersion,
       javacOptions ++= Seq("-source", JavaVersion, "-target", JavaVersion),
       scalacOptions ++= Seq("-target:jvm-1.7", "-deprecation"),
-      resolvers += "Local Maven Repository" at "file://"+Path.userHome.absolutePath+"/.m2/repository",
+      resolvers += Resolver.mavenLocal,
       resolvers += Classpaths.typesafeReleases,
-      resolvers += "oph-sade-artifactory-releases" at "http://penaali.hard.ware.fi/artifactory/oph-sade-release-local",
-      resolvers += "oph-sade-artifactory-snapshots" at "http://penaali.hard.ware.fi/artifactory/oph-sade-snapshot-local",
+      resolvers += "oph-sade-artifactory-releases" at "https://artifactory.oph.ware.fi/artifactory/oph-sade-release-local",
+      resolvers += "oph-sade-artifactory-snapshots" at "https://artifactory.oph.ware.fi/artifactory/oph-sade-snapshot-local",
       sourceGenerators in Compile <+= buildInfo,
       parallelExecution in Test := false,
       buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
-      EclipseKeys.createSrc := EclipseCreateSrc.Default + EclipseCreateSrc.Managed + EclipseCreateSrc.Resource,
-      EclipseKeys.eclipseOutput := Some("target/eclipse"),
-      EclipseKeys.executionEnvironment := Some(EclipseExecutionEnvironment.JavaSE17),
-      EclipseKeys.projectFlavor := EclipseProjectFlavor.Scala,
       buildInfoPackage := "fi.vm.sade.omatsivut",
       libraryDependencies ++= Seq(
         "org.scalatra" %% "scalatra" % ScalatraVersion,

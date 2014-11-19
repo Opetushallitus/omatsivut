@@ -177,9 +177,23 @@ fixtures = {
   },
 
   setApplicationStart: function(applicationId, startTime) {
+    var f = function(hakuOid) {
+      return Q($.ajax("/omatsivut/util/fixtures/haku/" + hakuOid + "/overrideStart/" + startTime, {type: "PUT"}))
+    }
+    return this.setHakuData(applicationId, f)
+  },
+
+  setInvertedPriority: function(applicationId) {
+    var f = function (hakuOid) {
+      return Q($.ajax("/omatsivut/util/fixtures/haku/" + hakuOid + "/invertPriority", { type: "PUT"}))
+    }
+    return this.setHakuData(applicationId, f)
+  },
+
+  setHakuData: function(applicationId, f) {
     return db.getApplications().then(function(applications) {
       var hakuOid = _(applications).find(function(application) { return application.hakemus.oid === applicationId }).hakemus.haku.oid
-      return Q($.ajax("/omatsivut/util/fixtures/haku/" + hakuOid + "/overrideStart/" + startTime, { type: "PUT" }))
+      f(hakuOid)
     })
   }
 }
