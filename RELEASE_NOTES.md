@@ -4,8 +4,10 @@
 
 ## QA:lla, odottaa tuotantoon siirtoa
 
+## [release-1861](https://bamboo.oph.ware.fi/deploy/viewDeploymentVersion.action?versionId=115769404)
 - Piwik korjaukset, virheiden logitus toimii paremmin
-- UI facelift
+- UI facelift [OHP-121](https://jira.oph.ware.fi/jira/browse/OHP-121)
+- priorisoimattomien hakujen käyttöliittymän muokkaus [OHP-114](https://jira.oph.ware.fi/jira/browse/OHP-114)
 
 ## Tuotannossa
 
