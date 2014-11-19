@@ -150,7 +150,7 @@ function ApplicationListPage() {
       },
 
       saveButton: function () {
-        return Button(function() { return getApplicationElement().find(".save-btn") }) 
+        return Button(function() { return getApplicationElement().find(".save-btn").first() }) 
       },
 
       getPreference: function (index) {
@@ -267,21 +267,21 @@ function ApplicationListPage() {
           },
 
           errorText: function() {
-            return vastaanottoElement().find(".status-message.error").text()
+            return vastaanottoElement().find(".status-message.error").first().text()
           }
         }
       },
 
       isValidationErrorVisible: function() {
-        return getApplicationElement().find(".status-message.error").is(":visible")
+        return getApplicationElement().find("[name='applicationForm'] .status-message.error").first().is(":visible")
       },
 
       statusMessage: function() {
-        return getApplicationElement().find(".status-message").text()
+        return getApplicationElement().find("[name='applicationForm'] .status-message").first().text()
       },
 
       saveError: function() {
-        return getApplicationElement().find(".status-message.error").text()
+        return getApplicationElement().find("[name='applicationForm'] .status-message.error").first().text()
       },
 
       emptyPreferencesForApplication: function () {

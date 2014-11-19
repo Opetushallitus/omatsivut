@@ -68,12 +68,14 @@
         <section class="application-section henkilotiedot" ng-if="application.editHenkilotiedotEnabled()">
             <header class="application-section-heading">
                 {{ localization('label.contactDetails') }}
-                <button ng-if="!(application.editHakutoiveetEnabled() && !application.applicationPeriodsInactive())" class="save-btn" ng-disabled="shouldSaveButtonBeDisabled()" ng-click="saveApplication()">{{ localization('button.save') }}</button>
-                <span ng-if="!(application.editHakutoiveetEnabled() && !application.applicationPeriodsInactive())" role="status" class="status-message" ng-class="statusMessageStyleModifier()" ng-bind="statusMessage"></span>
             </header>
 
             <henkilotiedot application="application">
             </henkilotiedot>
+            <header class="application-section-heading">
+                <button class="save-btn" ng-disabled="shouldSaveButtonBeDisabled()" ng-click="saveApplication()">{{ localization('button.save') }}</button>
+                <span role="status" class="status-message" ng-class="statusMessageStyleModifier()" ng-bind="statusMessage"></span>
+            </header>
         </section>
     </form>
 </div>
