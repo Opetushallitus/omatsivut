@@ -279,11 +279,15 @@
 
       describe("kun haku on käynnissä", function() {
         before(function() { fixtures.setApplicationStart(hakemusErityisopetuksenaId, daysFromNow(-30)) })
+        before(page.reloadPage())
+        before(
+          replacePreference(hakemusErityisopetuksena, 2, "Kiipulan ammattiopisto"),
+          function() { hakemusErityisopetuksena.questionsForApplication().enterAnswer(0, "Ei") },
+          function() { hakemusErityisopetuksena.questionsForApplication().enterAnswer(1, "Ei") },
+          hakemusErityisopetuksena.saveWaitSuccess
+        )
 
         describe("hakutoiveen lisääminen", function() {
-          before(replacePreference(hakemusErityisopetuksena, 2, "Kiipulan ammattiopisto"))
-          before(hakemusErityisopetuksena.saveWaitSuccess)
-
           it("onnistuu", function () {
           })
         })
