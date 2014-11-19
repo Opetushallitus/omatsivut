@@ -190,6 +190,11 @@ module.exports = function(listApp) {
           }, 3000)
         }
 
+        function scrollToTop() {
+          var $applicationHeader = $($element[0]).find(".application-header")
+          if ($applicationHeader.get(0) != null && $(window).scrollTop() > $applicationHeader.get(0).offsetTop) $applicationHeader.get(0).scrollIntoView()
+        }
+
         function updateValidationMessages(errors, skipQuestions) {
           var unhandledMessages = $scope.application.updateValidationMessages(errors, skipQuestions)
           unhandledMessages = hideErrorIfAlreadyShowsKoulutusError(unhandledMessages)
