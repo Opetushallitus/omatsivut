@@ -15,17 +15,12 @@ Ennen ajamista aja nämä:
     npm install
     node_modules/gulp/bin/gulp.js compile
 
-### Generoi IDE-projekti
+### IDE
 
-Generoi projekti Eclipseen:
+Projektissa tulee käyttää IDEA versiota 14 tai uudempaa.
+Importoi projekti SBT projektina siihen.
 
-`./sbt eclipse`
-
-... tai IDEAan:
-
-`./sbt 'gen-idea no-sbt-build-module'`
-
-### Käynnistä sovellus IDEAsta/Eclipsestä
+### Käynnistä sovellus IDEAsta
 
 Aja JettyLauncher-luokka. Jotta impersonointi/autentikoinnin ohitus onnistuu, anna parametri `-Domatsivut.profile=it`.
 
