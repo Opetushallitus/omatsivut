@@ -16,6 +16,8 @@
   var hakemusKorkeakoulu = page.getApplication(hakemusKorkeakouluId)
   var hakemusKorkeakouluKevatId = "1.2.246.562.11.00000877687"
   var hakemusKorkeakouluKevat = page.getApplication(hakemusKorkeakouluKevatId)
+  var hakemusKorkeakouluYhteishakuSyksy2014Id = "1.2.246.562.11.00000877686"
+  var hakemusKorkeakouluYhteishakuSyksy2014 = page.getApplication(hakemusKorkeakouluYhteishakuSyksy2014Id)
   var hakemusErityisopetuksenaId = "1.2.246.562.11.00000877688"
   var hakemusErityisopetuksena = page.getApplication(hakemusErityisopetuksenaId)
 
@@ -175,6 +177,20 @@
 
       it("tallennusaikaleima näkyy", function() {
         hakemusNivelKesa2013WithPeruskouluBaseEducation.changesSavedTimestamp().should.match(/Hakemusta muokattu \d+\..*?\d+ klo \d+\.\d+/)
+      })
+
+      describe("vanhat hakutoivekohtaiset kysymykset", function() {
+        it("näkyvät", function () {
+          hakemusKorkeakouluYhteishakuSyksy2014.questionsForApplication().count().should.equal(9)
+        })
+        it("on ryhmitelty oikein", function () {
+          var groupTitles = hakemusKorkeakouluYhteishakuSyksy2014.questionsForApplication().groupTitles()
+          expect(groupTitles).to.deep.equal([
+            'Lisäkysymykset: Muut lisäkysymykset: Helsingin yliopisto, Matemaattis-luonnontieteellinen tiedekunta - Fysiikka (aineenopettaja), luonnontieteiden kandidaatti ja filosofian maisteri',
+            'Lisäkysymykset: Muut lisäkysymykset: Metropolia AMK, Helsinki, Sofianlehdonkatu - Sosionomi (AMK), sosiaaliala, päivätoteutus',
+            'Lisäkysymykset: Muut lisäkysymykset:'
+          ])
+        })
       })
     })
 
