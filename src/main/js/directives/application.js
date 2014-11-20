@@ -152,6 +152,7 @@ module.exports = function(listApp) {
             $scope.applicationForm.$setPristine()
             setStatusMessage(localization("message.changesSaved"), "success")
             updateValidationMessages([])
+            if($scope.application.editHakutoiveetEnabled()) scrollToTop()
           }
 
           function onError(err) {
