@@ -24,12 +24,14 @@ Importoi projekti SBT projektina siihen.
 
 Aja JettyLauncher-luokka. Jotta impersonointi/autentikoinnin ohitus onnistuu, anna parametri `-Domatsivut.profile=it`.
 
-### Offline-käyttö (skipRaamit)
+### Offline-käyttö (skipRaamit) ja käyttö IE9:llä
 
 Kun sovellusta ajetaan `-Domatsivut.profile=it`-parametrillä, toimii se ilman verkkoyhteyttä vaikkapa junassa.
 Selaimessa sovellus kuitenkin lataa "oppija-raamit" testiympäristön serveriltä, johon sinulla ei välttämättä ole pääsyä.
-Tässä tapauksessa voit käyttää osoitetta http://localhost:8080/omatsivut/index.html#skipRaamit, jolloin raamit jätetään
+Tässä tapauksessa voit käyttää osoitetta [http://localhost:8080/omatsivut/index.html#skipRaamit], jolloin raamit jätetään
 pois. Mocha-testit käyttävät samaa ratkaisua.
+
+Myös IE9:llä pitää paikallisessa ympäristössä CORS:n takia käyttää skipRaamit tapaa.
 
 ### Valinta-tulos-service
 
