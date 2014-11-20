@@ -2109,6 +2109,7 @@
       return pref.remove()
         .then(pref.selectOpetusPiste(searchString))
         .then(pref.selectKoulutus(koulutusIndex))
+        .then(wait.forAngular)
     }
   }
 
