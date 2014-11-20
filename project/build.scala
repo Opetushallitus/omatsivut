@@ -14,11 +14,11 @@ object OmatsivutBuild extends Build {
   val TomcatVersion = "7.0.22"
   val SpringVersion = "3.2.9.RELEASE"
 
-  // task for running mocha tests
-  lazy val mocha = taskKey[Int]("run phantomJS tests")
-
   // task for running just unit tests
   lazy val UnitTest = config("unit") extend Test
+
+  // task for running just integration tests
+  lazy val IntegrationTest = config("integration") extend Test
 
   if(!System.getProperty("java.version").startsWith(JavaVersion)) {
     throw new IllegalStateException("Wrong java version (required " + JavaVersion + "): " + System.getProperty("java.version"))
@@ -29,10 +29,6 @@ object OmatsivutBuild extends Build {
     file("."),
     settings = Defaults.coreDefaultSettings ++ WebPlugin.webSettings ++ buildInfoSettings
       ++ Seq(
-      mocha := {
-        println("TODO: remove this after Bamboo build is ok, this is just a temporary placeholder")
-        0
-      },
       organization := Organization,
       name := Name,
       version := Version,
@@ -105,6 +101,12 @@ object OmatsivutBuild extends Build {
   .settings(testOptions in UnitTest := Seq(
       Tests.Argument("junitxml", "console"),
       Tests.Argument("exclude", "integration")
+    )
+  ).configs(IntegrationTest)
+  .settings(inConfig(IntegrationTest)(Defaults.testTasks): _*)
+  .settings(testOptions in IntegrationTest := Seq(
+      Tests.Argument("junitxml", "console"),
+      Tests.Argument("include", "integration")
     )
   )
   lazy val projectRef: ProjectReference = project
