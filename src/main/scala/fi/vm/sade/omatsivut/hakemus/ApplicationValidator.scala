@@ -130,7 +130,7 @@ trait ApplicationValidatorComponent {
     }
 
     private def convertToValidationInput(lomake: Lomake, application: Application): ValidationInput = {
-      new ValidationInput(lomake.form, application.getVastauksetMerged, application.getOid, lomake.oid, true)
+      new ValidationInput(lomake.form, application.getVastauksetMerged, application.getOid, lomake.oid, false)
     }
   }
 }
