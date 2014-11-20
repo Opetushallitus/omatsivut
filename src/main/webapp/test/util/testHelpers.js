@@ -178,7 +178,7 @@ fixtures = {
 
   setApplicationStart: function(applicationId, startTime) {
     var f = function(hakuOid) {
-      return Q($.ajax("/omatsivut/util/fixtures/haku/" + hakuOid + "/overrideStart/" + startTime, {type: "PUT", async: false}))
+      return Q($.ajax("/omatsivut/util/fixtures/haku/" + hakuOid + "/overrideStart/" + startTime, {type: "PUT"}))
     }
     return this.setHakuData(applicationId, f)
   },

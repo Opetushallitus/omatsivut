@@ -53,6 +53,12 @@ function ApplicationListPage() {
       }
     },
 
+    setApplicationStartAndOpen: function(applicationId, startTime) {
+      return function() {
+        return fixtures.setApplicationStart(applicationId, startTime).then(api.reloadPage())
+      }
+    },
+
     isVisible: function() {
       return S("#hakemus-list").is(":visible")
     },

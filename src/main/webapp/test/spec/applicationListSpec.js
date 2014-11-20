@@ -297,8 +297,7 @@
       })
 
       describe("kun haku on käynnissä", function() {
-        before(function() { fixtures.setApplicationStart(hakemusErityisopetuksenaId, daysFromNow(-30)) })
-        before(page.reloadPage())
+        before(page.setApplicationStartAndOpen(hakemusErityisopetuksenaId, daysFromNow(-30)))
         before(
           replacePreference(hakemusErityisopetuksena, 2, "Kiipulan ammattiopisto"),
           function() { hakemusErityisopetuksena.questionsForApplication().enterAnswer(0, "Ei") },
@@ -326,8 +325,7 @@
           })
 
           describe("kun haku ei ole enää voimassa", function() {
-            before(function() { fixtures.setApplicationStart(hakemusErityisopetuksenaId, daysFromNow(0)) })
-            before(page.reloadPage())
+            before(page.setApplicationStartAndOpen(hakemusErityisopetuksenaId, daysFromNow(0)))
             it("lisäkymykset eivät näy", function() {
               var questionTitles = hakemusErityisopetuksena.questionsForApplication().titles()
               expect(questionTitles).to.deep.equal([])
@@ -486,8 +484,7 @@
 
       describe("monta hakuaikaa", function() {
         before(
-          page.applyFixtureAndOpen({applicationOid: hakemusErityisopetuksenaId}),
-          function() { fixtures.setApplicationStart(hakemusErityisopetuksenaId, daysFromNow(-90))},
+          page.applyFixtureAndOpen({applicationOid: hakemusErityisopetuksenaId, overrideStart: daysFromNow(-90)}),
           page.applyValintatulosFixtureAndOpen("erillishaku-toinen-valmis", {"haku": "toinen-aste-erillishaku"})
         )
 
