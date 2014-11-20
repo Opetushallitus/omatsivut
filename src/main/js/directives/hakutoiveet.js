@@ -38,6 +38,8 @@ module.exports = function(listApp) {
 
     $scope.isLoadingKoulutusList = function() { return !$scope.isEditingDisabled() && this.hakutoive.hasOpetuspiste() && _.isEmpty($scope.koulutusList) }
 
+    $scope.isNonPrioritizedAndEditable = function () { return this.application.haku.usePriority || $scope.application.isEditable($scope.$index) }
+
     $scope.opetuspisteValittu = function($item, $model, $label) {
       this.hakutoive.setOpetuspiste($item.id, $item.name)
       $scope.koulutusList = []

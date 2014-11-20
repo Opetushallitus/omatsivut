@@ -1845,6 +1845,11 @@
         hakemusErityisopetuksena.getPreference(1).canRemove().should.equal(true)
       })
 
+      it('Piilotetaan tyhjät boksit lopusta', function () {
+        hakemusErityisopetuksena.preferencesForApplication().length.should.equal(2)
+        hakemusErityisopetuksena.getPreference(2).isNew().should.equal(true)
+      })
+
       after(page.applyFixtureAndOpen({applicationOid: hakemusYhteishakuKevat2014WithForeignBaseEducationId}))
     })
 

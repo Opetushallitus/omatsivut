@@ -1,7 +1,7 @@
 <div class="preference-list" ng-class="{validating: validating}" sortable sortable-item=".preference-list-item" sortable-moved="movePreference">
     <div class="overlay"></div>
     <div class="preference-list-item" aria-label="{{ ($index+1) + '. ' + hakutoive.data.Opetuspiste + ' - ' + hakutoive.data.Koulutus }}" ng-repeat="hakutoive in application.hakutoiveet" ng-controller="hakutoiveController" ng-class="{'inactive': isEditingDisabled() && hakutoive.isNew}">
-        <div class="preference-list-item-layout">
+        <div class="preference-list-item-layout" ng-show="isNonPrioritizedAndEditable()">
 
             <div class="item-content" ng-show="application.haku.usePriority">
                 <span class="row-number">{{$index+1}}</span>
