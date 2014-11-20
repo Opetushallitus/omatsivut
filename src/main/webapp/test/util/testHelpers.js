@@ -178,14 +178,14 @@ fixtures = {
 
   setApplicationStart: function(applicationId, startTime) {
     var f = function(hakuOid) {
-      return Q($.ajax("/omatsivut/util/fixtures/haku/" + hakuOid + "/overrideStart/" + startTime, {type: "PUT"}))
+      return Q($.ajax("/omatsivut/util/fixtures/haku/" + hakuOid + "/overrideStart/" + startTime, {type: "PUT", async: false}))
     }
     return this.setHakuData(applicationId, f)
   },
 
   setInvertedPriority: function(applicationId) {
     var f = function (hakuOid) {
-      return Q($.ajax("/omatsivut/util/fixtures/haku/" + hakuOid + "/invertPriority", { type: "PUT"}))
+      return Q($.ajax("/omatsivut/util/fixtures/haku/" + hakuOid + "/invertPriority", { type: "PUT", async: false}))
     }
     return this.setHakuData(applicationId, f)
   },
