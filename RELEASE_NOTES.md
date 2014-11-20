@@ -9,7 +9,7 @@
 - UI facelift [OHP-121](https://jira.oph.ware.fi/jira/browse/OHP-121)
 - priorisoimattomien hakujen käyttöliittymän muokkaus [OHP-114](https://jira.oph.ware.fi/jira/browse/OHP-114)
 - Uusi hakemus-api versio [OVT-8911](https://jira.oph.ware.fi/jira/browse/OVT-8911)
-- poistettu viimeisiimän tallenusken aikaleiman näyttäminen
+- poistettu viimeisimmän tallennuksen aikaleiman näyttäminen
 
 ## Tuotannossa
 
