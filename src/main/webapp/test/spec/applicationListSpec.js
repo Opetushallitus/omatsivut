@@ -181,7 +181,7 @@
 
       describe("vanhat hakutoivekohtaiset kysymykset", function() {
         it("näkyvät", function () {
-          hakemusKorkeakouluYhteishakuSyksy2014.questionsForApplication().count().should.equal(9)
+          expect(hakemusKorkeakouluYhteishakuSyksy2014.questionsForApplication().count()).to.equal(9)
         })
         it("on ryhmitelty oikein", function () {
           var groupTitles = hakemusKorkeakouluYhteishakuSyksy2014.questionsForApplication().groupTitles()
@@ -344,7 +344,7 @@
       describe("kun valintatuloksia ei ole julkaistu", function() {
         before(page.applyValintatulosFixtureAndOpen("ei-tuloksia"))
         it("hakemusta ei voi muokata", function () {
-          hakemusYhteishakuKevat2013WithForeignBaseEducation.preferencesForApplication().length.should.equal(0)
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.preferencesForApplication().length).to.equal(0)
         })
 
         it("hakuaikatieto näkyy", function() {
@@ -352,7 +352,7 @@
         })
 
         it("valintatuloksia ei näytetä", function () {
-          hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset().length.should.equal(0)
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset().length).to.equal(0)
         })
       })
 
@@ -360,7 +360,7 @@
         before(page.applyValintatulosFixtureAndOpen("hyvaksytty-ylempi-varalla"))
 
         it("hakemusta ei voi muokata", function () {
-          hakemusYhteishakuKevat2013WithForeignBaseEducation.preferencesForApplication().length.should.equal(0)
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.preferencesForApplication().length).to.equal(0)
         })
 
         it("hakuaikatieto näkyy", function() {
@@ -383,7 +383,7 @@
         before(page.applyValintatulosFixtureAndOpen("hyvaksytty-ylempi-varalla", {"haku": "toinen-aste-yhteishaku"}))
 
         it("hakemusta ei voi muokata", function () {
-          hakemusYhteishakuKevat2013WithForeignBaseEducation.preferencesForApplication().length.should.equal(0)
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.preferencesForApplication().length).to.equal(0)
         })
 
         it("valintatulokset näytetään", function () {
@@ -490,7 +490,7 @@
 
         describe("jos jonkun hakutoiveen hakuaika on päättynyt ennen muita ja sen tulokset ovat jo saatavilla", function () {
           it("hakutoiveet ovat näkyvissä", function () {
-            hakemusErityisopetuksena.preferencesForApplication().length.should.equal(2)
+            expect(hakemusErityisopetuksena.preferencesForApplication().length).to.equal(2)
           })
 
           it("tuloslistaus on näkyvissä", function() {
@@ -770,7 +770,7 @@
         describe("jos ei ole valintatuloksia ja hakukierros on päättynyt", function() {
           before(page.applyFixtureAndOpen({}))
           it("hakemusta ei voi muokata", function () {
-            hakemusYhteishakuKevat2013WithApplicationRoundEnded.preferencesForApplication().length.should.equal(0)
+            expect(hakemusYhteishakuKevat2013WithApplicationRoundEnded.preferencesForApplication().length).to.equal(0)
           })
 
           it("kerrotaan että haku on päättynyt", function () {
@@ -781,7 +781,7 @@
         describe("jos ei ole vastaanottotietoa ja ylin hakutoive on hylätty", function() {
           before(page.applyValintatulosFixtureAndOpen("hylatty-julkaistavissa-valmis"))
           it("hakemusta ei voi muokata", function () {
-            hakemusYhteishakuKevat2013WithForeignBaseEducation.preferencesForApplication().length.should.equal(0)
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.preferencesForApplication().length).to.equal(0)
           })
 
           it("valintatulokset näytetään", function () {
@@ -793,7 +793,7 @@
         describe("jos ei ole vastaanottotietoa ja jos ylin hakutoive on peruttu", function() {
           before(page.applyValintatulosFixtureAndOpen("perunut-julkaistavissa-valmis"))
           it("hakemusta ei voi muokata", function () {
-            hakemusYhteishakuKevat2013WithForeignBaseEducation.preferencesForApplication().length.should.equal(0)
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.preferencesForApplication().length).to.equal(0)
           })
 
           it("valintatulokset näytetään", function () {
@@ -805,7 +805,7 @@
         describe("jos on ottanut paikan vastaan", function() {
           before(page.applyValintatulosFixtureAndOpen("hyvaksytty-vastaanottanut"))
           it("hakemusta ei voi muokata", function () {
-            hakemusYhteishakuKevat2013WithForeignBaseEducation.preferencesForApplication().length.should.equal(0)
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.preferencesForApplication().length).to.equal(0)
           })
 
           it("valintatulokset näytetään", function () {
@@ -818,7 +818,7 @@
         describe("jos ei ole ottanut paikkaa vastaan määräaikaan mennessä", function() {
           before(page.applyValintatulosFixtureAndOpen("perunut-ei-vastaanottanut-maaraaikana"))
           it("hakemusta ei voi muokata", function () {
-            hakemusYhteishakuKevat2013WithForeignBaseEducation.preferencesForApplication().length.should.equal(0)
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.preferencesForApplication().length).to.equal(0)
           })
 
           it("valintatulokset näytetään", function () {
@@ -830,7 +830,7 @@
         describe("jos ei ole ottanut paikkaa vastaa paikkaa ja vastaanotto on päättynyt", function() {
           before(page.applyValintatulosFixtureAndOpen("hyvaksytty-kesken-julkaistavissa", {"ohjausparametrit": "vastaanotto-loppunut"}))
           it("hakemusta ei voi muokata", function () {
-            hakemusYhteishakuKevat2013WithForeignBaseEducation.preferencesForApplication().length.should.equal(0)
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.preferencesForApplication().length).to.equal(0)
           })
 
           it("valintatulokset näytetään", function () {
@@ -915,7 +915,7 @@
       describe("submitted-tilassa oleva hakemus", function() {
         before(page.applyFixtureAndOpen({fixtureName:"submittedApplication"}))
         it("hakemusta ei voi muokata", function() {
-          hakemusYhteishakuKevat2014WithForeignBaseEducation.preferencesForApplication().length.should.equal(0)
+          expect(hakemusYhteishakuKevat2014WithForeignBaseEducation.preferencesForApplication().length).to.equal(0)
         })
 
         it("seliteteksti näkyy oikein", function() {
@@ -926,7 +926,7 @@
       describe("post processing -tilassa oleva hakemus", function() {
         before(page.applyFixtureAndOpen({fixtureName:"postProcessingFailed"}))
         it("hakemusta ei voi muokata", function() {
-          hakemusYhteishakuKevat2014WithForeignBaseEducation.preferencesForApplication().length.should.equal(0)
+          expect(hakemusYhteishakuKevat2014WithForeignBaseEducation.preferencesForApplication().length).equal(0)
         })
 
         it("seliteteksti näkyy oikein", function() {
@@ -938,7 +938,7 @@
         before(page.applyFixtureAndOpen({applicationOid: hakemusIncompleteId}))
 
         it("hakemusta voi muokata", function() {
-          hakemusIncomplete.preferencesForApplication().length.should.not.equal(0)
+          expect(hakemusIncomplete.preferencesForApplication().length).to.not.equal(0)
         })
 
         describe("muokkaus", function() {
@@ -1062,7 +1062,8 @@
             return hakemusNivelKesa2013WithPeruskouluBaseEducation.getPreference(0).moveDown()
               .then(hakemusNivelKesa2013WithPeruskouluBaseEducation.saveWaitError)
               .then(function() {
-                hakemusNivelKesa2013WithPeruskouluBaseEducation.saveError().should.equal("Odottamaton virhe. Ota yhteyttä ylläpitoon.")
+                console.log('saveError()='+hakemusNivelKesa2013WithPeruskouluBaseEducation.saveError())
+                expect(hakemusNivelKesa2013WithPeruskouluBaseEducation.saveError()).to.equal("Odottamaton virhe. Ota yhteyttä ylläpitoon.")
               })
           })
 
@@ -1081,7 +1082,7 @@
             return hakemusNivelKesa2013WithPeruskouluBaseEducation.getPreference(0).moveDown()
               .then(hakemusNivelKesa2013WithPeruskouluBaseEducation.saveWaitError)
               .then(function() {
-                hakemusNivelKesa2013WithPeruskouluBaseEducation.saveError().should.equal("Tallentaminen epäonnistui, sillä istunto on vanhentunut. Kirjaudu uudestaan sisään.")
+                  expect(hakemusNivelKesa2013WithPeruskouluBaseEducation.saveError()).to.equal("Tallentaminen epäonnistui, sillä istunto on vanhentunut. Kirjaudu uudestaan sisään.")
               })
           })
         })
@@ -1095,7 +1096,7 @@
             return hakemusNivelKesa2013WithPeruskouluBaseEducation.getPreference(0).moveDown()
               .then(hakemusNivelKesa2013WithPeruskouluBaseEducation.saveWaitError)
               .then(function () {
-                hakemusNivelKesa2013WithPeruskouluBaseEducation.saveError().should.equal("Odottamaton virhe. Ota yhteyttä ylläpitoon.")
+                  expect(hakemusNivelKesa2013WithPeruskouluBaseEducation.saveError()).to.equal("Odottamaton virhe. Ota yhteyttä ylläpitoon.")
               })
           })
         })
@@ -1591,7 +1592,7 @@
 
         describe("Aluksi", function() {
           it("kysymykset näytetään", function() {
-            hakemusNivelKesa2013WithPeruskouluBaseEducation.questionsForApplication().count().should.equal(13)
+            expect(hakemusNivelKesa2013WithPeruskouluBaseEducation.questionsForApplication().count()).to.equal(13)
             hakemusNivelKesa2013WithPeruskouluBaseEducation.questionsForApplication().getAnswer(0).should.equal("")
           })
           it("pakolliset kentät korostetaan", function() {
@@ -1606,7 +1607,7 @@
           })
 
           it("näytetään kaikki validaatiovirheet", function() {
-            hakemusNivelKesa2013WithPeruskouluBaseEducation.questionsForApplication().validationMessageCount().should.equal(11)
+            expect(hakemusNivelKesa2013WithPeruskouluBaseEducation.questionsForApplication().validationMessageCount()).to.equal(11)
           })
 
           it("näytetään checkboxin minmax-validaatiovirhe", function() {
@@ -1646,7 +1647,7 @@
 
           describe("Käyttöliittymän tila", function() {
             it("kysymykset näytetään edelleen", function() {
-              hakemusNivelKesa2013WithPeruskouluBaseEducation.questionsForApplication().count().should.equal(13)
+              expect(hakemusNivelKesa2013WithPeruskouluBaseEducation.questionsForApplication().count()).to.equal(13)
             })
 
             it("validaatiovirheitä ei ole", function() {
@@ -1679,7 +1680,7 @@
             })
             describe("Ennen uusia muokkauksia", function() {
               it("vanhat vastaukset näytetään", function() {
-                hakemusNivelKesa2013WithPeruskouluBaseEducation.questionsForApplication().count().should.equal(13)
+                expect(hakemusNivelKesa2013WithPeruskouluBaseEducation.questionsForApplication().count()).to.equal(13)
                 hakemusNivelKesa2013WithPeruskouluBaseEducation.questionsForApplication().getAnswer(0).should.equal("tekstivastaus 1")
                 hakemusNivelKesa2013WithPeruskouluBaseEducation.questionsForApplication().getAnswer(1).should.equal("Vaihtoehto x 1")
               })
@@ -1693,7 +1694,7 @@
 
               describe("ennen tallennusta", function() {
                 it("kysymykset näytetään uudelleen", function () {
-                  hakemusNivelKesa2013WithPeruskouluBaseEducation.questionsForApplication().count().should.equal(13)
+                  expect(hakemusNivelKesa2013WithPeruskouluBaseEducation.questionsForApplication().count()).to.equal(13)
                   hakemusNivelKesa2013WithPeruskouluBaseEducation.questionsForApplication().getAnswer(0).should.equal("tekstivastaus 1")
                   hakemusNivelKesa2013WithPeruskouluBaseEducation.questionsForApplication().getAnswer(1).should.equal("Vaihtoehto x 1")
                 })
@@ -1718,7 +1719,7 @@
               replacePreference(hakemusNivelKesa2013WithPeruskouluBaseEducation, 2, "Etelä-Savon ammattiopisto")
             )
             it("hakutoiveeseen liittyvien lisäkysymysten aiemmat vastaukset hävitetään", function() {
-              hakemusNivelKesa2013WithPeruskouluBaseEducation.questionsForApplication().count().should.equal(13)
+              expect(hakemusNivelKesa2013WithPeruskouluBaseEducation.questionsForApplication().count()).to.equal(13)
               hakemusNivelKesa2013WithPeruskouluBaseEducation.questionsForApplication().getAnswer(0).should.equal("")
             })
           })
@@ -1846,7 +1847,7 @@
       })
 
       it('Piilotetaan tyhjät boksit lopusta', function () {
-        hakemusErityisopetuksena.preferencesForApplication().length.should.equal(2)
+        expect(hakemusErityisopetuksena.preferencesForApplication().length).to.equal(2)
         hakemusErityisopetuksena.getPreference(2).isNew().should.equal(true)
       })
 
