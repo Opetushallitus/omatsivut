@@ -4,14 +4,16 @@
 
 ## QA:lla, odottaa tuotantoon siirtoa
 
+- Hakutoivekohtaisten vastausten muokkaus [OHP-116](https://jira.oph.ware.fi/jira/browse/OHP-116)
+
+## Tuotannossa
+
 ## [release-1873](https://bamboo.oph.ware.fi/deploy/viewDeploymentVersion.action?versionId=115769455)
 - Piwik korjaukset, virheiden logitus toimii paremmin
 - UI facelift [OHP-121](https://jira.oph.ware.fi/jira/browse/OHP-121)
 - priorisoimattomien hakujen käyttöliittymän muokkaus [OHP-114](https://jira.oph.ware.fi/jira/browse/OHP-114)
 - Uusi hakemus-api versio [OVT-8911](https://jira.oph.ware.fi/jira/browse/OVT-8911)
 - poistettu viimeisimmän tallennuksen aikaleiman näyttäminen
-
-## Tuotannossa
 
 ### [release-1785](https://bamboo.oph.ware.fi/deploy/viewDeploymentVersion.action?versionId=110985364)
 - Tuki useammalle ja hakukohdekohtaisille hakuajoille [OHP-110](https://jira.oph.ware.fi/jira/browse/OHP-110)
