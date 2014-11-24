@@ -1,17 +1,15 @@
 package fi.vm.sade.omatsivut.servlet
 
-import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.omatsivut.auditlog.{AuditLogger, AuditLoggerComponent, SaveVastaanotto}
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.config.SpringContextComponent
 import fi.vm.sade.omatsivut.hakemus._
-import fi.vm.sade.omatsivut.hakemus.domain.{HakemusMuutos, ValidationError, _}
+import fi.vm.sade.omatsivut.hakemus.domain.{HakemusMuutos, _}
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.lomake.LomakeRepositoryComponent
-import fi.vm.sade.omatsivut.lomake.domain.QuestionNode
 import fi.vm.sade.omatsivut.security.Authentication
-import fi.vm.sade.omatsivut.tarjonta.domain.Hakukohde
-import fi.vm.sade.omatsivut.valintatulokset.{ValintatulosServiceComponent, Vastaanotto}
+import fi.vm.sade.omatsivut.valintatulokset.ValintatulosServiceComponent
+import fi.vm.sade.omatsivut.valintatulokset.domain.Vastaanotto
 import org.json4s.jackson.Serialization
 import org.scalatra._
 import org.scalatra.json._

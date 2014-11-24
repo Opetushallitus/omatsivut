@@ -3,7 +3,7 @@ package fi.vm.sade.omatsivut.auditlog
 import fi.vm.sade.log.model.Tapahtuma
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus.Answers
 import fi.vm.sade.omatsivut.security.AuthInfo
-import fi.vm.sade.omatsivut.valintatulokset.Vastaanotto
+import fi.vm.sade.omatsivut.valintatulokset.domain.Vastaanotto
 
 sealed trait AuditEvent {
   def target: String

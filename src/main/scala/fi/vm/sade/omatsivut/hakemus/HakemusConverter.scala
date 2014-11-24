@@ -1,7 +1,6 @@
 package fi.vm.sade.omatsivut.hakemus
 
 import java.util
-import java.util.Date
 
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
@@ -11,8 +10,10 @@ import fi.vm.sade.omatsivut.hakemus.domain._
 import fi.vm.sade.omatsivut.koodisto.KoodistoComponent
 import fi.vm.sade.omatsivut.lomake.domain.Lomake
 import fi.vm.sade.omatsivut.tarjonta.domain.Haku
-import fi.vm.sade.omatsivut.tarjonta.{TarjontaService, TarjontaComponent}
-import fi.vm.sade.omatsivut.valintatulokset.{ValintatulosServiceComponent, Vastaanottoaikataulu}
+import fi.vm.sade.omatsivut.tarjonta.{TarjontaComponent, TarjontaService}
+import fi.vm.sade.omatsivut.valintatulokset.ValintatulosServiceComponent
+import fi.vm.sade.omatsivut.valintatulokset.domain.Vastaanottoaikataulu
+
 import org.joda.time.LocalDateTime
 
 import scala.collection.JavaConversions._
@@ -157,7 +158,7 @@ trait HakemusConverterComponent {
       }
     }
 
-    private def convertToVastaanotettavuusAsti(aikataulu: Option[Vastaanottoaikataulu], hakutoiveenTulos: fi.vm.sade.omatsivut.valintatulokset.HakutoiveenValintatulos): Option[Long] = {
+    private def convertToVastaanotettavuusAsti(aikataulu: Option[Vastaanottoaikataulu], hakutoiveenTulos: fi.vm.sade.omatsivut.valintatulokset.domain.HakutoiveenValintatulos): Option[Long] = {
       aikataulu match {
         case None => None
         case Some(aikataulu) => {
@@ -170,7 +171,7 @@ trait HakemusConverterComponent {
       }
     }
 
-    private def convertToResultsState(hakutoiveenTulos: fi.vm.sade.omatsivut.valintatulokset.HakutoiveenValintatulos) = {
+    private def convertToResultsState(hakutoiveenTulos: fi.vm.sade.omatsivut.valintatulokset.domain.HakutoiveenValintatulos) = {
       hakutoiveenTulos.vastaanottotila  match {
         case None => ResultState.KESKEN
         case Some(tulos) => {

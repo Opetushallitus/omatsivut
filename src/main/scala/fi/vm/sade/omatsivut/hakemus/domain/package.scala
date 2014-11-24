@@ -5,7 +5,7 @@ import fi.vm.sade.omatsivut.hakemus.domain.HakutoiveenValintatulosTila.Hakutoive
 import fi.vm.sade.omatsivut.hakemus.domain.ResultState.ResultState
 import fi.vm.sade.omatsivut.hakemus.domain.VastaanotettavuusTila.VastaanotettavuusTila
 import fi.vm.sade.omatsivut.tarjonta.domain.{Haku, KohteenHakuaika}
-import fi.vm.sade.omatsivut.valintatulokset.HakutoiveenIlmoittautumistila
+import fi.vm.sade.omatsivut.valintatulokset.domain.HakutoiveenIlmoittautumistila
 
 package object domain {
   object Hakemus {
