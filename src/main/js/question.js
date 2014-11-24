@@ -70,7 +70,7 @@ function initialValue(question, application) {
   }
   function getOldValue(questionId) {
     var questionIdParts = /^(preference)(\d+)([-_].+)/.exec(questionId)
-    if (questionIdParts != null && application.hakutoiveet[questionIdParts[2]] != null && application.hakutoiveet[questionIdParts[2]].isNew) {
+    if (questionIdParts != null && application.hakutoiveet[questionIdParts[2] - 1] != null && application.hakutoiveet[questionIdParts[2] - 1].isNew) {
       return null
     }
     var phaseAnswers = application.persistedAnswers[question.id.phaseId]
