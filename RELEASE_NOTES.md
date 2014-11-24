@@ -4,6 +4,8 @@
 
 ## QA:lla, odottaa tuotantoon siirtoa
 
+## [release-1933](https://bamboo.oph.ware.fi/deploy/viewDeploymentVersion.action?versionId=115769639)
+- Notifikaatio teksti syksyn kk hausta
 - Hakutoivekohtaisten vastausten muokkaus [OHP-116](https://jira.oph.ware.fi/jira/browse/OHP-116)
 
 ## Tuotannossa
