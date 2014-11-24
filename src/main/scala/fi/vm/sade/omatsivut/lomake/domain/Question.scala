@@ -27,11 +27,25 @@ case class QuestionGroup(title: String, questions: List[QuestionNode]) extends Q
       case q: Question => List(q).filter(f)
       case q: QuestionGroup => q.filter(f) match {
         case QuestionGroup(_, Nil) => Nil
-        case QuestionGroup(_, list) if list.forall(_.isInstanceOf[TextNode]) => Nil
-        case q:QuestionGroup => List(q)
+        case QuestionGroup(title, list) => {
+          removeExtraLabels(list) match {
+            case Nil => Nil
+            case some =>  List(QuestionGroup(title, some))
+          }
+        }
       }
       case _ => Nil
     })
+  }
+  private def removeExtraLabels(questions: List[QuestionNode]): List[QuestionNode] = {
+    questions match {
+      case Nil => Nil
+      case List(textNode: TextNode) => Nil
+      case List(node) => questions
+      case node1 :: node2 :: tail if node1.isInstanceOf[TextNode] && node2.isInstanceOf[TextNode] => removeExtraLabels(node2 :: tail)
+      case node1 :: node2 :: tail if node2.isInstanceOf[TextNode] => node1 :: removeExtraLabels(node2 :: tail)
+      case node1 :: node2 :: tail => node1 :: node2 :: removeExtraLabels(tail)
+    }
   }
 }
 
