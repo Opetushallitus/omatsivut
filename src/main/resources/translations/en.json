@@ -11,8 +11,8 @@
   "label": {
     "applicationPeriod": "Application period",
     "applicationPeriodActive": "In progress",
-    "applicationPeriodEnds": "Application period will end",
-    "applicationPeriodPassed": "Application period ended",
+    "applicationPeriodEnds": "Application period ends",
+    "applicationPeriodPassed": "Application period has ended",
     "applicationPeriodNotStarted": "Application period not started",
     "applicationPeriodEnded": "Student admission process is unfinished.",
     "applicationRoundEnded": "Application round has ended.",
@@ -24,7 +24,7 @@
     "location_university": "Location",
     "education": "Study programme",
     "education_university": "Study programme",
-    "applicationPeriodForEducation": "Application period",
+    "applicationPeriodForEducation": "Application period for the study option",
     "chooseLocation": "Choose location...",
     "resultsPublishedDate": "Results will be published by",
     "questionGroupWithTitle": "Additional questions",
@@ -96,7 +96,7 @@
     "saveFailed": "Save failed. Try again later.",
     "saveFailed_sessionExpired": "Save failed because your session has expired. Please log in.",
     "saveFailed_validationError": "Could not save application - Please fill in all required information.",
-    "applicationPeriodNotActive": "You can't apply at this time.",
+    "applicationPeriodNotActive": "Application period not ongoing.",
     "serverError": "Unexpected error. Contact administrator."
   },
 
@@ -123,7 +123,7 @@
   },
 
   "registration": {
-    "pleaseRegister": "Please register",
+    "pleaseRegister": "Register for the semester",
     "goToRegistration": "Go to registration"
   }
 }
