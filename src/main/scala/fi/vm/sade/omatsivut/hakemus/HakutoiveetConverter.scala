@@ -24,10 +24,10 @@ object HakutoiveetConverter {
     hakutoiveet.zipWithIndex.flatMap {
       case (hakutoive, index) => {
         Map((longKey(koulutusId, index), ""), (longKey(opetuspisteId, index), "")) ++
-        hakutoiveetAnswers.filterKeys(_.startsWith((preferenceKeyPrefix + (index + 1)))) ++
         hakutoive.map {
           case (key, value) => (longKey(key, index), value)
-        }
+        } ++
+        hakutoiveetAnswers.filterKeys(_.startsWith((preferenceKeyPrefix + (index + 1))))
       }
     }.toMap[String, String]
   }

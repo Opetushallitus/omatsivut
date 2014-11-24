@@ -1521,6 +1521,45 @@
         })
       })
 
+      describe("Vanhojen kysymysten muokkaus", function() {
+        before(page.applyFixtureAndOpen({applicationOid: hakemusIncompleteId}))
+
+        it("kysymykset näytetään", function() {
+          var questionTitles = hakemusIncomplete.questionsForApplication().titles()
+          expect(questionTitles).to.deep.equal([
+            'Haetko koulutukseen harkintaan perustuvassa valinnassa?',
+            'Haluaisitko suorittaa lukion ja/tai ylioppilastutkinnon samaan aikaan kuin ammatillisen perustutkinnon?',
+            'Haetko koulutukseen harkintaan perustuvassa valinnassa?',
+            'Haetko urheilijan ammatilliseen koulutukseen?',
+            'Haluaisitko suorittaa lukion ja/tai ylioppilastutkinnon samaan aikaan kuin ammatillisen perustutkinnon?',
+            'Haetko koulutukseen harkintaan perustuvassa valinnassa?',
+            'Työkokemus kuukausina'
+          ])
+        })
+
+        describe("jos vaihdetaan harkinnanvaraiseen hakuun", function() {
+          before(
+            function() {hakemusIncomplete.questionsForApplication().enterAnswer(0, "Kyllä")},
+            wait.forAngular
+          )
+
+          it("lisäkysymys näytetään", function() {
+            var questionTitles = hakemusIncomplete.questionsForApplication().titles()
+            expect(questionTitles).to.deep.equal([
+              'Haetko koulutukseen harkintaan perustuvassa valinnassa?',
+              'Perustelu harkintaan perustuvan valinnan käyttämiselle',
+              'Haluaisitko suorittaa lukion ja/tai ylioppilastutkinnon samaan aikaan kuin ammatillisen perustutkinnon?',
+              'Haetko koulutukseen harkintaan perustuvassa valinnassa?',
+              'Haetko urheilijan ammatilliseen koulutukseen?',
+              'Haluaisitko suorittaa lukion ja/tai ylioppilastutkinnon samaan aikaan kuin ammatillisen perustutkinnon?',
+              'Haetko koulutukseen harkintaan perustuvassa valinnassa?',
+              'Työkokemus kuukausina'
+            ])
+          })
+        })
+
+      })
+
       var questions1 = [
         'Testikysymys, avaoin vastaus kenttä (pakollinen)?',
         'Valitse kahdesta vaihtoehdosta paremmin itsellesi sopiva?',
