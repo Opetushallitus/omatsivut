@@ -20,8 +20,8 @@ object ValintatulosServiceRunner extends Logging {
           logger.info("Starting valinta-tulos-service from " + path + " on port "+ valintatulosPort)
           val cwd = new java.io.File(path)
           val javaHome = System.getProperty("JAVA8_HOME", "")
-          Process(List("./sbt", "test:compile"), cwd, "JAVA_HOME" -> javaHome).!
-          val process = Process(List("./sbt", "test:run-main fi.vm.sade.valintatulosservice.JettyLauncher", "-Dvalintatulos.port=" + valintatulosPort, "-Dvalintatulos.profile=it-externalHakemus", "-Dhakemus.embeddedmongo.port=" + EmbeddedMongo.port,  "-Dfile.encoding=UTF-8"), cwd, "JAVA_HOME" -> javaHome).run(true)
+          Process(List("./sbt", "-no-colors", "test:compile"), cwd, "JAVA_HOME" -> javaHome).!
+          val process = Process(List("./sbt", "-no-colors", "test:run-main fi.vm.sade.valintatulosservice.JettyLauncher", "-Dvalintatulos.port=" + valintatulosPort, "-Dvalintatulos.profile=it-externalHakemus", "-Dhakemus.embeddedmongo.port=" + EmbeddedMongo.port,  "-Dfile.encoding=UTF-8"), cwd, "JAVA_HOME" -> javaHome).run(true)
           for (i <- 0 to 60 if PortChecker.isFreeLocalPort(valintatulosPort)) {
             Thread.sleep(1000)
           }
