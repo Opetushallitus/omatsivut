@@ -9,11 +9,11 @@
   },
 
   "label": {
-    "applicationPeriod": "Ansökningstiden",
-    "applicationPeriodActive": "Pågående",
-    "applicationPeriodEnds": "Ansökan avslutas",
-    "applicationPeriodPassed": "Ansökan har avslutats",
-    "applicationPeriodNotStarted": "Ansökan har inte börjat",
+    "applicationPeriod": "Ansökningstid",
+    "applicationPeriodActive": "Ansökan pågår",
+    "applicationPeriodEnds": "Ansökningstiden utgår",
+    "applicationPeriodPassed": "Ansökningstiden har utgått",
+    "applicationPeriodNotStarted": "Ansökningstiden har inte börjat",
     "applicationPeriodEnded": "Studerandeantagningen oavslutad",
     "applicationRoundEnded": "Ansökan har avslutats",
     "applicationReceived": "Ansökningsblankett inlämnad",
@@ -95,8 +95,8 @@
     "validationFailed_httpError": "Kunde inte ladda informationen. Var vänlig och försök igen senare.",
     "saveFailed": "Sparandet misslyckades. Försök på nytt senare.",
     "saveFailed_sessionExpired": "Sparandet misslyckades för att sessionen har föråldrats. Logga in på nytt.",
-    "saveFailed_validationError": "Sparades inte – svara först på alla tilläggsfrågor.",
-    "applicationPeriodNotActive": "Haku ei ole käynnissä.",
+    "saveFailed_validationError": "Inte lagrad – svara först på alla frågor.",
+    "applicationPeriodNotActive": "Ansökan pågår inte.",
     "serverError": "Ett oväntat fel inträffade. Var vänlig och kontakta administrationen."
   },
 
@@ -123,7 +123,7 @@
   },
 
   "registration": {
-    "pleaseRegister": "Registrera dig",
-    "goToRegistration": "Registrera"
+    "pleaseRegister": "Anmäla dig till terminen",
+    "goToRegistration": "Anmäla dig"
   }
 }
