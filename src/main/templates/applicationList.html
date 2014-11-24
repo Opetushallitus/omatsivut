@@ -1,18 +1,21 @@
 <div role="presentation" id="appRoot" class="content-column">
-    <h1>{{ localization('title.omatHakemukset') }}</h1>
 
-    <div class="application-list-status"
-         ng-if="applicationStatusMessage.length > 0"
-         ng-class="applicationStatusMessageType" ng-cloak
-         role="status">
-        <span>
-            {{ localization(applicationStatusMessage) }}
-        </span>
-    </div>
+  <p ng-if="localization('message.generalNotification').length > 0">{{ localization('message.generalNotification') }}</p>
 
-    <ul id="hakemus-list" aria-label="{{ localization('title.omatHakemukset') }}" ng-cloak>
-        <li ng-repeat="application in applications" class="application" data-oid="{{application.oid}}">
-            <application application="application"></application>
-        </li>
-    </ul>
+  <h1>{{ localization('title.omatHakemukset') }}</h1>
+
+  <div class="application-list-status"
+       ng-if="applicationStatusMessage.length > 0"
+       ng-class="applicationStatusMessageType" ng-cloak
+       role="status">
+      <span>
+          {{ localization(applicationStatusMessage) }}
+      </span>
+  </div>
+
+  <ul id="hakemus-list" aria-label="{{ localization('title.omatHakemukset') }}" ng-cloak>
+      <li ng-repeat="application in applications" class="application" data-oid="{{application.oid}}">
+          <application application="application"></application>
+      </li>
+  </ul>
 </div>

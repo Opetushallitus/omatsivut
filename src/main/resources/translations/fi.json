@@ -69,6 +69,7 @@
   },
 
   "message": {
+    "generalNotification": "Korkeakoulujen yhteishaun tulokset tulevat Oma opintopolku –palveluun aikaisintaan tiistaina 25.11.2014. Tulokset tulevat näkyviin, kun ne ovat valmistuneet.",
     "loadingApplications": "Hakemuksia ladataan...",
     "loadingData": "Lataa tietoja...",
     "noApplications": "Sinulla ei ole hakemuksia, joita on mahdollista muokata. Etsi koulutukset sanahaulla, ja täytä hakulomake. Tunnistautuneena voit tällä sivulla muokata hakemustasi hakuaikana.",
