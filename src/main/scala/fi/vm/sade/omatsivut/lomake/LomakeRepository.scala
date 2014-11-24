@@ -7,7 +7,8 @@ import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.koulutusinformaatio.{KoulutusInformaatioComponent, KoulutusInformaatioService}
 import fi.vm.sade.omatsivut.lomake.domain.Lomake
 import fi.vm.sade.omatsivut.ohjausparametrit.{OhjausparametritComponent, OhjausparametritService}
-import fi.vm.sade.omatsivut.tarjonta.{Haku, Hakuaika, TarjontaComponent, TarjontaService}
+import fi.vm.sade.omatsivut.tarjonta.domain.{Hakuaika, Haku}
+import fi.vm.sade.omatsivut.tarjonta.{TarjontaComponent, TarjontaService}
 import fi.vm.sade.omatsivut.util.Logging
 import fi.vm.sade.omatsivut.util.Timer.timed
 import org.joda.time.DateTime

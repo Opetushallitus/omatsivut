@@ -1,6 +1,7 @@
 package fi.vm.sade.omatsivut.tarjonta
 
 import fi.vm.sade.omatsivut.json.JsonFormats
+import fi.vm.sade.omatsivut.tarjonta.domain.{TarjontaHaku, KohteenHakuaika, Hakukohde}
 import org.json4s.JValue
 
 private object TarjontaParser extends JsonFormats {

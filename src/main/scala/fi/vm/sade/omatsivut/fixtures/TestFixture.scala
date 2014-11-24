@@ -5,7 +5,7 @@ import fi.vm.sade.omatsivut.config.{AppConfig, ComponentRegistry, OmatSivutSprin
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
 import fi.vm.sade.omatsivut.lomake.domain.Lomake
-import fi.vm.sade.omatsivut.tarjonta.Hakuaika
+import fi.vm.sade.omatsivut.tarjonta.domain.Hakuaika
 
 import scala.collection.JavaConversions._
 

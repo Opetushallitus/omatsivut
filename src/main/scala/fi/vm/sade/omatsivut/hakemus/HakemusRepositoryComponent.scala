@@ -10,7 +10,8 @@ import fi.vm.sade.omatsivut.hakemus.domain._
 import fi.vm.sade.omatsivut.lomake.LomakeRepositoryComponent
 import fi.vm.sade.omatsivut.lomake.domain.Lomake
 import fi.vm.sade.omatsivut.ohjausparametrit.OhjausparametritComponent
-import fi.vm.sade.omatsivut.tarjonta.{Haku, TarjontaComponent}
+import fi.vm.sade.omatsivut.tarjonta.TarjontaComponent
+import fi.vm.sade.omatsivut.tarjonta.domain.Haku
 import fi.vm.sade.omatsivut.util.Timer._
 import org.joda.time.LocalDateTime
 

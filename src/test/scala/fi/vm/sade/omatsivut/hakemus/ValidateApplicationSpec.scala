@@ -6,7 +6,7 @@ import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.omatsivut.fixtures.TestFixture._
 import fi.vm.sade.omatsivut.hakemus.domain._
 import fi.vm.sade.omatsivut.lomake.domain.{Text, QuestionGroup, QuestionId, QuestionNode}
-import fi.vm.sade.omatsivut.tarjonta.Hakuaika
+import fi.vm.sade.omatsivut.tarjonta.domain.Hakuaika
 import org.json4s._
 import org.json4s.jackson.{JsonMethods, Serialization}
 

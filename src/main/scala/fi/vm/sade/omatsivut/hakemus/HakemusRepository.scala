@@ -1,9 +1,9 @@
 package fi.vm.sade.omatsivut.hakemus
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.omatsivut.domain.Language.Language
-import fi.vm.sade.omatsivut.hakemus.domain.{ValidationError, Hakemus, HakemusMuutos}
-import fi.vm.sade.omatsivut.lomake.domain.{QuestionNode, Lomake}
-import fi.vm.sade.omatsivut.tarjonta.{Hakukohde, Haku}
+import fi.vm.sade.omatsivut.hakemus.domain.{Hakemus, HakemusMuutos, ValidationError}
+import fi.vm.sade.omatsivut.lomake.domain.{Lomake, QuestionNode}
+import fi.vm.sade.omatsivut.tarjonta.domain.Haku
 
 trait HakemusRepository {
   def updateHakemus(lomake: Lomake, haku: Haku)(hakemus: HakemusMuutos, userOid: String)(implicit lang: Language): Option[Hakemus]

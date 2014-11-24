@@ -11,7 +11,8 @@ import fi.vm.sade.omatsivut.hakemus.domain._
 import fi.vm.sade.omatsivut.localization.Translations
 import fi.vm.sade.omatsivut.lomake.AddedQuestionFinder
 import fi.vm.sade.omatsivut.lomake.domain.{AnswerId, Lomake, QuestionNode}
-import fi.vm.sade.omatsivut.tarjonta.{Haku, Hakukohde, TarjontaComponent}
+import fi.vm.sade.omatsivut.tarjonta.domain.Haku
+import fi.vm.sade.omatsivut.tarjonta.TarjontaComponent
 import fi.vm.sade.omatsivut.util.Logging
 
 import scala.collection.JavaConversions._

@@ -10,7 +10,8 @@ import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
 import fi.vm.sade.omatsivut.hakemus.domain._
 import fi.vm.sade.omatsivut.koodisto.KoodistoComponent
 import fi.vm.sade.omatsivut.lomake.domain.Lomake
-import fi.vm.sade.omatsivut.tarjonta.{TarjontaService, TarjontaComponent, Haku}
+import fi.vm.sade.omatsivut.tarjonta.domain.Haku
+import fi.vm.sade.omatsivut.tarjonta.{TarjontaService, TarjontaComponent}
 import fi.vm.sade.omatsivut.valintatulokset.{ValintatulosServiceComponent, Vastaanottoaikataulu}
 import org.joda.time.LocalDateTime
 

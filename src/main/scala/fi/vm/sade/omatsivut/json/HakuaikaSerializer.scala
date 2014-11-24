@@ -1,6 +1,6 @@
 package fi.vm.sade.omatsivut.json
 
-import fi.vm.sade.omatsivut.tarjonta.{Haku, KohteenHakuaika, Hakuaika}
+import fi.vm.sade.omatsivut.tarjonta.domain.{KohteenHakuaika, Hakuaika, Haku}
 import org.json4s._
 
 object JsonProcessor {

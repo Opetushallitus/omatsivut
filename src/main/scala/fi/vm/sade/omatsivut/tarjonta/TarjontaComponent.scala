@@ -10,6 +10,7 @@ import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.memoize.TTLOptionalMemoize
 import fi.vm.sade.omatsivut.ohjausparametrit.OhjausparametritComponent
 import fi.vm.sade.omatsivut.ohjausparametrit.domain.HaunAikataulu
+import fi.vm.sade.omatsivut.tarjonta.domain.{KohteenHakuaika, Hakukohde, Haku}
 import org.json4s.JsonAST.JValue
 
 import scala.collection.mutable
