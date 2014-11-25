@@ -191,7 +191,7 @@ Hakemus.prototype = {
     function removeFalseBooleans(obj) {
       _.each(obj, function(val, key) {
         if (_.isBoolean(val) && val === false)
-          delete obj[key]
+          obj[key] = ""
         else if (_.isObject(val))
           removeFalseBooleans(val)
       })
