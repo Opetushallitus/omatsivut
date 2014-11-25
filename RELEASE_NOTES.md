@@ -4,11 +4,15 @@
 
 ## QA:lla, odottaa tuotantoon siirtoa
 
+## [release-1947](https://bamboo.oph.ware.fi/deploy/viewDeploymentVersion.action?versionId=115769699)
+- Tarjonnan cachen kasvatus
+- Notifikaatio teksti pois syksyn kk hausta
+
+## Tuotannossa
+
 ## [release-1933](https://bamboo.oph.ware.fi/deploy/viewDeploymentVersion.action?versionId=115769639)
 - Notifikaatio teksti syksyn kk hausta
 - Hakutoivekohtaisten vastausten muokkaus [OHP-116](https://jira.oph.ware.fi/jira/browse/OHP-116)
-
-## Tuotannossa
 
 ## [release-1873](https://bamboo.oph.ware.fi/deploy/viewDeploymentVersion.action?versionId=115769455)
 - Piwik korjaukset, virheiden logitus toimii paremmin
