@@ -1557,6 +1557,51 @@
             ])
           })
         })
+      })
+
+      describe("Checkbox kysymykset", function() {
+        before(page.applyFixtureAndOpen({applicationOid: hakemusNivelKesa2013WithPeruskouluBaseEducationId}))
+
+        it("kysymykset näytetään", function() {
+          var questionTitles = hakemusNivelKesa2013WithPeruskouluBaseEducation.questionsForApplication().titles()
+          expect(questionTitles).to.deep.equal([
+            'Miksi haet kymppiluokalle?',
+            'Haen ensisijaisesti kielitukikympille?',
+            'Turun Kristillinen opisto',
+            'Päättötodistuksen kaikkien oppiaineiden keskiarvo?',
+            'Päättötodistukseni on'
+            ])
+        })
+
+        describe("Vastaaminen ensimmäiseen checkbox vaihtoehtoon", function() {
+          before(
+            function() {hakemusNivelKesa2013WithPeruskouluBaseEducation.questionsForApplication().enterAnswer(4, "osittain yksilöllistetty (yksittäisiä oppiaineita arvioitu tähdellä)")},
+            hakemusNivelKesa2013WithPeruskouluBaseEducation.saveWaitSuccess
+          )
+
+          it("onnistuu", function() {
+          })
+
+          describe("Vastaaminen toiseen checkbox vaihtoehtoon", function() {
+            before(
+              function() {hakemusNivelKesa2013WithPeruskouluBaseEducation.questionsForApplication().enterAnswer(4, "kokonaan yksilöllistetty (kaikki oppiaineet arvioitu tähdellä)")},
+              hakemusNivelKesa2013WithPeruskouluBaseEducation.saveWaitError
+            )
+
+            it("aiheuttaa validaatiovirheen", function() {
+            })
+
+            describe("kun ensimmäinen vastaus poistetaan", function() {
+              before(
+                function() {hakemusNivelKesa2013WithPeruskouluBaseEducation.questionsForApplication().enterAnswer(4, "osittain yksilöllistetty (yksittäisiä oppiaineita arvioitu tähdellä)")},
+                hakemusNivelKesa2013WithPeruskouluBaseEducation.saveWaitSuccess
+              )
+
+              it("tallennus onnistuu", function() {
+              })
+            })
+          })
+        })
 
       })
 
