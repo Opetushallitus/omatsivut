@@ -20,8 +20,8 @@ class UpdateApplicationSpec extends HakemusApiSpecification with FixturePerson w
     }
 
     "reject application with different person oid" in {
-      withHakemus(hakemusNivelKesa2013WithPeruskouluBaseEducationId) { hakemus =>
-        saveHakemus(hakemus) {
+      withHakemus(hakemusNivelKesa2013WithPeruskouluBaseEducationId) { hakemusInfo =>
+        saveHakemus(hakemusInfo.hakemus) {
           status must_== 403
         } (PersonOid("wat"))
       }

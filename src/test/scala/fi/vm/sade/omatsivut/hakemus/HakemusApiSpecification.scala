@@ -41,18 +41,18 @@ trait HakemusApiSpecification extends ScalatraTestSupport {
   val ssnKey: String = OppijaConstants.ELEMENT_ID_SOCIAL_SECURITY_NUMBER
   val addressKey: String = OppijaConstants.ELEMENT_ID_FIN_ADDRESS
 
-  def withHakemus[T](oid: String)(f: (Hakemus => T))(implicit personOid: PersonOid): T = {
+  def withHakemus[T](oid: String)(f: (HakemusInfo => T))(implicit personOid: PersonOid): T = {
     withApplications { applications =>
-      val hakemus = applications.find(_.oid == oid).get.copy(answers = Hakemus.emptyAnswers)
-      f(hakemus)
+      val originalHakemusInfo = applications.find(_.hakemus.oid == oid).get
+      f(originalHakemusInfo.copy(hakemus = originalHakemusInfo.hakemus.copy(answers = Hakemus.emptyAnswers)))
     }
   }
 
-  def withApplications[T](f: (List[Hakemus] => T))(implicit personOid: PersonOid): T = {
+  def withApplications[T](f: (List[HakemusInfo] => T))(implicit personOid: PersonOid): T = {
     authGet("secure/applications") {
       val b = body
       val applications: List[HakemusInfo] = Serialization.read[List[HakemusInfo]](b)
-      f(applications.map(_.hakemus))
+      f(applications)
     }
   }
 
@@ -68,14 +68,14 @@ trait HakemusApiSpecification extends ScalatraTestSupport {
 
   def setApplicationStart(applicationId: String, daysFromNow: Long)(implicit personOid: PersonOid) = {
     withApplications { applications =>
-      val hakuOid = applications.find(_.oid == applicationId).map(_.haku.oid).get
+      val hakuOid = applications.find(_.hakemus.oid == applicationId).map(_.hakemus.haku.oid).get
       put("util/fixtures/haku/" + hakuOid + "/overrideStart/" + (new Date().getTime + daysFromNow*24*60*60*1000), Iterable.empty) { }
     }
   }
 
   def modifyHakemus[T](oid: String)(modification: (Hakemus => Hakemus))(f: Hakemus => T)(implicit personOid: PersonOid): T = {
     withHakemus(oid) { hakemus =>
-      val modified = modification(hakemus)
+      val modified = modification(hakemus.hakemus)
       saveHakemus(modified) {
         f(modified)
       }
