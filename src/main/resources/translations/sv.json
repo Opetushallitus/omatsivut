@@ -69,7 +69,7 @@
   },
 
   "message": {
-    "generalNotification": "Resultaten av högskolornas gemensamma ansökan syns i Min Studieinfo –tjänsten tidigast tisdag 25.11.2014. Resultaten publiceras då de är färdiga.",
+    "generalNotification": "",
     "loadingApplications": "Laddar ansökningsblanketter…",
     "loadingData": "Laddar...",
     "noApplications": "Du har inga ansökningsblanketter att bearbeta. Sök utbildningar med ordsökningen och fyll i ansökningblanketten. Som identifierad användare kan du bearbeta din ansökan på denna sida under ansökningtiden.",

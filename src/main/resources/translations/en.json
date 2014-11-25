@@ -69,7 +69,7 @@
   },
 
   "message": {
-    "generalNotification": "Korkeakoulujen yhteishaun tulokset tulevat Oma opintopolku –palveluun aikaisintaan tiistaina 25.11.2014. Tulokset tulevat näkyviin, kun ne ovat valmistuneet.",
+    "generalNotification": "",
     "loadingApplications": "Loading application forms...",
     "loadingData": "Loading...",
     "noApplications": "You don't have any applications that can be edited. Find study options with the search engine and fill in the application form. As an identified user you can edit your application form on this page during the application period.",
