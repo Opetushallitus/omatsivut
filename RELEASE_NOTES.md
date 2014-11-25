@@ -4,11 +4,11 @@
 
 ## QA:lla, odottaa tuotantoon siirtoa
 
+## Tuotannossa
+
 ## [release-1947](https://bamboo.oph.ware.fi/deploy/viewDeploymentVersion.action?versionId=115769699)
 - Tarjonnan cachen kasvatus
 - Notifikaatio teksti pois syksyn kk hausta
-
-## Tuotannossa
 
 ## [release-1933](https://bamboo.oph.ware.fi/deploy/viewDeploymentVersion.action?versionId=115769639)
 - Notifikaatio teksti syksyn kk hausta
