@@ -69,7 +69,7 @@
   },
 
   "message": {
-    "generalNotification": "",
+    "generalNotification": "none",
     "loadingApplications": "Hakemuksia ladataan...",
     "loadingData": "Lataa tietoja...",
     "noApplications": "Sinulla ei ole hakemuksia, joita on mahdollista muokata. Etsi koulutukset sanahaulla, ja täytä hakulomake. Tunnistautuneena voit tällä sivulla muokata hakemustasi hakuaikana.",
