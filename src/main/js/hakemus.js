@@ -93,8 +93,9 @@ Hakemus.prototype = {
     var hakuaikaId = hakutoive.hakuaikaId
     var self = this
 
-    function findApplicationPeriod(applicationPeriodId) {
-      return _(self.haku.applicationPeriods).find(function(period) { return period.id === applicationPeriodId }) || {}
+    function isPeriodActive(applicationPeriodId) {
+      var period = _(self.haku.applicationPeriods).find(function(period) { return period.id === applicationPeriodId })
+      return period !== undefined ? period.active : self.haku.active
     }
 
     if (hakutoive.addedDuringCurrentSession) {
@@ -102,7 +103,7 @@ Hakemus.prototype = {
     } else if (!_.isEmpty(hakutoive.kohdekohtainenHakuaika)) {
       return !hakutoive.kohdekohtainenHakuaika.active
     } else if (!_.isEmpty(hakuaikaId)) {
-      return !findApplicationPeriod(hakuaikaId).active
+      return !isPeriodActive(hakuaikaId)
     } else {
       return !this.haku.active
     }
