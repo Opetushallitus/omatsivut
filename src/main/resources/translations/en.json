@@ -49,7 +49,7 @@
       "Peruuntunut": "Cancelled_automatically",
       "VarasijaltaHyvaksytty": "Accepted_from_reserve place",
       "Vastaanottanut": "You_have_confirmed_the study place",
-      "Hylatty": "You_have_not_received a study place",
+      "Hylatty": "You_have_not_received a study place.",
       "EhdollisestiVastaanottanut": "You_have_confirmed_the study place conditionally",
       "EiVastaanotettuMaaraAikana": "You_have_not_confirmed_the study place within the set time"
     }

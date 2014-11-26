@@ -49,7 +49,7 @@
       "Peruuntunut": "Ansökan_har_blivit_annullerad",
       "VarasijaltaHyvaksytty": "Godkänd_från_reservplats",
       "Vastaanottanut": "Du_har_tagit_emot_studieplatsen",
-      "Hylatty": "Du_har_inte_fått_någon_studieplats",
+      "Hylatty": "Du_har_inte_fått_någon_studieplats.",
       "EhdollisestiVastaanottanut": "Du_har_tagit_emot studieplatsen villkorligt",
       "EiVastaanotettuMaaraAikana": "Du_har_inte_tagit_emot studieplatsen inom utsatt tid"
     }
