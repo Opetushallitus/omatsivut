@@ -6,6 +6,9 @@
 
 ## Tuotannossa
 
+## [release-1973](https://bamboo.oph.ware.fi/deploy/viewDeploymentVersion.action?versionId=115769793)
+- Parannuksia valinnan tuloksen seliteteksteihin
+
 ## [release-1947](https://bamboo.oph.ware.fi/deploy/viewDeploymentVersion.action?versionId=115769699)
 - Tarjonnan cachen kasvatus
 - Notifikaatio teksti pois syksyn kk hausta
