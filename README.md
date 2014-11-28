@@ -5,6 +5,7 @@ Oppijan henkilökohtainen palvelu
 ## Teknologiat
 
 - Serverillä Scala 2.11.1, JRE7 (ei tällä hetkellä toimi Java8:lla), SBT
+- JCE (Java Cryptography Extension)
 - Frontissa Angular.js, gulp.js, npm
 - Testeissä Specs2, mocha, phantomjs. Kaikille toiminnoille automaattiset testit.
 
