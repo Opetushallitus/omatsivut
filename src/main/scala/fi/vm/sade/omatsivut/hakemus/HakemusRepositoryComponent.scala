@@ -16,6 +16,8 @@ import fi.vm.sade.omatsivut.util.Timer._
 import fi.vm.sade.omatsivut.valintatulokset.ValintatulosServiceComponent
 import org.joda.time.LocalDateTime
 
+import scala.util.{Failure, Success, Try}
+
 trait HakemusRepositoryComponent {
   this: LomakeRepositoryComponent with ApplicationValidatorComponent with HakemusConverterComponent with SpringContextComponent with AuditLoggerComponent with TarjontaComponent with OhjausparametritComponent with ValintatulosServiceComponent =>
 
@@ -131,19 +133,28 @@ trait HakemusRepositoryComponent {
             haku <- hakuOption
             lomake <- lomakeOption
           } yield {
-            val valintatulos = valintatulosService.getValintatulos(application.getOid, lomake.oid)
-            val hakemus = hakemusConverter.convertToHakemus(lomake, haku, application, valintatulos)
+            val valintatulos = fetchValintatulos(application.getOid, haku)
+            val hakemus = hakemusConverter.convertToHakemus(lomake, haku, application, valintatulos._1)
             auditLogger.log(ShowHakemus(application.getPersonOid, hakemus.oid, haku.oid))
+
             if(haku.applicationPeriods.exists(_.active)) {
               applicationValidator.validateAndFindQuestions(haku, lomake, withNoPreferenceSpesificAnswers(hakemus), application) match {
-                case (app, errors, questions) => HakemusInfo(hakemusConverter.convertToHakemus(lomake, haku, app, valintatulos), errors, questions)
+                case (app, errors, questions) => HakemusInfo(hakemusConverter.convertToHakemus(lomake, haku, app, valintatulos._1), errors, questions, valintatulos._2)
               }
             }
             else {
-              HakemusInfo(hakemus, List(), List())
+              HakemusInfo(hakemus, List(), List(), valintatulos._2)
             }
           }
         }).flatten.toList.sortBy[Long](_.hakemus.received).reverse
+      }
+    }
+
+    private def fetchValintatulos(applicationOid: String, haku: Haku) = {
+      val tulos = Try(valintatulosService.getValintatulos(applicationOid, haku.oid))
+      tulos match {
+        case Success(t) => (t, true)
+        case Failure(e) => (None, false)
       }
     }
 

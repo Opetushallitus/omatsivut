@@ -7,6 +7,8 @@ import fi.vm.sade.omatsivut.util.Timer.timed
 import fi.vm.sade.omatsivut.valintatulokset.domain.{Valintatulos, Vastaanotto}
 import org.json4s.JsonAST.JValue
 
+class ValintatulosException extends Exception
+
 trait ValintatulosService {
   def getValintatulos(hakemusOid: String, hakuOid: String): Option[Valintatulos]
   def vastaanota(hakemusOid: String, hakuOid: String, vastaanotto: Vastaanotto): Boolean
@@ -57,9 +59,11 @@ class RemoteValintatulosService(valintatulosServiceUrl: String) extends Valintat
           }
         }
       }
+      case (404, _, _) =>
+        None
       case (errorCode, _, resultString) =>
         logger.error("Response code " + errorCode + " fetching data from valinta-tulos-service at " + url)
-        None
+        throw new ValintatulosException()
     }
   }
 
