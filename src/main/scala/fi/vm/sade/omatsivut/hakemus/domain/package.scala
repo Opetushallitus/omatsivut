@@ -58,9 +58,9 @@ package object domain {
 
   case class Submitted(id: String = "SUBMITTED") extends HakemuksenTila // Alkutila, ei editoitatissa
   case class PostProcessing(id: String = "POSTPROCESSING") extends HakemuksenTila // Taustaprosessointi kesken, ei editoitavissa
-  case class Active(id: String = "ACTIVE", valintatulos: Option[Valintatulos] = None) extends HakemuksenTila // Aktiivinen, editoitavissa
-  case class HakukausiPaattynyt(id: String = "HAKUKAUSIPAATTYNYT", valintatulos: Option[Valintatulos] = None) extends HakemuksenTila // Hakukausi päättynyt
-  case class HakukierrosPaattynyt(id: String = "HAKUKIERROSPAATTYNYT", valintatulos: Option[Valintatulos] = None) extends HakemuksenTila // Hakukierros päättynyt
+  case class Active(id: String = "ACTIVE", valintatulos: Option[HakemuksenValintatulos] = None) extends HakemuksenTila // Aktiivinen, editoitavissa
+  case class HakukausiPaattynyt(id: String = "HAKUKAUSIPAATTYNYT", valintatulos: Option[HakemuksenValintatulos] = None) extends HakemuksenTila // Hakukausi päättynyt
+  case class HakukierrosPaattynyt(id: String = "HAKUKIERROSPAATTYNYT", valintatulos: Option[HakemuksenValintatulos] = None) extends HakemuksenTila // Hakukierros päättynyt
   case class Passive(id: String = "PASSIVE") extends HakemuksenTila // Passiivinen/poistettu
   case class Incomplete(id: String = "INCOMPLETE") extends HakemuksenTila // Tietoja puuttuu
 
@@ -69,8 +69,8 @@ package object domain {
     val VASTAANOTTANUT, EI_VASTAANOTETTU_MAARA_AIKANA, EHDOLLISESTI_VASTAANOTTANUT, PERUUTETTU, PERUNUT, HYLATTY, PERUUNTUNUT, KESKEN = Value
   }
 
-  case class Valintatulos(hakutoiveet: List[HakutoiveenValintatulos])
-  case class HakutoiveenValintatulos(
+  case class HakemuksenValintatulos(hakutoiveet: List[ToiveenValintatulos])
+  case class ToiveenValintatulos(
                                       koulutus: Koulutus,
                                       opetuspiste: Opetuspiste,
                                       tila: HakutoiveenValintatulosTila,

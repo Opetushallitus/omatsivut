@@ -6,7 +6,6 @@ import fi.vm.sade.omatsivut.auditlog._
 import fi.vm.sade.omatsivut.config.SpringContextComponent
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.domain.Language.Language
-import fi.vm.sade.omatsivut.hakemus.HakemusInfo
 import fi.vm.sade.omatsivut.hakemus.domain._
 import fi.vm.sade.omatsivut.lomake.LomakeRepositoryComponent
 import fi.vm.sade.omatsivut.lomake.domain.Lomake
@@ -14,7 +13,7 @@ import fi.vm.sade.omatsivut.ohjausparametrit.OhjausparametritComponent
 import fi.vm.sade.omatsivut.tarjonta.TarjontaComponent
 import fi.vm.sade.omatsivut.tarjonta.domain.Haku
 import fi.vm.sade.omatsivut.util.Timer._
-import org.joda.time.{DateTime, LocalDateTime}
+import org.joda.time.LocalDateTime
 
 trait HakemusRepositoryComponent {
   this: LomakeRepositoryComponent with ApplicationValidatorComponent with HakemusConverterComponent with SpringContextComponent with AuditLoggerComponent with TarjontaComponent with OhjausparametritComponent =>

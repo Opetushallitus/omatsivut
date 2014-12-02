@@ -90,18 +90,18 @@ trait HakemusConverterComponent {
       }
     }
 
-    private def isKesken(hakutoiveenValintatulos: HakutoiveenValintatulos) = {
+    private def isKesken(hakutoiveenValintatulos: ToiveenValintatulos) = {
       hakutoiveenValintatulos.tila  == HakutoiveenValintatulosTila.KESKEN ||
       hakutoiveenValintatulos.tila == HakutoiveenValintatulosTila.VARALLA
     }
 
-    private def isHyvaksytty(hakutoiveenValintatulos: HakutoiveenValintatulos) = {
+    private def isHyvaksytty(hakutoiveenValintatulos: ToiveenValintatulos) = {
       hakutoiveenValintatulos.tila  == HakutoiveenValintatulosTila.HYVAKSYTTY ||
       hakutoiveenValintatulos.tila == HakutoiveenValintatulosTila.HARKINNANVARAISESTI_HYVAKSYTTY ||
       hakutoiveenValintatulos.tila == HakutoiveenValintatulosTila.VARASIJALTA_HYVAKSYTTY
     }
 
-    private def vastaanottotieto(valintatulokset: List[HakutoiveenValintatulos]) = {
+    private def vastaanottotieto(valintatulokset: List[ToiveenValintatulos]) = {
       val valmisIndex = valintatulokset.indexWhere(_.vastaanottotila != ResultState.KESKEN)
       if (valmisIndex >= 0) {
         if (valintatulokset(valmisIndex).isPeruuntunut) {
@@ -116,12 +116,12 @@ trait HakemusConverterComponent {
       }
     }
 
-    private def isVastaanotettavissa(hakutoiveenValintatulos: HakutoiveenValintatulos) = {
+    private def isVastaanotettavissa(hakutoiveenValintatulos: ToiveenValintatulos) = {
       hakutoiveenValintatulos.vastaanotettavuustila == VastaanotettavuusTila.VASTAANOTETTAVISSA_EHDOLLISESTI ||
       hakutoiveenValintatulos.vastaanotettavuustila == VastaanotettavuusTila.VASTAANOTETTAVISSA_SITOVASTI
     }
 
-    private def convertToValintatulos(applicationSystemId: String, application: Application, hakutoiveet: List[Hakutoive])(implicit lang: Language.Language): Option[Valintatulos] = {
+    private def convertToValintatulos(applicationSystemId: String, application: Application, hakutoiveet: List[Hakutoive])(implicit lang: Language.Language): Option[HakemuksenValintatulos] = {
       def findKoulutus(oid: String): Koulutus = {
         val koulutus = (for {
           hakemusData <- hakutoiveet.flatMap(_.hakemusData)
@@ -139,8 +139,8 @@ trait HakemusConverterComponent {
       }
 
       valintatulosService.getValintatulos(application.getOid, applicationSystemId).map { valintaTulos =>
-        Valintatulos(valintaTulos.hakutoiveet.map { hakutoiveenTulos =>
-          HakutoiveenValintatulos(
+        HakemuksenValintatulos(valintaTulos.hakutoiveet.map { hakutoiveenTulos =>
+          ToiveenValintatulos(
             findKoulutus(hakutoiveenTulos.hakukohdeOid),
             findOpetuspiste(hakutoiveenTulos.tarjoajaOid),
             HakutoiveenValintatulosTila.withName(hakutoiveenTulos.valintatila),
