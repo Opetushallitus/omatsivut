@@ -63,9 +63,11 @@ object OmatsivutBuild extends Build {
         "com.scalatags" %% "scalatags" % "0.3.9",
         "com.fasterxml.jackson.dataformat" % "jackson-dataformat-yaml" % "2.4.1",
         "commons-codec" % "commons-codec" % "1.9",
+        "fi.vm.sade.koodisto" % "koodisto-api" % "13.3-SNAPSHOT",
         "fi.vm.sade.haku" % "hakemus-api" % "13.0-SNAPSHOT" excludeAll(
           ExclusionRule(organization = "org.json4s"),
-          ExclusionRule(organization = "com.wordnik")
+          ExclusionRule(organization = "com.wordnik"),
+          ExclusionRule(organization = "fi.vm.sade.koodisto")
         ),
         "fi.vm.sade.log" % "log-service" % "8.0-SNAPSHOT" classifier "classes" excludeAll(
           ExclusionRule(organization = "org.springframework.data"),
