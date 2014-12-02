@@ -4,6 +4,8 @@
 
 ## QA:lla, odottaa tuotantoon siirtoa
 
+- 3d6f5a6e9a1d577c70443c14b1500c653b2d266a: use koodisto-client-13.3-SNAPSHOT
+
 ## Tuotannossa
 
 ## [release-1973](https://bamboo.oph.ware.fi/deploy/viewDeploymentVersion.action?versionId=115769793)
