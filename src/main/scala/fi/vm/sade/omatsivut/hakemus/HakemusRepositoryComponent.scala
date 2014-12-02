@@ -13,10 +13,11 @@ import fi.vm.sade.omatsivut.ohjausparametrit.OhjausparametritComponent
 import fi.vm.sade.omatsivut.tarjonta.TarjontaComponent
 import fi.vm.sade.omatsivut.tarjonta.domain.Haku
 import fi.vm.sade.omatsivut.util.Timer._
+import fi.vm.sade.omatsivut.valintatulokset.ValintatulosServiceComponent
 import org.joda.time.LocalDateTime
 
 trait HakemusRepositoryComponent {
-  this: LomakeRepositoryComponent with ApplicationValidatorComponent with HakemusConverterComponent with SpringContextComponent with AuditLoggerComponent with TarjontaComponent with OhjausparametritComponent =>
+  this: LomakeRepositoryComponent with ApplicationValidatorComponent with HakemusConverterComponent with SpringContextComponent with AuditLoggerComponent with TarjontaComponent with OhjausparametritComponent with ValintatulosServiceComponent =>
 
   val hakemusRepository: HakemusRepository
 
@@ -130,10 +131,13 @@ trait HakemusRepositoryComponent {
             haku <- hakuOption
             lomake <- lomakeOption
           } yield {
-            val hakemus = hakemusConverter.convertToHakemus(lomake, haku, application)
+            val valintatulos = valintatulosService.getValintatulos(application.getOid, lomake.oid)
+            val hakemus = hakemusConverter.convertToHakemus(lomake, haku, application, valintatulos)
             auditLogger.log(ShowHakemus(application.getPersonOid, hakemus.oid, haku.oid))
             if(haku.applicationPeriods.exists(_.active)) {
-              applicationValidator.validateAndFindQuestions(haku, lomake, withNoPreferenceSpesificAnswers(hakemus), application)
+              applicationValidator.validateAndFindQuestions(haku, lomake, withNoPreferenceSpesificAnswers(hakemus), application) match {
+                case (app, errors, questions) => HakemusInfo(hakemusConverter.convertToHakemus(lomake, haku, app, valintatulos), errors, questions)
+              }
             }
             else {
               HakemusInfo(hakemus, List(), List())

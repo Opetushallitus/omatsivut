@@ -38,19 +38,19 @@ trait ApplicationValidatorComponent {
       withErrorLogging {
         val storedApplication = hakemusRepository.findStoredApplicationByOid(hakemusMuutos.oid)
         if (storedApplication.getPersonOid != personOid) throw new IllegalArgumentException("personId mismatch")
-        validateAndFindQuestions(haku, lomake, hakemusMuutos, storedApplication)
+        validateAndFindQuestions(haku, lomake, hakemusMuutos, storedApplication) match {
+          case (app, errors, questions) => HakemusInfo(hakemusConverter.convertToHakemus(lomake, haku, app), errors, questions)
+        }
       } ("Error validating application: " + hakemusMuutos.oid)
     }
 
-    private[hakemus] def validateAndFindQuestions(haku: Haku, lomake: Lomake, newHakemus: HakemusLike, storedApplication: Application)(implicit lang: Language.Language): HakemusInfo = {
+    private[hakemus] def validateAndFindQuestions(haku: Haku, lomake: Lomake, newHakemus: HakemusLike, storedApplication: Application)(implicit lang: Language.Language) = {
       withErrorLogging {
         val updatedApplication = update(newHakemus, lomake, storedApplication)
         val validationErrors: List[ValidationError] = validateHakutoiveetAndAnswers(updatedApplication, storedApplication, lomake) ++
           errorsForEditingInactiveHakuToive(updatedApplication, storedApplication, haku)
-
         val questions = AddedQuestionFinder.findQuestions(lomake)(storedApplication, newHakemus, tarjontaService.filterHakutoiveOidsByActivity(true, newHakemus.preferences, haku))
-
-        HakemusInfo(hakemusConverter.convertToHakemus(lomake, haku, updatedApplication), validationErrors, questions)
+        (updatedApplication, validationErrors, questions)
       } ("Error validating application: " + newHakemus.oid)
     }
 
