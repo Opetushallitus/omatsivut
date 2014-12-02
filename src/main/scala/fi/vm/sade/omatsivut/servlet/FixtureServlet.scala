@@ -5,7 +5,7 @@ import fi.vm.sade.omatsivut.config.SpringContextComponent
 import fi.vm.sade.omatsivut.fixtures.FixtureImporter
 import fi.vm.sade.omatsivut.tarjonta.TarjontaComponent
 import fi.vm.sade.omatsivut.util.Timer
-import fi.vm.sade.omatsivut.valintatulokset.{RemoteValintatulosService, ValintatulosServiceComponent}
+import fi.vm.sade.omatsivut.valintatulokset.{FailingRemoteValintatulosService, RemoteValintatulosService, ValintatulosServiceComponent}
 import org.scalatra.{InternalServerError, Ok}
 
 trait FixtureServletContainer {
@@ -28,6 +28,15 @@ trait FixtureServletContainer {
         val query = request.queryString
         new RemoteValintatulosService(appConfig.settings.valintaTulosServiceUrl).applyFixtureWithQuery(query)
         Ok
+      }
+
+      put("/fixtures/valintatulos/fail/:value") {
+        valintatulosService match {
+          case s: FailingRemoteValintatulosService =>
+            s.shouldFail = params("value").toBoolean
+            Ok
+          case _ => InternalServerError
+        }
       }
 
       put("/fixtures/haku/:oid/overrideStart/:timestamp") {

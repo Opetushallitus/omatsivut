@@ -48,7 +48,10 @@ class ComponentRegistry(val config: AppConfig)
     case _ => CachedKoulutusInformaatioService(config)
   }
 
-  private def configureValintatulosService: ValintatulosService = new RemoteValintatulosService(config.settings.valintaTulosServiceUrl)
+  private def configureValintatulosService: ValintatulosService = config match {
+    case x: StubbedExternalDeps => new FailingRemoteValintatulosService(config.settings.valintaTulosServiceUrl)
+    case _ => new RemoteValintatulosService(config.settings.valintaTulosServiceUrl)
+  }
 
   private def configureTarjontaService : TarjontaService = config match {
     case _ : StubbedExternalDeps => new StubbedTarjontaService()

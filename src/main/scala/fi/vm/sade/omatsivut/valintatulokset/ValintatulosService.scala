@@ -25,6 +25,14 @@ class NoOpValintatulosService extends ValintatulosService {
   override def vastaanota(hakemusOid: String, hakuOid: String, vastaanotto: Vastaanotto) = true
 }
 
+class FailingRemoteValintatulosService(valintatulosServiceUrl: String) extends RemoteValintatulosService(valintatulosServiceUrl) {
+  var shouldFail = false
+
+  override def getValintatulos(hakemusOid: String, hakuOid: String): Option[Valintatulos] = {
+    if(shouldFail) throw new ValintatulosException()
+    super.getValintatulos(hakemusOid, hakuOid)
+  }
+}
 
 class RemoteValintatulosService(valintatulosServiceUrl: String) extends ValintatulosService with JsonFormats with Logging {
   import org.json4s.jackson.JsonMethods._
