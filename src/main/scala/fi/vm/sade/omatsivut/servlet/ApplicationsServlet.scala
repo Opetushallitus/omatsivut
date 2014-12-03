@@ -28,7 +28,6 @@ trait ApplicationsServletContainer {
   class ApplicationsServlet(val appConfig: AppConfig)(implicit val swagger: Swagger) extends OmatSivutServletBase with JacksonJsonSupport with JsonFormats with SwaggerSupport with AuthenticationRequiringServlet {
     override def applicationName = Some("secure/applications")
     private val applicationValidator: ApplicationValidator = newApplicationValidator
-    override val authAuditLogger: AuditLogger = auditLogger
 
     protected val applicationDescription = "Oppijan henkilökohtaisen palvelun REST API, jolla voi hakea ja muokata hakemuksia ja omia tietoja"
 

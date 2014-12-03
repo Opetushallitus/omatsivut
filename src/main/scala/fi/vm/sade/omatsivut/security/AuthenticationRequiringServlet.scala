@@ -10,7 +10,6 @@ import org.scalatra.{NotFound, Unauthorized}
 
 trait AuthenticationRequiringServlet extends OmatSivutServletBase with AuthenticationInfoParsing with Logging {
   val appConfig: AppConfig
-  val authAuditLogger: AuditLogger
 
   def personOid() = personOidOption(request).getOrElse(sys.error("Unauthenticated account"))
 
