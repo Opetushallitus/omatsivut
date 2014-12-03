@@ -367,7 +367,7 @@
       })
 
       describe("kun kk valinta on kesken ja hakija on 2. varasijalla", function() {
-        before(page.applyValintatulosFixtureAndOpen("hyvaksytty-ylempi-varalla"))
+        before(page.applyValintatulosFixtureAndOpen("hyvaksytty-ylempi-varalla", {"ohjausparametrit": "varasijasaannot-ei-viela-voimassa"}))
 
         it("hakemusta ei voi muokata", function () {
           expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.preferencesForApplication().length).to.equal(0)
