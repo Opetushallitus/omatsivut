@@ -133,11 +133,11 @@ trait HakemusRepositoryComponent {
             haku <- hakuOption
             lomake <- lomakeOption
           } yield {
-            val valintatulos = fetchValintatulos(application.getOid, haku)
+            val valintatulos = fetchValintatulos(application, haku)
             val hakemus = hakemusConverter.convertToHakemus(lomake, haku, application, valintatulos._1)
             auditLogger.log(ShowHakemus(application.getPersonOid, hakemus.oid, haku.oid))
 
-            if(haku.applicationPeriods.exists(_.active)) {
+            if (haku.applicationPeriods.exists(_.active)) {
               applicationValidator.validateAndFindQuestions(haku, lomake, withNoPreferenceSpesificAnswers(hakemus), application) match {
                 case (app, errors, questions) => HakemusInfo(hakemusConverter.convertToHakemus(lomake, haku, app, valintatulos._1), errors, questions, valintatulos._2)
               }
@@ -150,11 +150,14 @@ trait HakemusRepositoryComponent {
       }
     }
 
-    private def fetchValintatulos(applicationOid: String, haku: Haku) = {
-      val tulos = Try(valintatulosService.getValintatulos(applicationOid, haku.oid))
-      tulos match {
-        case Success(t) => (t, true)
-        case Failure(e) => (None, false)
+    private def fetchValintatulos(application: Application, haku: Haku) = {
+      if (hakemusConverter.anyApplicationPeriodEnded(haku, application)) {
+        Try(valintatulosService.getValintatulos(application.getOid, haku.oid)) match {
+          case Success(t) => (t, true)
+          case Failure(e) => (None, false)
+        }
+      } else {
+        (None, true)
       }
     }
 

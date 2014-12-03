@@ -85,7 +85,11 @@ trait HakemusConverterComponent {
       }
     }
 
-    private def anyApplicationPeriodEnded(haku: Haku, hakutoiveet: List[Hakutoive]) = {
+    def anyApplicationPeriodEnded(haku: Haku, application: Application): Boolean = {
+      anyApplicationPeriodEnded(haku, convertHakuToiveet(application))
+    }
+
+    private def anyApplicationPeriodEnded(haku: Haku, hakutoiveet: List[Hakutoive]): Boolean = {
       val now = new LocalDateTime().toDate.getTime // Use LocalDateTime so that we can use TimeWarp in tests
       haku.applicationPeriods.exists(_.end < now) || hakutoiveet.exists { hakutoive =>
         hakutoive.kohdekohtainenHakuaika.map(_.end < now).getOrElse(false)
