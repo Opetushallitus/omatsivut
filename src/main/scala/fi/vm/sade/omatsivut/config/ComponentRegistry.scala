@@ -77,8 +77,8 @@ class ComponentRegistry(val config: AppConfig)
   def newHakemusPreviewGenerator(language: Language): HakemusPreviewGenerator = new HakemusPreviewGenerator()(language)
   def newApplicationsServlet = new ApplicationsServlet(config)
   def newKoulutusServlet = new KoulutusServlet
-  def newSecuredSessionServlet = new SecuredSessionServlet(config)
-  def newLogoutServlet = new LogoutServlet(config)
+  def newSecuredSessionServlet = new SecuredSessionServlet(config.authContext)
+  def newLogoutServlet = new LogoutServlet(config.authContext)
   def newFixtureServlet = new FixtureServlet(config)
   def newSwaggerServlet = new SwaggerServlet
   def newKoodistoServlet = new KoodistoServlet

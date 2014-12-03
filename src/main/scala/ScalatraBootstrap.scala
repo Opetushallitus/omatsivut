@@ -42,7 +42,7 @@ class ScalatraBootstrap extends LifeCycle with Logging {
     context.mount(new SessionServlet(config), "/session")
     context.mount(new RaamitServlet(config), "/raamit")
     context.mount(new PiwikServlet(config), "/piwik")
-    context.mount(new LoginServlet(config), "/login")
+    context.mount(new LoginServlet(config.authContext), "/login")
     context.mount(componentRegistry.newLogoutServlet, "/logout")
     context.mount(componentRegistry.newFixtureServlet, "/util")
   }
