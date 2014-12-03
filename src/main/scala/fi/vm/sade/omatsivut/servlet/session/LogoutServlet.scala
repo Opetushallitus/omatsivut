@@ -4,7 +4,7 @@ import javax.servlet.http.HttpServletRequest
 
 import fi.vm.sade.omatsivut.auditlog.{AuditLogger, AuditLoggerComponent, Logout}
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
-import fi.vm.sade.omatsivut.security.AuthenticationInfoParsing
+import fi.vm.sade.omatsivut.security.AuthenticationInfoParser._
 import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
 import org.scalatra.servlet.RichResponse
 
@@ -13,13 +13,13 @@ trait LogoutServletContainer {
 
   val auditLogger: AuditLogger
 
-  class LogoutServlet(val appConfig: AppConfig) extends OmatSivutServletBase with AuthenticationInfoParsing {
+  class LogoutServlet(val appConfig: AppConfig) extends OmatSivutServletBase {
     get("/*") {
       redirectToShibbolethLogout(request, response)
     }
 
     def sendLogOut {
-      auditLogger.log(Logout(authInfo(request)))
+      auditLogger.log(Logout(getAuthenticationInfo(request)))
       redirectToShibbolethLogout(request, response)
     }
 

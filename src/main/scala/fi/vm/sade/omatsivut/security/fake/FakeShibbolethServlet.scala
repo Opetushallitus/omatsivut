@@ -4,7 +4,9 @@ import javax.servlet.http.{HttpServletRequest, HttpServletResponse, Cookie => Ht
 
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.fixtures.TestFixture
-import fi.vm.sade.omatsivut.security.{AuthenticationCipher, AuthenticationInfoParsing, ShibbolethCookie}
+import fi.vm.sade.omatsivut.security.CookieHelper.reqCookie
+import fi.vm.sade.omatsivut.security.AuthenticationInfoParser._
+import fi.vm.sade.omatsivut.security.{CookieHelper, AuthenticationCipher, ShibbolethCookie}
 import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
 import org.scalatra.{Cookie, CookieOptions}
 
@@ -15,7 +17,7 @@ import org.scalatra.{Cookie, CookieOptions}
  *
  * @param appConfig
  */
-class FakeShibbolethServlet(val appConfig: AppConfig) extends OmatSivutServletBase with AuthenticationInfoParsing  {
+class FakeShibbolethServlet(val appConfig: AppConfig) extends OmatSivutServletBase {
   get("/fakesession") {
     val shibbolethCookie = ShibbolethCookie("_shibsession_fakeshibbolethsession", new AuthenticationCipher(appConfig.settings.aesKey, appConfig.settings.hmacKey).encrypt("FAKESESSION"))
     response.addCookie(fakeShibbolethSessionCookie(shibbolethCookie))
