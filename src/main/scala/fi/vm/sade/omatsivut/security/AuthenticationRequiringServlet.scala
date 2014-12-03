@@ -6,7 +6,7 @@ import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
 import fi.vm.sade.omatsivut.util.Logging
 import org.json4s.JsonDSL._
 import org.json4s.jackson.JsonMethods._
-import org.scalatra.{NotFound, Unauthorized}
+import org.scalatra.{InternalServerError, NotFound, Unauthorized}
 
 trait AuthenticationRequiringServlet extends OmatSivutServletBase with Logging {
   val appConfig: AppConfig
@@ -14,16 +14,15 @@ trait AuthenticationRequiringServlet extends OmatSivutServletBase with Logging {
   def personOid() = getAuthenticationInfo(request).personOid.getOrElse(sys.error("Unauthenticated account"))
 
   before() {
-    val AuthenticationInfo(personOidOption, shibbolethCookieOption) = getAuthenticationInfo(request)
-    shibbolethCookieOption match {
-      case Some(cookie) => personOidOption match {
-        case Some(oid) if !oid.isEmpty =>
-          true
-        case _ =>
-          halt(NotFound(render("error" -> "no oid was present")))
-      }
-      case _ =>
+    getAuthenticationInfo(request) match {
+      case AuthenticationInfo(_, _, Some(error)) =>
+        halt(InternalServerError("error" -> error))
+      case AuthenticationInfo(_, None, _) =>
         halt(Unauthorized(render("error" -> "unauthorized")))
+      case AuthenticationInfo(None, _, _) =>
+        halt(NotFound(render("error" -> "no oid was present")))
+      case AuthenticationInfo(Some(oid), _, _) =>
+        true
     }
   }
 }
