@@ -98,7 +98,8 @@
     "saveFailed_sessionExpired": "Save failed because your session has expired. Please log in.",
     "saveFailed_validationError": "Could not save application - Please fill in all required information.",
     "applicationPeriodNotActive": "Application period not ongoing.",
-    "serverError": "Unexpected error. Contact administrator."
+    "serverError": "Unexpected error. Contact administrator.",
+    "valintatulosFailed": "Loading results failed. Try again later."
   },
 
   "errorPage": {

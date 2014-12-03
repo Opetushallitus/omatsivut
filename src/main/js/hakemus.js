@@ -13,6 +13,7 @@ function Hakemus(json) {
   this.henkilotiedot = convertHenkilotiedot(json.hakemus.answers.henkilotiedot)
   this.persistedAnswers = json.hakemus.answers
   this.additionalQuestions = Question.getQuestions(json.questions, this)
+  this.tulosOk = json.tulosOk
   this.calculatedValues = {
     postOffice: json.hakemus.postOffice
   }
@@ -111,6 +112,10 @@ Hakemus.prototype = {
 
   allResultsAvailable: function() {
     return !this.hasResultState(["KESKEN", "VARALLA"]) && this.valintatulosHakutoiveet().length > 0
+  },
+
+  resultFetchedSuccessfully: function() {
+    return this.tulosOk
   },
 
   hasSomeResults: function() {

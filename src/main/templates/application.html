@@ -45,7 +45,10 @@
 
     <form name="applicationForm" novalidate >
 
-        <section class="application-section application-valintatulos" ng-if="application.hasSomeResults()">
+        <section class="application-section application-valintatulos-error" ng-if="!application.resultFetchedSuccessfully()">
+            <span role="status" class="status-message error">{{ localization("error.valintatulosFailed") }}</span>
+        </section>
+        <section class="application-section application-valintatulos" ng-if="application.resultFetchedSuccessfully() && application.hasSomeResults()">
             <valintatulos data="application.state.valintatulos" final="application.allResultsAvailable()"></valintatulos>
         </section>
 

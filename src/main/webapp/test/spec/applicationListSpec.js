@@ -341,6 +341,16 @@
 
       var hakuaikatieto = "Opiskelijavalinta on kesken. Tulokset julkaistaan viimeistään 11. kesäkuuta 2014."
 
+      describe("Kun valintatulosten haku epäonnistuu", function() {
+        before(page.setValintatulosServiceShouldFail("true"), page.applyValintatulosFixtureAndOpen("hyvaksytty-kesken-julkaistavissa"))
+        it("Näytetään virheviesti", function() {
+          var error = hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulosError()
+          expect(error.visible).to.equal(true)
+          expect(error.text).to.equal("Valintatuloksen hakemisessa tapahtui odottamaton virhe. Yritä myöhemmin uudelleen.")
+        })
+        after(page.setValintatulosServiceShouldFail("false"))
+      })
+
       describe("kun valintatuloksia ei ole julkaistu", function() {
         before(page.applyValintatulosFixtureAndOpen("ei-tuloksia"))
         it("hakemusta ei voi muokata", function () {

@@ -53,6 +53,12 @@ function ApplicationListPage() {
       }
     },
 
+    setValintatulosServiceShouldFail: function(fail) {
+      return function() {
+        return fixtures.setValintatulosServiceFailure(fail)
+      }
+    },
+
     setApplicationStartAndOpen: function(applicationId, startTime) {
       return function() {
         return fixtures.setApplicationStart(applicationId, startTime).then(api.reloadPage())
@@ -184,6 +190,14 @@ function ApplicationListPage() {
               tila: el.find("[ng-bind='valintatulosText(tulos)']").text().trim().replace(nbsp, " ")
             }
           }).toArray()
+      },
+
+      valintatulosError: function () {
+        var el = getApplicationElement(applicationIndex).find(".application-valintatulos-error")
+        return {
+          visible: el.is(":visible"),
+          text: el.find("span").text()
+        }
       },
 
       ilmoittautuminen: function(index) {

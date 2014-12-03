@@ -98,7 +98,8 @@
     "saveFailed_sessionExpired": "Sparandet misslyckades för att sessionen har föråldrats. Logga in på nytt.",
     "saveFailed_validationError": "Inte lagrad – svara först på alla frågor.",
     "applicationPeriodNotActive": "Ansökan pågår inte.",
-    "serverError": "Ett oväntat fel inträffade. Var vänlig och kontakta administrationen."
+    "serverError": "Ett oväntat fel inträffade. Var vänlig och kontakta administrationen.",
+    "valintatulosFailed": "Ett oväntat fel inträffade vid hämtning av antagningsresultaten. Försök senare på nytt."
   },
 
   "errorPage": {

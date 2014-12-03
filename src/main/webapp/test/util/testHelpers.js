@@ -195,6 +195,10 @@ fixtures = {
       var hakuOid = _(applications).find(function(application) { return application.hakemus.oid === applicationId }).hakemus.haku.oid
       f(hakuOid)
     })
+  },
+
+  setValintatulosServiceFailure: function(fail) {
+    return Q($.ajax("/omatsivut/util/fixtures/valintatulos/fail/" + fail, {type: "PUT", async: "false"}))
   }
 }
 
