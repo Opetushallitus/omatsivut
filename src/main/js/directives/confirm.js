@@ -24,10 +24,6 @@ module.exports = function(listApp) {
             originalText = element.text()
             element.text(attrs.confirmText)
             $("body").one("click.cancelConfirm", cancel)
-            element.one("mouseout.cancelConfirm", function () {
-              element.blur()
-            })
-            element.one("blur.cancelConfirm", cancel)
             element.fadeIn(100)
           }
           return false
