@@ -1,5 +1,6 @@
 package fi.vm.sade.omatsivut.hakemus
 
+import fi.vm.sade.haku.oppija.hakemus.aspect.ApplicationDiffUtil
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 import fi.vm.sade.omatsivut.auditlog._
@@ -73,10 +74,12 @@ trait HakemusRepositoryComponent {
       }
 
       timed(1000, "Application update"){
-        applicationJavaObject.map(updateApplication(lomake, _, hakemus)).filter {
-          case (originalApplication: Application, application: Application) => canUpdate(lomake, originalApplication, application, userOid)
-        }.map {
-          case (originalApplication, application) =>
+        applicationJavaObject.map(updateApplication(lomake, _, hakemus)).filter { case (originalApplication: Application, application: Application) =>
+          canUpdate(lomake, originalApplication, application, userOid)
+        }.map { case (originalApplication, application) =>
+          val muokkaaja: String = "henkilö:" + userOid
+          val selite = "Muokkaus Omat Sivut -palvelussa"
+          ApplicationDiffUtil.addHistoryBasedOnChangedAnswers(application, originalApplication, muokkaaja, selite);
           timed(1000, "Application update DAO"){
             dao.update(applicationQuery, application)
           }
