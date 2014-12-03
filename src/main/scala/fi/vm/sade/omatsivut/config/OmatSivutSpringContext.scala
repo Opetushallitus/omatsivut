@@ -53,9 +53,7 @@ object OmatSivutSpringContext extends Logging {
     val configurer: PropertySourcesPlaceholderConfigurer = new PropertySourcesPlaceholderConfigurer()
     val sources: MutablePropertySources = new MutablePropertySources()
 
-    val properties: Map[String, String] = configuration.properties
-
-    sources.addFirst(new MapPropertySource("omatsivut custom props", mapAsJavaMap(properties)))
+    sources.addFirst(new MapPropertySource("omatsivut custom props", mapAsJavaMap(configuration.settings.toProperties)))
     configurer.setPropertySources(sources)
     appContext.addBeanFactoryPostProcessor(configurer)
   }

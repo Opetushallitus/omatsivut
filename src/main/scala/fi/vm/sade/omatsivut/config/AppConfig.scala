@@ -139,8 +139,6 @@ object AppConfig extends Logging {
     def onStop {}
 
     def settings: ApplicationSettings
-
-    def properties = settings.toProperties
   }
 }
 
