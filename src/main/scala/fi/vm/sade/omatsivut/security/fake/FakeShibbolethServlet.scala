@@ -1,15 +1,20 @@
-package fi.vm.sade.omatsivut.servlet.testing
+package fi.vm.sade.omatsivut.security.fake
 
+import javax.servlet.http.{HttpServletRequest, HttpServletResponse, Cookie => HttpCookie}
 
-import javax.servlet.http.{Cookie => HttpCookie, HttpServletResponse, HttpServletRequest}
-
-import fi.vm.sade.omatsivut.config.AppConfig
-import AppConfig.AppConfig
+import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.fixtures.TestFixture
-import fi.vm.sade.omatsivut.security.{FakeAuthentication, AuthenticationCipher, ShibbolethCookie, AuthenticationInfoParsing}
+import fi.vm.sade.omatsivut.security.{AuthenticationCipher, AuthenticationInfoParsing, ShibbolethCookie}
 import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
-import org.scalatra.{CookieOptions, Cookie}
+import org.scalatra.{Cookie, CookieOptions}
 
+/**
+ * Simulates the actual Shibboleth server with AA (Attribute Authority) that provides the SSN->personOid mapping.
+ *
+ * Provides /fakesession?hetu=123456-7890 url for starting a session with given SSN.
+ *
+ * @param appConfig
+ */
 class FakeShibbolethServlet(val appConfig: AppConfig) extends OmatSivutServletBase with AuthenticationInfoParsing  {
   get("/fakesession") {
     val shibbolethCookie = ShibbolethCookie("_shibsession_fakeshibbolethsession", new AuthenticationCipher(appConfig.settings.aesKey, appConfig.settings.hmacKey).encrypt("FAKESESSION"))

@@ -1,16 +1,11 @@
 package fi.vm.sade.omatsivut.servlet.session
 
-import javax.servlet.http.{HttpServletResponse, HttpServletRequest}
+import javax.servlet.http.HttpServletRequest
 
-import fi.vm.sade.omatsivut.config.AppConfig
-import AppConfig.AppConfig
-import fi.vm.sade.omatsivut.auditlog.{AuditLoggerComponent, AuditLogger, Login}
+import fi.vm.sade.omatsivut.auditlog.{AuditLogger, Login}
+import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.security._
 import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
-import org.apache.commons.io.IOUtils
-import org.scalatra.Cookie
-
-import scala.collection.JavaConverters._
 
 trait SecuredSessionServletContainer {
   val auditLogger: AuditLogger

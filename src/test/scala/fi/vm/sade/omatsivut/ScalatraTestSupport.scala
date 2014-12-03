@@ -1,7 +1,8 @@
 package fi.vm.sade.omatsivut
 
 import fi.vm.sade.omatsivut.config.{AppConfig, ComponentRegistry}
-import fi.vm.sade.omatsivut.security.{FakeAuthentication, ShibbolethCookie}
+import fi.vm.sade.omatsivut.security.ShibbolethCookie
+import fi.vm.sade.omatsivut.security.fake.FakeAuthentication
 import fi.vm.sade.omatsivut.servlet.OmatSivutSwagger
 import fi.vm.sade.omatsivut.util.PortChecker
 import org.scalatra.test.HttpComponentsClient
@@ -16,20 +17,15 @@ trait ScalatraTestSupport extends Specification with HttpComponentsClient {
   def baseUrl = "http://localhost:" + SharedJetty.port + "/omatsivut"
 
   def authGet[A](uri: String)(f: => A)(implicit personOid: PersonOid): A = {
-    get(uri, headers = authHeaders(personOid.oid))(f)
+    get(uri, headers = FakeAuthentication.authHeaders(personOid.oid))(f)
   }
 
   def authPost[A](uri: String, body: Array[Byte])(f: => A)(implicit personOid: PersonOid): A = {
-    post(uri, body, headers = authHeaders(personOid.oid))(f)
+    post(uri, body, headers = FakeAuthentication.authHeaders(personOid.oid))(f)
   }
 
   def authPut[A](uri: String, body: Array[Byte])(f: => A)(implicit personOid: PersonOid): A = {
-    put(uri, body, headers = authHeaders(personOid.oid))(f)
-  }
-
-  def authHeaders[A](oid: String): Map[String, String] = {
-    val shibbolethCookie: ShibbolethCookie = ShibbolethCookie("_shibsession_test", "test")
-    Map("Cookie" -> (FakeAuthentication.oidCookie + "=" + oid + "; " + shibbolethCookie))
+    put(uri, body, headers = FakeAuthentication.authHeaders(personOid.oid))(f)
   }
 
   override def map(fs: => Fragments) = Step(SharedJetty.start) ^ super.map(fs)

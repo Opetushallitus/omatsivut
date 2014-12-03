@@ -1,8 +1,7 @@
-package fi.vm.sade.omatsivut.servlet.testing
+package fi.vm.sade.omatsivut.security.fake
 
 import javax.servlet.http.HttpServletRequestWrapper
 
-import fi.vm.sade.omatsivut.security.FakeAuthentication
 import fi.vm.sade.omatsivut.util.Logging
 import org.scalatra.ScalatraFilter
 

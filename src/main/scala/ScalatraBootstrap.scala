@@ -2,10 +2,10 @@ import java.util
 import javax.servlet.{DispatcherType, ServletContext}
 
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
-import fi.vm.sade.omatsivut.config.{ComponentRegistry, AppConfig, OmatSivutSpringContext}
+import fi.vm.sade.omatsivut.config.{AppConfig, ComponentRegistry, OmatSivutSpringContext}
+import fi.vm.sade.omatsivut.security.fake.{FakeShibbolethFilter, FakeShibbolethServlet}
 import fi.vm.sade.omatsivut.servlet._
 import fi.vm.sade.omatsivut.servlet.session.{LoginServlet, SessionServlet}
-import fi.vm.sade.omatsivut.servlet.testing.{FakeShibbolethFilter, FakeShibbolethServlet}
 import fi.vm.sade.omatsivut.util.Logging
 import org.scalatra._
 

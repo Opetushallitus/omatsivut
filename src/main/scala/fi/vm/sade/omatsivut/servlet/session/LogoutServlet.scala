@@ -3,9 +3,8 @@ package fi.vm.sade.omatsivut.servlet.session
 import javax.servlet.http.HttpServletRequest
 
 import fi.vm.sade.omatsivut.auditlog.{AuditLogger, AuditLoggerComponent, Logout}
-import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
-import fi.vm.sade.omatsivut.security.{AuthenticationInfoParsing, AuthenticationCipher}
+import fi.vm.sade.omatsivut.security.AuthenticationInfoParsing
 import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
 import org.scalatra.servlet.RichResponse
 
