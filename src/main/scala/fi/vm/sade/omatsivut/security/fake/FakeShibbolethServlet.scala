@@ -2,11 +2,11 @@ package fi.vm.sade.omatsivut.security.fake
 
 import javax.servlet.http.{HttpServletRequest, HttpServletResponse, Cookie => HttpCookie}
 
-import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
+import fi.vm.sade.omatsivut.config.AppConfig.{StubbedExternalDeps, AppConfig}
 import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.omatsivut.security.CookieHelper.reqCookie
 import fi.vm.sade.omatsivut.security.AuthenticationInfoParser._
-import fi.vm.sade.omatsivut.security.{CookieHelper, AuthenticationCipher, ShibbolethCookie}
+import fi.vm.sade.omatsivut.security.{RemoteAuthenticationInfoService, CookieHelper, AuthenticationCipher, ShibbolethCookie}
 import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
 import org.scalatra.{Cookie, CookieOptions}
 
@@ -23,9 +23,22 @@ class FakeShibbolethServlet(val appConfig: AppConfig) extends OmatSivutServletBa
     response.addCookie(fakeShibbolethSessionCookie(shibbolethCookie))
     paramOption("hetu") match {
       case Some(hetu) =>
-        response.addCookie(Cookie(FakeAuthentication.oidCookie, TestFixture.persons.get(hetu).getOrElse(""))(appConfig.authContext.cookieOptions))
+        val personOid: Option[String] = getPersonOidByHetu(hetu)
+        response.addCookie(Cookie(FakeAuthentication.oidCookie, personOid.getOrElse(""))(appConfig.authContext.cookieOptions))
         response.redirect(request.getContextPath + "/secure/initsession?hetu=" + hetu)
       case _ => halt(400, "Can't fake session without ssn")
+    }
+  }
+
+  def getPersonOidByHetu(hetu: String): Option[String] = {
+    appConfig match {
+      case c: StubbedExternalDeps => {
+        TestFixture.persons.get(hetu)
+      }
+      case _ => {
+        val service = new RemoteAuthenticationInfoService(appConfig.settings.authenticationServiceConfig, appConfig.settings.securitySettings)
+        service.getHenkiloOID(hetu)
+      }
     }
   }
 

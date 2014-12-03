@@ -4,7 +4,8 @@ import java.io.File
 
 import com.typesafe.config.{ConfigValueFactory, Config, ConfigException, ConfigFactory}
 import fi.vm.sade.omatsivut.util.Logging
-
+import fi.vm.sade.security.cas.{CasTicketRequest, CasConfig}
+import fi.vm.sade.security.ldap.LdapConfig
 import scala.collection.JavaConversions._
 
 object ApplicationSettings extends Logging {
@@ -31,6 +32,7 @@ case class ApplicationSettings(config: Config) {
 
   val piwikUrl = config.getString("omatsivut.piwik.url")
 
+  val securitySettings = new SecuritySettings(config)
   val authenticationServiceConfig = getRemoteApplicationConfig(config.getConfig("omatsivut.authentication-service"))
 
   val valintaTulosServiceUrl = config.getString("omatsivut.valinta-tulos-service.url")
@@ -77,4 +79,10 @@ case class Environment(val name: String) {
   def isReppu = name == "oph"
   def isProduction = name == "ophprod"
   def isQA = name == "ophp"
+}
+
+class SecuritySettings(c: Config) {
+  val casConfig = CasConfig(c.getString("cas.url"))
+  val casUsername = c.getString("cas.username")
+  val casPassword = c.getString("cas.password")
 }

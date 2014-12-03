@@ -22,6 +22,10 @@ ldap.manager.userdn={{ldap_manager_userdn}}
 omatsivut.crypto.aes.key={{omatsivut_crypto_aes_key}}
 omatsivut.crypto.hmac.key={{omatsivut_crypto_hmac_key}}
 
+cas.url=https://{{host_cas}}/cas
+cas.username={{omatsivut_haku_app_username}}
+cas.password={{omatsivut_haku_app_password}}
+
 omatsivut.cas.ticket.url={{omatsivut_cas_ticket_url}}
 omatsivut.oppija-raamit.url={{oppija_raamit_url}}
 omatsivut.piwik.url=https://{{host_oppija}}/wp/wp-content/themes/ophver3/js/piwik.js
