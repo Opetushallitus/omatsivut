@@ -15,7 +15,7 @@ import scala.collection.JavaConverters._
 trait SecuredSessionServletContainer {
   val auditLogger: AuditLogger
 
-  class SecuredSessionServlet(val appConfig: AppConfig) extends OmatSivutServletBase with AuthCookieParsing with ShibbolethPaths {
+  class SecuredSessionServlet(val appConfig: AppConfig) extends OmatSivutServletBase with AuthenticationInfoParsing with ShibbolethPaths {
     get("/initsession") {
       personOidOption(request.asInstanceOf[HttpServletRequest]) match {
         case (Some(oid)) => {

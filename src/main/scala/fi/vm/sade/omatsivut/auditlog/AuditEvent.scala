@@ -2,7 +2,7 @@ package fi.vm.sade.omatsivut.auditlog
 
 import fi.vm.sade.log.model.Tapahtuma
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus.Answers
-import fi.vm.sade.omatsivut.security.AuthInfo
+import fi.vm.sade.omatsivut.security.AuthenticationInfo
 import fi.vm.sade.omatsivut.valintatulokset.domain.Vastaanotto
 
 sealed trait AuditEvent {
@@ -12,11 +12,11 @@ sealed trait AuditEvent {
   def toLogMessage: String
 }
 
-case class Login(authInfo: AuthInfo, target: String = "Session") extends AuditEvent {
+case class Login(authInfo: AuthenticationInfo, target: String = "Session") extends AuditEvent {
   def toTapahtuma = Tapahtuma.createTRACE(systemName, target, toLogMessage, System.currentTimeMillis())
   def toLogMessage = "Käyttäjä kirjautui sisään: " + authInfo.toString
 }
-case class Logout(authInfo: AuthInfo, target: String = "Session") extends AuditEvent {
+case class Logout(authInfo: AuthenticationInfo, target: String = "Session") extends AuditEvent {
   def toTapahtuma = Tapahtuma.createTRACE(systemName, target, toLogMessage, System.currentTimeMillis())
   def toLogMessage = "Käyttäjä kirjautui ulos: " + authInfo.toString
 }

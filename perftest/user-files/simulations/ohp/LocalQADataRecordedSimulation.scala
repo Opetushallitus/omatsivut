@@ -39,7 +39,7 @@ class LocalQADataRecordedSimulation extends Simulation {
       .headers(headers_5))
       .check(status.is(401)))
       .exec(http("Fake login call")
-      .get( """/omatsivut/util/fakesession?hetu=210281-9988""")
+      .get( """/omatsivut/util/Shibboleth.sso?hetu=210281-9988""")
       .headers(headers_5))
       .exec(http("Get application page")
       .get( """/omatsivut/secure/applications"""))

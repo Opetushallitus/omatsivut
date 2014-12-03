@@ -7,7 +7,7 @@ import fi.vm.sade.omatsivut.hakemus._
 import fi.vm.sade.omatsivut.hakemus.domain.{HakemusMuutos, _}
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.lomake.LomakeRepositoryComponent
-import fi.vm.sade.omatsivut.security.Authentication
+import fi.vm.sade.omatsivut.security.AuthenticationRequiringServlet
 import fi.vm.sade.omatsivut.valintatulokset.ValintatulosServiceComponent
 import fi.vm.sade.omatsivut.valintatulokset.domain.Vastaanotto
 import org.json4s.jackson.Serialization
@@ -25,7 +25,7 @@ trait ApplicationsServletContainer {
     SpringContextComponent with
     AuditLoggerComponent =>
 
-  class ApplicationsServlet(val appConfig: AppConfig)(implicit val swagger: Swagger) extends OmatSivutServletBase with JacksonJsonSupport with JsonFormats with SwaggerSupport with Authentication {
+  class ApplicationsServlet(val appConfig: AppConfig)(implicit val swagger: Swagger) extends OmatSivutServletBase with JacksonJsonSupport with JsonFormats with SwaggerSupport with AuthenticationRequiringServlet {
     override def applicationName = Some("secure/applications")
     private val applicationValidator: ApplicationValidator = newApplicationValidator
     override val authAuditLogger: AuditLogger = auditLogger

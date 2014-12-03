@@ -12,7 +12,7 @@ import fi.vm.sade.omatsivut.lomake.{LomakeRepository, LomakeRepositoryComponent}
 import fi.vm.sade.omatsivut.koulutusinformaatio.{KoulutusInformaatioComponent, KoulutusInformaatioService}
 import fi.vm.sade.omatsivut.ohjausparametrit.{OhjausparametritComponent, OhjausparametritService}
 import fi.vm.sade.omatsivut.servlet.session.{LogoutServletContainer, SecuredSessionServletContainer}
-import fi.vm.sade.omatsivut.servlet.testing.TestHelperServletContainer
+import fi.vm.sade.omatsivut.servlet.testing.FixtureServletContainer
 import fi.vm.sade.omatsivut.servlet._
 import fi.vm.sade.omatsivut.tarjonta.{TarjontaComponent, TarjontaService}
 import fi.vm.sade.omatsivut.valintatulokset._
@@ -32,7 +32,7 @@ class ComponentRegistry(val config: AppConfig)
           KoulutusServletContainer with
           SecuredSessionServletContainer with
           LogoutServletContainer with
-          TestHelperServletContainer with
+          FixtureServletContainer with
           KoodistoServletContainer with
           TarjontaComponent with
           KoodistoComponent {
@@ -80,7 +80,7 @@ class ComponentRegistry(val config: AppConfig)
   def newKoulutusServlet = new KoulutusServlet
   def newSecuredSessionServlet = new SecuredSessionServlet(config)
   def newLogoutServlet = new LogoutServlet(config)
-  def newTestHelperServlet = new TestHelperServlet(config)
+  def newFixtureServlet = new FixtureServlet(config)
   def newSwaggerServlet = new SwaggerServlet
   def newKoodistoServlet = new KoodistoServlet
 
