@@ -77,7 +77,7 @@ trait HakemusRepositoryComponent {
         applicationJavaObject.map(updateApplication(lomake, _, hakemus)).filter { case (originalApplication: Application, application: Application) =>
           canUpdate(lomake, originalApplication, application, userOid)
         }.map { case (originalApplication, application) =>
-          val muokkaaja: String = "henkilö:" + userOid
+          val muokkaaja: String = userOid
           val selite = "Muokkaus Omat Sivut -palvelussa"
           ApplicationDiffUtil.addHistoryBasedOnChangedAnswers(application, originalApplication, muokkaaja, selite);
           timed(1000, "Application update DAO"){

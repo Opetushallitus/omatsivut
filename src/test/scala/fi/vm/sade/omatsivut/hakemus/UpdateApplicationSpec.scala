@@ -1,10 +1,10 @@
 package fi.vm.sade.omatsivut.hakemus
 
-import fi.vm.sade.omatsivut.fixtures.FixtureImporter
-import fi.vm.sade.omatsivut.{TimeWarp, PersonOid}
+import fi.vm.sade.haku.oppija.hakemus.domain.Change
 import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.fixtures.TestFixture._
-import fi.vm.sade.omatsivut.hakemus.domain.{Hakutoive, Hakemus}
+import fi.vm.sade.omatsivut.hakemus.domain.{Hakemus, Hakutoive}
+import fi.vm.sade.omatsivut.{PersonOid, TimeWarp}
 import org.json4s._
 import org.json4s.jackson.JsonMethods
 
@@ -44,6 +44,23 @@ class UpdateApplicationSpec extends HakemusApiSpecification with FixturePerson w
         withSavedApplication(newHakemus) { application =>
           application.getPhaseAnswers(personalInfoPhaseKey).get(ssnKey) must_== testHetu
           application.getPhaseAnswers(preferencesPhaseKey).get("539158b8e4b0b56e67d2c74b") must_== "yes sir"
+        }
+      }
+    }
+
+    "update application change history" in {
+      import collection.JavaConversions._
+      fixtureImporter.applyFixtures()
+      modifyHakemus(hakemusNivelKesa2013WithPeruskouluBaseEducationId)(answerExtraQuestion(preferencesPhaseKey, "539158b8e4b0b56e67d2c74b", "yes sir")) { newHakemus =>
+        status must_== 200
+        withSavedApplication(newHakemus) { application =>
+          application.getHistory.size must_== 2 // one existing change + new change prepended at position 0
+          val change: Change = application.getHistory.get(0)
+          change.getModifier must_== "1.2.246.562.24.14229104472"
+          change.getReason must_== "Muokkaus Omat Sivut -palvelussa"
+          change.getChanges.toList.map(_.toMap) must_== List(
+            Map("field" -> "539158b8e4b0b56e67d2c74b", "old value" -> "En tiedä mihin muualle hakisin", "new value" -> "yes sir")
+          )
         }
       }
     }
