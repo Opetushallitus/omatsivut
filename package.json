@@ -1,6 +1,6 @@
 {
   "devDependencies": {
-    "mocha-phantomjs": "raimohanska/mocha-phantomjs",
+    "mocha-phantomjs": "Opetushallitus/mocha-phantomjs",
     "phantomjs": "^1.9",
     "gulp": "^3.8.0",
     "browserify": "^4.1.10",
