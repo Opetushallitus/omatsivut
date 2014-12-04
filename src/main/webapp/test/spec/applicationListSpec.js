@@ -25,6 +25,12 @@
     expect(window.uiError || null).to.be.null
   })
 
+  afterEach(function () {
+    if (this.currentTest.state == 'failed') {
+      takeScreenshot()
+    }
+  })
+
   describe("Kun käyttäjä ei ole kirjautunut sisään", function() {
     before(
       session.logout,
