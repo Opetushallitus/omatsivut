@@ -32,7 +32,6 @@
     )
 
     it("näytetään sisäänkirjautumissivu", function() {
-
     })
 
     function loginVisible() {
@@ -51,6 +50,7 @@
 
     describe("jos käyttäjällä ei ole hakemuksia", function() {
       it("näytetään ilmoitus", function() {
+        expect(1).to.equal(2)
         expect(page.listStatusInfo()).to.equal('Sinulla ei ole hakemuksia, joita on mahdollista muokata. Etsi koulutukset sanahaulla, ja täytä hakulomake. Tunnistautuneena voit tällä sivulla muokata hakemustasi hakuaikana.' )
       })
     })
