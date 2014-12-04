@@ -226,6 +226,16 @@ function openPage(path, predicate) {
   }
 }
 
+function takeScreenshot() {
+  if (window.callPhantom) {
+    var date = new Date()
+    var filename = "target/screenshots/" + date.getTime()
+    console.log("Taking screenshot " + filename)
+    callPhantom({'screenshot': filename})
+  }
+}
+
+
 (function improveMocha() {
   var origBefore = before
   before = function() {
