@@ -217,11 +217,9 @@ function openPage(path, predicate) {
   return function() {
     var newTestFrame = $('<iframe>').attr({src: path, width: 1024, height: 800, id: "testframe"})
     $("#testframe").replaceWith(newTestFrame)
-    console.log("openPage()")
     return wait.until(function() {
       return predicate()
     })().then(function() {
-        console.log("openPage() done")
         window.uiError = null
         testFrame().onerror = function(err) { window.uiError = err; } // Hack: force mocha to fail on unhandled exceptions
     })
