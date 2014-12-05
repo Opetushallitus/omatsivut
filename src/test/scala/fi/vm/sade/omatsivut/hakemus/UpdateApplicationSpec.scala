@@ -1,6 +1,6 @@
 package fi.vm.sade.omatsivut.hakemus
 
-import fi.vm.sade.haku.oppija.hakemus.domain.Change
+import fi.vm.sade.haku.oppija.hakemus.domain.{ApplicationNote, Change}
 import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.fixtures.TestFixture._
 import fi.vm.sade.omatsivut.hakemus.domain.{Hakemus, Hakutoive}
@@ -61,6 +61,10 @@ class UpdateApplicationSpec extends HakemusApiSpecification with FixturePerson w
           change.getChanges.toList.map(_.toMap) must_== List(
             Map("field" -> "539158b8e4b0b56e67d2c74b", "old value" -> "En tiedä mihin muualle hakisin", "new value" -> "yes sir")
           )
+          application.getNotes.size must_== 3 // two existing notes + new note at position 0
+          val note: ApplicationNote = application.getNotes.get(0)
+          note.getUser must_== "1.2.246.562.24.14229104472"
+          note.getNoteText must_== "Hakija päivittänyt vaihetta 'hakutoiveet'"
         }
       }
     }

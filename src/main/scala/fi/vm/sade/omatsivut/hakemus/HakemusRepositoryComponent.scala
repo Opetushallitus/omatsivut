@@ -1,7 +1,8 @@
 package fi.vm.sade.omatsivut.hakemus
 
+import java.util.Date
 import fi.vm.sade.haku.oppija.hakemus.aspect.ApplicationDiffUtil
-import fi.vm.sade.haku.oppija.hakemus.domain.Application
+import fi.vm.sade.haku.oppija.hakemus.domain.{ApplicationNote, Application}
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 import fi.vm.sade.omatsivut.auditlog._
 import fi.vm.sade.omatsivut.config.SpringContextComponent
@@ -74,12 +75,9 @@ trait HakemusRepositoryComponent {
       }
 
       timed(1000, "Application update"){
-        applicationJavaObject.map(updateApplication(lomake, _, hakemus)).filter { case (originalApplication: Application, application: Application) =>
+        applicationJavaObject.map(updateApplication(lomake, _, hakemus, userOid)).filter { case (originalApplication: Application, application: Application) =>
           canUpdate(lomake, originalApplication, application, userOid)
         }.map { case (originalApplication, application) =>
-          val muokkaaja: String = userOid
-          val selite = "Muokkaus Omat Sivut -palvelussa"
-          ApplicationDiffUtil.addHistoryBasedOnChangedAnswers(application, originalApplication, muokkaaja, selite);
           timed(1000, "Application update DAO"){
             dao.update(applicationQuery, application)
           }
@@ -89,7 +87,7 @@ trait HakemusRepositoryComponent {
       }
     }
 
-    private def updateApplication(lomake: Lomake, application: Application, hakemus: HakemusMuutos)(implicit lang: Language.Language): (Application, Application) = {
+    private def updateApplication(lomake: Lomake, application: Application, hakemus: HakemusMuutos, userOid: String)(implicit lang: Language.Language): (Application, Application) = {
       val originalApplication = application.clone()
       ApplicationUpdater.update(lomake, application, hakemus)
       timed(1000, "ApplicationService: update preference based data"){
@@ -98,7 +96,21 @@ trait HakemusRepositoryComponent {
       timed(1000, "ApplicationService: update authorization Meta"){
         applicationService.updateAuthorizationMeta(application)
       }
+      updateChangeHistory(application, originalApplication, userOid)
+
       (originalApplication, application)
+    }
+
+    private def updateChangeHistory(application: Application, originalApplication: Application, userOid: String) {
+      val changes = ApplicationDiffUtil.addHistoryBasedOnChangedAnswers(application, originalApplication, userOid, "Muokkaus Omat Sivut -palvelussa");
+
+      val changedKeys: Set[String] = changes.toList.flatMap(_.toMap.get("field")).toSet
+      val changedPhases: List[String] = application.getAnswers.toMap.toList.filter { case (vaihe, vastaukset) =>
+        vastaukset.toMap.keys.exists(changedKeys.contains(_))
+      }.map(_._1)
+      val noteText = changedPhases.map("Hakija päivittänyt vaihetta '" + _ + "'").mkString("\n")
+
+      application.addNote(new ApplicationNote(noteText, new Date(), userOid))
     }
 
     override def findStoredApplicationByOid(oid: String): Application = {
@@ -172,5 +184,4 @@ trait HakemusRepositoryComponent {
       dao.find(new Application().setPersonOid(personOid).setOid(hakemusOid).setApplicationSystemId(hakuOid)).size() == 1
     }
   }
-
 }
