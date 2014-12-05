@@ -57,5 +57,5 @@ case class ImmutableLegacyApplicationWrapper(
                                               state: String,
                                               isPostProcessing: Boolean) {
   def phaseAnswers(phase: String): Map[String, String] = answers.getOrElse(phase, Map.empty)
-  def flatAnswers = FlatAnswers.flatten(answers)
+  lazy val flatAnswers = FlatAnswers.flatten(answers)
 }

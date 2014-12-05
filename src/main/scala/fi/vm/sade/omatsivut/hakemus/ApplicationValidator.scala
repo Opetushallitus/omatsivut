@@ -65,7 +65,7 @@ trait ApplicationValidatorComponent {
     }
 
     private def update(hakemusMuutos: HakemusLike, lomake: Lomake, application: ImmutableLegacyApplicationWrapper)(implicit lang: Language.Language): ImmutableLegacyApplicationWrapper = {
-      application.copy(answers = ApplicationUpdater.getUpdatedAnswersForApplication(lomake, application, hakemusMuutos))
+      application.copy(answers = AnswerHelper.getUpdatedAnswersForApplication(lomake, application, hakemusMuutos))
     }
 
     private def validateAndConvertErrors(application: ImmutableLegacyApplicationWrapper, appSystem: Lomake)(implicit lang: Language.Language) = {
@@ -102,7 +102,7 @@ trait ApplicationValidatorComponent {
 
     private def errorsForUnknownAnswers(lomake: Lomake, hakemusMuutos: HakemusMuutos)(implicit lang: Language.Language): List[ValidationError] = {
       val application = applicationRepository.findStoredApplicationByOid(hakemusMuutos.oid).getOrElse(throw new RuntimeException(s"Application ${hakemusMuutos.oid} not found"))
-      val allAnswers: Answers = ApplicationUpdater.getAllAnswersForApplication(lomake, application, hakemusMuutos)
+      val allAnswers: Answers = AnswerHelper.getAllAnswersForApplication(lomake, application, hakemusMuutos)
       val acceptedAnswerIds: Seq[AnswerId] = AddedQuestionFinder.findAddedQuestions(lomake, allAnswers, Hakemus.emptyAnswers).flatMap(_.answerIds).toList
 
       val flatAnswers: List[(String, String, String)] = hakemusMuutos.answers.toList.flatMap {

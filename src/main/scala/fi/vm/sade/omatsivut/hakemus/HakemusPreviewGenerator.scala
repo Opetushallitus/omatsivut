@@ -10,7 +10,6 @@ import fi.vm.sade.haku.oppija.lomake.domain.elements.{HiddenValue, Link, Notific
 import fi.vm.sade.haku.oppija.lomake.domain.rules.{AddElementRule, RelatedQuestionRule}
 import fi.vm.sade.omatsivut.config.SpringContextComponent
 import fi.vm.sade.omatsivut.domain.{Address, Attachment, Language}
-import fi.vm.sade.omatsivut.hakemus.FlatAnswers.FlatAnswers
 import fi.vm.sade.omatsivut.localization.Translations
 import fi.vm.sade.omatsivut.lomake.{ElementWrapper, OptionWrapper}
 import fi.vm.sade.omatsivut.servlet.ServerContaxtPath
@@ -36,9 +35,10 @@ trait HakemusPreviewGeneratorComponent {
 
     private def applicationPreview(serverPath: ServerContaxtPath, application: ImmutableLegacyApplicationWrapper) = {
       val applicationSystem = applicationSystemService.getApplicationSystem(application.hakuOid)
-      val answers: FlatAnswers = FlatAnswers.flatten(ApplicationUpdater.allAnswersFromApplication(application))
-      val form = ElementWrapper.wrapFiltered(applicationSystem.getForm, answers)
-      val addInfos = for(addInfo <- applicationSystem.getAdditionalInformationElements()) yield ElementWrapper.wrapFiltered(addInfo, answers)
+      val form = ElementWrapper.wrapFiltered(applicationSystem.getForm, application.flatAnswers)
+      val addInfos = for (addInfo <- applicationSystem.getAdditionalInformationElements()) yield {
+        ElementWrapper.wrapFiltered(addInfo, application.flatAnswers)
+      }
 
       def questionsPreview(element: ElementWrapper, showEmptyValues: Boolean): List[TypedTag[String]] = {
         element.element match {
@@ -188,7 +188,7 @@ trait HakemusPreviewGeneratorComponent {
       }
 
       def textQuestionPreview(element: ElementWrapper, showEmptyValues: Boolean = true) = {
-        questionPreview(element.title, answers.get(element.id).getOrElse("").asInstanceOf[String], showEmptyValues)
+        questionPreview(element.title, application.flatAnswers.get(element.id).getOrElse("").asInstanceOf[String], showEmptyValues)
       }
 
       def postalCodePreview(element: ElementWrapper) = {
@@ -205,7 +205,7 @@ trait HakemusPreviewGeneratorComponent {
 
       def selectedOption(options: List[OptionWrapper], key: String) = {
         options
-          .find { option => Some(option.value) == answers.get(key)}
+          .find { option => Some(option.value) == application.flatAnswers.get(key)}
       }
 
       def answerFromOptions(options: List[OptionWrapper], key: String) = {
@@ -215,7 +215,7 @@ trait HakemusPreviewGeneratorComponent {
       }
 
       def checkBoxPreview(element: ElementWrapper) = {
-        val answer: Option[String] = answers.get(element.id)
+        val answer: Option[String] = application.flatAnswers.get(element.id)
         val checkBoxValue = element.element.asInstanceOf[CheckBox].getValue
         val checked = (answer == Some(checkBoxValue))
         val translatedAnswer = checked match {
@@ -236,7 +236,7 @@ trait HakemusPreviewGeneratorComponent {
           tableElement.children.zipWithIndex.flatMap { case (childElement, index) =>
             childElement.element match {
               case row: PreferenceRow =>
-                answers(row.getEducationOidInputId) match {
+                application.flatAnswers(row.getEducationOidInputId) match {
                   case null => Nil
                   case "" => Nil
                   case _ => List(li(`class` := "preference-row")(
@@ -244,11 +244,11 @@ trait HakemusPreviewGeneratorComponent {
                       span(`class` := "index")(index+1),
                       span(`class` := "learning-institution")(
                         label(ElementWrapper.t(row.getLearningInstitutionLabel)),
-                        span(answers(row.getLearningInstitutionInputId))
+                        span(application.flatAnswers(row.getLearningInstitutionInputId))
                       ),
                       span(`class` := "education")(
                         label(ElementWrapper.t(row.getEducationLabel)),
-                        span(answers(row.getEducationInputId))
+                        span(application.flatAnswers(row.getEducationInputId))
                       )
                     ) ++ preferenceQuestionsPreview(childElement)
                   ))
@@ -341,7 +341,7 @@ trait HakemusPreviewGeneratorComponent {
         body(
           header(
             h1(ElementWrapper.t(applicationSystem.getName)),
-            h2(answers.get("Etunimet").getOrElse("") + " " + answers.get("Sukunimi").getOrElse("")),
+            h2(application.flatAnswers.get("Etunimet").getOrElse("") + " " + application.flatAnswers.get("Sukunimi").getOrElse("")),
             div(`class` := "detail application-received")(label(Translations.getTranslation("applicationPreview", "received")), span(formatDate(application.received))),
             div(`class` := "detail application-id")(label(Translations.getTranslation("applicationPreview", "applicationId")), span(formatOid(application.oid)))
           )

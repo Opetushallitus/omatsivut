@@ -95,7 +95,7 @@ trait HakemusRepositoryComponent {
     private def updateApplication(lomake: Lomake, application: Application, hakemus: HakemusMuutos, userOid: String)(implicit lang: Language.Language): (Application, Application) = {
       val originalApplication = application.clone()
       application.setUpdated(new Date())
-      val updatedAnswers = ApplicationUpdater.getUpdatedAnswersForApplication(lomake, wrap(application), hakemus)
+      val updatedAnswers = AnswerHelper.getUpdatedAnswersForApplication(lomake, wrap(application), hakemus)
       updatedAnswers.foreach { case (phaseId, phaseAnswers) =>
         application.addVaiheenVastaukset(phaseId, phaseAnswers)
       }

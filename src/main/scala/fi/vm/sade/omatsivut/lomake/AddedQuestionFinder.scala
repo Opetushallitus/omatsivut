@@ -4,7 +4,7 @@ import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
 import fi.vm.sade.omatsivut.hakemus.domain._
-import fi.vm.sade.omatsivut.hakemus.{ApplicationUpdater, FlatAnswers, HakutoiveetConverter, ImmutableLegacyApplicationWrapper}
+import fi.vm.sade.omatsivut.hakemus.{AnswerHelper, FlatAnswers, HakutoiveetConverter, ImmutableLegacyApplicationWrapper}
 import fi.vm.sade.omatsivut.lomake.domain.{Lomake, QuestionGroup, QuestionLeafNode, QuestionNode}
 
 object AddedQuestionFinder {
@@ -20,7 +20,7 @@ object AddedQuestionFinder {
   }
 
   def findQuestions(applicationSystem: Lomake)(storedApplication: ImmutableLegacyApplicationWrapper, hakemusMuutos: HakemusLike, hakutoiveet: List[String])(implicit lang: Language.Language): List[QuestionNode] = {
-    val filteredForm: ElementWrapper = ElementWrapper.wrapFiltered(applicationSystem.form, FlatAnswers.flatten(ApplicationUpdater.getAllAnswersForApplication(applicationSystem, storedApplication, hakemusMuutos)))
+    val filteredForm: ElementWrapper = ElementWrapper.wrapFiltered(applicationSystem.form, FlatAnswers.flatten(AnswerHelper.getAllAnswersForApplication(applicationSystem, storedApplication, hakemusMuutos)))
 
     val questionsPerHakutoive: List[QuestionNode] = hakemusMuutos.preferences.flatMap(hakutoive =>
       hakutoive.get("Koulutus-id") match {
@@ -46,9 +46,9 @@ object AddedQuestionFinder {
 
   private def findQuestionsByHakutoive(lomake: Lomake, storedApplication: ImmutableLegacyApplicationWrapper, hakemus: HakemusLike, hakutoive: HakutoiveData)(implicit lang: Language.Language): Set[QuestionLeafNode] = {
     val onlyOneHakutoive = removeAllOtherHakutoive(hakemus, hakutoive)
-    val currentAnswersWithOneHakutoive = ApplicationUpdater.getAllUpdatedAnswersForApplication(lomake, storedApplication, hakemus.answers, onlyOneHakutoive)
+    val currentAnswersWithOneHakutoive = AnswerHelper.getAllUpdatedAnswersForApplication(lomake, storedApplication, hakemus.answers, onlyOneHakutoive)
     val noHakutoive = removeAllOtherHakutoive(hakemus, Map())
-    val emptyAnswersWithNoHakutoive = ApplicationUpdater.getAllUpdatedAnswersForApplication(lomake, storedApplication, Hakemus.emptyAnswers, noHakutoive)
+    val emptyAnswersWithNoHakutoive = AnswerHelper.getAllUpdatedAnswersForApplication(lomake, storedApplication, Hakemus.emptyAnswers, noHakutoive)
     findAddedQuestions(lomake, currentAnswersWithOneHakutoive, emptyAnswersWithNoHakutoive)
   }
 
