@@ -22,7 +22,6 @@ package object tulokset {
                                   vastaanottotila: ResultState,
                                   vastaanotettavuustila: VastaanotettavuusTila,
                                   vastaanotettavissaAsti: Option[Long],
-                                  viimeisinValintatuloksenMuutos: Option[Long],
                                   ilmoittautumistila: Option[HakutoiveenIlmoittautumistila],
                                   jonosija: Option[Int],
                                   varasijojaTaytetaanAsti: Option[Long],

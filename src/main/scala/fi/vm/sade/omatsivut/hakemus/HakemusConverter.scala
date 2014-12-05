@@ -152,8 +152,7 @@ trait HakemusConverterComponent {
             HakutoiveenValintatulosTila.withName(hakutoiveenTulos.valintatila),
             convertToResultsState(hakutoiveenTulos),
             VastaanotettavuusTila.withName(hakutoiveenTulos.vastaanotettavuustila),
-            convertToVastaanotettavuusAsti(valintaTulos.aikataulu, hakutoiveenTulos),
-            hakutoiveenTulos.viimeisinValintatuloksenMuutos .map(_.getTime),
+            hakutoiveenTulos.vastaanottoDeadline.map(_.getTime),
             hakutoiveenTulos.ilmoittautumistila,
             hakutoiveenTulos.jonosija,
             hakutoiveenTulos.varasijojaTaytetaanAsti.map(_.getTime),
@@ -161,19 +160,6 @@ trait HakemusConverterComponent {
             hakutoiveenTulos.tilanKuvaukset.get(lang.toString.toUpperCase)
           )
         })
-      }
-    }
-
-    private def convertToVastaanotettavuusAsti(aikataulu: Option[Vastaanottoaikataulu], hakutoiveenTulos: HakutoiveenValintatulos): Option[Long] = {
-      aikataulu match {
-        case None => None
-        case Some(aikataulu) => {
-          val bufferDeadline = hakutoiveenTulos.viimeisinValintatuloksenMuutos.map(new LocalDateTime(_).plusDays(aikataulu.vastaanottoBufferDays.getOrElse(0)).toDate())
-          (aikataulu.vastaanottoEnd , bufferDeadline) match {
-            case (Some(end), Some(buffer)) => Some((if(buffer.after(end)) buffer else end).getTime())
-            case (end, _) => end.map(_.getTime())
-          }
-        }
       }
     }
 

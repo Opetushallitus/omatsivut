@@ -13,7 +13,7 @@ package object domain {
                                      vastaanottotila: Option[String],
                                      ilmoittautumistila: Option[HakutoiveenIlmoittautumistila],
                                      vastaanotettavuustila: String,
-                                     viimeisinValintatuloksenMuutos: Option[Date],
+                                     vastaanottoDeadline: Option[Date],
                                      jonosija: Option[Int],
                                      varasijojaKaytetaanAlkaen: Option[Date],
                                      varasijojaTaytetaanAsti: Option[Date],
