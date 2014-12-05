@@ -27,7 +27,7 @@ trait ApplicationValidatorComponent {
     private val validator: ElementTreeValidator = springContext.validator
 
     def validate(lomake: Lomake, hakemusMuutos: HakemusMuutos, haku: Haku)(implicit lang: Language.Language): List[ValidationError] = {
-      val storedApplication = wrap(hakemusRepository.findStoredApplicationByOid(hakemusMuutos.oid))
+      val storedApplication = applicationRepository.findStoredApplicationByOid(hakemusMuutos.oid).getOrElse(throw new RuntimeException(s"Application ${hakemusMuutos.oid} not found"))
       val updatedApplication = update(hakemusMuutos, lomake, storedApplication)
       validateHakutoiveetAndAnswers(updatedApplication, storedApplication, lomake) ++
         errorsForUnknownAnswers(lomake, hakemusMuutos) ++
@@ -36,7 +36,7 @@ trait ApplicationValidatorComponent {
 
     def validateAndFindQuestions(lomake: Lomake, hakemusMuutos: HakemusMuutos, haku: Haku, personOid: String)(implicit lang: Language.Language): HakemusInfo = {
       withErrorLogging {
-        val storedApplication = wrap(hakemusRepository.findStoredApplicationByOid(hakemusMuutos.oid))
+        val storedApplication = applicationRepository.findStoredApplicationByOid(hakemusMuutos.oid).getOrElse(throw new RuntimeException(s"Application ${hakemusMuutos.oid} not found"))
         if (storedApplication.personOid != personOid) throw new IllegalArgumentException("personId mismatch")
         validateAndFindQuestions(haku, lomake, hakemusMuutos, storedApplication) match {
           case (app, errors, questions) => HakemusInfo(hakemusConverter.convertToHakemus(lomake, haku, app), errors, questions)
@@ -101,7 +101,7 @@ trait ApplicationValidatorComponent {
     }
 
     private def errorsForUnknownAnswers(lomake: Lomake, hakemusMuutos: HakemusMuutos)(implicit lang: Language.Language): List[ValidationError] = {
-      val application = wrap(hakemusRepository.findStoredApplicationByOid(hakemusMuutos.oid))
+      val application = applicationRepository.findStoredApplicationByOid(hakemusMuutos.oid).getOrElse(throw new RuntimeException(s"Application ${hakemusMuutos.oid} not found"))
       val allAnswers: Answers = ApplicationUpdater.getAllAnswersForApplication(lomake, application, hakemusMuutos)
       val acceptedAnswerIds: Seq[AnswerId] = AddedQuestionFinder.findAddedQuestions(lomake, allAnswers, Hakemus.emptyAnswers).flatMap(_.answerIds).toList
 

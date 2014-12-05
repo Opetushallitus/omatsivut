@@ -71,7 +71,8 @@ class ComponentRegistry(val config: AppConfig)
   val valintatulosService: ValintatulosService = configureValintatulosService
   val auditLogger: AuditLogger = new AuditLoggerFacade(runningLogger)
   val lomakeRepository: LomakeRepository = new RemoteLomakeRepository
-  val hakemusRepository: HakemusRepository = new RemoteHakemusRepository
+  val hakemusRepository: RemoteHakemusRepository = new RemoteHakemusRepository
+  val applicationRepository = hakemusRepository
   val hakemusConverter: HakemusConverter = new HakemusConverter
   val tarjontaService: TarjontaService = configureTarjontaService
   val koodistoService: KoodistoService = configureKoodistoService

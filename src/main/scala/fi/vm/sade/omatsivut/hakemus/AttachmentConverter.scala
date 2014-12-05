@@ -1,17 +1,11 @@
 package fi.vm.sade.omatsivut.hakemus
 
-import fi.vm.sade.haku.oppija.hakemus.domain.util.AttachmentUtil
-import fi.vm.sade.haku.oppija.hakemus.domain.{Application, ApplicationAttachment}
+import fi.vm.sade.haku.oppija.hakemus.domain.ApplicationAttachment
 import fi.vm.sade.omatsivut.domain.{Address, Attachment, Language}
 
 import scala.collection.JavaConversions._
 
 object AttachmentConverter {
-  def getAttachments(application: Application)(implicit language: Language.Language): List[Attachment] = {
-    val attachmentInfo = AttachmentUtil.resolveAttachments(application)
-    attachmentInfo.toList.map(convertToAttachment(_))
-  }
-
   def convertToAttachment(attachment: ApplicationAttachment)(implicit language: Language.Language): Attachment = {
     val address = Option(attachment.getAddress())
     Attachment(

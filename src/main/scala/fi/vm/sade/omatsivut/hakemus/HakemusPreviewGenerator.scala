@@ -3,39 +3,34 @@ package fi.vm.sade.omatsivut.hakemus
 import java.text.SimpleDateFormat
 import java.util.Date
 
-import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.lomake.domain.elements.custom.gradegrid.{GradeGrid, GradeGridAddLang, GradeGridOptionQuestion, GradeGridTitle}
 import fi.vm.sade.haku.oppija.lomake.domain.elements.custom.{PostalCode, PreferenceRow, PreferenceTable, SocialSecurityNumber}
 import fi.vm.sade.haku.oppija.lomake.domain.elements.questions.{CheckBox, DateQuestion, OptionQuestion, TextArea, TextQuestion}
 import fi.vm.sade.haku.oppija.lomake.domain.elements.{HiddenValue, Link, Notification, Phase, Text, Theme, TitledGroup}
 import fi.vm.sade.haku.oppija.lomake.domain.rules.{AddElementRule, RelatedQuestionRule}
-import fi.vm.sade.omatsivut.config.{OmatSivutSpringContext, SpringContextComponent}
+import fi.vm.sade.omatsivut.config.SpringContextComponent
 import fi.vm.sade.omatsivut.domain.{Address, Attachment, Language}
 import fi.vm.sade.omatsivut.hakemus.FlatAnswers.FlatAnswers
-import ImmutableLegacyApplicationWrapper.wrap
-import fi.vm.sade.omatsivut.hakemus.ImmutableLegacyApplicationWrapper
-import fi.vm.sade.omatsivut.lomake.{ElementWrapper, OptionWrapper}
 import fi.vm.sade.omatsivut.localization.Translations
+import fi.vm.sade.omatsivut.lomake.{ElementWrapper, OptionWrapper}
 import fi.vm.sade.omatsivut.servlet.ServerContaxtPath
 import fi.vm.sade.omatsivut.util.Logging
 
 import scalatags.Text.TypedTag
 
 trait HakemusPreviewGeneratorComponent {
-  this: SpringContextComponent with HakemusConverterComponent =>
+  this: SpringContextComponent with HakemusRepositoryComponent with HakemusConverterComponent =>
 
   def newHakemusPreviewGenerator(language: Language.Language): HakemusPreviewGenerator
 
   class HakemusPreviewGenerator(implicit val language: Language.Language) extends Logging {
     import scala.collection.JavaConversions._
     import scalatags.Text.all._
-    private val applicationDao = springContext.applicationDAO
     private val applicationSystemService = springContext.applicationSystemService
 
     def generatePreview(serverPath: ServerContaxtPath, personOid: String, applicationOid: String): Option[String] = {
-      val applicationQuery: Application = new Application().setOid(applicationOid).setPersonOid(personOid)
-      applicationDao.find(applicationQuery).toList.headOption.map { application =>
-        applicationPreview(serverPath, wrap(application))
+      applicationRepository.findStoredApplicationByPersonAndOid(personOid, applicationOid).map { application =>
+        applicationPreview(serverPath, application)
       }
     }
 

@@ -1,15 +1,15 @@
 package fi.vm.sade.omatsivut.hakemus
 
 import java.util.Date
+
 import fi.vm.sade.haku.oppija.hakemus.aspect.ApplicationDiffUtil
-import fi.vm.sade.haku.oppija.hakemus.domain.{ApplicationNote, Application}
+import fi.vm.sade.haku.oppija.hakemus.domain.{Application, ApplicationNote}
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 import fi.vm.sade.omatsivut.auditlog._
 import fi.vm.sade.omatsivut.config.SpringContextComponent
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.domain.Language.Language
-import ImmutableLegacyApplicationWrapper.wrap
-import fi.vm.sade.omatsivut.hakemus.ImmutableLegacyApplicationWrapper
+import fi.vm.sade.omatsivut.hakemus.ImmutableLegacyApplicationWrapper.wrap
 import fi.vm.sade.omatsivut.hakemus.domain._
 import fi.vm.sade.omatsivut.lomake.LomakeRepositoryComponent
 import fi.vm.sade.omatsivut.lomake.domain.Lomake
@@ -26,8 +26,11 @@ trait HakemusRepositoryComponent {
   this: LomakeRepositoryComponent with ApplicationValidatorComponent with HakemusConverterComponent with SpringContextComponent with AuditLoggerComponent with TarjontaComponent with OhjausparametritComponent with ValintatulosServiceComponent =>
 
   val hakemusRepository: HakemusRepository
+  val applicationRepository: ApplicationRepository
 
-  class RemoteHakemusRepository extends HakemusRepository {
+  class RemoteHakemusRepository extends HakemusRepository with ApplicationRepository {
+    // TODO: don't implement two interfaces here, split!
+
     import scala.collection.JavaConversions._
     private val dao = springContext.applicationDAO
     private val applicationService = springContext.applicationService
@@ -119,15 +122,21 @@ trait HakemusRepositoryComponent {
       application.addNote(new ApplicationNote(noteText, new Date(), userOid))
     }
 
-    override def findStoredApplicationByOid(oid: String): Application = {
-      val applications = timed(1000, "Application fetch DAO"){
-        dao.find(new Application().setOid(oid)).toList
-      }
-      if (applications.size > 1) throw new RuntimeException("Too many applications for oid " + oid)
-      if (applications.size == 0) throw new RuntimeException("Application not found for oid " + oid)
-      val application = applications.head
-      application
+    override def findStoredApplicationByOid(oid: String): Option[ImmutableLegacyApplicationWrapper] = {
+      findStoredApplication(new Application().setOid(oid))
     }
+
+    override def findStoredApplicationByPersonAndOid(personOid: String, oid: String) = {
+      findStoredApplication(new Application().setOid(oid).setPersonOid(personOid))
+    }
+
+    private def findStoredApplication(query: Application) = {
+      val applications = timed(1000, "Application fetch DAO"){
+        dao.find(query).toList
+      }
+      applications.headOption.map(wrap)
+    }
+
 
     override def fetchHakemukset(personOid: String)(implicit lang: Language.Language) = {
       fetchHakemukset(new Application().setPersonOid(personOid))
