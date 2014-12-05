@@ -9,7 +9,9 @@ import fi.vm.sade.omatsivut.auditlog._
 import fi.vm.sade.omatsivut.config.SpringContextComponent
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.domain.Language.Language
-import fi.vm.sade.omatsivut.hakemus.ImmutableLegacyApplicationWrapper.wrap
+import fi.vm.sade.omatsivut.hakemus.FlatAnswers.FlatAnswers
+import fi.vm.sade.omatsivut.hakemus.ImmutableLegacyApplicationWrapper.{LegacyApplicationAnswers, wrap}
+import fi.vm.sade.omatsivut.hakemus.domain.Hakemus.Answers
 import fi.vm.sade.omatsivut.hakemus.domain._
 import fi.vm.sade.omatsivut.lomake.LomakeRepositoryComponent
 import fi.vm.sade.omatsivut.lomake.domain.Lomake
@@ -38,30 +40,29 @@ trait HakemusRepositoryComponent {
 
     def updateHakemus(lomake: Lomake, haku: Haku, hakemus: HakemusMuutos, userOid: String)(implicit lang: Language.Language): Option[Hakemus] = {
       val applicationQuery: Application = new Application().setOid(hakemus.oid)
-      val applicationJavaObject: Option[Application] = timed(1000, "Application fetch DAO"){
-        dao.find(applicationQuery).toList.headOption
-      }
-
-      timed(1000, "Application update"){
-        applicationJavaObject.map(updateApplication(lomake, _, hakemus, userOid)).filter { case (originalApplication: Application, application: Application) =>
-          canUpdate(lomake, originalApplication, application, userOid)
-        }.map { case (originalApplication, application) =>
-          timed(1000, "Application update DAO"){
-            dao.update(applicationQuery, application)
-          }
-          auditLogger.log(UpdateHakemus(userOid, hakemus.oid, haku.oid, originalApplication.getAnswers.toMap.mapValues(_.toMap), application.getAnswers.toMap.mapValues(_.toMap)))
-          hakemusConverter.convertToHakemus(lomake, haku, wrap(application))
+      for {
+        applicationJavaObject <- timed(1000, "Application fetch DAO") {dao.find(applicationQuery).toList.headOption}
+        originalApplication = wrap(applicationJavaObject)
+        updatedAnswers = AnswerHelper.getUpdatedAnswersForApplication(lomake, originalApplication, hakemus)
+        if canUpdate(lomake, originalApplication, updatedAnswers, userOid)
+      } yield {
+        mutateApplicationJavaObject(lomake, applicationJavaObject, updatedAnswers, userOid) // <- the only point of actual mutation
+        timed(1000, "Application update DAO"){
+          dao.update(applicationQuery, applicationJavaObject)
         }
+        auditLogger.log(UpdateHakemus(userOid, hakemus.oid, haku.oid, originalApplication.answers, updatedAnswers))
+        hakemusConverter.convertToHakemus(lomake, haku, wrap(applicationJavaObject))
       }
     }
 
-    private def canUpdate(lomake: Lomake, originalApplication: Application, updatedApplication: Application, userOid: String)(implicit lang: Language.Language): Boolean = {
-      val stateUpdateable = originalApplication.getState == Application.State.ACTIVE || originalApplication.getState == Application.State.INCOMPLETE
-      val inPostProcessing = !(originalApplication.getRedoPostProcess == Application.PostProcessingState.DONE || originalApplication.getRedoPostProcess() == null)
-      (isActiveHakuPeriod(lomake) || hasOnlyContactInfoChangesAndApplicationRoundHasNotEnded(lomake, originalApplication, updatedApplication)) &&
+    private def canUpdate(lomake: Lomake, originalApplication: ImmutableLegacyApplicationWrapper, newAnswers: Answers, userOid: String)(implicit lang: Language.Language): Boolean = {
+      val stateUpdateable = originalApplication.state == "ACTIVE" || originalApplication.state == "INCOMPLETE"
+      val inPostProcessing = originalApplication.isPostProcessing
+
+      (isActiveHakuPeriod(lomake) || hasOnlyContactInfoChangesAndApplicationRoundHasNotEnded(lomake, originalApplication, newAnswers)) &&
         stateUpdateable &&
         !inPostProcessing &&
-        userOid == originalApplication.getPersonOid
+        userOid == originalApplication.personOid
     }
 
     private def isActiveHakuPeriod(lomake: Lomake)(implicit lang: Language.Language) = {
@@ -69,14 +70,14 @@ trait HakemusRepositoryComponent {
       applicationPeriods.exists(_.active)
     }
 
-    private def hasOnlyContactInfoChangesAndApplicationRoundHasNotEnded(lomake: Lomake, originalApplication: Application, updatedApplication: Application): Boolean = {
-      val oldAnswers = originalApplication.getVastauksetMerged
-      val newAnswers = updatedApplication.getVastauksetMerged
-      val allKeys = oldAnswers.keySet() ++ newAnswers.keySet()
+    private def hasOnlyContactInfoChangesAndApplicationRoundHasNotEnded(lomake: Lomake, originalApplication: ImmutableLegacyApplicationWrapper, newAnswers: ImmutableLegacyApplicationWrapper.LegacyApplicationAnswers): Boolean = {
+      val oldAnswersFlattened = originalApplication.flatAnswers
+      val newAnswersFlattened = FlatAnswers.flatten(newAnswers)
+      val allKeys = oldAnswersFlattened.keySet ++ newAnswersFlattened.keySet
       new LocalDateTime().isBefore(ohjausparametritService.haunAikataulu(lomake.oid).flatMap(_.hakukierrosPaattyy).map(new LocalDateTime(_ : Long)).getOrElse(new LocalDateTime().plusYears(100))) && allKeys.filter(
         key => {
-          val oldValue = oldAnswers.getOrElse(key, "")
-          val newValue = newAnswers.getOrElse(key, "")
+          val oldValue = oldAnswersFlattened.getOrElse(key, "")
+          val newValue = newAnswersFlattened.getOrElse(key, "")
           if(oldValue.equals(newValue)) {
             false
           }
@@ -93,10 +94,9 @@ trait HakemusRepositoryComponent {
     }
 
 
-    private def updateApplication(lomake: Lomake, application: Application, hakemus: HakemusMuutos, userOid: String)(implicit lang: Language.Language): (Application, Application) = {
+    private def mutateApplicationJavaObject(lomake: Lomake, application: Application, updatedAnswers: LegacyApplicationAnswers, userOid: String)(implicit lang: Language.Language) {
       val originalApplication = application.clone()
       application.setUpdated(new Date())
-      val updatedAnswers = AnswerHelper.getUpdatedAnswersForApplication(lomake, wrap(application), hakemus)
       updatedAnswers.foreach { case (phaseId, phaseAnswers) =>
         application.addVaiheenVastaukset(phaseId, phaseAnswers)
       }
@@ -107,8 +107,6 @@ trait HakemusRepositoryComponent {
         applicationService.updateAuthorizationMeta(application)
       }
       updateChangeHistory(application, originalApplication, userOid)
-
-      (originalApplication, application)
     }
 
     private def updateChangeHistory(application: Application, originalApplication: Application, userOid: String) {

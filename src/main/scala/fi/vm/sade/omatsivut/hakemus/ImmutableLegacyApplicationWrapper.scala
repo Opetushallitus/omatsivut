@@ -42,7 +42,6 @@ object ImmutableLegacyApplicationWrapper {
     !(state == Application.PostProcessingState.DONE || state == null)
   }
 
-
 }
 
 case class ImmutableLegacyApplicationWrapper(
