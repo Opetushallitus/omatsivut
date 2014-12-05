@@ -1,13 +1,13 @@
 package fi.vm.sade.omatsivut.lomake
 
-import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.lomake.service.impl.ApplicationSystemServiceImpl
 import fi.vm.sade.omatsivut.config.SpringContextComponent
 import fi.vm.sade.omatsivut.domain.Language
+import fi.vm.sade.omatsivut.hakemus.ImmutableLegacyApplicationWrapper
 import fi.vm.sade.omatsivut.koulutusinformaatio.{KoulutusInformaatioComponent, KoulutusInformaatioService}
 import fi.vm.sade.omatsivut.lomake.domain.Lomake
 import fi.vm.sade.omatsivut.ohjausparametrit.{OhjausparametritComponent, OhjausparametritService}
-import fi.vm.sade.omatsivut.tarjonta.domain.{Hakuaika, Haku}
+import fi.vm.sade.omatsivut.tarjonta.domain.{Haku, Hakuaika}
 import fi.vm.sade.omatsivut.tarjonta.{TarjontaComponent, TarjontaService}
 import fi.vm.sade.omatsivut.util.Logging
 import fi.vm.sade.omatsivut.util.Timer.timed
@@ -29,10 +29,10 @@ trait LomakeRepositoryComponent {
       tryFind(oid)
     }
 
-    def lomakeAndHakuByApplication(application: Application)(implicit lang: Language.Language): (Option[Lomake], Option[Haku]) = {
-      application.getApplicationSystemId match {
+    def lomakeAndHakuByApplication(application: ImmutableLegacyApplicationWrapper)(implicit lang: Language.Language): (Option[Lomake], Option[Haku]) = {
+      application.hakuOid match {
         case "" => (None, None)
-        case applicationSystemId => (tryFind(applicationSystemId), tarjontaService.haku(applicationSystemId, lang))
+        case hakuOid => (tryFind(hakuOid), tarjontaService.haku(hakuOid, lang))
       }
     }
 
@@ -69,6 +69,6 @@ trait LomakeRepositoryComponent {
 
 trait LomakeRepository {
   def lomakeByOid(oid: String): Option[Lomake]
-  def lomakeAndHakuByApplication(application: Application)(implicit lang: Language.Language): (Option[Lomake], Option[Haku])
+  def lomakeAndHakuByApplication(application: ImmutableLegacyApplicationWrapper)(implicit lang: Language.Language): (Option[Lomake], Option[Haku])
   def applicationPeriodsByOid(applicationSystemId: String)(implicit lang: Language.Language) : List[Hakuaika]
 }

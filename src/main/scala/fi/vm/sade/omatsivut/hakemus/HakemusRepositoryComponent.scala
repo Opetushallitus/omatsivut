@@ -8,6 +8,8 @@ import fi.vm.sade.omatsivut.auditlog._
 import fi.vm.sade.omatsivut.config.SpringContextComponent
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.domain.Language.Language
+import ImmutableLegacyApplicationWrapper.wrap
+import fi.vm.sade.omatsivut.hakemus.ImmutableLegacyApplicationWrapper
 import fi.vm.sade.omatsivut.hakemus.domain._
 import fi.vm.sade.omatsivut.lomake.LomakeRepositoryComponent
 import fi.vm.sade.omatsivut.lomake.domain.Lomake
@@ -82,14 +84,18 @@ trait HakemusRepositoryComponent {
             dao.update(applicationQuery, application)
           }
           auditLogger.log(UpdateHakemus(userOid, hakemus.oid, haku.oid, originalApplication.getAnswers.toMap.mapValues(_.toMap), application.getAnswers.toMap.mapValues(_.toMap)))
-          hakemusConverter.convertToHakemus(lomake, haku, application)
+          hakemusConverter.convertToHakemus(lomake, haku, wrap(application))
         }
       }
     }
 
     private def updateApplication(lomake: Lomake, application: Application, hakemus: HakemusMuutos, userOid: String)(implicit lang: Language.Language): (Application, Application) = {
       val originalApplication = application.clone()
-      ApplicationUpdater.update(lomake, application, hakemus)
+      application.setUpdated(new Date())
+      val updatedAnswers = ApplicationUpdater.getUpdatedAnswersForApplication(lomake, wrap(application), hakemus)
+      updatedAnswers.foreach { case (phaseId, phaseAnswers) =>
+        application.addVaiheenVastaukset(phaseId, phaseAnswers)
+      }
       timed(1000, "ApplicationService: update preference based data"){
         applicationService.updatePreferenceBasedData(application)
       }
@@ -133,12 +139,12 @@ trait HakemusRepositoryComponent {
 
     private def fetchHakemukset(query: Application)(implicit lang: Language) = {
       timed(1000, "Application fetch"){
-        val applicationJavaObjects: List[Application] = timed(1000, "Application fetch DAO"){
+        val legacyApplications: List[ImmutableLegacyApplicationWrapper] = timed(1000, "Application fetch DAO"){
           dao.find(query).toList
-        }
-        applicationJavaObjects.filter{
+        }.map(ImmutableLegacyApplicationWrapper.wrap)
+        legacyApplications.filter{
           application => {
-            !application.getState.equals(Application.State.PASSIVE)
+            !application.state.equals("PASSIVE")
           }
         }.map(application => {
           val (lomakeOption, hakuOption) = timed(1000, "LomakeRepository get lomake"){
@@ -150,7 +156,7 @@ trait HakemusRepositoryComponent {
           } yield {
             val valintatulos = fetchValintatulos(application, haku)
             val hakemus = hakemusConverter.convertToHakemus(lomake, haku, application, valintatulos._1)
-            auditLogger.log(ShowHakemus(application.getPersonOid, hakemus.oid, haku.oid))
+            auditLogger.log(ShowHakemus(application.personOid, hakemus.oid, haku.oid))
 
             if (haku.applicationPeriods.exists(_.active)) {
               applicationValidator.validateAndFindQuestions(haku, lomake, withNoPreferenceSpesificAnswers(hakemus), application) match {
@@ -165,9 +171,9 @@ trait HakemusRepositoryComponent {
       }
     }
 
-    private def fetchValintatulos(application: Application, haku: Haku) = {
+    private def fetchValintatulos(application: ImmutableLegacyApplicationWrapper, haku: Haku) = {
       if (hakemusConverter.anyApplicationPeriodEnded(haku, application)) {
-        Try(valintatulosService.getValintatulos(application.getOid, haku.oid)) match {
+        Try(valintatulosService.getValintatulos(application.oid, haku.oid)) match {
           case Success(t) => (t, true)
           case Failure(e) => (None, false)
         }

@@ -1,33 +1,18 @@
 package fi.vm.sade.omatsivut.hakemus
 
-import java.util.Date
-
-import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 import fi.vm.sade.omatsivut.domain.Language
+import fi.vm.sade.omatsivut.hakemus.ImmutableLegacyApplicationWrapper
+import ImmutableLegacyApplicationWrapper.LegacyApplicationAnswers
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
-import fi.vm.sade.omatsivut.hakemus.domain.{HakemusLike, Hakemus, HakemusMuutos}
-import fi.vm.sade.omatsivut.lomake.domain.{Lomake, AnswerId, QuestionId}
+import fi.vm.sade.omatsivut.hakemus.domain.{Hakemus, HakemusLike}
+import fi.vm.sade.omatsivut.lomake.domain.{AnswerId, Lomake, QuestionId}
 import fi.vm.sade.omatsivut.lomake.{AddedQuestionFinder, ElementWrapper, FormQuestionFinder}
-
-import scala.collection.JavaConversions._
 
 object ApplicationUpdater {
   val preferencePhaseKey = OppijaConstants.PHASE_APPLICATION_OPTIONS
 
-  /**
-   * NOTE this method mutates the application, so call with application.clone(), if it is not wanted.
-   */
-  def update(lomake: Lomake, application: Application, hakemus: HakemusLike)(implicit lang: Language.Language) = {
-    val updatedAnswers = getUpdatedAnswersForApplication(lomake, application, hakemus)
-    updatedAnswers.foreach { case (phaseId, phaseAnswers) =>
-      application.addVaiheenVastaukset(phaseId, phaseAnswers)
-    }
-    application.setUpdated(new Date())
-    application
-  }
-
-  private def getUpdatedAnswersForApplication(lomake: Lomake, application: Application, hakemus: HakemusLike)(implicit lang: Language.Language): Answers = {
+  def getUpdatedAnswersForApplication(lomake: Lomake, application: ImmutableLegacyApplicationWrapper, hakemus: HakemusLike)(implicit lang: Language.Language): LegacyApplicationAnswers = {
     val allAnswers = getAllUpdatedAnswersForApplication(lomake, application, hakemus.answers, hakemus.preferences)
     val removedAnswerIds = getRemovedAnswerIds(lomake, application, hakemus)
 
@@ -41,7 +26,7 @@ object ApplicationUpdater {
     }
   }
 
-  def getAllUpdatedAnswersForApplication(lomake: Lomake, application: Application, newAnswers: Hakemus.Answers, hakutoiveet: List[Hakemus.HakutoiveData]): Answers = {
+  def getAllUpdatedAnswersForApplication(lomake: Lomake, application: ImmutableLegacyApplicationWrapper, newAnswers: Hakemus.Answers, hakutoiveet: List[Hakemus.HakutoiveData]): Answers = {
     allAnswersFromApplication(application).filterKeys(_ != preferencePhaseKey) ++
       updatedAnswersForHakuToiveet(lomake, application, newAnswers, hakutoiveet) ++
       updatedAnswersForOtherPhases(application, newAnswers)
@@ -64,7 +49,7 @@ object ApplicationUpdater {
     }
   }
 
-  private def getRemovedAnswerIds(lomake: Lomake, application: Application, hakemus: HakemusLike)(implicit lang: Language.Language): Seq[AnswerId] = {
+  private def getRemovedAnswerIds(lomake: Lomake, application: ImmutableLegacyApplicationWrapper, hakemus: HakemusLike)(implicit lang: Language.Language): Seq[AnswerId] = {
     val allOldAnswers = allAnswersFromApplication(application)
     val allNewAnswers = getAllAnswersForApplication(lomake, application, hakemus)
 
@@ -72,25 +57,25 @@ object ApplicationUpdater {
     removedQuestions.flatMap(_.answerIds)
   }
 
-  def getAllAnswersForApplication(lomake: Lomake, application: Application, hakemus: HakemusLike): Answers = {
+  def getAllAnswersForApplication(lomake: Lomake, application: ImmutableLegacyApplicationWrapper, hakemus: HakemusLike): Answers = {
     allAnswersFromApplication(application) ++
       updatedAnswersForHakuToiveet(lomake, application, hakemus.answers, hakemus.preferences) ++
       updatedAnswersForOtherPhases(application, hakemus.answers)
   }
 
-  def allAnswersFromApplication(application: Application) = {
-    application.getAnswers.toMap.mapValues(_.toMap)
+  def allAnswersFromApplication(application: ImmutableLegacyApplicationWrapper) = {
+    application.answers
   }
 
-  private def updatedAnswersForOtherPhases(application: Application, answers: Answers): Answers = {
+  private def updatedAnswersForOtherPhases(application: ImmutableLegacyApplicationWrapper, answers: Answers): Answers = {
     val allOtherPhaseAnswers = answers.filterKeys(phase => phase != preferencePhaseKey)
     allOtherPhaseAnswers.map { case (phase, answers) =>
-      val existingAnswers = application.getPhaseAnswers(phase).toMap
+      val existingAnswers = application.phaseAnswers(phase)
       (phase, existingAnswers ++ answers)
     }.toMap
   }
 
-  private def updatedAnswersForHakuToiveet(lomake: Lomake, application: Application, newAnswers: Hakemus.Answers, hakutoiveet: List[Hakemus.HakutoiveData]): Answers = {
+  private def updatedAnswersForHakuToiveet(lomake: Lomake, application: ImmutableLegacyApplicationWrapper, newAnswers: Hakemus.Answers, hakutoiveet: List[Hakemus.HakutoiveData]): Answers = {
     val previousAnswers = allAnswersFromApplication(application)
 
     val updatedAnswersForHakutoiveetPhase = HakutoiveetConverter.updateAnswers(hakutoiveet, newAnswers, previousAnswers)

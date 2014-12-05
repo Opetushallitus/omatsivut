@@ -12,6 +12,8 @@ import fi.vm.sade.haku.oppija.lomake.domain.rules.{AddElementRule, RelatedQuesti
 import fi.vm.sade.omatsivut.config.{OmatSivutSpringContext, SpringContextComponent}
 import fi.vm.sade.omatsivut.domain.{Address, Attachment, Language}
 import fi.vm.sade.omatsivut.hakemus.FlatAnswers.FlatAnswers
+import ImmutableLegacyApplicationWrapper.wrap
+import fi.vm.sade.omatsivut.hakemus.ImmutableLegacyApplicationWrapper
 import fi.vm.sade.omatsivut.lomake.{ElementWrapper, OptionWrapper}
 import fi.vm.sade.omatsivut.localization.Translations
 import fi.vm.sade.omatsivut.servlet.ServerContaxtPath
@@ -33,12 +35,12 @@ trait HakemusPreviewGeneratorComponent {
     def generatePreview(serverPath: ServerContaxtPath, personOid: String, applicationOid: String): Option[String] = {
       val applicationQuery: Application = new Application().setOid(applicationOid).setPersonOid(personOid)
       applicationDao.find(applicationQuery).toList.headOption.map { application =>
-        applicationPreview(serverPath, application)
+        applicationPreview(serverPath, wrap(application))
       }
     }
 
-    private def applicationPreview(serverPath: ServerContaxtPath, application: Application) = {
-      val applicationSystem = applicationSystemService.getApplicationSystem(application.getApplicationSystemId)
+    private def applicationPreview(serverPath: ServerContaxtPath, application: ImmutableLegacyApplicationWrapper) = {
+      val applicationSystem = applicationSystemService.getApplicationSystem(application.hakuOid)
       val answers: FlatAnswers = FlatAnswers.flatten(ApplicationUpdater.allAnswersFromApplication(application))
       val form = ElementWrapper.wrapFiltered(applicationSystem.getForm, answers)
       val addInfos = for(addInfo <- applicationSystem.getAdditionalInformationElements()) yield ElementWrapper.wrapFiltered(addInfo, answers)
@@ -91,7 +93,7 @@ trait HakemusPreviewGeneratorComponent {
       }
 
       def attachmentsInfoPreview(): List[TypedTag[String]] = {
-        val aoInfos = AttachmentConverter.getAttachments(application)
+        val aoInfos = application.attachments.map(AttachmentConverter.convertToAttachment(_))
 
         if (aoInfos.isEmpty) {
           Nil
@@ -345,8 +347,8 @@ trait HakemusPreviewGeneratorComponent {
           header(
             h1(ElementWrapper.t(applicationSystem.getName)),
             h2(answers.get("Etunimet").getOrElse("") + " " + answers.get("Sukunimi").getOrElse("")),
-            div(`class` := "detail application-received")(label(Translations.getTranslation("applicationPreview", "received")), span(formatDate(application.getReceived))),
-            div(`class` := "detail application-id")(label(Translations.getTranslation("applicationPreview", "applicationId")), span(formatOid(application.getOid)))
+            div(`class` := "detail application-received")(label(Translations.getTranslation("applicationPreview", "received")), span(formatDate(application.received))),
+            div(`class` := "detail application-id")(label(Translations.getTranslation("applicationPreview", "applicationId")), span(formatOid(application.oid)))
           )
           ::
           form.getElementsOfType[Phase].flatMap(questionsPreview(_, true))

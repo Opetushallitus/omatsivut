@@ -1,18 +1,18 @@
 package fi.vm.sade.omatsivut.hakemus
 
-import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.hakemus.it.dao.ApplicationDAO
 import fi.vm.sade.haku.oppija.lomake.validation.{ElementTreeValidator, ValidationInput, ValidationResult}
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 import fi.vm.sade.omatsivut.config.SpringContextComponent
 import fi.vm.sade.omatsivut.domain.Language
+import fi.vm.sade.omatsivut.hakemus.ImmutableLegacyApplicationWrapper._
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
 import fi.vm.sade.omatsivut.hakemus.domain._
 import fi.vm.sade.omatsivut.localization.Translations
 import fi.vm.sade.omatsivut.lomake.AddedQuestionFinder
-import fi.vm.sade.omatsivut.lomake.domain.{AnswerId, Lomake, QuestionNode}
-import fi.vm.sade.omatsivut.tarjonta.domain.Haku
+import fi.vm.sade.omatsivut.lomake.domain.{AnswerId, Lomake}
 import fi.vm.sade.omatsivut.tarjonta.TarjontaComponent
+import fi.vm.sade.omatsivut.tarjonta.domain.Haku
 import fi.vm.sade.omatsivut.util.Logging
 
 import scala.collection.JavaConversions._
@@ -27,7 +27,7 @@ trait ApplicationValidatorComponent {
     private val validator: ElementTreeValidator = springContext.validator
 
     def validate(lomake: Lomake, hakemusMuutos: HakemusMuutos, haku: Haku)(implicit lang: Language.Language): List[ValidationError] = {
-      val storedApplication = hakemusRepository.findStoredApplicationByOid(hakemusMuutos.oid)
+      val storedApplication = wrap(hakemusRepository.findStoredApplicationByOid(hakemusMuutos.oid))
       val updatedApplication = update(hakemusMuutos, lomake, storedApplication)
       validateHakutoiveetAndAnswers(updatedApplication, storedApplication, lomake) ++
         errorsForUnknownAnswers(lomake, hakemusMuutos) ++
@@ -36,15 +36,15 @@ trait ApplicationValidatorComponent {
 
     def validateAndFindQuestions(lomake: Lomake, hakemusMuutos: HakemusMuutos, haku: Haku, personOid: String)(implicit lang: Language.Language): HakemusInfo = {
       withErrorLogging {
-        val storedApplication = hakemusRepository.findStoredApplicationByOid(hakemusMuutos.oid)
-        if (storedApplication.getPersonOid != personOid) throw new IllegalArgumentException("personId mismatch")
+        val storedApplication = wrap(hakemusRepository.findStoredApplicationByOid(hakemusMuutos.oid))
+        if (storedApplication.personOid != personOid) throw new IllegalArgumentException("personId mismatch")
         validateAndFindQuestions(haku, lomake, hakemusMuutos, storedApplication) match {
           case (app, errors, questions) => HakemusInfo(hakemusConverter.convertToHakemus(lomake, haku, app), errors, questions)
         }
       } ("Error validating application: " + hakemusMuutos.oid)
     }
 
-    private[hakemus] def validateAndFindQuestions(haku: Haku, lomake: Lomake, newHakemus: HakemusLike, storedApplication: Application)(implicit lang: Language.Language) = {
+    private[hakemus] def validateAndFindQuestions(haku: Haku, lomake: Lomake, newHakemus: HakemusLike, storedApplication: ImmutableLegacyApplicationWrapper)(implicit lang: Language.Language) = {
       withErrorLogging {
         val updatedApplication = update(newHakemus, lomake, storedApplication)
         val validationErrors: List[ValidationError] = validateHakutoiveetAndAnswers(updatedApplication, storedApplication, lomake) ++
@@ -54,8 +54,8 @@ trait ApplicationValidatorComponent {
       } ("Error validating application: " + newHakemus.oid)
     }
 
-    private def validateHakutoiveetAndAnswers(updatedApplication: Application, storedApplication: Application, lomake: Lomake)(implicit lang: Language.Language): List[ValidationError] = {
-      if (isIncomplete(storedApplication)) {
+    private def validateHakutoiveetAndAnswers(updatedApplication: ImmutableLegacyApplicationWrapper, storedApplication: ImmutableLegacyApplicationWrapper, lomake: Lomake)(implicit lang: Language.Language): List[ValidationError] = {
+      if (!storedApplication.complete) {
         val errorsBeforeUpdate = validateAndConvertErrors(storedApplication, lomake)
         val errorsAfterUpdate: List[ValidationError] = validateAndConvertErrors(updatedApplication, lomake)
         errorsAfterUpdate.filter(!errorsBeforeUpdate.contains(_))
@@ -64,22 +64,18 @@ trait ApplicationValidatorComponent {
       }
     }
 
-    private def isIncomplete(application: Application): Boolean = {
-      application.getState == Application.State.INCOMPLETE
+    private def update(hakemusMuutos: HakemusLike, lomake: Lomake, application: ImmutableLegacyApplicationWrapper)(implicit lang: Language.Language): ImmutableLegacyApplicationWrapper = {
+      application.copy(answers = ApplicationUpdater.getUpdatedAnswersForApplication(lomake, application, hakemusMuutos))
     }
 
-    private def update(hakemusMuutos: HakemusLike, lomake: Lomake, application: Application)(implicit lang: Language.Language): Application = {
-      ApplicationUpdater.update(lomake, application.clone(), hakemusMuutos) // application is mutated
-    }
-
-    private def validateAndConvertErrors(application: Application, appSystem: Lomake)(implicit lang: Language.Language) = {
+    private def validateAndConvertErrors(application: ImmutableLegacyApplicationWrapper, appSystem: Lomake)(implicit lang: Language.Language) = {
       val result = validator.validate(convertToValidationInput(appSystem, application))
       convertoToValidationErrors(result)
     }
 
-    private def errorsForEditingInactiveHakuToive(updatedApplication: Application, storedApplication: Application, haku: Haku)(implicit lang: Language.Language): List[ValidationError] = {
-      val oldHakuToiveet = HakutoiveetConverter.convertFromAnswers(storedApplication.getAnswers.toMap.mapValues(_.toMap))
-      val newHakuToiveet = HakutoiveetConverter.convertFromAnswers(updatedApplication.getAnswers.toMap.mapValues(_.toMap))
+    private def errorsForEditingInactiveHakuToive(updatedApplication: ImmutableLegacyApplicationWrapper, storedApplication: ImmutableLegacyApplicationWrapper, haku: Haku)(implicit lang: Language.Language): List[ValidationError] = {
+      val oldHakuToiveet = HakutoiveetConverter.convertFromAnswers(storedApplication.answers)
+      val newHakuToiveet = HakutoiveetConverter.convertFromAnswers(updatedApplication.answers.mapValues(_.toMap))
       val oldInactiveHakuToiveet: List[String] = tarjontaService.filterHakutoiveOidsByActivity(false, oldHakuToiveet, haku)
       val newInactiveHakuToiveet: List[String] = tarjontaService.filterHakutoiveOidsByActivity(false, newHakuToiveet, haku)
       val newHakutoiveetWithIndex = newHakuToiveet.zipWithIndex
@@ -105,7 +101,7 @@ trait ApplicationValidatorComponent {
     }
 
     private def errorsForUnknownAnswers(lomake: Lomake, hakemusMuutos: HakemusMuutos)(implicit lang: Language.Language): List[ValidationError] = {
-      val application = hakemusRepository.findStoredApplicationByOid(hakemusMuutos.oid)
+      val application = wrap(hakemusRepository.findStoredApplicationByOid(hakemusMuutos.oid))
       val allAnswers: Answers = ApplicationUpdater.getAllAnswersForApplication(lomake, application, hakemusMuutos)
       val acceptedAnswerIds: Seq[AnswerId] = AddedQuestionFinder.findAddedQuestions(lomake, allAnswers, Hakemus.emptyAnswers).flatMap(_.answerIds).toList
 
@@ -132,8 +128,8 @@ trait ApplicationValidatorComponent {
       }.toList
     }
 
-    private def convertToValidationInput(lomake: Lomake, application: Application): ValidationInput = {
-      new ValidationInput(lomake.form, application.getVastauksetMerged, application.getOid, lomake.oid, false)
+    private def convertToValidationInput(lomake: Lomake, application: ImmutableLegacyApplicationWrapper): ValidationInput = {
+      new ValidationInput(lomake.form, FlatAnswers.flatten(application.answers), application.oid, lomake.oid, false)
     }
   }
 }

@@ -2,7 +2,6 @@ package fi.vm.sade.omatsivut.hakemus
 
 import java.util
 
-import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
@@ -29,20 +28,20 @@ trait HakemusConverterComponent {
     val baseEducationKey = OppijaConstants.ELEMENT_ID_BASE_EDUCATION
     val preferencePhaseKey = OppijaConstants.PHASE_APPLICATION_OPTIONS
 
-    def convertToHakemus(lomake: Lomake, haku: Haku, application: Application)(implicit lang: Language.Language) : Hakemus = {
+    def convertToHakemus(lomake: Lomake, haku: Haku, application: ImmutableLegacyApplicationWrapper)(implicit lang: Language.Language) : Hakemus = {
       convertToHakemus(lomake, haku, application, None)
     }
 
-    def convertToHakemus(lomake: Lomake, haku: Haku, application: Application, valintatulos: Option[Valintatulos])(implicit lang: Language.Language) : Hakemus = {
-      val koulutusTaustaAnswers: util.Map[String, String] = application.getAnswers.get(educationPhaseKey)
-      val receivedTime =  application.getReceived.getTime
-      val answers = application.clone().getAnswers.toMap.mapValues { phaseAnswers => phaseAnswers.toMap }
+    def convertToHakemus(lomake: Lomake, haku: Haku, application: ImmutableLegacyApplicationWrapper, valintatulos: Option[Valintatulos])(implicit lang: Language.Language) : Hakemus = {
+      val koulutusTaustaAnswers: util.Map[String, String] = application.phaseAnswers(educationPhaseKey)
+      val receivedTime =  application.received.getTime
+      val answers = application.answers
       val hakutoiveet = convertHakuToiveet(application)
 
       Hakemus(
-        application.getOid,
+        application.oid,
         receivedTime,
-        Option(application.getUpdated).map(_.getTime).getOrElse(receivedTime),
+        application.updated.map(_.getTime).getOrElse(receivedTime),
         tila(haku, application, hakutoiveet, valintatulos),
         hakutoiveet,
         haku,
@@ -56,8 +55,8 @@ trait HakemusConverterComponent {
       )
     }
 
-    def tila(haku: Haku, application: Application, hakutoiveet: List[Hakutoive], valintatulos: Option[Valintatulos])(implicit lang: Language.Language): HakemuksenTila = {
-      if (isPostProcessing(application)) {
+    def tila(haku: Haku, application: ImmutableLegacyApplicationWrapper, hakutoiveet: List[Hakutoive], valintatulos: Option[Valintatulos])(implicit lang: Language.Language): HakemuksenTila = {
+      if (application.isPostProcessing) {
         PostProcessing()
       } else {
         if (anyApplicationPeriodEnded(haku, hakutoiveet)) {
@@ -73,20 +72,20 @@ trait HakemusConverterComponent {
           }
 
         } else {
-          application.getState.toString match {
+          application.state match {
             case "ACTIVE" => Active()
             case "PASSIVE" => Passive()
             case "INCOMPLETE" => Incomplete()
             case "SUBMITTED" => Submitted()
             case x => {
-              throw new RuntimeException("Unexpected state for application " + application.getOid + ": " + x)
+              throw new RuntimeException("Unexpected state for application " + application.oid + ": " + x)
             }
           }
         }
       }
     }
 
-    def anyApplicationPeriodEnded(haku: Haku, application: Application): Boolean = {
+    def anyApplicationPeriodEnded(haku: Haku, application: ImmutableLegacyApplicationWrapper): Boolean = {
       anyApplicationPeriodEnded(haku, convertHakuToiveet(application))
     }
 
@@ -187,12 +186,7 @@ trait HakemusConverterComponent {
       }
     }
 
-    private def isPostProcessing(application: Application): Boolean = {
-      val state = application.getRedoPostProcess
-      !(state == Application.PostProcessingState.DONE || state == null)
-    }
-
-    private def convertHakuToiveet(application: Application): List[Hakutoive] = {
+    private def convertHakuToiveet(application: ImmutableLegacyApplicationWrapper): List[Hakutoive] = {
       def hakutoiveDataToHakutoive(data: HakutoiveData): Hakutoive = {
         data.isEmpty match {
           case true => Hakutoive.empty
@@ -201,7 +195,7 @@ trait HakemusConverterComponent {
             Hakutoive(Some(data), hakukohde.flatMap(_.hakuaikaId), hakukohde.flatMap(_.kohteenHakuaika))
         }
       }
-      HakutoiveetConverter.convertFromAnswers(application.getAnswers.toMap.mapValues(_.toMap)).map(hakutoiveDataToHakutoive)
+      HakutoiveetConverter.convertFromAnswers(application.answers).map(hakutoiveDataToHakutoive)
     }
   }
 }

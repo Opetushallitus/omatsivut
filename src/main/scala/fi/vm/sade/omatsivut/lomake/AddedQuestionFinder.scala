@@ -1,11 +1,10 @@
 package fi.vm.sade.omatsivut.lomake
 
-import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
 import fi.vm.sade.omatsivut.hakemus.domain._
-import fi.vm.sade.omatsivut.hakemus.{FlatAnswers, ApplicationUpdater, HakutoiveetConverter}
+import fi.vm.sade.omatsivut.hakemus.{ApplicationUpdater, FlatAnswers, HakutoiveetConverter, ImmutableLegacyApplicationWrapper}
 import fi.vm.sade.omatsivut.lomake.domain.{Lomake, QuestionGroup, QuestionLeafNode, QuestionNode}
 
 object AddedQuestionFinder {
@@ -20,8 +19,8 @@ object AddedQuestionFinder {
     newQuestions.diff(oldQuestions)
   }
 
-  def findQuestions(applicationSystem: Lomake)(storedApplication: Application, hakemusMuutos: HakemusLike, hakutoiveet: List[String])(implicit lang: Language.Language): List[QuestionNode] = {
-    val filteredForm: ElementWrapper = ElementWrapper.wrapFiltered(applicationSystem.form, FlatAnswers.flatten(ApplicationUpdater.getAllAnswersForApplication(applicationSystem, storedApplication.clone(), hakemusMuutos)))
+  def findQuestions(applicationSystem: Lomake)(storedApplication: ImmutableLegacyApplicationWrapper, hakemusMuutos: HakemusLike, hakutoiveet: List[String])(implicit lang: Language.Language): List[QuestionNode] = {
+    val filteredForm: ElementWrapper = ElementWrapper.wrapFiltered(applicationSystem.form, FlatAnswers.flatten(ApplicationUpdater.getAllAnswersForApplication(applicationSystem, storedApplication, hakemusMuutos)))
 
     val questionsPerHakutoive: List[QuestionNode] = hakemusMuutos.preferences.flatMap(hakutoive =>
       hakutoive.get("Koulutus-id") match {
@@ -45,7 +44,7 @@ object AddedQuestionFinder {
     withoutDuplicates(questionsPerHakutoive) ::: duplicates
   }
 
-  private def findQuestionsByHakutoive(lomake: Lomake, storedApplication: Application, hakemus: HakemusLike, hakutoive: HakutoiveData)(implicit lang: Language.Language): Set[QuestionLeafNode] = {
+  private def findQuestionsByHakutoive(lomake: Lomake, storedApplication: ImmutableLegacyApplicationWrapper, hakemus: HakemusLike, hakutoive: HakutoiveData)(implicit lang: Language.Language): Set[QuestionLeafNode] = {
     val onlyOneHakutoive = removeAllOtherHakutoive(hakemus, hakutoive)
     val currentAnswersWithOneHakutoive = ApplicationUpdater.getAllUpdatedAnswersForApplication(lomake, storedApplication, hakemus.answers, onlyOneHakutoive)
     val noHakutoive = removeAllOtherHakutoive(hakemus, Map())

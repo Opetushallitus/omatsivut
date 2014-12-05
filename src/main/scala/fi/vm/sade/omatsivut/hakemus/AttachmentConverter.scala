@@ -1,7 +1,7 @@
 package fi.vm.sade.omatsivut.hakemus
 
-import fi.vm.sade.haku.oppija.hakemus.domain.{Application, ApplicationAttachment}
 import fi.vm.sade.haku.oppija.hakemus.domain.util.AttachmentUtil
+import fi.vm.sade.haku.oppija.hakemus.domain.{Application, ApplicationAttachment}
 import fi.vm.sade.omatsivut.domain.{Address, Attachment, Language}
 
 import scala.collection.JavaConversions._
