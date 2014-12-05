@@ -1,6 +1,6 @@
 {
   "devDependencies": {
-    "mocha-phantomjs": "metaskills/mocha-phantomjs#a2272b29d775b540b54123f312ee04473982832a",
+    "mocha-phantomjs": "3.5.2",
     "phantomjs": "^1.9",
     "gulp": "^3.8.0",
     "browserify": "^4.1.10",
