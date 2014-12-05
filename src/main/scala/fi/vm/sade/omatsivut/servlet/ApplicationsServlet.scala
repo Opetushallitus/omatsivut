@@ -57,7 +57,7 @@ trait ApplicationsServletContainer {
       } yield {
         val errors = applicationValidator.validate(lomake, updated, haku)
         if(errors.isEmpty) {
-          hakemusRepository.updateHakemus(lomake, haku)(updated, personOid()) match {
+          hakemusUpdater.updateHakemus(lomake, haku, updated, personOid()) match {
             case Some(saved) => Ok(saved)
             case None => Forbidden("error" -> "Forbidden")
           }
