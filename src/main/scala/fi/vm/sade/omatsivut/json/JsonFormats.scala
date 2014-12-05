@@ -1,6 +1,6 @@
 package fi.vm.sade.omatsivut.json
 
-import fi.vm.sade.omatsivut.hakemus.domain._
+import fi.vm.sade.omatsivut.tulokset.HakutoiveenValintatulosTila
 import org.json4s._
 import org.json4s.ext.EnumNameSerializer
 

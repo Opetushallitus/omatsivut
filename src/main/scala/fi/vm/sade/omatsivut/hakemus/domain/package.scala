@@ -1,11 +1,8 @@
 package fi.vm.sade.omatsivut.hakemus
 
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
-import fi.vm.sade.omatsivut.hakemus.domain.HakutoiveenValintatulosTila.HakutoiveenValintatulosTila
-import fi.vm.sade.omatsivut.hakemus.domain.ResultState.ResultState
-import fi.vm.sade.omatsivut.hakemus.domain.VastaanotettavuusTila.VastaanotettavuusTila
 import fi.vm.sade.omatsivut.tarjonta.domain.{Haku, KohteenHakuaika}
-import fi.vm.sade.omatsivut.valintatulokset.domain.HakutoiveenIlmoittautumistila
+import fi.vm.sade.omatsivut.tulokset.HakemuksenValintatulos
 
 package object domain {
   object Hakemus {
@@ -31,6 +28,7 @@ package object domain {
   }
 
   case class Hakutoive(hakemusData: Option[HakutoiveData], hakuaikaId: Option[String] = None, kohdekohtainenHakuaika: Option[KohteenHakuaika] = None)
+  
   object Hakutoive {
     def empty = Hakutoive(None)
   }
@@ -64,40 +62,4 @@ package object domain {
   case class Passive(id: String = "PASSIVE") extends HakemuksenTila // Passiivinen/poistettu
   case class Incomplete(id: String = "INCOMPLETE") extends HakemuksenTila // Tietoja puuttuu
 
-  object ResultState extends Enumeration {
-    type ResultState = Value
-    val VASTAANOTTANUT, EI_VASTAANOTETTU_MAARA_AIKANA, EHDOLLISESTI_VASTAANOTTANUT, PERUUTETTU, PERUNUT, HYLATTY, PERUUNTUNUT, KESKEN = Value
-  }
-
-  case class HakemuksenValintatulos(hakutoiveet: List[ToiveenValintatulos])
-  case class ToiveenValintatulos(
-                                      koulutus: Koulutus,
-                                      opetuspiste: Opetuspiste,
-                                      tila: HakutoiveenValintatulosTila,
-                                      vastaanottotila: ResultState,
-                                      vastaanotettavuustila: VastaanotettavuusTila,
-                                      vastaanotettavissaAsti: Option[Long],
-                                      viimeisinValintatuloksenMuutos: Option[Long],
-                                      ilmoittautumistila: Option[HakutoiveenIlmoittautumistila],
-                                      jonosija: Option[Int],
-                                      varasijojaTaytetaanAsti: Option[Long],
-                                      varasijanumero: Option[Int],
-                                      tilankuvaus: Option[String]) {
-    def isPeruuntunut = {
-      vastaanottotila == ResultState.PERUNUT || vastaanottotila == ResultState.PERUUTETTU || vastaanottotila == ResultState.PERUUNTUNUT
-    }
-  }
-
-  case class Koulutus(oid: String, name: String)
-  case class Opetuspiste(oid: String, name: String)
-
-  object HakutoiveenValintatulosTila extends Enumeration {
-    type HakutoiveenValintatulosTila = Value
-    val HYVAKSYTTY, HARKINNANVARAISESTI_HYVAKSYTTY, VARASIJALTA_HYVAKSYTTY, VARALLA, PERUUTETTU, PERUNUT, HYLATTY, PERUUNTUNUT, KESKEN = Value
-  }
-
-  object VastaanotettavuusTila extends Enumeration {
-    type VastaanotettavuusTila = Value
-    val EI_VASTAANOTETTAVISSA, VASTAANOTETTAVISSA_SITOVASTI, VASTAANOTETTAVISSA_EHDOLLISESTI = Value
-  }
 }

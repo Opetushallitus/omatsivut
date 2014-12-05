@@ -11,6 +11,7 @@ import fi.vm.sade.omatsivut.koodisto.KoodistoComponent
 import fi.vm.sade.omatsivut.lomake.domain.Lomake
 import fi.vm.sade.omatsivut.tarjonta.domain.Haku
 import fi.vm.sade.omatsivut.tarjonta.{TarjontaComponent, TarjontaService}
+import fi.vm.sade.omatsivut.tulokset._
 import fi.vm.sade.omatsivut.valintatulokset.domain.{HakutoiveenValintatulos, Valintatulos, Vastaanottoaikataulu}
 import org.joda.time.LocalDateTime
 
