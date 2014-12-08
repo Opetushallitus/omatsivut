@@ -99,7 +99,7 @@
     "saveFailed_validationError": "Could not save application - Please fill in all required information.",
     "applicationPeriodNotActive": "Application period not ongoing.",
     "serverError": "Unexpected error. Contact administrator.",
-    "valintatulosFailed": "An unexpected error has occurred. No results of student selection cannot be showed at the moment. Try again later."
+    "valintatulosFailed": "An unexpected error occurred in retrieving the student selection results. Please try again later."
   },
 
   "errorPage": {
