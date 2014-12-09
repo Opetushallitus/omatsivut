@@ -55,13 +55,9 @@ trait ApplicationValidatorComponent {
     }
 
     private def validateHakutoiveetAndAnswers(updatedApplication: ImmutableLegacyApplicationWrapper, storedApplication: ImmutableLegacyApplicationWrapper, lomake: Lomake)(implicit lang: Language.Language): List[ValidationError] = {
-      if (!storedApplication.complete) {
-        val errorsBeforeUpdate = validateAndConvertErrors(storedApplication, lomake)
-        val errorsAfterUpdate: List[ValidationError] = validateAndConvertErrors(updatedApplication, lomake)
-        errorsAfterUpdate.filter(!errorsBeforeUpdate.contains(_))
-      } else {
-        validateAndConvertErrors(updatedApplication, lomake)
-      }
+      val errorsBeforeUpdate = validateAndConvertErrors(storedApplication, lomake)
+      val errorsAfterUpdate: List[ValidationError] = validateAndConvertErrors(updatedApplication, lomake)
+      errorsAfterUpdate.filter(!errorsBeforeUpdate.contains(_))
     }
 
     private def update(hakemusMuutos: HakemusLike, lomake: Lomake, application: ImmutableLegacyApplicationWrapper)(implicit lang: Language.Language): ImmutableLegacyApplicationWrapper = {
