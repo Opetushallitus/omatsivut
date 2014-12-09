@@ -88,7 +88,7 @@ trait HakemusRepositoryComponent {
           val newValue = newAnswersFlattened.getOrElse(key, "")
           val changed = oldValue != newValue && !isContactInformationChange(key)
           if (changed) {
-            logger.warn("Attempt to change a non-contact information value " + key + " for application " + originalApplication.oid)
+            logger.warn("Attempt to change a non-contact information value " + key + "=" + oldValue + "->" + newValue + " for application " + originalApplication.oid)
           }
           changed
         }
