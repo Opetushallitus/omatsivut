@@ -208,5 +208,13 @@ class UpdateApplicationSpec extends HakemusApiSpecification with FixturePerson w
         status must_== 400
       }
     }
+
+    "allow changing contact info if hakutoive specific application period has passed" in {
+      setupFixture(hakemusErityisopetuksenaId)
+      setApplicationStart(hakemusErityisopetuksenaId, 0)
+      modifyHakemus (hakemusErityisopetuksenaId) (answerExtraQuestion(henkilotiedot, lahiosoite, "uusi osoite")) { hakemus =>
+        status must_== 200
+      }
+    }
   }
 }
