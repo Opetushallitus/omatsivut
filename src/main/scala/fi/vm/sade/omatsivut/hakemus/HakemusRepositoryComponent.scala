@@ -115,8 +115,9 @@ trait HakemusRepositoryComponent {
       val changedKeys: Set[String] = changes.toList.flatMap(_.toMap.get("field")).toSet
       val changedPhases: List[String] = application.getAnswers.toMap.toList.filter { case (vaihe, vastaukset) =>
         vastaukset.toMap.keys.exists(changedKeys.contains(_))
-      }.map(_._1)
-      val noteText = changedPhases.map("Hakija päivittänyt vaihetta '" + _ + "'").mkString("\n")
+      }.map(_._1).map("'" + _ + "'")
+
+      val noteText = "Hakija päivittänyt " + (if (changedPhases.size == 1) { "vaihetta" } else { "vaiheita" }) + " " + changedPhases.mkString(", ")
 
       application.addNote(new ApplicationNote(noteText, new Date(), userOid))
     }

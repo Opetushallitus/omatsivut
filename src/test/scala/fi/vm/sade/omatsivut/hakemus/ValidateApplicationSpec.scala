@@ -44,8 +44,8 @@ class ValidateApplicationSpec extends HakemusApiSpecification with FixturePerson
     }
 
     "validate application with extra answers" in {
-      val extraQuestionOne: (Hakemus) => Hakemus = answerExtraQuestion(skillsetPhaseKey, "osaaminen-tuntematon-kysymys", "osaaminen-testivastaus")
-      val extraQuestionTwo: (Hakemus) => Hakemus = answerExtraQuestion(preferencesPhaseKey, "hakutoive-tuntematon-kysymys", "osaaminen-testivastaus")
+      val extraQuestionOne: (Hakemus) => Hakemus = answerExtraQuestion(osaaminen, "osaaminen-tuntematon-kysymys", "osaaminen-testivastaus")
+      val extraQuestionTwo: (Hakemus) => Hakemus = answerExtraQuestion(hakutoiveet, "hakutoive-tuntematon-kysymys", "osaaminen-testivastaus")
       modifyHakemus(hakemusNivelKesa2013WithPeruskouluBaseEducationId)(extraQuestionOne andThen extraQuestionTwo) { newHakemus =>
         validate(newHakemus) { (errors, structuredQuestions) =>
           status must_== 200

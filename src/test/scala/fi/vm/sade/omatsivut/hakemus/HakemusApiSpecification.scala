@@ -35,11 +35,11 @@ trait HakemusApiSpecification extends ScalatraTestSupport {
 
   lazy val fixtureImporter: FixtureImporter = new FixtureImporter(dao, springContext.mongoTemplate)
 
-  val personalInfoPhaseKey: String = OppijaConstants.PHASE_PERSONAL
-  val preferencesPhaseKey: String = OppijaConstants.PHASE_APPLICATION_OPTIONS
-  val skillsetPhaseKey: String = OppijaConstants.PHASE_GRADES
-  val ssnKey: String = OppijaConstants.ELEMENT_ID_SOCIAL_SECURITY_NUMBER
-  val addressKey: String = OppijaConstants.ELEMENT_ID_FIN_ADDRESS
+  val henkilotiedot: String = "henkilotiedot"
+  val hakutoiveet: String = "hakutoiveet"
+  val osaaminen: String = "osaaminen"
+  val henkilotunnus: String = "Henkilotunnus"
+  val lahiosoite: String = "lahiosoite"
 
   def withHakemus[T](oid: String)(f: (HakemusInfo => T))(implicit personOid: PersonOid): T = {
     withApplications { applications =>
@@ -83,7 +83,7 @@ trait HakemusApiSpecification extends ScalatraTestSupport {
   }
 
   def answerExtraQuestion(phaseId: String, questionId: String, answer: String)(hakemus: Hakemus) = {
-    val answerToExtraQuestion: Answers = Map(phaseId -> Map(questionId -> answer))
+    val answerToExtraQuestion: Answers = Map(phaseId -> (hakemus.answers.getOrElse(phaseId, Map.empty) + (questionId -> answer)))
     hakemus.copy(answers = hakemus.answers ++ answerToExtraQuestion)
   }
 
