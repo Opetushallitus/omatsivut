@@ -15,6 +15,7 @@ import org.scalatra._
 import org.scalatra.json._
 import org.scalatra.swagger.SwaggerSupportSyntax.OperationBuilder
 import org.scalatra.swagger._
+import scala.util.{Failure, Success}
 
 trait ApplicationsServletContainer {
   this: LomakeRepositoryComponent with
@@ -58,8 +59,10 @@ trait ApplicationsServletContainer {
         val errors = applicationValidator.validate(lomake, updated, haku)
         if(errors.isEmpty) {
           hakemusUpdater.updateHakemus(lomake, haku, updated, personOid()) match {
-            case Some(saved) => Ok(saved)
-            case None => Forbidden("error" -> "Forbidden")
+            case Success(saved) => Ok(saved)
+            case Failure(e) =>
+              logger.warn("Application update rejected for application " + lomake.oid + ": " + e.getMessage)
+              Forbidden("error" -> "Forbidden")
           }
         } else {
           BadRequest(errors)

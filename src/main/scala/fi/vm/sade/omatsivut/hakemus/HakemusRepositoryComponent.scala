@@ -39,31 +39,50 @@ trait HakemusRepositoryComponent {
   class HakemusUpdater extends Logging {
     private val applicationService = springContext.applicationService
 
-    def updateHakemus(lomake: Lomake, haku: Haku, hakemus: HakemusMuutos, userOid: String)(implicit lang: Language.Language): Option[Hakemus] = {
+    def updateHakemus(lomake: Lomake, haku: Haku, hakemus: HakemusMuutos, userOid: String)(implicit lang: Language.Language): Try[Hakemus] = {
       val applicationQuery: Application = new Application().setOid(hakemus.oid)
       for {
-        applicationJavaObject <- timed(1000, "Application fetch DAO") {dao.find(applicationQuery).toList.headOption}
+        applicationJavaObject <- timed(1000, "Application fetch DAO") {dao.find(applicationQuery).toList.headOption} match {
+          case Some(a) => Success(a)
+          case None => Failure(new IllegalArgumentException("Application not found"))
+        }
         originalApplication = wrap(applicationJavaObject)
         updatedAnswers = AnswerHelper.getUpdatedAnswersForApplication(lomake, originalApplication, hakemus)
-        if canUpdate(lomake, originalApplication, updatedAnswers, userOid)
+        checkedAnswers <- Try.apply { checkPermissions(lomake, originalApplication, updatedAnswers, userOid) }
       } yield {
-        mutateApplicationJavaObject(lomake, applicationJavaObject, updatedAnswers, userOid) // <- the only point of actual mutation
+        mutateApplicationJavaObject(lomake, applicationJavaObject, checkedAnswers, userOid) // <- the only point of actual mutation
         timed(1000, "Application update DAO"){
           dao.update(applicationQuery, applicationJavaObject)
         }
-        auditLogger.log(UpdateHakemus(userOid, hakemus.oid, haku.oid, originalApplication.answers, updatedAnswers))
+        auditLogger.log(UpdateHakemus(userOid, hakemus.oid, haku.oid, originalApplication.answers, checkedAnswers))
         hakemusConverter.convertToHakemus(lomake, haku, wrap(applicationJavaObject))
       }
     }
 
-    private def canUpdate(lomake: Lomake, originalApplication: ImmutableLegacyApplicationWrapper, newAnswers: Answers, userOid: String)(implicit lang: Language.Language): Boolean = {
-      val stateUpdateable = originalApplication.state == "ACTIVE" || originalApplication.state == "INCOMPLETE"
-      val inPostProcessing = originalApplication.isPostProcessing
+    private def checkPermissions(lomake: Lomake, originalApplication: ImmutableLegacyApplicationWrapper, newAnswers: Answers, userOid: String)(implicit lang: Language.Language) = {
+      if (!(originalApplication.state == "ACTIVE" || originalApplication.state == "INCOMPLETE")) {
+        throw new IllegalStateException("Not updateable state: " + originalApplication.state)
+      }
 
-      (isActiveHakuPeriod(lomake) || hasOnlyContactInfoChangesAndApplicationRoundHasNotEnded(lomake, originalApplication, newAnswers)) &&
-        stateUpdateable &&
-        !inPostProcessing &&
-        userOid == originalApplication.personOid
+      if (!isActiveHakuPeriod(lomake)) {
+        checkOnlyContactInfoChanges(lomake, originalApplication, newAnswers)
+
+        val hakukierrosPäättyy: LocalDateTime = ohjausparametritService.haunAikataulu(lomake.oid).flatMap(_.hakukierrosPaattyy).map(new LocalDateTime(_: Long)).getOrElse(new LocalDateTime().plusYears(100))
+
+        if (!new LocalDateTime().isBefore(hakukierrosPäättyy)) {
+          throw new IllegalArgumentException("Hakukierros päättynyt " + hakukierrosPäättyy)
+        }
+      }
+
+      if (originalApplication.isPostProcessing) {
+        throw new IllegalStateException("In post-processing")
+      }
+
+      if (userOid != originalApplication.personOid) {
+        throw new IllegalArgumentException("Person oid mismatch")
+      }
+
+      newAnswers
     }
 
     private def isActiveHakuPeriod(lomake: Lomake)(implicit lang: Language.Language) = {
@@ -71,7 +90,7 @@ trait HakemusRepositoryComponent {
       applicationPeriods.exists(_.active)
     }
 
-    private def hasOnlyContactInfoChangesAndApplicationRoundHasNotEnded(lomake: Lomake, originalApplication: ImmutableLegacyApplicationWrapper, newAnswers: ImmutableLegacyApplicationWrapper.LegacyApplicationAnswers): Boolean = {
+    private def checkOnlyContactInfoChanges(lomake: Lomake, originalApplication: ImmutableLegacyApplicationWrapper, newAnswers: ImmutableLegacyApplicationWrapper.LegacyApplicationAnswers) {
       def isContactInformationChange(key: String): Boolean = {
         List(OppijaConstants.ELEMENT_ID_FIN_ADDRESS, OppijaConstants.ELEMENT_ID_EMAIL, OppijaConstants.ELEMENT_ID_FIN_POSTAL_NUMBER).contains(key) ||
           key.startsWith(OppijaConstants.ELEMENT_ID_PREFIX_PHONENUMBER)
@@ -80,19 +99,17 @@ trait HakemusRepositoryComponent {
       val oldAnswersFlattened = originalApplication.flatAnswers
       val newAnswersFlattened = FlatAnswers.flatten(newAnswers)
 
-      val hakukierrosPäättyy: LocalDateTime = ohjausparametritService.haunAikataulu(lomake.oid).flatMap(_.hakukierrosPaattyy).map(new LocalDateTime(_: Long)).getOrElse(new LocalDateTime().plusYears(100))
-
-      new LocalDateTime().isBefore(hakukierrosPäättyy) && newAnswersFlattened.keys.find(
+      newAnswersFlattened.keys.foreach(
         key => {
           val oldValue = oldAnswersFlattened.getOrElse(key, "")
           val newValue = newAnswersFlattened.getOrElse(key, "")
           val changed = oldValue != newValue && !isContactInformationChange(key)
           if (changed) {
-            logger.warn("Attempt to change a non-contact information value " + key + "=" + oldValue + "->" + newValue + " for application " + originalApplication.oid)
+            throw new IllegalArgumentException("Attempt to change a non-contact information value " + key + "=" + oldValue + "->" + newValue + " for application " + originalApplication.oid)
           }
           changed
         }
-      ).isEmpty
+      )
     }
 
     private def mutateApplicationJavaObject(lomake: Lomake, application: Application, updatedAnswers: LegacyApplicationAnswers, userOid: String)(implicit lang: Language.Language) {
