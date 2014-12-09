@@ -18,6 +18,7 @@ import fi.vm.sade.omatsivut.lomake.domain.Lomake
 import fi.vm.sade.omatsivut.ohjausparametrit.OhjausparametritComponent
 import fi.vm.sade.omatsivut.tarjonta.TarjontaComponent
 import fi.vm.sade.omatsivut.tarjonta.domain.Haku
+import fi.vm.sade.omatsivut.util.Logging
 import fi.vm.sade.omatsivut.util.Timer._
 import fi.vm.sade.omatsivut.valintatulokset.ValintatulosServiceComponent
 import org.joda.time.LocalDateTime
@@ -35,7 +36,7 @@ trait HakemusRepositoryComponent {
 
   private val dao = springContext.applicationDAO
 
-  class HakemusUpdater {
+  class HakemusUpdater extends Logging {
     private val applicationService = springContext.applicationService
 
     def updateHakemus(lomake: Lomake, haku: Haku, hakemus: HakemusMuutos, userOid: String)(implicit lang: Language.Language): Option[Hakemus] = {
@@ -71,28 +72,28 @@ trait HakemusRepositoryComponent {
     }
 
     private def hasOnlyContactInfoChangesAndApplicationRoundHasNotEnded(lomake: Lomake, originalApplication: ImmutableLegacyApplicationWrapper, newAnswers: ImmutableLegacyApplicationWrapper.LegacyApplicationAnswers): Boolean = {
+      def isContactInformationChange(key: String): Boolean = {
+        List(OppijaConstants.ELEMENT_ID_FIN_ADDRESS, OppijaConstants.ELEMENT_ID_EMAIL, OppijaConstants.ELEMENT_ID_FIN_POSTAL_NUMBER).contains(key) ||
+          key.startsWith(OppijaConstants.ELEMENT_ID_PREFIX_PHONENUMBER)
+      }
+
       val oldAnswersFlattened = originalApplication.flatAnswers
       val newAnswersFlattened = FlatAnswers.flatten(newAnswers)
-      val allKeys = oldAnswersFlattened.keySet ++ newAnswersFlattened.keySet
-      new LocalDateTime().isBefore(ohjausparametritService.haunAikataulu(lomake.oid).flatMap(_.hakukierrosPaattyy).map(new LocalDateTime(_ : Long)).getOrElse(new LocalDateTime().plusYears(100))) && allKeys.filter(
+
+      val hakukierrosPäättyy: LocalDateTime = ohjausparametritService.haunAikataulu(lomake.oid).flatMap(_.hakukierrosPaattyy).map(new LocalDateTime(_: Long)).getOrElse(new LocalDateTime().plusYears(100))
+
+      new LocalDateTime().isBefore(hakukierrosPäättyy) && newAnswersFlattened.keys.find(
         key => {
           val oldValue = oldAnswersFlattened.getOrElse(key, "")
           val newValue = newAnswersFlattened.getOrElse(key, "")
-          if(oldValue.equals(newValue)) {
-            false
+          val changed = oldValue != newValue && !isContactInformationChange(key)
+          if (changed) {
+            logger.warn("Attempt to change a non-contact information value " + key + " for application " + originalApplication.oid)
           }
-          else {
-            !isContactInformationChange(key)
-          }
+          changed
         }
       ).isEmpty
     }
-
-    private def isContactInformationChange(key: String): Boolean = {
-      List(OppijaConstants.ELEMENT_ID_FIN_ADDRESS, OppijaConstants.ELEMENT_ID_EMAIL, OppijaConstants.ELEMENT_ID_FIN_POSTAL_NUMBER).contains(key) ||
-        key.startsWith(OppijaConstants.ELEMENT_ID_PREFIX_PHONENUMBER)
-    }
-
 
     private def mutateApplicationJavaObject(lomake: Lomake, application: Application, updatedAnswers: LegacyApplicationAnswers, userOid: String)(implicit lang: Language.Language) {
       val originalApplication = application.clone()
