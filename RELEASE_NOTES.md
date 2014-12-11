@@ -4,12 +4,17 @@
 
 ## QA:lla, odottaa tuotantoon siirtoa
 
-## [release-2037](https://bamboo.oph.ware.fi/deploy/viewDeploymentVersion.action?versionId=115770042)
+## [release-2114](https://bamboo.oph.ware.fi/deploy/viewDeploymentVersion.action?versionId=115770042)
+- Virkailijalla hakemuksen muutoshistoria-osiossa tulee näkyy myös OHP:ssä tehdyt muutokset [OHP-117](https://jira.oph.ware.fi/jira/browse/OHP-117)
+- Logitusparannuksia
+- Kielihuoltoa
+
+## Tuotannossa
+
+## [release-2045](https://bamboo.oph.ware.fi/deploy/viewDeploymentVersion.action?versionId=115770042)
 - koodisto-client-13.3-SNAPSHOT: korjattu muistivuoto
 - Virheilmoitus näkyviin käyttäjälle, jos valintatulosten haku epäonnistuu [OHP-123](https://jira.oph.ware.fi/jira/browse/OHP-123)
 - paikan vastaanoton vahvistusnapin toimintatavan muutos (ei enää disabloidu kun hiiren siirtää pois sen päältä)
-
-## Tuotannossa
 
 ## [release-1973](https://bamboo.oph.ware.fi/deploy/viewDeploymentVersion.action?versionId=115769793)
 - Parannuksia valinnan tuloksen seliteteksteihin
