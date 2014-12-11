@@ -37,15 +37,15 @@ module.exports = function(listApp) {
 
         $scope.valintatulosText = function(valintatulos) {
           var key = util.underscoreToCamelCase(valintatulos.tila)
-          if (!_.isEmpty(valintatulos.tilankuvaus)) {
+          if (["VASTAANOTTANUT", "EI_VASTAANOTETTU_MAARA_AIKANA", "EHDOLLISESTI_VASTAANOTTANUT"].indexOf(valintatulos.vastaanottotila) >= 0) {
+            key = util.underscoreToCamelCase(valintatulos.vastaanottotila)
+            return localization("label.resultState." + key)
+          } else if (!_.isEmpty(valintatulos.tilankuvaus)) {
             if(valintatulos.tila === "HYLATTY"){
               return localization("label.resultState." + key) + " " + valintatulos.tilankuvaus
             } else {
               return valintatulos.tilankuvaus
             }
-          } else if (["VASTAANOTTANUT", "EI_VASTAANOTETTU_MAARA_AIKANA", "EHDOLLISESTI_VASTAANOTTANUT"].indexOf(valintatulos.vastaanottotila) >= 0) {
-            key = util.underscoreToCamelCase(valintatulos.vastaanottotila)
-            return localization("label.resultState." + key)
           } else if (valintatulos.tila === "VARALLA" && valintatulos.varasijojaTaytetaanAsti != null) {
             return localization("label.resultState.VarallaPvm", {
               varasija: valintatulos.varasijanumero,
