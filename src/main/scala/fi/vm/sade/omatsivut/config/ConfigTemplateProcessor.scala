@@ -15,7 +15,7 @@ import scala.collection.JavaConverters._
 object ConfigTemplateProcessor {
   def createSettings(attributesFile: String): ApplicationSettings = {
     val templateFile: String = "src/main/resources/oph-configuration/omatsivut.properties.template"
-    val templatedData = ConfigTemplateProcessor.processTemplate(templateFile, attributesFile)
+    val templatedData = processTemplate(templateFile, attributesFile)
     val properties = new Properties()
     properties.load(new StringReader(templatedData))
     ApplicationSettings(ConfigFactory.load(ConfigFactory.parseProperties(properties)))
