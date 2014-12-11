@@ -4,10 +4,11 @@
 
 ## QA:lla, odottaa tuotantoon siirtoa
 
-## [release-2114](https://bamboo.oph.ware.fi/deploy/viewDeploymentVersion.action?versionId=115770042)
+## [release-2130](https://bamboo.oph.ware.fi/deploy/viewDeploymentVersion.action?versionId=115770445)
 - Virkailijalla hakemuksen muutoshistoria-osiossa tulee näkyy myös OHP:ssä tehdyt muutokset [OHP-117](https://jira.oph.ware.fi/jira/browse/OHP-117)
 - Logitusparannuksia
 - Kielihuoltoa
+- Hakijakohtainen vastaanottoaika klo 23:59 asti ja määräajan jälkeen näkyy kohteen statuksena "Ei vastaanottanut määräaikana tila" [OHP-127](https://jira.oph.ware.fi/jira/browse/OHP-127)
 
 ## Tuotannossa
 
