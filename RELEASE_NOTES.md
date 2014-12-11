@@ -8,7 +8,7 @@
 - Virkailijalla hakemuksen muutoshistoria-osiossa tulee näkyy myös OHP:ssä tehdyt muutokset [OHP-117](https://jira.oph.ware.fi/jira/browse/OHP-117)
 - Logitusparannuksia
 - Kielihuoltoa
-- Hakijakohtainen vastaanottoaika klo 23:59 asti ja määräajan jälkeen näkyy kohteen statuksena "Ei vastaanottanut määräaikana tila" [OHP-127](https://jira.oph.ware.fi/jira/browse/OHP-127)
+- Hakijakohtainen vastaanottoaika klo 23:59 asti ja määräajan jälkeen näkyy kohteen statuksena "Et vastaanottanut määräaikana" [OHP-127](https://jira.oph.ware.fi/jira/browse/OHP-127)
 
 ## Tuotannossa
 
