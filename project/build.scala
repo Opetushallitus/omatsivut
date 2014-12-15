@@ -102,12 +102,20 @@ object OmatsivutBuild extends Build {
   ).configs(UnitTest)
   .settings(inConfig(UnitTest)(Defaults.testTasks): _*)
   .settings(testOptions in UnitTest := Seq(
+      Tests.Setup(() => {
+        System.setProperty("specs2.outDir", "target/unit-specs2-reports")
+        System.setProperty("specs2.junit.outDir", "target/unit-test-reports")
+      }),
       Tests.Argument("junitxml", "console"),
       Tests.Argument("exclude", "integration")
     )
   ).configs(IntegrationTest)
   .settings(inConfig(IntegrationTest)(Defaults.testTasks): _*)
   .settings(testOptions in IntegrationTest := Seq(
+      Tests.Setup(() => {
+        System.setProperty("specs2.outDir", "target/integration-specs2-reports")
+        System.setProperty("specs2.junit.outDir", "target/integration-test-reports")
+      }),
       Tests.Argument("junitxml", "console"),
       Tests.Argument("include", "integration")
     )
