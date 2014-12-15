@@ -59,7 +59,7 @@ module.exports = function(listApp) {
         }
 
         $scope.valintatulosStyle = function(valintatulos) {
-          if (valintatulos.tila == "HYVAKSYTTY" || valintatulos.tila == "HYVAKSYTTY_EHDOLLISESTI")
+          if (valintatulos.tila == "HYVAKSYTTY" || valintatulos.tila == "HYVAKSYTTY_EHDOLLISESTI" || valintatulos.tila == "VARASIJALTA_HYVAKSYTTY")
             return "accepted"
         }
       }
