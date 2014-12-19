@@ -2,28 +2,29 @@ package fi.vm.sade.omatsivut
 
 import java.nio.file.{Files, Paths}
 
-import fi.vm.sade.omatsivut.mongo.EmbeddedMongo
+import fi.vm.sade.omatsivut.config.AppConfig
+import fi.vm.sade.utils.mongo.EmbeddedMongo
 import fi.vm.sade.utils.slf4j.Logging
-import fi.vm.sade.utils.tcp.PortChecker
+import fi.vm.sade.utils.tcp.{PortFromSystemPropertyOrFindFree, PortChecker}
 
 object ValintatulosServiceRunner extends Logging {
   import scala.sys.process._
 
-  var valintatulosPort = sys.props.getOrElse("valintatulos.port", PortChecker.findFreeLocalPort.toString).toInt
+  val valintatulosPortChooser = new PortFromSystemPropertyOrFindFree("valintatulos.port")
 
   val searchPaths = List("./valinta-tulos-service", "../valinta-tulos-service")
   var currentRunner: Option[scala.sys.process.Process] = None
 
   def start = this.synchronized {
-    if (currentRunner == None && PortChecker.isFreeLocalPort(valintatulosPort)) {
+    if (currentRunner == None && PortChecker.isFreeLocalPort(valintatulosPortChooser.chosenPort)) {
       findValintatulosService match {
         case Some(path) => {
-          logger.info("Starting valinta-tulos-service from " + path + " on port "+ valintatulosPort)
+          logger.info("Starting valinta-tulos-service from " + path + " on port "+ valintatulosPortChooser.chosenPort)
           val cwd = new java.io.File(path)
           val javaHome = System.getProperty("JAVA8_HOME", "")
           Process(List("./sbt", "-no-colors", "test:compile"), cwd, "JAVA_HOME" -> javaHome).!
-          val process = Process(List("./sbt", "-no-colors", "test:run-main fi.vm.sade.valintatulosservice.JettyLauncher", "-Dvalintatulos.port=" + valintatulosPort, "-Dvalintatulos.profile=it-externalHakemus", "-Dhakemus.embeddedmongo.port=" + EmbeddedMongo.port,  "-Dfile.encoding=UTF-8"), cwd, "JAVA_HOME" -> javaHome).run(true)
-          for (i <- 0 to 60 if PortChecker.isFreeLocalPort(valintatulosPort)) {
+          val process = Process(List("./sbt", "-no-colors", "test:run-main fi.vm.sade.valintatulosservice.JettyLauncher", "-Dvalintatulos.port=" + valintatulosPortChooser.chosenPort, "-Dvalintatulos.profile=it-externalHakemus", "-Dhakemus.embeddedmongo.port=" + AppConfig.embeddedmongoPortChooser.chosenPort,  "-Dfile.encoding=UTF-8"), cwd, "JAVA_HOME" -> javaHome).run(true)
+          for (i <- 0 to 60 if PortChecker.isFreeLocalPort(valintatulosPortChooser.chosenPort)) {
             Thread.sleep(1000)
           }
           currentRunner = Some(process)
@@ -33,7 +34,7 @@ object ValintatulosServiceRunner extends Logging {
           logger.error("******* valinta-tulos-service not found ********")
       }
     } else {
-      logger.info("Not starting valinta-tulos-service: seems to be running on port " + valintatulosPort)
+      logger.info("Not starting valinta-tulos-service: seems to be running on port " + valintatulosPortChooser.chosenPort)
     }
   }
 

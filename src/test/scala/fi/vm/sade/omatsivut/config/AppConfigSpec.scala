@@ -1,13 +1,15 @@
 package fi.vm.sade.omatsivut.config
 
 import fi.vm.sade.omatsivut.config.AppConfig.{AppConfig, ExampleTemplatedProps}
-import fi.vm.sade.omatsivut.mongo.EmbeddedMongo
+import fi.vm.sade.utils.mongo.EmbeddedMongo
+import fi.vm.sade.utils.tcp.PortFromSystemPropertyOrFindFree
 import org.specs2.mutable.Specification
 
 class AppConfigSpec extends Specification {
   "Config with default profile" should {
     "Start up" in {
-      EmbeddedMongo.withEmbeddedMongo {
+      val embeddedmongoPortChooser = new PortFromSystemPropertyOrFindFree("omatsivut.embeddedmongo.port")
+      EmbeddedMongo.withEmbeddedMongo(embeddedmongoPortChooser) {
         validateConfig(new AppConfig with ExampleTemplatedProps {
           def springConfiguration = new OmatSivutSpringContext.Default()
         })

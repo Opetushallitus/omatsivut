@@ -74,7 +74,6 @@ object OmatsivutBuild extends Build {
         "org.springframework" % "spring-jms" % SpringVersion, // <- patch for spring-core-3.1.3 transitive dep
         "org.springframework" % "spring-core" % SpringVersion,
         "org.springframework" % "spring-context" % SpringVersion,
-        "de.flapdoodle.embed" % "de.flapdoodle.embed.mongo" % "1.46.0",
         "com.google.guava" % "guava" % "15.0"
       ),
       artifactName <<= (name in (Compile, packageWar)) { projectName =>
