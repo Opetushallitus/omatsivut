@@ -6,7 +6,7 @@ import fi.vm.sade.omatsivut.config.{AppConfig, ComponentRegistry, OmatSivutSprin
 import fi.vm.sade.omatsivut.security.fake.{FakeShibbolethFilter, FakeShibbolethServlet}
 import fi.vm.sade.omatsivut.servlet._
 import fi.vm.sade.omatsivut.servlet.session.{LoginServlet, SessionServlet}
-import fi.vm.sade.omatsivut.util.Logging
+import fi.vm.sade.utils.slf4j.Logging
 import org.scalatra._
 
 class ScalatraBootstrap extends LifeCycle with Logging {

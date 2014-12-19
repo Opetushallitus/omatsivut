@@ -4,10 +4,12 @@ import com.typesafe.config.Config
 import fi.vm.sade.omatsivut.ValintatulosServiceRunner
 import fi.vm.sade.omatsivut.mongo.{EmbeddedMongo, MongoServer}
 import fi.vm.sade.omatsivut.security.{AuthenticationContext, ProductionAuthenticationContext, TestAuthenticationContext}
-import fi.vm.sade.omatsivut.util.Logging
+import fi.vm.sade.utils.config.{ConfigTemplateProcessor, ApplicationSettingsLoader}
+import fi.vm.sade.utils.slf4j.Logging
 import org.apache.activemq.broker.BrokerService
 
 object AppConfig extends Logging {
+  private implicit val settingsParser = ApplicationSettingsParser
 
   def getProfileProperty() = System.getProperty("omatsivut.profile", "default")
 
@@ -44,7 +46,7 @@ object AppConfig extends Logging {
   class Dev extends AppConfig with ExampleTemplatedProps with MockAuthentication {
     def springConfiguration = new OmatSivutSpringContext.Dev()
 
-    override lazy val settings = ConfigTemplateProcessor.createSettings(templateAttributesFile)
+    override lazy val settings = ConfigTemplateProcessor.createSettings("omatsivut", templateAttributesFile)
       .withOverride("mongodb.oppija.uri", "mongodb://localhost:27017")
   }
 
@@ -65,7 +67,7 @@ object AppConfig extends Logging {
       activemqOpt = None
     }
 
-    override lazy val settings = ConfigTemplateProcessor.createSettings(templateAttributesFile)
+    override lazy val settings = ConfigTemplateProcessor.createSettings("omatsivut", templateAttributesFile)
       .withOverride("mongodb.oppija.uri", "mongodb://localhost:27017")
       .withOverride("log.mongo.uri", "mongodb://localhost:27017")
       .withOverride("activemq.brokerurl", "vm://transport")
@@ -87,7 +89,7 @@ object AppConfig extends Logging {
       mongo = None
     }
 
-    override lazy val settings = ConfigTemplateProcessor.createSettings(templateAttributesFile)
+    override lazy val settings = ConfigTemplateProcessor.createSettings("omatsivut", templateAttributesFile)
       .withOverride("omatsivut.valinta-tulos-service.url", "http://localhost:"+ ValintatulosServiceRunner.valintatulosPort+"/valinta-tulos-service")
       .withOverride("mongo.db.name", "hakulomake")
       .withOverride("mongodb.oppija.uri", "mongodb://localhost:" + EmbeddedMongo.port)
@@ -103,7 +105,7 @@ object AppConfig extends Logging {
 
   trait ExternalProps {
     def configFile = System.getProperty("user.home") + "/oph-configuration/omatsivut.properties"
-    lazy val settings = ApplicationSettings.loadSettings(configFile)
+    lazy val settings = ApplicationSettingsLoader.loadSettings(configFile)
   }
 
   trait ExampleTemplatedProps extends AppConfig with TemplatedProps {
@@ -113,7 +115,7 @@ object AppConfig extends Logging {
 
   trait TemplatedProps {
     logger.info("Using template variables from " + templateAttributesFile)
-    lazy val settings = ConfigTemplateProcessor.createSettings(templateAttributesFile)
+    lazy val settings = ConfigTemplateProcessor.createSettings("omatsivut", templateAttributesFile)
     def templateAttributesFile: String
   }
 

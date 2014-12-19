@@ -9,8 +9,8 @@ import fi.vm.sade.omatsivut.lomake.domain.Lomake
 import fi.vm.sade.omatsivut.ohjausparametrit.{OhjausparametritComponent, OhjausparametritService}
 import fi.vm.sade.omatsivut.tarjonta.domain.{Haku, Hakuaika}
 import fi.vm.sade.omatsivut.tarjonta.{TarjontaComponent, TarjontaService}
-import fi.vm.sade.omatsivut.util.Logging
-import fi.vm.sade.omatsivut.util.Timer.timed
+import fi.vm.sade.utils.slf4j.Logging
+import fi.vm.sade.utils.Timer.timed
 import org.joda.time.DateTime
 
 trait LomakeRepositoryComponent {
@@ -39,7 +39,7 @@ trait LomakeRepositoryComponent {
     private def tryFind(applicationSystemOid: String): Option[Lomake] = {
       try {
         reportCacheStats()
-        Some(timed(1000, "Application system service"){
+        Some(timed("Application system service", 1000){
           Lomake(repository.getApplicationSystem(applicationSystemOid))
         })
       } catch {

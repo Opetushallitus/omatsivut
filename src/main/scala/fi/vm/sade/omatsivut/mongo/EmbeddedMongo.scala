@@ -5,7 +5,8 @@ import de.flapdoodle.embed.mongo.distribution.Version
 import de.flapdoodle.embed.mongo.{Command, MongodStarter}
 import de.flapdoodle.embed.process.config.io.ProcessOutput
 import de.flapdoodle.embed.process.runtime.Network
-import fi.vm.sade.omatsivut.util.{Logging, PortChecker}
+import fi.vm.sade.utils.slf4j.Logging
+import fi.vm.sade.utils.tcp.PortChecker
 
 object EmbeddedMongo extends Logging {
   val port = System.getProperty("omatsivut.embeddedmongo.port", PortChecker.findFreeLocalPort.toString).toInt

@@ -2,7 +2,7 @@ package fi.vm.sade.omatsivut.security.fake
 
 import javax.servlet.http.HttpServletRequestWrapper
 
-import fi.vm.sade.omatsivut.util.Logging
+import fi.vm.sade.utils.slf4j.Logging
 import org.scalatra.ScalatraFilter
 
 class FakeShibbolethFilter extends ScalatraFilter with Logging {

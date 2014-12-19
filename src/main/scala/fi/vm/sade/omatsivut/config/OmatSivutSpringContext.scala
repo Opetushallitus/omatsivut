@@ -11,7 +11,7 @@ import fi.vm.sade.haku.virkailija.authentication.impl.AuthenticationServiceMockI
 import fi.vm.sade.log.client.Logger
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.mongo.OmatSivutMongoConfiguration
-import fi.vm.sade.omatsivut.util.Logging
+import fi.vm.sade.utils.slf4j.Logging
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation._
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer

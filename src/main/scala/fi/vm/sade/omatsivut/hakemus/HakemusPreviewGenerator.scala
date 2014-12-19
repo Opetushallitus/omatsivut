@@ -13,7 +13,7 @@ import fi.vm.sade.omatsivut.domain.{Address, Attachment, Language}
 import fi.vm.sade.omatsivut.localization.Translations
 import fi.vm.sade.omatsivut.lomake.{ElementWrapper, OptionWrapper}
 import fi.vm.sade.omatsivut.servlet.ServerContaxtPath
-import fi.vm.sade.omatsivut.util.Logging
+import fi.vm.sade.utils.slf4j.Logging
 
 import scalatags.Text.TypedTag
 

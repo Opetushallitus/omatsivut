@@ -2,7 +2,7 @@ package fi.vm.sade.omatsivut.security
 
 import javax.servlet.http.HttpServletRequest
 
-import fi.vm.sade.omatsivut.util.Logging
+import fi.vm.sade.utils.slf4j.Logging
 
 object AuthenticationInfoParser extends Logging {
   def getAuthenticationInfo(request: HttpServletRequest): AuthenticationInfo = {

@@ -1,5 +1,5 @@
 package fi.vm.sade.omatsivut.memoize
-import  fi.vm.sade.omatsivut.util.Logging
+import  fi.vm.sade.utils.slf4j.Logging
 import org.joda.time.DateTime
 
 class TTLOptionalMemoize[-T, +R](f: T => Option[R], name: String, lifetimeSeconds: Long, maxSize: Integer) extends (T => Option[R]) with Logging {

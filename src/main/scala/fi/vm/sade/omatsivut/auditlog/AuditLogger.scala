@@ -2,9 +2,8 @@ package fi.vm.sade.omatsivut.auditlog
 
 import java.util.concurrent.ArrayBlockingQueue
 
-import fi.vm.sade.omatsivut.config.{OmatSivutSpringContext, SpringContextComponent, AppConfig}
-import AppConfig.AppConfig
-import fi.vm.sade.omatsivut.util.Logging
+import fi.vm.sade.omatsivut.config.SpringContextComponent
+import fi.vm.sade.utils.slf4j.Logging
 import org.slf4j.LoggerFactory
 
 trait AuditLoggerComponent {

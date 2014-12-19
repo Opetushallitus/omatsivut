@@ -9,7 +9,6 @@ import fi.vm.sade.omatsivut.auditlog._
 import fi.vm.sade.omatsivut.config.SpringContextComponent
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.domain.Language.Language
-import fi.vm.sade.omatsivut.hakemus.FlatAnswers.FlatAnswers
 import fi.vm.sade.omatsivut.hakemus.ImmutableLegacyApplicationWrapper.{LegacyApplicationAnswers, wrap}
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus.Answers
 import fi.vm.sade.omatsivut.hakemus.domain._
@@ -18,8 +17,8 @@ import fi.vm.sade.omatsivut.lomake.domain.Lomake
 import fi.vm.sade.omatsivut.ohjausparametrit.OhjausparametritComponent
 import fi.vm.sade.omatsivut.tarjonta.TarjontaComponent
 import fi.vm.sade.omatsivut.tarjonta.domain.Haku
-import fi.vm.sade.omatsivut.util.Logging
-import fi.vm.sade.omatsivut.util.Timer._
+import fi.vm.sade.utils.slf4j.Logging
+import fi.vm.sade.utils.Timer._
 import fi.vm.sade.omatsivut.valintatulokset.ValintatulosServiceComponent
 import org.joda.time.LocalDateTime
 
@@ -42,7 +41,7 @@ trait HakemusRepositoryComponent {
     def updateHakemus(lomake: Lomake, haku: Haku, hakemus: HakemusMuutos, userOid: String)(implicit lang: Language.Language): Try[Hakemus] = {
       val applicationQuery: Application = new Application().setOid(hakemus.oid)
       for {
-        applicationJavaObject <- timed(1000, "Application fetch DAO") {dao.find(applicationQuery).toList.headOption} match {
+        applicationJavaObject <- timed("Application fetch DAO", 1000) {dao.find(applicationQuery).toList.headOption} match {
           case Some(a) => Success(a)
           case None => Failure(new IllegalArgumentException("Application not found"))
         }
@@ -51,7 +50,7 @@ trait HakemusRepositoryComponent {
         checkedAnswers <- Try.apply { checkPermissions(lomake, originalApplication, updatedAnswers, userOid) }
       } yield {
         mutateApplicationJavaObject(lomake, applicationJavaObject, checkedAnswers, userOid) // <- the only point of actual mutation
-        timed(1000, "Application update DAO"){
+        timed("Application update DAO", 1000){
           dao.update(applicationQuery, applicationJavaObject)
         }
         auditLogger.log(UpdateHakemus(userOid, hakemus.oid, haku.oid, originalApplication.answers, checkedAnswers))
@@ -118,10 +117,10 @@ trait HakemusRepositoryComponent {
       updatedAnswers.foreach { case (phaseId, phaseAnswers) =>
         application.addVaiheenVastaukset(phaseId, phaseAnswers)
       }
-      timed(1000, "ApplicationService: update preference based data"){
+      timed("ApplicationService: update preference based data", 1000){
         applicationService.updatePreferenceBasedData(application)
       }
-      timed(1000, "ApplicationService: update authorization Meta"){
+      timed("ApplicationService: update authorization Meta", 1000){
         applicationService.updateAuthorizationMeta(application)
       }
       updateChangeHistory(application, originalApplication, userOid)
@@ -151,7 +150,7 @@ trait HakemusRepositoryComponent {
     }
 
     def findStoredApplication(query: Application) = {
-      val applications = timed(1000, "Application fetch DAO"){
+      val applications = timed("Application fetch DAO", 1000){
         dao.find(query).toList
       }
       applications.headOption.map(wrap)
@@ -174,8 +173,8 @@ trait HakemusRepositoryComponent {
     }
 
     private def fetchHakemukset(query: Application)(implicit lang: Language): List[HakemusInfo] = {
-      timed(1000, "Application fetch"){
-        val legacyApplications: List[ImmutableLegacyApplicationWrapper] = timed(1000, "Application fetch DAO"){
+      timed("Application fetch", 1000){
+        val legacyApplications: List[ImmutableLegacyApplicationWrapper] = timed("Application fetch DAO", 1000){
           dao.find(query).toList
         }.map(ImmutableLegacyApplicationWrapper.wrap)
         legacyApplications.filter{
@@ -183,7 +182,7 @@ trait HakemusRepositoryComponent {
             !application.state.equals("PASSIVE")
           }
         }.map(application => {
-          val (lomakeOption, hakuOption) = timed(1000, "LomakeRepository get lomake"){
+          val (lomakeOption, hakuOption) = timed("LomakeRepository get lomake", 1000){
             lomakeRepository.lomakeAndHakuByApplication(application)
           }
           for {

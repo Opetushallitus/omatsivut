@@ -1,6 +1,7 @@
 package fi.vm.sade.omatsivut.json
 
 import fi.vm.sade.omatsivut.tarjonta.domain.{KohteenHakuaika, Hakuaika, Haku}
+import fi.vm.sade.utils.json4s.GenericJsonFormats
 import org.json4s._
 
 object JsonProcessor {
@@ -14,7 +15,7 @@ object JsonProcessor {
 class HakuSerializer extends CustomSerializer[Haku](format => (
   {
     case obj : JObject =>
-      obj.extract[Haku](JsonFormats.genericFormats, Manifest.classType(classOf[Haku]))
+      obj.extract[Haku](GenericJsonFormats.genericFormats, Manifest.classType(classOf[Haku]))
   },
   {
     case x: Haku =>
@@ -24,7 +25,7 @@ class HakuSerializer extends CustomSerializer[Haku](format => (
 
 class HakuaikaSerializer extends CustomSerializer[Hakuaika](format => (
   {
-    case obj : JObject => obj.extract[Hakuaika](JsonFormats.genericFormats, Manifest.classType(classOf[Hakuaika]))
+    case obj : JObject => obj.extract[Hakuaika](GenericJsonFormats.genericFormats, Manifest.classType(classOf[Hakuaika]))
   },
   {
     case x: Hakuaika =>
@@ -38,7 +39,7 @@ class HakuaikaSerializer extends CustomSerializer[Hakuaika](format => (
 
 class KohteenHakuaikaSerializer extends CustomSerializer[KohteenHakuaika](format => (
   {
-    case obj : JObject => obj.extract[KohteenHakuaika](JsonFormats.genericFormats, Manifest.classType(classOf[KohteenHakuaika]))
+    case obj : JObject => obj.extract[KohteenHakuaika](GenericJsonFormats.genericFormats, Manifest.classType(classOf[KohteenHakuaika]))
   },
   {
     case x: KohteenHakuaika =>

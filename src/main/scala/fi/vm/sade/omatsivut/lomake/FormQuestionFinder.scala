@@ -6,7 +6,7 @@ import fi.vm.sade.haku.oppija.lomake.domain.elements.{Element, HiddenValue, Titl
 import fi.vm.sade.haku.oppija.lomake.validation.validators.RequiredFieldValidator
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.lomake.domain._
-import fi.vm.sade.omatsivut.util.Logging
+import fi.vm.sade.utils.slf4j.Logging
 
 import scala.collection.JavaConversions._
 

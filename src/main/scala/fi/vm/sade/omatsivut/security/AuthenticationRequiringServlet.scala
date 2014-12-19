@@ -3,7 +3,7 @@ package fi.vm.sade.omatsivut.security
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.security.AuthenticationInfoParser._
 import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
-import fi.vm.sade.omatsivut.util.Logging
+import fi.vm.sade.utils.slf4j.Logging
 import org.json4s.JsonDSL._
 import org.json4s.jackson.JsonMethods._
 import org.scalatra.{NotFound, Unauthorized}

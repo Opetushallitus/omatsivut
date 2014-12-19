@@ -1,6 +1,7 @@
 package fi.vm.sade.omatsivut.json
 
 import fi.vm.sade.omatsivut.lomake.domain._
+import fi.vm.sade.utils.json4s.GenericJsonFormats
 import org.json4s._
 
 class QuestionNodeSerializer extends Serializer[QuestionNode] {
@@ -26,6 +27,6 @@ class QuestionNodeSerializer extends Serializer[QuestionNode] {
   }
 
   override def serialize(implicit format: Formats): PartialFunction[Any, JValue] = {
-    case any: QuestionNode => Extraction.decompose(any)(JsonFormats.genericFormats)
+    case any: QuestionNode => Extraction.decompose(any)(GenericJsonFormats.genericFormats)
   }
 }

@@ -4,7 +4,7 @@ import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.config.SpringContextComponent
 import fi.vm.sade.omatsivut.fixtures.FixtureImporter
 import fi.vm.sade.omatsivut.tarjonta.TarjontaComponent
-import fi.vm.sade.omatsivut.util.Timer
+import fi.vm.sade.utils.Timer
 import fi.vm.sade.omatsivut.valintatulokset.{FailingRemoteValintatulosService, RemoteValintatulosService, ValintatulosServiceComponent}
 import org.scalatra.{InternalServerError, Ok}
 
@@ -18,7 +18,7 @@ trait FixtureServletContainer {
       put("/fixtures/apply") {
         val fixtureName: String = params("fixturename")
         val applicationOid: String = params.get("applicationOid").getOrElse("*").split("\\.").last
-        Timer.timed(100, "Apply fixtures"){
+        Timer.timed("Apply fixtures", 100){
           new FixtureImporter(springContext.applicationDAO, springContext.mongoTemplate).applyFixtures(fixtureName, "application/"+applicationOid+".json")
         }
         Ok

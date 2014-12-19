@@ -2,7 +2,7 @@ package fi.vm.sade.omatsivut.ohjausparametrit
 
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.fixtures.JsonFixtureMaps
-import fi.vm.sade.omatsivut.http.DefaultHttpClient
+import fi.vm.sade.utils.http.DefaultHttpClient
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.memoize.TTLOptionalMemoize
 import fi.vm.sade.omatsivut.ohjausparametrit.domain.{HaunAikataulu, TulostenJulkistus}

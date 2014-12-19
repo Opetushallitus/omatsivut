@@ -13,7 +13,7 @@ import fi.vm.sade.omatsivut.lomake.AddedQuestionFinder
 import fi.vm.sade.omatsivut.lomake.domain.{AnswerId, Lomake}
 import fi.vm.sade.omatsivut.tarjonta.TarjontaComponent
 import fi.vm.sade.omatsivut.tarjonta.domain.Haku
-import fi.vm.sade.omatsivut.util.Logging
+import fi.vm.sade.utils.slf4j.Logging
 
 import scala.collection.JavaConversions._
 

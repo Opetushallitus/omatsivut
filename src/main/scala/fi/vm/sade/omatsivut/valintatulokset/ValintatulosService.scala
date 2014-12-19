@@ -1,9 +1,9 @@
 package fi.vm.sade.omatsivut.valintatulokset
 
-import fi.vm.sade.omatsivut.http.DefaultHttpClient
+import fi.vm.sade.utils.http.DefaultHttpClient
 import fi.vm.sade.omatsivut.json.JsonFormats
-import fi.vm.sade.omatsivut.util.Logging
-import fi.vm.sade.omatsivut.util.Timer.timed
+import fi.vm.sade.utils.slf4j.Logging
+import fi.vm.sade.utils.Timer.timed
 import fi.vm.sade.omatsivut.valintatulokset.domain.{Valintatulos, Vastaanotto}
 import org.json4s.JsonAST.JValue
 
@@ -56,7 +56,7 @@ class RemoteValintatulosService(valintatulosServiceUrl: String) extends Valintat
     val url = valintatulosServiceUrl + "/haku/"+hakuOid+"/hakemus/"+hakemusOid
     val request = DefaultHttpClient.httpGet(url)
 
-    timed(1000, "ValintatulosService get"){request.responseWithHeaders} match {
+    timed("ValintatulosService get", 1000){request.responseWithHeaders} match {
       case (200, _, resultString) => {
         try {
           parse(resultString).extractOpt[JValue].map(_.extract[Valintatulos])

@@ -1,18 +1,12 @@
 package fi.vm.sade.omatsivut.json
 
 import fi.vm.sade.omatsivut.tulokset.HakutoiveenValintatulosTila
+import fi.vm.sade.utils.json4s.GenericJsonFormats
 import org.json4s._
 import org.json4s.ext.{JodaTimeSerializers, EnumNameSerializer}
 
 object JsonFormats {
-  val genericFormats =  new DefaultFormats {
-    override def dateFormatter = {
-      val format = super.dateFormatter
-      format.setTimeZone(DefaultFormats.UTC)
-      format
-    }
-  } ++ JodaTimeSerializers.all
-  val jsonFormats: Formats = JsonFormats.genericFormats ++ List(new QuestionNodeSerializer, new HakemusMuutosSerializer, new EnumNameSerializer(HakutoiveenValintatulosTila), new HakuSerializer, new KohteenHakuaikaSerializer)
+  val jsonFormats: Formats = GenericJsonFormats.genericFormats ++ List(new QuestionNodeSerializer, new HakemusMuutosSerializer, new EnumNameSerializer(HakutoiveenValintatulosTila), new HakuSerializer, new KohteenHakuaikaSerializer)
 }
 
 trait JsonFormats {
