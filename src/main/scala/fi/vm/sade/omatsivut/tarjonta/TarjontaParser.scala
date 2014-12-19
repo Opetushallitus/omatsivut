@@ -2,15 +2,18 @@ package fi.vm.sade.omatsivut.tarjonta
 
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.tarjonta.domain.{TarjontaHaku, KohteenHakuaika, Hakukohde}
+import fi.vm.sade.omatsivut.util.Logging
 import org.json4s.JValue
 
-private object TarjontaParser extends JsonFormats {
+private object TarjontaParser extends JsonFormats with Logging {
 
   def parseHaku(json: JValue) = {
-    for {
+    val res = for {
       obj <- (json \ "result").toOption
       h <- obj.extractOpt[TarjontaHaku]
     } yield h
+    if(!res.isDefined) { logger.warn("TarjontaHaku is empty") }
+    res
   }
 
   def parseHakukohde(json: JValue) = {
