@@ -4,11 +4,11 @@
 
 ## QA:lla, odottaa tuotantoon siirtoa
 
+## Tuotannossa
+
 ## [release-2248](https://bamboo.oph.ware.fi/deploy/viewDeploymentVersion.action?versionId=115771033)
 - uusin hakemus-api kirjasto korjaa tuotannon `Failed to instantiate fi.vm.sade.haku.oppija.lomake.validation.Validator using constructor NO_CONSTRUCTOR with arguments` ongelman.
 - pieniä korjauksia ja tulevia ominaisuuksia valmistelivia muutoksia
-
-## Tuotannossa
 
 ## [release-2130](https://bamboo.oph.ware.fi/deploy/viewDeploymentVersion.action?versionId=115770445)
 - Virkailijalla hakemuksen muutoshistoria-osiossa tulee näkyy myös OHP:ssä tehdyt muutokset [OHP-117](https://jira.oph.ware.fi/jira/browse/OHP-117)
