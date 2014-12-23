@@ -10,6 +10,7 @@ import fi.vm.sade.omatsivut.hakemus._
 import fi.vm.sade.omatsivut.koodisto.{KoodistoService, KoodistoComponent}
 import fi.vm.sade.omatsivut.lomake.{LomakeRepository, LomakeRepositoryComponent}
 import fi.vm.sade.omatsivut.koulutusinformaatio.{KoulutusInformaatioComponent, KoulutusInformaatioService}
+import fi.vm.sade.omatsivut.muistilista.{MuistilistaComponent, Muistilista}
 import fi.vm.sade.omatsivut.ohjausparametrit.{OhjausparametritComponent, OhjausparametritService}
 import fi.vm.sade.omatsivut.servlet.session.{LogoutServletContainer, SecuredSessionServletContainer}
 import fi.vm.sade.omatsivut.servlet._
@@ -28,6 +29,8 @@ class ComponentRegistry(val config: AppConfig)
           HakemusPreviewGeneratorComponent with
           HakemusConverterComponent with
           ApplicationsServletContainer with
+          MuistilistaServletContainer with
+          MuistilistaComponent with
           KoulutusServletContainer with
           SecuredSessionServletContainer with
           LogoutServletContainer with
@@ -74,6 +77,7 @@ class ComponentRegistry(val config: AppConfig)
   val hakemusConverter: HakemusConverter = new HakemusConverter
   val tarjontaService: TarjontaService = configureTarjontaService
   val koodistoService: KoodistoService = configureKoodistoService
+  val muistilistaService: MuistilistaService = new MuistilistaService
 
   def newApplicationValidator: ApplicationValidator = new ApplicationValidator
   def newHakemusPreviewGenerator(language: Language): HakemusPreviewGenerator = new HakemusPreviewGenerator()(language)
@@ -84,6 +88,7 @@ class ComponentRegistry(val config: AppConfig)
   def newFixtureServlet = new FixtureServlet(config)
   def newSwaggerServlet = new SwaggerServlet
   def newKoodistoServlet = new KoodistoServlet
+  def newMuistilistaServlet = new MuistilistaServlet
 
   def start {
     try {
