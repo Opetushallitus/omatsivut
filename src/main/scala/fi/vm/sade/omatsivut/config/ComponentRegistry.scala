@@ -7,18 +7,19 @@ import fi.vm.sade.omatsivut.config.AppConfig._
 import fi.vm.sade.omatsivut.domain.Language.Language
 import fi.vm.sade.omatsivut.fixtures.FixtureImporter
 import fi.vm.sade.omatsivut.hakemus._
-import fi.vm.sade.omatsivut.koodisto.{KoodistoService, KoodistoComponent}
-import fi.vm.sade.omatsivut.lomake.{LomakeRepository, LomakeRepositoryComponent}
+import fi.vm.sade.omatsivut.koodisto.{KoodistoComponent, KoodistoService}
 import fi.vm.sade.omatsivut.koulutusinformaatio.{KoulutusInformaatioComponent, KoulutusInformaatioService}
-import fi.vm.sade.omatsivut.muistilista.{MuistilistaComponent, Muistilista}
+import fi.vm.sade.omatsivut.lomake.{LomakeRepository, LomakeRepositoryComponent}
+import fi.vm.sade.omatsivut.muistilista.MuistilistaServiceComponent
 import fi.vm.sade.omatsivut.ohjausparametrit.{OhjausparametritComponent, OhjausparametritService}
-import fi.vm.sade.omatsivut.servlet.session.{LogoutServletContainer, SecuredSessionServletContainer}
 import fi.vm.sade.omatsivut.servlet._
+import fi.vm.sade.omatsivut.servlet.session.{LogoutServletContainer, SecuredSessionServletContainer}
 import fi.vm.sade.omatsivut.tarjonta.{TarjontaComponent, TarjontaService}
 import fi.vm.sade.omatsivut.valintatulokset._
 
 class ComponentRegistry(val config: AppConfig)
   extends SpringContextComponent with
+          MuistilistaServiceComponent with
           KoulutusInformaatioComponent with
           OhjausparametritComponent with
           LomakeRepositoryComponent with
@@ -30,7 +31,6 @@ class ComponentRegistry(val config: AppConfig)
           HakemusConverterComponent with
           ApplicationsServletContainer with
           MuistilistaServletContainer with
-          MuistilistaComponent with
           KoulutusServletContainer with
           SecuredSessionServletContainer with
           LogoutServletContainer with
@@ -42,7 +42,7 @@ class ComponentRegistry(val config: AppConfig)
   implicit val swagger = new OmatSivutSwagger
 
   private def configureOhjausparametritService: OhjausparametritService = config match {
-    case _ : StubbedExternalDeps => new StubbedOhjausparametritService()
+    case _: StubbedExternalDeps => new StubbedOhjausparametritService()
     case _ => CachedRemoteOhjausparametritService(config)
   }
 
@@ -56,8 +56,8 @@ class ComponentRegistry(val config: AppConfig)
     case _ => new RemoteValintatulosService(config.settings.valintaTulosServiceUrl)
   }
 
-  private def configureTarjontaService : TarjontaService = config match {
-    case _ : StubbedExternalDeps => new StubbedTarjontaService()
+  private def configureTarjontaService: TarjontaService = config match {
+    case _: StubbedExternalDeps => new StubbedTarjontaService()
     case _ => CachedRemoteTarjontaService(config)
   }
 
@@ -94,7 +94,7 @@ class ComponentRegistry(val config: AppConfig)
     try {
       config.onStart
       pool.execute(runningLogger)
-      if(config.isInstanceOf[IT]) {
+      if (config.isInstanceOf[IT]) {
         new FixtureImporter(springContext.applicationDAO, springContext.mongoTemplate).applyFixtures()
       }
     } catch {

@@ -1,7 +1,7 @@
 package fi.vm.sade.omatsivut.servlet
 
 import fi.vm.sade.omatsivut.json.JsonFormats
-import fi.vm.sade.omatsivut.muistilista.{MuistilistaComponent, Muistilista}
+import fi.vm.sade.omatsivut.muistilista.{MuistilistaServiceComponent, Muistilista}
 import fi.vm.sade.utils.slf4j.Logging
 import org.json4s.jackson.Serialization
 import org.scalatra.json.JacksonJsonSupport
@@ -9,8 +9,7 @@ import org.scalatra.json.JacksonJsonSupport
 
 trait MuistilistaServletContainer {
 
-  this: MuistilistaComponent =>
-
+  this: MuistilistaServiceComponent =>
 
     class MuistilistaServlet extends OmatSivutServletBase with JacksonJsonSupport with JsonFormats with Logging {
 
@@ -21,7 +20,6 @@ trait MuistilistaServletContainer {
 
       post() {
         val muistiLista = Serialization.read[Muistilista](request.body)
-        logger.info("muutos=" + muistiLista)
         muistilistaService.buildMail(muistiLista, request.getRequestURL)
       }
     }
