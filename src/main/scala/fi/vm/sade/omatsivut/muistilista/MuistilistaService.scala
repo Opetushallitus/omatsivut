@@ -2,11 +2,10 @@ package fi.vm.sade.omatsivut.muistilista
 
 import fi.vm.sade.omatsivut.http.UrlValueCompressor
 import fi.vm.sade.omatsivut.json.JsonFormats
+import fi.vm.sade.omatsivut.koulutusinformaatio.KoulutusInformaatioComponent
 import fi.vm.sade.omatsivut.koulutusinformaatio.domain.Koulutus
-import fi.vm.sade.omatsivut.koulutusinformaatio.{KoulutusInformaatioComponent, KoulutusInformaatioService}
 import fi.vm.sade.utils.slf4j.Logging
 import org.json4s.jackson.Serialization.write
-import org.scalatra.json.JacksonJsonSupport
 
 trait MuistilistaServiceComponent {
   this: KoulutusInformaatioComponent =>
@@ -17,20 +16,21 @@ trait MuistilistaServiceComponent {
 
     def buildMail(muistiLista: Muistilista, url: StringBuffer): String = {
       url + "/muistilista/" + buildUlrEncodedOidString(muistiLista.oids)
-      buildText(muistiLista).mkString
+      buildText(muistiLista)
     }
 
-    //TODO: write test
-    private def buildText(muistiLista: Muistilista) = {
+    private def buildText(muistiLista: Muistilista): String = {
       val kieli = muistiLista.kieli
       val oids = muistiLista.oids.toList
 
-      oids.map(k =>
+      val koulutus = oids.map(k =>
         koulutusInformaatioService.koulutus(k, kieli) match {
-          case Some(x) => x.toString
-          case _ => ""
+          case Some(x) => x
+          case _ => None
         }
-      )
+      ).asInstanceOf[List[Koulutus]]
+
+      koulutus.map(ki => ki.name).mkString(", ")
     }
 
     private def buildUlrEncodedOidString(oids: List[String]): String = {
