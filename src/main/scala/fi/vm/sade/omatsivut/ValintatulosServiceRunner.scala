@@ -3,9 +3,8 @@ package fi.vm.sade.omatsivut
 import java.nio.file.{Files, Paths}
 
 import fi.vm.sade.omatsivut.config.AppConfig
-import fi.vm.sade.utils.mongo.EmbeddedMongo
 import fi.vm.sade.utils.slf4j.Logging
-import fi.vm.sade.utils.tcp.{PortFromSystemPropertyOrFindFree, PortChecker}
+import fi.vm.sade.utils.tcp.{PortChecker, PortFromSystemPropertyOrFindFree}
 
 object ValintatulosServiceRunner extends Logging {
   import scala.sys.process._
