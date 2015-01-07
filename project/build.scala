@@ -58,6 +58,7 @@ object OmatsivutBuild extends Build {
         "com.scalatags" %% "scalatags" % "0.3.9",
         "commons-codec" % "commons-codec" % "1.9",
         "org.apache.commons" % "commons-compress" % "1.9",
+        "fi.vm.sade" %% "scala-utils" % "0.1.0-SNAPSHOT",
         "fi.vm.sade" %% "scala-security" % "0.1.0-SNAPSHOT",
         "fi.vm.sade.koodisto" % "koodisto-api" % "13.3-SNAPSHOT",
         "fi.vm.sade.haku" % "hakemus-api" % "13.0-SNAPSHOT" excludeAll(

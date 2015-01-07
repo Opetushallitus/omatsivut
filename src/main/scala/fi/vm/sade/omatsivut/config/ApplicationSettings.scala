@@ -1,7 +1,7 @@
 package fi.vm.sade.omatsivut.config
 
 import com.typesafe.config.Config
-import fi.vm.sade.security.cas.CasConfig
+import fi.vm.sade.utils.cas.CasConfig
 
 case class ApplicationSettings(config: Config) extends fi.vm.sade.utils.config.ApplicationSettings(config) {
   val casTicketUrl = config.getString("omatsivut.cas.ticket.url")
