@@ -14,10 +14,10 @@ object OmatsivutBuild extends Build {
   val TomcatVersion = "7.0.22"
   val SpringVersion = "3.2.9.RELEASE"
 
-  // task for running just unit tests
+  // task for running just unit tests. In scala these are not tagged.
   lazy val UnitTest = config("unit") extend Test
 
-  // task for running just integration tests
+  // task for running just integration tests. In scala source code these are tagged: tag("integration")
   lazy val IntegrationTest = config("integration") extend Test
 
   if(!System.getProperty("java.version").startsWith(JavaVersion)) {
