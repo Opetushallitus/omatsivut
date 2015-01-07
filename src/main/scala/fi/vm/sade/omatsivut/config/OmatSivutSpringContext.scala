@@ -97,6 +97,7 @@ object OmatSivutSpringContext extends Logging {
     "fi.vm.sade.haku.oppija.hakemus.service",
     "fi.vm.sade.haku.oppija.common.koulutusinformaatio",
     "fi.vm.sade.haku.virkailija.koulutusinformaatio",
+    "fi.vm.sade.haku.virkailija.lomakkeenhallinta.i18n",
     "fi.vm.sade.haku.oppija.common.organisaatio"
   ))
   @ImportResource(Array("/META-INF/spring/logger-context.xml"))
