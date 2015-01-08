@@ -10,6 +10,7 @@ package object domain {
                         provider: Option[Opetuspiste],
                         childLONames: List[String],
                         sora: Boolean,
+                        soraDescription: Option[String],
                         teachingLanguages: List[String],
                         athleteEducation: Boolean,
                         kaksoistutkinto: Boolean,

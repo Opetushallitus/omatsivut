@@ -27,6 +27,10 @@ trait ScalatraTestSupport extends Specification with HttpComponentsClient {
     put(uri, body, headers = FakeAuthentication.authHeaders(personOid.oid))(f)
   }
 
+  def postJSON[T](path: String, body: String, headers: Map[String, String] = Map.empty)(block: => T): T = {
+    post(path, body.getBytes("UTF-8"), Map("Content-type" -> "application/json") ++ headers)(block)
+  }
+
   override def map(fs: => Fragments) = Step(SharedJetty.start) ^ super.map(fs)
 }
 
