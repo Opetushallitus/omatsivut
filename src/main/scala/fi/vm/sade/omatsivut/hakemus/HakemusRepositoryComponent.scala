@@ -189,17 +189,17 @@ trait HakemusRepositoryComponent {
             haku <- hakuOption
             lomake <- lomakeOption
           } yield {
-            val valintatulos = fetchValintatulos(application, haku)
-            val hakemus = hakemusConverter.convertToHakemus(lomake, haku, application, valintatulos._1)
+            val (valintatulos, tulosOk) = fetchValintatulos(application, haku)
+            val hakemus = hakemusConverter.convertToHakemus(lomake, haku, application, valintatulos)
             auditLogger.log(ShowHakemus(application.personOid, hakemus.oid, haku.oid))
 
             if (haku.applicationPeriods.exists(_.active)) {
               applicationValidator.validateAndFindQuestions(haku, lomake, withNoPreferenceSpesificAnswers(hakemus), application) match {
-                case (app, errors, questions) => HakemusInfo(hakemusConverter.convertToHakemus(lomake, haku, app, valintatulos._1), errors, questions, valintatulos._2)
+                case (app, errors, questions) => HakemusInfo(hakemusConverter.convertToHakemus(lomake, haku, app, valintatulos), errors, questions, tulosOk)
               }
             }
             else {
-              HakemusInfo(hakemus, List(), List(), valintatulos._2)
+              HakemusInfo(hakemus, List(), List(), tulosOk)
             }
           }
         }).flatten.toList.sortBy[Long](_.hakemus.received).reverse
