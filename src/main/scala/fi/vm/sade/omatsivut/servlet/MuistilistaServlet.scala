@@ -1,9 +1,13 @@
 package fi.vm.sade.omatsivut.servlet
 
+import java.net.URLEncoder
+
+import fi.vm.sade.omatsivut.http.UrlValueCompressor
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.muistilista.{MuistilistaServiceComponent, Muistilista}
 import fi.vm.sade.utils.slf4j.Logging
 import org.json4s.jackson.Serialization
+import org.scalatra.{CookieOptions, Cookie}
 import org.scalatra.json.JacksonJsonSupport
 
 trait MuistilistaServletContainer {
@@ -14,7 +18,8 @@ trait MuistilistaServletContainer {
 
       get("/:compressedMuistilista") {
         val compressedMuistilista = params("compressedMuistilista")
-        //TODO: hae keksistä muistilista
+        val asString = UrlValueCompressor.decompress(compressedMuistilista)
+        response.addCookie(Cookie("basket", URLEncoder.encode(asString, "UTF-8"))(CookieOptions(path = "/")))
       }
 
       post() {
