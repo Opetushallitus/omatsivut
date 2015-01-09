@@ -47,7 +47,7 @@ trait KoulutusInformaatioComponent {
     private def wrapAsOption[A](l: List[A]): Option[List[A]] = if (!l.isEmpty) Some(l) else None
 
     def opetuspisteet(asId: String, query: String, lang: String): Option[List[Opetuspiste]] = {
-      val (responseCode, headersMap, resultString) = DefaultHttpClient.httpGet(appConfig.settings.koulutusinformaatioLopUrl + "/search/" + Http.urlEncode(query, "UTF-8"))
+      val (_, _, resultString) = DefaultHttpClient.httpGet(appConfig.settings.koulutusinformaatioLopUrl + "/search/" + Http.urlEncode(query, "UTF-8"))
         .param("asId", asId)
         .param("lang", lang)
         .responseWithHeaders
@@ -62,7 +62,7 @@ trait KoulutusInformaatioComponent {
       if(baseEducation.isDefined) {
         request = request.param("baseEducation", baseEducation.get)
       }
-      val (responseCode, headersMap, resultString) = request.responseWithHeaders
+      val (_, _, resultString) = request.responseWithHeaders
 
       wrapAsOption(parse(resultString).extract[List[Koulutus]])
     }
