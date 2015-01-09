@@ -34,14 +34,14 @@ trait HakemusConverterComponent {
 
     def convertToHakemus(lomake: Lomake, haku: Haku, application: ImmutableLegacyApplicationWrapper, valintatulos: Option[Valintatulos])(implicit lang: Language.Language) : Hakemus = {
       val koulutusTaustaAnswers: util.Map[String, String] = application.phaseAnswers(educationPhaseKey)
-      val receivedTime =  application.received.getTime
+      val receivedTime =  application.received.map(_.getTime)
       val answers = application.answers
       val hakutoiveet = convertHakuToiveet(application)
 
       Hakemus(
         application.oid,
         receivedTime,
-        application.updated.map(_.getTime).getOrElse(receivedTime),
+        application.updated.map(_.getTime).orElse(receivedTime),
         tila(haku, application, hakutoiveet, valintatulos),
         hakutoiveet,
         haku,

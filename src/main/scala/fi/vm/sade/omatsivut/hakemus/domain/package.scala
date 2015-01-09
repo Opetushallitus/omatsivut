@@ -13,8 +13,8 @@ package object domain {
   }
   case class Hakemus(
                       oid: String,
-                      received: Long,
-                      updated: Long,
+                      received: Option[Long],
+                      updated: Option[Long],
                       state: HakemuksenTila,
                       hakutoiveet: List[Hakutoive] = Nil,
                       haku: Haku,

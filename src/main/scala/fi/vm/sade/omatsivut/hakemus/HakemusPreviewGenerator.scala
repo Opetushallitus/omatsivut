@@ -137,7 +137,7 @@ trait HakemusPreviewGeneratorComponent {
       }
 
       def formatDeadlinePreview(date: Long): String = {
-        formatDate(new Date(date))
+        formatDate(Some(new Date(date)))
       }
 
       def elemIfNotEmptyString(elem: String => TypedTag[String], value: Option[String]): Option[TypedTag[String]] = {
@@ -331,8 +331,9 @@ trait HakemusPreviewGeneratorComponent {
         }
       }
 
-      def formatDate(date: Date) = {
-        new SimpleDateFormat("dd.MM.yyyy HH:mm").format(date)
+      def formatDate(date: Option[Date]) = date match {
+        case Some(date) => new SimpleDateFormat("dd.MM.yyyy HH:mm").format(date)
+        case None => ""
       }
 
       """<!DOCTYPE html>""" +

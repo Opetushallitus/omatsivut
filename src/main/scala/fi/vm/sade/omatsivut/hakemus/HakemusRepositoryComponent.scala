@@ -202,7 +202,7 @@ trait HakemusRepositoryComponent {
               HakemusInfo(hakemus, List(), List(), tulosOk)
             }
           }
-        }).flatten.toList.sortBy[Long](_.hakemus.received).reverse
+        }).flatten.toList.sortBy[Option[Long]](_.hakemus.received).reverse
       }
     }
 
