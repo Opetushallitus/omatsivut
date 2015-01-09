@@ -2,12 +2,14 @@ package fi.vm.sade.omatsivut.koulutusinformaatio
 
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.fixtures.JsonFixtureMaps
+import fi.vm.sade.omatsivut.fixtures.JsonFixtureMaps._
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.koulutusinformaatio.domain.{Koulutus, Opetuspiste}
 import fi.vm.sade.omatsivut.memoize.TTLOptionalMemoize
 import fi.vm.sade.utils.http.DefaultHttpClient
 import fi.vm.sade.utils.slf4j.Logging
-
+import org.json4s._
+import org.json4s.jackson.JsonMethods._
 import scalaj.http.Http
 
 trait KoulutusInformaatioComponent {
@@ -23,12 +25,18 @@ trait KoulutusInformaatioComponent {
     def koulutus(aoId: String, lang: String) = {
       JsonFixtureMaps.findByFieldValue[List[Koulutus]]("/mockdata/koulutukset.json", "id", aoId).getOrElse(List()).headOption
     }
+
+    def opetuspiste(id: String, lang: String) = {
+      val text = io.Source.fromInputStream(getClass.getResourceAsStream("/mockdata/opetuspisteet.json")).mkString
+      parse(text).extract[Map[String, List[Opetuspiste]]].values.flatten.find(_.id == id)
+    }
   }
 
   object CachedKoulutusInformaatioService {
     def apply(implicit appConfig: AppConfig): KoulutusInformaatioService = {
       val service = new RemoteKoulutusService()
       val cacheTimeSec = 60*15
+      val opetuspisteMemo = TTLOptionalMemoize.memoize(service.opetuspiste _, "koulutusinformaatio opetuspiste", cacheTimeSec, 32)
       val opetuspisteetMemo = TTLOptionalMemoize.memoize(service.opetuspisteet _, "koulutusinformaatio opetuspisteet", cacheTimeSec, 32)
       val koulutusMemo = TTLOptionalMemoize.memoize(service.koulutus _, "koulutusinformaatio koulutus", cacheTimeSec, 32)
       val koulutuksetMemo = TTLOptionalMemoize.memoize(service.koulutukset _, "koulutusinformaatio koulutukset", cacheTimeSec, 32)
@@ -37,6 +45,7 @@ trait KoulutusInformaatioComponent {
         def opetuspisteet(asId: String, query: String, lang: String): Option[List[Opetuspiste]] = opetuspisteetMemo(asId, query, lang)
         def koulutus(aoId: String, lang: String): Option[Koulutus] = koulutusMemo(aoId, lang)
         def koulutukset(asId: String, opetuspisteId: String, baseEducation: Option[String], vocational: String, uiLang: String): Option[List[Koulutus]] = koulutuksetMemo(asId, opetuspisteId, baseEducation, vocational, uiLang)
+        def opetuspiste(id: String, lang: String) = opetuspisteMemo(id, lang)
       }
     }
   }
@@ -53,6 +62,12 @@ trait KoulutusInformaatioComponent {
         .responseWithHeaders
 
       wrapAsOption(parse(resultString).extract[List[Opetuspiste]])
+    }
+
+    def opetuspiste(id: String, lang: String): Option[Opetuspiste] = {
+      DefaultHttpClient.httpGet(appConfig.settings.koulutusinformaatioLopUrl + "/" + id).response.flatMap { resultString =>
+        parse(resultString).extract[Option[Opetuspiste]]
+      }
     }
 
     def koulutukset(asId: String, opetuspisteId: String, baseEducation: Option[String], vocational: String, uiLang: String): Option[List[Koulutus]] = {

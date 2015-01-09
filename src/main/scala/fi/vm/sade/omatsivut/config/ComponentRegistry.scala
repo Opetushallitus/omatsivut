@@ -5,7 +5,7 @@ import java.util.concurrent.Executors
 import fi.vm.sade.omatsivut.auditlog.{AuditLogger, AuditLoggerComponent}
 import fi.vm.sade.omatsivut.config.AppConfig._
 import fi.vm.sade.omatsivut.domain.Language.Language
-import fi.vm.sade.omatsivut.fixtures.FixtureImporter
+import fi.vm.sade.omatsivut.fixtures.hakemus.ApplicationFixtureImporter
 import fi.vm.sade.omatsivut.hakemus._
 import fi.vm.sade.omatsivut.koodisto.{KoodistoComponent, KoodistoService}
 import fi.vm.sade.omatsivut.koulutusinformaatio.{KoulutusInformaatioComponent, KoulutusInformaatioService}
@@ -95,7 +95,7 @@ class ComponentRegistry(val config: AppConfig)
       config.onStart
       pool.execute(runningLogger)
       if (config.isInstanceOf[IT]) {
-        new FixtureImporter(springContext.applicationDAO, springContext.mongoTemplate).applyFixtures()
+        new ApplicationFixtureImporter(springContext.applicationDAO, springContext.mongoTemplate).applyFixtures()
       }
     } catch {
       case e: Exception =>

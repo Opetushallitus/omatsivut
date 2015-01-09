@@ -21,6 +21,7 @@ private object TarjontaParser extends JsonFormats with Logging {
       obj <- (json \ "result").toOption
       oid = (obj \ "oid").extract[String]
       hakuaikaId = (obj \ "hakuaikaId").extractOpt[String]
+      name = (obj \ "name").extractOpt[String].getOrElse("")
       hakuaika = createHakuaika((obj \ "hakuaikaAlkuPvm").extractOpt[Long], (obj \ "hakuaikaLoppuPvm").extractOpt[Long])
     } yield Hakukohde(oid, hakuaikaId, hakuaika)
   }

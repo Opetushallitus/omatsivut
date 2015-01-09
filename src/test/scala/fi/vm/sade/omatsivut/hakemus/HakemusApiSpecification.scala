@@ -5,12 +5,13 @@ import java.util.Date
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.hakemus.it.dao.ApplicationDAO
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
-import fi.vm.sade.omatsivut.fixtures.{FixtureImporter, TestFixture}
+import fi.vm.sade.omatsivut.fixtures.hakemus.ApplicationFixtureImporter
+import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.omatsivut.json.{QuestionNodeSerializer, JsonFormats}
 import fi.vm.sade.utils.json4s.GenericJsonFormats
 import org.json4s.JsonAST.JObject
 import org.json4s._
-import fi.vm.sade.omatsivut.fixtures.{FixtureImporter, TestFixture}
+import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.ScalatraTestSupport
 import fi.vm.sade.omatsivut.config.{OmatSivutSpringContext, AppConfig}
@@ -19,7 +20,6 @@ import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.{PersonOid, ScalatraTestSupport}
 import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
-import fi.vm.sade.omatsivut.fixtures.FixtureImporter
 import fi.vm.sade.omatsivut.fixtures.TestFixture._
 import fi.vm.sade.omatsivut.hakemus.domain.{Hakutoive, Active, HakemuksenTila, Hakemus}
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus.{Answers, HakutoiveData}
@@ -34,7 +34,7 @@ trait HakemusApiSpecification extends ScalatraTestSupport {
   private val springContext: OmatSivutSpringContext = componentRegistry.springContext
   private val dao: ApplicationDAO = springContext.applicationDAO
 
-  lazy val fixtureImporter: FixtureImporter = new FixtureImporter(dao, springContext.mongoTemplate)
+  lazy val fixtureImporter: ApplicationFixtureImporter = new ApplicationFixtureImporter(dao, springContext.mongoTemplate)
 
   val henkilotiedot: String = "henkilotiedot"
   val hakutoiveet: String = "hakutoiveet"
@@ -64,7 +64,7 @@ trait HakemusApiSpecification extends ScalatraTestSupport {
   }
 
   def setupFixture(fixtureName: String)(implicit appConfig: AppConfig) = {
-    new FixtureImporter(dao, springContext.mongoTemplate).applyFixtures(fixtureName)
+    new ApplicationFixtureImporter(dao, springContext.mongoTemplate).applyFixtures(fixtureName)
   }
 
   def setApplicationStart(applicationId: String, daysFromNow: Long)(implicit personOid: PersonOid) = {

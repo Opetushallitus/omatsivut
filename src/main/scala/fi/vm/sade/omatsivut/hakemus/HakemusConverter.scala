@@ -4,9 +4,12 @@ import java.util
 
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 import fi.vm.sade.omatsivut.domain.Language
+import fi.vm.sade.omatsivut.domain.Language
+import fi.vm.sade.omatsivut.domain.Language.Language
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
 import fi.vm.sade.omatsivut.hakemus.domain._
 import fi.vm.sade.omatsivut.koodisto.KoodistoComponent
+import fi.vm.sade.omatsivut.koulutusinformaatio.KoulutusInformaatioComponent
 import fi.vm.sade.omatsivut.lomake.domain.Lomake
 import fi.vm.sade.omatsivut.tarjonta.domain.Haku
 import fi.vm.sade.omatsivut.tarjonta.{TarjontaComponent, TarjontaService}
@@ -18,7 +21,7 @@ import scala.collection.JavaConversions._
 import scala.util.Try
 
 trait HakemusConverterComponent {
-  this: KoodistoComponent with TarjontaComponent =>
+  this: KoodistoComponent with TarjontaComponent with KoulutusInformaatioComponent =>
 
   val hakemusConverter: HakemusConverter
   val tarjontaService: TarjontaService
@@ -85,7 +88,7 @@ trait HakemusConverterComponent {
       }
     }
 
-    def anyApplicationPeriodEnded(haku: Haku, application: ImmutableLegacyApplicationWrapper): Boolean = {
+    def anyApplicationPeriodEnded(haku: Haku, application: ImmutableLegacyApplicationWrapper)(implicit lang: Language): Boolean = {
       anyApplicationPeriodEnded(haku, convertHakuToiveet(application))
     }
 
@@ -115,8 +118,9 @@ trait HakemusConverterComponent {
             case Some(kesken) => None // jos jokin yläpuolella on varalla
             case _ => Some(valintatulokset(valmisIndex))
           }
-        } else
+        } else {
           Some(valintatulokset(valmisIndex))
+        }
       } else {
         None
       }
@@ -129,18 +133,18 @@ trait HakemusConverterComponent {
 
     private def convertValintatulos(valintatulos: Option[Valintatulos], hakutoiveet: List[Hakutoive])(implicit lang: Language.Language): Option[HakemuksenValintatulos] = {
       def findKoulutus(oid: String): Koulutus = {
-        val koulutus = (for {
-          hakemusData <- hakutoiveet.flatMap(_.hakemusData)
-          koulutusId <- hakemusData.get("Koulutus-id") if koulutusId == oid
-        } yield Koulutus(oid, hakemusData.getOrElse("Koulutus", oid))).headOption
+        val koulutus = (for {hakemusData <- hakutoiveet.flatMap(_.hakemusData)
+                             koulutusId <- hakemusData.get("Koulutus-id") if koulutusId == oid} yield {
+          Koulutus(oid, hakemusData.getOrElse("Koulutus", oid))
+        }).headOption
         koulutus.getOrElse(Koulutus(oid, oid))
       }
 
       def findOpetuspiste(oid: String): Opetuspiste = {
-        val opetuspiste = (for {
-          hakemusData <- hakutoiveet.flatMap(_.hakemusData)
-          opetuspisteId <- hakemusData.get("Opetuspiste-id") if opetuspisteId == oid
-        } yield Opetuspiste(oid, hakemusData.getOrElse("Opetuspiste", oid))).headOption
+        val opetuspiste = (for {hakemusData <- hakutoiveet.flatMap(_.hakemusData)
+                                opetuspisteId <- hakemusData.get("Opetuspiste-id") if opetuspisteId == oid} yield {
+          Opetuspiste(oid, hakemusData.getOrElse("Opetuspiste", oid))
+        }).headOption
         opetuspiste.getOrElse(Opetuspiste(oid, oid))
       }
 
@@ -172,16 +176,27 @@ trait HakemusConverterComponent {
       }
     }
 
-    private def convertHakuToiveet(application: ImmutableLegacyApplicationWrapper): List[Hakutoive] = {
+    private def convertHakuToiveet(application: ImmutableLegacyApplicationWrapper)(implicit lang: Language): List[Hakutoive] = {
       def hakutoiveDataToHakutoive(data: HakutoiveData): Hakutoive = {
         data.isEmpty match {
-          case true => Hakutoive.empty
+          case true =>
+            Hakutoive.empty
           case _ =>
-            val hakukohde = tarjontaService.hakukohde(data("Koulutus-id"))
-            Hakutoive(Some(data), hakukohde.flatMap(_.hakuaikaId), hakukohde.flatMap(_.kohteenHakuaika))
+            val tarjonnanHakukohde = tarjontaService.hakukohde(data("Koulutus-id"))
+            val amendedData = amendWithKoulutusInformaatio(lang, data)
+
+            Hakutoive(Some(amendedData), tarjonnanHakukohde.flatMap(_.hakuaikaId), tarjonnanHakukohde.flatMap(_.kohteenHakuaika))
         }
       }
       HakutoiveetConverter.convertFromAnswers(application.answers).map(hakutoiveDataToHakutoive)
+    }
+
+    private def amendWithKoulutusInformaatio(lang: Language, data: HakutoiveData): HakutoiveData = {
+      val koulutus = data.get("Koulutus").orElse(koulutusInformaatioService.koulutus(data("Koulutus-id"), lang.toString).map(_.name))
+      val opetuspiste = data.get("Opetuspiste").orElse(koulutusInformaatioService.opetuspiste(data("Opetuspiste-id"), lang.toString).map(_.name))
+
+      val amendedData = data ++ koulutus.map("Koulutus" -> _) ++ opetuspiste.map("Opetuspiste" -> _)
+      amendedData
     }
   }
 }

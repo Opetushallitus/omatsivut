@@ -1,9 +1,10 @@
-package fi.vm.sade.omatsivut.fixtures
+package fi.vm.sade.omatsivut.fixtures.hakemus
 
 import fi.vm.sade.haku.oppija.hakemus.it.dao.ApplicationDAO
+import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
 
-class PeruskouluFixture(dao: ApplicationDAO) extends HakemusWithDifferentAnswersFixture(TestFixture.hakemusYhteishakuKevat2014WithForeignBaseEducationId)(dao) {
+protected class PeruskouluFixture(dao: ApplicationDAO) extends HakemusWithDifferentAnswersFixture(TestFixture.hakemusYhteishakuKevat2014WithForeignBaseEducationId)(dao) {
   def apply {
     val answers: Answers = Map(
       "koulutustausta" ->

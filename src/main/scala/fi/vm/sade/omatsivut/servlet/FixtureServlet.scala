@@ -2,7 +2,7 @@ package fi.vm.sade.omatsivut.servlet
 
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.config.SpringContextComponent
-import fi.vm.sade.omatsivut.fixtures.FixtureImporter
+import fi.vm.sade.omatsivut.fixtures.hakemus.ApplicationFixtureImporter
 import fi.vm.sade.omatsivut.tarjonta.TarjontaComponent
 import fi.vm.sade.utils.Timer
 import fi.vm.sade.omatsivut.valintatulokset.{FailingRemoteValintatulosService, RemoteValintatulosService, ValintatulosServiceComponent}
@@ -15,11 +15,11 @@ trait FixtureServletContainer {
 
   class FixtureServlet(val appConfig: AppConfig) extends OmatSivutServletBase  {
     if(appConfig.usesLocalDatabase) {
-      put("/fixtures/apply") {
+      put("/fixtures/hakemus/apply") {
         val fixtureName: String = params("fixturename")
         val applicationOid: String = params.get("applicationOid").getOrElse("*").split("\\.").last
         Timer.timed("Apply fixtures", 100){
-          new FixtureImporter(springContext.applicationDAO, springContext.mongoTemplate).applyFixtures(fixtureName, "application/"+applicationOid+".json")
+          new ApplicationFixtureImporter(springContext.applicationDAO, springContext.mongoTemplate).applyFixtures(fixtureName, "application/"+applicationOid+".json")
         }
         Ok
       }

@@ -206,7 +206,7 @@ trait HakemusRepositoryComponent {
       }
     }
 
-    private def fetchValintatulos(application: ImmutableLegacyApplicationWrapper, haku: Haku) = {
+    private def fetchValintatulos(application: ImmutableLegacyApplicationWrapper, haku: Haku)(implicit lang: Language) = {
       if (hakemusConverter.anyApplicationPeriodEnded(haku, application)) {
         Try(valintatulosService.getValintatulos(application.oid, haku.oid)) match {
           case Success(t) => (t, true)

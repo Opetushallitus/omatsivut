@@ -1,11 +1,11 @@
-package fi.vm.sade.omatsivut.fixtures
+package fi.vm.sade.omatsivut.fixtures.hakemus
 
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.hakemus.it.dao.ApplicationDAO
 import fi.vm.sade.haku.testfixtures.MongoFixtureImporter
 import org.springframework.data.mongodb.core.MongoTemplate
 
-class FixtureImporter(val applicationDAO: ApplicationDAO, val mongoTemplate: MongoTemplate) {
+class ApplicationFixtureImporter(val applicationDAO: ApplicationDAO, val mongoTemplate: MongoTemplate) {
   def applyFixtures(fixtureName: String = "", selector: String = "**/*.json") {
     if (!selector.endsWith("*.json")) {
       MongoFixtureImporter.clearFixtures(mongoTemplate, applicationDAO, "application")

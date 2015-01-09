@@ -1,12 +1,10 @@
-package fi.vm.sade.omatsivut.fixtures
+package fi.vm.sade.omatsivut.fixtures.hakemus
 
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.hakemus.it.dao.ApplicationDAO
-import fi.vm.sade.omatsivut.config.AppConfig
-import AppConfig.AppConfig
-import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
+import fi.vm.sade.omatsivut.fixtures.TestFixture
 
-class ApplicationStateFixture(val dao: ApplicationDAO) {
+protected class ApplicationStateFixture(val dao: ApplicationDAO) {
   def setState(state: Application.State = Application.State.PASSIVE) {
     val application: Application = dao.find(new Application().setOid(TestFixture.hakemusYhteishakuKevat2014WithForeignBaseEducationId)).get(0)
     application.setState(state)
