@@ -42,7 +42,7 @@ class RemoteValintatulosService(valintatulosServiceUrl: String) extends Valintat
   }
 
   def applyFixtureWithQuery(query: String) {
-    val url = valintatulosServiceUrl + "/util/fixtures/hakemus/apply?" + query
+    val url = valintatulosServiceUrl + "/util/fixtures/apply?" + query
     DefaultHttpClient.httpPut(url).responseWithHeaders match {
       case (200, _, resultString) =>
         logger.info("Using valinta-tulos-service fixture: " + query)
