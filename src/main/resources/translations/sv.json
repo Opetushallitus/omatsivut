@@ -127,5 +127,10 @@
   "registration": {
     "pleaseRegister": "Anmäla dig till terminen",
     "goToRegistration": "Anmäla dig"
+  },
+
+  "emailNote": {
+      "note": "Minneslista",
+      "openLink": "Öppnä minneslista Studieinfo"
   }
 }

@@ -127,5 +127,10 @@
   "registration": {
     "pleaseRegister": "Ilmoittaudu lukukaudelle",
     "goToRegistration": "Siirry ilmoittautumaan"
+  },
+
+  "emailNote": {
+      "note": "Muistilista",
+      "openLink": "Avaa muistilista Opintopolussa"
   }
 }

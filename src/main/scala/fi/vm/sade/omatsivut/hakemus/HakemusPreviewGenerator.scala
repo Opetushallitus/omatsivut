@@ -22,10 +22,11 @@ trait HakemusPreviewGeneratorComponent {
 
   def newHakemusPreviewGenerator(language: Language.Language): HakemusPreviewGenerator
 
-  class HakemusPreviewGenerator(implicit val language: Language.Language) extends Logging {
+  class HakemusPreviewGenerator(language: Language.Language) extends Logging {
     import scala.collection.JavaConversions._
     import scalatags.Text.all._
     private val applicationSystemService = springContext.applicationSystemService
+    private implicit val lang = language
 
     def generatePreview(serverPath: ServerContaxtPath, personOid: String, applicationOid: String): Option[String] = {
       applicationRepository.findStoredApplicationByPersonAndOid(personOid, applicationOid).map { application =>

@@ -127,5 +127,10 @@
   "registration": {
     "pleaseRegister": "Register for the semester",
     "goToRegistration": "Go to registration"
+  },
+
+  "emailNote": {
+      "note": "Muistilista",
+      "openLink": "Open notes Studyinfo"
   }
 }

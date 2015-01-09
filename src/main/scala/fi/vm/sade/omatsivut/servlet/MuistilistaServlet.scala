@@ -6,7 +6,6 @@ import fi.vm.sade.utils.slf4j.Logging
 import org.json4s.jackson.Serialization
 import org.scalatra.json.JacksonJsonSupport
 
-
 trait MuistilistaServletContainer {
 
   this: MuistilistaServiceComponent =>
@@ -20,7 +19,7 @@ trait MuistilistaServletContainer {
 
       post() {
         val muistiLista = Serialization.read[Muistilista](request.body)
-        muistilistaService.buildMail(muistiLista, request.getRequestURL)
+        muistilistaService(language).buildMail(muistiLista, request.getRequestURL)
       }
     }
 

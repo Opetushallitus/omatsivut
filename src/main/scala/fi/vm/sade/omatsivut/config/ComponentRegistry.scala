@@ -77,10 +77,10 @@ class ComponentRegistry(val config: AppConfig)
   val hakemusConverter: HakemusConverter = new HakemusConverter
   val tarjontaService: TarjontaService = configureTarjontaService
   val koodistoService: KoodistoService = configureKoodistoService
-  val muistilistaService: MuistilistaService = new MuistilistaService
+  def muistilistaService(language: Language): MuistilistaService = new MuistilistaService(language)
 
   def newApplicationValidator: ApplicationValidator = new ApplicationValidator
-  def newHakemusPreviewGenerator(language: Language): HakemusPreviewGenerator = new HakemusPreviewGenerator()(language)
+  def newHakemusPreviewGenerator(language: Language): HakemusPreviewGenerator = new HakemusPreviewGenerator(language)
   def newApplicationsServlet = new ApplicationsServlet(config)
   def newKoulutusServlet = new KoulutusServlet
   def newSecuredSessionServlet = new SecuredSessionServlet(config.authContext)
