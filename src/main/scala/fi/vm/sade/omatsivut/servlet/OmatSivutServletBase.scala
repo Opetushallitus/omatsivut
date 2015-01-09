@@ -20,7 +20,6 @@ trait OmatSivutServletBase extends ScalatraServlet with Logging {
   error {
     case e => {
       logger.error(request.getMethod + " " + requestPath, e);
-      e.printStackTrace()
       response.setStatus(500)
       "500 Internal Server Error"
     }
