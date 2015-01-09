@@ -26,6 +26,10 @@
     "gulp-ng-annotate": "^0.3.2",
     "baconjs": "^0.7.24"
   },
+  "scripts": {
+    "dev": "gulp dev",
+    "compile": "gulp compile"
+  },
   "name": "ohp",
   "description": "OHP Mocha tests",
   "version": "0.0.1"

@@ -81,11 +81,11 @@ Aja ensin `npm install`.
 
 Jatkuva fronttikäännös käyntiin näin (ei minimointia):
 
-    node_modules/gulp/bin/gulp.js dev
+    npm run dev
 
 Javascriptin minimointi:
 
-    node_modules/gulp/bin/gulp.js compile
+    npm run compile
 
 Tyylit tehty lessillä. Css-fileet src-puussa generoidaan siitä ja ovat ignoroitu gitissä.
 
