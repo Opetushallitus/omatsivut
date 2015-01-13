@@ -2,7 +2,7 @@ package fi.vm.sade.omatsivut.config
 
 import fi.vm.sade.haku.oppija.common.organisaatio.OrganizationService
 import fi.vm.sade.haku.oppija.hakemus.it.dao.ApplicationDAO
-import fi.vm.sade.haku.oppija.hakemus.service.HakuPermissionService
+import fi.vm.sade.haku.oppija.hakemus.service.{SyntheticApplicationService, HakuPermissionService, ApplicationService}
 import fi.vm.sade.haku.oppija.hakemus.service.impl.HakuPermissionServiceMockImpl
 import fi.vm.sade.haku.oppija.lomake.service.ApplicationSystemService
 import fi.vm.sade.haku.oppija.lomake.validation.ElementTreeValidator
@@ -18,7 +18,6 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer
 import org.springframework.core.env.{MapPropertySource, MutablePropertySources}
 import org.springframework.data.mongodb.core.MongoTemplate
 import scala.collection.JavaConversions._
-import fi.vm.sade.haku.oppija.hakemus.service.ApplicationService
 
 class OmatSivutSpringContext(context: ApplicationContext) {
   def applicationSystemService = context.getBean(classOf[ApplicationSystemService])
@@ -34,6 +33,8 @@ class OmatSivutSpringContext(context: ApplicationContext) {
   def auditLogger = context.getBean(classOf[Logger])
 
   def organizationService = context.getBean(classOf[OrganizationService])
+
+  def syntheticApplicationService = context.getBean(classOf[SyntheticApplicationService])
 }
 
 object OmatSivutSpringContext extends Logging {

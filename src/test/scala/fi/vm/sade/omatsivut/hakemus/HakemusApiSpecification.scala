@@ -34,7 +34,7 @@ trait HakemusApiSpecification extends ScalatraTestSupport {
   private val springContext: OmatSivutSpringContext = componentRegistry.springContext
   private val dao: ApplicationDAO = springContext.applicationDAO
 
-  lazy val fixtureImporter: ApplicationFixtureImporter = new ApplicationFixtureImporter(dao, springContext.mongoTemplate)
+  lazy val fixtureImporter: ApplicationFixtureImporter = new ApplicationFixtureImporter(springContext)
 
   val henkilotiedot: String = "henkilotiedot"
   val hakutoiveet: String = "hakutoiveet"
@@ -64,7 +64,7 @@ trait HakemusApiSpecification extends ScalatraTestSupport {
   }
 
   def setupFixture(fixtureName: String)(implicit appConfig: AppConfig) = {
-    new ApplicationFixtureImporter(dao, springContext.mongoTemplate).applyFixtures(fixtureName)
+    new ApplicationFixtureImporter(springContext).applyFixtures(fixtureName)
   }
 
   def setApplicationStart(applicationId: String, daysFromNow: Long)(implicit personOid: PersonOid) = {

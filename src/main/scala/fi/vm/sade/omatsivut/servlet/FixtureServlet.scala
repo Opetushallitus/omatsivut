@@ -19,7 +19,7 @@ trait FixtureServletContainer {
         val fixtureName: String = params("fixturename")
         val applicationOid: String = params.get("applicationOid").getOrElse("*").split("\\.").last
         Timer.timed("Apply fixtures", 100){
-          new ApplicationFixtureImporter(springContext.applicationDAO, springContext.mongoTemplate).applyFixtures(fixtureName, "application/"+applicationOid+".json")
+          new ApplicationFixtureImporter(springContext).applyFixtures(fixtureName, "application/"+applicationOid+".json")
         }
         Ok
       }

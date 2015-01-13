@@ -1954,6 +1954,18 @@
       after(page.applyFixtureAndOpen({applicationOid: hakemusYhteishakuKevat2014WithForeignBaseEducationId}))
     })
 
+    describe("Erillishaku ilman hakulomaketta", function() {
+      before(
+        page.applyFixtureAndOpen({fixtureName:"erillishaku"})
+      )
+
+      it("Hakemus näytetään", function() {
+        expect(ApplicationListPage().applications()).to.contain(
+          { applicationSystemName: 'Ammatillisen koulutuksen ja lukiokoulutuksen kevään 2014 yhteishaku' }
+        )
+      })
+    })
+
     describe("Näytä hakemus -linkki", function() {
       describe("Kun hakemusta ei ole muokattu", function() {
         it("linkki avaa esikatselusivun", function() {

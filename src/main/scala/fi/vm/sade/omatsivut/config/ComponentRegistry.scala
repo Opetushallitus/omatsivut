@@ -95,7 +95,7 @@ class ComponentRegistry(val config: AppConfig)
       config.onStart
       pool.execute(runningLogger)
       if (config.isInstanceOf[IT]) {
-        new ApplicationFixtureImporter(springContext.applicationDAO, springContext.mongoTemplate).applyFixtures()
+        new ApplicationFixtureImporter(springContext).applyFixtures()
       }
     } catch {
       case e: Exception =>
