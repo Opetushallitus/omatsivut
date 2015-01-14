@@ -1,6 +1,6 @@
 # Logger
 log4j.rootLogger={{env_loglevel}}, FILE
-{# raw-endraw -välillä template engine ei tee mitään! #} 
+{# raw-endraw -välillä template engine ei tee mitään! #}
 {% raw %}
 # Console output
 log4j.appender.STDOUT=org.apache.log4j.ConsoleAppender
@@ -28,6 +28,7 @@ log4j.appender.Audit.MaxFileSize=10MB
 log4j.appender.Audit.MaxBackupIndex=200
 {% endraw %}
 # Log omatsivut with INFO
+log4j.logger.fi.vm.sade.utils=INFO
 log4j.logger.fi.vm.sade.omatsivut=INFO
 # By default hide these spammers by default
 log4j.logger.org.apache.cxf=ERROR
