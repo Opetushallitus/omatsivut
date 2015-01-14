@@ -66,7 +66,7 @@ object OmatsivutBuild extends Build {
           ExclusionRule(organization = "com.wordnik"),
           ExclusionRule(organization = "fi.vm.sade.koodisto")
         ),
-        "fi.vm.sade.log" % "log-service" % "8.0-SNAPSHOT" classifier "classes" excludeAll(
+        "fi.vm.sade.log" % "log-service" % "13.0-SNAPSHOT" classifier "classes" excludeAll(
           ExclusionRule(organization = "org.springframework.data"),
           ExclusionRule(organization = "org.springframework"),
           ExclusionRule(organization = "fi.vm.sade.generic")
