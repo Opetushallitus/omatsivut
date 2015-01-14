@@ -399,7 +399,7 @@ function ApplicationListPage() {
       if (typeof applicationIndex == "number") {
         return S("#hakemus-list>li").eq(applicationIndex)
       } else {
-        return S('#hakemus-list>li[data-oid="' + applicationIndex + '"]')
+        return S('#hakemus-list>li[data-oid="' + applicationIndex + '"]').add('#hakemus-list>li:contains('+applicationIndex+')')
       }
     }
   }

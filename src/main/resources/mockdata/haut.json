@@ -4553,7 +4553,7 @@
             "koulutuksenAlkamiskausiUri": "kausi_k#1",
             "tila": "JULKAISTU",
             "sijoittelu": true,
-            "jarjestelmanHakulomake": true,
+            "jarjestelmanHakulomake": false,
             "hakuaikas": [
                 {
                     "hakuaikaId": "5474",

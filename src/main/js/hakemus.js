@@ -7,6 +7,7 @@ function Hakemus(json) {
   this.updated = json.hakemus.updated
   this.haku = copy(json.hakemus.haku)
   this.state = copy(json.hakemus.state)
+  this.hasForm = json.hakemus.hasForm
   this.educationBackground = copy(json.hakemus.educationBackground)
 
   this.hakutoiveet = convertHakutoiveet(json.hakemus.hakutoiveet)

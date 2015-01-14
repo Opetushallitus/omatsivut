@@ -1980,6 +1980,10 @@
           { applicationSystemName: 'Korkeakoulujen erillishaku 2001' }
         )
       })
+
+      it("Näytä hakemus -linkki disabloidaan", function() {
+        page.getApplication('Korkeakoulujen erillishaku 2001').previewLink().hasClass("disabled").should.equal(true)
+      })
     })
 
 

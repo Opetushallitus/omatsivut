@@ -21,7 +21,8 @@ package object domain {
                       educationBackground: EducationBackground,
                       answers: Answers,
                       postOffice: Option[String],
-                      requiresAdditionalInfo: Boolean
+                      requiresAdditionalInfo: Boolean,
+                      hasForm: Boolean
                       ) extends HakemusLike {
     def preferences = hakutoiveet.map(_.hakemusData.getOrElse(Map.empty))
     def toHakemusMuutos = HakemusMuutos(oid, haku.oid, hakutoiveet.map(_.hakemusData.getOrElse(Map.empty)), answers)
