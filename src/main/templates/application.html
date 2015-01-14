@@ -43,7 +43,7 @@
         </ilmoittautuminen>
     </section>
 
-    <form name="applicationForm" novalidate >
+    <form name="applicationForm" novalidate ng-show="application.hasForm">
 
         <section class="application-section application-valintatulos-error" ng-if="!application.resultFetchedSuccessfully()">
             <span role="status" class="status-message error">{{ localization("error.valintatulosFailed") }}</span>

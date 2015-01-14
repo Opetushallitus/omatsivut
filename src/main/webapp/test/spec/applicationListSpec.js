@@ -1971,6 +1971,8 @@
     })
 
     describe("Erillishaku ilman hakulomaketta", function() {
+      var erillishaku = page.getApplication('Korkeakoulujen erillishaku 2001')
+
       before(
         page.applyFixtureAndOpen({fixtureName:"erillishaku"})
       )
@@ -1982,7 +1984,11 @@
       })
 
       it("Näytä hakemus -linkki disabloidaan", function() {
-        page.getApplication('Korkeakoulujen erillishaku 2001').previewLink().hasClass("disabled").should.equal(true)
+        erillishaku.previewLink().hasClass("disabled").should.equal(true)
+      })
+
+      it("Yhteystietojen muokkaus ei ole mahdollista", function() {
+        erillishaku.yhteystiedot().isVisible().should.be.false
       })
     })
 
@@ -2014,6 +2020,7 @@
       describe("jos hakukierroksen päättymispäivä on menneisyydessä", function() {
         before(page.applyFixtureAndOpen({applicationOid: hakemusYhteishakuKevat2013WithApplicationRoundEndedId}))
         it("ei ole mahdollista", function () {
+          hakemusYhteishakuKevat2013WithApplicationRoundEnded.yhteystiedot().isVisible().should.be.false
           expect(hakemusYhteishakuKevat2013WithApplicationRoundEnded.yhteystiedot().getRow("Sähköposti").val()).to.be.undefined
           expect(hakemusYhteishakuKevat2013WithApplicationRoundEnded.yhteystiedot().getRow("Matkapuhelinnumero").val()).to.be.undefined
           expect(hakemusYhteishakuKevat2013WithApplicationRoundEnded.yhteystiedot().getRow("Lähiosoite").val()).to.be.undefined
@@ -2023,11 +2030,15 @@
 
       describe("jos hakukierroksen päättymispäivä on tulevaisuudessa", function() {
         before(page.applyFixtureAndOpen({applicationOid: hakemusYhteishakuKevat2013WithForeignBaseEducationId}))
-        it("on mahdollista", function () {
-          hakemusYhteishakuKevat2013WithForeignBaseEducation.yhteystiedot().getRow("Sähköposti").val().should.equal("")
-          hakemusYhteishakuKevat2013WithForeignBaseEducation.yhteystiedot().getRow("Matkapuhelinnumero").val().should.equal("")
-          hakemusYhteishakuKevat2013WithForeignBaseEducation.yhteystiedot().getRow("Lähiosoite").val().should.equal("foobartie 1")
-          hakemusYhteishakuKevat2013WithForeignBaseEducation.yhteystiedot().getRow("Postinumero").val().should.equal("00100")
+
+        describe("muokkaus", function() {
+          it("on mahdollista", function () {
+            hakemusYhteishakuKevat2013WithForeignBaseEducation.yhteystiedot().getRow("Sähköposti").val().should.equal("")
+            hakemusYhteishakuKevat2013WithForeignBaseEducation.yhteystiedot().getRow("Matkapuhelinnumero").val().should.equal("")
+            hakemusYhteishakuKevat2013WithForeignBaseEducation.yhteystiedot().getRow("Lähiosoite").val().should.equal("foobartie 1")
+            hakemusYhteishakuKevat2013WithForeignBaseEducation.yhteystiedot().getRow("Postinumero").val().should.equal("00100")
+            hakemusYhteishakuKevat2013WithForeignBaseEducation.yhteystiedot().isVisible().should.be.true
+          })
         })
 
         describe("jos annetaan vastaanottotieto", function() {

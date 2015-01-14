@@ -229,7 +229,7 @@ function ApplicationListPage() {
           },
 
           isVisible: function() {
-            return application.find(".yhteystiedot").is(":visible")
+            return application.find(".henkilotiedot").is(":visible")
           },
 
           saveButton: function() {
