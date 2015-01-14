@@ -15,7 +15,7 @@ module.exports = function(listApp) {
         })
 
         scope.$watch(attrs.ngModel, function(val) {
-          clearBtn.toggle(val.length > 0)
+          clearBtn.toggle(val && (val.length > 0))
         })
       }
     }
