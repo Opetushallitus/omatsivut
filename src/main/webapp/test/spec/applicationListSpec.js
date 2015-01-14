@@ -51,9 +51,7 @@
       return S("#hakemus-list").attr("ng-cloak") == null && page.listStatusInfo().length > 0
     }
 
-    before(function (done) {
-      session.init("300794-937F","fi").then(page.openPage(emptyApplicationPageVisible)).done(done)
-    })
+    before(session.init("300794-937F","fi"), page.openPage(emptyApplicationPageVisible))
 
     describe("jos käyttäjällä ei ole hakemuksia", function() {
       it("näytetään ilmoitus", function() {
@@ -67,9 +65,7 @@
       return S(".info").is(":visible")
     }
 
-    before(function (done) {
-      session.init("091094-970D","fi").then(page.openPage(infoBoxIsVisible)).done(done)
-    })
+    before(session.init("091094-970D","fi"), page.openPage(infoBoxIsVisible))
 
     it("näytetään ilmoitus", function() {
       expect(S(".info").text()).to.contain("emme löytäneet hakemuksia henkilötunnuksellasi")
@@ -139,12 +135,11 @@
   })
 
   describe('Hakemuslistaus', function () {
-
-    before(function (done) {
-      session.init("010101-123N","fi").then(page.applyFixtureAndOpen({})).done(done)
-    })
+    before(session.init("010101-123N","fi"))
 
     describe("Hakemuksen tietojen näyttäminen", function() {
+      before(page.applyFixtureAndOpen({}))
+
       it('hakemuslistassa on hakemus henkilölle 010101-123N', function () {
         expect(ApplicationListPage().applications()).to.contain(
           { applicationSystemName: 'Ammatillisen koulutuksen ja lukiokoulutuksen kevään 2014 yhteishaku' }

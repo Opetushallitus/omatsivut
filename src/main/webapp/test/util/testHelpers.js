@@ -67,11 +67,13 @@ wait = {
 
 session = {
   init: function(hetu,lang) {
-    langParam = ""
-    if (lang) {
-      langParam = "&lang=" + lang
+    return function () {
+      langParam = ""
+      if (lang) {
+        langParam = "&lang=" + lang
+      }
+      return Q($.get("/omatsivut/Shibboleth.sso/fakesession?hetu=" + hetu + langParam));
     }
-    return Q($.get("/omatsivut/Shibboleth.sso/fakesession?hetu=" + hetu + langParam));
   },
   logout: function() {
     return Q($.get("/omatsivut/logout"));

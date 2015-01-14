@@ -31,7 +31,7 @@ function ApplicationListPage() {
               $(testFrame().document).find("html").html("")
               prevLang = params.lang
             }
-            return session.init(testHetu, params.lang)
+            return session.init(testHetu, params.lang)()
           })
           .then(function() {
             if (params.overrideStart != null) {
