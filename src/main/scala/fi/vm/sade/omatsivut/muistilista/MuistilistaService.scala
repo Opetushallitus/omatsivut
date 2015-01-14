@@ -38,8 +38,8 @@ trait MuistilistaServiceComponent {
     private def buildMessage(koulutukset: List[Koulutus]): String = {
       koulutukset.map(k =>
         s"${Translations.getTranslation("emailNote", "note")}:\n" +
-          "${k.name}, ${getHaku(k)}, ${getOpetusPiste(k)} - ${k.educationDegree}\n" +
-          getSoraDescription(k)+"\n"+
+          s"\n${getHaku(k)}\n" +
+          s"* ${getOpetusPiste(k)} - ${k.name}\n\n" +
           Translations.getTranslation("emailNote", "openLink")+"\n")
         .mkString(",")
     }
