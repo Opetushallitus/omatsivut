@@ -39,7 +39,7 @@ trait ApplicationValidatorComponent {
         val storedApplication = applicationRepository.findStoredApplicationByOid(hakemusMuutos.oid).getOrElse(throw new RuntimeException(s"Application ${hakemusMuutos.oid} not found"))
         if (storedApplication.personOid != personOid) throw new IllegalArgumentException("personId mismatch")
         validateAndFindQuestions(haku, lomake, hakemusMuutos, storedApplication) match {
-          case (app, errors, questions) => HakemusInfo(hakemusConverter.convertToHakemus(lomake, haku, app), errors, questions)
+          case (app, errors, questions) => HakemusInfo(hakemusConverter.convertToHakemus(Some(lomake), haku, app), errors, questions)
         }
       } ("Error validating application: " + hakemusMuutos.oid)
     }

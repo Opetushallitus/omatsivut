@@ -54,7 +54,7 @@ trait HakemusRepositoryComponent {
           dao.update(applicationQuery, applicationJavaObject)
         }
         auditLogger.log(UpdateHakemus(userOid, hakemus.oid, haku.oid, originalApplication.answers, checkedAnswers))
-        hakemusConverter.convertToHakemus(lomake, haku, wrap(applicationJavaObject))
+        hakemusConverter.convertToHakemus(Some(lomake), haku, wrap(applicationJavaObject))
       }
     }
 
@@ -187,19 +187,18 @@ trait HakemusRepositoryComponent {
           }
           for {
             haku <- hakuOption
-            lomake <- lomakeOption
           } yield {
             val (valintatulos, tulosOk) = fetchValintatulos(application, haku)
-            val hakemus = hakemusConverter.convertToHakemus(lomake, haku, application, valintatulos)
+            val hakemus = hakemusConverter.convertToHakemus(lomakeOption, haku, application, valintatulos)
             auditLogger.log(ShowHakemus(application.personOid, hakemus.oid, haku.oid))
 
-            if (haku.applicationPeriods.exists(_.active)) {
-              applicationValidator.validateAndFindQuestions(haku, lomake, withNoPreferenceSpesificAnswers(hakemus), application) match {
-                case (app, errors, questions) => HakemusInfo(hakemusConverter.convertToHakemus(lomake, haku, app, valintatulos), errors, questions, tulosOk)
-              }
-            }
-            else {
-              HakemusInfo(hakemus, List(), List(), tulosOk)
+            lomakeOption match {
+              case Some(lomake) if haku.applicationPeriods.exists(_.active) =>
+                applicationValidator.validateAndFindQuestions(haku, lomake, withNoPreferenceSpesificAnswers(hakemus), application) match {
+                  case (app, errors, questions) => HakemusInfo(hakemusConverter.convertToHakemus(Some(lomake), haku, app, valintatulos), errors, questions, tulosOk)
+                }
+              case _ =>
+                HakemusInfo(hakemus, List(), List(), tulosOk)
             }
           }
         }).flatten.toList.sortBy[Option[Long]](_.hakemus.received).reverse

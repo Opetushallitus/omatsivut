@@ -53,7 +53,7 @@ object TestFixture {
 
   def haku(implicit lang: Language.Language) = componentRegistry.tarjontaService.haku(applicationSystemNivelKesa2013Oid, lang).get
   def hakemusMuutos(implicit lang: Language.Language) = {
-    componentRegistry.hakemusConverter.convertToHakemus(Lomake(applicationSystemNivelKesa2013), haku, wrap(applicationNivelKesa2013WithPeruskouluBaseEducationApp)).toHakemusMuutos
+    componentRegistry.hakemusConverter.convertToHakemus(Some(Lomake(applicationSystemNivelKesa2013)), haku, wrap(applicationNivelKesa2013WithPeruskouluBaseEducationApp)).toHakemusMuutos
   }
 
   val ammattistartti: HakutoiveData = JsonFixtureMaps.findByKey[HakutoiveData]("/mockdata/hakutoiveet.json", "1.2.246.562.14.2014030415375012208392").get

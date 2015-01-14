@@ -1,5 +1,8 @@
 package fi.vm.sade.omatsivut.lomake
 
+import com.google.common.util.concurrent.UncheckedExecutionException
+import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
+import fi.vm.sade.haku.oppija.lomake.exception.ApplicationSystemNotFound
 import fi.vm.sade.haku.oppija.lomake.service.impl.ApplicationSystemServiceImpl
 import fi.vm.sade.omatsivut.config.SpringContextComponent
 import fi.vm.sade.omatsivut.domain.Language
@@ -32,7 +35,7 @@ trait LomakeRepositoryComponent {
     def lomakeAndHakuByApplication(application: ImmutableLegacyApplicationWrapper)(implicit lang: Language.Language): (Option[Lomake], Option[Haku]) = {
       application.hakuOid match {
         case "" => (None, None)
-        case hakuOid => (tryFind(hakuOid), tarjontaService.haku(hakuOid, lang))
+        case hakuOid => (tryFind(hakuOid), tarjontaService.haku(hakuOid, lang)) // Miksi nämä bundlattu?
       }
     }
 
@@ -40,9 +43,12 @@ trait LomakeRepositoryComponent {
       try {
         reportCacheStats()
         Some(timed("Application system service", 1000){
-          Lomake(repository.getApplicationSystem(applicationSystemOid))
+          val applicationSystem: ApplicationSystem = repository.getApplicationSystem(applicationSystemOid)
+          Lomake(applicationSystem)
         })
       } catch {
+        case e: UncheckedExecutionException if (e.getCause.isInstanceOf[ApplicationSystemNotFound]) =>
+          None
         case e: Exception =>
           logger.error("applicationSystem loading failed", e)
           None

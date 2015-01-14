@@ -31,11 +31,11 @@ trait HakemusConverterComponent {
     val baseEducationKey = OppijaConstants.ELEMENT_ID_BASE_EDUCATION
     val preferencePhaseKey = OppijaConstants.PHASE_APPLICATION_OPTIONS
 
-    def convertToHakemus(lomake: Lomake, haku: Haku, application: ImmutableLegacyApplicationWrapper)(implicit lang: Language.Language) : Hakemus = {
+    def convertToHakemus(lomake: Option[Lomake], haku: Haku, application: ImmutableLegacyApplicationWrapper)(implicit lang: Language.Language) : Hakemus = {
       convertToHakemus(lomake, haku, application, None)
     }
 
-    def convertToHakemus(lomake: Lomake, haku: Haku, application: ImmutableLegacyApplicationWrapper, valintatulos: Option[Valintatulos])(implicit lang: Language.Language) : Hakemus = {
+    def convertToHakemus(lomake: Option[Lomake], haku: Haku, application: ImmutableLegacyApplicationWrapper, valintatulos: Option[Valintatulos])(implicit lang: Language.Language) : Hakemus = {
       val koulutusTaustaAnswers: util.Map[String, String] = application.phaseAnswers(educationPhaseKey)
       val receivedTime =  application.received.map(_.getTime)
       val answers = application.answers
@@ -54,7 +54,7 @@ trait HakemusConverterComponent {
           .flatMap(_.get("Postinumero"))
           .flatMap(koodistoService.postOffice)
           .flatMap((translations: Map[String,String]) => translations.get(lang.toString)),
-        lomake.requiresAdditionalInfo(application)
+        lomake.map(_.requiresAdditionalInfo(application)).getOrElse(false)
       )
     }
 
