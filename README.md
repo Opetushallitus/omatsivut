@@ -14,7 +14,7 @@ Oppijan henkilökohtainen palvelu
 Ennen ajamista aja nämä:
 
     npm install
-    node_modules/gulp/bin/gulp.js compile
+    npm run compile
 
 ### IDE
 
