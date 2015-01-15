@@ -35,3 +35,4 @@ omatsivut_authentication_service_username: ""
 omatsivut_authentication_service_password: ""
 ymparisto: "dev"
 oppija_raamit_url: "https://itest-oppija.oph.ware.fi"
+email_batch_size: 500

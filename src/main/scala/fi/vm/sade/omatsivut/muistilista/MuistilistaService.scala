@@ -1,5 +1,6 @@
 package fi.vm.sade.omatsivut.muistilista
 
+import fi.vm.sade.groupemailer.GroupEmailComponent
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.http.UrlValueCompressor
 import fi.vm.sade.omatsivut.json.JsonFormats
@@ -11,7 +12,7 @@ import fi.vm.sade.utils.slf4j.Logging
 import org.json4s.jackson.Serialization.write
 
 trait MuistilistaServiceComponent {
-  this: KoulutusInformaatioComponent with TarjontaComponent =>
+  this: KoulutusInformaatioComponent with TarjontaComponent with GroupEmailComponent =>
 
   def muistilistaService(language: Language.Language): MuistilistaService
 
@@ -24,11 +25,10 @@ trait MuistilistaServiceComponent {
     }
 
     private def getKoulutuksetWithMuistiLista(muistiLista: Muistilista) = {
-      val kieli = muistiLista.kieli
       val oids = muistiLista.koids.toList
 
       oids.map(k =>
-        koulutusInformaatioService.koulutus(k, kieli) match {
+        koulutusInformaatioService.koulutus(k, muistiLista.kieli) match {
           case Some(x) => x
           case _ => None
         }
@@ -40,7 +40,7 @@ trait MuistilistaServiceComponent {
         s"${Translations.getTranslation("emailNote", "note")}:\n" +
           s"\n${getHaku(k)}\n" +
           s"* ${getOpetusPiste(k)} - ${k.name}\n\n" +
-          Translations.getTranslation("emailNote", "openLink")+"\n")
+          Translations.getTranslation("emailNote", "openLink")+"\n\n")
         .mkString(",")
     }
 

@@ -2,6 +2,7 @@ package fi.vm.sade.omatsivut.config
 
 import java.util.concurrent.Executors
 
+import fi.vm.sade.groupemailer.{GroupEmailService, GroupEmailComponent}
 import fi.vm.sade.omatsivut.auditlog.{AuditLogger, AuditLoggerComponent}
 import fi.vm.sade.omatsivut.config.AppConfig._
 import fi.vm.sade.omatsivut.domain.Language.Language
@@ -20,6 +21,7 @@ import fi.vm.sade.omatsivut.valintatulokset._
 class ComponentRegistry(val config: AppConfig)
   extends SpringContextComponent with
           MuistilistaServiceComponent with
+          GroupEmailComponent with
           KoulutusInformaatioComponent with
           OhjausparametritComponent with
           LomakeRepositoryComponent with
@@ -51,6 +53,11 @@ class ComponentRegistry(val config: AppConfig)
     case _ => CachedKoulutusInformaatioService(config)
   }
 
+  private def configureGroupEmailService: GroupEmailService = config match {
+    case x: StubbedExternalDeps => new FakeGroupEmailService
+    case _ => new RemoteGroupEmailService(config.settings)
+  }
+
   private def configureValintatulosService: ValintatulosService = config match {
     case x: StubbedExternalDeps => new FailingRemoteValintatulosService(config.settings.valintaTulosServiceUrl)
     case _ => new RemoteValintatulosService(config.settings.valintaTulosServiceUrl)
@@ -77,8 +84,9 @@ class ComponentRegistry(val config: AppConfig)
   val hakemusConverter: HakemusConverter = new HakemusConverter
   val tarjontaService: TarjontaService = configureTarjontaService
   val koodistoService: KoodistoService = configureKoodistoService
-  def muistilistaService(language: Language): MuistilistaService = new MuistilistaService(language)
+  val groupEmailService: GroupEmailService = configureGroupEmailService
 
+  def muistilistaService(language: Language): MuistilistaService = new MuistilistaService(language)
   def newApplicationValidator: ApplicationValidator = new ApplicationValidator
   def newHakemusPreviewGenerator(language: Language): HakemusPreviewGenerator = new HakemusPreviewGenerator(language)
   def newApplicationsServlet = new ApplicationsServlet(config)

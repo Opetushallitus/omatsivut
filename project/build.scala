@@ -71,6 +71,7 @@ object OmatsivutBuild extends Build {
           ExclusionRule(organization = "org.springframework"),
           ExclusionRule(organization = "fi.vm.sade.generic")
         ),
+        "fi.vm.sade" %% "scala-group-emailer" % "0.1.0-SNAPSHOT",
         "com.sun.jersey" % "jersey-client" % "1.17.1", // <- patch for transitive dependency problem
         "org.springframework" % "spring-jms" % SpringVersion, // <- patch for spring-core-3.1.3 transitive dep
         "org.springframework" % "spring-core" % SpringVersion,

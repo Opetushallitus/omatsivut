@@ -1,9 +1,10 @@
 package fi.vm.sade.omatsivut.config
 
 import com.typesafe.config.Config
+import fi.vm.sade.groupemailer.GroupEmailerSettings
 import fi.vm.sade.utils.cas.CasConfig
 
-case class ApplicationSettings(config: Config) extends fi.vm.sade.utils.config.ApplicationSettings(config) {
+case class ApplicationSettings(config: Config) extends GroupEmailerSettings(config) {
   val casTicketUrl = config.getString("omatsivut.cas.ticket.url")
 
   val raamitUrl = config.getString("omatsivut.oppija-raamit.url")
