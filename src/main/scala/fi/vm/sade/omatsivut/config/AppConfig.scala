@@ -29,7 +29,6 @@ object AppConfig extends Logging {
       case "default" => new Default
       case "templated" => new LocalTestingWithTemplatedVars
       case "dev" => new Dev
-      case "dev-audit-log" => new DevWithAuditLog
       case "it" => new IT
       case "it-with-valintatulos" => new ITWithValintaTulosService
       case name => throw new IllegalArgumentException("Unknown value for omatsivut.profile: " + name);
@@ -50,29 +49,6 @@ object AppConfig extends Logging {
 
     override lazy val settings = ConfigTemplateProcessor.createSettings("omatsivut", templateAttributesFile)
       .withOverride("mongodb.oppija.uri", "mongodb://localhost:27017")
-  }
-
-  class DevWithAuditLog extends AppConfig with ExampleTemplatedProps with MockAuthentication  {
-    def springConfiguration = new OmatSivutSpringContext.DevWithAuditLog()
-
-    private var activemqOpt: Option[BrokerService] = None
-
-    override def onStart {
-      val activemq = new BrokerService()
-      activemq.addConnector("tcp://localhost:61616")
-      activemq.start()
-      activemqOpt = Some(activemq)
-    }
-
-    override def onStop {
-      activemqOpt.foreach(_.stop)
-      activemqOpt = None
-    }
-
-    override lazy val settings = ConfigTemplateProcessor.createSettings("omatsivut", templateAttributesFile)
-      .withOverride("mongodb.oppija.uri", "mongodb://localhost:27017")
-      .withOverride("log.mongo.uri", "mongodb://localhost:27017")
-      .withOverride("activemq.brokerurl", "vm://transport")
   }
 
   class IT extends ExampleTemplatedProps with MockAuthentication with StubbedExternalDeps {
