@@ -25,6 +25,10 @@ object OmatsivutBuild extends Build {
     throw new IllegalStateException("Wrong java version (required " + JavaVersion + "): " + System.getProperty("java.version"))
   }
 
+  if(Seq("webbuild.sh").! != 0){
+    throw new RuntimeException("webbuild failed")
+  }
+
   lazy val project = Project (
     "omatsivut",
     file("."),
