@@ -9,6 +9,7 @@ import fi.vm.sade.omatsivut.koulutusinformaatio.domain.Koulutus
 import fi.vm.sade.omatsivut.localization.Translations
 import fi.vm.sade.omatsivut.tarjonta.TarjontaComponent
 import fi.vm.sade.utils.slf4j.Logging
+import fi.vm.sade.utils.template.TemplateProcessor
 import org.json4s.jackson.Serialization.write
 
 trait MuistilistaServiceComponent {
@@ -36,12 +37,24 @@ trait MuistilistaServiceComponent {
     }
 
     private def buildMessage(koulutukset: List[Koulutus]): String = {
-      koulutukset.map(k =>
-        s"${Translations.getTranslation("emailNote", "note")}:\n" +
-          s"\n${getHaku(k)}\n" +
-          s"* ${getOpetusPiste(k)} - ${k.name}\n\n" +
-          Translations.getTranslation("emailNote", "openLink")+"\n\n")
-        .mkString(",")
+      TemplateProcessor.processMustache("src/main/resources/templates/emailTemplate.mustache", Map(
+        "subject" -> "SUBJECT",
+        "body" -> buildBody(koulutukset)
+      ))
+    }
+
+
+    def buildBody(koulutukset: List[Koulutus]): String = {
+      val hakuKoulutusList = koulutukset
+        .groupBy(k => getHaku(k))
+        .map { case (haku, koulutukset) => Map("haku" -> haku, "koulutukset" -> koulutukset.map((k) => s"${getOpetusPiste(k)} - ${k.name}"))}
+
+      TemplateProcessor.processMustache("src/main/resources/templates/muistilistaEmail.mustache", Map(
+        "note" -> Translations.getTranslation("emailNote", "note"),
+        "openLink" -> Translations.getTranslation("emailNote", "openLink"),
+        "link" -> "http://reddit.com",
+        "haut" -> hakuKoulutusList
+      ))
     }
 
     private def getOpetusPiste(koulutus: Koulutus): String = {
