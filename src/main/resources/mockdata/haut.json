@@ -4539,11 +4539,11 @@
              "usePriority" : true
         }
     },
-    "erillishaku": {
+    "korkeakoulu-erillishaku": {
         "result": {
             "modified": 1412325731347,
             "modifiedBy": "1.2.246.562.24.480305445310",
-            "oid": "1.2.246.562.5.2013080813081926341928",
+            "oid": "korkeakoulu-erillishaku",
             "hakukausiUri": "kausi_s#1",
             "hakukausiVuosi": 2014,
             "hakutapaUri": "hakutapa_01#1",

@@ -1969,21 +1969,41 @@
       var erillishaku = page.getApplication('Korkeakoulujen erillishaku 2001')
 
       before(
-        page.applyFixtureAndOpen({fixtureName:"erillishaku"})
+        page.applyErillishakuFixtureAndOpen
       )
 
-      it("Hakemus näytetään", function() {
-        expect(ApplicationListPage().applications()).to.contain(
-          { applicationSystemName: 'Korkeakoulujen erillishaku 2001' }
-        )
+      describe("Tietojen näyttäminen", function() {
+        it("Hakemus näytetään", function() {
+          expect(ApplicationListPage().applications()).to.contain(
+            { applicationSystemName: 'Korkeakoulujen erillishaku 2001' }
+          )
+        })
+
+        it("Näytä hakemus -linkki disabloidaan", function() {
+          erillishaku.previewLink().hasClass("disabled").should.equal(true)
+        })
+
+        it("Yhteystietojen muokkaus ei ole mahdollista", function() {
+          erillishaku.yhteystiedot().isVisible().should.be.false
+        })
+
+        it("Valintatulokset näytetään", function() {
+          expect(erillishaku.valintatulokset()[0].hakukohde).to.equal('Kallion lukio Lukion ilmaisutaitolinja')
+          expect(erillishaku.valintatulokset()[0].tila).to.equal('Hyväksytty')
+        })
+
+        it("Paikka on vastaanotettavissa", function() {
+          expect(erillishaku.vastaanotto(0).visible()).to.equal(true)
+        })
       })
 
-      it("Näytä hakemus -linkki disabloidaan", function() {
-        erillishaku.previewLink().hasClass("disabled").should.equal(true)
-      })
+      describe("Paikan vastaanotto", function() {
+        before(erillishaku.vastaanotto(0).selectOption("VASTAANOTTANUT"))
+        before(erillishaku.vastaanotto(0).send)
 
-      it("Yhteystietojen muokkaus ei ole mahdollista", function() {
-        erillishaku.yhteystiedot().isVisible().should.be.false
+        it("Toimii", function() {
+          expect(erillishaku.vastaanotto(0).visible()).to.equal(false)
+        })
       })
     })
 

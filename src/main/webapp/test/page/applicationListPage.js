@@ -53,6 +53,10 @@ function ApplicationListPage() {
       }
     },
 
+    applyErillishakuFixtureAndOpen: function() {
+      return fixtures.applyErillishaku().then(api.reloadPage())
+    },
+
     setValintatulosServiceShouldFail: function(fail) {
       return function() {
         return fixtures.setValintatulosServiceFailure(fail)

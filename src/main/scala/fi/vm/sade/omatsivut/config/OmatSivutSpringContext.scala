@@ -1,7 +1,7 @@
 package fi.vm.sade.omatsivut.config
 
 import fi.vm.sade.haku.oppija.common.organisaatio.OrganizationService
-import fi.vm.sade.haku.oppija.hakemus.it.dao.ApplicationDAO
+import fi.vm.sade.haku.oppija.hakemus.it.dao.{ApplicationOidDAO, ApplicationDAO}
 import fi.vm.sade.haku.oppija.hakemus.service.{SyntheticApplicationService, HakuPermissionService, ApplicationService}
 import fi.vm.sade.haku.oppija.hakemus.service.impl.HakuPermissionServiceMockImpl
 import fi.vm.sade.haku.oppija.lomake.service.ApplicationSystemService
@@ -10,6 +10,7 @@ import fi.vm.sade.haku.virkailija.authentication.AuthenticationService
 import fi.vm.sade.haku.virkailija.authentication.impl.AuthenticationServiceMockImpl
 import fi.vm.sade.log.client.Logger
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
+import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.omatsivut.mongo.OmatSivutMongoConfiguration
 import fi.vm.sade.utils.slf4j.Logging
 import org.springframework.context.ApplicationContext
@@ -70,6 +71,10 @@ object OmatSivutSpringContext extends Logging {
   @ImportResource(Array("/META-INF/spring/logger-mock-context.xml"))
   class Dev extends OmatSivutConfiguration {
     val profile = "dev"
+
+    @Bean def applicationOidDAO: ApplicationOidDAO = new ApplicationOidDAO {
+      override def generateNewOid() = "1.2.246.562.11.00000441369"
+    }
   }
 
   @Configuration
