@@ -13,6 +13,7 @@ object OmatsivutBuild extends Build {
   val ScalatraVersion = "2.3.0.RC3"
   val TomcatVersion = "7.0.22"
   val SpringVersion = "3.2.9.RELEASE"
+  val artifactory = "https://artifactory.oph.ware.fi/artifactory/"
 
   // task for running just unit tests. In scala these are not tagged.
   lazy val UnitTest = config("unit") extend Test
@@ -36,9 +37,11 @@ object OmatsivutBuild extends Build {
       javacOptions ++= Seq("-source", JavaVersion, "-target", JavaVersion),
       scalacOptions ++= Seq("-target:jvm-1.7", "-deprecation"),
       resolvers += Resolver.mavenLocal,
+      resolvers += "oph-sade-artifactory-releases" at artifactory + "oph-sade-release-local",
+      resolvers += "oph-sade-artifactory-snapshots" at artifactory + "oph-sade-snapshot-local",
+      resolvers += "oph-artifactory-repo1-cache" at artifactory + "repo1-cache",
+      resolvers += "repo1.maven.org" at "http://repo1.maven.org/maven2/",
       resolvers += Classpaths.typesafeReleases,
-      resolvers += "oph-sade-artifactory-releases" at "https://artifactory.oph.ware.fi/artifactory/oph-sade-release-local",
-      resolvers += "oph-sade-artifactory-snapshots" at "https://artifactory.oph.ware.fi/artifactory/oph-sade-snapshot-local",
       sourceGenerators in Compile <+= buildInfo,
       parallelExecution in Test := false,
       buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
