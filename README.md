@@ -133,23 +133,17 @@ Paikallisen mongon käynnistys:
 ### templated-profiili
 
 Tällä profiililla sovelluksen asetukset generoidaan tuotantoympäristöä vastaavasti `omatsivut.properties.template` -tiedostosta
-ja annetusta muuttujatiedostosta. Testi- ja tuotantoympäristöissä käytettävät muuttujatiedostot sijaitsevat erillisessä
- "deploy" -repositoriossa.
+ja annetusta muuttujatiedostosta. Testi- ja tuotantoympäristöissä käytettävät muuttujatiedostot sijaitsevat erillisissä sisäisissä
+ "environment" -repositorioissa.
 
-Muuttujatiedoston sijainti määritellään näin: `-Domatsivut.vars=../deploy/vars/environments/oph_vars.yml`.
-
+IDE:ssä voit ajaa käyttämällä system propertyä `-Domatsivut.profile=templated` ja aseta muuttujat sisältävän tiedoston sijainti toisessa system propertyssä, esim. `-Domatsivut.vars={HAKEMISTO}/oph_vars.yml`
+Mallia vars-tiedostoon voi ottaa tiedostosta `src/main/resources/oph-configuration/dev-vars.yml`
 
 ### default-profiili
 
 Oletusasetuksilla käytetään ulkoista konfiguraatiotiedostoa `omatsivut.properties`, joka generoidaan deployn yhteydessä
  `omatsivut.properties.template` ja ulkoisesta muuttujatiedostosta. Tätä profiilia käytetään testi- ja
 tuotantoympäristöissä.
-
-### templated-profiili
-
-Templated profiililla voi käyttää konfiguraatiota, jossa template-konfiguraatioon asettaan arvot ulkoisesta konfiguraatiosta. Käytä system propertyä `-Domatsivut.profile=templated`
-ja aseta muuttujat sisältävän tiedoston sijainti system propertyssä, esim. `-Domatsivut.vars={HAKEMISTO}/oph_vars.yml` - mallia vars-tiedostoon voi ottaa tiedostosta `src/main/resources/oph-configuration/dev-vars.yml`
-
 
 ## API-dokumentaatio
 
