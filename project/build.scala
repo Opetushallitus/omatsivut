@@ -15,11 +15,11 @@ object OmatsivutBuild extends Build {
   val SpringVersion = "3.2.9.RELEASE"
   val artifactory = "https://artifactory.oph.ware.fi/artifactory/"
 
-  // task for running just unit tests. In scala these are not tagged.
+  // task for running just unit tests (no mocha).
   lazy val UnitTest = config("unit") extend Test
 
-  // task for running just integration tests. In scala source code these are tagged: tag("integration")
-  lazy val IntegrationTest = config("integration") extend Test
+  // task for running just mocha tests.
+  lazy val MochaTest = config("mocha") extend Test
 
   if(!System.getProperty("java.version").startsWith(JavaVersion)) {
     throw new IllegalStateException("Wrong java version (required " + JavaVersion + "): " + System.getProperty("java.version"))
@@ -107,18 +107,18 @@ object OmatsivutBuild extends Build {
         System.setProperty("specs2.outDir", "target/unit-specs2-reports")
         System.setProperty("specs2.junit.outDir", "target/unit-test-reports")
       }),
-      Tests.Argument("junitxml", "console"),
-      Tests.Argument("exclude", "integration")
+      Tests.Filter(s => !s.endsWith("MochaTest")),
+      Tests.Argument("junitxml", "console")
     )
-  ).configs(IntegrationTest)
-  .settings(inConfig(IntegrationTest)(Defaults.testTasks): _*)
-  .settings(testOptions in IntegrationTest := Seq(
+  ).configs(MochaTest)
+  .settings(inConfig(MochaTest)(Defaults.testTasks): _*)
+  .settings(testOptions in MochaTest := Seq(
       Tests.Setup(() => {
-        System.setProperty("specs2.outDir", "target/integration-specs2-reports")
-        System.setProperty("specs2.junit.outDir", "target/integration-test-reports")
+        System.setProperty("specs2.outDir", "target/mocha-specs2-reports")
+        System.setProperty("specs2.junit.outDir", "target/mocha-test-reports")
       }),
-      Tests.Argument("junitxml", "console"),
-      Tests.Argument("include", "integration")
+      Tests.Filter(s => s.endsWith("MochaTest")),
+      Tests.Argument("junitxml", "console")
     )
   )
   lazy val projectRef: ProjectReference = project

@@ -59,7 +59,7 @@ Jos haluat ajaa pelkät ykikkötestit niin aja:
 
 `./sbt unit:test`
 
-Se skippaa kaikki testit joissa on integration tag.
+Se skippaa mocha testit.
 
 ### War-paketointi
 
@@ -104,7 +104,7 @@ npm install
 
 ### Aja testit
 
-`./runtests.sh`
+`./sbt mocha:test`
 
 ### Testien ajaminen selaimessa
 

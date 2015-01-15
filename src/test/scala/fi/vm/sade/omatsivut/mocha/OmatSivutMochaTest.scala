@@ -20,5 +20,5 @@ class OmatSivutMochaTest extends Specification {
         success
       }
     }
-  } tag("integration")
+  }
 }
