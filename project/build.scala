@@ -39,8 +39,6 @@ object OmatsivutBuild extends Build {
       resolvers += Resolver.mavenLocal,
       resolvers += "oph-sade-artifactory-releases" at artifactory + "oph-sade-release-local",
       resolvers += "oph-sade-artifactory-snapshots" at artifactory + "oph-sade-snapshot-local",
-      resolvers += "oph-artifactory-repo1-cache" at artifactory + "repo1-cache",
-      resolvers += "repo1.maven.org" at "http://repo1.maven.org/maven2/",
       resolvers += Classpaths.typesafeReleases,
       sourceGenerators in Compile <+= buildInfo,
       parallelExecution in Test := false,
