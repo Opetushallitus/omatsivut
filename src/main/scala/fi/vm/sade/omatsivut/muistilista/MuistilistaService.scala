@@ -43,7 +43,7 @@ trait MuistilistaServiceComponent {
 
     private def buildMessage(muistilista: Muistilista): EmailMessage = {
       val html = buildHtml(getKoulutuksetWithMuistiLista(muistilista), muistilista)
-      val receivers = muistilista.vastaaanottaja.map(v => EmailRecipient(None, v)).toList
+      val receivers = muistilista.vastaaanottaja.map(v => EmailRecipient("", v)).toList
       EmailMessage("omatsivut", muistilista.lahettaja.getOrElse("muistilista@opintopolku.fi"), receivers, muistilista.otsikko, html)
     }
 
