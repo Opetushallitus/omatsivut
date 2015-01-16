@@ -1,6 +1,6 @@
 package fi.vm.sade.omatsivut.muistilista
 
-import fi.vm.sade.groupemailer.GroupEmailComponent
+import fi.vm.sade.groupemailer.{EmailRecipient, EmailMessage, GroupEmailComponent, HtmlEmail}
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.http.UrlValueCompressor
 import fi.vm.sade.omatsivut.json.JsonFormats
@@ -20,12 +20,17 @@ trait MuistilistaServiceComponent {
   class MuistilistaService(language: Language.Language) extends JsonFormats with Logging {
     private implicit val lang = language
 
-    def buildMail(muistiLista: Muistilista, url: StringBuffer): String = {
+    def buildMail(muistiLista: Muistilista, url: StringBuffer) = {
       url + "/muistilista/" + buildUlrEncodedOidString(muistiLista.koids)
-      buildMessage(getKoulutuksetWithMuistiLista(muistiLista))
+      val koulutukset = getKoulutuksetWithMuistiLista(muistiLista)
+      buildMessage(muistiLista)
     }
 
-    private def getKoulutuksetWithMuistiLista(muistiLista: Muistilista) = {
+    def sendMail(email: EmailMessage) = {
+      groupEmailService.sendMailWithoutTemplate(HtmlEmail(email))
+    }
+
+    private def getKoulutuksetWithMuistiLista(muistiLista: Muistilista): List[Koulutus] = {
       val oids = muistiLista.koids.toList
 
       oids.map(k =>
@@ -36,17 +41,22 @@ trait MuistilistaServiceComponent {
       ).asInstanceOf[List[Koulutus]]
     }
 
-    private def buildMessage(koulutukset: List[Koulutus]): String = {
-      TemplateProcessor.processTemplate("src/main/resources/templates/emailTemplate.mustache", Map(
+    private def buildMessage(muistilista: Muistilista): EmailMessage = {
+      val html = buildHtml(getKoulutuksetWithMuistiLista(muistilista), muistilista)
+      val receivers = muistilista.vastaaanottaja.map(v => EmailRecipient(None, v)).toList
+      EmailMessage("omatsivut", muistilista.lahettaja.getOrElse("muistilista@opintopolku.fi"), receivers, muistilista.otsikko, html)
+    }
+
+    private def buildHtml(koulutukset: List[Koulutus], muistilista: Muistilista): String = {
+      TemplateProcessor.processTemplate("src/main/resources/templates/emailHeaderFooter.mustache", Map(
         "subject" -> "SUBJECT",
-        "body" -> buildBody(koulutukset)
+        "body" -> buildBody(koulutukset, muistilista)
       ))
     }
 
-
-    def buildBody(koulutukset: List[Koulutus]): String = {
+    private def buildBody(koulutukset: List[Koulutus], muistilista: Muistilista) = {
       val hakuKoulutusList = koulutukset
-        .groupBy(k => getHaku(k))
+        .groupBy(k => getHaku(muistilista))
         .map { case (haku, koulutukset) => Map("haku" -> haku, "koulutukset" -> koulutukset.map((k) => s"${getOpetusPiste(k)} - ${k.name}"))}
 
       TemplateProcessor.processTemplate("src/main/resources/templates/muistilistaEmail.mustache", Map(
@@ -71,11 +81,13 @@ trait MuistilistaServiceComponent {
       }
     }
 
-    private def getHaku(koulutus: Koulutus): String = {
-      tarjontaService.haku("1.2.246.562.5.2014020613412490531399", lang) match {
-        case Some(haku) => haku.name
+    private def getHaku(muistilista: Muistilista): List[String] = {
+      muistilista.hakuOids
+        .map(hakuOid => tarjontaService.haku(hakuOid, lang))
+        .map(h => h match {
+        case Some(h) => h.name
         case _ => throw new IllegalStateException("Haku not found")
-      }
+      })
     }
 
     private def buildUlrEncodedOidString(oids: List[String]): String = {
