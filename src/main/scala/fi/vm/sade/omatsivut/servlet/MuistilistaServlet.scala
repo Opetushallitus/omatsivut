@@ -24,7 +24,7 @@ trait MuistilistaServletContainer {
 
       post() {
         val muistiLista = Serialization.read[Muistilista](request.body)
-        muistilistaService(language).buildMail(muistiLista, request.getRequestURL)
+        muistilistaService(muistiLista.kieli).buildMail(muistiLista, request.getRequestURL)
       }
     }
 

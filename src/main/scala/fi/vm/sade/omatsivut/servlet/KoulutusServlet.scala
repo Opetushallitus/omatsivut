@@ -20,15 +20,19 @@ trait KoulutusServletContainer {
     }
 
     get("/opetuspisteet/:query") {
-      checkNotFound(koulutusInformaatioService.opetuspisteet(params("asId"), params("query"), paramOption("lang").getOrElse(Language.fi.toString())))
+      checkNotFound(koulutusInformaatioService.opetuspisteet(params("asId"), params("query"), getLangParam("lang")))
     }
 
     get("/koulutukset/:asId/:opetuspisteId") {
-      checkNotFound(koulutusInformaatioService.koulutukset(params("asId"), params("opetuspisteId"), paramOption("baseEducation"), params("vocational"), paramOption("uiLang").getOrElse(Language.fi.toString())))
+      checkNotFound(koulutusInformaatioService.koulutukset(params("asId"), params("opetuspisteId"), paramOption("baseEducation"), params("vocational"), getLangParam("uiLang")))
     }
 
     get("/koulutus/:aoId") {
-      checkNotFound(koulutusInformaatioService.koulutus(params("aoId"), paramOption("lang").getOrElse(Language.fi.toString())))
+      checkNotFound(koulutusInformaatioService.koulutus(params("aoId"), getLangParam("lang")))
+    }
+
+    def getLangParam(param: String): Language.Value = {
+      paramOption(param).flatMap(Language.parse(_)).getOrElse(Language.fi)
     }
 
     private def checkNotFound[A](result: Option[A]) = {

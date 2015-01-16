@@ -193,8 +193,8 @@ trait HakemusConverterComponent {
     }
 
     private def amendWithKoulutusInformaatio(lang: Language, data: HakutoiveData): HakutoiveData = {
-      val koulutus = data.get("Koulutus").orElse(koulutusInformaatioService.koulutus(data("Koulutus-id"), lang.toString).map(_.name))
-      val opetuspiste = data.get("Opetuspiste").orElse(koulutusInformaatioService.opetuspiste(data("Opetuspiste-id"), lang.toString).map(_.name))
+      val koulutus = data.get("Koulutus").orElse(koulutusInformaatioService.koulutus(data("Koulutus-id"), lang).map(_.name))
+      val opetuspiste = data.get("Opetuspiste").orElse(koulutusInformaatioService.opetuspiste(data("Opetuspiste-id"), lang).map(_.name))
 
       val amendedData = data ++ koulutus.map("Koulutus" -> _) ++ opetuspiste.map("Opetuspiste" -> _)
       amendedData

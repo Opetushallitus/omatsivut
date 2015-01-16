@@ -1,6 +1,7 @@
 package fi.vm.sade.omatsivut.koulutusinformaatio
 
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
+import fi.vm.sade.omatsivut.domain.Language.Language
 import fi.vm.sade.omatsivut.fixtures.JsonFixtureMaps
 import fi.vm.sade.omatsivut.fixtures.JsonFixtureMaps._
 import fi.vm.sade.omatsivut.json.JsonFormats
@@ -16,17 +17,17 @@ trait KoulutusInformaatioComponent {
   val koulutusInformaatioService: KoulutusInformaatioService
 
   class StubbedKoulutusInformaatioService extends KoulutusInformaatioService {
-    def opetuspisteet(asId: String, query: String, lang: String) = {
+    def opetuspisteet(asId: String, query: String, lang: Language) = {
       JsonFixtureMaps.findByKey[List[Opetuspiste]]("/mockdata/opetuspisteet.json", query.substring(0, 1).toLowerCase)
     }
-    def koulutukset(asId: String, opetuspisteId: String, baseEducation: Option[String], vocational: String, uiLang: String) = {
+    def koulutukset(asId: String, opetuspisteId: String, baseEducation: Option[String], vocational: String, uiLang: Language) = {
       JsonFixtureMaps.findByKey[List[Koulutus]]("/mockdata/koulutukset.json", opetuspisteId)
     }
-    def koulutus(aoId: String, lang: String) = {
+    def koulutus(aoId: String, lang: Language) = {
       JsonFixtureMaps.findByFieldValue[List[Koulutus]]("/mockdata/koulutukset.json", "id", aoId).getOrElse(List()).headOption
     }
 
-    def opetuspiste(id: String, lang: String) = {
+    def opetuspiste(id: String, lang: Language) = {
       val text = io.Source.fromInputStream(getClass.getResourceAsStream("/mockdata/opetuspisteet.json")).mkString
       parse(text).extract[Map[String, List[Opetuspiste]]].values.flatten.find(_.id == id)
     }
@@ -42,10 +43,10 @@ trait KoulutusInformaatioComponent {
       val koulutuksetMemo = TTLOptionalMemoize.memoize(service.koulutukset _, "koulutusinformaatio koulutukset", cacheTimeSec, 32)
 
       new KoulutusInformaatioService {
-        def opetuspisteet(asId: String, query: String, lang: String): Option[List[Opetuspiste]] = opetuspisteetMemo(asId, query, lang)
-        def koulutus(aoId: String, lang: String): Option[Koulutus] = koulutusMemo(aoId, lang)
-        def koulutukset(asId: String, opetuspisteId: String, baseEducation: Option[String], vocational: String, uiLang: String): Option[List[Koulutus]] = koulutuksetMemo(asId, opetuspisteId, baseEducation, vocational, uiLang)
-        def opetuspiste(id: String, lang: String) = opetuspisteMemo(id, lang)
+        def opetuspisteet(asId: String, query: String, lang: Language): Option[List[Opetuspiste]] = opetuspisteetMemo(asId, query, lang)
+        def koulutus(aoId: String, lang: Language): Option[Koulutus] = koulutusMemo(aoId, lang)
+        def koulutukset(asId: String, opetuspisteId: String, baseEducation: Option[String], vocational: String, uiLang: Language): Option[List[Koulutus]] = koulutuksetMemo(asId, opetuspisteId, baseEducation, vocational, uiLang)
+        def opetuspiste(id: String, lang: Language) = opetuspisteMemo(id, lang)
       }
     }
   }
@@ -55,25 +56,25 @@ trait KoulutusInformaatioComponent {
 
     private def wrapAsOption[A](l: List[A]): Option[List[A]] = if (!l.isEmpty) Some(l) else None
 
-    def opetuspisteet(asId: String, query: String, lang: String): Option[List[Opetuspiste]] = {
+    def opetuspisteet(asId: String, query: String, lang: Language): Option[List[Opetuspiste]] = {
       val (_, _, resultString) = DefaultHttpClient.httpGet(appConfig.settings.koulutusinformaatioLopUrl + "/search/" + Http.urlEncode(query, "UTF-8"))
         .param("asId", asId)
-        .param("lang", lang)
+        .param("lang", lang.toString)
         .responseWithHeaders
 
       wrapAsOption(parse(resultString).extract[List[Opetuspiste]])
     }
 
-    def opetuspiste(id: String, lang: String): Option[Opetuspiste] = {
+    def opetuspiste(id: String, lang: Language): Option[Opetuspiste] = {
       DefaultHttpClient.httpGet(appConfig.settings.koulutusinformaatioLopUrl + "/" + id).response.flatMap { resultString =>
         parse(resultString).extract[Option[Opetuspiste]]
       }
     }
 
-    def koulutukset(asId: String, opetuspisteId: String, baseEducation: Option[String], vocational: String, uiLang: String): Option[List[Koulutus]] = {
+    def koulutukset(asId: String, opetuspisteId: String, baseEducation: Option[String], vocational: String, uiLang: Language): Option[List[Koulutus]] = {
       var request = DefaultHttpClient.httpGet(appConfig.settings.koulutusinformaatioAoUrl + "/search/" + asId + "/" + opetuspisteId)
         .param("vocational", vocational)
-        .param("uiLang", uiLang)
+        .param("uiLang", uiLang.toString)
       if(baseEducation.isDefined) {
         request = request.param("baseEducation", baseEducation.get)
       }
@@ -82,10 +83,10 @@ trait KoulutusInformaatioComponent {
       wrapAsOption(parse(resultString).extract[List[Koulutus]])
     }
 
-    def koulutus(aoId: String, lang: String): Option[Koulutus] = {
+    def koulutus(aoId: String, lang: Language): Option[Koulutus] = {
       val (responseCode, headersMap, resultString) = DefaultHttpClient.httpGet(appConfig.settings.koulutusinformaatioAoUrl + "/" + aoId)
-        .param("lang", lang)
-        .param("uiLang", lang)
+        .param("lang", lang.toString)
+        .param("uiLang", lang.toString)
         .responseWithHeaders
       withWarnLogging{
         parse(resultString).extract[Option[Koulutus]]
