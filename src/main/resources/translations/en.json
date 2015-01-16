@@ -130,7 +130,7 @@
   },
 
   "emailNote": {
-      "note": "Muistilista",
-      "openLink": "Open notes Studyinfo"
+      "note": "Shortlist",
+      "openLink": "Open the shortlist in Studyinfo"
   }
 }
