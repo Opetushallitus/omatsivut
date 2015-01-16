@@ -1,8 +1,11 @@
 package fi.vm.sade.omatsivut.config
 
+import java.nio.file.{Paths, Files}
+
 import fi.vm.sade.omatsivut.config.AppConfig.{AppConfig, ExampleTemplatedProps}
 import fi.vm.sade.utils.mongo.EmbeddedMongo
 import fi.vm.sade.utils.tcp.PortFromSystemPropertyOrFindFree
+import org.specs2.matcher.PathMatchers
 import org.specs2.mutable.Specification
 
 class AppConfigSpec extends Specification {
@@ -26,6 +29,12 @@ class AppConfigSpec extends Specification {
   "Config with dev profile" should {
     "Start up" in {
       validateConfig(new AppConfig.Dev())
+    }
+  }
+
+  "omatsivut.properties.template" should {
+    "must exist with that name for deployment process" in {
+      "src/main/resources/oph-configuration/omatsivut.properties.template" must PathMatchers.beAnExistingPath
     }
   }
 

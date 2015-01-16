@@ -1,6 +1,8 @@
 #
 # TÄHÄN TIEDOSTOON EI SAA TALLENTAA YMPÄRISTÖKOHTAISIA ARVOJA MUUTOIN KUIN MUUTTUJINA!!!
 #
+# TÄMÄN TIEDOSTON NIMEÄ TAI POLKUA EI SAA MUUTTAA
+#
 # Tämä tiedosto toimii pohjana oph-configuration/omatsivut.properties tiedostolle,
 # joka asettaa tomcatin ympäristökohtaiset arvot.
 #
