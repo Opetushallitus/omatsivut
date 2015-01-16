@@ -37,7 +37,7 @@ trait MuistilistaServiceComponent {
     }
 
     private def buildMessage(koulutukset: List[Koulutus]): String = {
-      TemplateProcessor.processMustache("src/main/resources/templates/emailTemplate.mustache", Map(
+      TemplateProcessor.processTemplate("src/main/resources/templates/emailTemplate.mustache", Map(
         "subject" -> "SUBJECT",
         "body" -> buildBody(koulutukset)
       ))
@@ -49,7 +49,7 @@ trait MuistilistaServiceComponent {
         .groupBy(k => getHaku(k))
         .map { case (haku, koulutukset) => Map("haku" -> haku, "koulutukset" -> koulutukset.map((k) => s"${getOpetusPiste(k)} - ${k.name}"))}
 
-      TemplateProcessor.processMustache("src/main/resources/templates/muistilistaEmail.mustache", Map(
+      TemplateProcessor.processTemplate("src/main/resources/templates/muistilistaEmail.mustache", Map(
         "note" -> Translations.getTranslation("emailNote", "note"),
         "openLink" -> Translations.getTranslation("emailNote", "openLink"),
         "link" -> "http://reddit.com",
