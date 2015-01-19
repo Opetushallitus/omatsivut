@@ -1,0 +1,146 @@
+[
+  {
+    "applicationSystemId": "1.2.246.562.29.17832423606",
+    "applicationSystemName": "KK-testi-Erillishaku-Api",
+    "maxApplicationOptions": 3,
+    "applicationFormLink": null,
+    "applicationDates": [
+      {
+        "startDate": 1414569035340,
+        "endDate": 1415346677339
+      }
+    ],
+    "applicationOptions": [
+      {
+        "id": "1.2.246.562.20.39629017805",
+        "name": "Fysiikka (aineenopettaja), luonnontieteiden kandidaatti",
+        "educationDegree": "koulutusasteoph2002_72",
+        "sora": false,
+        "teachingLanguages": ["FI"],
+        "providerName": "Helsingin yliopisto",
+        "providerId": "1.2.246.562.10.53814745062",
+        "providerLocation": "HELSINGIN YLIOPISTO",
+        "qualification": null,
+        "baseEducationRequirement": null,
+        "parent": {
+          "id": "1.2.246.562.17.88921045113",
+          "name": "Fysiikka (aineenopettaja), luonnontieteiden kandidaatti"
+        },
+        "losRefs": [
+          {
+            "id": "1.2.246.562.17.88921045113",
+            "asIds": null,
+            "name": "Fysiikka (aineenopettaja), luonnontieteiden kandidaatti",
+            "qualifications": ["Filosofian maisteri"],
+            "prerequisite": null,
+            "provider": "Helsingin yliopisto",
+            "fieldOfExpertise": null
+          }
+        ],
+        "children": [],
+        "attachmentDeliveryDeadline": null,
+        "attachments": null,
+        "exams": null,
+        "athleteEducation": false,
+        "aoIdentifier": null,
+        "kaksoistutkinto": false,
+        "vocational": false,
+        "educationCodeUri": "koulutus_742301",
+        "type": "KORKEAKOULU",
+        "educationTypeUri": null,
+        "prerequisite": null,
+        "applicationDates": [],
+        "canBeApplied": false,
+        "nextApplicationPeriodStarts": null,
+        "hakutapaUri": null,
+        "applicationFormLink": null,
+        "asId": null,
+        "asName": null,
+        "kotitalous": false,
+        "hakuaikaId": "242219",
+        "useSystemApplicationForm": false,
+        "higherEducation": true
+      }
+    ],
+    "asOngoing": false,
+    "nextApplicationPeriodStarts": null,
+    "useSystemApplicationForm": true
+  },
+  {
+    "applicationSystemId": "1.2.246.562.5.2013080813081926341927",
+    "applicationSystemName": "Ammatillisen koulutuksen ja lukiokoulutuksen kevään 2014 yhteishaku",
+    "maxApplicationOptions": 5,
+    "applicationFormLink": null,
+    "applicationDates": [
+      {
+        "startDate": 1395734580000,
+        "endDate": 1413374434568
+      }
+    ],
+    "applicationOptions": [
+      {
+        "id": "1.2.246.562.14.2013092410023348364157",
+        "name": "Kotitalousopetus, pk",
+        "educationDegree": "32",
+        "sora": false,
+        "teachingLanguages": ["FI"],
+        "providerName": "Helsingin Diakoniaopisto",
+        "providerId": "1.2.246.562.10.67937704822",
+        "providerLocation": "HELSINKI",
+        "qualification": null,
+        "baseEducationRequirement": null,
+        "parent": {
+          "id": "1.2.246.562.5.2013061010184614853416_1.2.246.562.10.67937704822",
+          "name": "Kotitalousopetus (Talouskoulu)"
+        },
+        "losRefs": [],
+        "children": [
+          {
+            "id": "1.2.246.562.5.2013092409585294918169",
+            "losId": "1.2.246.562.5.2013061010184614873316_1.2.246.562.10.67937704822",
+            "name": "Kotitalousopetus",
+            "qualification": "------",
+            "prerequisite": {
+              "value": "PK",
+              "name": "Peruskoulu",
+              "shortName": "PK",
+              "description": "Peruskoulu",
+              "uri": "pohjakoulutusvaatimustoinenaste_pk"
+            }
+          }
+        ],
+        "attachmentDeliveryDeadline": 1394802000000,
+        "attachments": null,
+        "exams": null,
+        "athleteEducation": false,
+        "aoIdentifier": "186",
+        "kaksoistutkinto": false,
+        "vocational": true,
+        "educationCodeUri": "koulutus_038411",
+        "type": "TUTKINTO",
+        "educationTypeUri": "et3",
+        "prerequisite": {
+          "value": "PK",
+          "name": "Peruskoulu",
+          "shortName": "PK",
+          "description": "Peruskoulu",
+          "uri": "pohjakoulutusvaatimustoinenaste_pk"
+        },
+        "applicationDates": [],
+        "canBeApplied": false,
+        "nextApplicationPeriodStarts": null,
+        "hakutapaUri": null,
+        "applicationFormLink": null,
+        "asId": null,
+        "asName": null,
+        "kotitalous": true,
+        "hakuaikaId": null,
+        "useSystemApplicationForm": false,
+        "higherEducation": false
+      }
+    ],
+    "asOngoing": false,
+    "nextApplicationPeriodStarts": null,
+    "useSystemApplicationForm": true
+  }
+]

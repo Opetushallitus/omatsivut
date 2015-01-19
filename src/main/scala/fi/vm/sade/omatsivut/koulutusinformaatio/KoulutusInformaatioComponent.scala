@@ -7,6 +7,7 @@ import fi.vm.sade.omatsivut.fixtures.JsonFixtureMaps._
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.koulutusinformaatio.domain.{Koulutus, Opetuspiste}
 import fi.vm.sade.omatsivut.memoize.TTLOptionalMemoize
+import fi.vm.sade.omatsivut.muistilista.KoulutusInformaatioBasketItem
 import fi.vm.sade.utils.http.DefaultHttpClient
 import fi.vm.sade.utils.slf4j.Logging
 import org.json4s._
@@ -31,6 +32,11 @@ trait KoulutusInformaatioComponent {
       val text = io.Source.fromInputStream(getClass.getResourceAsStream("/mockdata/opetuspisteet.json")).mkString
       parse(text).extract[Map[String, List[Opetuspiste]]].values.flatten.find(_.id == id)
     }
+
+    def koulutusWithHaku(aoIds: List[String], lang: Language): Option[List[KoulutusInformaatioBasketItem]] = {
+      val text = io.Source.fromInputStream(getClass.getResourceAsStream("/mockdata/basketinfo.json")).mkString
+      parse(text).extract[Option[List[KoulutusInformaatioBasketItem]]]
+    }
   }
 
   object CachedKoulutusInformaatioService {
@@ -41,12 +47,15 @@ trait KoulutusInformaatioComponent {
       val opetuspisteetMemo = TTLOptionalMemoize.memoize(service.opetuspisteet _, "koulutusinformaatio opetuspisteet", cacheTimeSec, 32)
       val koulutusMemo = TTLOptionalMemoize.memoize(service.koulutus _, "koulutusinformaatio koulutus", cacheTimeSec, 32)
       val koulutuksetMemo = TTLOptionalMemoize.memoize(service.koulutukset _, "koulutusinformaatio koulutukset", cacheTimeSec, 32)
+      val koulutusWithHakuMemo = TTLOptionalMemoize.memoize(service.koulutusWithHaku _, "koulutusinformaatio muistilistan koulutukset", cacheTimeSec, 32)
 
       new KoulutusInformaatioService {
         def opetuspisteet(asId: String, query: String, lang: Language): Option[List[Opetuspiste]] = opetuspisteetMemo(asId, query, lang)
         def koulutus(aoId: String, lang: Language): Option[Koulutus] = koulutusMemo(aoId, lang)
         def koulutukset(asId: String, opetuspisteId: String, baseEducation: Option[String], vocational: String, uiLang: Language): Option[List[Koulutus]] = koulutuksetMemo(asId, opetuspisteId, baseEducation, vocational, uiLang)
         def opetuspiste(id: String, lang: Language) = opetuspisteMemo(id, lang)
+
+        def koulutusWithHaku(aoIds: List[String], lang: Language): Option[List[KoulutusInformaatioBasketItem]] = koulutusWithHakuMemo(aoIds, lang)
       }
     }
   }
@@ -90,6 +99,16 @@ trait KoulutusInformaatioComponent {
         .responseWithHeaders
       withWarnLogging{
         parse(resultString).extract[Option[Koulutus]]
+      }("Parsing response failed:\n" + resultString, None)
+    }
+
+    def koulutusWithHaku(aoIds: List[String], lang: Language): Option[List[KoulutusInformaatioBasketItem]] = {
+      val params = aoIds.map(a => "&aoId="+a).mkString
+
+      val (responseCode, headersMap, resultString) = DefaultHttpClient.httpGet(appConfig.settings.koulutusinformaatioAoUrl + "/basket/items?uiLang=" + lang + params)
+        .responseWithHeaders
+      withWarnLogging{
+        parse(resultString).extract[Option[List[KoulutusInformaatioBasketItem]]]
       }("Parsing response failed:\n" + resultString, None)
     }
   }

@@ -1,11 +1,10 @@
 package fi.vm.sade.omatsivut.muistilista
 
-import fi.vm.sade.groupemailer.{EmailRecipient, EmailMessage, GroupEmailComponent, HtmlEmail}
+import fi.vm.sade.groupemailer.{EmailMessage, EmailRecipient, GroupEmailComponent, HtmlEmail}
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.http.UrlValueCompressor
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.koulutusinformaatio.KoulutusInformaatioComponent
-import fi.vm.sade.omatsivut.koulutusinformaatio.domain.Koulutus
 import fi.vm.sade.omatsivut.localization.Translations
 import fi.vm.sade.omatsivut.tarjonta.TarjontaComponent
 import fi.vm.sade.utils.slf4j.Logging
@@ -22,7 +21,6 @@ trait MuistilistaServiceComponent {
 
     def buildMail(muistiLista: Muistilista, url: StringBuffer) = {
       url + "/muistilista/" + buildUlrEncodedOidString(muistiLista.koids)
-      val koulutukset = getKoulutuksetWithMuistiLista(muistiLista)
       buildMessage(muistiLista)
     }
 
@@ -31,22 +29,29 @@ trait MuistilistaServiceComponent {
     }
 
     private def buildMessage(muistilista: Muistilista): EmailMessage = {
-      val html = buildHtml(getKoulutuksetWithMuistiLista(muistilista), muistilista)
+      val html = buildHtml(muistilista)
       val receivers = muistilista.vastaaanottaja.map(v => EmailRecipient("", v)).toList
       EmailMessage("omatsivut", muistilista.lahettaja.getOrElse("muistilista@opintopolku.fi"), receivers, muistilista.otsikko, html)
     }
 
-    private def buildHtml(koulutukset: List[Koulutus], muistilista: Muistilista): String = {
+    private def buildHtml(muistilista: Muistilista): String = {
       TemplateProcessor.processTemplate("src/main/resources/templates/emailHeaderFooter.mustache", Map(
         "subject" -> "SUBJECT",
-        "body" -> buildBody(koulutukset, muistilista)
+        "body" -> buildBody(muistilista)
       ))
     }
 
-    private def buildBody(koulutukset: List[Koulutus], muistilista: Muistilista) = {
-      val hakuKoulutusList = koulutukset
-        .groupBy(k => getHaku(muistilista))
-        .map { case (haku, koulutukset) => Map("haku" -> haku, "koulutukset" -> koulutukset.map((k) => s"${getOpetusPiste(k)} - ${k.name}"))}
+    private def buildBody(muistilista: Muistilista) = {
+      def koulutuksetList(basketItems: List[KoulutusInformaatioBasketItem]): List[String] = {
+        basketItems.map((bi) => bi.applicationOptions.map((info) => s"${info.providerName} - ${info.name}")).flatten
+      }
+
+      val hakuKoulutusList = getKoulutukset(muistilista)
+        .groupBy(k => k.applicationSystemName)
+        .map { case (haku, basketItems) => Map(
+        "haku" -> haku,
+        "koulutukset" -> koulutuksetList(basketItems))
+      }
 
       TemplateProcessor.processTemplate("src/main/resources/templates/muistilistaEmail.mustache", Map(
         "note" -> Translations.getTranslation("emailNote", "note"),
@@ -56,31 +61,11 @@ trait MuistilistaServiceComponent {
       ))
     }
 
-    private def getOpetusPiste(koulutus: Koulutus): String = {
-      koulutus.provider match {
-        case Some(provider) => provider.name
-        case _ => throw new IllegalStateException("Koulutus name not found")
+    private def getKoulutukset(muistilista: Muistilista): List[KoulutusInformaatioBasketItem] = {
+      koulutusInformaatioService.koulutusWithHaku(muistilista.koids, muistilista.kieli) match {
+        case Some(x) => x.asInstanceOf[List[KoulutusInformaatioBasketItem]]
+        case _ => throw new IllegalStateException("koulutusWithHaku returned error")
       }
-    }
-
-    private def getHaku(muistilista: Muistilista): List[String] = {
-      muistilista.hakuOids
-        .map(hakuOid => tarjontaService.haku(hakuOid, lang))
-        .map(h => h match {
-        case Some(h) => h.name
-        case _ => throw new IllegalStateException("Haku not found")
-      })
-    }
-
-    private def getKoulutuksetWithMuistiLista(muistiLista: Muistilista): List[Koulutus] = {
-      val oids = muistiLista.koids.toList
-
-      oids.map(k =>
-        koulutusInformaatioService.koulutus(k, muistiLista.kieli) match {
-          case Some(x) => x
-          case _ => None
-        }
-      ).asInstanceOf[List[Koulutus]]
     }
 
     private def buildUlrEncodedOidString(oids: List[String]): String = {
