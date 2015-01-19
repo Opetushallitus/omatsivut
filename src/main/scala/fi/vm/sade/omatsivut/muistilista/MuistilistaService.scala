@@ -32,7 +32,7 @@ trait MuistilistaServiceComponent {
     }
 
     private def buildHtml(muistilista: Muistilista, url: String): String = {
-      TemplateProcessor.processTemplate("src/main/resources/templates/emailHeaderFooter.mustache", Map(
+      TemplateProcessor.processTemplate("/templates/emailHeaderFooter.mustache", Map(
         "subject" -> "SUBJECT",
         "body" -> buildBody(muistilista, url)
       ))
@@ -50,7 +50,7 @@ trait MuistilistaServiceComponent {
         "koulutukset" -> koulutuksetList(basketItems))
       }
 
-      TemplateProcessor.processTemplate("src/main/resources/templates/muistilistaEmail.mustache", Map(
+      TemplateProcessor.processTemplate("/templates/muistilistaEmail.mustache", Map(
         "note" -> Translations.getTranslation("emailNote", "note"),
         "openLink" -> Translations.getTranslation("emailNote", "openLink"),
         "link" -> url,
