@@ -41,6 +41,8 @@ omatsivut.valinta-tulos-service.url=https://{{host_virkailija}}/valinta-tulos-se
 
 omatsivut.koulutusinformaatio.ao.url=https\://{{host_haku}}/ao
 omatsivut.koulutusinformaatio.lop.url=https\://{{host_haku}}/lop
+omatsivut.koulutusinformaatio.basketitems.url=https\://{{host_haku}}/basket/items
+
 
 omatsivut.ohjausparametrit.url=https\://{{host_virkailija}}/ohjausparametrit-service/api/v1/rest/parametri
 

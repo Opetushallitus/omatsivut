@@ -19,29 +19,26 @@ trait MuistilistaServiceComponent {
   class MuistilistaService(language: Language.Language) extends JsonFormats with Logging {
     private implicit val lang = language
 
-    def buildMail(muistiLista: Muistilista, url: StringBuffer) = {
-      url + "/muistilista/" + buildUlrEncodedOidString(muistiLista.koids)
-      buildMessage(muistiLista)
-    }
-
-    def sendMail(email: EmailMessage) = {
+    def sendMail(muistiLista: Muistilista, url: StringBuffer) = {
+      val email = buildMessage(muistiLista, url + buildUlrEncodedOidString(muistiLista.koids))
       groupEmailService.sendMailWithoutTemplate(HtmlEmail(email))
     }
 
-    private def buildMessage(muistilista: Muistilista): EmailMessage = {
-      val html = buildHtml(muistilista)
+    private def buildMessage(muistilista: Muistilista, url: String): EmailMessage = {
+      val html = buildHtml(muistilista, url)
+      logger.info("EMAIL="+html)
       val receivers = muistilista.vastaaanottaja.map(v => EmailRecipient("", v)).toList
       EmailMessage("omatsivut", muistilista.lahettaja.getOrElse("muistilista@opintopolku.fi"), receivers, muistilista.otsikko, html)
     }
 
-    private def buildHtml(muistilista: Muistilista): String = {
+    private def buildHtml(muistilista: Muistilista, url: String): String = {
       TemplateProcessor.processTemplate("src/main/resources/templates/emailHeaderFooter.mustache", Map(
         "subject" -> "SUBJECT",
-        "body" -> buildBody(muistilista)
+        "body" -> buildBody(muistilista, url)
       ))
     }
 
-    private def buildBody(muistilista: Muistilista) = {
+    private def buildBody(muistilista: Muistilista, url: String) = {
       def koulutuksetList(basketItems: List[KoulutusInformaatioBasketItem]): List[String] = {
         basketItems.map((bi) => bi.applicationOptions.map((info) => s"${info.providerName} - ${info.name}")).flatten
       }
@@ -56,7 +53,7 @@ trait MuistilistaServiceComponent {
       TemplateProcessor.processTemplate("src/main/resources/templates/muistilistaEmail.mustache", Map(
         "note" -> Translations.getTranslation("emailNote", "note"),
         "openLink" -> Translations.getTranslation("emailNote", "openLink"),
-        "link" -> "http://reddit.com",
+        "link" -> url,
         "haut" -> hakuKoulutusList
       ))
     }

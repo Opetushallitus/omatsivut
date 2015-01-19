@@ -54,7 +54,6 @@ trait KoulutusInformaatioComponent {
         def koulutus(aoId: String, lang: Language): Option[Koulutus] = koulutusMemo(aoId, lang)
         def koulutukset(asId: String, opetuspisteId: String, baseEducation: Option[String], vocational: String, uiLang: Language): Option[List[Koulutus]] = koulutuksetMemo(asId, opetuspisteId, baseEducation, vocational, uiLang)
         def opetuspiste(id: String, lang: Language) = opetuspisteMemo(id, lang)
-
         def koulutusWithHaku(aoIds: List[String], lang: Language): Option[List[KoulutusInformaatioBasketItem]] = koulutusWithHakuMemo(aoIds, lang)
       }
     }
@@ -105,7 +104,9 @@ trait KoulutusInformaatioComponent {
     def koulutusWithHaku(aoIds: List[String], lang: Language): Option[List[KoulutusInformaatioBasketItem]] = {
       val params = aoIds.map(a => "&aoId="+a).mkString
 
-      val (responseCode, headersMap, resultString) = DefaultHttpClient.httpGet(appConfig.settings.koulutusinformaatioAoUrl + "/basket/items?uiLang=" + lang + params)
+      val url: String = appConfig.settings.koulutusinformaationBIUrl + "?uiLang=" + lang + params
+      logger.info("url="+url)
+      val (responseCode, headersMap, resultString) = DefaultHttpClient.httpGet(url)
         .responseWithHeaders
       withWarnLogging{
         parse(resultString).extract[Option[List[KoulutusInformaatioBasketItem]]]
