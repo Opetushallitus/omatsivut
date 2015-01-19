@@ -30,17 +30,6 @@ trait MuistilistaServiceComponent {
       groupEmailService.sendMailWithoutTemplate(HtmlEmail(email))
     }
 
-    private def getKoulutuksetWithMuistiLista(muistiLista: Muistilista): List[Koulutus] = {
-      val oids = muistiLista.koids.toList
-
-      oids.map(k =>
-        koulutusInformaatioService.koulutus(k, muistiLista.kieli) match {
-          case Some(x) => x
-          case _ => None
-        }
-      ).asInstanceOf[List[Koulutus]]
-    }
-
     private def buildMessage(muistilista: Muistilista): EmailMessage = {
       val html = buildHtml(getKoulutuksetWithMuistiLista(muistilista), muistilista)
       val receivers = muistilista.vastaaanottaja.map(v => EmailRecipient("", v)).toList
@@ -74,13 +63,6 @@ trait MuistilistaServiceComponent {
       }
     }
 
-    private def getSoraDescription(koulutus: Koulutus): String = {
-      koulutus.soraDescription match {
-        case Some(desc) => desc
-        case _ => throw new IllegalStateException("Koulutus description not found")
-      }
-    }
-
     private def getHaku(muistilista: Muistilista): List[String] = {
       muistilista.hakuOids
         .map(hakuOid => tarjontaService.haku(hakuOid, lang))
@@ -88,6 +70,17 @@ trait MuistilistaServiceComponent {
         case Some(h) => h.name
         case _ => throw new IllegalStateException("Haku not found")
       })
+    }
+
+    private def getKoulutuksetWithMuistiLista(muistiLista: Muistilista): List[Koulutus] = {
+      val oids = muistiLista.koids.toList
+
+      oids.map(k =>
+        koulutusInformaatioService.koulutus(k, muistiLista.kieli) match {
+          case Some(x) => x
+          case _ => None
+        }
+      ).asInstanceOf[List[Koulutus]]
     }
 
     private def buildUlrEncodedOidString(oids: List[String]): String = {
