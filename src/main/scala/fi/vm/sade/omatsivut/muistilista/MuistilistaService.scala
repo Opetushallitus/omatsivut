@@ -21,12 +21,13 @@ trait MuistilistaServiceComponent {
     def sendMail(muistiLista: Muistilista, url: StringBuffer) = {
       val email = buildMessage(muistiLista, url+ "/" + buildUlrEncodedOidString(muistiLista.koids))
       val recipients = muistiLista.vastaannottaja.map(v => EmailRecipient(v))
-      groupEmailService.sendMailWithoutTemplate(EmailData(email, recipients))
+      val mail = EmailData(email, recipients)
+      logger.info("mail="+mail)
+      groupEmailService.sendMailWithoutTemplate(mail)
     }
 
     private def buildMessage(muistilista: Muistilista, url: String): EmailMessage = {
       val body = buildHtml(muistilista, url)
-      logger.info("EMAIL="+body)
       EmailMessage("omatsivut", muistilista.lahettaja.getOrElse("muistilista@opintopolku.fi"), muistilista.otsikko, body, true)
     }
 
