@@ -31,7 +31,6 @@ trait MuistilistaServiceComponent {
 
     private def buildHtml(muistilista: Muistilista, url: String): String = {
       TemplateProcessor.processTemplate("/templates/emailHeaderFooter.mustache", Map(
-        "subject" -> "SUBJECT",
         "body" -> buildBody(muistilista, url)
       ))
     }
