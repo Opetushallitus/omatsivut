@@ -9,7 +9,7 @@ import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.omatsivut.valintatulokset.RemoteValintatulosService
 
 class ErillishakuFixtureImporter(appConfig: AppConfig, springContext: OmatSivutSpringContext) {
-  def applyFixtures {
+  def applyFixtures(hyvaksytty: Boolean) {
     import collection.JavaConversions._
     MongoFixtureImporter.clearFixtures(springContext.mongoTemplate, springContext.applicationDAO, "application")
     val hakemus = new Hakemus(TestFixture.personOid, "Erillis", "Hakija", "010101-123N", "9.1.1995")
@@ -17,6 +17,8 @@ class ErillishakuFixtureImporter(appConfig: AppConfig, springContext: OmatSivutS
     val tarjoaja: String = "1.2.246.562.10.591352080610"
     val syntheticApplication = new SyntheticApplication(hakukohde, "korkeakoulu-erillishaku", tarjoaja, List(hakemus))
     springContext.syntheticApplicationService.createApplications(syntheticApplication)
-    new RemoteValintatulosService(appConfig.settings.valintaTulosServiceUrl).applyFixtureWithQuery("fixturename=hyvaksytty-korkeakoulu-erillishaku")
+
+    val fixtureName: String = if(hyvaksytty) "hyvaksytty-korkeakoulu-erillishaku" else "hylatty-korkeakoulu-erillishaku"
+    new RemoteValintatulosService(appConfig.settings.valintaTulosServiceUrl).applyFixtureWithQuery("fixturename=" + fixtureName)
   }
 }

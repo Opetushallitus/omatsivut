@@ -165,8 +165,8 @@ fixtures = {
     return Q($.ajax("/omatsivut/util/fixtures/hakemus/apply?fixturename=" + fixtureName + "&applicationOid=" + applicationOid, { type: "PUT" }))
   },
 
-  applyErillishaku: function() {
-    return Q($.ajax("/omatsivut/util/fixtures/erillishaku", { type: "PUT" }))
+  applyErillishaku: function(hyvaksytty) {
+    return Q($.ajax("/omatsivut/util/fixtures/erillishaku?hyvaksytty=" + hyvaksytty, { type: "PUT" }))
   },
 
   applyValintatulos: function(fixtureName, otherFixtures) {

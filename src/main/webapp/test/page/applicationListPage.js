@@ -53,8 +53,10 @@ function ApplicationListPage() {
       }
     },
 
-    applyErillishakuFixtureAndOpen: function() {
-      return fixtures.applyErillishaku().then(api.reloadPage())
+    applyErillishakuFixtureAndOpen: function(hyvaksytty) {
+      return function(){
+        return fixtures.applyErillishaku(hyvaksytty).then(api.reloadPage())
+      }
     },
 
     setValintatulosServiceShouldFail: function(fail) {

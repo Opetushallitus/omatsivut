@@ -1969,7 +1969,7 @@
       var erillishaku = page.getApplication('Korkeakoulujen erillishaku 2001')
 
       before(
-        page.applyErillishakuFixtureAndOpen
+        page.applyErillishakuFixtureAndOpen(true)
       )
 
       describe("Tietojen näyttäminen", function() {
@@ -2003,6 +2003,15 @@
 
         it("Toimii", function() {
           expect(erillishaku.vastaanotto(0).visible()).to.equal(false)
+        })
+      })
+
+      describe("Hylätty valintatulos", function() {
+        before(page.applyErillishakuFixtureAndOpen(false))
+
+        it("Valintatulos näytetään", function() {
+          expect(erillishaku.valintatulokset()[0].hakukohde).to.equal('Kallion lukio Lukion ilmaisutaitolinja')
+          expect(erillishaku.valintatulokset()[0].tila).to.equal('Et saanut opiskelupaikkaa.')
         })
       })
     })

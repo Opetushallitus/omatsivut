@@ -43,16 +43,17 @@
         </ilmoittautuminen>
     </section>
 
-    <form name="applicationForm" novalidate ng-show="application.hasForm">
+    <form name="applicationForm" novalidate>
 
         <section class="application-section application-valintatulos-error" ng-if="!application.resultFetchedSuccessfully()">
             <span role="status" class="status-message error">{{ localization("error.valintatulosFailed") }}</span>
         </section>
+
         <section class="application-section application-valintatulos" ng-if="application.resultFetchedSuccessfully() && application.hasSomeResults()">
             <valintatulos data="application.state.valintatulos" final="application.allResultsAvailable()"></valintatulos>
         </section>
 
-        <section class="application-section hakutoiveet" ng-if="application.editHakutoiveetEnabled()">
+        <section ng-show="application.hasForm" class="application-section hakutoiveet" ng-if="application.editHakutoiveetEnabled()">
             <header class="application-section-heading">
                 {{ localization('label.preferences') }}
                 <button class="save-btn" ng-hide="application.applicationPeriodsInactive()" ng-disabled="shouldSaveButtonBeDisabled()" ng-click="saveApplication()">{{ localization('button.save') }}</button>
@@ -63,12 +64,12 @@
               </hakutoiveet>
           </section>
 
-        <section class="application-section additional-questions" ng-if="application.editHakutoiveetEnabled() && application.additionalQuestions.questionNodes.length > 0">
+        <section ng-show="application.hasForm" class="application-section additional-questions" ng-if="application.editHakutoiveetEnabled() && application.additionalQuestions.questionNodes.length > 0">
             <question question-node="application.additionalQuestions" application="application" class="questions" level="-1">
             </question>
         </section>
 
-        <section class="application-section henkilotiedot" ng-if="application.editHenkilotiedotEnabled()">
+        <section ng-show="application.hasForm" class="application-section henkilotiedot" ng-if="application.editHenkilotiedotEnabled()">
             <header class="application-section-heading">
                 {{ localization('label.contactDetails') }}
             </header>

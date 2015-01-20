@@ -20,7 +20,8 @@ trait FixtureServletContainer {
   class FixtureServlet(val appConfig: AppConfig) extends OmatSivutServletBase  {
     if(appConfig.usesLocalDatabase) {
       put("/fixtures/erillishaku") {
-        new ErillishakuFixtureImporter(appConfig, springContext).applyFixtures
+        val hyvaksytty: Boolean = params("hyvaksytty").toBoolean
+        new ErillishakuFixtureImporter(appConfig, springContext).applyFixtures(hyvaksytty)
         Ok
       }
       put("/fixtures/hakemus/apply") {
