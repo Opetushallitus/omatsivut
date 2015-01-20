@@ -1980,7 +1980,7 @@
         })
 
         it("Näytä hakemus -linkki disabloidaan", function() {
-          erillishaku.previewLink().hasClass("disabled").should.equal(true)
+          erillishaku.previewLink().hasClass("ng-hide").should.equal(true)
         })
 
         it("Yhteystietojen muokkaus ei ole mahdollista", function() {
