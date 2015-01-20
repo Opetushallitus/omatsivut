@@ -30,6 +30,7 @@ log4j.appender.Audit.MaxBackupIndex=50
 # Log omatsivut with INFO
 log4j.logger.fi.vm.sade.utils=INFO
 log4j.logger.fi.vm.sade.omatsivut=INFO
+log4j.logger.fi.vm.sade.groupemailer=INFO
 # By default hide these spammers by default
 log4j.logger.org.apache.cxf=ERROR
 log4j.logger.org.springframework=WARN

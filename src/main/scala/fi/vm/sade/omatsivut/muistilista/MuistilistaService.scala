@@ -21,9 +21,7 @@ trait MuistilistaServiceComponent {
     def sendMail(muistiLista: Muistilista, url: StringBuffer) = {
       val email = buildMessage(muistiLista, url+ "/" + buildUlrEncodedOidString(muistiLista.koids))
       val recipients = muistiLista.vastaannottaja.map(v => EmailRecipient(v))
-      val mail = EmailData(email, recipients)
-      logger.info("mail="+mail)
-      groupEmailService.sendMailWithoutTemplate(mail)
+      groupEmailService.sendMailWithoutTemplate(EmailData(email, recipients))
     }
 
     private def buildMessage(muistilista: Muistilista, url: String): EmailMessage = {
