@@ -1,18 +1,17 @@
 package fi.vm.sade.omatsivut.muistilista
 
-import fi.vm.sade.groupemailer.{EmailMessage, EmailRecipient, GroupEmailComponent, HtmlEmail}
+import fi.vm.sade.groupemailer._
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.http.UrlValueCompressor
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.koulutusinformaatio.KoulutusInformaatioComponent
 import fi.vm.sade.omatsivut.localization.Translations
-import fi.vm.sade.omatsivut.tarjonta.TarjontaComponent
 import fi.vm.sade.utils.slf4j.Logging
 import fi.vm.sade.utils.template.TemplateProcessor
 import org.json4s.jackson.Serialization.write
 
 trait MuistilistaServiceComponent {
-  this: KoulutusInformaatioComponent with TarjontaComponent with GroupEmailComponent =>
+  this: KoulutusInformaatioComponent with GroupEmailComponent =>
 
   def muistilistaService(language: Language.Language): MuistilistaService
 
@@ -20,15 +19,15 @@ trait MuistilistaServiceComponent {
     private implicit val lang = language
 
     def sendMail(muistiLista: Muistilista, url: StringBuffer) = {
-      val email = buildMessage(muistiLista, url + buildUlrEncodedOidString(muistiLista.koids))
-      groupEmailService.sendMailWithoutTemplate(HtmlEmail(email))
+      val email = buildMessage(muistiLista, url+ "/" + buildUlrEncodedOidString(muistiLista.koids))
+      val recipients = muistiLista.vastaannottaja.map(v => EmailRecipient(v))
+      groupEmailService.sendMailWithoutTemplate(EmailData(email, recipients))
     }
 
     private def buildMessage(muistilista: Muistilista, url: String): EmailMessage = {
-      val html = buildHtml(muistilista, url)
-      logger.info("EMAIL="+html)
-      val receivers = muistilista.vastaaanottaja.map(v => EmailRecipient("", v)).toList
-      EmailMessage("omatsivut", muistilista.lahettaja.getOrElse("muistilista@opintopolku.fi"), receivers, muistilista.otsikko, html)
+      val body = buildHtml(muistilista, url)
+      logger.info("EMAIL="+body)
+      EmailMessage("omatsivut", muistilista.lahettaja.getOrElse("muistilista@opintopolku.fi"), muistilista.otsikko, body, true)
     }
 
     private def buildHtml(muistilista: Muistilista, url: String): String = {
