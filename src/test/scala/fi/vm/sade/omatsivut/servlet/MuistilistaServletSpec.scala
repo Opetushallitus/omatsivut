@@ -28,7 +28,7 @@ class MuistilistaServletSpec extends ScalatraTestSupport with JsonFormats {
 
   "POST muistilista" should {
     "palauttaa koostettavan emailin" in {
-      postJSON("muistilista", Serialization.write(Muistilista(Some("lahettaja"), "otsikko", Language.fi, List("foobar@example.com"), List("1.2.246.562.20.94964838901")))) {
+      postJSON("muistilista", Serialization.write(Muistilista("otsikko", Language.fi, List("foobar@example.com"), List("1.2.246.562.20.94964838901")))) {
         status must_== 200
         println("body="+body)
         body.isEmpty must_== false

@@ -10,6 +10,8 @@ import fi.vm.sade.utils.slf4j.Logging
 import fi.vm.sade.utils.template.TemplateProcessor
 import org.json4s.jackson.Serialization.write
 
+import scala.xml.Utility
+
 trait MuistilistaServiceComponent {
   this: KoulutusInformaatioComponent with GroupEmailComponent =>
 
@@ -19,14 +21,15 @@ trait MuistilistaServiceComponent {
     private implicit val lang = language
 
     def sendMail(muistiLista: Muistilista, url: StringBuffer) = {
-      val email = buildMessage(muistiLista, url+ "/" + buildUlrEncodedOidString(muistiLista.koids))
-      val recipients = muistiLista.vastaannottaja.map(v => EmailRecipient(v))
+      val email = buildMessage(muistiLista, url + "/" + buildUlrEncodedOidString(muistiLista.koids))
+      val recipients = muistiLista.vastaannottaja.map(v => EmailRecipient(Utility.escape(v)))
       groupEmailService.sendMailWithoutTemplate(EmailData(email, recipients))
     }
 
     private def buildMessage(muistilista: Muistilista, url: String): EmailMessage = {
       val body = buildHtml(muistilista, url)
-      EmailMessage("omatsivut", muistilista.lahettaja.getOrElse("muistilista@opintopolku.fi"), muistilista.otsikko, body, true)
+      val subject = Utility.escape(muistilista.otsikko)
+      EmailMessage("omatsivut", "noreply@opintopolku.fi", subject, body, true)
     }
 
     private def buildHtml(muistilista: Muistilista, url: String): String = {
