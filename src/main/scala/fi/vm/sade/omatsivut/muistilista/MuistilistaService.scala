@@ -6,7 +6,6 @@ import fi.vm.sade.omatsivut.http.UrlValueCompressor
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.koulutusinformaatio.KoulutusInformaatioComponent
 import fi.vm.sade.omatsivut.localization.Translations
-import fi.vm.sade.utils.slf4j.Logging
 import fi.vm.sade.utils.template.TemplateProcessor
 import org.json4s.jackson.Serialization.write
 
@@ -17,7 +16,7 @@ trait MuistilistaServiceComponent {
 
   def muistilistaService(language: Language.Language): MuistilistaService
 
-  class MuistilistaService(language: Language.Language) extends JsonFormats with Logging {
+  class MuistilistaService(language: Language.Language) extends JsonFormats {
     private implicit val lang = language
 
     def sendMail(muistiLista: Muistilista, url: StringBuffer) = {
