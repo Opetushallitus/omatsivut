@@ -2,6 +2,7 @@ package fi.vm.sade.omatsivut.servlet
 
 import java.net.URLEncoder
 
+import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.http.UrlValueCompressor
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.muistilista.{Muistilista, MuistilistaServiceComponent}
@@ -14,12 +15,13 @@ trait MuistilistaServletContainer {
 
   this: MuistilistaServiceComponent =>
 
-  class MuistilistaServlet extends OmatSivutServletBase with JacksonJsonSupport with JsonFormats with Logging {
+  class MuistilistaServlet(val appConfig: AppConfig) extends OmatSivutServletBase with JacksonJsonSupport with JsonFormats with Logging {
 
     get("/:compressedMuistilista") {
       val compressedMuistilista = params("compressedMuistilista")
       val asString = UrlValueCompressor.decompress(compressedMuistilista)
       response.addCookie(Cookie("basket", URLEncoder.encode(asString, "UTF-8"))(CookieOptions(path = "/")))
+      response.redirect(appConfig.settings.muistilistaUrl)
     }
 
     post() {

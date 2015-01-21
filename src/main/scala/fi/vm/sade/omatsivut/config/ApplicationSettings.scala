@@ -19,6 +19,8 @@ case class ApplicationSettings(config: Config) extends GroupEmailerSettings(conf
   val koulutusinformaatioLopUrl = config.getString("omatsivut.koulutusinformaatio.lop.url")
   val koulutusinformaationBIUrl = config.getString("omatsivut.koulutusinformaatio.basketitems.url")
 
+  val muistilistaUrl = config.getString("muistilista.url")
+
   val ohjausparametritUrl = config.getString("omatsivut.ohjausparametrit.url")
   val tarjontaUrl = config.getString("omatsivut.tarjonta.url")
   val koodistoUrl = config.getString("cas.service.koodisto-service")

@@ -96,7 +96,7 @@ class ComponentRegistry(val config: AppConfig)
   def newFixtureServlet = new FixtureServlet(config)
   def newSwaggerServlet = new SwaggerServlet
   def newKoodistoServlet = new KoodistoServlet
-  def newMuistilistaServlet = new MuistilistaServlet
+  def newMuistilistaServlet = new MuistilistaServlet(config)
 
   def start {
     try {

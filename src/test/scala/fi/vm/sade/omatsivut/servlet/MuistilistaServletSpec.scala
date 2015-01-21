@@ -21,7 +21,7 @@ class MuistilistaServletSpec extends ScalatraTestSupport with JsonFormats {
       get(s"muistilista/${UrlValueCompressor.compress(exampleBasket)}") {
         val basketCookieAsString: String = response.headers("Set-Cookie").filter(_.startsWith("basket")).head
         basketCookieAsString must_== s"basket=${URLEncoder.encode(exampleBasket, "UTF-8")};Path=/"
-        status must_== 200
+        status must_== 302  //HTTP Redirect to Koulutusinformaatio
       }
     }
   }

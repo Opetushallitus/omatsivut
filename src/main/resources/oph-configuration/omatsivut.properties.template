@@ -143,3 +143,6 @@ ryhmasahkoposti.cas.password={{ ryhmasahkoposti_app_password_to_vtemailer }}
 ryhmasahkoposti.service.batch.size={{ email_batch_size }}
 ryhmasahkoposti.service.session.url=https://{{host_virkailija}}/ryhmasahkoposti-service/email/ok
 ryhmasahkoposti.service.email.url=https://{{host_virkailija}}/ryhmasahkoposti-service/email
+
+# MUISTILISTA
+muistilista.url=https://{{host_oppija}}/app/#!/muistilista
