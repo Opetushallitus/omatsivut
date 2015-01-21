@@ -26,7 +26,7 @@ trait MuistilistaServletContainer {
 
     post() {
       val muistiLista = Serialization.read[Muistilista](request.body)
-      if (muistiLista.otsikko.isEmpty || List(muistiLista.vastaannottaja, muistiLista.koids).exists(_.isEmpty)) {
+      if (muistiLista.otsikko.isEmpty || List(muistiLista.vastaanottaja, muistiLista.koids).exists(_.isEmpty)) {
         logger.warn("muistiLista malformed " + muistiLista)
         response.setStatus(400)
         "400 Bad Request"
