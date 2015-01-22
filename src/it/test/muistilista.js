@@ -37,7 +37,6 @@ describe('Muistilista QA', function () {
             .join(";")
             .replace(/(href=|")/gm, "")
             .split(";")
-            .splice(1)
     }
 
     function parseLatestEmailUrl(emailDirectory) {
@@ -64,28 +63,38 @@ describe('Muistilista QA', function () {
         }
     }
 
+    // Systeemitesti https://test-oppija.oph.ware.fi/omatsivut/muistilista -> http://wp-reppu.oph.ware.fi/ryhmasahkoposti-emails/
+    // QA https://testi.opintopolku.fi/omatsivut/muistilista -> http://shibboleth2.qa.oph.ware.fi/ryhmasahkoposti-emails/
+
+    var envs = {
+        qa: {
+            muistilista: "https://testi.opintopolku.fi/omatsivut/muistilista",
+            "emailDirectory": "http://shibboleth2.qa.oph.ware.fi/ryhmasahkoposti-emails/"
+        },
+        systeemitesti: {
+            muistilista: "https://test-oppija.oph.ware.fi/omatsivut/muistilista",
+            emailDirectory: "http://wp-reppu.oph.ware.fi/ryhmasahkoposti-emails/"
+        }
+    }
+
     it('should send email to a file folder', function (done) {
-        var emailDirectory = 'http://wp-reppu.oph.ware.fi/ryhmasahkoposti-emails/'
-        var muistiListaEndPoint = "https://test-oppija.oph.ware.fi/omatsivut/muistilista"
+        var env = envs.qa
         var muistilistaParams = {
             otsikko: "test subject " + Math.random(),
             kieli: "fi",
             vastaanottaja: ["foobar@example.com"],
             koids: ["1.2.246.562.14.2013092410023348364157"]
         }
-        httpPost(muistiListaEndPoint, {
+        httpPost(env.muistilista, {
             data: muistilistaParams,
             headers: {"Content-Type": "application/json"}
         }).then(retry(function () {
-                return httpGet(emailDirectory)
-                    .then(parseLatestEmailUrl(emailDirectory))
+                return httpGet(env.emailDirectory)
+                    .then(parseLatestEmailUrl(env.emailDirectory))
                     .then(httpGet)
                     .then(assertContains(muistilistaParams.otsikko, muistilistaParams.vastaanottaja[0]))
             })
         ).then(done, done)
-
-        // https://test-oppija.oph.ware.fi/omatsivut/muistilista -> http://wp-reppu.oph.ware.fi/ryhmasahkoposti-emails/
-        // https://testi.opintopolku.fi/omatsivut/muistilista
 
     })
 })
