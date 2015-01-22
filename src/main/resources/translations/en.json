@@ -131,6 +131,7 @@
 
   "emailNote": {
       "note": "Shortlist",
-      "openLink": "Open the shortlist in Studyinfo"
+      "openLink": "Open the shortlist in Studyinfo",
+      "noReply": "Do not reply to this message – the message has been sent automatically."
   }
 }

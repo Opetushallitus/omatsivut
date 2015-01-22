@@ -131,6 +131,7 @@
 
   "emailNote": {
       "note": "Muistilista",
-      "openLink": "Avaa muistilista Opintopolussa"
+      "openLink": "Avaa muistilista Opintopolussa",
+      "noReply": "Älä vastaa tähän viestiin - viesti on lähetetty automaattisesti."
   }
 }

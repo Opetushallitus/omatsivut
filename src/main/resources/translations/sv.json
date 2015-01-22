@@ -131,6 +131,7 @@
 
   "emailNote": {
       "note": "Minneslista",
-      "openLink": "Öppna minneslistan i Studieinfo"
+      "openLink": "Öppna minneslistan i Studieinfo",
+      "noReply": "Svara inte på detta meddelande – meddelandet har skickats automatiskt. "
   }
 }
