@@ -53,7 +53,8 @@ trait MuistilistaServiceComponent {
         "note" -> Translations.getTranslation("emailNote", "note"),
         "openLink" -> Translations.getTranslation("emailNote", "openLink"),
         "link" -> url,
-        "haut" -> hakuKoulutusList
+        "haut" -> hakuKoulutusList,
+        "noReply" -> Translations.getTranslation("emailNote", "noReply")
       ))
     }
 
