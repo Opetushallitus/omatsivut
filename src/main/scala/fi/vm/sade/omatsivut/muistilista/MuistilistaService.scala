@@ -1,6 +1,6 @@
 package fi.vm.sade.omatsivut.muistilista
 
-import fi.vm.sade.groupemailer.{EmailData, EmailRecipient, GroupEmailComponent, EmailMessage}
+import fi.vm.sade.groupemailer.{EmailData, EmailMessage, EmailRecipient, GroupEmailComponent}
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.http.UrlValueCompressor
 import fi.vm.sade.omatsivut.json.JsonFormats
@@ -8,8 +8,6 @@ import fi.vm.sade.omatsivut.koulutusinformaatio.KoulutusInformaatioComponent
 import fi.vm.sade.omatsivut.localization.Translations
 import fi.vm.sade.utils.template.TemplateProcessor
 import org.json4s.jackson.Serialization.write
-
-import scala.xml.Utility
 
 trait MuistilistaServiceComponent {
   this: KoulutusInformaatioComponent with GroupEmailComponent =>
@@ -21,13 +19,13 @@ trait MuistilistaServiceComponent {
 
     def sendMail(muistiLista: Muistilista, url: StringBuffer) = {
       val email = buildMessage(muistiLista, url + "/" + buildUlrEncodedOidString(muistiLista.koids))
-      val recipients = muistiLista.vastaanottaja.map(v => EmailRecipient(Utility.escape(v)))
+      val recipients = muistiLista.vastaanottaja.map(v => EmailRecipient(XssUtility.purifyFromHtml(v)))
       groupEmailService.sendMailWithoutTemplate(EmailData(email, recipients))
     }
 
     private def buildMessage(muistilista: Muistilista, url: String): EmailMessage = {
       val body = buildHtml(muistilista, url)
-      val subject = Utility.escape(muistilista.otsikko)
+      val subject = XssUtility.purifyFromHtml(muistilista.otsikko)
       EmailMessage("omatsivut", subject, body, true)
     }
 
