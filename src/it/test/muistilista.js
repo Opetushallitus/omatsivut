@@ -47,66 +47,51 @@ describe('Muistilista QA', function () {
             .splice(1)
     }
 
-    function assertContains(txt, fullText) {
-        if (fullText.indexOf(txt) === -1) {
-            throw new Error("Assert failed: " + txt + " was not included in: " + fullText);
+    function parseLatestEmailUrl(emailDirectory) {
+        return function (data) {
+            var emails = parseEmails(data)
+            return emailDirectory + emails[emails.length - 1];
         }
     }
 
-    function retry(attempts, fn, resolve, reject) {
-        if (resolve === undefined) {
-            console.log("retry start")
-            return Q.Promise(function(resolve, reject){
-                retry(attempts, fn, resolve, reject);
-            });
-        } else {
-            console.log("retry " + attempts)
-            try {
-                resolve(fn())
-            } catch(error) {
-                if(attempts == 0) {
-                    reject(error)
-                } else {
-                    var callback = new function(){retry(resolve, reject, attempts - 1, fn)};
-                    setTimeout(callback, 50)
+    function assertContains() {
+        console.log("POW!")
+        var args = Array.prototype.slice.call(arguments)
+        return function (fullText) {
+            args.forEach(function (s) {
+                if (fullText.indexOf(s) === -1) {
+                    throw new Error("Assert failed: '" + s + "' was not included in: " + fullText);
                 }
-            }
+            })
+            console.log("YES!")
+        }
+    }
+
+    function retry(fn) {
+        return function () {
+            return Qretry(fn, {maxRetry: 10, interval: 100, intervalMultiplicator: 1})
         }
     }
 
     it('should send email to a file folder', function (done) {
         var emailDirectory = 'http://wp-reppu.oph.ware.fi/ryhmasahkoposti-emails/';
         var muistiListaEndPoint = "https://test-oppija.oph.ware.fi/omatsivut/muistilista";
-        var randomSubject = "test subject " + Math.random()
+        var muistilistaParams = {
+            otsikko: "test subject " + Math.random(),
+            kieli: "fi",
+            vastaanottaja: ["foobar@example.com"],
+            koids: ["1.2.246.562.14.2013092410023348364157"]
+        }
         httpPost(muistiListaEndPoint, {
-            data: {
-                "otsikko": randomSubject,
-                "kieli": "fi",
-                "vastaanottaja": ["foobar@example.com"],
-                "koids": ["1.2.246.562.14.2013092410023348364157"]
-            },
+            data: muistilistaParams,
             headers: {"Content-Type": "application/json"}
-        }).then(function (data, response) {
-            return Qretry(
-                function() {
-                    console.log("POW!")
-                    return httpGet(emailDirectory).then(function (data, response) {
-                        var emails = parseEmails(data);
-                        var latestEmailUrl = emailDirectory + emails[emails.length - 1];
-                        return httpGet(latestEmailUrl)
-                    }).then(function (data, response) {
-                        assertContains(randomSubject, data)
-                        console.log("YES!")
-                    })
-                },{ maxRetry: 20, interval: 100 }
-            )
-        }).then(
-            function() {
-                done();
-            },
-            function (reason) {
-                done(reason);
-            });
+        }).then(retry(function () {
+                return httpGet(emailDirectory)
+                    .then(parseLatestEmailUrl(emailDirectory))
+                    .then(httpGet)
+                    .then(assertContains(muistilistaParams.otsikko, muistilistaParams.vastaanottaja[0]))
+            })
+        ).then(done, done);
 
         // https://test-oppija.oph.ware.fi/omatsivut/muistilista -> http://wp-reppu.oph.ware.fi/ryhmasahkoposti-emails/
         // https://testi.opintopolku.fi/omatsivut/muistilista
