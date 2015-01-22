@@ -1,0 +1,16 @@
+{
+  "name": "ohp-qa-it",
+  "description": "OHP QA IT tests",
+  "version": "0.0.1",
+  "devDependencies": {
+    "mocha": "2.1.0"
+  },
+  "dependencies": {
+    "node-rest-client": "1.4.3",
+    "q": "^1.1.2",
+    "qretry": "^0.2.1"
+  },
+  "scripts": {
+    "test": "mocha"
+  }
+}
