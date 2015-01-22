@@ -1,6 +1,6 @@
 package fi.vm.sade.omatsivut.muistilista
 
-import fi.vm.sade.groupemailer._
+import fi.vm.sade.groupemailer.{EmailData, EmailRecipient, GroupEmailComponent, EmailMessage}
 import fi.vm.sade.omatsivut.domain.Language
 import fi.vm.sade.omatsivut.http.UrlValueCompressor
 import fi.vm.sade.omatsivut.json.JsonFormats
@@ -28,7 +28,7 @@ trait MuistilistaServiceComponent {
     private def buildMessage(muistilista: Muistilista, url: String): EmailMessage = {
       val body = buildHtml(muistilista, url)
       val subject = Utility.escape(muistilista.otsikko)
-      EmailMessage("omatsivut", "noreply@opintopolku.fi", subject, body, true)
+      EmailMessage("omatsivut", subject, body, true)
     }
 
     private def buildHtml(muistilista: Muistilista, url: String): String = {
