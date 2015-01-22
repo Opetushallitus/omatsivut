@@ -2,7 +2,7 @@ var assert = require("assert")
 require("./helpers.js")()
 
 describe('Smoketest', function () {
-    this.timeout(10000)
+    this.timeout(120000)
 
     var envs = {
         qa: {
