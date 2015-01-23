@@ -46,6 +46,7 @@ class ScalatraBootstrap extends LifeCycle with Logging {
     context.mount(new LoginServlet(config.authContext), "/login")
     context.mount(componentRegistry.newLogoutServlet, "/logout")
     context.mount(componentRegistry.newFixtureServlet, "/util")
+    context.mount(new HealthServlet, "/health")
   }
 
   override def destroy(context: ServletContext) = {

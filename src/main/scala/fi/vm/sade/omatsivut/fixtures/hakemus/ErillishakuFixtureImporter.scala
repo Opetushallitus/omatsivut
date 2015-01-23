@@ -12,7 +12,7 @@ class ErillishakuFixtureImporter(appConfig: AppConfig, springContext: OmatSivutS
   def applyFixtures(hyvaksytty: Boolean) {
     import collection.JavaConversions._
     MongoFixtureImporter.clearFixtures(springContext.mongoTemplate, springContext.applicationDAO, "application")
-    val hakemus = new Hakemus(TestFixture.personOid, "Erillis", "Hakija", "010101-123N", "foobar@example.com", "9.1.1995")
+    val hakemus = new Hakemus(TestFixture.personOid, "Erillis", "Hakija", "010101-123N", "9.1.1995")
     val hakukohde: String = "1.2.246.562.5.72607738902"
     val tarjoaja: String = "1.2.246.562.10.591352080610"
     val syntheticApplication = new SyntheticApplication(hakukohde, "korkeakoulu-erillishaku", tarjoaja, List(hakemus))
