@@ -19,6 +19,23 @@ class XssPreventionSpec extends Specification {
       address must_!= "matti.mallikas@example.com"
     }
 
+    "Test javascript injection" in {
+      val malicioisCode = "<IMG SRC=JaVaScRiPt:alert('XSS')>"
+      val moreMalicioisCode = "\"><script>...</script><input value=\""
+      val remoteStyleSheet = "<LINK REL=\"stylesheet\"HREF=\"http://ha.ckers.org/xss.css\">"
+      val brTag = "<BR SIZE=\"&{alert('XSS')}\">"
+      val ssi = "<!--#exec cmd=\"/bin/echo '<SCRIPT SRC'\"--><!--#exec cmd=\"/bin/echo '=http://ha.ckers.org/xss.js ></SCRIPT>'\"-->"
+      val UTF8encoded = "<IMG SRC=&#106;&#97;&#118;&#97;&# 115;&#99;&#114;&#105;&#112;& #116;&#58;&#97;&#108;&#101;& #114;&#116;&#40;&#39;&#88;&# 83;&#83;&#39;&#41;>"
+      val multiLine = "normal\t\n\n<IMG\nSRC\n=\n\"\nj\na\nv\na\ns\nc\nr\ni »\n\np\nt\n:\na\nl\ne\nr\nt\n(\n'\nX\nS\nS\n' »\n\n)\n\"\n> text"
+      XssUtility.purifyFromHtml(malicioisCode) must_== ""
+      XssUtility.purifyFromHtml(moreMalicioisCode) must_== "\">"
+      XssUtility.purifyFromHtml(remoteStyleSheet) must_== ""
+      XssUtility.purifyFromHtml(brTag) must_== ""
+      XssUtility.purifyFromHtml(ssi) must_== ""
+      XssUtility.purifyFromHtml(UTF8encoded) must_== ""
+      XssUtility.purifyFromHtml(multiLine) must_== "normal text"
+    }
+
     "Test subject input cleaning" in {
       val subject = "muistilista otsikko<html></html> § < <1>  ><a href=\\\"http://www.google.com\\\"</a>"
       XssUtility.purifyFromHtml(subject) must_== "muistilista otsikko § < <1> >"
