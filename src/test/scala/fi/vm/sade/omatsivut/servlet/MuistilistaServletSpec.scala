@@ -28,7 +28,7 @@ class MuistilistaServletSpec extends ScalatraTestSupport with JsonFormats {
 
   "POST muistilista" should {
     "palauttaa koostettavan emailin" in {
-      postJSON("muistilista", Serialization.write(Muistilista("otsikko", Language.fi, List("foobar@example.com"), List("1.2.246.562.20.94964838901")))) {
+      postJSON("muistilista", Serialization.write(Muistilista("otsikko", Language.fi, List("foobar@example.com"), List("1.2.246.562.20.94964838901"), ""))) {
         status must_== 200
         body.isEmpty must_== false
       }
@@ -37,7 +37,7 @@ class MuistilistaServletSpec extends ScalatraTestSupport with JsonFormats {
 
   "POST malformed muistilista empty receiver list" should {
     "returns HTTP error code" in {
-      postJSON("muistilista", Serialization.write(Muistilista("otsikko", Language.fi, List(), List("1.2.246.562.20.94964838901")))) {
+      postJSON("muistilista", Serialization.write(Muistilista("otsikko", Language.fi, List(), List("1.2.246.562.20.94964838901"), ""))) {
         status must_== 400
       }
     }
@@ -45,7 +45,7 @@ class MuistilistaServletSpec extends ScalatraTestSupport with JsonFormats {
 
   "POST malformed muistilista empty koulutus oid list" should {
     "returns HTTP error code" in {
-      postJSON("muistilista", Serialization.write(Muistilista("otsikko", Language.fi, List("foobar@example.com"), List()))) {
+      postJSON("muistilista", Serialization.write(Muistilista("otsikko", Language.fi, List("foobar@example.com"), List(), ""))) {
         status must_== 400
       }
     }
@@ -53,15 +53,15 @@ class MuistilistaServletSpec extends ScalatraTestSupport with JsonFormats {
 
   "POST malformed muistilista empty subject" should {
     "returns HTTP error code" in {
-      postJSON("muistilista", Serialization.write(Muistilista("", Language.fi, List(), List("1.2.246.562.20.94964838901")))) {
+      postJSON("muistilista", Serialization.write(Muistilista("", Language.fi, List(), List("1.2.246.562.20.94964838901"), ""))) {
         status must_== 400
       }
     }
   }
 
-  "POST malformed muistilista empty language" should {
+  "POST malformed muistilista with invalid language" should {
     "returns HTTP error code" in {
-      postJSON("muistilista", """{"otsikko": "", "kieli": "foobar lang", "vastaannottaja": ["foobar@example.com"], "koids": ["1.2.246.562.14.2013092410023348364157"]}""") {
+      postJSON("muistilista", """{"otsikko": "", "kieli": "foobar lang", "vastaanottaja": ["foobar@example.com"], "koids": ["1.2.246.562.14.2013092410023348364157"], "captcha": ""}""") {
         status must_== 500
       }
     }
