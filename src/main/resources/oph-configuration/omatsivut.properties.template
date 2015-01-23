@@ -146,3 +146,5 @@ ryhmasahkoposti.service.email.url=https://{{host_virkailija}}/ryhmasahkoposti-se
 
 # MUISTILISTA
 muistilista.url=https://{{host_oppija}}/app/#!/muistilista
+recaptcha.url=https://www.google.com/recaptcha/api/siteverify
+recaptcha.secret={{recaptcha_secret}}

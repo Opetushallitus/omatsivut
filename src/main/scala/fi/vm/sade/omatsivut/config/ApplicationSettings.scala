@@ -21,6 +21,9 @@ case class ApplicationSettings(config: Config) extends GroupEmailerSettings(conf
 
   val muistilistaUrl = config.getString("muistilista.url")
 
+  val recaptchaUrl = config.getString("recaptcha.url")
+  val recaptchaSecret = config.getString("recaptcha.secret")
+
   val ohjausparametritUrl = config.getString("omatsivut.ohjausparametrit.url")
   val tarjontaUrl = config.getString("omatsivut.tarjonta.url")
   val koodistoUrl = config.getString("cas.service.koodisto-service")
