@@ -4,7 +4,7 @@ import java.util.concurrent.Executors
 
 import fi.vm.sade.groupemailer.{GroupEmailService, GroupEmailComponent}
 import fi.vm.sade.omatsivut.auditlog.{AuditLogger, AuditLoggerComponent}
-import fi.vm.sade.omatsivut.captcha.CaptchaServiceComponent
+import fi.vm.sade.utils.captcha.{CaptchaServiceSettings, CaptchaServiceComponent}
 import fi.vm.sade.omatsivut.config.AppConfig._
 import fi.vm.sade.omatsivut.domain.Language.Language
 import fi.vm.sade.omatsivut.fixtures.hakemus.ApplicationFixtureImporter
@@ -87,7 +87,7 @@ class ComponentRegistry(val config: AppConfig)
   val tarjontaService: TarjontaService = configureTarjontaService
   val koodistoService: KoodistoService = configureKoodistoService
   val groupEmailService: GroupEmailService = configureGroupEmailService
-  val captchaService: CaptchaService = new RemoteCaptchaService(config)
+  val captchaService: CaptchaService = new RemoteCaptchaService(config.settings.captchaSettings)
 
   def muistilistaService(language: Language): MuistilistaService = new MuistilistaService(language)
   def newApplicationValidator: ApplicationValidator = new ApplicationValidator

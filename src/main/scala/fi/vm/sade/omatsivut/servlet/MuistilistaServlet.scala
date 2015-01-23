@@ -2,7 +2,7 @@ package fi.vm.sade.omatsivut.servlet
 
 import java.net.URLEncoder
 
-import fi.vm.sade.omatsivut.captcha.CaptchaServiceComponent
+import fi.vm.sade.utils.captcha.CaptchaServiceComponent
 import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig

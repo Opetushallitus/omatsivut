@@ -2,9 +2,13 @@ package fi.vm.sade.omatsivut.config
 
 import com.typesafe.config.Config
 import fi.vm.sade.groupemailer.GroupEmailerSettings
+import fi.vm.sade.utils.captcha.CaptchaServiceSettings
 import fi.vm.sade.utils.cas.CasConfig
 
 case class ApplicationSettings(config: Config) extends GroupEmailerSettings(config) {
+
+  val captchaSettings = new CaptchaServiceSettings(config)
+
   val casTicketUrl = config.getString("omatsivut.cas.ticket.url")
 
   val raamitUrl = config.getString("omatsivut.oppija-raamit.url")
@@ -20,9 +24,6 @@ case class ApplicationSettings(config: Config) extends GroupEmailerSettings(conf
   val koulutusinformaationBIUrl = config.getString("omatsivut.koulutusinformaatio.basketitems.url")
 
   val muistilistaUrl = config.getString("muistilista.url")
-
-  val recaptchaUrl = config.getString("recaptcha.url")
-  val recaptchaSecret = config.getString("recaptcha.secret")
 
   val ohjausparametritUrl = config.getString("omatsivut.ohjausparametrit.url")
   val tarjontaUrl = config.getString("omatsivut.tarjonta.url")
