@@ -34,7 +34,7 @@ trait MuistilistaServletContainer {
         response.setStatus(403)
         "403 Forbidden"
       }
-      if (muistiLista.otsikko.isEmpty || List(muistiLista.vastaanottaja, muistiLista.koids).exists(_.isEmpty)) {
+      else if (muistiLista.otsikko.isEmpty || List(muistiLista.vastaanottaja, muistiLista.koids).exists(_.isEmpty)) {
         logger.warn("muistiLista malformed:" + request.body)
         response.setStatus(400)
         "400 Bad Request"
