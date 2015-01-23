@@ -30,7 +30,6 @@ object AppConfig extends Logging {
       case "templated" => new LocalTestingWithTemplatedVars
       case "dev" => new Dev
       case "it" => new IT
-      case "it-with-valintatulos" => new ITWithValintaTulosService
       case name => throw new IllegalArgumentException("Unknown value for omatsivut.profile: " + name);
     }
   }
@@ -71,10 +70,6 @@ object AppConfig extends Logging {
       .withOverride("omatsivut.valinta-tulos-service.url", "http://localhost:"+ ValintatulosServiceRunner.valintatulosPortChooser.chosenPort+"/valinta-tulos-service")
       .withOverride("mongo.db.name", "hakulomake")
       .withOverride("mongodb.oppija.uri", "mongodb://localhost:" + embeddedmongoPortChooser.chosenPort)
-  }
-
-  class ITWithValintaTulosService extends IT {
-
   }
 
   class ImmediateCookieTimeout extends IT {
