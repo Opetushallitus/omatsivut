@@ -20,8 +20,8 @@ class XssPreventionSpec extends Specification {
     }
 
     "Test javascript injection" in {
-      val malicioisCode = "<IMG SRC=JaVaScRiPt:alert('XSS')>"
-      val moreMalicioisCode = "\"><script>...</script><input value=\""
+      val maliciousCode = "<IMG SRC=JaVaScRiPt:alert('XSS')>"
+      val moreMaliciousCode = "\"><script>...</script><input value=\""
       val remoteStyleSheet = "<LINK REL=\"stylesheet\"HREF=\"http://ha.ckers.org/xss.css\">"
       val brTag = "<BR SIZE=\"&{alert('XSS')}\">"
       val ssi = "<!--#exec cmd=\"/bin/echo '<SCRIPT SRC'\"--><!--#exec cmd=\"/bin/echo '=http://ha.ckers.org/xss.js ></SCRIPT>'\"-->"
