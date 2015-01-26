@@ -36,15 +36,11 @@ trait MuistilistaServiceComponent {
     }
 
     private def buildBody(muistilista: Muistilista, url: String) = {
-      def koulutuksetList(basketItems: List[KoulutusInformaatioBasketItem]): List[String] = {
-        basketItems.map((bi) => bi.applicationOptions.map((info) => s"${info.providerName} - ${info.name}")).flatten
-      }
 
       val hakuKoulutusList = getKoulutukset(muistilista)
-        .groupBy(k => k.applicationSystemName)
-        .map { case (haku, basketItems) => Map(
-        "haku" -> haku,
-        "koulutukset" -> koulutuksetList(basketItems))
+        .map { hakuItems => Map(
+        "haku" -> hakuItems.applicationSystemName,
+        "koulutukset" -> hakuItems.applicationOptions.map(info => s"${info.providerName} - ${info.name}"))
       }
 
       TemplateProcessor.processTemplate("/templates/muistilistaEmail.mustache", Map(
