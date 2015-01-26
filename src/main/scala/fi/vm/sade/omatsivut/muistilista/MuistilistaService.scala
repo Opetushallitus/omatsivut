@@ -16,6 +16,7 @@ trait MuistilistaServiceComponent {
 
   class MuistilistaService(language: Language.Language) extends JsonFormats {
     private implicit val lang = language
+    private val erikseenHaettavatHakukohteetId = "erikseenHaettavatHakukohteet"
 
     def sendMail(muistiLista: Muistilista, url: StringBuffer) = {
       val email = buildMessage(muistiLista, url + "/" + buildUlrEncodedOidString(muistiLista.koids))
@@ -37,10 +38,20 @@ trait MuistilistaServiceComponent {
 
     private def buildBody(muistilista: Muistilista, url: String) = {
 
+      def hakuName(haku: KoulutusInformaatioBasketItem) = {
+        if(erikseenHaettavatHakukohteetId.equals(haku.applicationSystemId)) {
+          Translations.getTranslation("emailNote", "erikseenHaettavatHakukohteet")
+        }
+        else {
+          haku.applicationSystemName
+        }
+      }
+
       val hakuKoulutusList = getKoulutukset(muistilista)
         .map { hakuItems => Map(
-        "haku" -> hakuItems.applicationSystemName,
-        "koulutukset" -> hakuItems.applicationOptions.map(info => s"${info.providerName} - ${info.name}"))
+          "haku" -> hakuName(hakuItems),
+          "koulutukset" -> hakuItems.applicationOptions.map(info => s"${info.providerName} - ${info.name}")
+        )
       }
 
       TemplateProcessor.processTemplate("/templates/muistilistaEmail.mustache", Map(

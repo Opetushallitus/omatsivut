@@ -131,6 +131,7 @@
 
   "emailNote": {
       "note": "Shortlist",
+      "erikseenHaettavatHakukohteet": "Study options with separate application",
       "openLink": "Open the shortlist in Studyinfo",
       "noReply": "Do not reply to this message – the message has been sent automatically."
   }

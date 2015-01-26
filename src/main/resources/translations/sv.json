@@ -131,6 +131,7 @@
 
   "emailNote": {
       "note": "Minneslista",
+      "erikseenHaettavatHakukohteet": "Ansökningsmål med skild ansökan",
       "openLink": "Öppna minneslistan i Studieinfo",
       "noReply": "Svara inte på detta meddelande – meddelandet har skickats automatiskt. "
   }
