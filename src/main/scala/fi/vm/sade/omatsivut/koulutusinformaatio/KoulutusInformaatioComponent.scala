@@ -7,7 +7,7 @@ import fi.vm.sade.omatsivut.fixtures.JsonFixtureMaps._
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.koulutusinformaatio.domain.{Koulutus, Opetuspiste}
 import fi.vm.sade.omatsivut.memoize.TTLOptionalMemoize
-import fi.vm.sade.omatsivut.muistilista.KoulutusInformaatioBasketItem
+import fi.vm.sade.omatsivut.muistilista.{MuistilistaKoulutusInfo, KoulutusInformaatioBasketItem}
 import fi.vm.sade.utils.http.DefaultHttpClient
 import fi.vm.sade.utils.slf4j.Logging
 import org.json4s._
@@ -35,7 +35,8 @@ trait KoulutusInformaatioComponent {
 
     def koulutusWithHaku(aoIds: List[String], lang: Language): Option[List[KoulutusInformaatioBasketItem]] = {
       val text = io.Source.fromInputStream(getClass.getResourceAsStream("/mockdata/basketinfo.json")).mkString
-      parse(text).extract[Option[List[KoulutusInformaatioBasketItem]]]
+      val allBasketItems = parse(text).extract[Option[List[KoulutusInformaatioBasketItem]]].getOrElse(List())
+      Some(allBasketItems.filter( bi => bi.applicationOptions.filter( ao => aoIds.contains(ao.id)).nonEmpty))
     }
   }
 
