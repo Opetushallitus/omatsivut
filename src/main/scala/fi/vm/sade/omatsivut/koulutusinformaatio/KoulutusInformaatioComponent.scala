@@ -93,25 +93,27 @@ trait KoulutusInformaatioComponent {
     }
 
     def koulutus(aoId: String, lang: Language): Option[Koulutus] = {
-      val (responseCode, headersMap, resultString) = DefaultHttpClient.httpGet(appConfig.settings.koulutusinformaatioAoUrl + "/" + aoId)
+      val request = DefaultHttpClient.httpGet(appConfig.settings.koulutusinformaatioAoUrl + "/" + aoId)
         .param("lang", lang.toString)
         .param("uiLang", lang.toString)
-        .responseWithHeaders
+
+      val (responseCode, headersMap, resultString) = request.responseWithHeaders()
       withWarnLogging{
         parse(resultString).extract[Option[Koulutus]]
-      }("Parsing response failed:\n" + resultString, None)
+      }(s"Parsing response from ${request.getUrl} failed:\n$resultString" , None)
     }
 
     def koulutusWithHaku(aoIds: List[String], lang: Language): Option[List[KoulutusInformaatioBasketItem]] = {
-      val params = aoIds.map(a => "&aoId="+a).mkString
+      var request = DefaultHttpClient.httpGet(appConfig.settings.koulutusinformaationBIUrl)
+        .param("uiLang", lang.toString)
+      aoIds.foreach(a =>  {
+        request = request.param("aoId", a)
+      })
 
-      val url: String = appConfig.settings.koulutusinformaationBIUrl + "?uiLang=" + lang + params
-      logger.info("url="+url)
-      val (responseCode, headersMap, resultString) = DefaultHttpClient.httpGet(url)
-        .responseWithHeaders
+      val (responseCode, headersMap, resultString) = request.responseWithHeaders
       withWarnLogging{
         parse(resultString).extract[Option[List[KoulutusInformaatioBasketItem]]]
-      }("Parsing response failed:\n" + resultString, None)
+      }(s"Parsing response from ${request.getUrl} failed:\n$resultString" , None)
     }
   }
 }
