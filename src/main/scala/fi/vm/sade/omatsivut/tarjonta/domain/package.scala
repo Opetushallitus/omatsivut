@@ -11,7 +11,7 @@ package object domain {
 
   object Haku {
     def apply(tarjontaHaku: TarjontaHaku, lang: Language) : Haku = {
-      Haku(tarjontaHaku.oid, tarjontaHaku.nimi("kieli_" + lang.toString), tarjontaHaku.hakuaikas.sortBy(_.alkuPvm).map(h => Hakuaika(h)), HakuTyyppi(tarjontaHaku).toString, isKorkeakouluhaku(tarjontaHaku), tarjontaHaku.usePriority)
+      Haku(tarjontaHaku.oid, tarjontaHaku.getLocalizedName(lang), tarjontaHaku.hakuaikas.sortBy(_.alkuPvm).map(h => Hakuaika(h)), HakuTyyppi(tarjontaHaku).toString, isKorkeakouluhaku(tarjontaHaku), tarjontaHaku.usePriority)
     }
 
     private def isKorkeakouluhaku(tarjontaHaku: TarjontaHaku) = {
