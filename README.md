@@ -19,7 +19,7 @@ Ennen ajamista aja nämä:
 Lisää JAVA_HOME ja JAVA_HOME8 ympäristömuuttujat polkuun:
 
     export JAVA_HOME=$(/usr/libexec/java_home -v 1.7)
-    export JAVA_HOME8=$(/usr/libexec/java_home -v 1.8)
+    export JAVA8_HOME=$(/usr/libexec/java_home -v 1.8)
 
 ### IDE
 
