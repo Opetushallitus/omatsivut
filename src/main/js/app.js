@@ -14,6 +14,7 @@ require("moment/locale/en-gb.js");
 
 angular.module("templates", [])
 require("../templates/templates.js")
+require("../webapp/hakemuseditori-templates.js")
 
 var listApp = angular.module('listApp', ["ngResource", "ngSanitize", "ngAnimate", "RecursionHelper", "ui.bootstrap.typeahead", "template/typeahead/typeahead-popup.html", "template/typeahead/typeahead-match.html", "debounce", "exceptionOverride", "templates"], function($locationProvider) {
   $locationProvider.html5Mode(false)
@@ -23,26 +24,11 @@ var staticResources = require('./staticResources')
 require('./localization')(listApp, staticResources)
 require('./restResources')(listApp)
 
-require('./applicationValidator')(listApp)
-require('./settings')(listApp, testMode())
-require('./angularBacon')(listApp)
+require('./hakemuseditori')(listApp)
 
-require('./directives/callout')(listApp)
-require('./directives/confirm')(listApp)
-require('./directives/localizedLink')(listApp)
-require('./directives/formattedTime')(listApp)
-require('./directives/sortable')(listApp)
-require('./directives/disableClickFocus')(listApp)
-require('./directives/question')(listApp)
+require('./settings')(listApp, testMode())
+
 require('./directives/applicationList')(listApp)
-require('./directives/application')(listApp)
-require('./directives/hakutoiveenVastaanotto')(listApp)
-require('./directives/ilmoittautuminen')(listApp)
-require('./directives/hakutoiveet')(listApp)
-require('./directives/valintatulos')(listApp)
-require('./directives/henkilotiedot')(listApp)
-require('./directives/applicationPeriods')(listApp)
-require('./directives/clearableInput')(listApp)
 
 listApp.run(function ($rootScope, localization) {
   $rootScope.localization = localization

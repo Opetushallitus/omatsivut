@@ -14,6 +14,12 @@ import fi.vm.sade.utils.http.DefaultHttpClient
 import fi.vm.sade.utils.slf4j.Logging
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
+<<<<<<< HEAD
+||||||| merged common ancestors
+import scalaj.http.Http
+=======
+import scalaj.http.{HttpConstants, Http}
+>>>>>>> first shot at extracting hakemuseditori
 
 trait KoulutusInformaatioComponent {
   val koulutusInformaatioService: KoulutusInformaatioService

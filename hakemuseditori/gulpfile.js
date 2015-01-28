@@ -33,19 +33,19 @@ gulp.task('lint', function() {
 
 gulp.task("templates", function() {
   return gulp.src("src/main/templates/**/*.html")
-    .pipe(templates("templates.js", { root:"templates/"}))
-    .pipe(gulp.dest("src/main/templates"))
+    .pipe(templates("hakemuseditori-templates.js", { root:"templates/"}))
+    .pipe(gulp.dest("dist"))
 })
 
 gulp.task('less', function () {
-    gulp.src('src/main/less/**/main.less')
-        .pipe(less().on('error', handleError))
-        .pipe(concat('main.css'))
-        .pipe(gulp.dest('src/main/webapp/css'));
-    gulp.src('src/main/less/**/preview.less')
-      .pipe(less().on('error', handleError))
-      .pipe(concat('preview.css'))
-      .pipe(gulp.dest('src/main/webapp/css'));
+  gulp.src('src/main/less/**/main.less')
+    .pipe(less().on('error', handleError))
+    .pipe(concat('main.css'))
+    .pipe(gulp.dest('src/main/webapp/css'));
+  gulp.src('src/main/less/**/preview.less')
+    .pipe(less().on('error', handleError))
+    .pipe(concat('preview.css'))
+    .pipe(gulp.dest('src/main/webapp/css'));
 });
 
 gulp.task('browserify', ["templates"], function() {
@@ -57,18 +57,16 @@ gulp.task('browserify-min', ["templates"], function() {
 })
 
 function compileJs(compress) {
-  gulp.src('hakemuseditori/dist/*')
-    .pipe(gulp.dest('src/main/webapp'))
-  gulp.src(['src/main/js/app.js'])
+  gulp.src(['src/main/js/hakemuseditori.js'])
     .pipe(browserify({
-      external: ["./hakemuseditori"],
       insertGlobals: true,
-      debug: true
+      debug: true,
+      require: "./hakemuseditori"
     }).on('error', handleError))
-    .pipe(concat('bundle.js'))
+    .pipe(concat('hakemuseditori.js'))
     .pipe(gulpif(compress, ngAnnotate()))
     .pipe(gulpif(compress, uglify({ mangle: true })))
-    .pipe(gulp.dest('src/main/webapp'))
+    .pipe(gulp.dest('dist'))
 }
 
 gulp.task('watch', function() {
