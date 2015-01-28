@@ -118,7 +118,7 @@ function ApplicationListPage() {
   function getTemplateTexts() {
     return Q.all([
       Q($.get("/omatsivut/index.html")),
-      Q($.get("/omatsivut/bundle.js"))
+      Q($.ajax({type: "get", url:"/omatsivut/bundle.js", dataType:"text"})) // explicitly set datatype to prevent script execution
     ]).then(function(arr) {
       var indexHtml = arr[0]
       var templateIds = _.uniq(arr[1].match(/templates\/.*?html/g))
