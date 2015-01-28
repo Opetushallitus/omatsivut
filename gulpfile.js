@@ -57,7 +57,7 @@ gulp.task('browserify-min', ["templates"], function() {
 })
 
 function compileJs(compress) {
-  gulp.src('hakemuseditori/dist/*')
+  gulp.src("node_modules/hakemuseditori/dist/*")
     .pipe(gulp.dest('src/main/webapp'))
   gulp.src(['src/main/js/app.js'])
     .pipe(browserify({
