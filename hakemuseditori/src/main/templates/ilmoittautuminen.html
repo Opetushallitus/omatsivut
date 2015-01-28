@@ -1,7 +1,0 @@
-<div class="ilmoittautuminen-item fade-transitions" ng-repeat="tulos in hakukohteet()">
-    <header>
-        <strong>{{ localization('registration.pleaseRegister') }}</strong>
-        {{ tulos.opetuspiste.name }} - {{ tulos.koulutus.name }}
-    </header>
-    <a href="{{ tulos.ilmoittautumistila.ilmoittautumistapa.url }}">{{ localization('registration.goToRegistration') }}</a>
-</div>
