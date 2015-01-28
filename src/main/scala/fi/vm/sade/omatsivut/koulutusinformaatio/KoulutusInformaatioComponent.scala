@@ -1,5 +1,7 @@
 package fi.vm.sade.omatsivut.koulutusinformaatio
 
+import java.net.URLEncoder
+
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.domain.Language.Language
 import fi.vm.sade.omatsivut.fixtures.JsonFixtureMaps
@@ -7,12 +9,11 @@ import fi.vm.sade.omatsivut.fixtures.JsonFixtureMaps._
 import fi.vm.sade.omatsivut.json.JsonFormats
 import fi.vm.sade.omatsivut.koulutusinformaatio.domain.{Koulutus, Opetuspiste}
 import fi.vm.sade.omatsivut.memoize.TTLOptionalMemoize
-import fi.vm.sade.omatsivut.muistilista.{MuistilistaKoulutusInfo, KoulutusInformaatioBasketItem}
+import fi.vm.sade.omatsivut.muistilista.KoulutusInformaatioBasketItem
 import fi.vm.sade.utils.http.DefaultHttpClient
 import fi.vm.sade.utils.slf4j.Logging
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
-import scalaj.http.Http
 
 trait KoulutusInformaatioComponent {
   val koulutusInformaatioService: KoulutusInformaatioService
@@ -66,7 +67,7 @@ trait KoulutusInformaatioComponent {
     private def wrapAsOption[A](l: List[A]): Option[List[A]] = if (!l.isEmpty) Some(l) else None
 
     def opetuspisteet(asId: String, query: String, lang: Language): Option[List[Opetuspiste]] = {
-      val (_, _, resultString) = DefaultHttpClient.httpGet(appConfig.settings.koulutusinformaatioLopUrl + "/search/" + Http.urlEncode(query, "UTF-8"))
+      val (_, _, resultString) = DefaultHttpClient.httpGet(appConfig.settings.koulutusinformaatioLopUrl + "/search/" + URLEncoder.encode(query, "UTF-8"))
         .param("asId", asId)
         .param("lang", lang.toString)
         .responseWithHeaders
