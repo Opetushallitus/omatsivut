@@ -83,4 +83,4 @@ gulp.task('watch', function() {
 gulp.task('compile', ['templates', 'browserify-min', 'less']);
 gulp.task('compile-dev', ['templates', 'browserify', 'less']);
 gulp.task('dev', ['lint', 'compile-dev', 'watch']);
-gulp.task('default', ['dev']);
+gulp.task('default', ['compile']);

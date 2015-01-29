@@ -28,8 +28,8 @@
     "hakemuseditori": "Opetushallitus/hakemuseditori"
   },
   "scripts": {
-    "dev": "gulp dev",
-    "compile": "gulp compile"
+    "dev": "./gulp dev",
+    "compile": "./gulp compile"
   },
   "name": "ohp",
   "description": "OHP Mocha tests",

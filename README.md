@@ -11,10 +11,9 @@ Oppijan henkilökohtainen palvelu
 
 ## Get started
 
-Ennen ajamista aja nämä:
+Buildaa fronttiapplikaatio (npm install + gulp)
 
-    npm install
-    npm run compile
+    ./webbuild.sh
 
 Lisää JAVA_HOME ja JAVA_HOME8 ympäristömuuttujat polkuun:
 
@@ -80,19 +79,33 @@ Avaa selaimessa [http://localhost:8080/omatsivut/](http://localhost:8080/omatsiv
 
 ## Fronttidevaus
 
-Frontti paketoidaan gulpilla ja browserifyllä. Paketointi tapahtuu mocha-testien ajon yhteydessä (`runtests.sh`).
+Frontti paketoidaan gulpilla ja browserifyllä. Skripti `webbuild.sh` tekee tämän helpoksi.
 
-Aja ensin `npm install`.
+Paketoi frontti devausmoodissa (ei minifiointia):
+
+    ./webbuild.sh compile-dev
 
 Jatkuva fronttikäännös käyntiin näin (ei minimointia):
 
-    npm run dev
+    ./webbuild.sh dev
 
-Javascriptin minimointi:
+Tuotantoa vastaava buildi
 
-    npm run compile
+    ./webbuild.sh
 
-Tyylit tehty lessillä. Css-fileet src-puussa generoidaan siitä ja ovat ignoroitu gitissä.
+Suuri osa fronttikoodista sijaitsee [hakemuseditori](https://github.com/Opetushallitus/hakemuseditori/tree/master/dist)
+-repositoriossa, mistä käytetään tiedostoja `hakemuseditori.js` ja `hakemuseditori-templates.js`. 
+Nämä tiedostot haetaan paketoinnin yhteydessä npm:llä ja kopioidaan
+gulp-buildissa hakemistoon `src/main/webapp`.
+
+Jos muokkaat hakemuseditorin koodia ja haluat nopean kopioinnin omatsivut-applikaatioon
+jokaisen muokkauksen yhteydessä, tee näin:
+
+    cd ../hakemuseditori
+    ./gulp omatsivut dev 
+
+Tyylit tehty lessillä. Css-fileet src-puussa generoidaan siitä ja ovat 
+ignoroitu gitissä.
 
 ## Impersonointi / autentikoinnin ohitus
 
