@@ -2,7 +2,7 @@ package fi.vm.sade.omatsivut.servlet
 
 import javax.servlet.http.Cookie
 
-import fi.vm.sade.omatsivut.domain.Language
+import fi.vm.sade.hakemuseditori.domain.Language
 import org.scalatra.test.specs2.MutableScalatraSpec
 
 class LanguageFilterSpec extends MutableScalatraSpec {

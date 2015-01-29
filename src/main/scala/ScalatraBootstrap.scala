@@ -2,7 +2,7 @@ import java.util
 import javax.servlet.{DispatcherType, ServletContext}
 
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
-import fi.vm.sade.omatsivut.config.{AppConfig, ComponentRegistry, OmatSivutSpringContext}
+import fi.vm.sade.omatsivut.config.{OmatSivutSpringContext, AppConfig, ComponentRegistry}
 import fi.vm.sade.omatsivut.security.fake.{FakeShibbolethFilter, FakeShibbolethServlet}
 import fi.vm.sade.omatsivut.servlet._
 import fi.vm.sade.omatsivut.servlet.session.{LoginServlet, SessionServlet}

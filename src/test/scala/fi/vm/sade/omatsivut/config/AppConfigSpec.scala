@@ -1,7 +1,6 @@
 package fi.vm.sade.omatsivut.config
 
 import java.nio.file.{Paths, Files}
-
 import fi.vm.sade.omatsivut.config.AppConfig.{AppConfig, ExampleTemplatedProps}
 import fi.vm.sade.utils.mongo.EmbeddedMongo
 import fi.vm.sade.utils.tcp.PortFromSystemPropertyOrFindFree

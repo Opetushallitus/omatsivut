@@ -1,14 +1,14 @@
 package fi.vm.sade.omatsivut.fixtures.hakemus
 
+import fi.vm.sade.hakemuseditori.hakemus.HakemusSpringContext
 import fi.vm.sade.haku.oppija.hakemus.domain.dto.SyntheticApplication
 import fi.vm.sade.haku.oppija.hakemus.domain.dto.SyntheticApplication.Hakemus
 import fi.vm.sade.haku.testfixtures.MongoFixtureImporter
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
-import fi.vm.sade.omatsivut.config.OmatSivutSpringContext
 import fi.vm.sade.omatsivut.fixtures.TestFixture
-import fi.vm.sade.omatsivut.valintatulokset.RemoteValintatulosService
+import fi.vm.sade.hakemuseditori.valintatulokset.RemoteValintatulosService
 
-class ErillishakuFixtureImporter(appConfig: AppConfig, springContext: OmatSivutSpringContext) {
+class ErillishakuFixtureImporter(appConfig: AppConfig, springContext: HakemusSpringContext) {
   def applyFixtures(hyvaksytty: Boolean) {
     import collection.JavaConversions._
     MongoFixtureImporter.clearFixtures(springContext.mongoTemplate, springContext.applicationDAO, "application")

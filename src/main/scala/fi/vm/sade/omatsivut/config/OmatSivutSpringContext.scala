@@ -1,42 +1,18 @@
 package fi.vm.sade.omatsivut.config
 
-import fi.vm.sade.haku.oppija.common.organisaatio.OrganizationService
-import fi.vm.sade.haku.oppija.hakemus.it.dao.{ApplicationOidDAO, ApplicationDAO}
-import fi.vm.sade.haku.oppija.hakemus.service.{SyntheticApplicationService, HakuPermissionService, ApplicationService}
+import fi.vm.sade.haku.oppija.hakemus.it.dao.ApplicationOidDAO
+import fi.vm.sade.haku.oppija.hakemus.service.HakuPermissionService
 import fi.vm.sade.haku.oppija.hakemus.service.impl.HakuPermissionServiceMockImpl
-import fi.vm.sade.haku.oppija.lomake.service.ApplicationSystemService
-import fi.vm.sade.haku.oppija.lomake.validation.ElementTreeValidator
 import fi.vm.sade.haku.virkailija.authentication.AuthenticationService
 import fi.vm.sade.haku.virkailija.authentication.impl.AuthenticationServiceMockImpl
-import fi.vm.sade.log.client.Logger
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
-import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.omatsivut.mongo.OmatSivutMongoConfiguration
 import fi.vm.sade.utils.slf4j.Logging
-import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation._
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer
 import org.springframework.core.env.{MapPropertySource, MutablePropertySources}
-import org.springframework.data.mongodb.core.MongoTemplate
+
 import scala.collection.JavaConversions._
-
-class OmatSivutSpringContext(context: ApplicationContext) {
-  def applicationSystemService = context.getBean(classOf[ApplicationSystemService])
-
-  def applicationDAO = context.getBean(classOf[ApplicationDAO])
-
-  def applicationService = context.getBean(classOf[ApplicationService])
-
-  def mongoTemplate = context.getBean(classOf[MongoTemplate])
-
-  def validator = context.getBean(classOf[ElementTreeValidator])
-
-  def auditLogger = context.getBean(classOf[Logger])
-
-  def organizationService = context.getBean(classOf[OrganizationService])
-
-  def syntheticApplicationService = context.getBean(classOf[SyntheticApplicationService])
-}
 
 object OmatSivutSpringContext extends Logging {
   def check {}

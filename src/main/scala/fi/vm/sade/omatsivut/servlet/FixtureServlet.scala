@@ -1,15 +1,15 @@
 package fi.vm.sade.omatsivut.servlet
 
+import fi.vm.sade.hakemuseditori.hakemus.SpringContextComponent
 import fi.vm.sade.haku.oppija.hakemus.domain.dto.SyntheticApplication
 import fi.vm.sade.haku.oppija.hakemus.domain.dto.SyntheticApplication.Hakemus
 import fi.vm.sade.haku.testfixtures.MongoFixtureImporter
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
-import fi.vm.sade.omatsivut.config.SpringContextComponent
 import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.omatsivut.fixtures.hakemus.{ErillishakuFixtureImporter, ApplicationFixtureImporter}
-import fi.vm.sade.omatsivut.tarjonta.TarjontaComponent
+import fi.vm.sade.hakemuseditori.tarjonta.TarjontaComponent
 import fi.vm.sade.utils.Timer
-import fi.vm.sade.omatsivut.valintatulokset.{FailingRemoteValintatulosService, RemoteValintatulosService, ValintatulosServiceComponent}
+import fi.vm.sade.hakemuseditori.valintatulokset.{FailingRemoteValintatulosService, RemoteValintatulosService, ValintatulosServiceComponent}
 import org.scalatra.{InternalServerError, Ok}
 
 trait FixtureServletContainer {

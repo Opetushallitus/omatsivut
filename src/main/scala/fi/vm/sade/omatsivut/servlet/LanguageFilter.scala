@@ -2,7 +2,7 @@ package fi.vm.sade.omatsivut.servlet
 
 import javax.servlet.http.{Cookie, HttpServletRequest, HttpServletResponse}
 
-import fi.vm.sade.omatsivut.domain.Language
+import fi.vm.sade.hakemuseditori.domain.Language
 import fi.vm.sade.utils.slf4j.Logging
 import org.scalatra.ScalatraFilter
 

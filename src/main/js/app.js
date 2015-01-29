@@ -13,8 +13,8 @@ require("moment/locale/sv.js");
 require("moment/locale/en-gb.js");
 
 angular.module("templates", [])
-require("../templates/templates.js")
 require("../webapp/hakemuseditori-templates.js")
+require("../templates/templates.js")
 
 var listApp = angular.module('listApp', ["ngResource", "ngSanitize", "ngAnimate", "RecursionHelper", "ui.bootstrap.typeahead", "template/typeahead/typeahead-popup.html", "template/typeahead/typeahead-match.html", "debounce", "exceptionOverride", "templates"], function($locationProvider) {
   $locationProvider.html5Mode(false)

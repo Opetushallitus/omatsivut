@@ -1,6 +1,7 @@
 package fi.vm.sade.omatsivut.servlet.session
 
-import fi.vm.sade.omatsivut.auditlog.{AuditLogger, Login}
+import fi.vm.sade.hakemuseditori.auditlog.AuditLogger
+import fi.vm.sade.omatsivut.auditlog.Login
 import fi.vm.sade.omatsivut.security.AuthenticationContext
 import fi.vm.sade.omatsivut.security.AuthenticationInfoParser._
 import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase

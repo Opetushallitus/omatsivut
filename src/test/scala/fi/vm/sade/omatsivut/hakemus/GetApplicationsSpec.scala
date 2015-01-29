@@ -4,7 +4,7 @@ import fi.vm.sade.omatsivut.TimeWarp
 import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.omatsivut.fixtures.TestFixture._
-import fi.vm.sade.omatsivut.lomake.domain.QuestionNode
+import fi.vm.sade.hakemuseditori.lomake.domain.QuestionNode
 import org.joda.time.DateTime
 
 class GetApplicationsSpec extends HakemusApiSpecification with FixturePerson with TimeWarp {

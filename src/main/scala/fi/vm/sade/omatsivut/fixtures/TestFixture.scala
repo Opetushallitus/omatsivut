@@ -1,12 +1,13 @@
 package fi.vm.sade.omatsivut.fixtures
 
+import fi.vm.sade.hakemuseditori.fixtures.JsonFixtureMaps
+import fi.vm.sade.hakemuseditori.hakemus.{HakemusSpringContext, ImmutableLegacyApplicationWrapper}
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
-import fi.vm.sade.omatsivut.config.{AppConfig, ComponentRegistry, OmatSivutSpringContext}
-import fi.vm.sade.omatsivut.domain.Language
-import fi.vm.sade.omatsivut.hakemus.ImmutableLegacyApplicationWrapper
-import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
-import fi.vm.sade.omatsivut.lomake.domain.Lomake
-import fi.vm.sade.omatsivut.tarjonta.domain.Hakuaika
+import fi.vm.sade.omatsivut.config.{AppConfig, ComponentRegistry}
+import fi.vm.sade.hakemuseditori.domain.Language
+import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus._
+import fi.vm.sade.hakemuseditori.lomake.domain.Lomake
+import fi.vm.sade.hakemuseditori.tarjonta.domain.Hakuaika
 import ImmutableLegacyApplicationWrapper.wrap
 
 import scala.collection.JavaConversions._
@@ -35,7 +36,7 @@ object TestFixture {
 
   lazy val (applicationSystemNivelKesa2013, applicationNivelKesa2013WithPeruskouluBaseEducationApp) = {
     withConfig(new ComponentRegistry(appConfig), { registry =>
-      val springContext: OmatSivutSpringContext = registry.springContext
+      val springContext: HakemusSpringContext = registry.springContext
       val as = springContext.applicationSystemService.getApplicationSystem(applicationSystemNivelKesa2013Oid)
       val app = springContext.applicationDAO.find(new Application().setOid(hakemusNivelKesa2013WithPeruskouluBaseEducationId)).toList.head
       (as, app)

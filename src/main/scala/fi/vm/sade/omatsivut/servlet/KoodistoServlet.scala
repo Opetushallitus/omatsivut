@@ -1,7 +1,7 @@
 package fi.vm.sade.omatsivut.servlet
 
-import fi.vm.sade.omatsivut.json.JsonFormats
-import fi.vm.sade.omatsivut.koodisto.{KoodistoService, KoodistoComponent}
+import fi.vm.sade.hakemuseditori.json.JsonFormats
+import fi.vm.sade.hakemuseditori.koodisto.{KoodistoService, KoodistoComponent}
 import org.scalatra.NotFound
 import org.scalatra.json.JacksonJsonSupport
 import org.scalatra.swagger.{SwaggerSupport, Swagger}

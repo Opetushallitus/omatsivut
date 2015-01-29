@@ -1,12 +1,12 @@
 package fi.vm.sade.omatsivut.lomake
 
-import fi.vm.sade.omatsivut.domain.Language
+import fi.vm.sade.hakemuseditori.domain.Language
+import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus
+import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus.Answers
+import fi.vm.sade.hakemuseditori.hakemus.{ImmutableLegacyApplicationWrapper, AnswerHelper, HakutoiveetConverter}
+import fi.vm.sade.hakemuseditori.lomake.AddedQuestionFinder
+import fi.vm.sade.hakemuseditori.lomake.domain.Lomake
 import fi.vm.sade.omatsivut.fixtures.TestFixture._
-import fi.vm.sade.omatsivut.hakemus.domain.Hakemus
-import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
-import fi.vm.sade.omatsivut.hakemus.{ImmutableLegacyApplicationWrapper, AnswerHelper, HakutoiveetConverter}
-import ImmutableLegacyApplicationWrapper.wrap
-import fi.vm.sade.omatsivut.lomake.domain.Lomake
 import org.specs2.mutable.Specification
 
 class AddedQuestionFinderSpec extends Specification {
@@ -25,8 +25,8 @@ class AddedQuestionFinderSpec extends Specification {
     }
 
     "Report zero additional questions when re-ordering hakutoiveet" in {
-      val answers1 = AnswerHelper.getAllUpdatedAnswersForApplication(lomake, wrap(applicationNivelKesa2013WithPeruskouluBaseEducationApp), hakemusMuutos.answers, hakemusMuutos.preferences)
-      val answers2 = AnswerHelper.getAllUpdatedAnswersForApplication(lomake, wrap(applicationNivelKesa2013WithPeruskouluBaseEducationApp), hakemusMuutos.answers, hakemusMuutos.preferences.reverse)
+      val answers1 = AnswerHelper.getAllUpdatedAnswersForApplication(lomake, ImmutableLegacyApplicationWrapper.wrap(applicationNivelKesa2013WithPeruskouluBaseEducationApp), hakemusMuutos.answers, hakemusMuutos.preferences)
+      val answers2 = AnswerHelper.getAllUpdatedAnswersForApplication(lomake, ImmutableLegacyApplicationWrapper.wrap(applicationNivelKesa2013WithPeruskouluBaseEducationApp), hakemusMuutos.answers, hakemusMuutos.preferences.reverse)
       val addedQuestions = findAddedQuestions(answers1, answers2)
       val removedQuestions = findAddedQuestions(answers2, answers1)
       addedQuestions.length must_== 0

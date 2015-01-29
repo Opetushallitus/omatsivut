@@ -1,8 +1,8 @@
 package fi.vm.sade.omatsivut
 
 import fi.vm.sade.omatsivut.config.{ComponentRegistry, AppConfig}
-import fi.vm.sade.omatsivut.json.JsonFormats
-import fi.vm.sade.omatsivut.valintatulokset.ValintatulosService
+import fi.vm.sade.hakemuseditori.json.JsonFormats
+import fi.vm.sade.hakemuseditori.valintatulokset.ValintatulosService
 
 object ValintatulosTester extends scala.App with JsonFormats {
   import org.json4s.native.Serialization.write

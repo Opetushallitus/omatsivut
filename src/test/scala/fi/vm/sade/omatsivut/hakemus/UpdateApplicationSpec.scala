@@ -1,9 +1,9 @@
 package fi.vm.sade.omatsivut.hakemus
 
+import fi.vm.sade.hakemuseditori.hakemus.domain.{Hakutoive, Hakemus}
 import fi.vm.sade.haku.oppija.hakemus.domain.{ApplicationNote, Change}
 import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.fixtures.TestFixture._
-import fi.vm.sade.omatsivut.hakemus.domain.{Hakemus, Hakutoive}
 import fi.vm.sade.omatsivut.{PersonOid, TimeWarp}
 import org.json4s._
 import org.json4s.jackson.JsonMethods
@@ -49,7 +49,7 @@ class UpdateApplicationSpec extends HakemusApiSpecification with FixturePerson w
     }
 
     "update application change history" in {
-      import collection.JavaConversions._
+      import scala.collection.JavaConversions._
       "single change" in {
         fixtureImporter.applyFixtures()
         val modification = answerExtraQuestion(hakutoiveet, "539158b8e4b0b56e67d2c74b", "yes sir") _

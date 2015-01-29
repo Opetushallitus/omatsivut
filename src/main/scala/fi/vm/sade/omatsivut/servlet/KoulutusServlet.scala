@@ -1,8 +1,8 @@
 package fi.vm.sade.omatsivut.servlet
 
-import fi.vm.sade.omatsivut.domain.Language
-import fi.vm.sade.omatsivut.json.JsonFormats
-import fi.vm.sade.omatsivut.koulutusinformaatio.{KoulutusInformaatioComponent, KoulutusInformaatioService}
+import fi.vm.sade.hakemuseditori.domain.Language
+import fi.vm.sade.hakemuseditori.json.JsonFormats
+import fi.vm.sade.hakemuseditori.koulutusinformaatio.{KoulutusInformaatioComponent, KoulutusInformaatioService}
 import org.scalatra.NotFound
 import org.scalatra.json.JacksonJsonSupport
 import org.scalatra.swagger.{Swagger, SwaggerSupport}

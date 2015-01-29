@@ -1,15 +1,15 @@
 package fi.vm.sade.omatsivut.servlet
 
-import fi.vm.sade.omatsivut.auditlog.{AuditLogger, AuditLoggerComponent, SaveVastaanotto}
+import fi.vm.sade.hakemuseditori.auditlog.{AuditLogger, AuditLoggerComponent, SaveVastaanotto}
+import fi.vm.sade.hakemuseditori.hakemus.domain.{HakemusMuutos, Hakemus}
+import fi.vm.sade.hakemuseditori.hakemus.{SpringContextComponent, HakemusInfo, ApplicationValidatorComponent, HakemusRepositoryComponent}
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
-import fi.vm.sade.omatsivut.config.SpringContextComponent
-import fi.vm.sade.omatsivut.hakemus._
-import fi.vm.sade.omatsivut.hakemus.domain.{HakemusMuutos, _}
-import fi.vm.sade.omatsivut.json.JsonFormats
-import fi.vm.sade.omatsivut.lomake.LomakeRepositoryComponent
+import fi.vm.sade.hakemuseditori.json.JsonFormats
+import fi.vm.sade.hakemuseditori.lomake.LomakeRepositoryComponent
+import fi.vm.sade.omatsivut.hakemuspreview.HakemusPreviewGeneratorComponent
 import fi.vm.sade.omatsivut.security.AuthenticationRequiringServlet
-import fi.vm.sade.omatsivut.valintatulokset.ValintatulosServiceComponent
-import fi.vm.sade.omatsivut.valintatulokset.domain.Vastaanotto
+import fi.vm.sade.hakemuseditori.valintatulokset.ValintatulosServiceComponent
+import fi.vm.sade.hakemuseditori.valintatulokset.domain.Vastaanotto
 import org.json4s.jackson.Serialization
 import org.scalatra._
 import org.scalatra.json._

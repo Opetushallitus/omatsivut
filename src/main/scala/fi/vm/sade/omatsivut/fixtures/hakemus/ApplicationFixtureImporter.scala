@@ -1,10 +1,10 @@
 package fi.vm.sade.omatsivut.fixtures.hakemus
 
+import fi.vm.sade.hakemuseditori.hakemus.HakemusSpringContext
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.testfixtures.MongoFixtureImporter
-import fi.vm.sade.omatsivut.config.OmatSivutSpringContext
 
-class ApplicationFixtureImporter(context: OmatSivutSpringContext) {
+class ApplicationFixtureImporter(context: HakemusSpringContext) {
 
   def applyFixtures(fixtureName: String = "", selector: String = "**/*.json") {
     if (!selector.endsWith("*.json")) {

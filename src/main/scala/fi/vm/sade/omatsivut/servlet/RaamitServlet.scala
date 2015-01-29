@@ -2,8 +2,8 @@ package fi.vm.sade.omatsivut.servlet
 
 import fi.vm.sade.omatsivut.config.AppConfig
 import AppConfig.AppConfig
-import fi.vm.sade.omatsivut.json.JsonFormats
-import fi.vm.sade.omatsivut.koulutusinformaatio.KoulutusInformaatioService
+import fi.vm.sade.hakemuseditori.json.JsonFormats
+import fi.vm.sade.hakemuseditori.koulutusinformaatio.KoulutusInformaatioService
 import org.scalatra.json.JacksonJsonSupport
 import org.scalatra.swagger.{Swagger, SwaggerSupport}
 

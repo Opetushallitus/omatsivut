@@ -3,24 +3,28 @@ package fi.vm.sade.omatsivut.config
 import java.util.concurrent.Executors
 
 import fi.vm.sade.groupemailer.{GroupEmailService, GroupEmailComponent}
-import fi.vm.sade.omatsivut.auditlog.{AuditLogger, AuditLoggerComponent}
+import fi.vm.sade.hakemuseditori.hakemus._
+import fi.vm.sade.hakemuseditori.localization.TranslationsComponent
+import fi.vm.sade.hakemuseditori.auditlog.{AuditContext, AuditLogger, AuditLoggerComponent}
+import fi.vm.sade.omatsivut.hakemuspreview.HakemusPreviewGeneratorComponent
+import fi.vm.sade.omatsivut.localization.OmatSivutTranslations
 import fi.vm.sade.utils.captcha.{CaptchaServiceSettings, CaptchaServiceComponent}
 import fi.vm.sade.omatsivut.config.AppConfig._
-import fi.vm.sade.omatsivut.domain.Language.Language
+import fi.vm.sade.hakemuseditori.domain.Language.Language
 import fi.vm.sade.omatsivut.fixtures.hakemus.ApplicationFixtureImporter
-import fi.vm.sade.omatsivut.hakemus._
-import fi.vm.sade.omatsivut.koodisto.{KoodistoComponent, KoodistoService}
-import fi.vm.sade.omatsivut.koulutusinformaatio.{KoulutusInformaatioComponent, KoulutusInformaatioService}
-import fi.vm.sade.omatsivut.lomake.{LomakeRepository, LomakeRepositoryComponent}
+import fi.vm.sade.hakemuseditori.koodisto.{KoodistoComponent, KoodistoService}
+import fi.vm.sade.hakemuseditori.koulutusinformaatio.{KoulutusInformaatioComponent, KoulutusInformaatioService}
+import fi.vm.sade.hakemuseditori.lomake.{LomakeRepository, LomakeRepositoryComponent}
 import fi.vm.sade.omatsivut.muistilista.MuistilistaServiceComponent
-import fi.vm.sade.omatsivut.ohjausparametrit.{OhjausparametritComponent, OhjausparametritService}
+import fi.vm.sade.hakemuseditori.ohjausparametrit.{OhjausparametritComponent, OhjausparametritService}
 import fi.vm.sade.omatsivut.servlet._
 import fi.vm.sade.omatsivut.servlet.session.{LogoutServletContainer, SecuredSessionServletContainer}
-import fi.vm.sade.omatsivut.tarjonta.{TarjontaComponent, TarjontaService}
-import fi.vm.sade.omatsivut.valintatulokset._
+import fi.vm.sade.hakemuseditori.tarjonta.{TarjontaComponent, TarjontaService}
+import fi.vm.sade.hakemuseditori.valintatulokset._
 
 class ComponentRegistry(val config: AppConfig)
   extends SpringContextComponent with
+          TranslationsComponent with
           MuistilistaServiceComponent with
           GroupEmailComponent with
           KoulutusInformaatioComponent with
@@ -47,12 +51,12 @@ class ComponentRegistry(val config: AppConfig)
 
   private def configureOhjausparametritService: OhjausparametritService = config match {
     case _: StubbedExternalDeps => new StubbedOhjausparametritService()
-    case _ => CachedRemoteOhjausparametritService(config)
+    case _ => CachedRemoteOhjausparametritService(config.settings.ohjausparametritUrl)
   }
 
   private def configureKoulutusInformaatioService: KoulutusInformaatioService = config match {
     case x: StubbedExternalDeps => new StubbedKoulutusInformaatioService
-    case _ => CachedKoulutusInformaatioService(config)
+    case _ => CachedKoulutusInformaatioService(new RemoteKoulutusService(config.settings.koulutusinformaatioAoUrl, config.settings.koulutusinformaationBIUrl, config.settings.koulutusinformaatioLopUrl))
   }
 
   private def configureGroupEmailService: GroupEmailService = config match {
@@ -67,17 +71,17 @@ class ComponentRegistry(val config: AppConfig)
 
   private def configureTarjontaService: TarjontaService = config match {
     case _: StubbedExternalDeps => new StubbedTarjontaService()
-    case _ => CachedRemoteTarjontaService(config)
+    case _ => CachedRemoteTarjontaService(config.settings.tarjontaUrl)
   }
 
   private def configureKoodistoService: KoodistoService = config match {
     case _: StubbedExternalDeps => new StubbedKoodistoService
-    case _ => new RemoteKoodistoService(config)
+    case _ => new RemoteKoodistoService(config.settings.koodistoUrl)
   }
 
   private lazy val runningLogger = new RunnableLogger
   private lazy val pool = Executors.newSingleThreadExecutor
-  lazy val springContext = new OmatSivutSpringContext(OmatSivutSpringContext.createApplicationContext(config))
+  lazy val springContext = new HakemusSpringContext(OmatSivutSpringContext.createApplicationContext(config))
   val koulutusInformaatioService: KoulutusInformaatioService = configureKoulutusInformaatioService
   val ohjausparametritService: OhjausparametritService = configureOhjausparametritService
   val valintatulosService: ValintatulosService = configureValintatulosService
@@ -117,5 +121,11 @@ class ComponentRegistry(val config: AppConfig)
 
   def stop {
     config.onStop
+  }
+
+  override val translations = OmatSivutTranslations
+
+  override val auditContext: AuditContext = new AuditContext {
+    override def systemName = "omatsivut"
   }
 }

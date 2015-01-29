@@ -2,7 +2,7 @@ package fi.vm.sade.omatsivut.fixtures.hakemus
 
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.hakemus.it.dao.ApplicationDAO
-import fi.vm.sade.omatsivut.hakemus.domain.Hakemus.Answers
+import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus.Answers
 
 protected class HakemusWithDifferentAnswersFixture(hakemusOid: String)(val dao: ApplicationDAO) {
   def replaceAnswers(answers: Answers) {

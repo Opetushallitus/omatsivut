@@ -1,5 +1,6 @@
 package fi.vm.sade.omatsivut.http
 
+import fi.vm.sade.hakemuseditori.http.UrlValueCompressor
 import org.specs2.mutable.Specification
 
 class UrlValueCompressorSpec extends Specification {

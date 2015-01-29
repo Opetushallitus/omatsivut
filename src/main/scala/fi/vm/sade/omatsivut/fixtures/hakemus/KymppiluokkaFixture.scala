@@ -2,7 +2,7 @@ package fi.vm.sade.omatsivut.fixtures.hakemus
 
 import fi.vm.sade.haku.oppija.hakemus.it.dao.ApplicationDAO
 import fi.vm.sade.omatsivut.fixtures.TestFixture
-import fi.vm.sade.omatsivut.hakemus.domain.Hakemus._
+import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus._
 
 protected class KymppiluokkaFixture(dao: ApplicationDAO) extends HakemusWithDifferentAnswersFixture(TestFixture.hakemusYhteishakuKevat2014WithForeignBaseEducationId)(dao) {
   def apply {

@@ -1,11 +1,11 @@
 package fi.vm.sade.omatsivut.muistilista
 
 import fi.vm.sade.groupemailer.{EmailData, EmailMessage, EmailRecipient, GroupEmailComponent}
-import fi.vm.sade.omatsivut.domain.Language
-import fi.vm.sade.omatsivut.http.UrlValueCompressor
-import fi.vm.sade.omatsivut.json.JsonFormats
-import fi.vm.sade.omatsivut.koulutusinformaatio.KoulutusInformaatioComponent
-import fi.vm.sade.omatsivut.localization.Translations
+import fi.vm.sade.hakemuseditori.domain.Language
+import fi.vm.sade.hakemuseditori.http.UrlValueCompressor
+import fi.vm.sade.hakemuseditori.json.JsonFormats
+import fi.vm.sade.hakemuseditori.koulutusinformaatio.{KoulutusInformaatioBasketItem, KoulutusInformaatioComponent}
+import fi.vm.sade.omatsivut.localization.OmatSivutTranslations
 import fi.vm.sade.utils.template.TemplateProcessor
 import org.json4s.jackson.Serialization.write
 
@@ -40,7 +40,7 @@ trait MuistilistaServiceComponent {
 
       def hakuName(haku: KoulutusInformaatioBasketItem) = {
         if(erikseenHaettavatHakukohteetId.equals(haku.applicationSystemId)) {
-          Translations.getTranslation("emailNote", "erikseenHaettavatHakukohteet")
+          OmatSivutTranslations.getTranslation("emailNote", "erikseenHaettavatHakukohteet")
         }
         else {
           haku.applicationSystemName
@@ -55,11 +55,11 @@ trait MuistilistaServiceComponent {
       }
 
       TemplateProcessor.processTemplate("/templates/muistilistaEmail.mustache", Map(
-        "note" -> Translations.getTranslation("emailNote", "note"),
-        "openLink" -> Translations.getTranslation("emailNote", "openLink"),
+        "note" -> OmatSivutTranslations.getTranslation("emailNote", "note"),
+        "openLink" -> OmatSivutTranslations.getTranslation("emailNote", "openLink"),
         "link" -> url,
         "haut" -> hakuKoulutusList,
-        "noReply" -> Translations.getTranslation("emailNote", "noReply")
+        "noReply" -> OmatSivutTranslations.getTranslation("emailNote", "noReply")
       ))
     }
 

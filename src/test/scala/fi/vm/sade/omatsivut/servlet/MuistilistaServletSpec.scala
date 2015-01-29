@@ -1,12 +1,11 @@
 package fi.vm.sade.omatsivut.servlet
 
 import java.net.URLEncoder
-
+import fi.vm.sade.hakemuseditori.http.UrlValueCompressor
 import fi.vm.sade.omatsivut.ScalatraTestSupport
 import fi.vm.sade.omatsivut.config.AppConfig
-import fi.vm.sade.omatsivut.domain.Language
-import fi.vm.sade.omatsivut.http.UrlValueCompressor
-import fi.vm.sade.omatsivut.json.JsonFormats
+import fi.vm.sade.hakemuseditori.domain.Language
+import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.omatsivut.muistilista.Muistilista
 import org.json4s.jackson.Serialization
 

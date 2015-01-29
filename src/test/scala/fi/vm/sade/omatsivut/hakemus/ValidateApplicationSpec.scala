@@ -1,12 +1,11 @@
 package fi.vm.sade.omatsivut.hakemus
 
+import fi.vm.sade.hakemuseditori.hakemus.domain._
+import fi.vm.sade.hakemuseditori.lomake.domain.{QuestionId, QuestionNode}
 import fi.vm.sade.omatsivut.PersonOid
 import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.omatsivut.fixtures.TestFixture._
-import fi.vm.sade.omatsivut.hakemus.domain._
-import fi.vm.sade.omatsivut.lomake.domain.{Text, QuestionGroup, QuestionId, QuestionNode}
-import fi.vm.sade.omatsivut.tarjonta.domain.Hakuaika
 import org.json4s._
 import org.json4s.jackson.{JsonMethods, Serialization}
 

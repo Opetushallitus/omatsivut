@@ -1,6 +1,6 @@
 package fi.vm.sade.omatsivut.servlet.session
 
-import fi.vm.sade.omatsivut.domain.Language
+import fi.vm.sade.hakemuseditori.domain.Language
 import org.scalatra.servlet.RichResponse
 
 trait ShibbolethPaths {

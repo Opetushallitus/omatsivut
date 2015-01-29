@@ -1,10 +1,9 @@
 package fi.vm.sade.omatsivut.hakemus
 
-import fi.vm.sade.haku.oppija.hakemus.it.dao.ApplicationDAO
 import fi.vm.sade.omatsivut.PersonOid
-import fi.vm.sade.omatsivut.config.{AppConfig, OmatSivutSpringContext}
-import fi.vm.sade.omatsivut.fixtures.TestFixture._
+import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.fixtures.TestFixture
+import fi.vm.sade.omatsivut.fixtures.TestFixture._
 import org.xml.sax.SAXParseException
 
 class HakemusPreviewSpec extends HakemusApiSpecification with FixturePerson {

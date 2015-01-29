@@ -7,7 +7,6 @@ import fi.vm.sade.utils.config.{ConfigTemplateProcessor, ApplicationSettingsLoad
 import fi.vm.sade.utils.mongo.{EmbeddedMongo, MongoServer}
 import fi.vm.sade.utils.slf4j.Logging
 import fi.vm.sade.utils.tcp.PortFromSystemPropertyOrFindFree
-import org.apache.activemq.broker.BrokerService
 
 object AppConfig extends Logging {
   private implicit val settingsParser = ApplicationSettingsParser

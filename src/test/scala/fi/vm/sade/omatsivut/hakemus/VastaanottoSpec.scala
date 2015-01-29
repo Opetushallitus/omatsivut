@@ -3,7 +3,7 @@ package fi.vm.sade.omatsivut.hakemus
 import fi.vm.sade.omatsivut.PersonOid
 import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.servlet.ClientSideVastaanotto
-import fi.vm.sade.omatsivut.valintatulokset.RemoteValintatulosService
+import fi.vm.sade.hakemuseditori.valintatulokset.RemoteValintatulosService
 import org.json4s.jackson._
 
 class VastaanottoSpec extends HakemusApiSpecification with FixturePerson {
