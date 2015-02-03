@@ -5,7 +5,7 @@ soon as they will be approved by the European Commission - subsequent versions
 of the EUPL (the "Licence");
 
 You may not use this work except in compliance with the Licence.
-You may obtain a copy of the Licence at: http://www.osor.eu/eupl/
+You may obtain a copy of the Licence at: https://joinup.ec.europa.eu/software/page/eupl
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
