@@ -3,7 +3,7 @@ package fi.vm.sade.hakemuseditori.koodisto
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.koodisto.impl.{KoodistoServiceMockImpl, KoodistoServiceImpl}
 import fi.vm.sade.koodisto.util.CachingKoodistoClient
 import fi.vm.sade.hakemuseditori.domain.Language.Language
-import fi.vm.sade.hakemuseditori.hakemus.SpringContextComponent
+import fi.vm.sade.hakemuseditori.hakemus.{HakemusSpringContext, SpringContextComponent}
 import fi.vm.sade.hakemuseditori.memoize.{TTLOptionalMemoize, TTLCache}
 import scala.collection.JavaConverters._
 
@@ -11,7 +11,16 @@ trait KoodistoService {
   type Translations = Map[String, String]
   private val cacheTimeSec = 60*15
 
-  def postOffice(postalCode: String) = officesMemo().get.get(postalCode)
+  def postOfficeTranslations(postalCode: String): Option[Map[String, String]] = {
+    officesMemo().get.get(postalCode)
+  }
+
+  def postOffice(postalCode: String, lang: Language): Option[PostOffice] = {
+    val office = postOfficeTranslations(postalCode)
+    office.map{(translations: Map[String, String]) =>
+      PostOffice(postalCode, translations.getOrElse(lang.toString, ""))
+    }
+  }
 
   private val officesMemo = TTLOptionalMemoize.memoize(getOffices _, "koodisto offices", cacheTimeSec, 64)
   val service: fi.vm.sade.haku.virkailija.lomakkeenhallinta.koodisto.KoodistoService
@@ -24,16 +33,16 @@ trait KoodistoService {
 }
 
 trait KoodistoComponent {
-  this: SpringContextComponent =>
-
   def koodistoService: KoodistoService
-
-  class RemoteKoodistoService(koodistoUrl: String) extends KoodistoService {
-    lazy val client = new CachingKoodistoClient(koodistoUrl)
-    lazy val service = new KoodistoServiceImpl(client, springContext.organizationService)
-  }
-
-  class StubbedKoodistoService extends KoodistoService {
-    lazy val service = new KoodistoServiceMockImpl
-  }
 }
+
+class RemoteKoodistoService(koodistoUrl: String, springContext: HakemusSpringContext) extends KoodistoService {
+  lazy val client = new CachingKoodistoClient(koodistoUrl)
+  lazy val service = new KoodistoServiceImpl(client, springContext.organizationService)
+}
+
+class StubbedKoodistoService extends KoodistoService {
+  lazy val service = new KoodistoServiceMockImpl
+}
+
+case class PostOffice(postalCode: String, postOffice: String)

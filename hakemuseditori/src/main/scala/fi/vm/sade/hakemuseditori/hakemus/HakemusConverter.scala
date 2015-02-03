@@ -52,7 +52,7 @@ trait HakemusConverterComponent {
         answers,
         answers.get("henkilotiedot")
           .flatMap(_.get("Postinumero"))
-          .flatMap(koodistoService.postOffice)
+          .flatMap(koodistoService.postOfficeTranslations)
           .flatMap((translations: Map[String,String]) => translations.get(lang.toString)),
         lomake.map(_.requiresAdditionalInfo(application)).getOrElse(false),
         lomake.isDefined

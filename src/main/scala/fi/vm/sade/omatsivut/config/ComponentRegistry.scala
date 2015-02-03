@@ -3,6 +3,7 @@ package fi.vm.sade.omatsivut.config
 import java.util.concurrent.Executors
 
 import fi.vm.sade.groupemailer.{GroupEmailService, GroupEmailComponent}
+import fi.vm.sade.hakemuseditori.HakemusEditoriComponent
 import fi.vm.sade.hakemuseditori.hakemus._
 import fi.vm.sade.hakemuseditori.localization.TranslationsComponent
 import fi.vm.sade.hakemuseditori.auditlog.{AuditContext, AuditLogger, AuditLoggerComponent}
@@ -12,7 +13,7 @@ import fi.vm.sade.utils.captcha.{CaptchaServiceSettings, CaptchaServiceComponent
 import fi.vm.sade.omatsivut.config.AppConfig._
 import fi.vm.sade.hakemuseditori.domain.Language.Language
 import fi.vm.sade.omatsivut.fixtures.hakemus.ApplicationFixtureImporter
-import fi.vm.sade.hakemuseditori.koodisto.{KoodistoComponent, KoodistoService}
+import fi.vm.sade.hakemuseditori.koodisto.{RemoteKoodistoService, StubbedKoodistoService, KoodistoComponent, KoodistoService}
 import fi.vm.sade.hakemuseditori.koulutusinformaatio.{KoulutusInformaatioComponent, KoulutusInformaatioService}
 import fi.vm.sade.hakemuseditori.lomake.{LomakeRepository, LomakeRepositoryComponent}
 import fi.vm.sade.omatsivut.muistilista.MuistilistaServiceComponent
@@ -36,6 +37,7 @@ class ComponentRegistry(val config: AppConfig)
           ApplicationValidatorComponent with
           HakemusPreviewGeneratorComponent with
           HakemusConverterComponent with
+          HakemusEditoriComponent with
           ApplicationsServletContainer with
           MuistilistaServletContainer with
           CaptchaServiceComponent with
@@ -76,7 +78,7 @@ class ComponentRegistry(val config: AppConfig)
 
   private def configureKoodistoService: KoodistoService = config match {
     case _: StubbedExternalDeps => new StubbedKoodistoService
-    case _ => new RemoteKoodistoService(config.settings.koodistoUrl)
+    case _ => new RemoteKoodistoService(config.settings.koodistoUrl, springContext)
   }
 
   private lazy val runningLogger = new RunnableLogger

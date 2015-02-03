@@ -1,5 +1,7 @@
 package fi.vm.sade.omatsivut.servlet
 
+import fi.vm.sade.hakemuseditori.domain.Language
+import fi.vm.sade.hakemuseditori.{HakemusEditoriUserContext, UpdateResult, HakemusEditoriComponent}
 import fi.vm.sade.hakemuseditori.auditlog.{AuditLogger, AuditLoggerComponent, SaveVastaanotto}
 import fi.vm.sade.hakemuseditori.hakemus.domain.{HakemusMuutos, Hakemus}
 import fi.vm.sade.hakemuseditori.hakemus.{SpringContextComponent, HakemusInfo, ApplicationValidatorComponent, HakemusRepositoryComponent}
@@ -18,7 +20,7 @@ import org.scalatra.swagger._
 import scala.util.{Failure, Success}
 
 trait ApplicationsServletContainer {
-  this: LomakeRepositoryComponent with
+  this: HakemusEditoriComponent with LomakeRepositoryComponent with
     HakemusRepositoryComponent with
     ValintatulosServiceComponent with
     ApplicationValidatorComponent with
@@ -26,9 +28,11 @@ trait ApplicationsServletContainer {
     SpringContextComponent with
     AuditLoggerComponent =>
 
-  class ApplicationsServlet(val appConfig: AppConfig)(implicit val swagger: Swagger) extends OmatSivutServletBase with JacksonJsonSupport with JsonFormats with SwaggerSupport with AuthenticationRequiringServlet {
+  class ApplicationsServlet(val appConfig: AppConfig)(implicit val swagger: Swagger) extends OmatSivutServletBase with JacksonJsonSupport with JsonFormats with SwaggerSupport with AuthenticationRequiringServlet with HakemusEditoriUserContext {
     override def applicationName = Some("secure/applications")
     private val applicationValidator: ApplicationValidator = newApplicationValidator
+
+    private val hakemusEditori = newEditor(this)
 
     protected val applicationDescription = "Oppijan henkilökohtaisen palvelun REST API, jolla voi hakea ja muokata hakemuksia ja omia tietoja"
 
@@ -40,7 +44,7 @@ trait ApplicationsServletContainer {
       summary "Hae kirjautuneen oppijan hakemukset"
     )
     get("/", operation(getApplicationsSwagger)) {
-      hakemusRepository.fetchHakemukset(personOid())
+      hakemusEditori.fetchByPersonOid(personOid())
     }
 
     val putApplicationsSwagger = (apiOperation[Hakemus]("putApplication")
@@ -49,27 +53,15 @@ trait ApplicationsServletContainer {
       parameter pathParam[String]("oid").description("Hakemuksen oid")
       parameter bodyParam[HakemusMuutos]("updated").description("Päivitetty hakemus")
     )
+
     put("/:oid", operation(putApplicationsSwagger)) {
       val content: String = request.body
       val updated = Serialization.read[HakemusMuutos](content)
-      val response = for {
-        lomake <- lomakeRepository.lomakeByOid(updated.hakuOid)
-        haku <- tarjontaService.haku(lomake.oid, language)
-      } yield {
-        val errors = applicationValidator.validate(lomake, updated, haku)
-        if(errors.isEmpty) {
-          hakemusUpdater.updateHakemus(lomake, haku, updated, personOid()) match {
-            case Success(saved) => Ok(saved)
-            case Failure(e) =>
-              logger.warn("Application update rejected for application " + lomake.oid + ": " + e.getMessage)
-              Forbidden("error" -> "Forbidden")
-          }
-        } else {
-          BadRequest(errors)
-        }
-      }
+      val response: Option[ActionResult] = hakemusEditori.updateHakemus(updated)
+        .map { case UpdateResult(status, body) => ActionResult(ResponseStatus(status), body, Map.empty)}
       response.getOrElse(InternalServerError("error" -> "Internal service unavailable"))
     }
+
 
     val validateApplicationsSwagger = (apiOperation[HakemusInfo]("validateApplication")
       summary "Tarkista hakemus ja palauta virheet sekä pyydettyjen kohteiden kysymykset"
@@ -78,12 +70,9 @@ trait ApplicationsServletContainer {
     )
     post("/validate/:oid", operation(validateApplicationsSwagger)) {
       val muutos = Serialization.read[HakemusMuutos](request.body)
-      val lomakeOpt = lomakeRepository.lomakeByOid(muutos.hakuOid)
-      val hakuOpt = tarjontaService.haku(muutos.hakuOid, language)
-      (lomakeOpt, hakuOpt) match {
-        case (Some(lomake), Some(haku)) => {
-          applicationValidator.validateAndFindQuestions(lomake, muutos, haku, personOid())
-        }
+
+      hakemusEditori.validateHakemus(muutos) match {
+        case Some(hakemusInfo) => hakemusInfo
         case _ => InternalServerError("error" -> "Internal service unavailable")
       }
     }

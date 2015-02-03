@@ -167,6 +167,10 @@ trait HakemusRepositoryComponent {
       fetchHakemukset(new Application().setPersonOid(personOid).setOid(hakemusOid)).headOption
     }
 
+    def getHakemus(hakemusOid: String)(implicit lang: Language): Option[HakemusInfo] = {
+      fetchHakemukset(new Application().setOid(hakemusOid)).headOption
+    }
+
     def exists(personOid: String, hakuOid: String, hakemusOid: String) = {
       dao.find(new Application().setPersonOid(personOid).setOid(hakemusOid).setApplicationSystemId(hakuOid)).size() == 1
     }

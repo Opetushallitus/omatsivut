@@ -34,13 +34,6 @@ trait KoulutusServletContainer {
     def getLangParam(param: String): Language.Value = {
       paramOption(param).flatMap(Language.parse(_)).getOrElse(Language.fi)
     }
-
-    private def checkNotFound[A](result: Option[A]) = {
-      result match {
-        case Some(x) => x
-        case _ => NotFound("error" -> "Not found")
-      }
-    }
   }
 }
 

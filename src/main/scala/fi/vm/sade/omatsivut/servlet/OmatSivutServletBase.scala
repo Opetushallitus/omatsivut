@@ -34,4 +34,11 @@ trait OmatSivutServletBase extends ScalatraServlet with Logging {
   }
 
   override def environment = AppConfig.getProfileProperty()
+
+  def checkNotFound[A](result: Option[A]) = {
+    result match {
+      case Some(x) => x
+      case _ => NotFound("error" -> "Not found")
+    }
+  }
 }
