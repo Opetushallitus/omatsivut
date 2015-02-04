@@ -58,8 +58,8 @@ class UpdateApplicationSpec extends HakemusApiSpecification with FixturePerson w
           withSavedApplication(newHakemus) { application =>
             application.getHistory.size must_== 2 // one existing change + new change prepended at position 0
           val change: Change = application.getHistory.get(0)
-            change.getModifier must_== "1.2.246.562.24.14229104472"
-            change.getReason must_== "Muokkaus Omat Sivut -palvelussa"
+            change.getModifier must_== "oppija 1.2.246.562.24.14229104472"
+            change.getReason must_== "Muokkaus omatsivut -palvelussa"
             change.getChanges.toList.map(_.toMap) must_== List(
               Map("field" -> "539158b8e4b0b56e67d2c74b", "old value" -> "En tiedä mihin muualle hakisin", "new value" -> "yes sir")
             )
