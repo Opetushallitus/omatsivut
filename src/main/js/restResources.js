@@ -1,12 +1,16 @@
 module.exports = function(listApp) {
-  listApp.factory("restResources", ["$resource", function($resource) {
+  listApp.factory("restResources", ["$resource", "$http", function($resource, $http) {
     return {
       applications: $resource("/omatsivut/secure/applications", null, {
-          "update": {
-            method: "PUT",
-            url: "/omatsivut/secure/applications/:id"
-          }
-        }),
+        "update": {
+          method: "PUT",
+          url: "/omatsivut/secure/applications/:id"
+        }
+      }),
+
+      validate: function(application) {
+        return $http.post("/omatsivut/secure/applications/validate/" + application.oid, application.toJson())
+      },
 
       vastaanota: $resource("/omatsivut/secure/applications/vastaanota", null, {
         "post": {
