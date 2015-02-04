@@ -97,7 +97,7 @@ object OmatsivutBuild extends Build {
         file("target") / defaultPath.getName
       },
       testOptions in Test := Seq(
-        Tests.Argument("-u", "console")
+        Tests.Argument(TestFrameworks.Specs2, "junitxml", "console")
       )
     )
   ).settings(
@@ -110,7 +110,7 @@ object OmatsivutBuild extends Build {
         System.setProperty("specs2.junit.outDir", "target/unit-test-reports")
       }),
       Tests.Filter(s => !s.endsWith("MochaTest")),
-      Tests.Argument("-u", "console")
+      Tests.Argument(TestFrameworks.Specs2, "junitxml", "console")
     )
   ).configs(MochaTest)
   .settings(inConfig(MochaTest)(Defaults.testTasks): _*)
@@ -120,7 +120,7 @@ object OmatsivutBuild extends Build {
         System.setProperty("specs2.junit.outDir", "target/mocha-test-reports")
       }),
       Tests.Filter(s => s.endsWith("MochaTest")),
-      Tests.Argument("-u", "console")
+      Tests.Argument(TestFrameworks.Specs2, "junitxml", "console")
     )
   )
   lazy val projectRef: ProjectReference = project
