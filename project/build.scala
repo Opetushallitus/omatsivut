@@ -96,6 +96,7 @@ object OmatsivutBuild extends Build {
       artifactPath in (Compile, packageWar) ~= { defaultPath =>
         file("target") / defaultPath.getName
       },
+      testFrameworks := Seq(TestFrameworks.Specs2),
       testOptions in Test := Seq(
         Tests.Argument(TestFrameworks.Specs2, "junitxml", "console")
       )
@@ -123,5 +124,6 @@ object OmatsivutBuild extends Build {
       Tests.Argument(TestFrameworks.Specs2, "junitxml", "console")
     )
   )
+  .disablePlugins(plugins.JUnitXmlReportPlugin)
   lazy val projectRef: ProjectReference = project
 }
