@@ -1,6 +1,7 @@
 package fi.vm.sade.omatsivut.servlet
 
 import fi.vm.sade.hakemuseditori.domain.Language
+import fi.vm.sade.hakemuseditori.user.Oppija
 import fi.vm.sade.hakemuseditori.{HakemusEditoriUserContext, UpdateResult, HakemusEditoriComponent}
 import fi.vm.sade.hakemuseditori.auditlog.{AuditLogger, AuditLoggerComponent, SaveVastaanotto}
 import fi.vm.sade.hakemuseditori.hakemus.domain.{HakemusMuutos, Hakemus}
@@ -31,7 +32,7 @@ trait ApplicationsServletContainer {
   class ApplicationsServlet(val appConfig: AppConfig)(implicit val swagger: Swagger) extends OmatSivutServletBase with JacksonJsonSupport with JsonFormats with SwaggerSupport with AuthenticationRequiringServlet with HakemusEditoriUserContext {
     override def applicationName = Some("secure/applications")
     private val applicationValidator: ApplicationValidator = newApplicationValidator
-
+    def user = Oppija(personOid())
     private val hakemusEditori = newEditor(this)
 
     protected val applicationDescription = "Oppijan henkilökohtaisen palvelun REST API, jolla voi hakea ja muokata hakemuksia ja omia tietoja"
