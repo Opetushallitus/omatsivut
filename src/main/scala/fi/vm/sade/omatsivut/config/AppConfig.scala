@@ -12,6 +12,8 @@ object AppConfig extends Logging {
   private implicit val settingsParser = ApplicationSettingsParser
   val embeddedmongoPortChooser = new PortFromSystemPropertyOrFindFree("omatsivut.embeddedmongo.port")
 
+  lazy val embeddedJettyPort = System.getProperty("omatsivut.port", "8080").toInt
+
   def getProfileProperty() = System.getProperty("omatsivut.profile", "default")
 
   def fromSystemProperty: AppConfig = {

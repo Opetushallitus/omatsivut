@@ -1,13 +1,12 @@
 package fi.vm.sade.omatsivut
 
+import fi.vm.sade.omatsivut.config.AppConfig
 import org.eclipse.jetty.server.Server
-import org.eclipse.jetty.servlet.{DefaultServlet, ServletContextHandler}
 import org.eclipse.jetty.webapp.WebAppContext
-import org.scalatra.servlet.ScalatraListener
 
 object JettyLauncher {
   def main(args: Array[String]) {
-    new JettyLauncher(System.getProperty("omatsivut.port", "8080").toInt).start.join
+    new JettyLauncher(AppConfig.embeddedJettyPort).start.join
   }
 }
 
