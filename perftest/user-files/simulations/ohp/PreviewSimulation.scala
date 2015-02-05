@@ -9,7 +9,7 @@ import io.gatling.jdbc.Predef._
 class PreviewSimulation extends Simulation {
 
 	val httpProtocol = http
-		.baseURL("http://localhost:8080")
+		.baseURL("http://localhost:7337")
 		.inferHtmlResources(BlackList(""".*\.js""", """.*css""", """.*\.gif""", """.*\.jpeg""", """.*\.jpg""", """.*\.ico""", """.*\.woff""", """.*\.(t|o)tf""", """.*\.png"""), WhiteList())
 		.acceptHeader("""text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8""")
 		.acceptEncodingHeader("""gzip, deflate""")

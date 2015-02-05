@@ -9,7 +9,7 @@ import io.gatling.jdbc.Predef._
 class LocalQADataRecordedSimulation extends Simulation {
 
 	val httpProtocol = http
-		.baseURL("http://localhost:8080")
+		.baseURL("http://localhost:7337")
 		.inferHtmlResources(BlackList(""".*css\?.*""", """.*\.js""", """.*\.css""", """.*\.gif""", """.*\.jpeg""", """.*\.jpg""", """.*\.ico""", """.*\.woff""", """.*\.(t|o)tf""", """.*\.png"""), WhiteList())
 		.acceptHeader("""application/json, text/plain, */*""")
 		.acceptEncodingHeader("""gzip, deflate""")

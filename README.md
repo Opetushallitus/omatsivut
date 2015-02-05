@@ -33,7 +33,7 @@ Aja JettyLauncher-luokka. Jotta impersonointi/autentikoinnin ohitus onnistuu, an
 
 Kun sovellusta ajetaan `-Domatsivut.profile=it`-parametrillä, toimii se ilman verkkoyhteyttä vaikkapa junassa.
 Selaimessa sovellus kuitenkin lataa "oppija-raamit" testiympäristön serveriltä, johon sinulla ei välttämättä ole pääsyä.
-Tässä tapauksessa voit käyttää osoitetta [http://localhost:8080/omatsivut/index.html#skipRaamit], jolloin raamit jätetään
+Tässä tapauksessa voit käyttää osoitetta [http://localhost:7337/omatsivut/index.html#skipRaamit], jolloin raamit jätetään
 pois. Mocha-testit käyttävät samaa ratkaisua.
 
 Myös IE9:llä pitää paikallisessa ympäristössä CORS:n takia käyttää skipRaamit tapaa.
@@ -75,7 +75,7 @@ Se skippaa mocha testit.
 `./sbt "test:run-main fi.vm.sade.omatsivut.JettyLauncher" -Domatsivut.profile=it`
 ```
 
-Avaa selaimessa [http://localhost:8080/omatsivut/](http://localhost:8080/omatsivut/).
+Avaa selaimessa [http://localhost:7337/omatsivut/](http://localhost:7337/omatsivut/).
 
 ## Fronttidevaus
 
@@ -94,7 +94,7 @@ Tuotantoa vastaava buildi
     ./webbuild.sh
 
 Suuri osa fronttikoodista sijaitsee [hakemuseditori](https://github.com/Opetushallitus/hakemuseditori/tree/master/dist)
--repositoriossa, mistä käytetään tiedostoja `hakemuseditori.js` ja `hakemuseditori-templates.js`. 
+-repositoriossa, mistä käytetään tiedostoja `hakemuseditori.js` ja `hakemuseditori-templates.js`.
 Nämä tiedostot haetaan paketoinnin yhteydessä npm:llä ja kopioidaan
 gulp-buildissa hakemistoon `src/main/webapp`.
 
@@ -102,9 +102,9 @@ Jos muokkaat hakemuseditorin koodia ja haluat nopean kopioinnin omatsivut-applik
 jokaisen muokkauksen yhteydessä, tee näin:
 
     cd ../hakemuseditori
-    ./gulp omatsivut dev 
+    ./gulp omatsivut dev
 
-Tyylit tehty lessillä. Css-fileet src-puussa generoidaan siitä ja ovat 
+Tyylit tehty lessillä. Css-fileet src-puussa generoidaan siitä ja ovat
 ignoroitu gitissä.
 
 Kun yllä oleva on tehty, jatkuva fronttikäännös ilman minimointia, joka huomaa muutokset myös paikallisessa hakemuseditori-repossa (../hakemuseditori) käynnistyy näin:
@@ -130,7 +130,7 @@ npm install
 
 ### Testien ajaminen selaimessa
 
-Tomcat käyntiin (ks yllä) ja sitten [http://localhost:8080/omatsivut/test/runner.html](http://localhost:8080/omatsivut/test/runner.html)
+Palvelin käyntiin (ks yllä) ja sitten [http://localhost:7337/omatsivut/test/runner.html](http://localhost:7337/omatsivut/test/runner.html)
 
 Testien ajaminen onnistuneesti vaatii sitä, että tämän projektin rinnalta hakemistopuusta löytyy [valinta-tulos-service](https://github.com/Opetushallitus/valinta-tulos-service).
 
@@ -171,4 +171,4 @@ tuotantoympäristöissä.
 
 REST-rajapinnat dokumentoitu Swaggerilla.
 
-[http://localhost:8080/omatsivut/api-docs](http://localhost:8080/omatsivut/api-docs)
+[http://localhost:7337/omatsivut/api-docs](http://localhost:7337/omatsivut/api-docs)
