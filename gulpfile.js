@@ -39,7 +39,20 @@ gulp.task("templates", function() {
     .pipe(gulp.dest("src/main/templates"))
 })
 
-gulp.task('less', function () {
+gulp.task('copy-editor', function() {
+    gulp.src(editorLocation + "/src/main/img/**")
+      .pipe(gulp.dest('src/main/webapp/img/hakemuseditori'))
+
+    if(!localEditor) {
+      gulp.src(editorLocation + "/dist/*.js")
+        .pipe(gulp.dest('src/main/webapp'))
+    }
+
+    return gulp.src(editorLocation + "/src/main/less/**")
+      .pipe(gulp.dest('src/main/less/hakemuseditori'))
+})
+
+gulp.task('less', ['copy-editor'], function () {
     gulp.src('src/main/less/main.less')
         .pipe(less().on('error', handleError))
         .pipe(concat('main.css'))
@@ -60,12 +73,6 @@ gulp.task('browserify-min', ["templates"], function() {
 })
 
 function compileJs(compress) {
-  if(!localEditor) {
-    gulp.src(editorLocation + "/dist/*.js")
-      .pipe(gulp.dest('src/main/webapp'))
-  }
-  gulp.src(editorLocation + "/src/main/less/**")
-    .pipe(gulp.dest('src/main/less/hakemuseditori'))
   gulp.src(['src/main/js/app.js'])
     .pipe(browserify({
       external: ["./hakemuseditori"],
@@ -87,14 +94,14 @@ gulp.task('watch', function() {
     gulp.watch(['src/main/less/**/*.less'],['less']);
 });
 
-gulp.task('enable-local-editor', function() {
+gulp.task('local-editor', function() {
     localEditor = true
     editorLocation = "../hakemuseditori"
 });
 
-gulp.task('dev-local-editor', ['enable-local-editor', 'dev']);
+gulp.task('dev-local-editor', ['local-editor', 'dev']);
 
-gulp.task('compile', ['templates', 'browserify-min', 'less']);
-gulp.task('compile-dev', ['templates', 'browserify', 'less']);
+gulp.task('compile', ['copy-editor', 'templates', 'browserify-min', 'less']);
+gulp.task('compile-dev', ['copy-editor', 'templates', 'browserify', 'less']);
 gulp.task('dev', ['lint', 'compile-dev', 'watch']);
 gulp.task('default', ['compile']);

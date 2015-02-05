@@ -86,6 +86,7 @@ src/main/webapp/hakemuseditori*
 src/main/webapp/css/
 src/main/templates/templates.js
 src/main/less/hakemuseditori
+src/main/webapp/img/hakemuseditori
 
 # active mq
 activemq-data
