@@ -10,6 +10,7 @@ class OmatSivutMochaTest extends Specification {
   "Mocha tests" in {
     System.setProperty("omatsivut.profile", "it")
     val omatSivutPort: Int = PortChecker.findFreeLocalPort
+    System.setProperty("omatsivut.port", omatSivutPort.toString)
 
     new JettyLauncher(omatSivutPort).withJetty {
       val pb = Seq("node_modules/mocha-phantomjs/bin/mocha-phantomjs", "-R", "spec", "http://localhost:"+omatSivutPort+"/omatsivut/test/runner.html")
