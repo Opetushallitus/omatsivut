@@ -208,7 +208,7 @@
         })
 
         describe("ensimmäisen hakuajan toiveen lisäys", function() {
-          before(replacePreference(hakemusKorkeakouluKevat, 3, "Taideyliopisto"))
+          before(replacePreference(hakemusKorkeakouluKevat, 3, "Taideyliopisto, Teatterikorkeakoulu"))
           before(hakemusKorkeakouluKevat.saveWaitSuccess)
           it("onnistuu", function() {
           })
@@ -224,7 +224,7 @@
       })
 
       describe("kun ollaan hakuaikojen välissä", function() {
-        before(page.applyFixtureAndOpen({applicationOid: hakemusKorkeakouluKevatId, overrideStart: daysFromNow(-30)}))
+        before(page.applyFixtureAndOpen({applicationOid: hakemusKorkeakouluKevatId, overrideStart: daysFromNow(-28)}))
         it("hakuaikalistaus näkyy oikein", function() {
           hakemusKorkeakouluKevat.applicationPeriods().should.match(hakuajat("Hakuaika päättynyt", "Hakuaika ei alkanut"))
         })
@@ -255,7 +255,7 @@
         })
 
         describe("ensimmäisen hakuajan toiveen lisäys", function() {
-          before(replacePreference(hakemusKorkeakouluKevat, 3, "Taideyliopisto"))
+          before(replacePreference(hakemusKorkeakouluKevat, 3, "Taideyliopisto, Teatterikorkeakoulu"))
           before(hakemusKorkeakouluKevat.saveWaitError)
           it("aiheuttaa virheen", function() {
             hakemusKorkeakouluKevat.getPreference(3).errorMessage().should.equal("Haku ei ole käynnissä.")
