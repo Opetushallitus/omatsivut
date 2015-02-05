@@ -59,6 +59,7 @@ function logExceptionToPiwik(msg, data) {
   if (typeof _paq === 'undefined' || _paq == null) {
     console.warn("Piwik not present, cannot log: " + msg + "\n" + data)
   } else {
+    console.warn(msg + "\n" + data)
     _paq.push(["trackEvent", document.location, msg, data])
   }
 }
