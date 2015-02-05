@@ -1,5 +1,7 @@
 package fi.vm.sade.omatsivut.config
 
+import fi.vm.sade.haku.oppija.common.koulutusinformaatio.impl.ApplicationOptionServiceImpl
+import fi.vm.sade.haku.oppija.common.koulutusinformaatio.{ApplicationOption, ApplicationOptionService}
 import fi.vm.sade.haku.oppija.hakemus.it.dao.ApplicationOidDAO
 import fi.vm.sade.haku.oppija.hakemus.service.HakuPermissionService
 import fi.vm.sade.haku.oppija.hakemus.service.impl.HakuPermissionServiceMockImpl
@@ -52,6 +54,9 @@ object OmatSivutSpringContext extends Logging {
     @Bean def applicationOidDAO: ApplicationOidDAO = new ApplicationOidDAO {
       override def generateNewOid() = "1.2.246.562.11.00000441369"
     }
+
+    @Bean def applicationOptionService: ApplicationOptionService = new ApplicationOptionServiceImpl("http://localhost:" + AppConfig.embeddedJettyPort + "/omatsivut/koulutusinformaatio/koulutus");
+
   }
 
   @Configuration
