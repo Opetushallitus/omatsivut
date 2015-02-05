@@ -85,6 +85,7 @@ src/main/webapp/bundle.js
 src/main/webapp/hakemuseditori*
 src/main/webapp/css/
 src/main/templates/templates.js
+src/main/less/hakemuseditori
 
 # active mq
 activemq-data

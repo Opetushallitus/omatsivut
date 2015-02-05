@@ -12,6 +12,7 @@ var gulp = require('gulp'),
 var jsFiles = 'src/main/js/**/*.js';
 var isWatch
 var localEditor = false
+var editorLocation = "node_modules/hakemuseditori"
 
 function handleError(err) {
     console.log(err.toString());
@@ -39,11 +40,12 @@ gulp.task("templates", function() {
 })
 
 gulp.task('less', function () {
-    gulp.src('src/main/less/**/main.less')
+    gulp.src('src/main/less/main.less')
         .pipe(less().on('error', handleError))
         .pipe(concat('main.css'))
         .pipe(gulp.dest('src/main/webapp/css'));
-    gulp.src('src/main/less/**/preview.less')
+
+    gulp.src('src/main/less/preview.less')
       .pipe(less().on('error', handleError))
       .pipe(concat('preview.css'))
       .pipe(gulp.dest('src/main/webapp/css'));
@@ -59,9 +61,11 @@ gulp.task('browserify-min', ["templates"], function() {
 
 function compileJs(compress) {
   if(!localEditor) {
-    gulp.src("node_modules/hakemuseditori/dist/*")
+    gulp.src(editorLocation + "/dist/*.js")
       .pipe(gulp.dest('src/main/webapp'))
   }
+  gulp.src(editorLocation + "/src/main/less/**")
+    .pipe(gulp.dest('src/main/less/hakemuseditori'))
   gulp.src(['src/main/js/app.js'])
     .pipe(browserify({
       external: ["./hakemuseditori"],
@@ -85,6 +89,7 @@ gulp.task('watch', function() {
 
 gulp.task('enable-local-editor', function() {
     localEditor = true
+    editorLocation = "../hakemuseditori"
 });
 
 gulp.task('dev-local-editor', ['enable-local-editor', 'dev']);
