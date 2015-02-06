@@ -16,6 +16,8 @@
   var hakemusKorkeakoulu = page.getApplication(hakemusKorkeakouluId)
   var hakemusKorkeakouluKevatId = "1.2.246.562.11.00000877687"
   var hakemusKorkeakouluKevat = page.getApplication(hakemusKorkeakouluKevatId)
+  var hakemusKorkeakouluKevatWithJazzId = "1.2.246.562.11.00000000178"
+  var hakemusKorkeakouluKevatWithJazz = page.getApplication(hakemusKorkeakouluKevatWithJazzId)
   var hakemusKorkeakouluYhteishakuSyksy2014Id = "1.2.246.562.11.00000877686"
   var hakemusKorkeakouluYhteishakuSyksy2014 = page.getApplication(hakemusKorkeakouluYhteishakuSyksy2014Id)
   var hakemusErityisopetuksenaId = "1.2.246.562.11.00000877688"
@@ -148,7 +150,7 @@
           { applicationSystemName: "Perusopetuksen jälkeisen valmistavan koulutuksen kesän 2014 haku MUOKATTU" }
         )
       })
-      
+
       it('ensimmäisenä on uusin hakemus', function () {
         expect(ApplicationListPage().applications()[0]).to.deep.equal(
           { applicationSystemName: 'Korkeakoulujen yhteishaku kevät 2015' }
@@ -270,6 +272,93 @@
           })
         })
       })
+    })
+
+    describe("jos hakukohteiden määrä ryhmässä on rajoitettu", function() {
+        before(page.applyFixtureAndOpen({applicationOid: hakemusKorkeakouluKevatWithJazzId, overrideStart: daysFromNow(-70)}))
+
+        it("kaksi hakutoivetta ovat muokattavissa", function () {
+          hakemusKorkeakouluKevatWithJazz.getPreference(0).isLocked().should.be.false
+          hakemusKorkeakouluKevatWithJazz.getPreference(1).isLocked().should.be.false
+          expect(hakemusKorkeakouluKevatWithJazz.isValidationErrorVisible()).to.equal(false)
+        })
+
+        describe("ryhmään kuulumattoman hakutoiveen lisäys", function () {
+          before(
+            replacePreference(hakemusKorkeakouluKevatWithJazz, 2, "Helsingin yliopisto, Humanistinen tiedekunta"),
+            function() { hakemusKorkeakouluKevatWithJazz.questionsForApplication().enterAnswer(9, "Suomeksi.") },
+            hakemusKorkeakouluKevatWithJazz.saveWaitSuccess
+          )
+          it("onnistuu", function() {
+          })
+
+          describe("kolmannen saman ryhmän hakutoiveen lisäys", function () {
+            before(replacePreference(hakemusKorkeakouluKevatWithJazz, 3, "Taideyliopisto,  Sibelius-Akatemia", 3))
+
+            describe("lisäyksen jälkeen", function () {
+              it("tallennusnappi on disabloitunut", function () {
+                hakemusKorkeakouluKevatWithJazz.saveButton().isEnabled().should.be.false
+              })
+              it("koko hakemuksen validointi herjaa", function () {
+                expect(hakemusKorkeakouluKevatWithJazz.statusMessage()).to.equal("Täytä kaikki tiedot")
+                expect(hakemusKorkeakouluKevatWithJazz.statusMessage()).to.equal("Täytä kaikki tiedot")
+              })
+              it("kaikille ryhmän kohteille näytetään virhe", function () {
+                hakemusKorkeakouluKevatWithJazz.getPreference(0).errorMessage().should.equal("Liian monta hakukohdetta valittu samasta ryhmästä.")
+                hakemusKorkeakouluKevatWithJazz.getPreference(1).errorMessage().should.equal("Liian monta hakukohdetta valittu samasta ryhmästä.")
+                hakemusKorkeakouluKevatWithJazz.getPreference(3).errorMessage().should.equal("Liian monta hakukohdetta valittu samasta ryhmästä.")
+              })
+              it("ryhmään kuulumattomalle ei näytettä virhettä", function () {
+                hakemusKorkeakouluKevatWithJazz.getPreference(2).errorMessage().should.equal("")
+              })
+            })
+
+            describe("jos poistetaan yksi vanhoista ryhmän kohteista", function () {
+              before(
+                hakemusKorkeakouluKevatWithJazz.getPreference(1).remove
+              )
+
+              describe("poiston jälkeen", function () {
+                it("uuden kohteen kysymykset tulevat näkyviin", function () {
+                  var questionTitles = hakemusKorkeakouluKevatWithJazz.questionsForApplication().titles()
+                  expect(questionTitles).to.deep.equal([
+                    'Soitto/laulunäytteen instrumentti ja ohjelma',
+                    'Millä kielellä osallistut valintakokeisiin?',
+                    'Jos olet lyömäsoittaja, millaista rumpusettiä käytät?',
+                    'Haluatko saada valintakoekysymykset suomeksi vai ruotsiksi?',
+                    'Pääinstrumentti',
+                    'Ohjelma valintakokeessa',
+                    'Jos olet lyömäsoittaja, millaista rumpusettiä käytät?',
+                    'Millä kielellä osallistut valintakokeisiin?',
+                    'Sibelius-Akatemian koulutukset (muut kuin Arts Management)',
+                    'Jos olet muun kuin EU/EFTA-maan kansalainen, miten todistat kielitaitosi?',
+                    'Luettele lyhyesti aiemmat musiikkiopintosi (opettajat, oppilaitokset) ja muu musiikillinen toiminta.',
+                    'Onko jokin oppilaitos aiemmin peruuttanut opiskeluoikeutesi SORA-lainsäädännön perusteella (ks. lisää alla)?',
+                    'Sibelius-Akatemian 2,5-vuotinen maisterikoulutus',
+                    'Oletko suorittanut vaaditun soveltuvan korkeakoulututkinnon?',
+                    'Korkeakoulututkinnon nimi, oppilaitos ja valmistumispäivämäärä',
+                    'Taideyliopiston hakukohteet',
+                    'Opiskeletko tällä hetkellä jossakin Taideyliopiston akatemioista?'
+                  ])
+                })
+                it("validaatio herjaa puuttuvista tiedoista", function () {
+                  expect(hakemusKorkeakouluKevatWithJazz.statusMessage()).to.equal("Täytä kaikki tiedot")
+                })
+              })
+
+              describe("tallennus", function () {
+                before(
+                  function() { hakemusKorkeakouluKevatWithJazz.questionsForApplication().enterAnswer(4, "fagotti") },
+                  function() { hakemusKorkeakouluKevatWithJazz.questionsForApplication().enterAnswer(5, "nahkea") },
+                  function() { hakemusKorkeakouluKevatWithJazz.questionsForApplication().enterAnswer(7, "suomeksi") },
+                  hakemusKorkeakouluKevatWithJazz.saveWaitSuccess
+                )
+                it("onnistuu", function () {
+                })
+              })
+            })
+          })
+        })
     })
 
     describe("hakutoivekohtaiset hakuajat", function() {
