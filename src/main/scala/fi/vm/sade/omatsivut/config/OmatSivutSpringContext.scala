@@ -1,6 +1,7 @@
 package fi.vm.sade.omatsivut.config
 
-import fi.vm.sade.haku.oppija.common.koulutusinformaatio.impl.ApplicationOptionServiceImpl
+import fi.vm.sade.hakemuseditori.domain.Language
+import fi.vm.sade.hakemuseditori.koulutusinformaatio.KoulutusInformaatioComponent
 import fi.vm.sade.haku.oppija.common.koulutusinformaatio.{ApplicationOption, ApplicationOptionService}
 import fi.vm.sade.haku.oppija.hakemus.it.dao.ApplicationOidDAO
 import fi.vm.sade.haku.oppija.hakemus.service.HakuPermissionService
@@ -55,7 +56,23 @@ object OmatSivutSpringContext extends Logging {
       override def generateNewOid() = "1.2.246.562.11.00000441369"
     }
 
-    @Bean def applicationOptionService: ApplicationOptionService = new ApplicationOptionServiceImpl("http://localhost:" + AppConfig.embeddedJettyPort + "/omatsivut/koulutusinformaatio/koulutus");
+    @Bean def applicationOptionService: ApplicationOptionService = new ApplicationOptionService with KoulutusInformaatioComponent {
+
+      override val koulutusInformaatioService = new StubbedKoulutusInformaatioService
+
+      override def get(oid: String): ApplicationOption = get(oid, Language.fi.toString)
+
+      override def get(oid: String, lang: String): ApplicationOption = {
+        val ao = new ApplicationOption()
+        ao.setId(oid)
+        val koulutus = koulutusInformaatioService.koulutus(oid, Language.parse(lang).get)
+        if(koulutus.isDefined) {
+          ao.setName(koulutus.get.name)
+          ao.setGroups(koulutus.get.organizationGroups.map(_.oid))
+        }
+        ao
+      }
+    }
 
   }
 
