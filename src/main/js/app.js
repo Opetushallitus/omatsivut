@@ -21,7 +21,7 @@ var listApp = angular.module('listApp', ["ngResource", "ngSanitize", "ngAnimate"
 });
 
 var staticResources = require('./staticResources')
-require('./localization')(listApp, staticResources)
+
 require('./restResources')(listApp)
 
 require('./hakemuseditori')(listApp)
@@ -45,6 +45,7 @@ $("html").on("oppija-raamit-loaded", function() {
 angular.element(document).ready(function() {
   staticResources.init(function() {
     raamitLoaded.done(function() {
+      require('./localization')(listApp, staticResources)
       angular.bootstrap(document, ['listApp'])
       $("body").attr("aria-busy","false")
     })
