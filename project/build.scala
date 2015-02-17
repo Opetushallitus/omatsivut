@@ -99,7 +99,13 @@ object OmatsivutBuild extends Build {
       testFrameworks := Seq(TestFrameworks.Specs2),
       testOptions in Test := Seq(
         Tests.Argument(TestFrameworks.Specs2, "junitxml", "console")
-      )
+      ),
+      publishTo := {
+        if (Version.trim.endsWith("SNAPSHOT"))
+          Some("snapshots" at artifactory + "/oph-sade-snapshot-local;build.timestamp=" + new java.util.Date().getTime)
+        else
+          Some("releases" at artifactory + "/oph-sade-release-local")
+      }
     )
   ).settings(
     net.virtualvoid.sbt.graph.Plugin.graphSettings: _*
