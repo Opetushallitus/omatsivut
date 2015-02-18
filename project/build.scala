@@ -100,6 +100,7 @@ object OmatsivutBuild extends Build {
       testOptions in Test := Seq(
         Tests.Argument(TestFrameworks.Specs2, "junitxml", "console")
       ),
+      credentials += Credentials(Path.userHome / ".ivy2" / ".credentials"),
       publishTo := {
         if (Version.trim.endsWith("SNAPSHOT"))
           Some("snapshots" at artifactory + "/oph-sade-snapshot-local;build.timestamp=" + new java.util.Date().getTime)
