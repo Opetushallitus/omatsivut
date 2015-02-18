@@ -37,7 +37,7 @@ object AppConfig extends Logging {
 
   class Default extends AppConfig with ExternalProps {
     def springConfiguration = new OmatSivutSpringContext.Default()
-    override def usesFakeAuthentication = settings.environment.isLuokka || settings.environment.isKoulutus
+    override def usesFakeAuthentication = settings.environment.isDev || settings.environment.isLuokka || settings.environment.isKoulutus
   }
 
   class LocalTestingWithTemplatedVars(val templateAttributesFile: String = System.getProperty("omatsivut.vars")) extends AppConfig with TemplatedProps with TestMode {
