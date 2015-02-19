@@ -397,7 +397,7 @@ function ApplicationListPage() {
 
     function getApplicationElement() {
       var el = doGetApplicationElement()
-      if (el.get(0)) el.get(0).scrollIntoView()
+      //if (el.get(0)) el.get(0).scrollIntoView()
       return el
     }
 
