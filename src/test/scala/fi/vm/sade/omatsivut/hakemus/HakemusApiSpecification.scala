@@ -20,8 +20,8 @@ import org.json4s.reflect.TypeInfo
 trait HakemusApiSpecification extends ScalatraTestSupport {
   implicit val jsonFormats: Formats = JsonFormats.jsonFormats ++ List(new HakemuksenTilaSerializer)
 
-  private val springContext: HakemusSpringContext = componentRegistry.springContext
-  private val dao: ApplicationDAO = springContext.applicationDAO
+  private lazy val springContext: HakemusSpringContext = componentRegistry.springContext
+  private lazy val dao: ApplicationDAO = springContext.applicationDAO
 
   lazy val fixtureImporter: ApplicationFixtureImporter = new ApplicationFixtureImporter(springContext)
 

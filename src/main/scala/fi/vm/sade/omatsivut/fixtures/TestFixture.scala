@@ -57,9 +57,9 @@ object TestFixture {
     componentRegistry.hakemusConverter.convertToHakemus(Some(Lomake(applicationSystemNivelKesa2013)), haku, wrap(applicationNivelKesa2013WithPeruskouluBaseEducationApp)).toHakemusMuutos
   }
 
-  val ammattistartti: HakutoiveData = JsonFixtureMaps.findByKey[HakutoiveData]("/mockdata/hakutoiveet.json", "1.2.246.562.14.2014030415375012208392").get
-  val ammattistarttiAhlman: HakutoiveData = JsonFixtureMaps.findByKey[HakutoiveData]("/mockdata/hakutoiveet.json", "1.2.246.562.14.2014040912353139913320").get
-  val hevostalous: HakutoiveData = JsonFixtureMaps.findByKey[HakutoiveData]("/mockdata/hakutoiveet.json", "1.2.246.562.5.31982630126").get
+  lazy val ammattistartti: HakutoiveData = JsonFixtureMaps.findByKey[HakutoiveData]("/hakemuseditorimockdata/hakutoiveet.json", "1.2.246.562.14.2014030415375012208392").get
+  lazy val ammattistarttiAhlman: HakutoiveData = JsonFixtureMaps.findByKey[HakutoiveData]("/hakemuseditorimockdata/hakutoiveet.json", "1.2.246.562.14.2014040912353139913320").get
+  lazy val hevostalous: HakutoiveData = JsonFixtureMaps.findByKey[HakutoiveData]("/hakemuseditorimockdata/hakutoiveet.json", "1.2.246.562.5.31982630126").get
 
   val hakemus2_hakuaika = Hakuaika("5474", 1404190831839L, 4131320431839L)
   val hakemusLisahaku_hakuaikaDefault = hakemus2_hakuaika

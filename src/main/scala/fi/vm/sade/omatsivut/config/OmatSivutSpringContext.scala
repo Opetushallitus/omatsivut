@@ -45,7 +45,8 @@ object OmatSivutSpringContext extends Logging {
     "fi.vm.sade.haku.oppija.hakemus",
     "fi.vm.sade.haku.oppija.lomake",
     "fi.vm.sade.haku.oppija.repository",
-    "fi.vm.sade.haku.virkailija"
+    "fi.vm.sade.haku.virkailija",
+    "fi.vm.sade.haku.oppija.common.koulutusinformaatio.impl"
   ))
   @Import(Array(classOf[OmatSivutMongoConfiguration], classOf[OmatSivutCacheConfiguration]))
   @ImportResource(Array("/META-INF/spring/logger-mock-context.xml"))
@@ -55,25 +56,6 @@ object OmatSivutSpringContext extends Logging {
     @Bean def applicationOidDAO: ApplicationOidDAO = new ApplicationOidDAO {
       override def generateNewOid() = "1.2.246.562.11.00000441369"
     }
-
-    @Bean def applicationOptionService: ApplicationOptionService = new ApplicationOptionService with KoulutusInformaatioComponent {
-
-      override val koulutusInformaatioService = new StubbedKoulutusInformaatioService
-
-      override def get(oid: String): ApplicationOption = get(oid, Language.fi.toString)
-
-      override def get(oid: String, lang: String): ApplicationOption = {
-        val ao = new ApplicationOption()
-        ao.setId(oid)
-        val koulutus = koulutusInformaatioService.koulutus(oid, Language.parse(lang).get)
-        if(koulutus.isDefined) {
-          ao.setName(koulutus.get.name)
-          ao.setGroups(koulutus.get.organizationGroups.map(_.oid))
-        }
-        ao
-      }
-    }
-
   }
 
   @Configuration
