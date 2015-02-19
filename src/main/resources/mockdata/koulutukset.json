@@ -84,6 +84,188 @@
       "0"
     ]
   },
+
+
+
+
+
+  "1.2.246.562.20.85668637847": {
+    "id": "1.2.246.562.20.85668637847",
+    "name": "Kansanmusiikki 5,5-vuotinen koulutus",
+    "aoIdentifier": null,
+    "educationDegree": "koulutusasteoph2002_72",
+    "sora": false,
+    "teachingLanguages": [
+      "FI"
+    ],
+    "athleteEducation": false,
+    "kaksoistutkinto": false,
+    "vocational": false,
+    "educationCodeUri": "",
+    "organizationGroups": [],
+    "attachments": null,
+    "requiredBaseEducations": [
+      "0"
+    ],
+    "provider": {
+      "applicationSystemIds": ["1.2.246.562.5.2013112910452702965370", "1.2.246.562.29.95390561488"]
+    }
+  },
+  "1.2.246.562.20.48556982121": {
+    "id": "1.2.246.562.20.48556982121",
+    "name": "Näyttelijäntyön koulutusohjelma",
+    "aoIdentifier": null,
+    "educationDegree": "koulutusasteoph2002_63",
+    "sora": false,
+    "teachingLanguages": [
+      "FI"
+    ],
+    "athleteEducation": false,
+    "kaksoistutkinto": false,
+    "vocational": false,
+    "educationCodeUri": "",
+    "organizationGroups": [],
+    "attachments": null,
+    "requiredBaseEducations": [
+      "0"
+    ],
+    "provider": {
+      "applicationSystemIds": ["1.2.246.562.5.2013112910452702965370", "1.2.246.562.29.95390561488"]
+    }
+  },
+
+  "1.2.246.562.14.2013102812460331191879": {
+    "id": "1.2.246.562.14.2013102812460331191879",
+    "name": "CopyPaste1",
+    "aoIdentifier": "035",
+    "educationDegree": "koulutusasteoph2002_63",
+    "sora": false,
+    "teachingLanguages": [
+      "FI"
+    ],
+    "athleteEducation": false,
+    "kaksoistutkinto": false,
+    "vocational": false,
+    "educationCodeUri": "koulutus_321501",
+    "organizationGroups": [],
+    "attachments": null,
+    "requiredBaseEducations": [
+      "0", "1"
+    ],
+    "provider": {
+      "applicationSystemIds": ["1.2.246.562.5.2013080813081926341927"]
+    }
+  },
+
+  "1.2.246.562.20.94964838901": {
+    "id": "1.2.246.562.20.94964838901",
+    "name": "CopyPaste2",
+    "aoIdentifier": null,
+    "educationDegree": "koulutusasteoph2002_63",
+    "sora": false,
+    "teachingLanguages": [
+      "FI"
+    ],
+    "athleteEducation": false,
+    "kaksoistutkinto": false,
+    "vocational": false,
+    "educationCodeUri": "koulutus_671201",
+    "organizationGroups": [],
+    "attachments": null,
+    "requiredBaseEducations": [
+      "0"
+    ],
+    "provider": {
+      "applicationSystemIds": ["1.2.246.562.29.173465377510"]
+    }
+  },
+
+  "1.2.246.562.5.68672543292": {
+    "id": "1.2.246.562.5.68672543292",
+    "name": "CopyPaste3",
+    "aoIdentifier": "515",
+    "educationDegree": "koulutusasteoph2002_63",
+    "sora": false,
+    "teachingLanguages": [
+      "FI"
+    ],
+    "athleteEducation": true,
+    "kaksoistutkinto": true,
+    "vocational": false,
+    "educationCodeUri": "koulutus_341101",
+    "organizationGroups": [],
+    "attachments": null,
+    "requiredBaseEducations": [
+      "0", "1"
+    ],
+    "provider": {
+      "applicationSystemIds": ["1.2.246.562.5.2013112910452702965370", "1.2.246.562.5.2013080813081926341927"]
+    }
+  },
+
+  "1.2.246.562.5.19132087818": {
+    "id": "1.2.246.562.5.19132087818",
+    "name": "Grundexamen i fiskeri, gr",
+    "aoIdentifier": "852",
+    "educationDegree": "32",
+    "sora": false,
+    "teachingLanguages": ["SV"],
+    "athleteEducation": false,
+    "kaksoistutkinto": false,
+    "vocational": true,
+    "educationCodeUri": "koulutus_361401",
+    "organizationGroups": [],
+    "attachments": null,
+    "requiredBaseEducations": [
+      "0"
+    ],
+    "provider": {
+      "applicationSystemIds": ["1.2.246.562.5.2014020613412490531399"]
+    }
+  },
+
+  "1.2.246.562.20.645785477510": {
+    "id": "1.2.246.562.20.645785477510",
+    "name": "CopyPaste5",
+    "aoIdentifier": null,
+    "educationDegree": "koulutusasteoph2002_63",
+    "sora": false,
+    "teachingLanguages": [
+      "SV"
+    ],
+    "athleteEducation": false,
+    "kaksoistutkinto": false,
+    "vocational": false,
+    "educationCodeUri": "koulutus_742301",
+    "organizationGroups": [],
+    "attachments": null,
+    "requiredBaseEducations": [
+      "0"
+    ],
+    "provider": {
+      "applicationSystemIds": ["1.2.246.562.5.2013112910452702965370", "1.2.246.562.29.173465377510"]
+    }
+  },
+
+  "1.2.246.562.5.31982630126": {
+    "id": "1.2.246.562.5.31982630126",
+    "name": "Hevostalouden perustutkinto, pk",
+    "aoIdentifier": "215",
+    "educationDegree": "32",
+    "sora": false,
+    "teachingLanguages": ["FI"],
+    "athleteEducation": false,
+    "kaksoistutkinto": true,
+    "vocational": true,
+    "educationCodeUri": "koulutus_361104",
+    "organizationGroups": [],
+    "requiredBaseEducations": [
+      "1"
+    ],
+    "provider": {
+      "applicationSystemIds": ["1.2.246.562.5.2013080813081926341927"]
+    }
+  },
   "1.2.246.562.20.35798482663": {
     "id": "1.2.246.562.20.35798482663",
     "name": "Informaatioverkostot, tekniikan kandidaatti ja diplomi-insinööri",
@@ -102,8 +284,30 @@
     "attachments": null,
     "provider": {
       "applicationSystemIds": ["1.2.246.562.29.95390561488"]
-    }
+    },
+    "requiredBaseEducations": [
+      "0"
+    ]
   },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   "1.2.246.562.20.40828730156": {
     "id": "1.2.246.562.20.40828730156",
     "name": "Musiikkitiede, humanististen tieteiden kandidaatti ja filosofian maisteri",
@@ -290,7 +494,7 @@
     "vocational": true,
     "educationCodeUri": "koulutus_039996",
     "provider": {
-      "applicationSystemIds": ["1.2.246.562.5.2014022711042555034240", "1.2.246.562.5.2013080813081926341927"]
+      "applicationSystemIds": ["1.2.246.562.5.2014022711042555034240", "1.2.246.562.5.2013080813081926341927", "1.2.246.562.29.173465377510"]
     },
     "requiredBaseEducations": [
       "1"
@@ -389,7 +593,7 @@
     "provider": {
       "id": "1.2.246.562.10.591352080610",
       "name": "Tampereen seudun ammattiopisto Tredu",
-      "applicationSystemIds": ["1.2.246.562.5.2013080813081926341927"]
+      "applicationSystemIds": ["1.2.246.562.5.2014020613412490531399", "1.2.246.562.5.2013080813081926341927"]
     },
     "requiredBaseEducations": [
       "0", "1"
