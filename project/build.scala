@@ -44,6 +44,7 @@ object OmatsivutBuild extends Build {
       resolvers += "oph-sade-artifactory-releases" at artifactory + "oph-sade-release-local",
       resolvers += "oph-sade-artifactory-snapshots" at artifactory + "oph-sade-snapshot-local",
       resolvers += Classpaths.typesafeReleases,
+      resolvers += "Scalaz Bintray Repo" at "http://dl.bintray.com/scalaz/releases",
       sourceGenerators in Compile <+= buildInfo,
       parallelExecution in Test := false,
       buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
