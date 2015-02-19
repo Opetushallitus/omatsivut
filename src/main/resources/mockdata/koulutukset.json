@@ -312,7 +312,7 @@
     "provider": {
       "id": "1.2.246.562.10.591352080610",
       "name": "Kallion lukio",
-      "applicationSystemIds": ["1.2.246.562.5.2013080813081926341927"]
+      "applicationSystemIds": ["1.2.246.562.5.2013080813081926341927", "1.2.246.562.5.2013080813081926341928"]
     },
     "attachmentDeliveryAddress": {
       "streetAddress": "PL 3805",
@@ -339,7 +339,7 @@
     "provider": {
       "id": "1.2.246.562.10.591352080610",
       "name": "Salon lukio",
-      "applicationSystemIds": ["1.2.246.562.5.2013080813081926341927"]
+      "applicationSystemIds": ["1.2.246.562.5.2013080813081926341927", "1.2.246.562.5.2013080813081926341928"]
     },
     "attachmentDeliveryAddress": {
       "streetAddress": "PL 3805",
@@ -1125,6 +1125,29 @@
     "organizationGroups": [],
     "requiredBaseEducations": [
       "1"
+    ],
+    "canBeApplied": true
+  },
+
+  "1.2.246.562.20.60377543290": {
+    "id": "1.2.246.562.20.60377543290",
+    "name": "Copy-paste",
+    "aoIdentifier": "019",
+    "educationDegree": "22",
+    "educationCodeUri": "",
+    "sora": false,
+    "vocational": true,
+    "kaksoistutkinto": false,
+    "teachingLanguages": ["FI"],
+    "athleteEducation": false,
+    "provider": {
+      "id": "1.2.246.562.10.35241670047",
+      "name": "Copy-paste",
+      "applicationSystemIds": ["1.2.246.562.5.2013080813081926341928"]
+    },
+    "organizationGroups": [],
+    "requiredBaseEducations": [
+      "0"
     ],
     "canBeApplied": true
   },
