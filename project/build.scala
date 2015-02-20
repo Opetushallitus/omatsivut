@@ -25,6 +25,7 @@ object OmatsivutBuild extends Build {
     throw new IllegalStateException("Wrong java version (required " + JavaVersion + "): " + System.getProperty("java.version"))
   }
 
+  // TODO causes at least with hakemuseditori gulp build IDEA constantly refreshing
   if(Seq("./webbuild.sh").! != 0){
     throw new RuntimeException("webbuild failed")
   }
