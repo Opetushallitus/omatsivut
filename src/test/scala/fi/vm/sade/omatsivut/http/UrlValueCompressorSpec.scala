@@ -2,10 +2,7 @@ package fi.vm.sade.omatsivut.http
 
 import fi.vm.sade.hakemuseditori.http.UrlValueCompressor
 import org.specs2.mutable.Specification
-import org.junit.runner.RunWith
-import org.specs2.runner.JUnitRunner
 
-@RunWith(classOf[JUnitRunner])
 class UrlValueCompressorSpec extends Specification {
 
   "Compressing" should {

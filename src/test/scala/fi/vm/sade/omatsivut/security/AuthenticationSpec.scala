@@ -3,10 +3,7 @@ package fi.vm.sade.omatsivut.security
 import fi.vm.sade.omatsivut.ScalatraTestSupport
 import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.hakemus.FixturePerson
-import org.junit.runner.RunWith
-import org.specs2.runner.JUnitRunner
 
-@RunWith(classOf[JUnitRunner])
 class AuthenticationSpec extends ScalatraTestSupport with FixturePerson {
   override lazy val appConfig = new AppConfig.IT
 
