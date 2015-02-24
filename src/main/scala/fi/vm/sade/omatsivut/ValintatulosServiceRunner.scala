@@ -25,9 +25,11 @@ object ValintatulosServiceRunner extends Logging {
             javaHome ="";
           }
 
+          var mvn = System.getProperty("mvn", "mvn");
+
           logger.info("Using java home:" + javaHome);
 
-          val process = Process(List("mvn", "tomcat7:run", "-Dmaven.tomcat.port=" + valintatulosPortChooser.chosenPort, "-Dvalintatulos.profile=it-externalHakemus", "-Dhakemus.embeddedmongo.port=" + AppConfig.embeddedmongoPortChooser.chosenPort,  "-Dfile.encoding=UTF-8"), cwd, "JAVA_HOME" -> javaHome).run(true)
+          val process = Process(List(mvn, "tomcat7:run", "-Dmaven.tomcat.port=" + valintatulosPortChooser.chosenPort, "-Dvalintatulos.profile=it-externalHakemus", "-Dhakemus.embeddedmongo.port=" + AppConfig.embeddedmongoPortChooser.chosenPort,  "-Dfile.encoding=UTF-8"), cwd, "JAVA_HOME" -> javaHome).run(true)
           for (i <- 0 to 60 if PortChecker.isFreeLocalPort(valintatulosPortChooser.chosenPort)) {
             Thread.sleep(1000)
           }
