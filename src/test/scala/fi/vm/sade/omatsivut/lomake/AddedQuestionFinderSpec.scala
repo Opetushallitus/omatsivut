@@ -7,8 +7,11 @@ import fi.vm.sade.hakemuseditori.hakemus.{ImmutableLegacyApplicationWrapper, Ans
 import fi.vm.sade.hakemuseditori.lomake.AddedQuestionFinder
 import fi.vm.sade.hakemuseditori.lomake.domain.Lomake
 import fi.vm.sade.omatsivut.fixtures.TestFixture._
+import org.junit.runner.RunWith
 import org.specs2.mutable.Specification
+import org.specs2.runner.JUnitRunner
 
+@RunWith(classOf[JUnitRunner])
 class AddedQuestionFinderSpec extends Specification {
 
   implicit val lang = Language.fi
