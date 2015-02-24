@@ -4,9 +4,12 @@ import java.nio.file.{Paths, Files}
 import fi.vm.sade.omatsivut.config.AppConfig.{AppConfig, ExampleTemplatedProps}
 import fi.vm.sade.utils.mongo.EmbeddedMongo
 import fi.vm.sade.utils.tcp.PortFromSystemPropertyOrFindFree
+import org.junit.runner.RunWith
 import org.specs2.matcher.PathMatchers
 import org.specs2.mutable.Specification
+import org.specs2.runner.JUnitRunner
 
+@RunWith(classOf[JUnitRunner])
 class AppConfigSpec extends Specification {
   "Config with default profile" should {
     "Start up" in {

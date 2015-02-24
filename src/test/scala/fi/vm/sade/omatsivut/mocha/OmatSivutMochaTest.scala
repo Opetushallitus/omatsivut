@@ -3,7 +3,10 @@ package fi.vm.sade.omatsivut.mocha
 import fi.vm.sade.omatsivut.JettyLauncher
 import fi.vm.sade.utils.tcp.PortChecker
 import org.specs2.mutable.Specification
+import org.junit.runner.RunWith
+import org.specs2.runner.JUnitRunner
 
+@RunWith(classOf[JUnitRunner])
 class OmatSivutMochaTest extends Specification {
   import scala.sys.process._
 

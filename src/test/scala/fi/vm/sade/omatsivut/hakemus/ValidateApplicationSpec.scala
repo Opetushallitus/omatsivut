@@ -8,7 +8,10 @@ import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.omatsivut.fixtures.TestFixture._
 import org.json4s._
 import org.json4s.jackson.{JsonMethods, Serialization}
+import org.junit.runner.RunWith
+import org.specs2.runner.JUnitRunner
 
+@RunWith(classOf[JUnitRunner])
 class ValidateApplicationSpec extends HakemusApiSpecification with FixturePerson {
   override lazy val appConfig = new AppConfig.IT
   private val hakemusNivelKesa2013WithPeruskouluBaseEducationExtraQuestions = List(

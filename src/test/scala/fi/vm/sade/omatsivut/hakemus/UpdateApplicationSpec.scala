@@ -7,7 +7,10 @@ import fi.vm.sade.omatsivut.fixtures.TestFixture._
 import fi.vm.sade.omatsivut.{PersonOid, TimeWarp}
 import org.json4s._
 import org.json4s.jackson.JsonMethods
+import org.junit.runner.RunWith
+import org.specs2.runner.JUnitRunner
 
+@RunWith(classOf[JUnitRunner])
 class UpdateApplicationSpec extends HakemusApiSpecification with FixturePerson with TimeWarp {
   override implicit lazy val appConfig = new AppConfig.IT
   sequential

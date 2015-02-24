@@ -6,7 +6,10 @@ import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.omatsivut.fixtures.TestFixture._
 import fi.vm.sade.hakemuseditori.lomake.domain.QuestionNode
 import org.joda.time.DateTime
+import org.junit.runner.RunWith
+import org.specs2.runner.JUnitRunner
 
+@RunWith(classOf[JUnitRunner])
 class GetApplicationsSpec extends HakemusApiSpecification with FixturePerson with TimeWarp {
   override lazy val appConfig = new AppConfig.IT
 

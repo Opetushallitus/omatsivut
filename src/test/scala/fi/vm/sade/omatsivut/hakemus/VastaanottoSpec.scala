@@ -5,7 +5,10 @@ import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.servlet.ClientSideVastaanotto
 import fi.vm.sade.hakemuseditori.valintatulokset.RemoteValintatulosService
 import org.json4s.jackson._
+import org.junit.runner.RunWith
+import org.specs2.runner.JUnitRunner
 
+@RunWith(classOf[JUnitRunner])
 class VastaanottoSpec extends HakemusApiSpecification with FixturePerson {
   override implicit lazy val appConfig = new AppConfig.IT
   sequential

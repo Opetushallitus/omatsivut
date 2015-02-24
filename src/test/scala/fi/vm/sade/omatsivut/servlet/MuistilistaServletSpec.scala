@@ -9,7 +9,10 @@ import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.omatsivut.muistilista.Muistilista
 import org.json4s.jackson.Serialization
 
+import org.junit.runner.RunWith
+import org.specs2.runner.JUnitRunner
 
+@RunWith(classOf[JUnitRunner])
 class MuistilistaServletSpec extends ScalatraTestSupport with JsonFormats {
 
   override lazy val appConfig = new AppConfig.IT
