@@ -22,12 +22,14 @@ Lisää JAVA_HOME ja JAVA_HOME8 ympäristömuuttujat polkuun:
 
 ### IDE
 
-Projektissa tulee käyttää IDEA versiota 14 tai uudempaa.
-Importoi projekti SBT projektina siihen.
+Projektissa tulee käyttää IDEA versiota 14 tai uudempaa. Avaa IDEAssa pom.xml. Scala-asetuksissa säädä Incrementality type = SBT.
 
 ### Käynnistä sovellus IDEAsta
 
-Aja JettyLauncher-luokka. Jotta impersonointi/autentikoinnin ohitus onnistuu, anna parametri `-Domatsivut.profile=it`.
+Aja JettyLauncher-luokka.
+
+- jotta impersonointi/autentikoinnin ohitus onnistuu, anna parametri `-Domatsivut.profile=it`.
+- jotta valinta-tulos-service suostuu käynnistymään anna parameteri `-DJAVA8_HOME=<home>`, missä <home> osoittaa Java8-installaatioon.
 
 ### Offline-käyttö (skipRaamit) ja käyttö IE9:llä
 
