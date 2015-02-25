@@ -2,7 +2,10 @@ package fi.vm.sade.omatsivut.security
 
 import fi.vm.sade.omatsivut.muistilista.XssUtility
 import org.specs2.mutable.Specification
+import org.junit.runner.RunWith
+import org.specs2.runner.JUnitRunner
 
+@RunWith(classOf[JUnitRunner])
 class XssPreventionSpec extends Specification {
 
   "XSS prevention" should {

@@ -1,11 +1,10 @@
 package fi.vm.sade.omatsivut.servlet
 
-import fi.vm.sade.omatsivut.BuildInfo
 import org.scalatra.swagger.{ApiInfo, Swagger}
 
 class OmatSivutSwagger extends Swagger(
 	Swagger.SpecVersion,
-    BuildInfo.version,
+    "0.1.0-SNAPSHOT",
     ApiInfo("omatsivut",
             "Oppijan henkilökohtainen palvelu",
             "https://opintopolku.fi/wp/fi/opintopolku/tietoa-palvelusta/",
