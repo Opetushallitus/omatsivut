@@ -9,6 +9,7 @@ import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.omatsivut.muistilista.{Muistilista, MuistilistaServiceComponent}
 import fi.vm.sade.utils.slf4j.Logging
+import org.json4s.MappingException
 import org.json4s.jackson.Serialization
 import org.scalatra.json.JacksonJsonSupport
 import org.scalatra.{Cookie, CookieOptions}
@@ -27,18 +28,25 @@ trait MuistilistaServletContainer {
     }
 
     post() {
-      val muistiLista = Serialization.read[Muistilista](request.body)
-      if(!captchaService.checkCaptcha(muistiLista.captcha)) {
-        logger.warn("muistiLista with invalid captcha:" + request.body)
-        response.setStatus(403)
-        "403 Forbidden"
-      }
-      else if (muistiLista.otsikko.isEmpty || List(muistiLista.vastaanottaja, muistiLista.koids).exists(_.isEmpty)) {
-        logger.warn("muistiLista malformed:" + request.body)
-        response.setStatus(400)
-        "400 Bad Request"
-      } else {
-        muistilistaService(muistiLista.kieli).sendMail(muistiLista, request.getRequestURL)
+      try {
+        val muistiLista = Serialization.read[Muistilista](request.body)
+        if(!captchaService.checkCaptcha(muistiLista.captcha)) {
+          logger.warn("muistiLista with invalid captcha:" + request.body)
+          response.setStatus(403)
+          "403 Forbidden"
+        }
+        else if (muistiLista.otsikko.isEmpty || List(muistiLista.vastaanottaja, muistiLista.koids).exists(_.isEmpty)) {
+          logger.warn("muistiLista malformed:" + request.body)
+          response.setStatus(400)
+          "400 Bad Request"
+        } else {
+          muistilistaService(muistiLista.kieli).sendMail(muistiLista, request.getRequestURL)
+        }
+      } catch {
+        case e: MappingException =>
+          logger.warn("Invalid input: " + e.getMessage + " (request data: " + request.body + ")")
+          response.setStatus(400)
+          "400 Bad Request"
       }
     }
 
