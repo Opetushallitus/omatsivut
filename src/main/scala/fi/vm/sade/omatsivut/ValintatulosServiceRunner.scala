@@ -24,9 +24,7 @@ object ValintatulosServiceRunner extends Logging {
           if (javaHome.contains("{")) {
             javaHome ="";
           }
-
-          var mvn = System.getProperty("mvn", "mvn");
-
+          val mvn = System.getProperty("mvn", "mvn");
           logger.info("Using java home:" + javaHome);
 
           val process = Process(List(mvn, "tomcat7:run", "-Dmaven.tomcat.port=" + valintatulosPortChooser.chosenPort, "-Dvalintatulos.profile=it-externalHakemus", "-Dhakemus.embeddedmongo.port=" + AppConfig.embeddedmongoPortChooser.chosenPort,  "-Dfile.encoding=UTF-8"), cwd, "JAVA_HOME" -> javaHome).run(true)
