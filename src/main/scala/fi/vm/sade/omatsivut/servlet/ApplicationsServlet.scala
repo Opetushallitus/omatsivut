@@ -41,19 +41,10 @@ trait ApplicationsServletContainer {
       contentType = formats("json")
     }
 
-    val getApplicationsSwagger: OperationBuilder = (apiOperation[List[HakemusInfo]]("getApplications")
-      summary "Hae kirjautuneen oppijan hakemukset"
-    )
     get("/", operation(getApplicationsSwagger)) {
       hakemusEditori.fetchByPersonOid(personOid())
     }
 
-    val putApplicationsSwagger = (apiOperation[Hakemus]("putApplication")
-      summary "Tallenna muokattu hakemus"
-      notes "Palauttaa tallennetun hakemuksen (tyyppiä Hakemus) ok tapauksessa ja listan virheitä (tyyppiä ValidationError) virhetapauksessa"
-      parameter pathParam[String]("oid").description("Hakemuksen oid")
-      parameter bodyParam[HakemusMuutos]("updated").description("Päivitetty hakemus")
-    )
 
     put("/:oid", operation(putApplicationsSwagger)) {
       val content: String = request.body
@@ -64,11 +55,6 @@ trait ApplicationsServletContainer {
     }
 
 
-    val validateApplicationsSwagger = (apiOperation[HakemusInfo]("validateApplication")
-      summary "Tarkista hakemus ja palauta virheet sekä pyydettyjen kohteiden kysymykset"
-      parameter pathParam[String]("oid").description("Hakemuksen oid")
-      parameter bodyParam[HakemusMuutos]("muutos").description("Päivitetty hakemus")
-    )
     post("/validate/:oid", operation(validateApplicationsSwagger)) {
       val muutos = Serialization.read[HakemusMuutos](request.body)
 
@@ -78,10 +64,6 @@ trait ApplicationsServletContainer {
       }
     }
 
-    val previewApplicationSwagger: OperationBuilder = (apiOperation[String]("previewApplication")
-      summary "Hakemuksen esikatselu HTML-muodossa"
-      parameter pathParam[String]("oid").description("Hakemuksen oid")
-    )
     get("/preview/:oid", operation(previewApplicationSwagger)) {
       newHakemusPreviewGenerator(language).generatePreview(ServerContaxtPath(request), personOid(), params("oid")) match {
         case Some(previewHtml) =>
@@ -92,12 +74,6 @@ trait ApplicationsServletContainer {
       }
     }
 
-    val postVastaanotaSwagger: OperationBuilder = (apiOperation[String]("previewApplication")
-      summary "Tallenna opiskelupaikan vastaanottotieto"
-      parameter pathParam[String]("hakemusOid").description("Hakemuksen oid")
-      parameter pathParam[String]("hakuOid").description("Haun oid")
-      parameter bodyParam[ClientSideVastaanotto]("vastaanotto").description("Vastaanottotilan muutostieto")
-    )
     post("/vastaanota/:hakuOid/:hakemusOid", operation(postVastaanotaSwagger)) {
       val hakemusOid = params("hakemusOid")
       val hakuOid = params("hakuOid")
@@ -119,7 +95,39 @@ trait ApplicationsServletContainer {
         }
       }
     }
+
+
+    val getApplicationsSwagger: OperationBuilder = (apiOperation[List[HakemusInfo]]("getApplications")
+      summary "Hae kirjautuneen oppijan hakemukset"
+      )
+
+    val putApplicationsSwagger = (apiOperation[Hakemus]("putApplication")
+      summary "Tallenna muokattu hakemus"
+      notes "Palauttaa tallennetun hakemuksen (tyyppiä Hakemus) ok tapauksessa ja listan virheitä (tyyppiä ValidationError) virhetapauksessa"
+      parameter pathParam[String]("oid").description("Hakemuksen oid")
+      parameter bodyParam[HakemusMuutos]("updated").description("Päivitetty hakemus")
+      )
+
+    val validateApplicationsSwagger = (apiOperation[HakemusInfo]("validateApplication")
+      summary "Tarkista hakemus ja palauta virheet sekä pyydettyjen kohteiden kysymykset"
+      parameter pathParam[String]("oid").description("Hakemuksen oid")
+      parameter bodyParam[HakemusMuutos]("muutos").description("Päivitetty hakemus")
+      )
+
+    val previewApplicationSwagger: OperationBuilder = (apiOperation[String]("previewApplication")
+      summary "Hakemuksen esikatselu HTML-muodossa"
+      parameter pathParam[String]("oid").description("Hakemuksen oid")
+      )
+
+    val postVastaanotaSwagger: OperationBuilder = (apiOperation[String]("previewApplication")
+      summary "Tallenna opiskelupaikan vastaanottotieto"
+      parameter pathParam[String]("hakemusOid").description("Hakemuksen oid")
+      parameter pathParam[String]("hakuOid").description("Haun oid")
+      parameter bodyParam[ClientSideVastaanotto]("vastaanotto").description("Vastaanottotilan muutostieto")
+      )
   }
+
+
 }
 
 case class ClientSideVastaanotto(hakukohdeOid: String, tila: String)
