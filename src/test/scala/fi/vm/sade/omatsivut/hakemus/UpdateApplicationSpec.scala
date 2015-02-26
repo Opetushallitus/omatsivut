@@ -140,6 +140,9 @@ class UpdateApplicationSpec extends HakemusApiSpecification with FixturePerson w
     "do not allow updating of other info after application period end, but before application round end" in {
       modifyHakemus(inactiveHakemusWithApplicationRoundNotEndedId)(addHakutoive(Hakutoive(Some(Map(
         "Koulutus-id" -> "1.2.246.562.20.60377543290",
+        "Koulutus" -> "foobar",
+        "Opetuspiste" -> "barfoo",
+        "Opetuspiste-id" -> "1.2.246.562.20.60377543290",
         "Koulutus-id-lang" -> "FI",
         "Koulutus-id-aoIdentifier" -> "019"))))) { hakemus =>
         status must_== 403
