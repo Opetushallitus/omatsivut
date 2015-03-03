@@ -174,3 +174,16 @@ tuotantoympäristöissä.
 REST-rajapinnat dokumentoitu Swaggerilla.
 
 [http://localhost:7337/omatsivut/api-docs](http://localhost:7337/omatsivut/api-docs)
+
+
+## Java 8 -tuki
+
+Java 8 -tuki on kokeellisella asteella!
+
+Java 8 update 20:ssä on bugi (https://bugs.openjdk.java.net/browse/JDK-8058847) joka aiheuttaa ongelmia Scalap:n kanssa (https://github.com/json4s/json4s/issues/216), jota json4s-kirjasto käyttää.
+Bugin korjaus tulee näillä näkymin Java 8 update 40:een, jota vielä odottelemme.
+Tästä syystä olemme pitäytyneet Java 7:ssa. Bugille on kuitenkin workaround. `-XX:-EliminateAutoBox`, jolla homma toimii. Toisaalta, update 40 on saatavana beta-versiona täältä: https://jdk8.java.net/download.html
+
+Java 8 mahdollistaa omien sivujen testauksessa (it-profiililla) ajettavan valinta-tulos-servicen ajamisen samassa virtuaalikoneessa sen sijaan, että se käynnistettäisiin Mavenilla.
+
+Nyt `JettyLauncher` -luokka tunnistaa java-version ja käynnistää vts:n samassa virtuaalikoneessa jos Java 8 on käytössä.

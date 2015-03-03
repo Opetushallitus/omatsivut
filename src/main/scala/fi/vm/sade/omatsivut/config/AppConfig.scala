@@ -59,7 +59,7 @@ object AppConfig extends Logging {
 
     override def onStart {
       mongo = EmbeddedMongo.start(embeddedmongoPortChooser)
-      ValintatulosServiceRunner.start
+      ValintatulosServiceRunner.runner.start
     }
 
     override def onStop {
@@ -68,7 +68,7 @@ object AppConfig extends Logging {
     }
 
     override lazy val settings = ConfigTemplateProcessor.createSettings("omatsivut", templateAttributesFile)
-      .withOverride("omatsivut.valinta-tulos-service.url", "http://localhost:"+ ValintatulosServiceRunner.valintatulosPortChooser.chosenPort+"/valinta-tulos-service")
+      .withOverride("omatsivut.valinta-tulos-service.url", "http://localhost:"+ ValintatulosServiceRunner.runner.port+"/valinta-tulos-service")
       .withOverride("mongo.db.name", "hakulomake")
       .withOverride("mongodb.oppija.uri", "mongodb://localhost:" + embeddedmongoPortChooser.chosenPort)
   }
