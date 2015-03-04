@@ -2,14 +2,12 @@ package fi.vm.sade.omatsivut
 
 import fi.vm.sade.omatsivut.config.{AppConfig, ComponentRegistry}
 import fi.vm.sade.omatsivut.security.fake.FakeAuthentication
-import fi.vm.sade.omatsivut.servlet.OmatSivutSwagger
 import fi.vm.sade.utils.tcp.PortChecker
 import org.scalatra.test.HttpComponentsClient
 import org.specs2.mutable.Specification
 import org.specs2.specification.{Fragments, Step}
 
 trait ScalatraTestSupport extends Specification with HttpComponentsClient {
-  implicit val swagger = new OmatSivutSwagger
   lazy val appConfig = AppConfigSetup.create
   lazy val componentRegistry = new ComponentRegistry(appConfig)
 

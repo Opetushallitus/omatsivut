@@ -5,16 +5,13 @@ import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.hakemuseditori.koulutusinformaatio.{KoulutusInformaatioComponent, KoulutusInformaatioService}
 import org.scalatra.NotFound
 import org.scalatra.json.JacksonJsonSupport
-import org.scalatra.swagger.{Swagger, SwaggerSupport}
 
 trait KoulutusServletContainer {
   this: KoulutusInformaatioComponent =>
 
   val koulutusInformaatioService: KoulutusInformaatioService
 
-  class KoulutusServlet(implicit val swagger: Swagger) extends OmatSivutServletBase with JacksonJsonSupport with JsonFormats with SwaggerSupport {
-    protected val applicationDescription = "Oppijan henkilökohtaisen palvelun REST API, jolla etsitään opetuspisteitä ja koulutuksia"
-
+  class KoulutusServlet extends OmatSivutServletBase with JacksonJsonSupport with JsonFormats {
     before() {
       contentType = formats("json")
     }

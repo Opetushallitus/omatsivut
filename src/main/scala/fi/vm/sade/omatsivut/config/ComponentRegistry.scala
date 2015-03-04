@@ -49,8 +49,6 @@ class ComponentRegistry(val config: AppConfig)
           TarjontaComponent with
           KoodistoComponent {
 
-  implicit val swagger = new OmatSivutSwagger
-
   private def configureOhjausparametritService: OhjausparametritService = config match {
     case _: StubbedExternalDeps => new StubbedOhjausparametritService()
     case _ => CachedRemoteOhjausparametritService(config.settings.ohjausparametritUrl)
@@ -103,7 +101,6 @@ class ComponentRegistry(val config: AppConfig)
   def newSecuredSessionServlet = new SecuredSessionServlet(config.authContext)
   def newLogoutServlet = new LogoutServlet(config.authContext)
   def newFixtureServlet = new FixtureServlet(config)
-  def newSwaggerServlet = new SwaggerServlet
   def newKoodistoServlet = new KoodistoServlet
   def newMuistilistaServlet = new MuistilistaServlet(config)
 
