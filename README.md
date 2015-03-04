@@ -186,4 +186,5 @@ Tästä syystä olemme pitäytyneet Java 7:ssa. Bugille on kuitenkin workaround.
 
 Java 8 mahdollistaa omien sivujen testauksessa (it-profiililla) ajettavan valinta-tulos-servicen ajamisen samassa virtuaalikoneessa sen sijaan, että se käynnistettäisiin Mavenilla.
 
-Nyt `JettyLauncher` -luokka tunnistaa java-version ja käynnistää vts:n samassa virtuaalikoneessa jos Java 8 on käytössä.
+Nyt `JettyLauncher` -luokka tunnistaa java-version ja käynnistää vts:n samassa virtuaalikoneessa jos Java 8 on käytössä,
+ja system property `valintatulos.port` puuttuu.

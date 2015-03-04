@@ -12,7 +12,7 @@ object JettyLauncher {
 }
 
 class JettyLauncher(val port: Int, profile: Option[String] = None) {
-  val useEmbeddedVts = !System.getProperty("java.version").startsWith("1.7")
+  val useEmbeddedVts = !System.getProperty("java.version").startsWith("1.7") && System.getProperty("valintatulos.port") == null;
   val server = new Server(port)
   val handlers = new HandlerCollection()
 
