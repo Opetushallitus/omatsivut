@@ -10,7 +10,7 @@ import org.specs2.runner.JUnitRunner
 class CryptoSpec extends Specification {
   "AES crypto" should {
     "encrypt and decrypt" in {
-      val appConfig: AppConfig = AppConfig.fromSystemProperty
+      val appConfig: AppConfig = new AppConfig.IT
       val cipher: AuthenticationCipher = new AuthenticationCipher(appConfig.settings.aesKey, appConfig.settings.hmacKey)
       val encrypted = cipher.encrypt("testString")
       cipher.decrypt(encrypted) must_== "testString"
