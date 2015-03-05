@@ -43,7 +43,7 @@ object SharedJetty {
 }
 
 object AppConfigSetup {
-  lazy val create = AppConfig.fromSystemProperty
+  lazy val create = new AppConfig.IT
 }
 
 case class PersonOid(oid: String)
