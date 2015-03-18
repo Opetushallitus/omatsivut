@@ -40,11 +40,11 @@ object AppConfig extends Logging {
     override def usesFakeAuthentication = settings.environment.isDev || settings.environment.isLuokka || settings.environment.isKoulutus
   }
 
-  class LocalTestingWithTemplatedVars(val templateAttributesFile: String = System.getProperty("omatsivut.vars")) extends AppConfig with TemplatedProps with TestMode {
+  class LocalTestingWithTemplatedVars(val templateAttributesFile: String = System.getProperty("omatsivut.vars")) extends AppConfig with TemplatedProps with MockAuthentication {
     def springConfiguration = new OmatSivutSpringContext.Default()
   }
 
-  class Dev extends AppConfig with ExampleTemplatedProps with MockAuthentication {
+  class Dev extends AppConfig with ExampleTemplatedProps with MockAuthentication with StubbedExternalDeps {
     def springConfiguration = new OmatSivutSpringContext.Dev()
 
     override lazy val settings = ConfigTemplateProcessor.createSettings("omatsivut", templateAttributesFile)
@@ -93,13 +93,10 @@ object AppConfig extends Logging {
     def templateAttributesFile: String
   }
 
-  trait StubbedExternalDeps extends TestMode {
+  trait StubbedExternalDeps {
   }
 
-  trait MockAuthentication extends TestMode {
-  }
-
-  trait TestMode extends AppConfig {
+  trait MockAuthentication extends AppConfig {
     override def usesFakeAuthentication = true
   }
 

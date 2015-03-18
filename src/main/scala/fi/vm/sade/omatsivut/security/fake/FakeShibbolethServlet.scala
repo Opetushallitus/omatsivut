@@ -2,11 +2,10 @@ package fi.vm.sade.omatsivut.security.fake
 
 import javax.servlet.http.{HttpServletRequest, HttpServletResponse, Cookie => HttpCookie}
 
-import fi.vm.sade.omatsivut.config.AppConfig.{StubbedExternalDeps, AppConfig}
+import fi.vm.sade.omatsivut.config.AppConfig.{AppConfig, StubbedExternalDeps}
 import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.omatsivut.security.CookieHelper.reqCookie
-import fi.vm.sade.omatsivut.security.AuthenticationInfoParser._
-import fi.vm.sade.omatsivut.security.{RemoteAuthenticationInfoService, CookieHelper, AuthenticationCipher, ShibbolethCookie}
+import fi.vm.sade.omatsivut.security.{AuthenticationCipher, RemoteAuthenticationInfoService, ShibbolethCookie}
 import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
 import org.scalatra.{Cookie, CookieOptions}
 
