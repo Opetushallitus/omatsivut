@@ -72,7 +72,7 @@
     "generalNotification": "none",
     "loadingApplications": "Laddar ansökningsblanketter…",
     "loadingData": "Laddar...",
-    "noApplications": "Du har inga ansökningsblanketter att bearbeta. Sök utbildningar med ordsökningen och fyll i ansökningblanketten. Som identifierad användare kan du bearbeta din ansökan på denna sida under ansökningtiden.",
+    "noApplications": "Du har inga ansökningsblanketter att bearbeta. Sök utbildningar med ordsökningen och fyll i ansökningsblanketten. Som identifierad användare kan du bearbeta din ansökan på denna sida under ansökningstiden.",
     "validationOk": "Kom ihåg att spara ansökan.",
     "changesSaved": "Alla ändringar sparade.",
     "yes": "Ja",
@@ -105,7 +105,7 @@
   "errorPage": {
     "noApplicationsFound": {
       "title": "Inga ansökningsblanketter hittades med din personbeteckning.",
-      "text": "Identifiering lyckades men inga ansöka finns med din personbeteckning. Sök utbildningar med ordsökningen och fyll i ansökningblanketten. Som identifierad användare kan du bearbeta din ansökan på denna sida under ansökningtiden."
+      "text": "Identifiering lyckades men inga ansökningar finns med din personbeteckning. Sök utbildningar med ordsökningen och fyll i ansökningsblanketten. Som identifierad användare kan du bearbeta din ansökan på denna sida under ansökningstiden."
     }
   },
 
