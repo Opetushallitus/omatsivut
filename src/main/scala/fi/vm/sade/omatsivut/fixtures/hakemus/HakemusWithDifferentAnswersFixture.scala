@@ -8,13 +8,13 @@ protected class HakemusWithDifferentAnswersFixture(hakemusOid: String)(val dao: 
   def replaceAnswers(answers: Answers) {
     val application: Application = dao.find(new Application().setOid(hakemusOid)).get(0)
     replaceAnswers(application, answers)
-    dao.save(application)
+    dao.update(new Application().setOid(application.getOid), application)
   }
 
   def addAnswers(answers: Answers) {
     val application: Application = dao.find(new Application().setOid(hakemusOid)).get(0)
     addAnswers(application, answers)
-    dao.save(application)
+    dao.update(new Application().setOid(application.getOid), application)
   }
 
   private def addAnswers(application: Application, answers: Answers) {
