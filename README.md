@@ -24,6 +24,8 @@ Lisää JAVA_HOME ja JAVA_HOME8 ympäristömuuttujat polkuun:
 
 Projektissa tulee käyttää IDEA versiota 14 tai uudempaa. Avaa IDEAssa pom.xml. Scala-asetuksissa säädä Incrementality type = SBT.
 
+Jos testeistä tulee IDE:llä yllättäviä `StackOverflow`-exceptioneita, anna JVM:lle suurempi stack 'VM parameters'-vivulla, esim. `-Xss4m`.
+
 ### Käynnistä sovellus IDEAsta
 
 Aja JettyLauncher-luokka.
