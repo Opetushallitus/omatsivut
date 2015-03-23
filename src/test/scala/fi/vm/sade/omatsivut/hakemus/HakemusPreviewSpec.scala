@@ -39,7 +39,7 @@ class HakemusPreviewSpec extends HakemusApiSpecification with FixturePerson {
         // lupatiedot
         body must contain("""<label>Minulle saa lähettää postia ja sähköpostia vapaista opiskelupaikoista ja muuta koulutusmarkkinointia.</label><span class="answer">Ei</span>""")
         // harkinnanvarainen haku liitepyynnöt
-        body must contain("""<td><div>Kallion lukio Lukion ilmaisutaitolinja</div><div>PL 3805</div><div>00099</div><div>HELSINGIN KAUPUNKI</div></td>""")
+        body must contain("""<td><div>Kallion lukio Lukion ilmaisutaitolinja</div><div>PL 3805</div><div>00099</div><div>HELSINGIN KAUPUNKI</div><div>sahkoposti@osoite.dev</div></td>""")
         body must contain("""<td><div>Salon Lukio Lukio</div><div>Kaherinkatu 2</div><div>24130</div><div>SALO</div></td>""")
         // piwik
         body must contain("""src="/omatsivut/piwik/load"""")

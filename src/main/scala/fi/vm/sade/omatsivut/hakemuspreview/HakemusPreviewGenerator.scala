@@ -117,7 +117,9 @@ trait HakemusPreviewGeneratorComponent {
             elemIfNotEmptyString(text => div(raw(text)), info.description)
           ),
           td(elemIfNotEmptyString(div(_), info.recipientName ),
-             attachmentAddressInfoPreview(info.address)),
+             attachmentAddressInfoPreview(info.address),
+             elemIfNotEmptyString(div(_), info.emailAddress )
+          ),
           td(elemIfNotEmpty[Long](div(_), info.deadline, formatDeadlinePreview))
 
         ))
