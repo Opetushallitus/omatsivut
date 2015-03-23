@@ -25,14 +25,10 @@ class MavenValintatulosServiceRunner extends ValintatulosServiceRunner with Logg
         case Some(path) => {
           logger.info("Starting valinta-tulos-service from " + path + " on port "+ port)
           val cwd = new java.io.File(path)
-          var javaHome = System.getProperty("JAVA8_HOME", "")
-          if (javaHome.contains("{")) {
-            javaHome ="";
-          }
+          var envProperties = getEnvProperties();
           val mvn = System.getProperty("mvn", "mvn");
-          logger.info("Using java home:" + javaHome);
 
-          val process = Process(List(mvn, "test-compile", "exec:java", "-Dvalintatulos.port=" + port, "-Dvalintatulos.profile=it-externalHakemus", "-Dhakemus.embeddedmongo.port=" + AppConfig.embeddedmongoPortChooser.chosenPort,  "-Dfile.encoding=UTF-8"), cwd, "JAVA_HOME" -> javaHome).run(true)
+          val process = Process(List(mvn, "test-compile", "exec:java", "-Dvalintatulos.port=" + port, "-Dvalintatulos.profile=it-externalHakemus", "-Dhakemus.embeddedmongo.port=" + AppConfig.embeddedmongoPortChooser.chosenPort,  "-Dfile.encoding=UTF-8"), cwd, envProperties: _*).run(true)
           for (i <- 0 to 60 if PortChecker.isFreeLocalPort(port)) {
             Thread.sleep(1000)
           }
@@ -53,6 +49,18 @@ class MavenValintatulosServiceRunner extends ValintatulosServiceRunner with Logg
   }
 
   private val searchPaths = List("./valinta-tulos-service", "../valinta-tulos-service")
+
+  private def getEnvProperties(): Seq[(String, String)] = {
+    var javaHome = System.getProperty("JAVA8_HOME", System.getenv("JAVA8_HOME"))
+    if (javaHome == null || javaHome.contains("{")) {
+      javaHome = "";
+    }
+    if (javaHome.isEmpty) {
+      throw new IllegalStateException("No JAVA8_HOME system property or environment variable set");
+    }
+    logger.info("Using java home:" + javaHome);
+    List("JAVA_HOME" -> javaHome)
+  }
 
   private def findValintatulosService = {
     searchPaths.find((path) => Files.exists(Paths.get(path)))
