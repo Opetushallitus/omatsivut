@@ -73,7 +73,7 @@ trait ApplicationsServletContainer {
     post("/vastaanota/:hakuOid/:hakemusOid") {
       val hakemusOid = params("hakemusOid")
       val hakuOid = params("hakuOid")
-      if (!hakemusRepository.exists(personOid(), hakuOid, hakemusOid)) {
+      if (!applicationRepository.exists(personOid(), hakemusOid)) {
         NotFound("error" -> "Not found")
       } else {
         val clientVastaanotto = Serialization.read[ClientSideVastaanotto](request.body)
@@ -82,7 +82,7 @@ trait ApplicationsServletContainer {
         val vastaanotto = Vastaanotto(clientVastaanotto.hakukohdeOid, clientVastaanotto.tila, muokkaaja, selite)
         if(valintatulosService.vastaanota(hakemusOid, hakuOid, vastaanotto)) {
           auditLogger.log(SaveVastaanotto(personOid(), hakemusOid, hakuOid, vastaanotto))
-          hakemusRepository.getHakemus(personOid(), hakemusOid) match {
+          hakemusRepository.getHakemus(hakemusOid) match {
             case Some(hakemus) => hakemus
             case _ => NotFound("error" -> "Not found")
           }
