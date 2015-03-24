@@ -430,6 +430,25 @@ function ApplicationListPage() {
     }
   }
 
+  function Question(el) {
+    return {
+      title: function() {
+        return el.find('.title').text()
+      },
+      inputs: function() {
+        return el.find("input, textarea, select").map(function() {
+          var o = {
+            input: $(this),
+          }
+          if ($(this).parent().is('label')) {
+            o.label = $(this).parent().text().trim()
+          }
+          return o
+        }).toArray()
+      }
+    }
+  }
+
   function Questions(el) {
     return {
       data: function() {
@@ -438,7 +457,6 @@ function ApplicationListPage() {
             title: $(this).find(".title").text(),
             validationMessage: $(this).find(".validation-message").text(),
             id: testFrame().angular.element($(this).parent()).scope().questionNode.id.questionId
-
           }
         }).toArray()
       },
@@ -454,6 +472,15 @@ function ApplicationListPage() {
       },
       validationMessageCount: function() {
         return _(this.validationMessages()).filter(function(msg) { return msg.length > 0 }).length
+      },
+      getQuestionsByTitle: function(title) {
+        return el().find(".title")
+          .filter(function() { return $(this).text() === title })
+          .closest('.question')
+          .map(function() {
+            return Question($(this))
+          })
+          .toArray()
       },
       enterAnswer: function(index, answer) {
         var input = el().find(".question").eq(index).find("input, textarea, select")
