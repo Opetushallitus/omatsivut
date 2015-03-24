@@ -56,30 +56,13 @@ Myös mocha-testien onnistunut ajo edellyttää paikallisesti ajossa olevaa vali
 
 Näin ajat testit komentoriviltä.
 
-`./sbt test`
+`mvn test`
 
 Komento ajaa kaikki testit, mukaan lukien yksikkötestit, REST-palvelujen testit, mocha-selaintestit.
 
-
-#### Yksikkötestit
-
-Jos haluat ajaa pelkät ykikkötestit niin aja:
-
-`./sbt unit:test`
-
-Se skippaa mocha testit.
-
 ### War-paketointi
 
-`./sbt package`
-
-### Käännä ja käynnistä komentoriviltä
-
-```sh
-`./sbt "test:run-main fi.vm.sade.omatsivut.JettyLauncher" -Domatsivut.profile=it`
-```
-
-Avaa selaimessa [http://localhost:7337/omatsivut/](http://localhost:7337/omatsivut/).
+`mvn package`
 
 ## Fronttidevaus
 
@@ -127,11 +110,6 @@ Jos applikaatiota ajetaan "testimoodissa" eli esim. `-Domatsivut.profile=dev`, n
 brew install npm
 npm install
 ```
-
-### Aja testit
-
-`./sbt mocha:test`
-
 ### Testien ajaminen selaimessa
 
 Palvelin käyntiin (ks yllä) ja sitten [http://localhost:7337/omatsivut/test/runner.html](http://localhost:7337/omatsivut/test/runner.html)
