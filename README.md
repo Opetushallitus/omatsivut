@@ -116,6 +116,21 @@ Palvelin käyntiin (ks yllä) ja sitten [http://localhost:7337/omatsivut/test/ru
 
 Testien ajaminen onnistuneesti vaatii sitä, että tämän projektin rinnalta hakemistopuusta löytyy [valinta-tulos-service](https://github.com/Opetushallitus/valinta-tulos-service).
 
+## Testidata
+
+Testien ajaminen käynnistää embedded Mongo instanssin hakulomake-kannasta.
+Siihen ladataan fixtuuridata
+`haku/hakemus-api/src/main/resources/mongofixtures` kansiosta. Kyseisessä
+datassa on hakemusten personOid kentät muutettu vastaamaan testien käyttämää
+henkilöä. Fixtuurien lisäämistä varten löytyy scripti `haku/testfixtures`
+kansiosta.
+
+Testit käyttävät myös mokattuja ulkoisten palvelujen rajapintoja. Näiden
+mokkien data löytyy pääsääntöisesti
+`hakemuseditori/src/main/resources/hakemuseditorimockdata/` kansiosta,
+poikkeuksena koulutusdata joka sijaitsee kansiossa
+`haku/hakemus-api/src/main/resources/mockdata`.
+
 ## Sovellusprofiili
 
 Sovellus tukee eri profiileita. Profiili määritellään `omatsivut.profile` system propertyllä, esim `-Domatsivut.profile=it`.
