@@ -22,6 +22,7 @@
   var hakemusKorkeakouluYhteishakuSyksy2014 = page.getApplication(hakemusKorkeakouluYhteishakuSyksy2014Id)
   var hakemusErityisopetuksenaId = "1.2.246.562.11.00000877688"
   var hakemusErityisopetuksena = page.getApplication(hakemusErityisopetuksenaId)
+  var hakemusLisakysymyksenJatkokysymyksella = page.getApplication("1.2.246.562.11.00001305319")
 
   afterEach(function() {
     expect(window.uiError || null).to.be.null
@@ -1660,49 +1661,148 @@
       })
 
       describe("Checkbox kysymykset", function() {
-        before(page.applyFixtureAndOpen({applicationOid: hakemusNivelKesa2013WithPeruskouluBaseEducationId}))
+        describe("Yksitasoinen checkbox kysymys", function() {
+          before(page.applyFixtureAndOpen({applicationOid: hakemusNivelKesa2013WithPeruskouluBaseEducationId}))
 
-        it("kysymykset näytetään", function() {
-          var questionTitles = hakemusNivelKesa2013WithPeruskouluBaseEducation.questionsForApplication().titles()
-          expect(questionTitles).to.deep.equal([
-            'Miksi haet kymppiluokalle?',
-            'Haen ensisijaisesti kielitukikympille?',
-            'Turun Kristillinen opisto',
-            'Päättötodistuksen kaikkien oppiaineiden keskiarvo?',
-            'Päättötodistukseni on'
+          it("kysymykset näytetään", function() {
+            var questionTitles = hakemusNivelKesa2013WithPeruskouluBaseEducation.questionsForApplication().titles()
+            expect(questionTitles).to.deep.equal([
+              'Miksi haet kymppiluokalle?',
+              'Haen ensisijaisesti kielitukikympille?',
+              'Turun Kristillinen opisto',
+              'Päättötodistuksen kaikkien oppiaineiden keskiarvo?',
+              'Päättötodistukseni on'
             ])
-        })
-
-        describe("Vastaaminen ensimmäiseen checkbox vaihtoehtoon", function() {
-          before(
-            function() {hakemusNivelKesa2013WithPeruskouluBaseEducation.questionsForApplication().enterAnswer(4, "osittain yksilöllistetty (yksittäisiä oppiaineita arvioitu tähdellä)")},
-            hakemusNivelKesa2013WithPeruskouluBaseEducation.saveWaitSuccess
-          )
-
-          it("onnistuu", function() {
           })
 
-          describe("Vastaaminen toiseen checkbox vaihtoehtoon", function() {
+          describe("Vastaaminen ensimmäiseen checkbox vaihtoehtoon", function() {
             before(
-              function() {hakemusNivelKesa2013WithPeruskouluBaseEducation.questionsForApplication().enterAnswer(4, "kokonaan yksilöllistetty (kaikki oppiaineet arvioitu tähdellä)")},
-              hakemusNivelKesa2013WithPeruskouluBaseEducation.saveWaitError
+              function() {hakemusNivelKesa2013WithPeruskouluBaseEducation.questionsForApplication().enterAnswer(4, "osittain yksilöllistetty (yksittäisiä oppiaineita arvioitu tähdellä)")},
+              hakemusNivelKesa2013WithPeruskouluBaseEducation.saveWaitSuccess
             )
 
-            it("aiheuttaa validaatiovirheen", function() {
+            it("onnistuu", function() {
             })
 
-            describe("kun ensimmäinen vastaus poistetaan", function() {
+            describe("Vastaaminen toiseen checkbox vaihtoehtoon", function() {
               before(
-                function() {hakemusNivelKesa2013WithPeruskouluBaseEducation.questionsForApplication().enterAnswer(4, "osittain yksilöllistetty (yksittäisiä oppiaineita arvioitu tähdellä)")},
-                hakemusNivelKesa2013WithPeruskouluBaseEducation.saveWaitSuccess
+                function() {hakemusNivelKesa2013WithPeruskouluBaseEducation.questionsForApplication().enterAnswer(4, "kokonaan yksilöllistetty (kaikki oppiaineet arvioitu tähdellä)")},
+                hakemusNivelKesa2013WithPeruskouluBaseEducation.saveWaitError
               )
 
-              it("tallennus onnistuu", function() {
+              it("aiheuttaa validaatiovirheen", function() {
+              })
+
+              describe("kun ensimmäinen vastaus poistetaan", function() {
+                before(
+                  function() {hakemusNivelKesa2013WithPeruskouluBaseEducation.questionsForApplication().enterAnswer(4, "osittain yksilöllistetty (yksittäisiä oppiaineita arvioitu tähdellä)")},
+                  hakemusNivelKesa2013WithPeruskouluBaseEducation.saveWaitSuccess
+                )
+
+                it("tallennus onnistuu", function() {
+                })
               })
             })
           })
         })
 
+        describe("Jatkokysymyksen laukaiseva checkbox kysymys", function() {
+          before(
+              page.applyFixtureAndOpen({ applicationOid: "1.2.246.562.11.00001305319" }),
+              function() {
+                // Tuotannosta tuotu testidata sisältää jo testattavan vastauksen, joten se otetaan alustuksessa pois
+                hakemusLisakysymyksenJatkokysymyksella.questionsForApplication().enterAnswer(4, "Arvosteluasteikko 1-3")
+              },
+              wait.forAngular);
+
+          it("vain kolmeen jatkokysymykseen on vastattu etukäteen", function() {
+            expect(hakemusLisakysymyksenJatkokysymyksella.questionsForApplication()
+                .getQuestionsByTitle("Valitse arvosana").length).to.equal(3)
+          })
+
+          it("aluksi vain ensimmäisen tason kysymys näytetään", function() {
+            var checkboxes = hakemusLisakysymyksenJatkokysymyksella.questionsForApplication()
+                .getQuestionsByTitle("Ammatillisen tutkinnon äidinkielen tai viestinnän arvosana")[0]
+                .inputs()
+            expect(checkboxes.map(function(i) { return i.input[0].checked })).to.deep.equal([false, false, false]);
+            expect(checkboxes.map(function(i) { return i.label })).to.deep.equal(["Arvosteluasteikko 1-3", "Arvosteluasteikko 1-5", "Arvosteluasteikko 4-10"])
+          })
+
+          describe("Ensimmäisen tason kysymykseen vastaaminen", function() {
+            before(
+                function() { hakemusLisakysymyksenJatkokysymyksella.questionsForApplication().enterAnswer(4, "Arvosteluasteikko 1-5"); },
+                wait.forAngular)
+
+            it("tuo arvosteluasteikon", function() {
+              var checkboxes = hakemusLisakysymyksenJatkokysymyksella.questionsForApplication()
+                  .getQuestionsByTitle("Valitse arvosana")[0]
+                  .inputs();
+              expect(checkboxes.map(function(i) { return i.label })).to.deep.equal(["1", "2", "3", "4", "5"]);
+            })
+
+            it("ei tuota virheviestiä", function() {
+              hakemusLisakysymyksenJatkokysymyksella.questionsForApplication().validationMessages()[4].should.equal("");
+              expect(hakemusLisakysymyksenJatkokysymyksella.statusMessage()).to.equal("Muista tallentaa muutokset")
+            })
+
+            describe("Ensimmäisen tason toiseen kysymykseen vastaaminen", function() {
+              before(
+                  function() { hakemusLisakysymyksenJatkokysymyksella.questionsForApplication().enterAnswer(4, "Arvosteluasteikko 1-3"); },
+                  wait.forAngular)
+
+              it("tuottaa lomakevirheen", function() {
+                expect(hakemusLisakysymyksenJatkokysymyksella.statusMessage()).to.equal("Täytä kaikki tiedot")
+              })
+
+              it("tuottaa kysymysvirheen", function() {
+                hakemusLisakysymyksenJatkokysymyksella.questionsForApplication().validationMessages()[4].should.equal("Virheellinen arvo");
+              })
+
+              after(
+                  function() { hakemusLisakysymyksenJatkokysymyksella.questionsForApplication().enterAnswer(4, "Arvosteluasteikko 1-3"); },
+                  wait.forAngular)
+            })
+
+            describe("Toisen tason kysymykseen vastaaminen", function() {
+              before(
+                  wait.forAngular,
+                  function() { hakemusLisakysymyksenJatkokysymyksella.questionsForApplication().enterAnswer(5, "1"); },
+                  wait.forAngular)
+
+              it("ei tuota virheviestiä", function() {
+                hakemusLisakysymyksenJatkokysymyksella.questionsForApplication().validationMessages()[5].should.equal("");
+                expect(hakemusLisakysymyksenJatkokysymyksella.statusMessage()).to.equal("Muista tallentaa muutokset")
+              })
+
+              describe("Toisen tason toiseen kysymykseen vastaaminen", function() {
+                before(
+                    function() { hakemusLisakysymyksenJatkokysymyksella.questionsForApplication().enterAnswer(5, "2"); },
+                    wait.forAngular)
+
+                it("tuottaa lomakevirheen", function() {
+                  expect(hakemusLisakysymyksenJatkokysymyksella.statusMessage()).to.equal("Täytä kaikki tiedot")
+                })
+
+                it("tuottaa kysymysvirheen", function() {
+                  hakemusLisakysymyksenJatkokysymyksella.questionsForApplication().validationMessages()[5].should.equal("Virheellinen arvo");
+                })
+
+                after(
+                    function() { hakemusLisakysymyksenJatkokysymyksella.questionsForApplication().enterAnswer(5, "2"); },
+                    wait.forAngular)
+              })
+
+              describe("Lomakkeen tallennus", function() {
+                before(
+                    wait.forAngular,
+                    hakemusLisakysymyksenJatkokysymyksella.saveWaitSuccess)
+
+                it("onnistuu", function() {
+                })
+              })
+            })
+          })
+        })
       })
 
       var questions1 = [
