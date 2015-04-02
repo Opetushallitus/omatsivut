@@ -1,18 +1,17 @@
 package fi.vm.sade.omatsivut.config
 
 import com.typesafe.config.Config
-import fi.vm.sade.omatsivut.ValintatulosServiceRunner
 import fi.vm.sade.omatsivut.security.{AuthenticationContext, ProductionAuthenticationContext, TestAuthenticationContext}
 import fi.vm.sade.utils.config.{ConfigTemplateProcessor, ApplicationSettingsLoader}
 import fi.vm.sade.utils.mongo.{EmbeddedMongo, MongoServer}
 import fi.vm.sade.utils.slf4j.Logging
-import fi.vm.sade.utils.tcp.PortFromSystemPropertyOrFindFree
+import fi.vm.sade.utils.tcp.{PortChecker, PortFromSystemPropertyOrFindFree}
 
 object AppConfig extends Logging {
   private implicit val settingsParser = ApplicationSettingsParser
   val embeddedmongoPortChooser = new PortFromSystemPropertyOrFindFree("omatsivut.embeddedmongo.port")
 
-  lazy val embeddedJettyPort = System.getProperty("omatsivut.port", "7337").toInt
+  val embeddedJettyPortChooser = new PortFromSystemPropertyOrFindFree("omatsivut.port");
 
   def getProfileProperty() = System.getProperty("omatsivut.profile", "default")
 
@@ -59,7 +58,6 @@ object AppConfig extends Logging {
 
     override def onStart {
       mongo = EmbeddedMongo.start(embeddedmongoPortChooser)
-      ValintatulosServiceRunner.runner.start
     }
 
     override def onStop {
@@ -68,7 +66,7 @@ object AppConfig extends Logging {
     }
 
     override lazy val settings = ConfigTemplateProcessor.createSettings("omatsivut", templateAttributesFile)
-      .withOverride("omatsivut.valinta-tulos-service.url", "http://localhost:"+ ValintatulosServiceRunner.runner.port+"/valinta-tulos-service")
+      .withOverride("omatsivut.valinta-tulos-service.url", "http://localhost:"+ embeddedJettyPortChooser.chosenPort + "/valinta-tulos-service")
       .withOverride("mongo.db.name", "hakulomake")
       .withOverride("mongodb.oppija.uri", "mongodb://localhost:" + embeddedmongoPortChooser.chosenPort)
   }

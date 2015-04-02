@@ -4,25 +4,32 @@ Oppijan henkilökohtainen palvelu
 
 ## Teknologiat
 
-- Serverillä Scala 2.11.1, JRE7 (ei tällä hetkellä toimi Java8:lla), SBT
-- JCE (Java Cryptography Extension) - Lataa Oraclen sivuilta ja kopioi tiedostot $JAVA_HOME/jre/lib/security
+- Scala 2.11 (servereillä yhä JRE7)
 - Frontissa Angular.js, gulp.js, npm
 - Testeissä Specs2, mocha, phantomjs. Kaikille toiminnoille automaattiset testit.
 
-## Get started
+### JDK
+
+- Käytetään kehityksessä JDK8:a, mutta target version yhä 1.7
+- JCE (Java Cryptography Extension)
+   - Ilman laajennosta tulee virhe: "java.security.InvalidKeyException: Illegal key size"
+   - Lataa Oraclen sivuilta ja kopioi tiedostot $JAVA_HOME/jre/lib/security
+
+    http://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html
+
+Lisää JAVA_HOME ympäristömuuttujat polkuun:
+
+    export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
+
+## Webbuild
 
 Buildaa fronttiapplikaatio (npm install + gulp)
 
     ./webbuild.sh
 
-Lisää JAVA_HOME ja JAVA_HOME8 ympäristömuuttujat polkuun:
-
-    export JAVA_HOME=$(/usr/libexec/java_home -v 1.7)
-    export JAVA8_HOME=$(/usr/libexec/java_home -v 1.8)
-
 ### IDE
 
-Projektissa tulee käyttää IDEA versiota 14 tai uudempaa. Avaa IDEAssa pom.xml. Scala-asetuksissa säädä Incrementality type = SBT.
+Importoi IDEA:ssa projektin maven projektina.
 
 Jos testeistä tulee IDE:llä yllättäviä `StackOverflow`-exceptioneita, anna JVM:lle suurempi stack 'VM parameters'-vivulla, esim. `-Xss4m`.
 
@@ -42,15 +49,7 @@ pois. Mocha-testit käyttävät samaa ratkaisua.
 
 Myös IE9:llä pitää paikallisessa ympäristössä CORS:n takia käyttää skipRaamit tapaa.
 
-### Valinta-tulos-service
-
-Jotta hakemuksiin liittyvät valintatulokset voitaisiin näyttää, täytyy sovelluksen saada yhteys
-[valinta-tulos-service](https://github.com/Opetushallitus/valinta-tulos-service) -palveluun. Voit käynnistää paikallisen
-instanssin noudattamalla valinta-tulos-servicen README:ssa olevia ohjeita.
-
-Myös mocha-testien onnistunut ajo edellyttää paikallisesti ajossa olevaa valinta-tulos-service -instanssia.
-
-## SBT-buildi
+## Maven-buildi
 
 ### Testit
 
@@ -169,17 +168,3 @@ tuotantoympäristöissä.
 REST-rajapinnat dokumentoitu Swaggerilla.
 
 [http://localhost:7337/omatsivut/api-docs](http://localhost:7337/omatsivut/api-docs)
-
-
-## Java 8 -tuki
-
-Java 8 -tuki on kokeellisella asteella!
-
-Java 8 update 20:ssä on bugi (https://bugs.openjdk.java.net/browse/JDK-8058847) joka aiheuttaa ongelmia Scalap:n kanssa (https://github.com/json4s/json4s/issues/216), jota json4s-kirjasto käyttää.
-Bugin korjaus tulee näillä näkymin Java 8 update 40:een, jota vielä odottelemme.
-Tästä syystä olemme pitäytyneet Java 7:ssa. Bugille on kuitenkin workaround. `-XX:-EliminateAutoBox`, jolla homma toimii. Toisaalta, update 40 on saatavana beta-versiona täältä: https://jdk8.java.net/download.html
-
-Java 8 mahdollistaa omien sivujen testauksessa (it-profiililla) ajettavan valinta-tulos-servicen ajamisen samassa virtuaalikoneessa sen sijaan, että se käynnistettäisiin Mavenilla.
-
-Nyt `JettyLauncher` -luokka tunnistaa java-version ja käynnistää vts:n samassa virtuaalikoneessa jos Java 8 on käytössä,
-ja system property `valintatulos.port` puuttuu.

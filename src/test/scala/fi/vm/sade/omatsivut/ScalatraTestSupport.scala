@@ -11,7 +11,7 @@ trait ScalatraTestSupport extends Specification with HttpComponentsClient {
   lazy val appConfig = AppConfigSetup.create
   lazy val componentRegistry = new ComponentRegistry(appConfig)
 
-  def baseUrl = "http://localhost:" + SharedJetty.port + "/omatsivut"
+  def baseUrl = "http://localhost:" + AppConfig.embeddedJettyPortChooser.chosenPort + "/omatsivut"
 
   def authGet[A](uri: String)(f: => A)(implicit personOid: PersonOid): A = {
     get(uri, headers = FakeAuthentication.authHeaders(personOid.oid))(f)
@@ -33,9 +33,7 @@ trait ScalatraTestSupport extends Specification with HttpComponentsClient {
 }
 
 object SharedJetty {
-  private lazy val jettyLauncher = new JettyLauncher(PortChecker.findFreeLocalPort, Some("it"))
-
-  def port = jettyLauncher.port
+  private lazy val jettyLauncher = new JettyLauncher(Some("it"))
 
   def start {
     jettyLauncher.start

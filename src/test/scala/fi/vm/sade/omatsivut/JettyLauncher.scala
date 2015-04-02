@@ -7,11 +7,12 @@ import org.eclipse.jetty.webapp.WebAppContext
 
 object JettyLauncher {
   def main(args: Array[String]) {
-    new JettyLauncher(AppConfig.embeddedJettyPort).start.join
+    System.setProperty("omatsivut.port", System.getProperty("omatsivut.port", "7337"))
+    new JettyLauncher().start.join
   }
 }
 
-class JettyLauncher(val port: Int, profile: Option[String] = None) {
+class JettyLauncher(profile: Option[String] = None) {
   private val javaVersion: String = System.getProperty("java.version")
   if (!javaVersion.startsWith("1.8")) {
     System.err.println(s"""------------------------------
@@ -19,7 +20,7 @@ class JettyLauncher(val port: Int, profile: Option[String] = None) {
                           |------------------------------""".stripMargin)
     System.exit(1)
   }
-  val server = new Server(port)
+  val server = new Server(AppConfig.embeddedJettyPortChooser.chosenPort)
   val handlers = new HandlerCollection()
 
   val omatsivut = {
@@ -41,10 +42,6 @@ class JettyLauncher(val port: Int, profile: Option[String] = None) {
     context
   }
   handlers.addHandler(valintatulosservice)
-  ValintatulosServiceRunner.runner = new ValintatulosServiceRunner {
-    def port = JettyLauncher.this.port
-    def start = {}
-  }
 
   server.setHandler(handlers)
 
