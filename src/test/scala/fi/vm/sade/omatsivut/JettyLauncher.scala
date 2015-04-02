@@ -12,7 +12,13 @@ object JettyLauncher {
 }
 
 class JettyLauncher(val port: Int, profile: Option[String] = None) {
-  val useEmbeddedVts = !System.getProperty("java.version").startsWith("1.7") && System.getProperty("valintatulos.port") == null;
+  private val javaVersion: String = System.getProperty("java.version")
+  if (!javaVersion.startsWith("1.8")) {
+    System.err.println(s"""------------------------------
+                          |EXITING: Run omatsivut with Java 1.8, java.version was ${javaVersion}
+                          |------------------------------""".stripMargin)
+    System.exit(1)
+  }
   val server = new Server(port)
   val handlers = new HandlerCollection()
 
@@ -26,20 +32,18 @@ class JettyLauncher(val port: Int, profile: Option[String] = None) {
   }
   handlers.addHandler(omatsivut)
 
-  if (useEmbeddedVts) {
-    val valintatulosservice = {
-      System.setProperty("valintatulos.profile", "it-externalHakemus")
-      System.setProperty("hakemus.embeddedmongo.port", AppConfig.embeddedmongoPortChooser.chosenPort.toString)
-      val context = new WebAppContext();
-      context.setContextPath("/valinta-tulos-service");
-      context.setWar("target/valinta-tulos-service.war");
-      context
-    }
-    handlers.addHandler(valintatulosservice)
-    ValintatulosServiceRunner.runner = new ValintatulosServiceRunner {
-      def port = JettyLauncher.this.port
-      def start = {}
-    }
+  val valintatulosservice = {
+    System.setProperty("valintatulos.profile", "it-externalHakemus")
+    System.setProperty("hakemus.embeddedmongo.port", AppConfig.embeddedmongoPortChooser.chosenPort.toString)
+    val context = new WebAppContext();
+    context.setContextPath("/valinta-tulos-service");
+    context.setWar("target/valinta-tulos-service.war");
+    context
+  }
+  handlers.addHandler(valintatulosservice)
+  ValintatulosServiceRunner.runner = new ValintatulosServiceRunner {
+    def port = JettyLauncher.this.port
+    def start = {}
   }
 
   server.setHandler(handlers)
