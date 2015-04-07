@@ -239,7 +239,7 @@ trait HakemusPreviewGeneratorComponent {
           tableElement.children.zipWithIndex.flatMap { case (childElement, index) =>
             childElement.element match {
               case row: PreferenceRow =>
-                application.flatAnswers(row.getEducationOidInputId) match {
+                application.flatAnswers.getOrElse(row.getEducationOidInputId, "") match {
                   case null => Nil
                   case "" => Nil
                   case _ => List(li(`class` := "preference-row")(

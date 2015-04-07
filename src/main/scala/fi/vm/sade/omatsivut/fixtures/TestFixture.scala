@@ -15,6 +15,7 @@ import scala.collection.JavaConversions._
 object TestFixture {
   val hakemusNivelKesa2013WithPeruskouluBaseEducationId = "1.2.246.562.11.00000877107"
   val hakemusYhteishakuKevat2014WithForeignBaseEducationId = "1.2.246.562.11.00000441368"
+  val hakemusWithMissingPreferences = "1.2.246.562.11.00000441372"
   val hakemusWithAtheleteQuestions = "1.2.246.562.11.00000441371"
   val hakemusLisahaku = hakemusWithAtheleteQuestions
   val hakemusWithGradeGridAndDancePreference = "1.2.246.562.11.00000855417"

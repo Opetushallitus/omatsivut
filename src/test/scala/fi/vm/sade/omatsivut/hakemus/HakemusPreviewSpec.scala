@@ -46,6 +46,36 @@ class HakemusPreviewSpec extends HakemusApiSpecification with FixturePerson {
       }
     }
 
+    "generate application preview with missing preferences" in {
+
+      fixtureImporter.applyOverrides("peruskoulu")
+      authGet("secure/applications/preview/" + hakemusWithMissingPreferences) {
+        response.status must_== 200
+        response.getContentType() must_== "text/html; charset=UTF-8"
+
+        body must contain("""<label>Vastaanotettu</label><span>25.06.2014 15:52</span>""")
+        body must contain("""<label>Hakemusnumero</label><span>00000441368</span>""")
+
+        // henkilötiedot
+        body must contain("""<div class="question"><label>Sukunimi</label><span class="answer">Testaaja</span>""")
+        body must contain("""<div class="question"><label>Äidinkieli</label><span class="answer">suomi</span>""")
+        body must contain("""<div class="question"><label>Lähiosoite</label><span class="answer">foobartie 1</span></div>""")
+        body must contain("""<div class="question"><label>&nbsp;</label><span class="answer">00100 HELSINKI</span></div>""")
+        body.split("div").toList.count(_.contains("<label>Puhelinnumero</label>")) must_== 2
+        // koulutustausta
+        body must contain("""<div class="question"><label>Valitse tutkinto, jolla haet koulutukseen</label><span class="answer">Perusopetuksen oppimäärä</span>""")
+        // hakutoiveet
+        body must contain("""<li class="preference-row"><span class="index">1</span><span class="learning-institution"><label>Opetuspiste</label><span>Kallion lukio</span></span><span class="education"><label>Koulutus</label><span>Lukion ilmaisutaitolinja</span></span></li>""")
+        // lupatiedot
+        body must contain("""<label>Minulle saa lähettää postia ja sähköpostia vapaista opiskelupaikoista ja muuta koulutusmarkkinointia.</label><span class="answer">Ei</span>""")
+        // harkinnanvarainen haku liitepyynnöt
+        body must contain("""<td><div>Kallion lukio Lukion ilmaisutaitolinja</div><div>PL 3805</div><div>00099</div><div>HELSINGIN KAUPUNKI</div><div>sahkoposti@osoite.dev</div></td>""")
+        body must contain("""<td><div>Salon Lukio Lukio</div><div>Kaherinkatu 2</div><div>24130</div><div>SALO</div></td>""")
+        // piwik
+        body must contain("""src="/omatsivut/piwik/load"""")
+      }
+    }
+
     "reject access to other person's data" in {
       authGet("secure/applications/preview/" + hakemusYhteishakuKevat2014WithForeignBaseEducationId) {
         response.status must_== 404
