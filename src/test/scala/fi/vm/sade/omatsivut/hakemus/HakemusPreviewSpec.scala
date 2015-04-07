@@ -48,13 +48,13 @@ class HakemusPreviewSpec extends HakemusApiSpecification with FixturePerson {
 
     "generate application preview with missing preferences" in {
 
-      fixtureImporter.applyOverrides("peruskoulu")
-      authGet("secure/applications/preview/" + hakemusWithMissingPreferences) {
+      fixtureImporter.applyOverrides("peruskouluWithMissingPreferences")
+      authGet("secure/applications/preview/" + hakemusPeruskouluWithMissingPreferences) {
         response.status must_== 200
         response.getContentType() must_== "text/html; charset=UTF-8"
 
         body must contain("""<label>Vastaanotettu</label><span>25.06.2014 15:52</span>""")
-        body must contain("""<label>Hakemusnumero</label><span>00000441368</span>""")
+        body must contain("""<label>Hakemusnumero</label><span>00000441373</span>""")
 
         // henkilötiedot
         body must contain("""<div class="question"><label>Sukunimi</label><span class="answer">Testaaja</span>""")

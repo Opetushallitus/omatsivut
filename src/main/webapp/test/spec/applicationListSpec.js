@@ -4,6 +4,8 @@
   var hakemusNivelKesa2013WithPeruskouluBaseEducation = page.getApplication(hakemusNivelKesa2013WithPeruskouluBaseEducationId)
   var hakemusYhteishakuKevat2014WithForeignBaseEducationId = "1.2.246.562.11.00000441368"
   var hakemusYhteishakuKevat2014WithForeignBaseEducation = page.getApplication(hakemusYhteishakuKevat2014WithForeignBaseEducationId)
+  var hakemusYhteishakuKevat2014WithMissingPreferencesId = "1.2.246.562.11.00000441373"
+  var hakemusYhteishakuKevat2014WithMissingPreferences = page.getApplication(hakemusYhteishakuKevat2014WithMissingPreferencesId)
   var hakemusLisaKevat2014WithForeignBaseEducationId = "1.2.246.562.11.00000441371"
   var hakemusLisaKevat2014WithForeignBaseEducation = page.getApplication(hakemusLisaKevat2014WithForeignBaseEducationId)
   var hakemusYhteishakuKevat2013WithForeignBaseEducationId = "1.2.246.562.11.00000441369"
@@ -2085,7 +2087,7 @@
         hakemusYhteishakuKevat2014WithForeignBaseEducation.saveWaitSuccess
       )
 
-      endToEndTest("järjestys", "järjestys muuttuu nuolta klikkaamalla", function () {
+      endToEndTest(hakemusYhteishakuKevat2014WithForeignBaseEducation, hakemusYhteishakuKevat2014WithForeignBaseEducationId, "järjestys", "järjestys muuttuu nuolta klikkaamalla", function () {
         return hakemusYhteishakuKevat2014WithForeignBaseEducation.getPreference(1).moveDown()
       }, function (dbStart, dbEnd) {
         dbStart.hakemus.hakutoiveet[0].should.deep.equal(dbEnd.hakemus.hakutoiveet[0])
@@ -2093,12 +2095,12 @@
         dbStart.hakemus.hakutoiveet[2].should.deep.equal(dbEnd.hakemus.hakutoiveet[1])
       })
 
-      endToEndTest("poisto", "hakutoiveen voi poistaa", function () {
+      endToEndTest(hakemusYhteishakuKevat2014WithForeignBaseEducation, hakemusYhteishakuKevat2014WithForeignBaseEducationId, "poisto", "hakutoiveen voi poistaa", function () {
         return hakemusYhteishakuKevat2014WithForeignBaseEducation.getPreference(0).remove()
       }, function (dbStart, dbEnd) {
         dbEnd.hakemus.hakutoiveet.should.deep.equal(_.flatten([_.rest(dbStart.hakemus.hakutoiveet), {}]))
       })
-      endToEndTest("lisäys", "hakutoiveen voi lisätä", replacePreference(hakemusYhteishakuKevat2014WithForeignBaseEducation, 2, "Turun"), function(dbStart, dbEnd) {
+      endToEndTest(hakemusYhteishakuKevat2014WithForeignBaseEducation, hakemusYhteishakuKevat2014WithForeignBaseEducationId, "lisäys", "hakutoiveen voi lisätä", replacePreference(hakemusYhteishakuKevat2014WithForeignBaseEducation, 2, "Turun"), function(dbStart, dbEnd) {
           var newOne = {
               hakemusData: { 'Opetuspiste-id': '1.2.246.562.10.49832689993',
                   Opetuspiste: 'Turun Kristillinen opisto',
@@ -2116,6 +2118,32 @@
               hakuaikaId: "5474"
           }
         dbEnd.hakemus.hakutoiveet.should.deep.equal(dbStart.hakemus.hakutoiveet.slice(0, 2).concat(newOne).concat({}).concat({}))
+      })
+    })
+
+    describe("Hakemuslistauksen muokkaus hakemuksella, josta puuttuu preferenssejä", function () {
+      before(
+          page.applyFixtureAndOpen({fixtureName:"peruskouluWithMissingPreferences", applicationOid: hakemusYhteishakuKevat2014WithMissingPreferencesId})
+      )
+
+      endToEndTest(hakemusYhteishakuKevat2014WithMissingPreferences, hakemusYhteishakuKevat2014WithMissingPreferencesId, "lisäys", "hakutoiveen voi lisätä", replacePreference(hakemusYhteishakuKevat2014WithMissingPreferences, 2, "Turun"), function(dbStart, dbEnd) {
+          var newOne = {
+              hakemusData: { 'Opetuspiste-id': '1.2.246.562.10.49832689993',
+                  Opetuspiste: 'Turun Kristillinen opisto',
+                  Koulutus: 'Kymppiluokka',
+                  'Koulutus-id-kaksoistutkinto': 'false',
+                  'Koulutus-id-sora': 'false',
+                  'Koulutus-id-vocational': 'true',
+                  'Koulutus-id-attachments': 'false',
+                  'Koulutus-id-lang': 'FI',
+                  'Koulutus-id-aoIdentifier': '019',
+                  'Koulutus-id-athlete': 'false',
+                  'Koulutus-educationDegree': '22',
+                  'Koulutus-id': '1.2.246.562.14.2014032812530780195965',
+                  'Koulutus-id-educationcode': 'koulutus_020075' },
+              hakuaikaId: "5474"
+          }
+          dbEnd.hakemus.hakutoiveet.should.deep.equal(dbStart.hakemus.hakutoiveet.slice(0, 2).concat(newOne).concat({}).concat({}))
       })
     })
 
@@ -2505,7 +2533,7 @@
       .then(function() { return hakemusNivelKesa2013WithPeruskouluBaseEducation.getPreference(0).remove() })
   }
 
-  function endToEndTest(descName, testName, manipulationFunction, dbCheckFunction) {
+  function endToEndTest(application, applicationId, descName, testName, manipulationFunction, dbCheckFunction) {
     describe(descName, function() {
       var applicationsBefore, applicationsAfter;
       before(
@@ -2515,7 +2543,7 @@
           })
         },
         manipulationFunction,
-        hakemusYhteishakuKevat2014WithForeignBaseEducation.saveWaitSuccess,
+        application.saveWaitSuccess,
         function(done) {
           db.getApplications().then(function(apps) {
             applicationsAfter = apps
@@ -2524,7 +2552,7 @@
         }
       )
       it(testName, function() {
-        dbCheckFunction(findApplicationById(applicationsBefore, hakemusYhteishakuKevat2014WithForeignBaseEducationId), findApplicationById(applicationsAfter, hakemusYhteishakuKevat2014WithForeignBaseEducationId))
+        dbCheckFunction(findApplicationById(applicationsBefore, applicationId), findApplicationById(applicationsAfter, applicationId))
       })
     })
   }
@@ -2537,6 +2565,16 @@
       })
       .then(wait.until(function() { return hakemusYhteishakuKevat2014WithForeignBaseEducation.saveError() == "" }))
       .then(wait.forAngular)
+  }
+
+  function answerDiscretionaryQuestionsWithMissingPreferences() {
+        return wait.until(function() { return hakemusYhteishakuKevat2014WithMissingPreferences.questionsForApplication().count() >= 2})()
+            .then(function() { hakemusYhteishakuKevat2014WithMissingPreferences.questionsForApplication().enterAnswer(0, "Kyllä") })
+            .then(wait.until(function() { return hakemusYhteishakuKevat2014WithMissingPreferences.questionsForApplication().count() == 3})).then(function() {
+                hakemusYhteishakuKevat2014WithMissingPreferences.questionsForApplication().enterAnswer(1, "Oppimisvaikeudet")
+            })
+            .then(wait.until(function() { return hakemusYhteishakuKevat2014WithMissingPreferences.saveError() == "" }))
+            .then(wait.forAngular)
   }
 
   function findApplicationById(applications, id) {

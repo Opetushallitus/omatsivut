@@ -17,6 +17,7 @@ class ApplicationFixtureImporter(context: HakemusSpringContext) {
   def applyOverrides(fixtureName: String = "") {
     fixtureName match {
       case "peruskoulu" => new PeruskouluFixture(context.applicationDAO).apply
+      case "peruskouluWithMissingPreferences" => new PeruskouluWithMissingPreferencesFixture(context.applicationDAO).apply
       case "passiveApplication" => new ApplicationStateFixture(context.applicationDAO).setState(Application.State.PASSIVE)
       case "incompleteApplication" => new ApplicationStateFixture(context.applicationDAO).setState(Application.State.INCOMPLETE)
       case "submittedApplication" => new ApplicationStateFixture(context.applicationDAO).setState(Application.State.SUBMITTED)
