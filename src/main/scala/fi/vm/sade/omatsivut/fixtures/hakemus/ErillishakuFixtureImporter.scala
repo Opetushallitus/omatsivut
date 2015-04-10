@@ -4,6 +4,7 @@ import fi.vm.sade.hakemuseditori.hakemus.HakemusSpringContext
 import fi.vm.sade.haku.oppija.hakemus.domain.dto.SyntheticApplication
 import fi.vm.sade.haku.oppija.hakemus.domain.dto.SyntheticApplication.Hakemus
 import fi.vm.sade.haku.testfixtures.MongoFixtureImporter
+import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.hakemuseditori.valintatulokset.RemoteValintatulosService
@@ -12,7 +13,7 @@ class ErillishakuFixtureImporter(appConfig: AppConfig, springContext: HakemusSpr
   def applyFixtures(hyvaksytty: Boolean) {
     import collection.JavaConversions._
     MongoFixtureImporter.clearFixtures(springContext.mongoTemplate, springContext.applicationDAO, "application")
-    val hakemus = new Hakemus(TestFixture.personOid, "Erillis", "Hakija", "010101-123N", "foobar@example.com", "9.1.1995")
+    val hakemus = new Hakemus(TestFixture.personOid, "Erillis", "Hakija", OppijaConstants.SUKUPUOLI_MIES, OppijaConstants.EDUCATION_LANGUAGE_FI, "010101-123N", "foobar@example.com", "9.1.1995")
     val hakukohde: String = "1.2.246.562.5.72607738902"
     val tarjoaja: String = "1.2.246.562.10.591352080610"
     val syntheticApplication = new SyntheticApplication(hakukohde, "korkeakoulu-erillishaku", tarjoaja, List(hakemus))
