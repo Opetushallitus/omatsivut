@@ -16,6 +16,7 @@ Oppijan henkilökohtainen palvelu
    - Lataa Oraclen sivuilta ja kopioi tiedostot $JAVA_HOME/jre/lib/security
 
     http://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html
+- Java-versio vähintään 1.8 update 40 (aiemmilla tarvitaan flägi `-XX:-EliminateAutoBox`)
 
 Lisää JAVA_HOME ympäristömuuttujat polkuun:
 
@@ -38,7 +39,7 @@ Jos testeistä tulee IDE:llä yllättäviä `StackOverflow`-exceptioneita, anna 
 Aja JettyLauncher-luokka.
 
 - jotta impersonointi/autentikoinnin ohitus onnistuu, anna parametri `-Domatsivut.profile=it`.
-- jotta valinta-tulos-service suostuu käynnistymään anna parameteri `-DJAVA8_HOME=<home>`, missä <home> osoittaa Java8-installaatioon.
+- lisäksi `-Xss2M`, ettei stäkki lopu fikstuuridatalla, jossa on erittäin syviä rakenteita
 
 ### Offline-käyttö (skipRaamit) ja käyttö IE9:llä
 
