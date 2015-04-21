@@ -10,7 +10,7 @@ import fi.vm.sade.haku.oppija.hakemus.it.dao.ApplicationDAO
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.omatsivut.fixtures.hakemus.ApplicationFixtureImporter
-import fi.vm.sade.omatsivut.{PersonOid, ScalatraTestSupport}
+import fi.vm.sade.omatsivut.{SharedAppConfig, PersonOid, ScalatraTestSupport}
 import fi.vm.sade.utils.json4s.GenericJsonFormats
 import org.json4s.JsonAST.JObject
 import org.json4s._
@@ -20,7 +20,7 @@ import org.json4s.reflect.TypeInfo
 trait HakemusApiSpecification extends ScalatraTestSupport {
   implicit val jsonFormats: Formats = JsonFormats.jsonFormats ++ List(new HakemuksenTilaSerializer)
 
-  private lazy val springContext: HakemusSpringContext = componentRegistry.springContext
+  private lazy val springContext: HakemusSpringContext = SharedAppConfig.componentRegistry.springContext
   private lazy val dao: ApplicationDAO = springContext.applicationDAO
 
   lazy val fixtureImporter: ApplicationFixtureImporter = new ApplicationFixtureImporter(springContext)

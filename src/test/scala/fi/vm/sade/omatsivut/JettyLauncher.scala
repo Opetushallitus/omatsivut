@@ -49,14 +49,4 @@ class JettyLauncher(profile: Option[String] = None) {
     server.start
     server
   }
-
-
-  def withJetty[T](block: => T) = {
-    val server = start
-    try {
-      block
-    } finally {
-      server.stop
-    }
-  }
 }

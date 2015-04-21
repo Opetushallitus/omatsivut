@@ -8,8 +8,6 @@ import org.specs2.mutable.Specification
 import org.specs2.specification.{Fragments, Step}
 
 trait ScalatraTestSupport extends Specification with HttpComponentsClient {
-  lazy final val appConfig = new AppConfig.IT
-  lazy val componentRegistry = new ComponentRegistry(appConfig)
 
   def baseUrl = "http://localhost:" + AppConfig.embeddedJettyPortChooser.chosenPort + "/omatsivut"
 
@@ -32,12 +30,5 @@ trait ScalatraTestSupport extends Specification with HttpComponentsClient {
   override def map(fs: => Fragments) = Step(SharedJetty.start) ^ super.map(fs)
 }
 
-object SharedJetty {
-  private lazy val jettyLauncher = new JettyLauncher(Some("it"))
-
-  def start {
-    jettyLauncher.start
-  }
-}
 
 case class PersonOid(oid: String)

@@ -1,0 +1,20 @@
+package fi.vm.sade.omatsivut
+
+import fi.vm.sade.omatsivut.config.{ComponentRegistry, AppConfig}
+
+object SharedAppConfig {
+  lazy final val appConfig = new AppConfig.IT
+  lazy val componentRegistry = {
+    val registry = new ComponentRegistry(appConfig)
+    registry.start
+    registry
+  }
+}
+
+object SharedJetty {
+  private lazy val jettyLauncher = new JettyLauncher(Some("it"))
+
+  def start {
+    jettyLauncher.start
+  }
+}

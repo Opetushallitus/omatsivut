@@ -1,16 +1,8 @@
 package fi.vm.sade.omatsivut.fixtures
 
 import fi.vm.sade.hakemuseditori.fixtures.JsonFixtureMaps
-import fi.vm.sade.hakemuseditori.hakemus.{HakemusSpringContext, ImmutableLegacyApplicationWrapper}
-import fi.vm.sade.haku.oppija.hakemus.domain.Application
-import fi.vm.sade.omatsivut.config.{AppConfig, ComponentRegistry}
-import fi.vm.sade.hakemuseditori.domain.Language
 import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus._
-import fi.vm.sade.hakemuseditori.lomake.domain.Lomake
 import fi.vm.sade.hakemuseditori.tarjonta.domain.Hakuaika
-import ImmutableLegacyApplicationWrapper.wrap
-
-import scala.collection.JavaConversions._
 
 object TestFixture {
   val hakemusNivelKesa2013WithPeruskouluBaseEducationId = "1.2.246.562.11.00000877107"
@@ -32,31 +24,6 @@ object TestFixture {
 
   val persons = Map((testHetu, personOid),
                     (testHetuWithNoApplications, "1.2.246.562.24.79213463339"))
-  lazy val appConfig = new AppConfig.IT
-  lazy val componentRegistry = new ComponentRegistry(appConfig)
-
-  lazy val (applicationSystemNivelKesa2013, applicationNivelKesa2013WithPeruskouluBaseEducationApp) = {
-    withConfig(new ComponentRegistry(appConfig), { registry =>
-      val springContext: HakemusSpringContext = registry.springContext
-      val as = springContext.applicationSystemService.getApplicationSystem(applicationSystemNivelKesa2013Oid)
-      val app = springContext.applicationDAO.find(new Application().setOid(hakemusNivelKesa2013WithPeruskouluBaseEducationId)).toList.head
-      (as, app)
-    })
-  }
-
-  def withConfig[T](registry: ComponentRegistry, f: (ComponentRegistry => T)): T = {
-    registry.start
-    try {
-      f(registry)
-    } finally {
-      registry.stop
-    }
-  }
-
-  def haku(implicit lang: Language.Language) = componentRegistry.tarjontaService.haku(applicationSystemNivelKesa2013Oid, lang).get
-  def hakemusMuutos(implicit lang: Language.Language) = {
-    componentRegistry.hakemusConverter.convertToHakemus(Some(Lomake(applicationSystemNivelKesa2013)), haku, wrap(applicationNivelKesa2013WithPeruskouluBaseEducationApp)).toHakemusMuutos
-  }
 
   lazy val ammattistartti: HakutoiveData = JsonFixtureMaps.findByKey[HakutoiveData]("/hakemuseditorimockdata/hakutoiveet.json", "1.2.246.562.14.2014030415375012208392").get
   lazy val ammattistarttiAhlman: HakutoiveData = JsonFixtureMaps.findByKey[HakutoiveData]("/hakemuseditorimockdata/hakutoiveet.json", "1.2.246.562.14.2014040912353139913320").get
