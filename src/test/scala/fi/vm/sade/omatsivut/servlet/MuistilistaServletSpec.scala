@@ -15,8 +15,6 @@ import org.specs2.runner.JUnitRunner
 @RunWith(classOf[JUnitRunner])
 class MuistilistaServletSpec extends ScalatraTestSupport with JsonFormats {
 
-  override lazy val appConfig = new AppConfig.IT
-
     "GET muistilista" should {
       "make a cookie with correct ids" in {
         val exampleBasket: String = """["1.1","1.2"]"""

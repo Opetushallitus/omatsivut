@@ -13,7 +13,6 @@ import org.specs2.runner.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
 class ValidateApplicationSpec extends HakemusApiSpecification with FixturePerson {
-  override lazy val appConfig = new AppConfig.IT
   private val hakemusNivelKesa2013WithPeruskouluBaseEducationExtraQuestions = List(
     "Miksi haet kymppiluokalle?",
     "Haen ensisijaisesti kielitukikympille?",

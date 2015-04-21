@@ -13,7 +13,6 @@ import org.specs2.runner.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
 class UpdateApplicationSpec extends HakemusApiSpecification with FixturePerson with TimeWarp {
-  override implicit lazy val appConfig = new AppConfig.IT
   sequential
 
   "PUT /application/:oid" should {

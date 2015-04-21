@@ -8,7 +8,6 @@ import org.specs2.runner.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
 class AuthenticationSpec extends ScalatraTestSupport with FixturePerson {
-  override lazy val appConfig = new AppConfig.IT
 
   "GET /applications" should {
     "return 401 if not authenticated" in {

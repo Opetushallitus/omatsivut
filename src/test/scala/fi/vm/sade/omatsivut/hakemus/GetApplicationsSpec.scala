@@ -11,7 +11,6 @@ import org.specs2.runner.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
 class GetApplicationsSpec extends HakemusApiSpecification with FixturePerson with TimeWarp {
-  override lazy val appConfig = new AppConfig.IT
 
   sequential
 

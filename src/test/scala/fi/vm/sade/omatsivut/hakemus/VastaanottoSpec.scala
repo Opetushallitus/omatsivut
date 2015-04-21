@@ -10,7 +10,6 @@ import org.specs2.runner.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
 class VastaanottoSpec extends HakemusApiSpecification with FixturePerson {
-  override implicit lazy val appConfig = new AppConfig.IT
   sequential
 
   "POST /applications/vastaanota/:hakuOid/:hakemusOid" should {

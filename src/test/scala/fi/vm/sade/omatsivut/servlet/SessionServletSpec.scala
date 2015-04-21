@@ -10,7 +10,6 @@ import org.specs2.runner.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
 class SessionServletSpec extends ScalatraTestSupport {
-  override lazy val appConfig = new AppConfig.IT
 
   "GET /secure/initsession" should {
     "redirect to Shibboleth login" in {

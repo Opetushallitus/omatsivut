@@ -10,7 +10,6 @@ import org.specs2.runner.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
 class HakemusPreviewSpec extends HakemusApiSpecification with FixturePerson {
-  override lazy val appConfig = new AppConfig.IT
 
   sequential
 

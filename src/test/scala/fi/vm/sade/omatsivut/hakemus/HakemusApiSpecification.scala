@@ -52,7 +52,7 @@ trait HakemusApiSpecification extends ScalatraTestSupport {
     }
   }
 
-  def setupFixture(fixtureName: String)(implicit appConfig: AppConfig) = {
+  def setupFixture(fixtureName: String) = {
     new ApplicationFixtureImporter(springContext).applyFixtures(fixtureName)
   }
 
