@@ -35,7 +35,7 @@ class JettyLauncher(profile: Option[String] = None) {
 
   val valintatulosservice = {
     System.setProperty("valintatulos.profile", "it-externalHakemus")
-    System.setProperty("hakemus.embeddedmongo.port", AppConfig.embeddedmongoPortChooser.chosenPort.toString)
+    System.setProperty("hakemus.embeddedmongo.port", AppConfig.embeddedMongoPortChooser.chosenPort.toString)
     val context = new WebAppContext();
     context.setContextPath("/valinta-tulos-service");
     context.setWar("target/valinta-tulos-service.war");

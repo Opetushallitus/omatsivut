@@ -9,7 +9,7 @@ import fi.vm.sade.utils.tcp.{PortChecker, PortFromSystemPropertyOrFindFree}
 
 object AppConfig extends Logging {
   private implicit val settingsParser = ApplicationSettingsParser
-  val embeddedmongoPortChooser = new PortFromSystemPropertyOrFindFree("omatsivut.embeddedmongo.port")
+  val embeddedMongoPortChooser = new PortFromSystemPropertyOrFindFree("omatsivut.embeddedmongo.port")
 
   val embeddedJettyPortChooser = new PortFromSystemPropertyOrFindFree("omatsivut.port");
 
@@ -57,7 +57,7 @@ object AppConfig extends Logging {
     private var mongo: Option[MongoServer] = None
 
     override def onStart {
-      mongo = EmbeddedMongo.start(embeddedmongoPortChooser)
+      mongo = EmbeddedMongo.start(embeddedMongoPortChooser)
     }
 
     override def onStop {
@@ -68,7 +68,7 @@ object AppConfig extends Logging {
     override lazy val settings = ConfigTemplateProcessor.createSettings("omatsivut", templateAttributesFile)
       .withOverride("omatsivut.valinta-tulos-service.url", "http://localhost:"+ embeddedJettyPortChooser.chosenPort + "/valinta-tulos-service")
       .withOverride("mongo.db.name", "hakulomake")
-      .withOverride("mongodb.oppija.uri", "mongodb://localhost:" + embeddedmongoPortChooser.chosenPort)
+      .withOverride("mongodb.oppija.uri", "mongodb://localhost:" + embeddedMongoPortChooser.chosenPort)
   }
 
   class ImmediateCookieTimeout extends IT {
