@@ -1,8 +1,6 @@
 package fi.vm.sade.omatsivut.config
 
-import fi.vm.sade.omatsivut.config.AppConfig.{AppConfig, ExampleTemplatedProps}
-import fi.vm.sade.utils.mongo.EmbeddedMongo
-import fi.vm.sade.utils.tcp.ChooseFreePort
+import fi.vm.sade.omatsivut.config.AppConfig.{EmbbeddedMongo, AppConfig}
 import org.junit.runner.RunWith
 import org.specs2.matcher.PathMatchers
 import org.specs2.mutable.Specification
@@ -12,12 +10,9 @@ import org.specs2.runner.JUnitRunner
 class AppConfigSpec extends Specification {
   "Config with default profile" should {
     "Start up" in {
-      val embeddedmongoPortChooser = new ChooseFreePort()
-      EmbeddedMongo.withEmbeddedMongo(embeddedmongoPortChooser) {
-        validateConfig(new AppConfig with ExampleTemplatedProps {
-          def springConfiguration = new OmatSivutSpringContext.Default()
-        })
-      }
+      validateConfig(new EmbbeddedMongo {
+        def springConfiguration = new OmatSivutSpringContext.Default()
+      })
     }
   }
 

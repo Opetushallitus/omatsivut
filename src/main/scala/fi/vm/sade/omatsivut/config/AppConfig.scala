@@ -50,25 +50,8 @@ object AppConfig extends Logging {
       .withOverride("mongodb.oppija.uri", "mongodb://localhost:27017")
   }
 
-  class IT extends ExampleTemplatedProps with MockAuthentication with StubbedExternalDeps {
+  class IT extends EmbbeddedMongo with MockAuthentication with StubbedExternalDeps {
     def springConfiguration = new OmatSivutSpringContext.Dev()
-    override def usesLocalDatabase = true
-
-    private var mongo: Option[MongoServer] = None
-
-    override def onStart {
-      mongo = EmbeddedMongo.start(embeddedMongoPortChooser)
-    }
-
-    override def onStop {
-      mongo.foreach(_.stop)
-      mongo = None
-    }
-
-    override lazy val settings = ConfigTemplateProcessor.createSettings("omatsivut", templateAttributesFile)
-      .withOverride("omatsivut.valinta-tulos-service.url", "http://localhost:"+ embeddedJettyPortChooser.chosenPort + "/valinta-tulos-service")
-      .withOverride("mongo.db.name", "hakulomake")
-      .withOverride("mongodb.oppija.uri", "mongodb://localhost:" + embeddedMongoPortChooser.chosenPort)
   }
 
   class ImmediateCookieTimeout extends IT {
@@ -92,6 +75,24 @@ object AppConfig extends Logging {
   }
 
   trait StubbedExternalDeps {
+  }
+
+  trait EmbbeddedMongo extends AppConfig with ExampleTemplatedProps {
+    private var mongo: Option[MongoServer] = None
+
+    override def onStart {
+      mongo = EmbeddedMongo.start(embeddedMongoPortChooser)
+    }
+
+    override def onStop {
+      mongo.foreach(_.stop)
+      mongo = None
+    }
+
+    override lazy val settings = ConfigTemplateProcessor.createSettings("omatsivut", templateAttributesFile)
+      .withOverride("omatsivut.valinta-tulos-service.url", "http://localhost:"+ embeddedJettyPortChooser.chosenPort + "/valinta-tulos-service")
+      .withOverride("mongo.db.name", "hakulomake")
+      .withOverride("mongodb.oppija.uri", "mongodb://localhost:" + embeddedMongoPortChooser.chosenPort)
   }
 
   trait MockAuthentication extends AppConfig {
