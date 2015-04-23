@@ -956,6 +956,14 @@
           })
         })
       })
+      describe("jos on ottanut paikan vastaan yliopistohaussa, mutta ilmoittautuminen on loppunut", function () {
+        before(page.applyValintatulosFixtureAndOpen("hyvaksytty-vastaanottanut", {"ohjausparametrit": "ilmoittautuminen-loppunut"}))
+        describe("Oili-ilmoittautumislinkki", function () {
+          it("Piilotetaan", function() {
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.ilmoittautuminen(0).visible).to.equal(false)
+          })
+        })
+      })
       describe("Jos on saanut paikan, muttei vielä ottanut sitä vastaan", function() {
         before(page.applyValintatulosFixtureAndOpen("hyvaksytty-kesken-julkaistavissa"))
 
