@@ -16,7 +16,6 @@ object SharedJetty {
   private lazy val jettyLauncher = new JettyLauncher(Some("it"))
 
   def start {
-    EmbeddedMongo.start(AppConfig.embeddedMongoPortChooser)
     jettyLauncher.start
   }
 }
