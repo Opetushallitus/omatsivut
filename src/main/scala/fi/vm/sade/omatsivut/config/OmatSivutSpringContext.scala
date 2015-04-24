@@ -1,8 +1,5 @@
 package fi.vm.sade.omatsivut.config
 
-import fi.vm.sade.hakemuseditori.domain.Language
-import fi.vm.sade.hakemuseditori.koulutusinformaatio.KoulutusInformaatioComponent
-import fi.vm.sade.haku.oppija.common.koulutusinformaatio.{ApplicationOption, ApplicationOptionService}
 import fi.vm.sade.haku.oppija.hakemus.it.dao.ApplicationOidDAO
 import fi.vm.sade.haku.oppija.hakemus.service.HakuPermissionService
 import fi.vm.sade.haku.oppija.hakemus.service.impl.HakuPermissionServiceMockImpl
@@ -26,8 +23,8 @@ object OmatSivutSpringContext extends Logging {
     appContext.getEnvironment.setActiveProfiles(configuration.springConfiguration.profile)
     customPropertiesHack(appContext, configuration)
     appContext.register(configuration.springConfiguration.getClass)
-    appContext.refresh
-    return appContext
+    appContext.refresh()
+    appContext
   }
 
   private def customPropertiesHack(appContext: AnnotationConfigApplicationContext, configuration: AppConfig) {
