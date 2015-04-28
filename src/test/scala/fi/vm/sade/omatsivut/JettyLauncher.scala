@@ -1,12 +1,22 @@
 package fi.vm.sade.omatsivut
 
+import javax.net.ssl._
+
 import fi.vm.sade.omatsivut.config.AppConfig
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.server.handler.HandlerCollection
 import org.eclipse.jetty.webapp.WebAppContext
 
 object JettyLauncher {
+
+  private def disableSSLHostNameVerification {
+    HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
+      override def verify(hostname: String, session: SSLSession) = true
+    })
+  }
+
   def main(args: Array[String]) {
+    disableSSLHostNameVerification
     System.setProperty("omatsivut.port", System.getProperty("omatsivut.port", "7337"))
     new JettyLauncher().start.join
   }
