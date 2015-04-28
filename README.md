@@ -45,7 +45,7 @@ Aja JettyLauncher-luokka.
 
 Kun sovellusta ajetaan `-Domatsivut.profile=it`-parametrillä, toimii se ilman verkkoyhteyttä vaikkapa junassa.
 Selaimessa sovellus kuitenkin lataa "oppija-raamit" testiympäristön serveriltä, johon sinulla ei välttämättä ole pääsyä.
-Tässä tapauksessa voit käyttää osoitetta [http://localhost:7337/omatsivut/index.html#skipRaamit], jolloin raamit jätetään
+Tässä tapauksessa voit käyttää osoitetta [http://localhost:7337/omatsivut/index.html#skipRaamit](http://localhost:7337/omatsivut/index.html#skipRaamit), jolloin raamit jätetään
 pois. Mocha-testit käyttävät samaa ratkaisua.
 
 Myös IE9:llä pitää paikallisessa ympäristössä CORS:n takia käyttää skipRaamit tapaa.
