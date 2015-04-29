@@ -10,9 +10,11 @@ import org.specs2.runner.JUnitRunner
 class OmatSivutMochaTest extends Specification {
   import scala.sys.process._
 
-  "Mocha tests" in {
+  step {
     SharedJetty.start
+  }
 
+  "Mocha tests" in {
     val pb = Seq("node_modules/mocha-phantomjs/bin/mocha-phantomjs", "-R", "spec", "http://localhost:"+AppConfig.embeddedJettyPortChooser.chosenPort+"/omatsivut/test/runner.html")
     val res = pb.!
     if (res != 0) {

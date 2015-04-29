@@ -9,6 +9,10 @@ import org.specs2.specification.{Fragments, Step}
 
 trait ScalatraTestSupport extends Specification with HttpComponentsClient {
 
+  step {
+    SharedJetty.start
+  }
+
   def baseUrl = "http://localhost:" + AppConfig.embeddedJettyPortChooser.chosenPort + "/omatsivut"
 
   def authGet[A](uri: String)(f: => A)(implicit personOid: PersonOid): A = {
@@ -26,8 +30,6 @@ trait ScalatraTestSupport extends Specification with HttpComponentsClient {
   def postJSON[T](path: String, body: String, headers: Map[String, String] = Map.empty)(block: => T): T = {
     post(path, body.getBytes("UTF-8"), Map("Content-type" -> "application/json") ++ headers)(block)
   }
-
-  override def map(fs: => Fragments) = Step(SharedJetty.start) ^ super.map(fs)
 }
 
 
