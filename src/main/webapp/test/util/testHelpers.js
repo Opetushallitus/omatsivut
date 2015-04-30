@@ -34,7 +34,7 @@ wait = {
         if (condition()) {
           deferred.resolve()
         } else if (remaining === 0) {
-          deferred.reject("timeout of " + maxWaitMs + " in wait.until")
+          deferred.reject("timeout of " + maxWaitMs + " in wait.until of condition:\n" + condition)
         } else {
           setTimeout(function() {
             waitLoop(remaining-1)
