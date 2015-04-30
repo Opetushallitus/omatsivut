@@ -1,16 +1,18 @@
 package fi.vm.sade.omatsivut
 
-import fi.vm.sade.omatsivut.config.{AppConfig, ComponentRegistry}
+import fi.vm.sade.hakemuseditori.hakemus.HakemusSpringContext
+import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.security.fake.FakeAuthentication
-import fi.vm.sade.utils.tcp.PortChecker
 import org.scalatra.test.HttpComponentsClient
 import org.specs2.mutable.Specification
-import org.specs2.specification.{Fragments, Step}
 
 trait ScalatraTestSupport extends Specification with HttpComponentsClient {
 
+  protected lazy val springContext: HakemusSpringContext = SharedAppConfig.componentRegistry.springContext
+
   step {
     SharedJetty.start
+    springContext
   }
 
   def baseUrl = "http://localhost:" + AppConfig.embeddedJettyPortChooser.chosenPort + "/omatsivut"
