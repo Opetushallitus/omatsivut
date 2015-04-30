@@ -15,19 +15,26 @@ function S(selector) {
   }
 }
 
+function getWaitTimeut() {
+  if(testTimeoutCurrent !== testTimeoutDefault) {
+    testTimeoutCurrent = testTimeoutDefault
+    return testTimeoutFirst
+  }
+  return testTimeoutCurrent
+}
 wait = {
-  maxWaitMs: testTimeout,
   waitIntervalMs: 10,
   until: function(condition, count) {
     return function() {
+      var maxWaitMs = getWaitTimeut()
       var deferred = Q.defer()
-      if (count == undefined) count = wait.maxWaitMs / wait.waitIntervalMs;
+      if (count == undefined) count = maxWaitMs / wait.waitIntervalMs;
 
       (function waitLoop(remaining) {
         if (condition()) {
           deferred.resolve()
         } else if (remaining === 0) {
-          deferred.reject("timeout of " + wait.maxWaitMs + " in wait.until")
+          deferred.reject("timeout of " + maxWaitMs + " in wait.until")
         } else {
           setTimeout(function() {
             waitLoop(remaining-1)

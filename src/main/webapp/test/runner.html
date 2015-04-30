@@ -13,10 +13,12 @@
 <script src="lib/q.js"></script>
 <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 <script>
-    var testTimeout = 30000
+    var testTimeoutFirst = 90000
+    var testTimeoutDefault = 30000
+    var testTimeoutCurrent = testTimeoutFirst
     mocha.ui('bdd')
     mocha.reporter('html')
-    mocha.timeout(testTimeout)
+    mocha.timeout(testTimeoutDefault)
 </script>
 <script src="util/testHelpers.js"></script>
 <script src="page/applicationListPage.js"></script>
