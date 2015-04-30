@@ -78,8 +78,8 @@
   })
 
   describe("Sivupohjan lokalisointi", function() {
+    this.timeout(90000)
     before(
-        function(){this.timeout(90000)},
         page.applyFixtureAndOpen({})
     )
     it("kaikki tekstit on lokalisoitu", function() {
