@@ -13,9 +13,8 @@
 <script src="lib/q.js"></script>
 <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 <script>
-    var testTimeoutFirst = 90000
-    var testTimeoutDefault = 30000
-    var testTimeoutCurrent = testTimeoutFirst
+    var testTimeoutPageLoad = 90000
+    var testTimeoutDefault = 20000
     mocha.ui('bdd')
     mocha.reporter('html')
     mocha.timeout(testTimeoutDefault)

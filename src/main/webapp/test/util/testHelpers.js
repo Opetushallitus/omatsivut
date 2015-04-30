@@ -15,20 +15,13 @@ function S(selector) {
   }
 }
 
-function getWaitTimeut() {
-  if(testTimeoutCurrent !== testTimeoutDefault) {
-    testTimeoutCurrent = testTimeoutDefault
-    return testTimeoutFirst
-  }
-  return testTimeoutCurrent
-}
 wait = {
   waitIntervalMs: 10,
-  until: function(condition, count) {
+  until: function(condition, maxWaitMs) {
     return function() {
-      var maxWaitMs = getWaitTimeut()
+      if (maxWaitMs == undefined) maxWaitMs = testTimeoutDefault;
       var deferred = Q.defer()
-      if (count == undefined) count = maxWaitMs / wait.waitIntervalMs;
+      var count = maxWaitMs / wait.waitIntervalMs;
 
       (function waitLoop(remaining) {
         if (condition()) {
@@ -230,9 +223,12 @@ function openPage(path, predicate) {
   return function() {
     var newTestFrame = $('<iframe>').attr({src: path, width: 1024, height: 800, id: "testframe"})
     $("#testframe").replaceWith(newTestFrame)
-    return wait.until(function() {
-      return predicate()
-    })().then(function() {
+    return wait.until(
+        function() {
+          return predicate()
+        },
+        testTimeoutPageLoad
+    )().then(function() {
         window.uiError = null
         testFrame().onerror = function(err) { window.uiError = err; } // Hack: force mocha to fail on unhandled exceptions
     })
