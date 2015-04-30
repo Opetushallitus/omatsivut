@@ -78,7 +78,10 @@
   })
 
   describe("Sivupohjan lokalisointi", function() {
-    before(page.applyFixtureAndOpen({}))
+    before(
+        function(){this.timeout(90000)},
+        page.applyFixtureAndOpen({})
+    )
     it("kaikki tekstit on lokalisoitu", function() {
       return ApplicationListPage().getNonLocalizedText().then(function(text) {
         expect(text).to.equal("")
