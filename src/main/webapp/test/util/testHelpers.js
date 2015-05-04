@@ -162,11 +162,11 @@ db = {
 fixtures = {
   applyFixture: function(fixtureName, applicationOid) {
     applicationOid = applicationOid || "*"
-    return Q($.ajax("/omatsivut/util/fixtures/hakemus/apply?fixturename=" + fixtureName + "&applicationOid=" + applicationOid, { type: "PUT", async: false }))
+    return Q($.ajax({url: "/omatsivut/util/fixtures/hakemus/apply?fixturename=" + fixtureName + "&applicationOid=" + applicationOid, type: "PUT"}))
   },
 
   applyErillishaku: function(hyvaksytty) {
-    return Q($.ajax("/omatsivut/util/fixtures/erillishaku?hyvaksytty=" + hyvaksytty, { type: "PUT", async: false }))
+    return Q($.ajax({url: "/omatsivut/util/fixtures/erillishaku?hyvaksytty=" + hyvaksytty, type: "PUT"}))
   },
 
   applyValintatulos: function(fixtureName, otherFixtures) {
@@ -179,19 +179,19 @@ fixtures = {
         query = query +"&haku=" + otherFixtures.haku
       }
     }
-    return Q($.ajax("/omatsivut/util/fixtures/valintatulos/apply?fixturename=" + fixtureName + query, { type: "PUT", async: false}))
+    return Q($.ajax({url: "/omatsivut/util/fixtures/valintatulos/apply?fixturename=" + fixtureName + query, type: "PUT"}))
   },
 
   setApplicationStart: function(applicationId, startTime) {
     var f = function(hakuOid) {
-      return Q($.ajax("/omatsivut/util/fixtures/haku/" + hakuOid + "/overrideStart/" + startTime, {type: "PUT", async: false}))
+      return Q($.ajax({url: "/omatsivut/util/fixtures/haku/" + hakuOid + "/overrideStart/" + startTime, type: "PUT"}))
     }
     return this.setHakuData(applicationId, f)
   },
 
   setInvertedPriority: function(applicationId) {
     var f = function (hakuOid) {
-      return Q($.ajax("/omatsivut/util/fixtures/haku/" + hakuOid + "/invertPriority", { type: "PUT", async: false}))
+      return Q($.ajax({url: "/omatsivut/util/fixtures/haku/" + hakuOid + "/invertPriority", type: "PUT"}))
     }
     return this.setHakuData(applicationId, f)
   },
@@ -199,12 +199,12 @@ fixtures = {
   setHakuData: function(applicationId, f) {
     return db.getApplications().then(function(applications) {
       var hakuOid = _(applications).find(function(application) { return application.hakemus.oid === applicationId }).hakemus.haku.oid
-      f(hakuOid)
+      return f(hakuOid)
     })
   },
 
   setValintatulosServiceFailure: function(fail) {
-    return Q($.ajax("/omatsivut/util/fixtures/valintatulos/fail/" + fail, {type: "PUT", async: "false"}))
+    return Q($.ajax({url: "/omatsivut/util/fixtures/valintatulos/fail/" + fail, type: "PUT"}))
   }
 }
 
