@@ -162,11 +162,11 @@ db = {
 fixtures = {
   applyFixture: function(fixtureName, applicationOid) {
     applicationOid = applicationOid || "*"
-    return Q($.ajax("/omatsivut/util/fixtures/hakemus/apply?fixturename=" + fixtureName + "&applicationOid=" + applicationOid, { type: "PUT" }))
+    return Q($.ajax("/omatsivut/util/fixtures/hakemus/apply?fixturename=" + fixtureName + "&applicationOid=" + applicationOid, { type: "PUT", async: false }))
   },
 
   applyErillishaku: function(hyvaksytty) {
-    return Q($.ajax("/omatsivut/util/fixtures/erillishaku?hyvaksytty=" + hyvaksytty, { type: "PUT" }))
+    return Q($.ajax("/omatsivut/util/fixtures/erillishaku?hyvaksytty=" + hyvaksytty, { type: "PUT", async: false }))
   },
 
   applyValintatulos: function(fixtureName, otherFixtures) {
@@ -179,7 +179,7 @@ fixtures = {
         query = query +"&haku=" + otherFixtures.haku
       }
     }
-    return Q($.ajax("/omatsivut/util/fixtures/valintatulos/apply?fixturename=" + fixtureName + query, { type: "PUT" }))
+    return Q($.ajax("/omatsivut/util/fixtures/valintatulos/apply?fixturename=" + fixtureName + query, { type: "PUT", async: false}))
   },
 
   setApplicationStart: function(applicationId, startTime) {
