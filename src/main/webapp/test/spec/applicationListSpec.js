@@ -403,12 +403,15 @@
 
         describe("hakutoiveen lisääminen", function() {
           it("onnistuu", function () {
+            expect(hakemusErityisopetuksena.saveError()).to.equal("")
           })
         })
 
         describe("hakutoiveen poisto", function() {
-          before(hakemusErityisopetuksena.getPreference(1).remove)
-          before(hakemusErityisopetuksena.saveWaitSuccess)
+          before(
+              hakemusErityisopetuksena.getPreference(1).remove,
+              hakemusErityisopetuksena.saveWaitSuccess
+          )
 
           describe("toisen hakutoiveen poiston jälkeen", function() {
             it("lisäkysymykset näkyvät yhä", function () {
