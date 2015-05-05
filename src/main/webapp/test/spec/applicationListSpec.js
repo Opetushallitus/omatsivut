@@ -393,8 +393,8 @@
       })
 
       describe("kun haku on käynnissä", function() {
-        before(page.setApplicationStartAndOpen(hakemusErityisopetuksenaId, daysFromNow(-30)))
         before(
+          page.setApplicationStartAndOpen(hakemusErityisopetuksenaId, daysFromNow(-30)),
           replacePreference(hakemusErityisopetuksena, 2, "Kiipulan ammattiopisto"),
           function() { hakemusErityisopetuksena.questionsForApplication().enterAnswer(0, "Ei") },
           function() { hakemusErityisopetuksena.questionsForApplication().enterAnswer(1, "Ei") },
