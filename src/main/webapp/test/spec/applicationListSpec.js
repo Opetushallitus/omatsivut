@@ -409,6 +409,7 @@
 
         describe("hakutoiveen poisto", function() {
           before(
+              wait.forAngular,
               hakemusErityisopetuksena.getPreference(1).remove,
               hakemusErityisopetuksena.saveWaitSuccess
           )
