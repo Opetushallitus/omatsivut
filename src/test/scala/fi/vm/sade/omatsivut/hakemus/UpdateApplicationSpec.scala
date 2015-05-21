@@ -68,7 +68,10 @@ class UpdateApplicationSpec extends HakemusApiSpecification with FixturePerson w
               Map("field" -> "preference4-Opetuspiste-id", "new value" -> ""),
               Map("field" -> "preference5-Opetuspiste-id", "new value" -> ""),
               Map("field" -> "preference5-Koulutus-id", "new value" -> ""),
-              Map("field" -> "preference4-Koulutus-id", "new value" -> "")
+              Map("field" -> "preference4-Koulutus-id", "new value" -> ""),
+              Map("field" -> "eligibility_1_2_246_562_14_2014032812530780195965", "new value" -> "NOT_CHECKED:UNKNOWN:null"),
+              Map("field" -> "eligibility_1_2_246_562_14_2014032610154661183054", "new value" -> "NOT_CHECKED:UNKNOWN:null"),
+              Map("field" -> "eligibility_1_2_246_562_14_2014040212501070122979", "new value" -> "NOT_CHECKED:UNKNOWN:null")
             )
             application.getNotes.size must_== 3 // two existing notes + new note at position 0
           val note: ApplicationNote = application.getNotes.get(0)
