@@ -4,6 +4,7 @@ import java.util
 import java.util.Date
 
 import fi.vm.sade.haku.oppija.common.suoritusrekisteri.{ArvosanaDTO, OpiskelijaDTO, SuoritusDTO, SuoritusrekisteriService}
+import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.hakemus.it.dao.ApplicationOidDAO
 import fi.vm.sade.haku.oppija.hakemus.service.HakuPermissionService
 import fi.vm.sade.haku.oppija.hakemus.service.impl.HakuPermissionServiceMockImpl
@@ -11,6 +12,8 @@ import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
 import fi.vm.sade.haku.virkailija.authentication.AuthenticationService
 import fi.vm.sade.haku.virkailija.authentication.impl.AuthenticationServiceMockImpl
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.tarjonta.HakuService
+import fi.vm.sade.haku.virkailija.valinta.ValintaService
+import fi.vm.sade.haku.virkailija.valinta.dto.{HakemusDTO, HakijaDTO}
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.mongo.OmatSivutMongoConfiguration
 import fi.vm.sade.utils.slf4j.Logging
@@ -107,6 +110,14 @@ object OmatSivutSpringContext extends Logging {
       override def getApplicationSystems(b: Boolean): util.List[ApplicationSystem] = unsupportedIntegrationException
 
       override def getApplicationSystem(s: String): ApplicationSystem = unsupportedIntegrationException
+    }
+
+    @Bean def valintaService: ValintaService = new ValintaService {
+      override def getHakemus(asOid: String, applicationOid: String): HakemusDTO = unsupportedIntegrationException
+
+      override def getHakija(asOid: String, application: String): HakijaDTO = unsupportedIntegrationException
+
+      override def fetchValintaData(application: Application): util.Map[String, String] = unsupportedIntegrationException
     }
 
     def unsupportedIntegrationException: Nothing = {
