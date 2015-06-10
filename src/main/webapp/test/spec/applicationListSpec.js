@@ -499,12 +499,13 @@
         it("valintatulokset näytetään", function () {
           expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].hakukohde).to.equal('Kallion lukio Lukion ilmaisutaitolinja')
           expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].tila).to.equal('2. varasijalla. Varasijoja täytetään 26. elokuuta 2014 asti.')
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[1].hakukohde).to.equal('Salon lukio Lukio')
           expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[1].tila).to.equal('Hyväksytty')
         })
 
         it("ilmoitetaan myönnetystä paikasta", function() {
           expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).title()).to.deep.equal(
-            "Opiskelupaikka myönnetty Kallion lukio - Lukio"
+            "Opiskelupaikka myönnetty Salon lukio - Lukio"
           )
         })
 
@@ -540,7 +541,7 @@
         })
 
         it("valintatulokset näytetään", function () {
-          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[1].hakukohde).to.equal('Kallion lukio Lukio')
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[1].hakukohde).to.equal('Salon lukio Lukio')
           expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[1].tila).to.equal('Peruutettu')
         })
 
@@ -558,7 +559,7 @@
         })
 
         it("valintatulokset näytetään", function () {
-          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[1].hakukohde).to.equal('Kallion lukio Lukio')
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[1].hakukohde).to.equal('Salon lukio Lukio')
           expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[1].tila).to.equal('Peruit opiskelupaikan')
         })
 
@@ -574,7 +575,7 @@
           expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].hakukohde).to.equal('Kallion lukio Lukion ilmaisutaitolinja')
           expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].tila).to.equal('Hyväksytty varasijalta')
 
-          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[1].hakukohde).to.equal('Kallion lukio Lukio')
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[1].hakukohde).to.equal('Salon lukio Lukio')
           expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[1].tila).to.equal('Peruuntunut')
         })
 
@@ -997,9 +998,10 @@
           before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send)
 
           it("Oili-linkki tulee näkyviin ja toinen paikka on yhä mahdollista vastaanottaa", function() {
-            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).title()).to.equal('Opiskelupaikka myönnetty Kallion lukio - Lukio')
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).title()).to.equal('Opiskelupaikka myönnetty Salon lukio - Lukio')
             expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.ilmoittautuminen(0).title()).to.equal('Ilmoittaudu lukukaudelle Kallion lukio - Lukion ilmaisutaitolinja')
           })
+
 
           describe("Kun toinen paikka otetaan vastaan", function() {
             before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VASTAANOTTANUT"))
@@ -1007,7 +1009,7 @@
 
             it("Näkyy oili linkki molemmille paikoille", function() {
               expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.ilmoittautuminen(0).title()).to.equal('Ilmoittaudu lukukaudelle Kallion lukio - Lukion ilmaisutaitolinja')
-              expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.ilmoittautuminen(1).title()).to.equal('Ilmoittaudu lukukaudelle Kallion lukio - Lukio')
+              expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.ilmoittautuminen(1).title()).to.equal('Ilmoittaudu lukukaudelle Salon lukio - Lukio')
             })
           })
         })
@@ -2220,7 +2222,7 @@
         })
 
         it("Valintatulokset näytetään", function() {
-          expect(erillishaku.valintatulokset()[0].hakukohde).to.equal('Kallion lukio Lukion ilmaisutaitolinja')
+          expect(erillishaku.valintatulokset()[0].hakukohde).to.equal(' ') // <- valinta-tulos-servicellä ei ole kannassaan tätä (käyttää erillistä hakemuskantaa)
           expect(erillishaku.valintatulokset()[0].tila).to.equal('Hyväksytty')
         })
 
@@ -2242,7 +2244,7 @@
         before(page.applyErillishakuFixtureAndOpen(false))
 
         it("Valintatulos näytetään", function() {
-          expect(erillishaku.valintatulokset()[0].hakukohde).to.equal('Kallion lukio Lukion ilmaisutaitolinja')
+          expect(erillishaku.valintatulokset()[0].hakukohde).to.equal(' ') // <- valinta-tulos-servicellä ei ole kannassaan tätä (käyttää erillistä hakemuskantaa)
           expect(erillishaku.valintatulokset()[0].tila).to.equal('Et saanut opiskelupaikkaa.')
         })
       })

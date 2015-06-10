@@ -192,7 +192,7 @@ function ApplicationListPage() {
           .map(function () {
             var el = $(this)
             return {
-              hakukohde: el.find("[ng-bind='tulos.opetuspiste.name']").text() + " " + el.find("[ng-bind='tulos.koulutus.name']").text(),
+              hakukohde: el.find("[ng-bind='tulos.tarjoajaNimi']").text() + " " + el.find("[ng-bind='tulos.hakukohdeNimi']").text(),
               tila: el.find("[ng-bind='valintatulosText(tulos)']").text().trim().replace(nbsp, " ")
             }
           }).toArray()
@@ -265,7 +265,7 @@ function ApplicationListPage() {
           },
 
           info: function() {
-            return vastaanottoElement().find("[ng-if='hakutoive.vastaanotettavissaAsti']").map(function() {
+            return vastaanottoElement().find("[ng-if='hakutoive.vastaanottoDeadline']").map(function() {
               return $(this).text().trim()
             }).toArray()
           },
