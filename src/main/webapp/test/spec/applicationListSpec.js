@@ -683,7 +683,7 @@
           describe("ennen vastaanottoa", function() {
             it("vastausaika näkyy", function () {
               expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).info()).to.deep.equal([
-                "Vastaa sitovasti viimeistään 11. tammikuuta 2042 klo 23.59"
+                "Vastaa sitovasti viimeistään 11. tammikuuta 2042 klo 12.00"
               ])
             })
           })
