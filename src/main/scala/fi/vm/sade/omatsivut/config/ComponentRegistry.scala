@@ -9,6 +9,7 @@ import fi.vm.sade.hakemuseditori.localization.TranslationsComponent
 import fi.vm.sade.hakemuseditori.auditlog.{AuditContext, AuditLogger, AuditLoggerComponent}
 import fi.vm.sade.omatsivut.hakemuspreview.HakemusPreviewGeneratorComponent
 import fi.vm.sade.omatsivut.localization.OmatSivutTranslations
+import fi.vm.sade.omatsivut.valintarekisteri.{RemoteValintaRekisteriService, ValintaRekisteriService, ValintaRekisteriComponent}
 import fi.vm.sade.utils.captcha.{CaptchaServiceSettings, CaptchaServiceComponent}
 import fi.vm.sade.omatsivut.config.AppConfig._
 import fi.vm.sade.hakemuseditori.domain.Language.Language
@@ -33,6 +34,7 @@ class ComponentRegistry(val config: AppConfig)
           LomakeRepositoryComponent with
           HakemusRepositoryComponent with
           ValintatulosServiceComponent with
+          ValintaRekisteriComponent with
           AuditLoggerComponent with
           ApplicationValidatorComponent with
           HakemusPreviewGeneratorComponent with
@@ -69,6 +71,10 @@ class ComponentRegistry(val config: AppConfig)
     case _ => new RemoteValintatulosService(config.settings.valintaTulosServiceUrl)
   }
 
+  private def configureValintaRekisteriService: ValintaRekisteriService = config match {
+    case _ => new RemoteValintaRekisteriService(config.settings.valintarekisteriUrl)
+  }
+
   private def configureTarjontaService: TarjontaService = config match {
     case _: StubbedExternalDeps => new StubbedTarjontaService()
     case _ => CachedRemoteTarjontaService(config.settings.tarjontaUrl)
@@ -85,6 +91,7 @@ class ComponentRegistry(val config: AppConfig)
   val koulutusInformaatioService: KoulutusInformaatioService = configureKoulutusInformaatioService
   val ohjausparametritService: OhjausparametritService = configureOhjausparametritService
   val valintatulosService: ValintatulosService = configureValintatulosService
+  val valintaRekisteriService: ValintaRekisteriService = configureValintaRekisteriService
   val auditLogger: AuditLogger = new AuditLoggerFacade(runningLogger)
   val lomakeRepository: LomakeRepository = new RemoteLomakeRepository
   val hakemusConverter: HakemusConverter = new HakemusConverter

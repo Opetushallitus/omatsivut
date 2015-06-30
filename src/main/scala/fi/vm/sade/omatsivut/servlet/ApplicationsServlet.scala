@@ -13,6 +13,7 @@ import fi.vm.sade.omatsivut.hakemuspreview.HakemusPreviewGeneratorComponent
 import fi.vm.sade.omatsivut.security.AuthenticationRequiringServlet
 import fi.vm.sade.hakemuseditori.valintatulokset.ValintatulosServiceComponent
 import fi.vm.sade.hakemuseditori.valintatulokset.domain.Vastaanotto
+import fi.vm.sade.omatsivut.valintarekisteri.ValintaRekisteriComponent
 import org.json4s.jackson.Serialization
 import org.scalatra._
 import org.scalatra.json._
@@ -22,6 +23,7 @@ trait ApplicationsServletContainer {
   this: HakemusEditoriComponent with LomakeRepositoryComponent with
     HakemusRepositoryComponent with
     ValintatulosServiceComponent with
+    ValintaRekisteriComponent with
     ApplicationValidatorComponent with
     HakemusPreviewGeneratorComponent with
     SpringContextComponent with
@@ -80,6 +82,7 @@ trait ApplicationsServletContainer {
         val muokkaaja: String = "henkilö:" + personOid()
         val selite = "Muokkaus Omat Sivut -palvelussa"
         val vastaanotto = Vastaanotto(clientVastaanotto.hakukohdeOid, clientVastaanotto.tila, muokkaaja, selite)
+        valintaRekisteriService.vastaanota(hakemusOid, hakuOid, vastaanotto)
         if(valintatulosService.vastaanota(hakemusOid, hakuOid, vastaanotto)) {
           auditLogger.log(SaveVastaanotto(personOid(), hakemusOid, hakuOid, vastaanotto))
           hakemusRepository.getHakemus(hakemusOid) match {
