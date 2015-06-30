@@ -14,7 +14,7 @@ class RemoteAuthenticationInfoService(val config: RemoteApplicationConfig, val s
 
   private def getCookies(createNewSession: Boolean): List[String] =
     new CasClient(securitySettings.casConfig).
-      getSessionCookies(CasTicketRequest(config.url, securitySettings.casUsername, securitySettings.casPassword), createNewSession)
+      getSessionCookies(CasTicketRequest(s"${config.url}/${config.ticketConsumerPath}", securitySettings.casUsername, securitySettings.casPassword), createNewSession)
 
   private def addHeaders(request: HttpRequest, createNewSession: Boolean = false): HttpRequest = {
     request
@@ -40,7 +40,7 @@ class RemoteAuthenticationInfoService(val config: RemoteApplicationConfig, val s
           } yield oid
           oids.headOption
         case code =>
-          logger.error("Error fetching personOid. Response code=" + code + ", content=" + resultString)
+          logger.error(s"Error fetching personOid. Response code=$code, content=$resultString")
           None
       }
     }
