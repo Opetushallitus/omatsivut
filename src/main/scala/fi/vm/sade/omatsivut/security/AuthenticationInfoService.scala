@@ -14,16 +14,16 @@ class RemoteAuthenticationInfoService(val config: RemoteApplicationConfig, val s
     new CasClient(securitySettings.casConfig).
       getSessionCookies(CasTicketRequest(config.url, securitySettings.casUsername, securitySettings.casPassword), createNewSession)
 
-  private def addHeaders(request: HttpRequest, createNewSession: Boolean = false): Unit = {
-    request.header("Cookie", getCookies(createNewSession).mkString("; "))
-    request.header("Caller-Id", "omatsivut.omatsivut.backend")
+  private def addHeaders(request: HttpRequest, createNewSession: Boolean = false): HttpRequest = {
+    request
+      .header("Cookie", getCookies(createNewSession).mkString("; "))
+      .header("Caller-Id", "omatsivut.omatsivut.backend")
   }
 
   def getHenkiloOID(hetu: String) : Option[String] = {
     def tryGet(h: String, createNewSession: Boolean = false, retryCount: Int = 0): Option[String] = {
       val path: String = config.url + "/" + config.config.getString("get_oid.path") + "/" + hetu
-      val request = DefaultHttpClient.httpGet(path)
-      addHeaders(request, createNewSession)
+      val request = addHeaders(DefaultHttpClient.httpGet(path), createNewSession)
       val (responseCode, headersMap, resultString) = request.responseWithHeaders()
 
       responseCode match {
