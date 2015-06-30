@@ -7,6 +7,8 @@ import fi.vm.sade.utils.slf4j.Logging
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
 
+import scalaj.http.HttpOptions
+
 class RemoteAuthenticationInfoService(val config: RemoteApplicationConfig, val securitySettings: SecuritySettings) extends Logging {
   implicit val formats = DefaultFormats
 
@@ -23,7 +25,7 @@ class RemoteAuthenticationInfoService(val config: RemoteApplicationConfig, val s
   def getHenkiloOID(hetu: String) : Option[String] = {
     def tryGet(h: String, createNewSession: Boolean = false, retryCount: Int = 0): Option[String] = {
       val path: String = config.url + "/" + config.config.getString("get_oid.path") + "/" + hetu
-      val request = addHeaders(DefaultHttpClient.httpGet(path), createNewSession)
+      val request = addHeaders(DefaultHttpClient.httpGet(path, HttpOptions.followRedirects(true)), createNewSession)
       val (responseCode, headersMap, resultString) = request.responseWithHeaders()
 
       responseCode match {
