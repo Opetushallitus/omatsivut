@@ -82,7 +82,7 @@ trait ApplicationsServletContainer {
         val muokkaaja: String = "henkilö:" + personOid()
         val selite = "Muokkaus Omat Sivut -palvelussa"
         val vastaanotto = Vastaanotto(clientVastaanotto.hakukohdeOid, clientVastaanotto.tila, muokkaaja, selite)
-        valintaRekisteriService.vastaanota(hakemusOid, hakuOid, vastaanotto)
+        valintaRekisteriService.vastaanota(hakemusOid, hakuOid, Vastaanotto(clientVastaanotto.hakukohdeOid, clientVastaanotto.tila, personOid(), selite))
         if(valintatulosService.vastaanota(hakemusOid, hakuOid, vastaanotto)) {
           auditLogger.log(SaveVastaanotto(personOid(), hakemusOid, hakuOid, vastaanotto))
           hakemusRepository.getHakemus(hakemusOid) match {
