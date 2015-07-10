@@ -2,27 +2,27 @@ package fi.vm.sade.omatsivut.config
 
 import java.util.concurrent.Executors
 
-import fi.vm.sade.groupemailer.{GroupEmailService, GroupEmailComponent}
+import fi.vm.sade.groupemailer.{GroupEmailComponent, GroupEmailService}
 import fi.vm.sade.hakemuseditori.HakemusEditoriComponent
-import fi.vm.sade.hakemuseditori.hakemus._
-import fi.vm.sade.hakemuseditori.localization.TranslationsComponent
 import fi.vm.sade.hakemuseditori.auditlog.{AuditContext, AuditLogger, AuditLoggerComponent}
-import fi.vm.sade.omatsivut.hakemuspreview.HakemusPreviewGeneratorComponent
-import fi.vm.sade.omatsivut.localization.OmatSivutTranslations
-import fi.vm.sade.omatsivut.valintarekisteri.{RemoteValintaRekisteriService, ValintaRekisteriService, ValintaRekisteriComponent}
-import fi.vm.sade.utils.captcha.{CaptchaServiceSettings, CaptchaServiceComponent}
-import fi.vm.sade.omatsivut.config.AppConfig._
 import fi.vm.sade.hakemuseditori.domain.Language.Language
-import fi.vm.sade.omatsivut.fixtures.hakemus.ApplicationFixtureImporter
-import fi.vm.sade.hakemuseditori.koodisto.{RemoteKoodistoService, StubbedKoodistoService, KoodistoComponent, KoodistoService}
+import fi.vm.sade.hakemuseditori.hakemus._
+import fi.vm.sade.hakemuseditori.koodisto.{KoodistoComponent, KoodistoService, RemoteKoodistoService, StubbedKoodistoService}
 import fi.vm.sade.hakemuseditori.koulutusinformaatio.{KoulutusInformaatioComponent, KoulutusInformaatioService}
+import fi.vm.sade.hakemuseditori.localization.TranslationsComponent
 import fi.vm.sade.hakemuseditori.lomake.{LomakeRepository, LomakeRepositoryComponent}
-import fi.vm.sade.omatsivut.muistilista.MuistilistaServiceComponent
 import fi.vm.sade.hakemuseditori.ohjausparametrit.{OhjausparametritComponent, OhjausparametritService}
-import fi.vm.sade.omatsivut.servlet._
-import fi.vm.sade.omatsivut.servlet.session.{LogoutServletContainer, SecuredSessionServletContainer}
 import fi.vm.sade.hakemuseditori.tarjonta.{TarjontaComponent, TarjontaService}
 import fi.vm.sade.hakemuseditori.valintatulokset._
+import fi.vm.sade.omatsivut.config.AppConfig._
+import fi.vm.sade.omatsivut.fixtures.hakemus.ApplicationFixtureImporter
+import fi.vm.sade.omatsivut.hakemuspreview.HakemusPreviewGeneratorComponent
+import fi.vm.sade.omatsivut.localization.OmatSivutTranslations
+import fi.vm.sade.omatsivut.muistilista.MuistilistaServiceComponent
+import fi.vm.sade.omatsivut.servlet._
+import fi.vm.sade.omatsivut.servlet.session.{LogoutServletContainer, SecuredSessionServletContainer}
+import fi.vm.sade.omatsivut.valintarekisteri.{MockedValintaRekisteriService, RemoteValintaRekisteriService, ValintaRekisteriComponent, ValintaRekisteriService}
+import fi.vm.sade.utils.captcha.CaptchaServiceComponent
 
 class ComponentRegistry(val config: AppConfig)
   extends SpringContextComponent with
@@ -72,6 +72,7 @@ class ComponentRegistry(val config: AppConfig)
   }
 
   private def configureValintaRekisteriService: ValintaRekisteriService = config match {
+    case x: StubbedExternalDeps => new MockedValintaRekisteriService
     case _ => new RemoteValintaRekisteriService(config.settings.valintarekisteriUrl)
   }
 
