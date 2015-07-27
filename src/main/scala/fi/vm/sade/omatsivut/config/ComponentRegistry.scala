@@ -21,7 +21,7 @@ import fi.vm.sade.omatsivut.localization.OmatSivutTranslations
 import fi.vm.sade.omatsivut.muistilista.MuistilistaServiceComponent
 import fi.vm.sade.omatsivut.servlet._
 import fi.vm.sade.omatsivut.servlet.session.{LogoutServletContainer, SecuredSessionServletContainer}
-import fi.vm.sade.omatsivut.valintarekisteri.{MockedValintaRekisteriService, RemoteValintaRekisteriService, ValintaRekisteriComponent, ValintaRekisteriService}
+import fi.vm.sade.omatsivut.valintarekisteri.{MockedValintaRekisteriServiceForIT, RemoteValintaRekisteriService, ValintaRekisteriComponent, ValintaRekisteriService}
 import fi.vm.sade.utils.captcha.CaptchaServiceComponent
 
 class ComponentRegistry(val config: AppConfig)
@@ -72,7 +72,7 @@ class ComponentRegistry(val config: AppConfig)
   }
 
   private def configureValintaRekisteriService: ValintaRekisteriService = config match {
-    case x: StubbedExternalDeps => new MockedValintaRekisteriService
+    case x: StubbedExternalDeps => new MockedValintaRekisteriServiceForIT
     case _ => new RemoteValintaRekisteriService(config.settings.valintarekisteriUrl)
   }
 

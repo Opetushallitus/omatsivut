@@ -12,6 +12,7 @@ trait ValintaRekisteriComponent {
 }
 
 trait ValintaRekisteriService {
+  def isEnabled: Boolean
   def vastaanota(henkilo: String, hakukohde: String, ilmoittaja: String): Boolean
 }
 
@@ -19,29 +20,27 @@ case class VastaanottoIlmoitus(henkilo: String, hakukohde: String, ilmoittaja: S
 
 class RemoteValintaRekisteriService(valintaRekisteriServiceUrl: String, client: HttpClient = DefaultHttpClient) extends ValintaRekisteriService with JsonFormats with Logging {
   override def vastaanota(henkilo: String, hakukohde: String, ilmoittaja: String): Boolean = {
-    if (valintaRekisteriServiceUrl.length > 0) {
-      val url = s"$valintaRekisteriServiceUrl/vastaanotto"
-      client.httpPost(url, Some(Serialization.write(VastaanottoIlmoitus(henkilo, hakukohde, ilmoittaja))))
-        .header("Content-type", "application/json")
-        .header("Caller-Id", "omatsivut.omatsivut.backend")
-        .header("Palvelukutsu.Lahettaja.JarjestelmaTunnus", ilmoittaja)
-        .responseWithHeaders() match {
-          case (200, headers, result) =>
-            logger.debug(s"POST $url: headers $headers, body $result")
-            true
-          case (code, _, _) =>
-            logger.error(s"Response code $code from valintarekisteri for $url")
-            false
-        }
-    } else {
-      true
-    }
+    client.httpPost(valintaRekisteriServiceUrl, Some(Serialization.write(VastaanottoIlmoitus(henkilo, hakukohde, ilmoittaja))))
+      .header("Content-type", "application/json")
+      .header("Caller-Id", "omatsivut.omatsivut.backend")
+      .header("Palvelukutsu.Lahettaja.JarjestelmaTunnus", ilmoittaja)
+      .responseWithHeaders() match {
+        case (200, headers, result) =>
+          logger.debug(s"POST $valintaRekisteriServiceUrl: headers $headers, body $result")
+          true
+        case (code, _, _) =>
+          logger.error(s"Response code $code from valintarekisteri for $valintaRekisteriServiceUrl")
+          false
+      }
   }
+
+  override def isEnabled = valintaRekisteriServiceUrl.length > 0
 }
 
-class MockedValintaRekisteriService extends ValintaRekisteriService with JsonFormats with Logging {
-  override def vastaanota(henkilo: String, hakukohde: String, ilmoittaja: String): Boolean = hakukohde match {
-    case "1.2.246.562.5.72607738903" => false
-    case _ => true
+class MockedValintaRekisteriServiceForIT extends ValintaRekisteriService with JsonFormats with Logging {
+  override def vastaanota(henkilo: String, hakukohde: String, ilmoittaja: String): Boolean = {
+    throw new RuntimeException("MockedValintaRekisteriService is not in use")
   }
+
+  override def isEnabled = false
 }

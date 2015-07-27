@@ -1,24 +1,28 @@
 package fi.vm.sade.omatsivut.servlet
 
-import fi.vm.sade.hakemuseditori.auditlog.{AuditLoggerComponent, SaveVastaanotto}
-import fi.vm.sade.hakemuseditori.hakemus.domain.HakemusMuutos
-import fi.vm.sade.hakemuseditori.hakemus.{ApplicationValidatorComponent, HakemusRepositoryComponent, SpringContextComponent}
+import fi.vm.sade.hakemuseditori.domain.Language
+import fi.vm.sade.hakemuseditori.user.Oppija
+import fi.vm.sade.hakemuseditori.{HakemusEditoriUserContext, UpdateResult, HakemusEditoriComponent}
+import fi.vm.sade.hakemuseditori.auditlog.{AuditLogger, AuditLoggerComponent, SaveVastaanotto}
+import fi.vm.sade.hakemuseditori.hakemus.domain.{HakemusMuutos, Hakemus}
+import fi.vm.sade.hakemuseditori.hakemus.{SpringContextComponent, HakemusInfo, ApplicationValidatorComponent, HakemusRepositoryComponent}
+import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.hakemuseditori.lomake.LomakeRepositoryComponent
-import fi.vm.sade.hakemuseditori.user.Oppija
-import fi.vm.sade.hakemuseditori.valintatulokset.domain.Vastaanotto
-import fi.vm.sade.hakemuseditori.{HakemusEditoriComponent, HakemusEditoriUserContext, UpdateResult}
-import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.hakemuspreview.HakemusPreviewGeneratorComponent
 import fi.vm.sade.omatsivut.security.AuthenticationRequiringServlet
+import fi.vm.sade.hakemuseditori.valintatulokset.ValintatulosServiceComponent
+import fi.vm.sade.hakemuseditori.valintatulokset.domain.Vastaanotto
 import fi.vm.sade.omatsivut.valintarekisteri.ValintaRekisteriComponent
 import org.json4s.jackson.Serialization
 import org.scalatra._
 import org.scalatra.json._
+import scala.util.{Failure, Success}
 
 trait ApplicationsServletContainer {
   this: HakemusEditoriComponent with LomakeRepositoryComponent with
     HakemusRepositoryComponent with
+    ValintatulosServiceComponent with
     ValintaRekisteriComponent with
     ApplicationValidatorComponent with
     HakemusPreviewGeneratorComponent with
@@ -26,7 +30,7 @@ trait ApplicationsServletContainer {
     AuditLoggerComponent =>
 
   class ApplicationsServlet(val appConfig: AppConfig) extends OmatSivutServletBase with JacksonJsonSupport with JsonFormats with AuthenticationRequiringServlet with HakemusEditoriUserContext {
-    def user() = Oppija(personOid())
+    def user = Oppija(personOid())
     private val hakemusEditori = newEditor(this)
 
     protected val applicationDescription = "Oppijan henkilökohtaisen palvelun REST API, jolla voi hakea ja muokata hakemuksia ja omia tietoja"
@@ -75,9 +79,15 @@ trait ApplicationsServletContainer {
       if (!applicationRepository.exists(henkilo, hakemusOid)) {
         NotFound("error" -> "Not found")
       } else {
-        val vastaanotto = Serialization.read[ClientSideVastaanotto](request.body)
-        if (valintaRekisteriService.vastaanota(henkilo, vastaanotto.hakukohdeOid, henkilo)) { // TODO tila mukaan valintarekisteriin lähetettävään kutsuun
-          auditlogVastaanotto(hakemusOid, hakuOid, henkilo, vastaanotto)
+        val clientVastaanotto = Serialization.read[ClientSideVastaanotto](request.body)
+        val vastaanotto = Vastaanotto(clientVastaanotto.hakukohdeOid, clientVastaanotto.tila, henkilo, "Muokkaus Omat Sivut -palvelussa")
+        val ret = if(valintaRekisteriService.isEnabled) {
+          valintaRekisteriService.vastaanota(henkilo, vastaanotto.hakukohdeOid, henkilo)
+        } else {
+          valintatulosService.vastaanota(hakemusOid, hakuOid, vastaanotto)
+        }
+        if(ret) {
+          auditLogger.log(SaveVastaanotto(personOid(), hakemusOid, hakuOid, vastaanotto))
           hakemusRepository.getHakemus(hakemusOid) match {
             case Some(hakemus) => hakemus
             case _ => NotFound("error" -> "Not found")
@@ -87,17 +97,6 @@ trait ApplicationsServletContainer {
         }
       }
     }
-  }
-
-  private def auditlogVastaanotto(hakemusOid: String, hakuOid: String, henkilo: String, vastaanotto: ClientSideVastaanotto) {
-    auditLogger.log(
-      SaveVastaanotto(
-        henkilo,
-        hakemusOid,
-        hakuOid,
-        Vastaanotto(vastaanotto.hakukohdeOid, vastaanotto.tila, henkilo, "Muokkaus Omat Sivut -palvelussa")
-      )
-    )
   }
 }
 

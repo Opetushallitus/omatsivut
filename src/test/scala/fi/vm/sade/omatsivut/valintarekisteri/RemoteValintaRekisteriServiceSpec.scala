@@ -14,7 +14,7 @@ class RemoteValintaRekisteriServiceSpec extends MutableScalatraSpec with Mockito
   val henkilo = "foo"
   val hakukohde = "bar"
   val ilmoittaja = "foo"
-  val serviceUrl = "http://localhost/valintarekisteri"
+  val serviceUrl = "http://localhost/valintarekisteri/vastaanotto"
 
   "RemoteValintaRekisteriService" should {
 
@@ -46,10 +46,10 @@ class RemoteValintaRekisteriServiceSpec extends MutableScalatraSpec with Mockito
   def mockHttpClient(requestAssert: (Map[String, String]) => Unit = (requestHeaders: Map[String, String]) => {}) = {
     val client = mock[HttpClient]
     client.httpPost(
-      s"$serviceUrl/vastaanotto",
+      serviceUrl,
       Some(Serialization.write(VastaanottoIlmoitus(henkilo, hakukohde, ilmoittaja)))
     ) returns MockedHttpRequest(
-      s"$serviceUrl/vastaanotto",
+      serviceUrl,
       200,
       Some(""),
       requestAssert
