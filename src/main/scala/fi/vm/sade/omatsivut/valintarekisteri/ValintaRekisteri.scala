@@ -28,7 +28,7 @@ class RemoteValintaRekisteriService(valintaRekisteriServiceUrl: String, client: 
         case (200, headers, result) =>
           logger.debug(s"POST $valintaRekisteriServiceUrl: headers $headers, body $result")
           true
-        case (code, _, _) =>
+        case (code, headers, result) =>
           logger.error(s"Response code $code from valintarekisteri for $valintaRekisteriServiceUrl")
           false
       }
