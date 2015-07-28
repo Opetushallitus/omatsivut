@@ -38,6 +38,7 @@ omatsivut.authentication-service.ticket_consumer_path=j_spring_cas_security_chec
 omatsivut.authentication-service.get_oid.path=resources/s2s/byHetu
 
 omatsivut.valinta-tulos-service.url=https://{{host_virkailija}}/valinta-tulos-service
+omatsivut.valintarekisteri.url={{valintarekisteri_url}}
 
 omatsivut.koulutusinformaatio.ao.url=https\://{{host_haku}}/ao
 omatsivut.koulutusinformaatio.lop.url=https\://{{host_haku}}/lop

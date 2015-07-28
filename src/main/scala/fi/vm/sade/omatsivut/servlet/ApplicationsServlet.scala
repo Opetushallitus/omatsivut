@@ -13,6 +13,7 @@ import fi.vm.sade.omatsivut.hakemuspreview.HakemusPreviewGeneratorComponent
 import fi.vm.sade.omatsivut.security.AuthenticationRequiringServlet
 import fi.vm.sade.hakemuseditori.valintatulokset.ValintatulosServiceComponent
 import fi.vm.sade.hakemuseditori.valintatulokset.domain.Vastaanotto
+import fi.vm.sade.omatsivut.valintarekisteri.ValintaRekisteriComponent
 import org.json4s.jackson.Serialization
 import org.scalatra._
 import org.scalatra.json._
@@ -22,6 +23,7 @@ trait ApplicationsServletContainer {
   this: HakemusEditoriComponent with LomakeRepositoryComponent with
     HakemusRepositoryComponent with
     ValintatulosServiceComponent with
+    ValintaRekisteriComponent with
     ApplicationValidatorComponent with
     HakemusPreviewGeneratorComponent with
     SpringContextComponent with
@@ -73,14 +75,18 @@ trait ApplicationsServletContainer {
     post("/vastaanota/:hakuOid/:hakemusOid") {
       val hakemusOid = params("hakemusOid")
       val hakuOid = params("hakuOid")
-      if (!applicationRepository.exists(personOid(), hakemusOid)) {
+      val henkilo = personOid()
+      if (!applicationRepository.exists(henkilo, hakemusOid)) {
         NotFound("error" -> "Not found")
       } else {
         val clientVastaanotto = Serialization.read[ClientSideVastaanotto](request.body)
-        val muokkaaja: String = "henkilö:" + personOid()
-        val selite = "Muokkaus Omat Sivut -palvelussa"
-        val vastaanotto = Vastaanotto(clientVastaanotto.hakukohdeOid, clientVastaanotto.tila, muokkaaja, selite)
-        if(valintatulosService.vastaanota(hakemusOid, hakuOid, vastaanotto)) {
+        val vastaanotto = Vastaanotto(clientVastaanotto.hakukohdeOid, clientVastaanotto.tila, henkilo, "Muokkaus Omat Sivut -palvelussa")
+        val ret = if(valintaRekisteriService.isEnabled) {
+          valintaRekisteriService.vastaanota(henkilo, vastaanotto.hakukohdeOid, henkilo)
+        } else {
+          valintatulosService.vastaanota(hakemusOid, hakuOid, vastaanotto)
+        }
+        if(ret) {
           auditLogger.log(SaveVastaanotto(personOid(), hakemusOid, hakuOid, vastaanotto))
           hakemusRepository.getHakemus(hakemusOid) match {
             case Some(hakemus) => hakemus
