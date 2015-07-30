@@ -12,7 +12,7 @@ import fi.vm.sade.haku.oppija.lomake.domain.elements.custom.{PostalCode, Prefere
 import fi.vm.sade.haku.oppija.lomake.domain.elements.questions.{CheckBox, DateQuestion, OptionQuestion, TextArea, TextQuestion}
 import fi.vm.sade.haku.oppija.lomake.domain.elements.{HiddenValue, Link, Notification, Phase, Text, Theme, TitledGroup}
 import fi.vm.sade.haku.oppija.lomake.domain.rules.{AddElementRule, RelatedQuestionRule}
-import fi.vm.sade.omatsivut.servlet.ServerContaxtPath
+import fi.vm.sade.omatsivut.servlet.ServerContextPath
 import fi.vm.sade.utils.slf4j.Logging
 
 import scalatags.Text.TypedTag
@@ -28,13 +28,13 @@ trait HakemusPreviewGeneratorComponent {
     private val applicationSystemService = springContext.applicationSystemService
     private implicit val lang = language
 
-    def generatePreview(serverPath: ServerContaxtPath, personOid: String, applicationOid: String): Option[String] = {
+    def generatePreview(serverPath: ServerContextPath, personOid: String, applicationOid: String): Option[String] = {
       applicationRepository.findStoredApplicationByPersonAndOid(personOid, applicationOid).map { application =>
         applicationPreview(serverPath, application)
       }
     }
 
-    private def applicationPreview(serverPath: ServerContaxtPath, application: ImmutableLegacyApplicationWrapper) = {
+    private def applicationPreview(serverPath: ServerContextPath, application: ImmutableLegacyApplicationWrapper) = {
       val applicationSystem = applicationSystemService.getApplicationSystem(application.hakuOid)
       val form = ElementWrapper.wrapFiltered(applicationSystem.getForm, application.flatAnswers)
       val addInfos = for (addInfo <- applicationSystem.getAdditionalInformationElements()) yield {
