@@ -12,6 +12,8 @@ object TestFixture {
   val hakemusLisahaku = hakemusWithAtheleteQuestions
   val hakemusWithGradeGridAndDancePreference = "1.2.246.562.11.00000855417"
   val hakemusKorkeakoulutKevat2014Id = "1.2.246.562.11.00000877687"
+  val hakemusKorkeakouluYhteishakuSyksy2014Id = "1.2.246.562.11.00000877686"
+  val hakemusTampereenYliopistonErillishaku = "1.2.246.562.11.00001583209"
   val hakemusErityisopetuksenaId = "1.2.246.562.11.00000877688"
   val inactiveHakemusWithApplicationRoundNotEndedId = "1.2.246.562.11.00000441369"
   val inactiveHakemusWithApplicationRoundEndedId = "1.2.246.562.11.00000441370"

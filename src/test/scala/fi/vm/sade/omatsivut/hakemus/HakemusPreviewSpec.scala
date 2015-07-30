@@ -105,7 +105,6 @@ class HakemusPreviewSpec extends HakemusApiSpecification with FixturePerson {
 
     "support athlete additional information" in {
       authGet("secure/applications/preview/" + TestFixture.hakemusWithAtheleteQuestions) {
-        //println(prettyPrintHtml(body))
         body must contain("""Muistathan täyttää myös urheilijan lisätietolomakkeen ja palauttaa sen oppilaitokseen, johon haet.""")
         body must contain("""<a href="http://www.sport.fi/urheiluoppilaitoshaku" target="_blank">http://www.sport.fi/urheiluoppilaitoshaku (pdf-tiedosto, avautuu uuteen välilehteen)</a>""")
       }
@@ -117,6 +116,11 @@ class HakemusPreviewSpec extends HakemusApiSpecification with FixturePerson {
       }
     }
 
+    "support date questions" in {
+      authGet("secure/applications/preview/" + TestFixture.hakemusTampereenYliopistonErillishaku) {
+        body must contain("""<label>Suoritusvuosi ja päivämäärä</label><span class="answer">06.02.2015</span>""")
+      }(PersonOid("1.2.246.562.24.62990791810"))
+    }
   }
 
   private def prettyPrintHtml(content: String) = {
