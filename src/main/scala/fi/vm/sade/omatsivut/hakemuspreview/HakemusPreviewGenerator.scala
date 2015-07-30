@@ -87,28 +87,28 @@ case class QuestionsPreview(implicit translations: Translations, language: Langu
   import scala.collection.JavaConversions._
   import scalatags.Text.all._
 
-  def generate(element: ElementWrapper, answers: FlatAnswers, showEmptyValues: Boolean): List[TypedTag[String]] = {
-    element.element match {
-      case _: GradeGrid => List(gradeGridPreview(element, answers))
-      case _: PreferenceTable => List(preferenceTablePreview(element, answers))
-      case _: PostalCode => postalCodePreview(element, answers)
-      case _: OptionQuestion => optionQuestionPreview(element, answers)
-      case _: CheckBox => checkBoxPreview(element, answers)
-      case _: Theme => themePreview(element, answers)
-      case _: Phase => childrenPreview(element, answers)
-      case _: RelatedQuestionRule => childrenPreview(element, answers)
-      case _: Text => List(textPreview(element))
-      case _: Notification => List(textPreview(element))
-      case link: Link => List(linkPreview(element, link))
-      case _: TitledGroup => List(titledGroupPreview(element, answers))
-      case _: AddElementRule => childrenPreview(element, answers, false)
-      case _: HiddenValue => Nil // info about attachments are added separately in the end of the document
-      case _: TextArea => textQuestionPreview(element, answers)
-      case _: SocialSecurityNumber => textQuestionPreview(element, answers)
-      case _: TextQuestion => textQuestionPreview(element, answers, showEmptyValues)
-      case _: DateQuestion => textQuestionPreview(element, answers)
-      case _ =>
-        logger.warn("Ignoring element " + element.element.getType + ": " + element.id)
+  def generate(ew: ElementWrapper, answers: FlatAnswers, showEmptyValues: Boolean): List[TypedTag[String]] = {
+    ew.element match {
+      case e: GradeGrid             => List(gradeGridPreview(ew, answers))
+      case e: PreferenceTable       => List(preferenceTablePreview(ew, answers))
+      case e: PostalCode            => postalCodePreview(ew, answers)
+      case e: OptionQuestion        => optionQuestionPreview(ew, answers)
+      case e: CheckBox              => checkBoxPreview(ew, answers)
+      case e: Theme                 => themePreview(ew, answers)
+      case e: Phase                 => childrenPreview(ew, answers)
+      case e: RelatedQuestionRule   => childrenPreview(ew, answers)
+      case e: Text                  => List(textPreview(ew))
+      case e: Notification          => List(textPreview(ew))
+      case e: Link                  => List(linkPreview(ew, e))
+      case e: TitledGroup           => List(titledGroupPreview(ew, answers))
+      case e: AddElementRule        => childrenPreview(ew, answers, false)
+      case e: HiddenValue           => Nil // info about attachments are added separately in the end of the document
+      case e: TextArea              => textQuestionPreview(ew, answers)
+      case e: SocialSecurityNumber  => textQuestionPreview(ew, answers)
+      case e: TextQuestion          => textQuestionPreview(ew, answers, showEmptyValues)
+      case e: DateQuestion          => textQuestionPreview(ew, answers)
+      case e =>
+        logger.warn("Ignoring element " + e.getType + ": " + e.getId)
         Nil
     }
   }
