@@ -10,7 +10,7 @@ import fi.vm.sade.hakemuseditori.lomake.{ElementWrapper, OptionWrapper}
 import fi.vm.sade.haku.oppija.lomake.domain.elements.custom.gradegrid.{GradeGrid, GradeGridAddLang, GradeGridOptionQuestion, GradeGridTitle}
 import fi.vm.sade.haku.oppija.lomake.domain.elements.custom.{PostalCode, PreferenceRow, PreferenceTable, SocialSecurityNumber}
 import fi.vm.sade.haku.oppija.lomake.domain.elements.questions.{CheckBox, DateQuestion, OptionQuestion, TextArea, TextQuestion}
-import fi.vm.sade.haku.oppija.lomake.domain.elements.{HiddenValue, Link, Notification, Phase, Text, Theme, TitledGroup}
+import fi.vm.sade.haku.oppija.lomake.domain.elements._
 import fi.vm.sade.haku.oppija.lomake.domain.rules.{AddElementRule, RelatedQuestionRule}
 import fi.vm.sade.omatsivut.servlet.ServerContextPath
 import fi.vm.sade.utils.slf4j.Logging
@@ -28,13 +28,13 @@ trait HakemusPreviewGeneratorComponent {
     private val applicationSystemService = springContext.applicationSystemService
     private implicit val lang = language
 
-    def generatePreview(serverPath: ServerContextPath, personOid: String, applicationOid: String): Option[String] = {
+    def generatePreview(personOid: String, applicationOid: String): Option[String] = {
       applicationRepository.findStoredApplicationByPersonAndOid(personOid, applicationOid).map { application =>
-        applicationPreview(serverPath, application)
+        applicationPreview(application)
       }
     }
 
-    private def applicationPreview(serverPath: ServerContextPath, application: ImmutableLegacyApplicationWrapper) = {
+    private def applicationPreview(application: ImmutableLegacyApplicationWrapper) = {
       val applicationSystem = applicationSystemService.getApplicationSystem(application.hakuOid)
       val form = ElementWrapper.wrapFiltered(applicationSystem.getForm, application.flatAnswers)
       val addInfos = for (addInfo <- applicationSystem.getAdditionalInformationElements()) yield {
@@ -58,7 +58,7 @@ trait HakemusPreviewGeneratorComponent {
           case _: Notification => List(textPreview(element))
           case link: Link => List(linkPreview(element, link))
           case _: TitledGroup => List(titledGroupPreview(element))
-          case _: DateQuestion => List(textPreview(element))
+          case _: DateQuestion => dateQuestionPreview(element)
           case _: AddElementRule => childrenPreview(element, false)
           case _: HiddenValue => Nil // info about attachments are added separately in the end of the document
           case _ =>
@@ -188,6 +188,11 @@ trait HakemusPreviewGeneratorComponent {
         else {
           label(raw(question))
         }
+      }
+
+
+      def dateQuestionPreview(element: ElementWrapper) = {
+        textQuestionPreview(element)
       }
 
       def textQuestionPreview(element: ElementWrapper, showEmptyValues: Boolean = true) = {
@@ -363,6 +368,5 @@ trait HakemusPreviewGeneratorComponent {
       )
     }
   }
-
 }
 
