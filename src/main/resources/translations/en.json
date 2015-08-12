@@ -95,6 +95,7 @@
     "validationFailed": "Please fill in all required information",
     "validationFailed_httpError": "Connection error. Try again later.",
     "saveFailed": "Save failed. Try again later.",
+    "priorAcceptance": "Accepting place of study blocked by a prior acceptance",
     "saveFailed_sessionExpired": "Save failed because your session has expired. Please log in.",
     "saveFailed_validationError": "Could not save application - Please fill in all required information.",
     "applicationPeriodNotActive": "Application period not ongoing.",

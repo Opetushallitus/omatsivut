@@ -95,6 +95,7 @@
     "validationFailed": "Täytä kaikki tiedot",
     "validationFailed_httpError": "Tietojen haku epäonnistui. Yritä myöhemmin uudelleen.",
     "saveFailed": "Tallentaminen epäonnistui. Yritä myöhemmin uudelleen.",
+    "priorAcceptance": "Aiempi vastaanotto estää vastaanottamasta opiskelupaikkaa.",
     "saveFailed_sessionExpired": "Tallentaminen epäonnistui, sillä istunto on vanhentunut. Kirjaudu uudestaan sisään.",
     "saveFailed_validationError": "Ei tallennettu - tarkista syöttämäsi tiedot.",
     "applicationPeriodNotActive": "Haku ei ole käynnissä.",

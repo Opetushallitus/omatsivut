@@ -95,6 +95,7 @@
     "validationFailed": "Fyll i alla fält.",
     "validationFailed_httpError": "Kunde inte ladda informationen. Var vänlig och försök igen senare.",
     "saveFailed": "Sparandet misslyckades. Försök på nytt senare.",
+    "priorAcceptance": "Tidigare acceptans blockar acceptans av studieplats.",
     "saveFailed_sessionExpired": "Sparandet misslyckades för att sessionen har föråldrats. Logga in på nytt.",
     "saveFailed_validationError": "Inte lagrad – svara först på alla frågor.",
     "applicationPeriodNotActive": "Ansökan pågår inte.",
