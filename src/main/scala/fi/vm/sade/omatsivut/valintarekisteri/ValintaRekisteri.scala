@@ -28,14 +28,19 @@ class RemoteValintaRekisteriService(valintaRekisteriServiceUrl: String, client: 
         case (200, headers, result) =>
           logger.debug(s"POST $valintaRekisteriServiceUrl: headers $headers, body $result")
           true
+        case (403, headers, result) =>
+          logger.debug(s"acceptance blocked by prior: $result")
+          false
         case (code, headers, result) =>
           logger.error(s"Response code $code from valintarekisteri for $valintaRekisteriServiceUrl")
-          false
+          throw RemoteServiceException(result)
       }
   }
 
   override def isEnabled = valintaRekisteriServiceUrl.length > 0
 }
+
+case class RemoteServiceException(message: String) extends Exception(message)
 
 class MockedValintaRekisteriServiceForIT extends ValintaRekisteriService with JsonFormats with Logging {
   override def vastaanota(henkilo: String, hakukohde: String, ilmoittaja: String): Boolean = {

@@ -81,20 +81,30 @@ trait ApplicationsServletContainer {
       } else {
         val clientVastaanotto = Serialization.read[ClientSideVastaanotto](request.body)
         val vastaanotto = Vastaanotto(clientVastaanotto.hakukohdeOid, clientVastaanotto.tila, henkilo, "Muokkaus Omat Sivut -palvelussa")
-        val ret = if(valintaRekisteriService.isEnabled) {
-          valintaRekisteriService.vastaanota(henkilo, vastaanotto.hakukohdeOid, henkilo)
-        } else {
-          valintatulosService.vastaanota(hakemusOid, hakuOid, vastaanotto)
-        }
-        if(ret) {
-          auditLogger.log(SaveVastaanotto(personOid(), hakemusOid, hakuOid, vastaanotto))
-          hakemusRepository.getHakemus(hakemusOid) match {
-            case Some(hakemus) => hakemus
-            case _ => NotFound("error" -> "Not found")
+        try{
+          val ret = if(valintaRekisteriService.isEnabled) {
+            valintaRekisteriService.vastaanota(henkilo, vastaanotto.hakukohdeOid, henkilo)
+          } else {
+            valintatulosService.vastaanota(hakemusOid, hakuOid, vastaanotto)
           }
-        } else {
-          InternalServerError("error" -> "Not receivable")
+          if(ret) {
+            auditLogger.log(SaveVastaanotto(personOid(), hakemusOid, hakuOid, vastaanotto))
+            hakemusRepository.getHakemus(hakemusOid) match {
+              case Some(hakemus) => hakemus
+              case _ => NotFound("error" -> "Not found")
+            }
+          }
+          else {
+            Forbidden("error" -> "Not receivable")
+          }
+
+        } catch {
+          case e =>
+            logger.error("failure in background service call", e)
+            InternalServerError("error" -> "Background service failed")
+
         }
+
       }
     }
   }
