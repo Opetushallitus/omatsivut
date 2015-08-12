@@ -1,5 +1,6 @@
 package fi.vm.sade.omatsivut.valintarekisteri
 
+import fi.vm.sade.hakemuseditori.valintatulokset.RemoteServiceException
 import org.json4s.jackson.Serialization
 import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.utils.http.{HttpClient, DefaultHttpClient}
@@ -40,7 +41,6 @@ class RemoteValintaRekisteriService(valintaRekisteriServiceUrl: String, client: 
   override def isEnabled = valintaRekisteriServiceUrl.length > 0
 }
 
-case class RemoteServiceException(message: String) extends Exception(message)
 
 class MockedValintaRekisteriServiceForIT extends ValintaRekisteriService with JsonFormats with Logging {
   override def vastaanota(henkilo: String, hakukohde: String, ilmoittaja: String): Boolean = {
