@@ -792,7 +792,7 @@
         })
       })
 
-      describe("kun hakijalle tarjotaan kahta paikkaa kk haussa", function() {
+      describe("kun hakijalle tarjotaan kahta paikkaa kk varsinaisessa haussa (virhetilanne, mutta vastaa lisähaun toimintaa)", function() {
         before(page.applyValintatulosFixtureAndOpen("hyvaksytty-kaikkiin"))
 
         describe("alkutilassa", function() {
@@ -809,13 +809,13 @@
           })
         })
 
-        describe("ensimmäisen paikan vastaanottaminen", function() {
+        describe("ensimmäisen paikan sitova vastaanottaminen", function() {
           before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VASTAANOTTANUT"))
           before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send)
 
           it("vastaanottotieto näkyy ja toinen paikka peruuntuu", function() {
             expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].tila).to.equal('Opiskelupaikka vastaanotettu')
-            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[1].tila).to.equal('Peruuntunut')
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[1].tila).to.equal('Peruit opiskelupaikan')
           })
 
           it("kumpikaan paikka ei ole enää vastaanotettavissa", function() {
@@ -823,13 +823,13 @@
           })
         })
 
-        describe("toisen paikan vastaanottaminen", function() {
+        describe("toisen paikan sitova vastaanottaminen", function() {
           before(page.applyValintatulosFixtureAndOpen("hyvaksytty-kaikkiin"))
           before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(1).selectOption("VASTAANOTTANUT"))
           before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(1).send)
 
           it("vastaanottotieto näkyy ja toinen paikka peruuntuu", function() {
-            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].tila).to.equal('Peruuntunut')
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].tila).to.equal('Peruit opiskelupaikan')
             expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[1].tila).to.equal('Opiskelupaikka vastaanotettu')
           })
         })
