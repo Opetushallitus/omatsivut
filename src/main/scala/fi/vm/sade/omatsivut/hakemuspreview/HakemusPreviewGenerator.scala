@@ -2,21 +2,20 @@ package fi.vm.sade.omatsivut.hakemuspreview
 
 import java.text.SimpleDateFormat
 import java.util.Date
-import fi.vm.sade.hakemuseditori.domain.Language
+
 import fi.vm.sade.hakemuseditori.domain.Language.Language
 import fi.vm.sade.hakemuseditori.domain.{Address, Attachment, Language}
 import fi.vm.sade.hakemuseditori.hakemus.FlatAnswers.FlatAnswers
 import fi.vm.sade.hakemuseditori.hakemus._
 import fi.vm.sade.hakemuseditori.localization.{Translations, TranslationsComponent}
-import fi.vm.sade.hakemuseditori.lomake.{FilteredElementWrapper, ElementWrapper, OptionWrapper}
+import fi.vm.sade.hakemuseditori.lomake.{ElementWrapper, FilteredElementWrapper, OptionWrapper}
 import fi.vm.sade.haku.oppija.hakemus.domain.ApplicationAttachment
 import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
-import fi.vm.sade.haku.oppija.lomake.domain.elements.custom.gradegrid.{GradeGrid, GradeGridAddLang, GradeGridOptionQuestion, GradeGridTitle}
-import fi.vm.sade.haku.oppija.lomake.domain.elements.custom.{PostalCode, PreferenceRow, PreferenceTable, SocialSecurityNumber}
-import fi.vm.sade.haku.oppija.lomake.domain.elements.questions.{CheckBox, DateQuestion, OptionQuestion, TextArea, TextQuestion}
 import fi.vm.sade.haku.oppija.lomake.domain.elements._
+import fi.vm.sade.haku.oppija.lomake.domain.elements.custom.gradegrid.{GradeGrid, GradeGridAddLang, GradeGridOptionQuestion, GradeGridTitle}
+import fi.vm.sade.haku.oppija.lomake.domain.elements.custom.{GradeAverage, PostalCode, PreferenceRow, PreferenceTable, SocialSecurityNumber}
+import fi.vm.sade.haku.oppija.lomake.domain.elements.questions.{CheckBox, DateQuestion, OptionQuestion, TextArea, TextQuestion}
 import fi.vm.sade.haku.oppija.lomake.domain.rules.{AddElementRule, RelatedQuestionRule}
-import fi.vm.sade.omatsivut.servlet.ServerContextPath
 import fi.vm.sade.utils.slf4j.Logging
 
 import scalatags.Text.TypedTag
@@ -97,6 +96,7 @@ case class QuestionsPreview(implicit translations: Translations, language: Langu
       case e: Theme                 => themePreview(ew, answers)
       case e: Phase                 => childrenPreview(ew, answers)
       case e: RelatedQuestionRule   => childrenPreview(ew, answers)
+      case e: GradeAverage          => childrenPreview(ew, answers)
       case e: Text                  => List(textPreview(ew))
       case e: Notification          => List(textPreview(ew))
       case e: Link                  => List(linkPreview(ew, e))

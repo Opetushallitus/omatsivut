@@ -5,6 +5,7 @@ import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus._
 import fi.vm.sade.hakemuseditori.tarjonta.domain.Hakuaika
 
 object TestFixture {
+  val hakemusSyksy2015EiLukionArvosanaa = "1.2.246.562.11.00004102043"
   val hakemusNivelKesa2013WithPeruskouluBaseEducationId = "1.2.246.562.11.00000877107"
   val hakemusYhteishakuKevat2014WithForeignBaseEducationId = "1.2.246.562.11.00000441368"
   val hakemusPeruskouluWithMissingPreferences = "1.2.246.562.11.00000441373"

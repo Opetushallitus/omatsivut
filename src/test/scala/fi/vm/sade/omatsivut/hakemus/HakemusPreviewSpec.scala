@@ -121,6 +121,13 @@ class HakemusPreviewSpec extends HakemusApiSpecification with FixturePerson {
         body must contain("""<label>Suoritusvuosi ja päivämäärä</label><span class="answer">06.02.2015</span>""")
       }(PersonOid("1.2.246.562.24.62990791810"))
     }
+
+    "support optional grade average" in {
+      fixtureImporter.applyFixtures("submittedApplication")
+      authGet("secure/applications/preview/" + TestFixture.hakemusSyksy2015EiLukionArvosanaa) {
+        body must contain( """<label>En suorita lukion oppimäärää</label><span class="answer">Kyllä</span>""")
+      }(PersonOid("1.2.246.562.24.34231229312"))
+    }
   }
 
   private def prettyPrintHtml(content: String) = {
