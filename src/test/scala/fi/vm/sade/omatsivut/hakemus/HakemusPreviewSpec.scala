@@ -126,7 +126,7 @@ class HakemusPreviewSpec extends HakemusApiSpecification with FixturePerson {
       fixtureImporter.applyFixtures("submittedApplication")
       authGet("secure/applications/preview/" + TestFixture.hakemusSyksy2015EiLukionArvosanaa) {
         body must contain( """<label>En suorita lukion oppimäärää</label><span class="answer">Kyllä</span>""")
-      }(PersonOid("1.2.246.562.24.34231229312"))
+      }(PersonOid("1.2.246.562.24.14229104472"))
     }
   }
 

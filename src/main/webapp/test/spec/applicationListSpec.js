@@ -25,6 +25,7 @@
   var hakemusErityisopetuksenaId = "1.2.246.562.11.00000877688"
   var hakemusErityisopetuksena = page.getApplication(hakemusErityisopetuksenaId)
   var hakemusLisakysymyksenJatkokysymyksella = page.getApplication("1.2.246.562.11.00001305319")
+  var hakemusOnkoKeskiarvoaKysymyksella = page.getApplication("1.2.246.562.11.00004102043")
 
   afterEach(function() {
     expect(window.uiError || null).to.be.null
@@ -159,7 +160,7 @@
 
       it('ensimmäisenä on uusin hakemus', function () {
         expect(ApplicationListPage().applications()[0]).to.deep.equal(
-          { applicationSystemName: 'Korkeakoulujen yhteishaku kevät 2015' }
+          { applicationSystemName: 'Korkeakoulujen yhteishaku syksy 2015' }
         )
       })
 
@@ -1815,6 +1816,64 @@
                 before(
                     wait.forAngular,
                     hakemusLisakysymyksenJatkokysymyksella.saveWaitSuccess)
+
+                it("onnistuu", function() {
+                })
+              })
+            })
+          })
+        })
+
+        describe("Onko tutkinnolla keskiarvoa checkbox", function() {
+          before(
+              page.applyFixtureAndOpen({ applicationOid: "1.2.246.562.11.00004102043" }),
+              wait.forAngular)
+
+          it("näkyy", function() {
+            var lukio = hakemusOnkoKeskiarvoaKysymyksella.questionsForApplication().getQuestionsByTitle("Lukio")
+            expect(lukio.length).to.equal(1)
+            expect(lukio[0].inputs()[0].label).to.equal("En suorita lukion oppimäärää")
+          })
+
+          describe("valinnan poisto", function() {
+            before(
+                function() {hakemusOnkoKeskiarvoaKysymyksella.questionsForApplication().enterAnswer(2, "En suorita lukion oppimäärää")},
+                wait.forAngular)
+
+            it("näyttää keskiarvokysymyksen", function() {
+              expect(hakemusOnkoKeskiarvoaKysymyksella.questionsForApplication()
+                  .getQuestionsByTitle("Lukion päättötodistuksen keskiarvo").length).to.equal(1)
+            })
+
+            describe("keskiarvon voi syöttää", function() {
+              before(
+                  function() {hakemusOnkoKeskiarvoaKysymyksella.questionsForApplication().enterAnswer(3, "1,23")},
+                  wait.forAngular)
+
+              describe("ja lomakkeen tallennus", function() {
+                before(
+                    wait.forAngular,
+                    hakemusOnkoKeskiarvoaKysymyksella.saveWaitSuccess)
+
+                it("onnistuu", function() {
+                })
+              })
+            })
+
+            describe("ja uudelleenvalinta", function() {
+              before(
+                  function() {hakemusOnkoKeskiarvoaKysymyksella.questionsForApplication().enterAnswer(2, "En suorita lukion oppimäärää")},
+                  wait.forAngular)
+
+              it("piilottaa keskiarvokysymyksen", function () {
+                expect(hakemusOnkoKeskiarvoaKysymyksella.questionsForApplication()
+                    .getQuestionsByTitle("Lukion päättötodistuksen keskiarvo").length).to.equal(0)
+              })
+
+              describe("ja lomakkeen tallennus", function() {
+                before(
+                    wait.forAngular,
+                    hakemusOnkoKeskiarvoaKysymyksella.saveWaitSuccess)
 
                 it("onnistuu", function() {
                 })
