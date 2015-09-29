@@ -85,7 +85,10 @@
       "latestAnswer": "Give a binding answer at the latest __aika__",
       "accept": "I confirm the granted study place",
       "conditionalAccept": "I confirm the granted study place if I do not receive a study place from any of my higher prioritized options.",
-      "reject": "I do not confirm the study place."
+      "reject": "I do not confirm the study place.",
+      "responseReceived": "Your answer has been sent.",
+      "invalidEmail": "Invalid e-mail",
+      "emailLabel": "E-mail (a confirmation will be sent to your e-mail)"
     }
   },
 

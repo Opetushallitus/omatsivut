@@ -85,7 +85,10 @@
       "latestAnswer": "Ge bindande svar senast __aika__",
       "accept": "Jag tar emot den beviljade studieplatsen",
       "conditionalAccept": "Jag tar emot den beviljade studieplatsen, om jag inte får en plats från något av mina högre prioriserade.",
-      "reject": "Jag tar inte emot studieplatsen"
+      "reject": "Jag tar inte emot studieplatsen",
+      "responseReceived": "Ditt svar har mottagits.",
+      "invalidEmail": "Felaktig e-postadress",
+      "emailLabel": "E-postadress (bekräftelse skickas till din e-post)"
     }
   },
 

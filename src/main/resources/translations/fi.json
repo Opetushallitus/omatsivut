@@ -85,7 +85,10 @@
       "latestAnswer": "Vastaa sitovasti viimeistään __aika__",
       "accept": "Otan myönnetyn opiskelupaikan vastaan",
       "conditionalAccept": "Otan myönnetyn opiskelupaikan vastaan, jos en saa paikkaa mistään mieluisammasta hakukohteestani",
-      "reject": "En ota opiskelupaikkaa vastaan"
+      "reject": "En ota opiskelupaikkaa vastaan",
+      "responseReceived": "Vastauksesi on vastaanotettu.",
+      "invalidEmail": "Virheellinen sähköpostiosoite",
+      "emailLabel": "Sähköpostiosoite (saat vahvistuksen sähköpostilla)"
     }
   },
 
