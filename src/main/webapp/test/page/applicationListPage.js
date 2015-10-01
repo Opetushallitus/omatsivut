@@ -271,7 +271,7 @@ function ApplicationListPage() {
           },
 
           vaihtoehdot: function() {
-            return vastaanottoElement().find("label:visible").map(function() {
+            return vastaanottoElement().find(".hakutoive-options label:visible").map(function() {
               return $(this).text().trim()
             }).toArray()
           },
