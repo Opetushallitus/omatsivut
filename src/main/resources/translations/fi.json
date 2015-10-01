@@ -82,13 +82,24 @@
 
     "acceptEducation": {
       "received": "Opiskelupaikka myönnetty",
-      "latestAnswer": "Vastaa sitovasti viimeistään __aika__",
+      "latestAnswer": "Lähetä vastauksesi viimeistään __aika__ mennessä tai menetät tarjotun opiskelupaikan.",
       "accept": "Otan myönnetyn opiskelupaikan vastaan",
       "conditionalAccept": "Otan myönnetyn opiskelupaikan vastaan, jos en saa paikkaa mistään mieluisammasta hakukohteestani",
       "reject": "En ota opiskelupaikkaa vastaan",
       "responseReceived": "Vastauksesi on vastaanotettu.",
       "invalidEmail": "Virheellinen sähköpostiosoite",
-      "emailLabel": "Sähköpostiosoite (saat vahvistuksen sähköpostilla)"
+      "emailLabel": "Sähköpostiosoite (saat vahvistuksen sähköpostilla)",
+      "cannotChangeAnswer": "Huom! Vastausta ei voi myöhemmin muuttaa",
+      "email": {
+        "dateFormat": "dd.MM.YYYY 'klo' HH:mm",
+        "subject": "Vastauksesi on vastaanotettu",
+        "body": "Hei,\n\nOlemme vastaanottaneet %s vastauksesi:\n%s\n\nTerveisin,\n\nOpintopolku\nOpiskelijavalinnat",
+        "tila": {
+          "VASTAANOTTANUT": "Otan opiskelupaikan vastaan",
+          "PERUNUT": "En ota opiskelupaikkaa vastaan",
+          "EHDOLLISESTI_VASTAANOTTANUT": "Otan opiskelupaikan ehdollisesti vastaan"
+        }
+      }
     }
   },
 
