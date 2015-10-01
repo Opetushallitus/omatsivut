@@ -82,13 +82,24 @@
 
     "acceptEducation": {
       "received": "Studieplats beviljad",
-      "latestAnswer": "Ge bindande svar senast __aika__",
+      "latestAnswer": "Ge bindande svar senast __aika__, annars mister du beviljade studieplatsen.",
       "accept": "Jag tar emot den beviljade studieplatsen",
       "conditionalAccept": "Jag tar emot den beviljade studieplatsen, om jag inte får en plats från något av mina högre prioriserade.",
       "reject": "Jag tar inte emot studieplatsen",
       "responseReceived": "Ditt svar har mottagits.",
       "invalidEmail": "Felaktig e-postadress",
-      "emailLabel": "E-postadress (bekräftelse skickas till din e-post)"
+      "emailLabel": "E-postadress (bekräftelse skickas till din e-post)",
+      "cannotChangeAnswer": "Obs! Svaret kan inte ändras senare",
+      "email": {
+        "dateFormat": "dd.MM.YYYY 'kl' HH:mm",
+        "subject": "Ditt svar har mottagits",
+        "body": "Hej,\n\nVi har mottagit %s ditt svar:\n%s\n\nHälsningar,\n\nStudieinfo",
+        "tila": {
+          "VASTAANOTTANUT": "Jag tar emot den beviljade studieplatsen",
+          "PERUNUT": "Jag tar inte emot studieplatsen",
+          "EHDOLLISESTI_VASTAANOTTANUT": "Jag tar emot den beviljade studieplatsen, om jag inte får en plats från något av mina högre prioriserade."
+        }
+      }
     }
   },
 

@@ -82,13 +82,24 @@
 
     "acceptEducation": {
       "received": "Study place granted",
-      "latestAnswer": "Give a binding answer at the latest __aika__",
+      "latestAnswer": "Give a binding answer at the latest __aika__, or otherwise you will loose the granted study place.",
       "accept": "I confirm the granted study place",
       "conditionalAccept": "I confirm the granted study place if I do not receive a study place from any of my higher prioritized options.",
       "reject": "I do not confirm the study place.",
       "responseReceived": "Your answer has been sent.",
       "invalidEmail": "Invalid e-mail",
-      "emailLabel": "E-mail (a confirmation will be sent to your e-mail)"
+      "emailLabel": "E-mail (a confirmation will be sent to your e-mail)",
+      "cannotChangeAnswer": "Note! You cannot change your answer later",
+      "email": {
+        "dateFormat": "MMMMM d YYYY hh:mm aaa",
+        "subject": "Your answer was received",
+        "body": "Hello,\n\nWe have received %s your answer:\n%s\n\nRegards,\n\nStudyinfo",
+        "tila": {
+          "VASTAANOTTANUT": "I confirm the granted study place",
+          "PERUNUT": "I do not confirm the study place.",
+          "EHDOLLISESTI_VASTAANOTTANUT": "I confirm the granted study place if I do not receive a study place from any of my higher prioritized options."
+        }
+      }
     }
   },
 
