@@ -288,7 +288,7 @@ function ApplicationListPage() {
           },
 
           send: function() {
-            vastaanottoElement().find(".vastaanota-btn").click().click() // confirm
+            vastaanottoElement().find(".vastaanota-btn").click() // confirm
             return wait.forAngular()
           },
 
