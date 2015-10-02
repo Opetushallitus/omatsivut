@@ -101,9 +101,11 @@ trait ApplicationsServletContainer {
               val dateAndTime = dateFormat.format(Calendar.getInstance().getTime())
               val answer = translations.getTranslation("message", "acceptEducation", "email", "tila", clientVastaanotto.tila)
               val aoInfoRow = List(answer, clientVastaanotto.tarjoajaNimi, clientVastaanotto.hakukohdeNimi).mkString(" - ")
-              val body = translations.getTranslation("message", "acceptEducation", "email", "body").format(dateAndTime, aoInfoRow)
+              val body = translations.getTranslation("message", "acceptEducation", "email", "body")
+                            .format(dateAndTime, aoInfoRow)
+                            .replace("\n", "\n<br>")
 
-              val email = EmailMessage("omatsivut", subject, body, html = false)
+              val email = EmailMessage("omatsivut", subject, body, html = true)
               val recipients = List(EmailRecipient(clientVastaanotto.email))
               groupEmailService.sendMailWithoutTemplate(EmailData(email, recipients))
             }
