@@ -92,8 +92,8 @@
       "cannotChangeAnswer": "Obs! Svaret kan inte ändras senare",
       "email": {
         "dateFormat": "dd.MM.YYYY 'kl' HH:mm",
-        "subject": "Ditt svar har mottagits",
-        "body": "Hej,\n\nVi har mottagit %s ditt svar:\n%s\n\nHälsningar,\n\nStudieinfo",
+        "subject": "Studieinfo: Ditt svar har mottagits",
+        "body": "Hej,\n\nVi har mottagit %s ditt svar:\n%s\n\nSvara inte på detta meddelande, det har skickats automatiskt.",
         "tila": {
           "VASTAANOTTANUT": "Jag tar emot den beviljade studieplatsen",
           "PERUNUT": "Jag tar inte emot studieplatsen",

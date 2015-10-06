@@ -92,8 +92,8 @@
       "cannotChangeAnswer": "Note! You cannot change your answer later",
       "email": {
         "dateFormat": "MMMMM d YYYY hh:mm aaa",
-        "subject": "Your answer was received",
-        "body": "Hello,\n\nWe have received %s your answer:\n%s\n\nRegards,\n\nStudyinfo",
+        "subject": "Studyinfo: Your answer was received",
+        "body": "Hello,\n\nWe have received %s your answer:\n%s\n\nThis is an automatically generated email, please do not reply.",
         "tila": {
           "VASTAANOTTANUT": "I confirm the granted study place",
           "PERUNUT": "I do not confirm the study place.",
