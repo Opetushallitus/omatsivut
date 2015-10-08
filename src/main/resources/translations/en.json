@@ -82,9 +82,11 @@
 
     "acceptEducation": {
       "received": "Study place granted",
-      "latestAnswer": "Give a binding answer at the latest __aika__, or otherwise you will loose the granted study place.",
+      "latestAnswer": "Submit your answer by __aika__, or you will lose the offered study place.",
       "accept": "I confirm the granted study place",
-      "conditionalAccept": "I confirm the granted study place if I do not receive a study place from any of my higher prioritized options.",
+      "conditionalAccept": "I confirm the study place conditionally",
+      "conditionalAcceptInfo1": "You can still get accepted from a waiting list to a higher prioritized study programme.",
+      "conditionalAcceptInfo2": "The confirmation will become binding if you are not offered a study place from a study programme with higher priority.",
       "reject": "I do not confirm the study place.",
       "responseReceived": "Your answer has been sent.",
       "invalidEmail": "Invalid e-mail",
@@ -92,8 +94,8 @@
       "cannotChangeAnswer": "Note! You cannot change your answer later",
       "email": {
         "dateFormat": "MMMMM d YYYY hh:mm aaa",
-        "subject": "Studyinfo: Your answer was received",
-        "body": "Hello,\n\nWe have received %s your answer:\n%s\n\nThis is an automatically generated email, please do not reply.",
+        "subject": "Studyinfo: Your answer has been received",
+        "body": "Hello,\n\nWe have received %s your answer:\n%s\n\nDo not reply to this message – the message has been sent automatically.",
         "tila": {
           "VASTAANOTTANUT": "I confirm the granted study place",
           "PERUNUT": "I do not confirm the study place.",
