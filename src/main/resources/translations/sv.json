@@ -4,7 +4,7 @@
   },
 
   "sidebar": {
-    "opintopolku": "Studieinfo",
+    "opintopolku": "Min Studieinfo",
     "applications": "Mina ansökningsblanketter"
   },
 
@@ -99,7 +99,7 @@
         "tila": {
           "VASTAANOTTANUT": "Jag tar emot den beviljade studieplatsen",
           "PERUNUT": "Jag tar inte emot studieplatsen",
-          "EHDOLLISESTI_VASTAANOTTANUT": "Jag tar emot den beviljade studieplatsen, om jag inte får en plats från något av mina högre prioriserade."
+          "EHDOLLISESTI_VASTAANOTTANUT": "Jag tar emot studieplatsen villkorligt"
         }
       }
     }
