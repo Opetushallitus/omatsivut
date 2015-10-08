@@ -84,7 +84,9 @@
       "received": "Studieplats beviljad",
       "latestAnswer": "Ge bindande svar senast __aika__, annars mister du beviljade studieplatsen.",
       "accept": "Jag tar emot den beviljade studieplatsen",
-      "conditionalAccept": "Jag tar emot den beviljade studieplatsen, om jag inte får en plats från något av mina högre prioriserade.",
+      "conditionalAccept": "Jag tar emot studieplatsen villkorligt",
+      "conditionalAcceptInfo1": "Du kan fortfarande bli godkänd från reservplats till ett ansökningsönskemål med högre prioritet",
+      "conditionalAcceptInfo2": "Vastaanottoo muuttuu sitovaksi, jos sinua ei valita ylempiin hakutoiveisiin.",
       "reject": "Jag tar inte emot studieplatsen",
       "responseReceived": "Ditt svar har mottagits.",
       "invalidEmail": "Felaktig e-postadress",
@@ -97,7 +99,7 @@
         "tila": {
           "VASTAANOTTANUT": "Jag tar emot den beviljade studieplatsen",
           "PERUNUT": "Jag tar inte emot studieplatsen",
-          "EHDOLLISESTI_VASTAANOTTANUT": "Jag tar emot den beviljade studieplatsen, om jag inte får en plats från något av mina högre prioriserade."
+          "EHDOLLISESTI_VASTAANOTTANUT": "Jag tar emot studieplatsen villkorligt"
         }
       }
     }
@@ -140,8 +142,8 @@
   },
 
   "registration": {
-    "pleaseRegister": "Anmäla dig till terminen",
-    "goToRegistration": "Anmäla dig"
+    "pleaseRegister": "Anmäl dig till terminen",
+    "goToRegistration": "Anmäl dig"
   },
 
   "emailNote": {
