@@ -82,11 +82,11 @@
 
     "acceptEducation": {
       "received": "Studieplats beviljad",
-      "latestAnswer": "Skicka svaret före __aika__, annars går du miste om den beviljade studieplatsen.",
+      "latestAnswer": "Skicka svaret före __aika__, annars går du miste om den erbjudna studieplatsen.",
       "accept": "Jag tar emot den beviljade studieplatsen",
       "conditionalAccept": "Jag tar emot studieplatsen villkorligt",
       "conditionalAcceptInfo1": "Du kan fortfarande bli godkänd från reservplats till ett ansökningsönskemål med högre prioritet.",
-      "conditionalAcceptInfo2": "Mottagandet ändras till bindande, om du inte blir antagen till ett ansökningsönskemål med högre prioritet.",
+      "conditionalAcceptInfo2": "Mottagandet ändras till bindande om du inte blir antagen till ett ansökningsönskemål med högre prioritet.",
       "reject": "Jag tar inte emot studieplatsen",
       "responseReceived": "Ditt svar har mottagits.",
       "invalidEmail": "Felaktig e-postadress",
