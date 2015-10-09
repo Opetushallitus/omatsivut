@@ -86,7 +86,7 @@
       "accept": "Otan opiskelupaikan vastaan sitovasti",
       "conditionalAccept": "Otan opiskelupaikan vastaan ehdollisesti",
       "conditionalAcceptInfo1": "Voit edelleen tulla varasijalta hyväksytyksi mieluisampaan hakutoiveeseen.",
-      "conditionalAcceptInfo2": "Vastaanottoo muuttuu sitovaksi, jos sinua ei valita ylempiin hakutoiveisiin.",
+      "conditionalAcceptInfo2": "Vastaanotto muuttuu sitovaksi, jos sinua ei valita ylempiin hakutoiveisiin.",
       "reject": "En ota opiskelupaikkaa vastaan",
       "responseReceived": "Vastauksesi on vastaanotettu.",
       "invalidEmail": "Virheellinen sähköpostiosoite",
