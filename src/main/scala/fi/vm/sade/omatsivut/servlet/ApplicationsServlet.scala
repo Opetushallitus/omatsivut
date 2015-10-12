@@ -1,23 +1,26 @@
 package fi.vm.sade.omatsivut.servlet
 
-import fi.vm.sade.hakemuseditori.domain.Language
-import fi.vm.sade.hakemuseditori.user.Oppija
-import fi.vm.sade.hakemuseditori.{HakemusEditoriUserContext, UpdateResult, HakemusEditoriComponent}
-import fi.vm.sade.hakemuseditori.auditlog.{AuditLogger, AuditLoggerComponent, SaveVastaanotto}
-import fi.vm.sade.hakemuseditori.hakemus.domain.{HakemusMuutos, Hakemus}
-import fi.vm.sade.hakemuseditori.hakemus.{SpringContextComponent, HakemusInfo, ApplicationValidatorComponent, HakemusRepositoryComponent}
-import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
+import java.text.SimpleDateFormat
+import java.util.Calendar
+
+import fi.vm.sade.groupemailer.{EmailData, EmailMessage, EmailRecipient, GroupEmailComponent}
+import fi.vm.sade.hakemuseditori.auditlog.{AuditLoggerComponent, SaveVastaanotto}
+import fi.vm.sade.hakemuseditori.hakemus.domain.HakemusMuutos
+import fi.vm.sade.hakemuseditori.hakemus.{ApplicationValidatorComponent, HakemusRepositoryComponent, SpringContextComponent}
 import fi.vm.sade.hakemuseditori.json.JsonFormats
+import fi.vm.sade.hakemuseditori.localization.TranslationsComponent
 import fi.vm.sade.hakemuseditori.lomake.LomakeRepositoryComponent
-import fi.vm.sade.omatsivut.hakemuspreview.HakemusPreviewGeneratorComponent
-import fi.vm.sade.omatsivut.security.AuthenticationRequiringServlet
+import fi.vm.sade.hakemuseditori.user.Oppija
 import fi.vm.sade.hakemuseditori.valintatulokset.ValintatulosServiceComponent
 import fi.vm.sade.hakemuseditori.valintatulokset.domain.Vastaanotto
+import fi.vm.sade.hakemuseditori.{HakemusEditoriComponent, HakemusEditoriUserContext, UpdateResult}
+import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
+import fi.vm.sade.omatsivut.hakemuspreview.HakemusPreviewGeneratorComponent
+import fi.vm.sade.omatsivut.security.AuthenticationRequiringServlet
 import fi.vm.sade.omatsivut.valintarekisteri.ValintaRekisteriComponent
 import org.json4s.jackson.Serialization
 import org.scalatra._
 import org.scalatra.json._
-import scala.util.{Failure, Success}
 
 trait ApplicationsServletContainer {
   this: HakemusEditoriComponent with LomakeRepositoryComponent with
@@ -27,7 +30,9 @@ trait ApplicationsServletContainer {
     ApplicationValidatorComponent with
     HakemusPreviewGeneratorComponent with
     SpringContextComponent with
-    AuditLoggerComponent =>
+    AuditLoggerComponent with
+    GroupEmailComponent with
+    TranslationsComponent =>
 
   class ApplicationsServlet(val appConfig: AppConfig) extends OmatSivutServletBase with JacksonJsonSupport with JsonFormats with AuthenticationRequiringServlet with HakemusEditoriUserContext {
     def user = Oppija(personOid())
@@ -88,6 +93,22 @@ trait ApplicationsServletContainer {
             valintatulosService.vastaanota(hakemusOid, hakuOid, vastaanotto)
           }
           if(ret) {
+            // Send a confirmation e-mail
+            if (!clientVastaanotto.email.equals("")) {
+              val subject = translations.getTranslation("message", "acceptEducation", "email", "subject")
+
+              val dateFormat = new SimpleDateFormat(translations.getTranslation("message", "acceptEducation", "email", "dateFormat"))
+              val dateAndTime = dateFormat.format(Calendar.getInstance().getTime())
+              val answer = translations.getTranslation("message", "acceptEducation", "email", "tila", clientVastaanotto.tila)
+              val aoInfoRow = List(answer, clientVastaanotto.tarjoajaNimi, clientVastaanotto.hakukohdeNimi).mkString(" - ")
+              val body = translations.getTranslation("message", "acceptEducation", "email", "body")
+                            .format(dateAndTime, aoInfoRow)
+                            .replace("\n", "\n<br>")
+
+              val email = EmailMessage("omatsivut", subject, body, html = true)
+              val recipients = List(EmailRecipient(clientVastaanotto.email))
+              groupEmailService.sendMailWithoutTemplate(EmailData(email, recipients))
+            }
             auditLogger.log(SaveVastaanotto(personOid(), hakemusOid, hakuOid, vastaanotto))
             hakemusRepository.getHakemus(hakemusOid) match {
               case Some(hakemus) => hakemus
@@ -110,5 +131,6 @@ trait ApplicationsServletContainer {
   }
 }
 
-case class ClientSideVastaanotto(hakukohdeOid: String, tila: String)
+case class ClientSideVastaanotto(hakukohdeOid: String, tila: String, email: String = "",
+                                 hakukohdeNimi: String = "", tarjoajaNimi: String = "")
 

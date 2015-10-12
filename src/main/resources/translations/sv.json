@@ -4,7 +4,7 @@
   },
 
   "sidebar": {
-    "opintopolku": "Studieinfo",
+    "opintopolku": "Min Studieinfo",
     "applications": "Mina ansökningsblanketter"
   },
 
@@ -82,10 +82,26 @@
 
     "acceptEducation": {
       "received": "Studieplats beviljad",
-      "latestAnswer": "Ge bindande svar senast __aika__",
+      "latestAnswer": "Skicka svaret före __aika__, annars går du miste om den erbjudna studieplatsen.",
       "accept": "Jag tar emot den beviljade studieplatsen",
-      "conditionalAccept": "Jag tar emot den beviljade studieplatsen, om jag inte får en plats från något av mina högre prioriserade.",
-      "reject": "Jag tar inte emot studieplatsen"
+      "conditionalAccept": "Jag tar emot studieplatsen villkorligt",
+      "conditionalAcceptInfo1": "Du kan fortfarande bli godkänd från reservplats till ett ansökningsönskemål med högre prioritet.",
+      "conditionalAcceptInfo2": "Mottagandet ändras till bindande om du inte blir antagen till ett ansökningsönskemål med högre prioritet.",
+      "reject": "Jag tar inte emot studieplatsen",
+      "responseReceived": "Ditt svar har mottagits.",
+      "invalidEmail": "Felaktig e-postadress",
+      "emailLabel": "E-postadress (bekräftelse skickas till din e-post)",
+      "cannotChangeAnswer": "Obs! Svaret kan inte ändras senare",
+      "email": {
+        "dateFormat": "dd.MM.YYYY 'kl' HH:mm",
+        "subject": "Studieinfo: Ditt svar har mottagits",
+        "body": "Hej,\n\nVi har mottagit %s ditt svar:\n%s\n\nSvara inte på detta meddelande - meddelandet har skickats automatiskt.",
+        "tila": {
+          "VASTAANOTTANUT": "Jag tar emot den beviljade studieplatsen",
+          "PERUNUT": "Jag tar inte emot studieplatsen",
+          "EHDOLLISESTI_VASTAANOTTANUT": "Jag tar emot studieplatsen villkorligt"
+        }
+      }
     }
   },
 
@@ -126,8 +142,8 @@
   },
 
   "registration": {
-    "pleaseRegister": "Anmäla dig till terminen",
-    "goToRegistration": "Anmäla dig"
+    "pleaseRegister": "Anmäl dig till terminen",
+    "goToRegistration": "Anmäl dig"
   },
 
   "emailNote": {
