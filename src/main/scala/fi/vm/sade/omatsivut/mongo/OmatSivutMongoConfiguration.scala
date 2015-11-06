@@ -15,7 +15,7 @@ import org.springframework.data.mongodb.core.MongoTemplate
   def sanitizeMongoUrl(mongoUri: String) = mongoUri match {
     case uri if uri.contains("@") => uri.substring(mongoUri.indexOf("@"))
     case uri if uri.contains("//") => uri.substring(mongoUri.indexOf("//"))
-    case _ => _
+    case _ =>
   }
 
   @Bean def mongo(@Value("${mongodb.url}") mongoUri: String): MongoClient = {
