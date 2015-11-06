@@ -110,6 +110,8 @@ object OmatSivutSpringContext extends Logging {
       override def getApplicationSystems(b: Boolean): util.List[ApplicationSystem] = unsupportedIntegrationException
 
       override def getApplicationSystem(s: String): ApplicationSystem = unsupportedIntegrationException
+
+      override def kayttaaJarjestelmanLomaketta(oid: String): Boolean = unsupportedIntegrationException
     }
 
     @Bean def valintaService: ValintaService = new ValintaService {
