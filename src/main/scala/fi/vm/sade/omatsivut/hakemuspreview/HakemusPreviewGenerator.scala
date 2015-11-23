@@ -107,6 +107,7 @@ case class QuestionsPreview(implicit translations: Translations, language: Langu
       case e: SocialSecurityNumber  => textQuestionPreview(ew, answers)
       case e: TextQuestion          => textQuestionPreview(ew, answers, showEmptyValues)
       case e: DateQuestion          => textQuestionPreview(ew, answers)
+      case e: RichText              => List(textPreview(ew))
       case e =>
         logger.warn("Ignoring element " + e.getType + ": " + e.getId)
         Nil
