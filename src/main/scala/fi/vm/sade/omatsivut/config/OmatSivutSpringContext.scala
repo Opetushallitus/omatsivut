@@ -47,6 +47,7 @@ object OmatSivutSpringContext extends Logging {
 
   @Configuration
   @ComponentScan(basePackages = Array(
+    "fi.vm.sade.haku.http",
     "fi.vm.sade.haku.oppija.common",
     "fi.vm.sade.haku.oppija.hakemus",
     "fi.vm.sade.haku.oppija.lomake",
@@ -67,6 +68,7 @@ object OmatSivutSpringContext extends Logging {
   @Configuration
   @ComponentScan(basePackages = Array(
     "fi.vm.sade.security",
+    "fi.vm.sade.haku.http",
     "fi.vm.sade.haku.oppija.lomake",
     "fi.vm.sade.haku.oppija.repository",
     "fi.vm.sade.haku.oppija.hakemus.it.dao",
