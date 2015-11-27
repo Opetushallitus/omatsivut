@@ -72,11 +72,15 @@ haku.app.username.to.sijoittelu={{haku_app_username_to_sijoittelu}}
 haku.app.password.to.sijoittelu={{haku_app_password_to_sijoittelu}}
 haku.app.username.to.suoritusrekisteri={{haku_app_username_to_suoritusrekisteri}}
 haku.app.password.to.suoritusrekisteri={{haku_app_password_to_suoritusrekisteri}}
+hakuperusteet.url.fi=https\://{{host_haku}}/hakuperusteet
+hakuperusteet.url.sv=https\://{{host_haku_sv}}/hakuperusteet
+hakuperusteet.url.en=https\://{{host_haku_en}}/hakuperusteet
 mongo.db.name=hakulomake
 mongo.db.maxpoolsize=100
 mongodb.oppija.uri=mongodb://{{mongodb_hakemus_auth}}@{{mongodb_hakemus_host}}:{{mongodb_hakemus_port}}
 mongodb.url=${mongodb.oppija.uri}/${mongo.db.name}?maxpoolsize=${mongo.db.maxpoolsize}
 onlyBackgroundValidation=
+oppijantunnistus.create.url=https\://{{host_virkailija}}/oppijan-tunnistus/api/v1/token
 scheduler.run={{haku_scheduler_run}}
 scheduler.delay={{haku_scheduler_delay}}
 scheduler.sendMail={{haku_scheduler_sendMail}}
