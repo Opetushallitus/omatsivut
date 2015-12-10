@@ -2,11 +2,13 @@ package fi.vm.sade.omatsivut.config
 
 import java.util.concurrent.Executors
 
+import com.google.common.util.concurrent.ListenableFuture
 import fi.vm.sade.groupemailer.{GroupEmailComponent, GroupEmailService}
 import fi.vm.sade.hakemuseditori.HakemusEditoriComponent
 import fi.vm.sade.hakemuseditori.auditlog.{AuditContext, AuditLogger, AuditLoggerComponent}
 import fi.vm.sade.hakemuseditori.domain.Language.Language
 import fi.vm.sade.hakemuseditori.hakemus._
+import fi.vm.sade.hakemuseditori.hakumaksu.HakumaksuComponent
 import fi.vm.sade.hakemuseditori.koodisto.{KoodistoComponent, KoodistoService, RemoteKoodistoService, StubbedKoodistoService}
 import fi.vm.sade.hakemuseditori.koulutusinformaatio.{KoulutusInformaatioComponent, KoulutusInformaatioService}
 import fi.vm.sade.hakemuseditori.localization.TranslationsComponent
@@ -14,6 +16,9 @@ import fi.vm.sade.hakemuseditori.lomake.{LomakeRepository, LomakeRepositoryCompo
 import fi.vm.sade.hakemuseditori.ohjausparametrit.{OhjausparametritComponent, OhjausparametritService}
 import fi.vm.sade.hakemuseditori.tarjonta.{TarjontaComponent, TarjontaService}
 import fi.vm.sade.hakemuseditori.valintatulokset._
+import fi.vm.sade.haku.http.HttpRestClient.Response
+import fi.vm.sade.haku.http.{HttpRestClient, RestClient}
+import fi.vm.sade.haku.oppija.hakemus.service.HakumaksuService
 import fi.vm.sade.omatsivut.config.AppConfig._
 import fi.vm.sade.omatsivut.fixtures.hakemus.ApplicationFixtureImporter
 import fi.vm.sade.omatsivut.hakemuspreview.HakemusPreviewGeneratorComponent
@@ -49,7 +54,8 @@ class ComponentRegistry(val config: AppConfig)
           FixtureServletContainer with
           KoodistoServletContainer with
           TarjontaComponent with
-          KoodistoComponent {
+          KoodistoComponent with
+          HakumaksuComponent {
 
   private def configureOhjausparametritService: OhjausparametritService = config match {
     case _: StubbedExternalDeps => new StubbedOhjausparametritService()
@@ -86,9 +92,24 @@ class ComponentRegistry(val config: AppConfig)
     case _ => new RemoteKoodistoService(config.settings.koodistoUrl, springContext)
   }
 
+  private def configureHakumaksuService: HakumaksuService = config match {
+    case _: StubbedExternalDeps => new HakumaksuService(config.settings.koodistoUrl,
+      config.settings.koulutusinformaatioAoUrl, config.settings.oppijanTunnistusUrl,
+      config.settings.hakuperusteetUrlFi, config.settings.hakuperusteetUrlSv,
+      config.settings.hakuperusteetUrlEn, new RestClient {
+        override def get[T](url: String, responseClass: Class[T]): ListenableFuture[Response[T]] = ???
+        override def post[T, B](url: String, body: B, responseClass: Class[T]): ListenableFuture[Response[T]] = ???
+      })
+    case _ => new HakumaksuService(config.settings.koodistoUrl,
+      config.settings.koulutusinformaatioAoUrl, config.settings.oppijanTunnistusUrl,
+      config.settings.hakuperusteetUrlFi, config.settings.hakuperusteetUrlSv,
+      config.settings.hakuperusteetUrlEn, new HttpRestClient())
+  }
+
   private lazy val runningLogger = new RunnableLogger
   private lazy val pool = Executors.newSingleThreadExecutor
   lazy val springContext = new HakemusSpringContext(OmatSivutSpringContext.createApplicationContext(config))
+  val hakumaksuService: HakumaksuService = configureHakumaksuService
   val koulutusInformaatioService: KoulutusInformaatioService = configureKoulutusInformaatioService
   val ohjausparametritService: OhjausparametritService = configureOhjausparametritService
   val valintatulosService: ValintatulosService = configureValintatulosService
