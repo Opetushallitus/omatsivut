@@ -8,7 +8,6 @@ import fi.vm.sade.hakemuseditori.HakemusEditoriComponent
 import fi.vm.sade.hakemuseditori.auditlog.{AuditContext, AuditLogger, AuditLoggerComponent}
 import fi.vm.sade.hakemuseditori.domain.Language.Language
 import fi.vm.sade.hakemuseditori.hakemus._
-import fi.vm.sade.hakemuseditori.hakumaksu.HakumaksuComponent
 import fi.vm.sade.hakemuseditori.koodisto.{KoodistoComponent, KoodistoService, RemoteKoodistoService, StubbedKoodistoService}
 import fi.vm.sade.hakemuseditori.koulutusinformaatio.{KoulutusInformaatioComponent, KoulutusInformaatioService}
 import fi.vm.sade.hakemuseditori.localization.TranslationsComponent
@@ -54,8 +53,7 @@ class ComponentRegistry(val config: AppConfig)
           FixtureServletContainer with
           KoodistoServletContainer with
           TarjontaComponent with
-          KoodistoComponent with
-          HakumaksuComponent {
+          KoodistoComponent {
 
   private def configureOhjausparametritService: OhjausparametritService = config match {
     case _: StubbedExternalDeps => new StubbedOhjausparametritService()
@@ -93,13 +91,7 @@ class ComponentRegistry(val config: AppConfig)
   }
 
   private def configureHakumaksuService: HakumaksuService = config match {
-    case _: StubbedExternalDeps => new HakumaksuService(config.settings.koodistoUrl,
-      config.settings.koulutusinformaatioAoUrl, config.settings.oppijanTunnistusUrl,
-      config.settings.hakuperusteetUrlFi, config.settings.hakuperusteetUrlSv,
-      config.settings.hakuperusteetUrlEn, new RestClient {
-        override def get[T](url: String, responseClass: Class[T]): ListenableFuture[Response[T]] = ???
-        override def post[T, B](url: String, body: B, responseClass: Class[T]): ListenableFuture[Response[T]] = ???
-      })
+    case _: StubbedExternalDeps => stubbedHakumaksuService
     case _ => new HakumaksuService(config.settings.koodistoUrl,
       config.settings.koulutusinformaatioAoUrl, config.settings.oppijanTunnistusUrl,
       config.settings.hakuperusteetUrlFi, config.settings.hakuperusteetUrlSv,
