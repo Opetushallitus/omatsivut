@@ -151,5 +151,13 @@
       "erikseenHaettavatHakukohteet": "Erikseen haettavat hakukohteet",
       "openLink": "Avaa muistilista Opintopolussa",
       "noReply": "Älä vastaa tähän viestiin - viesti on lähetetty automaattisesti."
+  },
+
+  "payment" : {
+    "status": {
+      "ok": "Hakemuksen käsittelymaksu on maksettu.",
+      "notified": "Hakemus odottaa hakemuksen käsittelymaksun maksamista."
+    },
+    "aoNotification": "Tämän hakukohteen ja ilmoittamasi pohjakoulutuksen perusteella sinun täytyy maksaa hakemuksen käsittelymaksu."
   }
 }

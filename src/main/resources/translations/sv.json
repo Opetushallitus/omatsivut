@@ -151,5 +151,13 @@
       "erikseenHaettavatHakukohteet": "Ansökningsmål med skild ansökan",
       "openLink": "Öppna minneslistan i Studieinfo",
       "noReply": "Svara inte på detta meddelande – meddelandet har skickats automatiskt. "
+  },
+
+  "payment" : {
+    "status": {
+      "ok": "Ansökningens handläggningsavgift är betald.",
+      "notified": "Ansökningen väntar på att handläggningsavgiften betalas."
+    },
+    "aoNotification": "På basis av detta ansökningsmål och den grundutbildning du angett måste du betala handläggningsavgiften för ansökan."
   }
 }
