@@ -158,6 +158,6 @@
       "ok": "Ansökningens handläggningsavgift är betald.",
       "notified": "Ansökningen väntar på att handläggningsavgiften betalas."
     },
-    "aoNotification": "På basis av detta ansökningsmål och den grundutbildning du angett måste du betala handläggningsavgiften för ansökan."
+    "aoNotification": "På basis av detta ansökningsmål och den grundutbildning du angett måste du betala handläggningsavgiften för ansökan. Instruktionerna för betalningen kommer per e-post efter att du har sparat dina ändringar (ifall du inte redan fått dem)."
   }
 }

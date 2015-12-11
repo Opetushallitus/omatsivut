@@ -158,6 +158,6 @@
       "ok": "Hakemuksen käsittelymaksu on maksettu.",
       "notified": "Hakemus odottaa hakemuksen käsittelymaksun maksamista."
     },
-    "aoNotification": "Tämän hakukohteen ja ilmoittamasi pohjakoulutuksen perusteella sinun täytyy maksaa hakemuksen käsittelymaksu."
+    "aoNotification": "Tämän hakukohteen ja ilmoittamasi pohjakoulutuksen perusteella sinun täytyy maksaa hakemuksen käsittelymaksu. Tallennuksen jälkeen saat sähköpostissa ohjeet maksua varten (jos et ole aiemmin saanut viestiä)."
   }
 }
