@@ -2,7 +2,6 @@ package fi.vm.sade.omatsivut.config
 
 import java.util.concurrent.Executors
 
-import com.google.common.util.concurrent.ListenableFuture
 import fi.vm.sade.groupemailer.{GroupEmailComponent, GroupEmailService}
 import fi.vm.sade.hakemuseditori.HakemusEditoriComponent
 import fi.vm.sade.hakemuseditori.auditlog.{AuditContext, AuditLogger, AuditLoggerComponent}
@@ -15,8 +14,7 @@ import fi.vm.sade.hakemuseditori.lomake.{LomakeRepository, LomakeRepositoryCompo
 import fi.vm.sade.hakemuseditori.ohjausparametrit.{OhjausparametritComponent, OhjausparametritService}
 import fi.vm.sade.hakemuseditori.tarjonta.{TarjontaComponent, TarjontaService}
 import fi.vm.sade.hakemuseditori.valintatulokset._
-import fi.vm.sade.haku.http.HttpRestClient.Response
-import fi.vm.sade.haku.http.{HttpRestClient, RestClient}
+import fi.vm.sade.haku.http.HttpRestClient
 import fi.vm.sade.haku.oppija.hakemus.service.HakumaksuService
 import fi.vm.sade.omatsivut.config.AppConfig._
 import fi.vm.sade.omatsivut.fixtures.hakemus.ApplicationFixtureImporter
