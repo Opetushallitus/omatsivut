@@ -156,7 +156,8 @@
   "payment" : {
     "status": {
       "ok": "We have received your payment for the application fee.",
-      "notified": "You have not yet paid the application fee."
+      "notified": "You have not yet paid the application fee.",
+      "notOk": "You did not pay the application fee. The application will not be processed."
     },
     "aoNotification": "Based on the study programme you are applying to and the qualification/qualifications you have stated as your educational background, you are required to pay the application fee. You will receive the payment instructions by e-mail after you have saved your changes (in case you haven't already got them)."
   }
