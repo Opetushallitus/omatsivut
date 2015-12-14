@@ -22,7 +22,7 @@ protected class HakemusWithDifferentAnswersFixture(hakemusOid: String)(val dao: 
     answers.foreach { case (phaseId, phaseAnswers) =>
       val oldPhaseAnswers = application.getPhaseAnswers(phaseId).asScala
       val newAnswers = phaseAnswers.foldLeft(oldPhaseAnswers) { case (memo, value: (String, String)) => memo + (value._1 -> value._2)}
-      application.addVaiheenVastaukset(phaseId, newAnswers.asJava)
+      application.setVaiheenVastauksetAndSetPhaseId(phaseId, newAnswers.asJava)
     }
     val i=2
   }
@@ -30,7 +30,7 @@ protected class HakemusWithDifferentAnswersFixture(hakemusOid: String)(val dao: 
   private def replaceAnswers(application: Application, answers: Answers) {
     import scala.collection.JavaConverters._
     answers.foreach { case (phaseId, phaseAnswers) =>
-      application.addVaiheenVastaukset(phaseId, phaseAnswers.asJava)
+      application.setVaiheenVastauksetAndSetPhaseId(phaseId, phaseAnswers.asJava)
     }
   }
 }
