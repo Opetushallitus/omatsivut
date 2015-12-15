@@ -7,6 +7,7 @@ import fi.vm.sade.hakemuseditori.HakemusEditoriComponent
 import fi.vm.sade.hakemuseditori.auditlog.{AuditContext, AuditLogger, AuditLoggerComponent}
 import fi.vm.sade.hakemuseditori.domain.Language.Language
 import fi.vm.sade.hakemuseditori.hakemus._
+import fi.vm.sade.hakemuseditori.hakumaksu.{HakumaksuServiceWrapper, RemoteHakumaksuServiceWrapper, StubbedHakumaksuServiceWrapper}
 import fi.vm.sade.hakemuseditori.koodisto.{KoodistoComponent, KoodistoService, RemoteKoodistoService, StubbedKoodistoService}
 import fi.vm.sade.hakemuseditori.koulutusinformaatio.{KoulutusInformaatioComponent, KoulutusInformaatioService}
 import fi.vm.sade.hakemuseditori.localization.TranslationsComponent
@@ -88,18 +89,20 @@ class ComponentRegistry(val config: AppConfig)
     case _ => new RemoteKoodistoService(config.settings.koodistoUrl, springContext)
   }
 
-  private def configureHakumaksuService: HakumaksuService = config match {
-    case _: StubbedExternalDeps => stubbedHakumaksuService
-    case _ => new HakumaksuService(config.settings.koodistoUrl,
+  private def configureHakumaksuService: HakumaksuServiceWrapper = config match {
+    case _: StubbedExternalDeps => new StubbedHakumaksuServiceWrapper
+    case _ => new RemoteHakumaksuServiceWrapper(
+      new HakumaksuService(config.settings.koodistoUrl,
       config.settings.koulutusinformaatioAoUrl, config.settings.oppijanTunnistusUrl,
       config.settings.hakuperusteetUrlFi, config.settings.hakuperusteetUrlSv,
       config.settings.hakuperusteetUrlEn, new HttpRestClient())
+    )
   }
 
   private lazy val runningLogger = new RunnableLogger
   private lazy val pool = Executors.newSingleThreadExecutor
   lazy val springContext = new HakemusSpringContext(OmatSivutSpringContext.createApplicationContext(config))
-  val hakumaksuService: HakumaksuService = configureHakumaksuService
+  val hakumaksuService: HakumaksuServiceWrapper = configureHakumaksuService
   val koulutusInformaatioService: KoulutusInformaatioService = configureKoulutusInformaatioService
   val ohjausparametritService: OhjausparametritService = configureOhjausparametritService
   val valintatulosService: ValintatulosService = configureValintatulosService
