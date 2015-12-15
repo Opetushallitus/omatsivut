@@ -617,6 +617,9 @@ function ApplicationListPage() {
       hakuaika: function () {
         return el().find(".hakuaika").text().trim()
       },
+      paymentNotificationIsShown: function() {
+        return el().find(".aoPaymentNotification:visible").length === 1
+      },
       toString: function() {
         return api.opetuspiste() + " " + api.koulutus()
       },

@@ -14,6 +14,8 @@ import fi.vm.sade.hakemuseditori.lomake.{LomakeRepository, LomakeRepositoryCompo
 import fi.vm.sade.hakemuseditori.ohjausparametrit.{OhjausparametritComponent, OhjausparametritService}
 import fi.vm.sade.hakemuseditori.tarjonta.{TarjontaComponent, TarjontaService}
 import fi.vm.sade.hakemuseditori.valintatulokset._
+import fi.vm.sade.haku.http.HttpRestClient
+import fi.vm.sade.haku.oppija.hakemus.service.HakumaksuService
 import fi.vm.sade.omatsivut.config.AppConfig._
 import fi.vm.sade.omatsivut.fixtures.hakemus.ApplicationFixtureImporter
 import fi.vm.sade.omatsivut.hakemuspreview.HakemusPreviewGeneratorComponent
@@ -86,9 +88,18 @@ class ComponentRegistry(val config: AppConfig)
     case _ => new RemoteKoodistoService(config.settings.koodistoUrl, springContext)
   }
 
+  private def configureHakumaksuService: HakumaksuService = config match {
+    case _: StubbedExternalDeps => stubbedHakumaksuService
+    case _ => new HakumaksuService(config.settings.koodistoUrl,
+      config.settings.koulutusinformaatioAoUrl, config.settings.oppijanTunnistusUrl,
+      config.settings.hakuperusteetUrlFi, config.settings.hakuperusteetUrlSv,
+      config.settings.hakuperusteetUrlEn, new HttpRestClient())
+  }
+
   private lazy val runningLogger = new RunnableLogger
   private lazy val pool = Executors.newSingleThreadExecutor
   lazy val springContext = new HakemusSpringContext(OmatSivutSpringContext.createApplicationContext(config))
+  val hakumaksuService: HakumaksuService = configureHakumaksuService
   val koulutusInformaatioService: KoulutusInformaatioService = configureKoulutusInformaatioService
   val ohjausparametritService: OhjausparametritService = configureOhjausparametritService
   val valintatulosService: ValintatulosService = configureValintatulosService

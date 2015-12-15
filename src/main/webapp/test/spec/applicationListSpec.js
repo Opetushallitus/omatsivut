@@ -1261,6 +1261,10 @@
           hakemusNivelKesa2013WithPeruskouluBaseEducation.getPreference(1).selectKoulutus(0)
         )
 
+        it("hakumaksun ilmoitus näytetään", function() {
+          hakemusNivelKesa2013WithPeruskouluBaseEducation.getPreference(1).paymentNotificationIsShown().should.be.true
+        })
+
         it("seuraava hakukohde tulee muokattavaksi", function() {
           hakemusNivelKesa2013WithPeruskouluBaseEducation.getPreference(2).isEditable().should.be.true
         })
