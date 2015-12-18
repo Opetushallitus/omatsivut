@@ -15,8 +15,6 @@ import fi.vm.sade.hakemuseditori.lomake.{LomakeRepository, LomakeRepositoryCompo
 import fi.vm.sade.hakemuseditori.ohjausparametrit.{OhjausparametritComponent, OhjausparametritService}
 import fi.vm.sade.hakemuseditori.tarjonta.{TarjontaComponent, TarjontaService}
 import fi.vm.sade.hakemuseditori.valintatulokset._
-import fi.vm.sade.haku.http.HttpRestClient
-import fi.vm.sade.haku.oppija.hakemus.service.HakumaksuService
 import fi.vm.sade.omatsivut.config.AppConfig._
 import fi.vm.sade.omatsivut.fixtures.hakemus.ApplicationFixtureImporter
 import fi.vm.sade.omatsivut.hakemuspreview.HakemusPreviewGeneratorComponent
@@ -91,12 +89,7 @@ class ComponentRegistry(val config: AppConfig)
 
   private def configureHakumaksuService: HakumaksuServiceWrapper = config match {
     case _: StubbedExternalDeps => new StubbedHakumaksuServiceWrapper
-    case _ => new RemoteHakumaksuServiceWrapper(
-      new HakumaksuService(config.settings.koodistoUrl,
-      config.settings.koulutusinformaatioAoUrl, config.settings.oppijanTunnistusUrl,
-      config.settings.hakuperusteetUrlFi, config.settings.hakuperusteetUrlSv,
-      config.settings.hakuperusteetUrlEn, new HttpRestClient())
-    )
+    case _ => new RemoteHakumaksuServiceWrapper(springContext)
   }
 
   private lazy val runningLogger = new RunnableLogger

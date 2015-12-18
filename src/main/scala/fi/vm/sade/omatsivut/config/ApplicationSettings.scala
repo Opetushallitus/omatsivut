@@ -33,12 +33,6 @@ case class ApplicationSettings(config: Config) extends GroupEmailerSettings(conf
   val aesKey = config.getString("omatsivut.crypto.aes.key")
   val hmacKey = config.getString("omatsivut.crypto.hmac.key")
 
-  val oppijanTunnistusUrl = config.getString("oppijantunnistus.create.url")
-
-  val hakuperusteetUrlFi = config.getString("hakuperusteet.url.fi")
-  val hakuperusteetUrlSv = config.getString("hakuperusteet.url.sv")
-  val hakuperusteetUrlEn = config.getString("hakuperusteet.url.en")
-
   private def getRemoteApplicationConfig(config: Config) = {
     RemoteApplicationConfig(
       config.getString("url"),
