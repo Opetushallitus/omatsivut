@@ -63,6 +63,8 @@ object OmatSivutSpringContext extends Logging {
     @Bean def applicationOidDAO: ApplicationOidDAO = new ApplicationOidDAO {
       override def generateNewOid() = "1.2.246.562.11.00000441369"
     }
+
+    @Bean def hakumaksuService = null
   }
 
   @Configuration
@@ -124,6 +126,9 @@ object OmatSivutSpringContext extends Logging {
 
       override def fetchValintaData(application: Application): util.Map[String, String] = unsupportedIntegrationException
     }
+
+    // We access it directly, see ComponentRegistry -> configureHakumaksuService
+    @Bean def hakumaksuService = null
 
     def unsupportedIntegrationException: Nothing = {
       throw new scala.UnsupportedOperationException("This integration is supported and should not be called in omatsivut")
