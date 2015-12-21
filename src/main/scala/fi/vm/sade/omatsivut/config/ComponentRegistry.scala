@@ -20,6 +20,7 @@ import fi.vm.sade.omatsivut.fixtures.hakemus.ApplicationFixtureImporter
 import fi.vm.sade.omatsivut.hakemuspreview.HakemusPreviewGeneratorComponent
 import fi.vm.sade.omatsivut.localization.OmatSivutTranslations
 import fi.vm.sade.omatsivut.muistilista.MuistilistaServiceComponent
+import fi.vm.sade.omatsivut.oppijantunnistus.{OppijanTunnistusComponent, OppijanTunnistusService, RemoteOppijanTunnistusService, StubbedOppijanTunnistusService}
 import fi.vm.sade.omatsivut.servlet._
 import fi.vm.sade.omatsivut.servlet.session.{LogoutServletContainer, SecuredSessionServletContainer}
 import fi.vm.sade.omatsivut.valintarekisteri.{MockedValintaRekisteriServiceForIT, RemoteValintaRekisteriService, ValintaRekisteriComponent, ValintaRekisteriService}
@@ -50,7 +51,8 @@ class ComponentRegistry(val config: AppConfig)
           FixtureServletContainer with
           KoodistoServletContainer with
           TarjontaComponent with
-          KoodistoComponent {
+          KoodistoComponent with
+          OppijanTunnistusComponent {
 
   private def configureOhjausparametritService: OhjausparametritService = config match {
     case _: StubbedExternalDeps => new StubbedOhjausparametritService()
@@ -80,6 +82,11 @@ class ComponentRegistry(val config: AppConfig)
   private def configureTarjontaService: TarjontaService = config match {
     case _: StubbedExternalDeps => new StubbedTarjontaService()
     case _ => CachedRemoteTarjontaService(config.settings.tarjontaUrl)
+  }
+
+  private def configureOppijanTunnistusService: OppijanTunnistusService = config match {
+    case _: StubbedExternalDeps => new StubbedOppijanTunnistusService()
+    case _ => new RemoteOppijanTunnistusService(config.settings.oppijanTunnistusVerifyUrl)
   }
 
   private def configureKoodistoService: KoodistoService = config match {
@@ -113,6 +120,7 @@ class ComponentRegistry(val config: AppConfig)
   val koodistoService: KoodistoService = configureKoodistoService
   val groupEmailService: GroupEmailService = configureGroupEmailService
   val captchaService: CaptchaService = new RemoteCaptchaService(config.settings.captchaSettings)
+  val oppijanTunnistusService = configureOppijanTunnistusService
 
   def muistilistaService(language: Language): MuistilistaService = new MuistilistaService(language)
   def newApplicationValidator: ApplicationValidator = new ApplicationValidator
