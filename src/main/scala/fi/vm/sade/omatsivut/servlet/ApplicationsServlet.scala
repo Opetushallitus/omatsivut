@@ -16,11 +16,14 @@ import fi.vm.sade.hakemuseditori.valintatulokset.domain.Vastaanotto
 import fi.vm.sade.hakemuseditori.{HakemusEditoriComponent, HakemusEditoriUserContext, UpdateResult}
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.hakemuspreview.HakemusPreviewGeneratorComponent
+import fi.vm.sade.omatsivut.oppijantunnistus.OppijanTunnistusComponent
 import fi.vm.sade.omatsivut.security.AuthenticationRequiringServlet
 import fi.vm.sade.omatsivut.valintarekisteri.ValintaRekisteriComponent
 import org.json4s.jackson.Serialization
 import org.scalatra._
 import org.scalatra.json._
+
+import scala.util.{Failure, Success}
 
 trait ApplicationsServletContainer {
   this: HakemusEditoriComponent with LomakeRepositoryComponent with
@@ -32,7 +35,8 @@ trait ApplicationsServletContainer {
     SpringContextComponent with
     AuditLoggerComponent with
     GroupEmailComponent with
-    TranslationsComponent =>
+    TranslationsComponent with
+    OppijanTunnistusComponent =>
 
   class ApplicationsServlet(val appConfig: AppConfig) extends OmatSivutServletBase with JacksonJsonSupport with JsonFormats with AuthenticationRequiringServlet with HakemusEditoriUserContext {
     def user = Oppija(personOid())
@@ -48,6 +52,14 @@ trait ApplicationsServletContainer {
       hakemusEditori.fetchByPersonOid(personOid())
     }
 
+    get("/application/:token") {
+      oppijanTunnistusService.validateToken(params("token")) match {
+        case Success(hakemusOid) => hakemusOid
+        case Failure(exception) =>
+          logger.error("Failed to validate token", exception)
+          InternalServerError("error" -> "Failed to validate token")
+      }
+    }
 
     put("/:oid") {
       val content: String = request.body
