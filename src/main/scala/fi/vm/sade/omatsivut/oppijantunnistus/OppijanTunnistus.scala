@@ -15,12 +15,14 @@ trait OppijanTunnistusService {
   def validateToken(token: String): Try[HakemusOid]
 }
 
+case class OppijanTunnistusVerification(valid: Boolean, metadata: Option[HakuAppMetadata])
+
+case class HakuAppMetadata(hakemusOid: HakemusOid)
+
+class InvalidTokenException(msg: String) extends RuntimeException(msg)
+
 class RemoteOppijanTunnistusService(verifyUrl: String, client: HttpClient = DefaultHttpClient) extends OppijanTunnistusService {
   implicit val formats = DefaultFormats
-
-  case class OppijanTunnistusVerification(valid: Boolean, metadata: HakuAppMetadata)
-
-  case class HakuAppMetadata(hakemusOid: HakemusOid)
 
   def validateToken(token: String): Try[HakemusOid] = {
 
@@ -30,8 +32,8 @@ class RemoteOppijanTunnistusService(verifyUrl: String, client: HttpClient = Defa
     request.responseWithHeaders() match {
       case (200, _, resultString) =>
         Try(parse(resultString).extract[OppijanTunnistusVerification]) match {
-          case Success(OppijanTunnistusVerification(true, HakuAppMetadata(hakemusOid))) => Success(hakemusOid)
-          case Success(OppijanTunnistusVerification(false, _)) => Failure(new RuntimeException("invalid token"))
+          case Success(OppijanTunnistusVerification(true, Some(HakuAppMetadata(hakemusOid)))) => Success(hakemusOid)
+          case Success(OppijanTunnistusVerification(false, _)) => Failure(new InvalidTokenException("invalid token"))
           case Failure(e) => Failure(new RuntimeException("invalid response from oppijan tunnistus", e))
         }
       case (code, _, resultString) =>
