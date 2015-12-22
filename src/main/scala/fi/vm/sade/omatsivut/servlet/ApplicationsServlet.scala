@@ -62,10 +62,10 @@ trait ApplicationsServletContainer {
               NonSensitiveHakemus(hakemus.oid, hakemus.hakutoiveet)
             case _ =>
               logger.error("Token was valid but hakemus not found! Token: " + params("token") + ", hakemusOid: " + hakemusOid)
-              NotFound("error" -> "Hakemus not found")
+              InternalServerError("error" -> "Internal service unavailable")
           }
         case Failure(e: InvalidTokenException) =>
-          "tokenValid" -> false
+          NotFound("tokenValid" -> false)
         case Failure(exception) =>
           logger.error("Failed to validate token", exception)
           InternalServerError("error" -> "Failed to validate token")
