@@ -1,9 +1,9 @@
 package fi.vm.sade.omatsivut.oppijantunnistus
 
-import fi.vm.sade.omatsivut.HakemusOid.HakemusOid
+import fi.vm.sade.omatsivut.NonSensitiveHakemus.Oid
 import fi.vm.sade.utils.http.{DefaultHttpClient, HttpClient}
-import org.json4s.native.JsonMethods._
 import org.json4s._
+import org.json4s.native.JsonMethods._
 
 import scala.util.{Failure, Success, Try}
 
@@ -12,19 +12,19 @@ trait OppijanTunnistusComponent {
 }
 
 trait OppijanTunnistusService {
-  def validateToken(token: String): Try[HakemusOid]
+  def validateToken(token: String): Try[Oid]
 }
 
 case class OppijanTunnistusVerification(valid: Boolean, metadata: Option[HakuAppMetadata])
 
-case class HakuAppMetadata(hakemusOid: HakemusOid)
+case class HakuAppMetadata(hakemusOid: Oid)
 
 class InvalidTokenException(msg: String) extends RuntimeException(msg)
 
 class RemoteOppijanTunnistusService(verifyUrl: String, client: HttpClient = DefaultHttpClient) extends OppijanTunnistusService {
   implicit val formats = DefaultFormats
 
-  def validateToken(token: String): Try[HakemusOid] = {
+  def validateToken(token: String): Try[Oid] = {
 
     val request = client.httpGet(verifyUrl + s"/$token")
                     .header("Caller-Id", "omatsivut.omatsivut.backend")
@@ -44,5 +44,5 @@ class RemoteOppijanTunnistusService(verifyUrl: String, client: HttpClient = Defa
 }
 
 class StubbedOppijanTunnistusService extends OppijanTunnistusService {
-  override def validateToken(token: String): Try[HakemusOid] = Success("successHakemusOid")
+  override def validateToken(token: String): Try[Oid] = Success("successHakemusOid")
 }

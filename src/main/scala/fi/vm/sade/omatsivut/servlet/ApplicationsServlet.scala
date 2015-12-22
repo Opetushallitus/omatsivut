@@ -13,10 +13,11 @@ import fi.vm.sade.hakemuseditori.lomake.LomakeRepositoryComponent
 import fi.vm.sade.hakemuseditori.user.Oppija
 import fi.vm.sade.hakemuseditori.valintatulokset.ValintatulosServiceComponent
 import fi.vm.sade.hakemuseditori.valintatulokset.domain.Vastaanotto
-import fi.vm.sade.hakemuseditori._
+import fi.vm.sade.hakemuseditori.{ValidationException, ForbiddenException, HakemusEditoriComponent, HakemusEditoriUserContext}
+import fi.vm.sade.omatsivut.NonSensitiveHakemus
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.hakemuspreview.HakemusPreviewGeneratorComponent
-import fi.vm.sade.omatsivut.oppijantunnistus.OppijanTunnistusComponent
+import fi.vm.sade.omatsivut.oppijantunnistus.{InvalidTokenException, OppijanTunnistusComponent}
 import fi.vm.sade.omatsivut.security.AuthenticationRequiringServlet
 import fi.vm.sade.omatsivut.valintarekisteri.ValintaRekisteriComponent
 import org.json4s.jackson.Serialization
@@ -54,7 +55,17 @@ trait ApplicationsServletContainer {
 
     get("/application/:token") {
       oppijanTunnistusService.validateToken(params("token")) match {
-        case Success(hakemusOid) => hakemusOid
+        case Success(hakemusOid) =>
+          hakemusEditori.fetchByHakemusOid(hakemusOid) match {
+            case Some(hakemusInfo) =>
+              val hakemus = hakemusInfo.hakemus
+              NonSensitiveHakemus(hakemus.oid, hakemus.hakutoiveet)
+            case _ =>
+              logger.error("Token was valid but hakemus not found! Token: " + params("token") + ", hakemusOid: " + hakemusOid)
+              NotFound("error" -> "Hakemus not found")
+          }
+        case Failure(e: InvalidTokenException) =>
+          "tokenValid" -> false
         case Failure(exception) =>
           logger.error("Failed to validate token", exception)
           InternalServerError("error" -> "Failed to validate token")
