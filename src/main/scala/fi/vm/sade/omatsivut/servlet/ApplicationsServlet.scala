@@ -14,10 +14,8 @@ import fi.vm.sade.hakemuseditori.user.Oppija
 import fi.vm.sade.hakemuseditori.valintatulokset.ValintatulosServiceComponent
 import fi.vm.sade.hakemuseditori.valintatulokset.domain.Vastaanotto
 import fi.vm.sade.hakemuseditori.{ValidationException, ForbiddenException, HakemusEditoriComponent, HakemusEditoriUserContext}
-import fi.vm.sade.omatsivut.NonSensitiveHakemus
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.hakemuspreview.HakemusPreviewGeneratorComponent
-import fi.vm.sade.omatsivut.oppijantunnistus.{InvalidTokenException, OppijanTunnistusComponent}
 import fi.vm.sade.omatsivut.security.AuthenticationRequiringServlet
 import fi.vm.sade.omatsivut.valintarekisteri.ValintaRekisteriComponent
 import org.json4s.jackson.Serialization
@@ -36,8 +34,7 @@ trait ApplicationsServletContainer {
     SpringContextComponent with
     AuditLoggerComponent with
     GroupEmailComponent with
-    TranslationsComponent with
-    OppijanTunnistusComponent =>
+    TranslationsComponent =>
 
   class ApplicationsServlet(val appConfig: AppConfig) extends OmatSivutServletBase with JacksonJsonSupport with JsonFormats with AuthenticationRequiringServlet with HakemusEditoriUserContext {
     def user = Oppija(personOid())
@@ -51,25 +48,6 @@ trait ApplicationsServletContainer {
 
     get("/") {
       hakemusEditori.fetchByPersonOid(personOid())
-    }
-
-    get("/application/:token") {
-      oppijanTunnistusService.validateToken(params("token")) match {
-        case Success(hakemusOid) =>
-          hakemusEditori.fetchByHakemusOid(hakemusOid) match {
-            case Some(hakemusInfo) =>
-              val hakemus = hakemusInfo.hakemus
-              NonSensitiveHakemus(hakemus.oid, hakemus.hakutoiveet)
-            case _ =>
-              logger.error("Token was valid but hakemus not found! Token: " + params("token") + ", hakemusOid: " + hakemusOid)
-              InternalServerError("error" -> "Internal service unavailable")
-          }
-        case Failure(e: InvalidTokenException) =>
-          NotFound("tokenValid" -> false)
-        case Failure(exception) =>
-          logger.error("Failed to validate token", exception)
-          InternalServerError("error" -> "Failed to validate token")
-      }
     }
 
     put("/:oid") {
