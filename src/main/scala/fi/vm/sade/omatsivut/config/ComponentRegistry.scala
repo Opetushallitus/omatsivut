@@ -52,7 +52,8 @@ class ComponentRegistry(val config: AppConfig)
           KoodistoServletContainer with
           TarjontaComponent with
           KoodistoComponent with
-          OppijanTunnistusComponent {
+          OppijanTunnistusComponent with
+          NonSensitiveApplicationServletContainer {
 
   private def configureOhjausparametritService: OhjausparametritService = config match {
     case _: StubbedExternalDeps => new StubbedOhjausparametritService()
@@ -126,6 +127,7 @@ class ComponentRegistry(val config: AppConfig)
   def newFixtureServlet = new FixtureServlet(config)
   def newKoodistoServlet = new KoodistoServlet
   def newMuistilistaServlet = new MuistilistaServlet(config)
+  def newNonSensitiveApplicationServlet = new NonSensitiveApplicationServlet(config)
 
   def start {
     try {
