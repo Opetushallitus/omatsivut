@@ -163,6 +163,7 @@
   },
 
   "hakutoiveidenMuokkaus": {
-    "title": "Hakutoiveiden muokkaus"
+    "title": "Hakutoiveiden muokkaus",
+    "infoNotification": "<strong>Huom! Kirjauduit sähköpostilinkin kautta muuttamaan hakutoiveitasi.</strong> Voit lisätä ja poistaa hakutoiveita ja muuttaa niiden järjestystä. Jos haluat katsella koko hakemusta ja tehdä muita muutoksia hakemukseesi, niin kirjaudu verkkopankkitunnuksilla, mobiilivarmenteella tai sähköisellä henkilökortilla Oma Opintopolku -palveluun. <a href='https://opintopolku.fi/wp/oma-opintopolku-palvelu/'>Lue lisää Oma Opintopolku -palvelusta.</a>"
   }
 }
