@@ -58,6 +58,11 @@ gulp.task('less', ['copy-editor'], function () {
         .pipe(concat('main.css'))
         .pipe(gulp.dest('src/main/webapp/css'));
 
+    gulp.src('src/main/less/hakutoiveidenMuokkaus.less')
+        .pipe(less().on('error', handleError))
+        .pipe(concat('hakutoiveidenMuokkaus.css'))
+        .pipe(gulp.dest('src/main/webapp/css'));
+
     gulp.src('src/main/less/preview.less')
       .pipe(less().on('error', handleError))
       .pipe(concat('preview.css'))

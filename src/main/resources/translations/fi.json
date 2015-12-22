@@ -160,5 +160,9 @@
       "notOk": "Hakemuksen käsittelymaksua ei maksettu. Hakemusta ei käsitellä."
     },
     "aoNotification": "Tämän hakukohteen ja ilmoittamasi pohjakoulutuksen perusteella sinun täytyy maksaa hakemuksen käsittelymaksu. Tallennuksen jälkeen saat sähköpostissa ohjeet maksua varten (jos et ole aiemmin saanut viestiä)."
+  },
+
+  "hakutoiveidenMuokkaus": {
+    "title": "Hakutoiveiden muokkaus"
   }
 }

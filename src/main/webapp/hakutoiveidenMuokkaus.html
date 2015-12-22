@@ -3,10 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <title>Hakutoiveiden muokkaus / Ändring av ansökningsönskemål / Changing of application option preferences</title>
+    <link href='//fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700' rel='stylesheet' type='text/css'>
+    <link href="css/main.css" media="all" rel="stylesheet" type="text/css"/>
+    <link href="css/hakutoiveidenMuokkaus.css" media="all" rel="stylesheet" type="text/css"/>
+    <link href="fontello/css/fontello.css" rel="stylesheet" type="text/css" />
 </head>
-<body>
-    <p>Tähän avataan palvelu, jossa voit muokata hakemuksesi hakukohteita.</p>
-    <p>Här öppnas en tjänst där du kan ändra dina ansökningsönskemål.</p>
-    <p>You will soon be able to edit your application option preferences here.</p>
+<body ng-controller="HakutoiveidenMuokkausController">
+    <header id="siteheader">
+        <a href="/" class="logo">
+            <img ng-src="img/opintopolku_large-{{lang}}.png">
+        </a>
+        <div class="center">
+            <h1>{{ localization("hakutoiveidenMuokkaus.title") }}</h1>
+            <span>{{ localization("applicationPreview.applicationId") }} 9219834293584</span>
+        </div>
+        <div class="right">
+            <span class="user">Matti Meikäläinen</span>
+            <a class="logout">{{ localization("button.logout") }}</a>
+        </div>
+    </header>
+    <section class="content">
+        <p>TODO</p>
+    </section>
+    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="hakemuseditori.js"></script>
+    <script src="bundle.js"></script>
 </body>
 </html>
