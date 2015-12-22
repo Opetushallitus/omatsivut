@@ -23,6 +23,7 @@ trait NonSensitiveApplicationServletContainer {
     }
 
     get("/application/:token") {
+      def serverError = InternalServerError("errorType" -> "serverError")
       oppijanTunnistusService.validateToken(params("token")) match {
         case Success(hakemusOid) =>
           hakemusRepository.getHakemus(hakemusOid) match {
@@ -31,13 +32,13 @@ trait NonSensitiveApplicationServletContainer {
               NonSensitiveHakemus(hakemus.oid, hakemus.hakutoiveet)
             case _ =>
               logger.error("Token was valid but hakemus not found! Token: " + params("token") + ", hakemusOid: " + hakemusOid)
-              InternalServerError("error" -> "Internal service unavailable")
+              serverError
           }
         case Failure(e: InvalidTokenException) =>
-          NotFound("tokenValid" -> false)
+          NotFound("errorType" -> "invalidToken")
         case Failure(exception) =>
           logger.error("Failed to validate token", exception)
-          InternalServerError("error" -> "Failed to validate token")
+          serverError
       }
     }
 
