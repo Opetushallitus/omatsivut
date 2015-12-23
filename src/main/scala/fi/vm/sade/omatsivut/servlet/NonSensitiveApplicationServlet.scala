@@ -41,7 +41,7 @@ trait NonSensitiveApplicationServletContainer {
 
     get("/application/session") {
       val bearerMatch = """Bearer (.+)""".r
-      response.getHeader("Authorization") match {
+      request.getHeader("Authorization") match {
         case bearerMatch(token) =>
           jwt.decode(token) match {
             case Success(hakemus) =>
