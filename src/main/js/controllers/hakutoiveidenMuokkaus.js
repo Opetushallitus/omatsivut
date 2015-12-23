@@ -2,21 +2,35 @@ module.exports = function(app) {
     app.controller('HakutoiveidenMuokkausController', function($scope, $location, $http) {
         var matches = $location.path().match(/token\/(.+)/)
         var token = matches && matches[1]
+        var baseUrl = 'insecure/applications/application/'
+        var bearerTokenKey = 'bearerToken'
 
         $scope.lang = 'fi' // Todo
 
-        if (token) {
-            $location.path('')
-            $http.get('http://weerfdsfinsecure/applications/application/' + token)
-                .success(function(hakemus) {
-                    $scope.hakemus = hakemus
-                })
-                .error(function(response) {
-                    $scope.error = angular.extend({}, response)
-                })
+        function getBearerToken() {
+            return window.sessionStorage.getItem(bearerTokenKey)
         }
-        else {
-            // TODO: redirect to help page?
+
+        if (token || getBearerToken()) {
+            $scope.loading = true
+            $location.path('/').replace()
+            var suffix = token ? 'token/' + token : 'session'
+            $http.get(baseUrl + suffix, {
+                headers: {
+                    Authorization: 'Bearer' + getBearerToken()
+                }
+            }).success(function(response) {
+                $scope.loading = false
+                $scope.hakemus = response
+                window.sessionStorage.setItem(bearerTokenKey, response.jsonWebToken)
+            }).error(function(response) {
+                $scope.loading = false
+                $scope.error = angular.extend({}, response)
+            })
+        } else {
+            $scope.error = {
+                errorType: 'noTokenAvailable'
+            }
         }
     })
 }
