@@ -116,7 +116,9 @@
     "saveFailed_validationError": "Ei tallennettu - tarkista syöttämäsi tiedot.",
     "applicationPeriodNotActive": "Haku ei ole käynnissä.",
     "serverError": "Odottamaton virhe. Ota yhteyttä ylläpitoon.",
-    "valintatulosFailed": "Valintatuloksen hakemisessa tapahtui odottamaton virhe. Yritä myöhemmin uudelleen."
+    "valintatulosFailed": "Valintatuloksen hakemisessa tapahtui odottamaton virhe. Yritä myöhemmin uudelleen.",
+    "invalidToken": "Sähköpostilinkin tunniste on virheellinen!",
+    "noTokenAvailable": "Tunniste puuttuu!"
   },
 
   "errorPage": {

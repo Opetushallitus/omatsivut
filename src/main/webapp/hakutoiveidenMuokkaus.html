@@ -8,23 +8,39 @@
     <link href="css/hakutoiveidenMuokkaus.css" media="all" rel="stylesheet" type="text/css"/>
     <link href="fontello/css/fontello.css" rel="stylesheet" type="text/css" />
 </head>
-<body ng-controller="HakutoiveidenMuokkausController">
+<body ng-controller="HakutoiveidenMuokkausController" class="hakemuseditori">
     <header id="siteheader">
         <a href="/" class="logo">
             <img ng-src="img/opintopolku_large-{{lang}}.png">
         </a>
         <div class="center">
             <h1>{{ localization("hakutoiveidenMuokkaus.title") }}</h1>
-            <span>{{ localization("applicationPreview.applicationId") }} 9219834293584</span>
+            <span ng-if="hakemus">
+                {{ localization("applicationPreview.applicationId") }}
+                {{ hakemus.oid }}
+            </span>
         </div>
-        <div class="right">
+        <div class="right" ng-class="{invisible: !hakemus}">
             <span class="user">Matti Meikäläinen</span>
             <a class="logout">{{ localization("button.logout") }}</a>
         </div>
     </header>
-    <section class="content">
+
+    <section class="content error" ng-if="error">
+        <div class="alert alert-danger">{{ localization("error." + error.errorType) }}</div>
+    </section>
+
+    <section class="content hakemus" ng-if="hakemus">
         <notification message="{{localization('hakutoiveidenMuokkaus.infoNotification')}}" />
     </section>
+
+    <section class="content loading" ng-if="loading">
+        <div class="notification">
+            <img src="img/ajax-loader.gif">
+            {{ localization("message.loadingData") }}
+        </div>
+    </section>
+
     <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
     <script src="hakemuseditori.js"></script>
     <script src="bundle.js"></script>

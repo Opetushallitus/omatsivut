@@ -116,7 +116,9 @@
     "saveFailed_validationError": "Inte lagrad – svara först på alla frågor.",
     "applicationPeriodNotActive": "Ansökan pågår inte.",
     "serverError": "Ett oväntat fel inträffade. Var vänlig och kontakta administrationen.",
-    "valintatulosFailed": "Ett oväntat fel inträffade vid hämtning av antagningsresultaten. Försök senare på nytt."
+    "valintatulosFailed": "Ett oväntat fel inträffade vid hämtning av antagningsresultaten. Försök senare på nytt.",
+    "invalidToken": "Ogiltig länk!",
+    "noTokenAvailable": "No token!"
   },
 
   "errorPage": {
