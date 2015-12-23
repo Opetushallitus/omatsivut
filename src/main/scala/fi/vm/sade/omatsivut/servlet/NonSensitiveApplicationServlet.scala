@@ -2,11 +2,12 @@ package fi.vm.sade.omatsivut.servlet
 
 import fi.vm.sade.hakemuseditori.hakemus.HakemusRepositoryComponent
 import fi.vm.sade.hakemuseditori.json.JsonFormats
-import fi.vm.sade.omatsivut.NonSensitiveHakemus
 import fi.vm.sade.omatsivut.NonSensitiveHakemus.Oid
+import fi.vm.sade.omatsivut.NonSensitiveHakemusInfo
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.oppijantunnistus.{InvalidTokenException, OppijanTunnistusComponent}
 import fi.vm.sade.omatsivut.security.{HakemusJWT, JsonWebToken}
+import org.json4s.FieldSerializer
 import org.scalatra.json.JacksonJsonSupport
 import org.scalatra.{InternalServerError, NotFound}
 
@@ -18,6 +19,8 @@ trait NonSensitiveApplicationServletContainer {
 
   class NonSensitiveApplicationServlet(val appConfig: AppConfig) extends OmatSivutServletBase with JacksonJsonSupport with JsonFormats {
 
+    implicit val jsonFormats_ = jsonFormats + FieldSerializer[NonSensitiveHakemusInfo]()
+
     protected val applicationDescription = "Oppijan henkilökohtaisen palvelun REST API, jolla voi muokata hakemusta heikosti tunnistautuneena"
 
     val jwt = new JsonWebToken(appConfig.settings.hmacKey)
@@ -27,8 +30,7 @@ trait NonSensitiveApplicationServletContainer {
     def returnHakemus(oid: Oid) = {
       hakemusRepository.getHakemus(oid) match {
         case Some(hakemusInfo) =>
-          val hakemus = hakemusInfo.hakemus
-          NonSensitiveHakemus(hakemus.oid, hakemus.hakutoiveet, jwt.encode(HakemusJWT(hakemus.oid)))
+          new NonSensitiveHakemusInfo(hakemusInfo, jwt.encode(HakemusJWT(hakemusInfo.hakemus.oid)))
         case _ =>
           logger.error("Hakemus not found! HakemusOid: " + oid)
           serverError
