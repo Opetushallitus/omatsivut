@@ -52,7 +52,7 @@ trait NonSensitiveApplicationServletContainer {
       }
     }
 
-    get("/application/:token") {
+    get("/application/token/:token") {
       oppijanTunnistusService.validateToken(params("token")) match {
         case Success(hakemusOid) =>
           returnHakemus(hakemusOid)
