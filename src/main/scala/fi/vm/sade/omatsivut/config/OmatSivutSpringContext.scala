@@ -65,6 +65,8 @@ object OmatSivutSpringContext extends Logging {
     }
 
     @Bean def hakumaksuService = null
+
+    @Bean def sendMailService = null
   }
 
   @Configuration
