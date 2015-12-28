@@ -1,6 +1,6 @@
 package fi.vm.sade.omatsivut.security
 
-import fi.vm.sade.omatsivut.NonSensitiveHakemus.Oid
+import fi.vm.sade.omatsivut.NonSensitiveHakemusInfo.Oid
 import org.json4s.JsonDSL.WithBigDecimal._
 import org.json4s._
 import pdi.jwt.{JwtAlgorithm, JwtJson4s}
