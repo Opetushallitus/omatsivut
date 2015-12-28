@@ -87,6 +87,9 @@ scheduler.delay={{haku_scheduler_delay}}
 scheduler.sendMail={{haku_scheduler_sendMail}}
 user.oid.prefix=1.2.246.562.24
 application.oid.prefix = 1.2.246.562.11
+email.application.modify.link.fi=https\://{{host_haku}}/omatsivut/hakutoiveidenMuokkaus.html#/token/
+email.application.modify.link.sv=https\://{{host_haku_sv}}/omatsivut/hakutoiveidenMuokkaus.html#/token/
+email.application.modify.link.en=https\://{{host_haku_en}}/omatsivut/hakutoiveidenMuokkaus.html#/token/
 
 server.name={{ansible_hostname}}
 
