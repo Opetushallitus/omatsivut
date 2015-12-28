@@ -1,3 +1,5 @@
+var Hakemus = require('./hakemuseditori').Hakemus
+
 module.exports = function(app) {
     app.controller('HakutoiveidenMuokkausController', function($scope, $location, $http) {
         var matches = $location.path().match(/token\/(.+)/)
@@ -17,11 +19,11 @@ module.exports = function(app) {
             var suffix = token ? 'token/' + token : 'session'
             $http.get(baseUrl + suffix, {
                 headers: {
-                    Authorization: 'Bearer' + getBearerToken()
+                    Authorization: 'Bearer ' + getBearerToken()
                 }
-            }).success(function(response) {
+            }).success(function(response) {
                 $scope.loading = false
-                $scope.hakemus = response
+                $scope.hakemusInfo = new Hakemus(response.hakemusInfo)
                 window.sessionStorage.setItem(bearerTokenKey, response.jsonWebToken)
             }).error(function(response) {
                 $scope.loading = false
