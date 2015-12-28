@@ -1,6 +1,6 @@
 package fi.vm.sade.omatsivut.oppijantunnistus
 
-import fi.vm.sade.omatsivut.NonSensitiveHakemus.Oid
+import fi.vm.sade.omatsivut.NonSensitiveHakemusInfo.Oid
 import fi.vm.sade.utils.http.{DefaultHttpClient, HttpClient}
 import org.json4s._
 import org.json4s.native.JsonMethods._
