@@ -124,7 +124,7 @@ trait ApplicationsServletContainer {
           }
 
         } catch {
-          case e =>
+          case e: Throwable =>
             logger.error("failure in background service call", e)
             InternalServerError("error" -> "Background service failed")
 
