@@ -8,7 +8,7 @@
     <link href="css/hakutoiveidenMuokkaus.css" media="all" rel="stylesheet" type="text/css"/>
     <link href="fontello/css/fontello.css" rel="stylesheet" type="text/css" />
 </head>
-<body ng-controller="HakutoiveidenMuokkausController" class="hakemuseditori">
+<body ng-controller="HakutoiveidenMuokkausController" class="hakemuseditori hakutoiveidenMuokkaus">
     <header id="siteheader">
         <a href="/" class="logo">
             <img ng-src="img/opintopolku_large-{{lang}}.png">
@@ -30,8 +30,9 @@
         <div class="alert alert-danger">{{ localization("error." + error.errorType) }}</div>
     </section>
 
-    <section class="content hakemus" ng-if="hakemus">
-        <notification message="{{localization('hakutoiveidenMuokkaus.infoNotification')}}" />
+    <section class="content hakemus" ng-if="hakemusInfo">
+        <notification message="{{localization('hakutoiveidenMuokkaus.infoNotification')}}"></notification>
+        <application application="hakemusInfo"></application>
     </section>
 
     <section class="content loading" ng-if="loading">
