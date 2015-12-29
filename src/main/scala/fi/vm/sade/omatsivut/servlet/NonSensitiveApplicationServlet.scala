@@ -26,7 +26,7 @@ trait NonSensitiveApplicationServletContainer {
     protected val applicationDescription = "Oppijan henkilökohtaisen palvelun REST API, jolla voi muokata hakemusta heikosti tunnistautuneena"
 
     def getPersonOidFromSession: String = {
-      getHakemusOidFromBearerToken match {
+      getHakemusInfoFromBearerToken match {
         case Success(hakemusJWT) =>
           applicationRepository
             .findStoredApplicationByOid(hakemusJWT.oid)
@@ -53,7 +53,7 @@ trait NonSensitiveApplicationServletContainer {
       }
     }
 
-    def getHakemusOidFromBearerToken: Try[HakemusJWT] = {
+    def getHakemusInfoFromBearerToken: Try[HakemusJWT] = {
       val bearerMatch = """Bearer (.+)""".r
       request.getHeader("Authorization") match {
         case bearerMatch(token) => jwt.decode(token)
@@ -66,7 +66,7 @@ trait NonSensitiveApplicationServletContainer {
     }
 
     get("/application/session") {
-      getHakemusOidFromBearerToken match {
+      getHakemusInfoFromBearerToken match {
         case Success(hakemusJWT) => returnHakemus(hakemusJWT.oid)
         case Failure(e) => serverError
       }
