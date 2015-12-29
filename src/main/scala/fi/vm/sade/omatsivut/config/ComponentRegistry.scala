@@ -3,7 +3,7 @@ package fi.vm.sade.omatsivut.config
 import java.util.concurrent.Executors
 
 import fi.vm.sade.groupemailer.{GroupEmailComponent, GroupEmailService}
-import fi.vm.sade.hakemuseditori.HakemusEditoriComponent
+import fi.vm.sade.hakemuseditori.{StubbedSendMailServiceWrapper, RemoteSendMailServiceWrapper, SendMailServiceWrapper, HakemusEditoriComponent}
 import fi.vm.sade.hakemuseditori.auditlog.{AuditContext, AuditLogger, AuditLoggerComponent}
 import fi.vm.sade.hakemuseditori.domain.Language.Language
 import fi.vm.sade.hakemuseditori.hakemus._
@@ -92,10 +92,16 @@ class ComponentRegistry(val config: AppConfig)
     case _ => new RemoteHakumaksuServiceWrapper(springContext)
   }
 
+  private def configureSendMailService: SendMailServiceWrapper = config match {
+    case _: StubbedExternalDeps => new StubbedSendMailServiceWrapper
+    case _ => new RemoteSendMailServiceWrapper(springContext)
+  }
+
   private lazy val runningLogger = new RunnableLogger
   private lazy val pool = Executors.newSingleThreadExecutor
   lazy val springContext = new HakemusSpringContext(OmatSivutSpringContext.createApplicationContext(config))
   val hakumaksuService: HakumaksuServiceWrapper = configureHakumaksuService
+  val sendMailService: SendMailServiceWrapper = configureSendMailService
   val koulutusInformaatioService: KoulutusInformaatioService = configureKoulutusInformaatioService
   val ohjausparametritService: OhjausparametritService = configureOhjausparametritService
   val valintatulosService: ValintatulosService = configureValintatulosService
