@@ -11,7 +11,7 @@ object NonSensitiveHakemusInfo {
 
   val nonSensitiveContactDetails = List(ELEMENT_ID_EMAIL, ELEMENT_ID_PREFIX_PHONENUMBER + "1")
 
-  protected case class NonSensitiveHakemusInfo(hakemusInfo: HakemusInfo, jsonWebToken: String)
+  protected case class NonSensitiveHakemusInfo(hakemusInfo: HakemusInfo)
 
   def extend[A, B, C](target: Map[A, Map[B, C]], source: Map[A, Map[B, C]]): Map[A, Map[B, C]] =
     target ++ (for ((k, v) <- source) yield k -> (target.getOrElse(k, Map()) ++ v))
@@ -40,12 +40,12 @@ object NonSensitiveHakemusInfo {
     hakemus.copy(answers = extend(filteredAnswers, nonSensitiveHenkilotiedot(hakemus)))
   }
 
-  def apply(sensitiveHakemusInfo: HakemusInfo, jsonWebToken: String): NonSensitiveHakemusInfo = {
-    val nonSensitiveQuestions = sensitiveHakemusInfo.questions.filter(q => !q.isSensitive)
+  def apply(sensitiveHakemusInfo: HakemusInfo, questions: List[QuestionNode]): NonSensitiveHakemusInfo = {
+    val nonSensitiveQuestions = questions // TODO
     NonSensitiveHakemusInfo(
       sensitiveHakemusInfo.copy(
         hakemus = sanitizeHakemus(sensitiveHakemusInfo.hakemus, nonSensitiveQuestions),
         questions = nonSensitiveQuestions
-      ), jsonWebToken)
+      ))
   }
 }
