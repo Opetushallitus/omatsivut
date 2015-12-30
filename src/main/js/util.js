@@ -6,5 +6,8 @@ module.exports = {
   },
   setBearerToken: function(token) {
     window.sessionStorage.setItem(BEARER_TOKEN_KEY, token)
+  },
+  removeBearerToken: function() {
+    window.sessionStorage.removeItem(BEARER_TOKEN_KEY)
   }
 }

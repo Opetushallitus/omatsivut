@@ -166,6 +166,7 @@
 
   "hakutoiveidenMuokkaus": {
     "title": "Ändring av ansökningsönskemål",
-    "infoNotification": "<strong>Obs! Du loggade in för att ändra dina ansökningsönskemål via en e-post länk.</strong> Du kan lägga till och ta bort ansökningsönskemål, samt ändra deras ordning. Om du vill se hela din ansökan eller göra övriga ändringar till den kan du göra det i Min Studieinfo -tjänsten. <a href='https://studieinfo.fi/wp/min-studieinfo-tjansten/'>Läs mera om Min Studieinfo -tjänsten.</a>"
+    "infoNotification": "<strong>Obs! Du loggade in för att ändra dina ansökningsönskemål via en e-post länk.</strong> Du kan lägga till och ta bort ansökningsönskemål, samt ändra deras ordning. Om du vill se hela din ansökan eller göra övriga ändringar till den kan du göra det i Min Studieinfo -tjänsten. <a href='https://studieinfo.fi/wp/min-studieinfo-tjansten/'>Läs mera om Min Studieinfo -tjänsten.</a>",
+    "logoutPage": "<h2>Du är utloggad.</h2><p>Tack för besöket!</p><p><a href='https://studieinfo.fi'>Studieinfo.fi</a></p>"
   }
 }
