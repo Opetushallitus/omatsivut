@@ -13,7 +13,7 @@ import fi.vm.sade.hakemuseditori.lomake.LomakeRepositoryComponent
 import fi.vm.sade.hakemuseditori.user.Oppija
 import fi.vm.sade.hakemuseditori.valintatulokset.ValintatulosServiceComponent
 import fi.vm.sade.hakemuseditori.valintatulokset.domain.Vastaanotto
-import fi.vm.sade.hakemuseditori.{ValidationException, ForbiddenException, HakemusEditoriComponent, HakemusEditoriUserContext}
+import fi.vm.sade.hakemuseditori._
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.hakemuspreview.HakemusPreviewGeneratorComponent
 import fi.vm.sade.omatsivut.security.AuthenticationRequiringServlet

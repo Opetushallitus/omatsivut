@@ -6,7 +6,7 @@ import fi.vm.sade.hakemuseditori.hakemus.domain.HakemusMuutos
 import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.hakemuseditori.lomake.domain.QuestionNode
 import fi.vm.sade.hakemuseditori.user.Oppija
-import fi.vm.sade.hakemuseditori.{HakemusEditoriComponent, HakemusEditoriUserContext, UpdateResult}
+import fi.vm.sade.hakemuseditori._
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants._
 import fi.vm.sade.omatsivut.NonSensitiveHakemusInfo
 import fi.vm.sade.omatsivut.NonSensitiveHakemusInfo.Oid
@@ -68,6 +68,18 @@ trait NonSensitiveApplicationServletContainer {
       contentType = formats("json")
     }
 
+    put("/:oid") {
+      val content: String = request.body
+      val updated = Serialization.read[HakemusMuutos](content)
+      val visibleQuestions = newQuestions(updated)
+      hakemusEditori.updateHakemus(updated) match {
+        case Success(hakemus) => ActionResult(ResponseStatus(200), NonSensitiveHakemusInfo.sanitizeHakemus(hakemus, visibleQuestions), Map.empty)
+        case Failure(e: ForbiddenException) => ActionResult(ResponseStatus(403), "errors" -> "Forbidden", Map.empty)
+        case Failure(e: ValidationException) => ActionResult(ResponseStatus(400), e.validationErrors, Map.empty)
+        case Failure(e: Throwable) => InternalServerError("error" -> "Internal service unavailable")
+      }
+    }
+
     get("/application/session") {
       getHakemusInfoFromBearerToken match {
         case Success(hakemusJWT) => returnHakemus(hakemusJWT.oid)
@@ -89,19 +101,6 @@ trait NonSensitiveApplicationServletContainer {
 
     post("/validate/:oid") {
       val muutos = Serialization.read[HakemusMuutos](request.body)
-
-      def newHakukohteet(muutos: HakemusMuutos): List[HakutoiveData] = {
-        val storedHakemus = hakemusRepository.getHakemus(params("oid")).get
-        def isExistingHakukohde(hakukohde: HakutoiveData): Boolean = {
-          storedHakemus.hakemus.preferences.exists(p => p.get(PREFERENCE_FRAGMENT_OPTION_ID) == hakukohde.get(PREFERENCE_FRAGMENT_OPTION_ID))
-        }
-        muutos.hakutoiveet.filter(p => !isExistingHakukohde(p))
-      }
-
-      def newQuestions(muutos: HakemusMuutos): List[QuestionNode] = {
-        hakemusEditori.validateHakemus(muutos.copy(hakutoiveet = newHakukohteet(muutos))).get.questions
-      }
-
       hakemusEditori.validateHakemus(muutos) match {
         case Some(hakemusInfo) =>
           val info = NonSensitiveHakemusInfo.apply(hakemusInfo, jwt.encode(HakemusJWT(hakemusInfo.hakemus.oid))).hakemusInfo
@@ -110,6 +109,17 @@ trait NonSensitiveApplicationServletContainer {
       }
     }
 
+    def newHakukohteet(muutos: HakemusMuutos): List[HakutoiveData] = {
+      val storedHakemus = hakemusRepository.getHakemus(params("oid")).get
+      def isExistingHakukohde(hakukohde: HakutoiveData): Boolean = {
+        storedHakemus.hakemus.preferences.exists(p => p.get(PREFERENCE_FRAGMENT_OPTION_ID) == hakukohde.get(PREFERENCE_FRAGMENT_OPTION_ID))
+      }
+      muutos.hakutoiveet.filter(p => !isExistingHakukohde(p))
+    }
+
+    def newQuestions(muutos: HakemusMuutos): List[QuestionNode] = {
+      hakemusEditori.validateHakemus(muutos.copy(hakutoiveet = newHakukohteet(muutos))).get.questions
+    }
   }
 
 }
