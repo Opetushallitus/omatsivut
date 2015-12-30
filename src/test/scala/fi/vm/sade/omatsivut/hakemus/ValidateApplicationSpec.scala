@@ -25,7 +25,7 @@ class ValidateApplicationSpec extends HakemusApiSpecification with FixturePerson
 
   "POST /application/validate" should {
     "validating unchanged application should return same questions and errors as initial load" in {
-      withHakemus(hakemusNivelKesa2013WithPeruskouluBaseEducationId) { hakemusInfo =>
+      withHakemusWithEmptyAnswers(hakemusNivelKesa2013WithPeruskouluBaseEducationId) { hakemusInfo =>
         validate(hakemusInfo.hakemus) { (errors, structuredQuestions) =>
           status must_== 200
           errors must_== List()
@@ -37,7 +37,7 @@ class ValidateApplicationSpec extends HakemusApiSpecification with FixturePerson
     }
 
     "reject application with different personOid" in {
-      withHakemus(hakemusNivelKesa2013WithPeruskouluBaseEducationId) { hakemusInfo =>
+      withHakemusWithEmptyAnswers(hakemusNivelKesa2013WithPeruskouluBaseEducationId) { hakemusInfo =>
         validate(hakemusInfo.hakemus) { (errors, structuredQuestions) =>
           status must_== 500
         }(PersonOid("wat"))
@@ -57,7 +57,7 @@ class ValidateApplicationSpec extends HakemusApiSpecification with FixturePerson
     }
 
     "get additional question correctly for old questions" in {
-      withHakemus(TestFixture.hakemusWithGradeGridAndDancePreference) { hakemusInfo =>
+      withHakemusWithEmptyAnswers(TestFixture.hakemusWithGradeGridAndDancePreference) { hakemusInfo =>
         validate(hakemusInfo.hakemus) { (errors, structuredQuestions) =>
           status must_== 200
           QuestionNode.flatten(structuredQuestions).map(_.id) must_== List(
