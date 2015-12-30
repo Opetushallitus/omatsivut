@@ -21,7 +21,7 @@
             </span>
         </div>
         <div class="right" ng-class="{invisible: !hakemus}">
-            <span class="user">Matti Meikäläinen</span>
+            <span class="user">{{user.name}}</span>
             <a class="logout">{{ localization("button.logout") }}</a>
         </div>
     </header>
@@ -30,9 +30,9 @@
         <div class="alert alert-danger">{{ localization("error." + error.errorType) }}</div>
     </section>
 
-    <section class="content hakemus" ng-if="hakemusInfo">
+    <section class="content hakemus" ng-if="hakemus">
         <notification message="{{localization('hakutoiveidenMuokkaus.infoNotification')}}"></notification>
-        <application application="hakemusInfo"></application>
+        <application application="hakemus"></application>
     </section>
 
     <section class="content loading" ng-if="loading">
