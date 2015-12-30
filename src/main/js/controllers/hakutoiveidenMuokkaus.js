@@ -9,6 +9,12 @@ module.exports = function(app) {
 
     $scope.lang = 'fi' // Todo
 
+    $scope.logout = function() {
+      util.removeBearerToken()
+      $scope.hakemus = null;
+      $scope.loggedOut = true;
+    }
+
     if (token || util.getBearerToken()) {
       $scope.loading = true
       $location.path('/').replace()

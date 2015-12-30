@@ -22,7 +22,7 @@
         </div>
         <div class="right" ng-class="{invisible: !hakemus}">
             <span class="user">{{user.name}}</span>
-            <a class="logout">{{ localization("button.logout") }}</a>
+            <a class="logout" ng-click="logout()">{{ localization("button.logout") }}</a>
         </div>
     </header>
 
@@ -33,6 +33,10 @@
     <section class="content hakemus" ng-if="hakemus">
         <notification message="{{localization('hakutoiveidenMuokkaus.infoNotification')}}"></notification>
         <application application="hakemus"></application>
+    </section>
+
+    <section class="content hakemus" ng-if="loggedOut">
+        <div class="alert alert-info" ng-bind-html="localization('hakutoiveidenMuokkaus.logoutPage')"></div>
     </section>
 
     <section class="content loading" ng-if="loading">
