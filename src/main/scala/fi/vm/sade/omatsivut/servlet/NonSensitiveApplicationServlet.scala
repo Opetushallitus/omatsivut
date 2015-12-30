@@ -1,10 +1,13 @@
 package fi.vm.sade.omatsivut.servlet
 
 import fi.vm.sade.hakemuseditori.hakemus.HakemusRepositoryComponent
+import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus.HakutoiveData
 import fi.vm.sade.hakemuseditori.hakemus.domain.HakemusMuutos
 import fi.vm.sade.hakemuseditori.json.JsonFormats
+import fi.vm.sade.hakemuseditori.lomake.domain.QuestionNode
 import fi.vm.sade.hakemuseditori.user.Oppija
-import fi.vm.sade.hakemuseditori.{HakemusEditoriComponent, HakemusEditoriUserContext}
+import fi.vm.sade.hakemuseditori.{HakemusEditoriComponent, HakemusEditoriUserContext, UpdateResult}
+import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants._
 import fi.vm.sade.omatsivut.NonSensitiveHakemusInfo
 import fi.vm.sade.omatsivut.NonSensitiveHakemusInfo.Oid
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
@@ -12,7 +15,7 @@ import fi.vm.sade.omatsivut.oppijantunnistus.{InvalidTokenException, OppijanTunn
 import fi.vm.sade.omatsivut.security.{HakemusJWT, JsonWebToken}
 import org.json4s.jackson.Serialization
 import org.scalatra.json.JacksonJsonSupport
-import org.scalatra.{InternalServerError, NotFound}
+import org.scalatra.{ActionResult, InternalServerError, NotFound, ResponseStatus}
 
 import scala.util.{Failure, Success, Try}
 
@@ -87,8 +90,22 @@ trait NonSensitiveApplicationServletContainer {
     post("/validate/:oid") {
       val muutos = Serialization.read[HakemusMuutos](request.body)
 
+      def newHakukohteet(muutos: HakemusMuutos): List[HakutoiveData] = {
+        val storedHakemus = hakemusRepository.getHakemus(params("oid")).get
+        def isExistingHakukohde(hakukohde: HakutoiveData): Boolean = {
+          storedHakemus.hakemus.preferences.exists(p => p.get(PREFERENCE_FRAGMENT_OPTION_ID) == hakukohde.get(PREFERENCE_FRAGMENT_OPTION_ID))
+        }
+        muutos.hakutoiveet.filter(p => !isExistingHakukohde(p))
+      }
+
+      def newQuestions(muutos: HakemusMuutos): List[QuestionNode] = {
+        hakemusEditori.validateHakemus(muutos.copy(hakutoiveet = newHakukohteet(muutos))).get.questions
+      }
+
       hakemusEditori.validateHakemus(muutos) match {
-        case Some(hakemusInfo) => NonSensitiveHakemusInfo.apply(hakemusInfo, jwt.encode(HakemusJWT(hakemusInfo.hakemus.oid))).hakemusInfo
+        case Some(hakemusInfo) =>
+          val info = NonSensitiveHakemusInfo.apply(hakemusInfo, jwt.encode(HakemusJWT(hakemusInfo.hakemus.oid))).hakemusInfo
+          info.copy(questions = newQuestions(muutos))
         case _ => InternalServerError("error" -> "Internal service unavailable")
       }
     }
