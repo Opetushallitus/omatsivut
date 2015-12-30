@@ -1261,8 +1261,8 @@
           hakemusNivelKesa2013WithPeruskouluBaseEducation.getPreference(1).selectKoulutus(0)
         )
 
-        it("hakumaksun ilmoitus näytetään", function() {
-          hakemusNivelKesa2013WithPeruskouluBaseEducation.getPreference(1).paymentNotificationIsShown().should.be.true
+        it("hakumaksun ilmoitusta ei näytetä", function() {
+          hakemusNivelKesa2013WithPeruskouluBaseEducation.getPreference(1).paymentNotificationIsShown().should.be.false
         })
 
         it("seuraava hakukohde tulee muokattavaksi", function() {
@@ -1357,6 +1357,19 @@
           })
         })
       })
+
+    })
+
+    xdescribe("Hakutoiveiden maksunotifikaatio", function() {
+      before(
+        page.applyFixtureAndOpen({applicationOid: hakemusKorkeakouluKevat}),
+        leaveOnlyOnePreference
+      )
+
+      xit("näytetään haussa, jossa maksumuuri on käytössä", function() {
+        // TODO
+      })
+
     })
 
     describe("Kun hakijalla on ulkomaalainen pohjakoulutus", function() {
