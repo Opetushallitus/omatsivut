@@ -30,10 +30,16 @@ trait HakemusApiSpecification extends ScalatraTestSupport {
   val henkilotunnus: String = "Henkilotunnus"
   val lahiosoite: String = "lahiosoite"
 
-  def withHakemus[T](oid: String)(f: (HakemusInfo => T))(implicit personOid: PersonOid): T = {
+  def withHakemusWithEmptyAnswers[T](oid: String)(f: (HakemusInfo => T))(implicit personOid: PersonOid): T = {
     withApplications { applications =>
       val originalHakemusInfo = applications.find(_.hakemus.oid == oid).get
       f(originalHakemusInfo.copy(hakemus = originalHakemusInfo.hakemus.copy(answers = Hakemus.emptyAnswers)))
+    }
+  }
+
+  def withHakemus[T](oid: String)(f: (HakemusInfo => T))(implicit personOid: PersonOid): T = {
+    withApplications { applications =>
+      f(applications.find(_.hakemus.oid == oid).get)
     }
   }
 
@@ -63,7 +69,7 @@ trait HakemusApiSpecification extends ScalatraTestSupport {
   }
 
   def modifyHakemus[T](oid: String)(modification: (Hakemus => Hakemus))(f: Hakemus => T)(implicit personOid: PersonOid): T = {
-    withHakemus(oid) { hakemus =>
+    withHakemusWithEmptyAnswers(oid) { hakemus =>
       val modified = modification(hakemus.hakemus)
       saveHakemus(modified) {
         f(modified)
