@@ -22,6 +22,8 @@
   var hakemusKorkeakouluKevatWithJazz = page.getApplication(hakemusKorkeakouluKevatWithJazzId)
   var hakemusKorkeakouluYhteishakuSyksy2014Id = "1.2.246.562.11.00000877686"
   var hakemusKorkeakouluYhteishakuSyksy2014 = page.getApplication(hakemusKorkeakouluYhteishakuSyksy2014Id)
+  var hakemusKorkeakouluSyksy2016Id = "1.2.246.562.11.00004587493"
+  var hakemusKorkeakouluSyksy2016 = page.getApplication(hakemusKorkeakouluSyksy2016Id)
   var hakemusErityisopetuksenaId = "1.2.246.562.11.00000877688"
   var hakemusErityisopetuksena = page.getApplication(hakemusErityisopetuksenaId)
   var hakemusLisakysymyksenJatkokysymyksella = page.getApplication("1.2.246.562.11.00001305319")
@@ -160,7 +162,7 @@
 
       it('ensimmäisenä on uusin hakemus', function () {
         expect(ApplicationListPage().applications()[0]).to.deep.equal(
-          { applicationSystemName: 'Korkeakoulujen yhteishaku syksy 2015' }
+          { applicationSystemName: 'Korkeakoulujen yhteishaku syksy 2016' }
         )
       })
 
@@ -1261,10 +1263,6 @@
           hakemusNivelKesa2013WithPeruskouluBaseEducation.getPreference(1).selectKoulutus(0)
         )
 
-        it("hakumaksun ilmoitusta ei näytetä", function() {
-          hakemusNivelKesa2013WithPeruskouluBaseEducation.getPreference(1).paymentNotificationIsShown().should.be.false
-        })
-
         it("seuraava hakukohde tulee muokattavaksi", function() {
           hakemusNivelKesa2013WithPeruskouluBaseEducation.getPreference(2).isEditable().should.be.true
         })
@@ -1360,14 +1358,15 @@
 
     })
 
-    xdescribe("Hakutoiveiden maksunotifikaatio", function() {
+    describe("Hakutoiveiden maksunotifikaatio", function() {
       before(
-        page.applyFixtureAndOpen({applicationOid: hakemusKorkeakouluKevat}),
-        leaveOnlyOnePreference
+        page.applyFixtureAndOpen({applicationOid: hakemusKorkeakouluSyksy2016Id}),
+        hakemusKorkeakouluSyksy2016.getPreference(0).moveDown,
+        hakemusKorkeakouluSyksy2016.saveWaitSuccess
       )
 
-      xit("näytetään haussa, jossa maksumuuri on käytössä", function() {
-        // TODO
+      it("näytetään hakukohteelle", function() {
+        hakemusKorkeakouluSyksy2016.getPreference(0).paymentNotificationIsShown().should.be.true
       })
 
     })
