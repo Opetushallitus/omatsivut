@@ -21,8 +21,8 @@ module.exports = function(app, staticResources) {
       var suffix = token ? 'token/' + token : 'session'
       $http.get(baseUrl + suffix).success(function(response) {
         $scope.loading = false
-        $scope.hakemus = new Hakemus(response.hakemusInfo)
-        var henkilotiedot = response.hakemusInfo.hakemus.answers.henkilotiedot
+        $scope.hakemus = new Hakemus(response)
+        var henkilotiedot = response.hakemus.answers.henkilotiedot
         $scope.user = {
           name: henkilotiedot.Kutsumanimi + ' ' + henkilotiedot.Sukunimi
         }
