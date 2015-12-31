@@ -1,7 +1,7 @@
 package fi.vm.sade.omatsivut
 
 import fi.vm.sade.hakemuseditori.hakemus.HakemusInfo
-import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus
+import fi.vm.sade.hakemuseditori.hakemus.domain._
 import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus.Answers
 import fi.vm.sade.hakemuseditori.lomake.domain.{AnswerId, QuestionNode}
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants._
@@ -37,7 +37,15 @@ object NonSensitiveHakemusInfo {
 
   def sanitizeHakemus(hakemus: Hakemus, visibleQuestions: List[QuestionNode]): Hakemus = {
     val filteredAnswers = answersWithQuestions(hakemus.answers, visibleQuestions)
-    hakemus.copy(answers = extend(filteredAnswers, nonSensitiveHenkilotiedot(hakemus)))
+    val stateWithoutValintatulos = hakemus.state match {
+      case s: Active => s.copy(valintatulos = None)
+      case s: HakukausiPaattynyt => s.copy(valintatulos = None)
+      case s: HakukierrosPaattynyt => s.copy(valintatulos = None)
+      case s: HakemuksenTila => s
+    }
+    hakemus.copy(
+      answers = extend(filteredAnswers, nonSensitiveHenkilotiedot(hakemus)),
+      state = stateWithoutValintatulos)
   }
 
   def apply(sensitiveHakemusInfo: HakemusInfo, questions: List[QuestionNode]): NonSensitiveHakemusInfo = {
