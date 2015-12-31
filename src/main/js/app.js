@@ -34,7 +34,6 @@ require('./controllers/hakutoiveidenMuokkaus')(listApp, staticResources)
 
 listApp.config(function ($httpProvider) {
   $httpProvider.interceptors.push(require('./interceptors/nonSensitiveHakemus'))
-  $httpProvider.interceptors.push(require('./interceptors/authorization'))
 })
 
 listApp.run(function ($rootScope, localization) {
