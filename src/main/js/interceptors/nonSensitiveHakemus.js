@@ -5,7 +5,7 @@ function shouldRerouteRequest(config) {
 }
 
 function shouldAuthenticate(config) {
-  return config.url.indexOf('/insecure/') !== -1
+  return config.url.indexOf('insecure/') !== -1
 }
 
 var nonSensitiveHakemusInterceptor = {
