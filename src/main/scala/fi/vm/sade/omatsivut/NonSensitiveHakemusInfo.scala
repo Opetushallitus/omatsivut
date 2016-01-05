@@ -9,7 +9,7 @@ import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants._
 object NonSensitiveHakemusInfo {
   type Oid = String
 
-  val nonSensitiveContactDetails = List(ELEMENT_ID_EMAIL, ELEMENT_ID_PREFIX_PHONENUMBER + "1")
+  val nonSensitiveContactDetails = List(ELEMENT_ID_EMAIL, ELEMENT_ID_PREFIX_PHONENUMBER + "1", ELEMENT_ID_NICKNAME, ELEMENT_ID_LAST_NAME)
 
   protected case class NonSensitiveHakemusInfo(hakemusInfo: HakemusInfo)
 
