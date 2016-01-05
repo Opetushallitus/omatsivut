@@ -91,9 +91,9 @@ trait NonSensitiveApplicationServletContainer {
             .findStoredApplicationByOid(hakemusOid)
             .getOrElse(throw new RuntimeException("Application not found: " + hakemusOid))
             .personOid
-          val hakemusWithNoQuestions = NonSensitiveHakemusInfo.apply(hakemusRepository.getHakemus(hakemusOid).get, List())
+          val hakemusWithNoQuestions = NonSensitiveHakemusInfo.apply(hakemusRepository.getHakemus(hakemusOid).get, List.empty)
           val initialHakukohdeOids = definedHakukohdes(hakemusWithNoQuestions.hakemusInfo.hakemus)
-            .map(p => p.get(PREFERENCE_FRAGMENT_OPTION_ID).get)
+            .map(_(PREFERENCE_FRAGMENT_OPTION_ID))
           InsecureResponse(jwt.encode(HakemusJWT(hakemusOid, initialHakukohdeOids, personOid)), hakemusWithNoQuestions.hakemusInfo)
         case Failure(e: InvalidTokenException) =>
           NotFound("errorType" -> "invalidToken")
@@ -118,18 +118,18 @@ trait NonSensitiveApplicationServletContainer {
     }
 
     def definedHakukohdes(hakemus: HakemusLike): List[HakutoiveData] = {
-      hakemus.preferences.filter(p => p.contains(PREFERENCE_FRAGMENT_OPTION_ID))
+      hakemus.preferences.filter(_.contains(PREFERENCE_FRAGMENT_OPTION_ID))
     }
 
     def newHakukohteet(initialHakukohdeOids: List[Oid], muutos: HakemusMuutos): List[HakutoiveData] = {
-      def isExistingHakukohde(hakukohde: HakutoiveData): Boolean = {
-        initialHakukohdeOids.contains(hakukohde.get(PREFERENCE_FRAGMENT_OPTION_ID).get)
-      }
-      definedHakukohdes(muutos).filter(p => !isExistingHakukohde(p))
+      val isNotExistingHakukohde = (hakukohde: HakutoiveData) => !initialHakukohdeOids.contains(hakukohde(PREFERENCE_FRAGMENT_OPTION_ID))
+      definedHakukohdes(muutos).filter(isNotExistingHakukohde)
     }
 
     def newQuestions(initialHakukohdeOids: List[Oid], muutos: HakemusMuutos): List[QuestionNode] = {
-      hakemusEditori.validateHakemus(muutos.copy(hakutoiveet = newHakukohteet(initialHakukohdeOids, muutos))).get.questions
+      hakemusEditori.validateHakemus(muutos.copy(hakutoiveet = newHakukohteet(initialHakukohdeOids, muutos)))
+        .map(_.questions)
+        .getOrElse(List.empty)
     }
   }
 
