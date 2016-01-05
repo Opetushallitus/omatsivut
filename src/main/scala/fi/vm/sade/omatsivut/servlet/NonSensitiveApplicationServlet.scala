@@ -9,13 +9,13 @@ import fi.vm.sade.hakemuseditori.lomake.domain.QuestionNode
 import fi.vm.sade.hakemuseditori.user.Oppija
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants._
 import fi.vm.sade.omatsivut.NonSensitiveHakemusInfo
-import fi.vm.sade.omatsivut.NonSensitiveHakemusInfo.Oid
+import fi.vm.sade.omatsivut.NonSensitiveHakemusInfo.{sanitizeHakemus, Oid}
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.oppijantunnistus.{InvalidTokenException, OppijanTunnistusComponent}
 import fi.vm.sade.omatsivut.security.{HakemusJWT, JsonWebToken}
 import org.json4s.jackson.Serialization
 import org.scalatra.json.JacksonJsonSupport
-import org.scalatra.{ActionResult, InternalServerError, NotFound, ResponseStatus}
+import org.scalatra._
 
 import scala.util.{Failure, Success, Try}
 
@@ -57,17 +57,20 @@ trait NonSensitiveApplicationServletContainer {
     put("/:oid") {
       getHakemusInfoFromBearerToken match {
         case Success(hakemusJWT) =>
-          val content: String = request.body
-          val updated = Serialization.read[HakemusMuutos](content)
+          val updated = Serialization.read[HakemusMuutos](request.body)
           hakemusEditori.updateHakemus(updated) match {
             case Success(hakemus) =>
-              val sanitizedHakemus: Hakemus = NonSensitiveHakemusInfo.sanitizeHakemus(hakemus, newQuestions(hakemusJWT.initialHakukohdeOids, updated))
-              ActionResult(ResponseStatus(200), InsecureResponse(jwt.encode(hakemusJWT), sanitizedHakemus), Map.empty)
-            case Failure(e: ForbiddenException) => ActionResult(ResponseStatus(403), "errors" -> "Forbidden", Map.empty)
-            case Failure(e: ValidationException) => ActionResult(ResponseStatus(400), e.validationErrors, Map.empty)
-            case Failure(e: Throwable) => InternalServerError("error" -> "Internal service unavailable")
+              val sanitizedHakemus = sanitizeHakemus(hakemus, newQuestions(hakemusJWT.initialHakukohdeOids, updated))
+              Ok(InsecureResponse(jwt.encode(hakemusJWT), sanitizedHakemus))
+            case Failure(e: ForbiddenException) =>
+              Forbidden("errors" -> "Forbidden")
+            case Failure(e: ValidationException) =>
+              BadRequest(e.validationErrors)
+            case Failure(e: Throwable) =>
+              InternalServerError("error" -> "Internal service unavailable")
           }
-        case Failure(e) => InternalServerError("error" -> e.getMessage)
+        case Failure(e) =>
+          InternalServerError("error" -> e.getMessage)
       }
     }
 
@@ -109,11 +112,15 @@ trait NonSensitiveApplicationServletContainer {
           val muutos = Serialization.read[HakemusMuutos](request.body)
           hakemusEditori.validateHakemus(muutos) match {
             case Some(hakemusInfo) =>
-              InsecureResponse(jwt.encode(hakemusJWT),
-                NonSensitiveHakemusInfo.apply(hakemusInfo, newQuestions(hakemusJWT.initialHakukohdeOids, muutos)).hakemusInfo)
-            case _ => InternalServerError("error" -> "Internal service unavailable")
+              InsecureResponse(
+                jwt.encode(hakemusJWT),
+                NonSensitiveHakemusInfo(hakemusInfo, newQuestions(hakemusJWT.initialHakukohdeOids, muutos)).hakemusInfo
+              )
+            case _ =>
+              InternalServerError("error" -> "Internal service unavailable")
           }
-        case Failure(e) => InternalServerError("error" -> e.getMessage)
+        case Failure(e) =>
+          InternalServerError("error" -> e.getMessage)
       }
     }
 
