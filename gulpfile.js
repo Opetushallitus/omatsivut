@@ -62,6 +62,11 @@ gulp.task('less', ['copy-editor'], function () {
       .pipe(less().on('error', handleError))
       .pipe(concat('preview.css'))
       .pipe(gulp.dest('src/main/webapp/css'));
+
+    gulp.src('src/main/less/hakutoiveidenMuokkaus.less')
+      .pipe(less().on('error', handleError))
+      .pipe(concat('hakutoiveidenMuokkaus.css'))
+      .pipe(gulp.dest('src/main/webapp/css'));
 });
 
 gulp.task('browserify', ["templates"], function() {
