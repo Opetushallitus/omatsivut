@@ -13,7 +13,7 @@ import fi.vm.sade.hakemuseditori.lomake.LomakeRepositoryComponent
 import fi.vm.sade.hakemuseditori.user.Oppija
 import fi.vm.sade.hakemuseditori.valintatulokset.ValintatulosServiceComponent
 import fi.vm.sade.hakemuseditori.valintatulokset.domain.Vastaanotto
-import fi.vm.sade.hakemuseditori.{HakemusEditoriComponent, HakemusEditoriUserContext, UpdateResult}
+import fi.vm.sade.hakemuseditori._
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.hakemuspreview.HakemusPreviewGeneratorComponent
 import fi.vm.sade.omatsivut.security.AuthenticationRequiringServlet
@@ -21,6 +21,8 @@ import fi.vm.sade.omatsivut.valintarekisteri.ValintaRekisteriComponent
 import org.json4s.jackson.Serialization
 import org.scalatra._
 import org.scalatra.json._
+
+import scala.util.{Success, Failure}
 
 trait ApplicationsServletContainer {
   this: HakemusEditoriComponent with LomakeRepositoryComponent with
@@ -52,9 +54,12 @@ trait ApplicationsServletContainer {
     put("/:oid") {
       val content: String = request.body
       val updated = Serialization.read[HakemusMuutos](content)
-      val response: Option[ActionResult] = hakemusEditori.updateHakemus(updated)
-        .map { case UpdateResult(status, body) => ActionResult(ResponseStatus(status), body, Map.empty)}
-      response.getOrElse(InternalServerError("error" -> "Internal service unavailable"))
+      hakemusEditori.updateHakemus(updated) match {
+        case Success(body) => ActionResult(ResponseStatus(200), body, Map.empty)
+        case Failure(e: ForbiddenException) => ActionResult(ResponseStatus(403), "error" -> "Forbidden", Map.empty)
+        case Failure(e: ValidationException) => ActionResult(ResponseStatus(400), e.validationErrors, Map.empty)
+        case Failure(e) => InternalServerError("error" -> "Internal service unavailable")
+      }
     }
 
 
