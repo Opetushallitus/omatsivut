@@ -29,6 +29,8 @@ require('./hakemuseditori')(listApp)
 require('./settings')(listApp, testMode())
 
 require('./directives/applicationList')(listApp)
+require('./directives/notification')(listApp)
+require('./controllers/hakutoiveidenMuokkaus')(listApp, staticResources)
 
 listApp.run(function ($rootScope, localization) {
   $rootScope.localization = localization

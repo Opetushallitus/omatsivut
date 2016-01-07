@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Hakutoiveiden muokkaus / Ändring av ansökningsönskemål / Changing of application option preferences</title>
+    <link href='//fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700' rel='stylesheet' type='text/css'>
+    <link href="css/main.css" media="all" rel="stylesheet" type="text/css"/>
+    <link href="css/hakutoiveidenMuokkaus.css" media="all" rel="stylesheet" type="text/css"/>
+    <link href="fontello/css/fontello.css" rel="stylesheet" type="text/css" />
+</head>
+<body ng-controller="HakutoiveidenMuokkausController" class="hakemuseditori hakutoiveidenMuokkaus">
+<header id="siteheader">
+    <a href="/" class="logo">
+        <img ng-src="img/opintopolku_large-{{lang}}.png">
+    </a>
+    <div class="center">
+        <h1>{{ localization("hakutoiveidenMuokkaus.title") }}</h1>
+    </div>
+</header>
+
+<section class="content hakemus">
+    <notification message="{{ localization('hakutoiveidenMuokkaus.infoNotification') }}"></notification>
+</section>
+
+<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="piwik/load"></script>
+<script src="hakemuseditori.js"></script>
+<script src="bundle.js"></script>
+</body>
+</html>

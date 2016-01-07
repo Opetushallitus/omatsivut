@@ -160,5 +160,10 @@
       "notOk": "You did not pay the application fee. The application will not be processed."
     },
     "aoNotification": "Based on the study programme you are applying to and the qualification/qualifications you have stated as your educational background, you are required to pay the application fee. You will receive the payment instructions by e-mail after you have saved your changes (in case you haven't already got them)."
+  },
+
+  "hakutoiveidenMuokkaus": {
+    "title": "Modify study programme choices",
+    "infoNotification": "<strong>Note! You logged in via an e-mail link to modify your study programme choices.</strong> You can add and remove study programme choices and change their order 15.1.2016 - 27.1.2016 klo 15:00. If you want to see your whole application now and do other modifications to it, please log in to My Studyinfo -service. <a href='https://studyinfo.fi/wp2/en/my-studyinfo-service/'>Read more about My Studyinfo -service.</a>"
   }
 }
