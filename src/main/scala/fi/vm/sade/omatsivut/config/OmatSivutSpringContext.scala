@@ -16,6 +16,7 @@ import fi.vm.sade.haku.virkailija.valinta.ValintaService
 import fi.vm.sade.haku.virkailija.valinta.dto.{HakemusDTO, HakijaDTO}
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.mongo.OmatSivutMongoConfiguration
+import fi.vm.sade.tarjonta.service.resources.v1.dto.HakuV1RDTO
 import fi.vm.sade.utils.slf4j.Logging
 import org.springframework.context.annotation._
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer
@@ -119,6 +120,8 @@ object OmatSivutSpringContext extends Logging {
       override def getApplicationSystem(s: String): ApplicationSystem = unsupportedIntegrationException
 
       override def kayttaaJarjestelmanLomaketta(oid: String): Boolean = unsupportedIntegrationException
+
+      override def getRawApplicationSystem(oid: String): HakuV1RDTO = unsupportedIntegrationException
     }
 
     @Bean def valintaService: ValintaService = new ValintaService {
