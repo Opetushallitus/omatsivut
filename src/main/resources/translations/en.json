@@ -164,6 +164,6 @@
 
   "hakutoiveidenMuokkaus": {
     "title": "Modify study programme choices",
-    "infoNotification": "<strong>Note! You logged in via an e-mail link to modify your study programme choices.</strong> You can add and remove study programme choices and change their order on this page 15.1.2016 - 27.1.2016 klo 15:00. If you want to see your whole application and do other modifications, please log in to the My Studyinfo -service. <a href='https://studyinfo.fi/wp2/en/my-studyinfo-service/'>Read more about the My Studyinfo -service.</a>"
+    "infoNotification": "<strong>Note! You logged in via an e-mail link to modify your study programme choices.</strong> You can add and remove study programme choices and change their order on this page starting from 15.1.2016. If you want to see your whole application and do other modifications, please log in to the My Studyinfo -service. <a href='https://studyinfo.fi/wp2/en/my-studyinfo-service/'>Read more about the My Studyinfo -service.</a>"
   }
 }
