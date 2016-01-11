@@ -160,7 +160,7 @@
 
       it('ensimmäisenä on uusin hakemus', function () {
         expect(ApplicationListPage().applications()[0]).to.deep.equal(
-          { applicationSystemName: 'Korkeakoulujen yhteishaku syksy 2015' }
+          { applicationSystemName: 'Korkeakoulujen yhteishaku syksy 2016' }
         )
       })
 
@@ -1260,10 +1260,6 @@
           hakemusNivelKesa2013WithPeruskouluBaseEducation.getPreference(1).selectOpetusPiste("Ahl"),
           hakemusNivelKesa2013WithPeruskouluBaseEducation.getPreference(1).selectKoulutus(0)
         )
-
-        it("hakumaksun ilmoitus näytetään", function() {
-          hakemusNivelKesa2013WithPeruskouluBaseEducation.getPreference(1).paymentNotificationIsShown().should.be.true
-        })
 
         it("seuraava hakukohde tulee muokattavaksi", function() {
           hakemusNivelKesa2013WithPeruskouluBaseEducation.getPreference(2).isEditable().should.be.true
