@@ -2,10 +2,10 @@ package fi.vm.sade.omatsivut.servlet
 
 import fi.vm.sade.hakemuseditori._
 import fi.vm.sade.hakemuseditori.hakemus.HakemusRepositoryComponent
-import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus.HakutoiveData
+import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus.{Answers, HakutoiveData}
 import fi.vm.sade.hakemuseditori.hakemus.domain.{Hakemus, HakemusLike, HakemusMuutos}
 import fi.vm.sade.hakemuseditori.json.JsonFormats
-import fi.vm.sade.hakemuseditori.lomake.domain.QuestionNode
+import fi.vm.sade.hakemuseditori.lomake.domain.{AnswerId, QuestionNode}
 import fi.vm.sade.hakemuseditori.user.Oppija
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants._
 import fi.vm.sade.omatsivut.NonSensitiveHakemusInfo
@@ -60,8 +60,9 @@ trait NonSensitiveApplicationServletContainer {
           val updated = Serialization.read[HakemusMuutos](request.body)
           hakemusEditori.updateHakemus(updated) match {
             case Success(hakemus) =>
-              val sanitizedHakemus = sanitizeHakemus(hakemus, newQuestions(hakemusJWT.initialHakukohdeOids, updated))
-              Ok(InsecureResponse(jwt.encode(hakemusJWT), sanitizedHakemus))
+              val answersFromThisSession = NonSensitiveHakemusInfo.answerIds(updated.answers) & NonSensitiveHakemusInfo.answerIds(hakemus.answers)
+              Ok(InsecureResponse(jwt.encode(HakemusJWT(hakemusJWT.oid, answersFromThisSession, hakemusJWT.personOid)),
+                sanitizeHakemus(hakemus, answersFromThisSession)))
             case Failure(e: ForbiddenException) =>
               Forbidden("errors" -> "Forbidden")
             case Failure(e: ValidationException) =>
@@ -77,12 +78,8 @@ trait NonSensitiveApplicationServletContainer {
     get("/application/session") {
       getHakemusInfoFromBearerToken match {
         case Success(hakemusJWT) =>
-          val sensitiveHakemusInfo = hakemusRepository.getHakemus(hakemusJWT.oid).get
-          val hakemus = sensitiveHakemusInfo.hakemus
-          val questionsAddedInThisSession = newQuestions(hakemusJWT.initialHakukohdeOids,
-            HakemusMuutos(hakemus.oid, hakemus.haku.oid, hakemus.preferences, Map.empty))
           InsecureResponse(jwt.encode(hakemusJWT),
-            NonSensitiveHakemusInfo.apply(sensitiveHakemusInfo, questionsAddedInThisSession).hakemusInfo)
+            NonSensitiveHakemusInfo.sanitize(hakemusRepository.getHakemus(hakemusJWT.oid).get, hakemusJWT.answersFromThisSession).hakemusInfo)
         case Failure(e) => InternalServerError("error" -> e.getMessage)
       }
     }
@@ -94,10 +91,8 @@ trait NonSensitiveApplicationServletContainer {
             .findStoredApplicationByOid(hakemusOid)
             .getOrElse(throw new RuntimeException("Application not found: " + hakemusOid))
             .personOid
-          val hakemusWithNoQuestions = NonSensitiveHakemusInfo.apply(hakemusRepository.getHakemus(hakemusOid).get, List.empty)
-          val initialHakukohdeOids = definedHakukohdes(hakemusWithNoQuestions.hakemusInfo.hakemus)
-            .map(_(PREFERENCE_FRAGMENT_OPTION_ID))
-          InsecureResponse(jwt.encode(HakemusJWT(hakemusOid, initialHakukohdeOids, personOid)), hakemusWithNoQuestions.hakemusInfo)
+          InsecureResponse(jwt.encode(HakemusJWT(hakemusOid, NonSensitiveHakemusInfo.nonSensitiveAnswers, personOid)),
+            NonSensitiveHakemusInfo.sanitize(hakemusRepository.getHakemus(hakemusOid).get, NonSensitiveHakemusInfo.nonSensitiveAnswers).hakemusInfo)
         case Failure(e: InvalidTokenException) =>
           NotFound("errorType" -> "invalidToken")
         case Failure(exception) =>
@@ -112,9 +107,8 @@ trait NonSensitiveApplicationServletContainer {
           val muutos = Serialization.read[HakemusMuutos](request.body)
           hakemusEditori.validateHakemus(muutos) match {
             case Some(hakemusInfo) =>
-              InsecureResponse(
-                jwt.encode(hakemusJWT),
-                NonSensitiveHakemusInfo(hakemusInfo, newQuestions(hakemusJWT.initialHakukohdeOids, muutos)).hakemusInfo
+              InsecureResponse(jwt.encode(hakemusJWT),
+                NonSensitiveHakemusInfo.sanitize(hakemusInfo, NonSensitiveHakemusInfo.answerIds(muutos.answers)).hakemusInfo
               )
             case _ =>
               InternalServerError("error" -> "Internal service unavailable")

@@ -1,5 +1,6 @@
 package fi.vm.sade.omatsivut.security
 
+import fi.vm.sade.hakemuseditori.lomake.domain.AnswerId
 import fi.vm.sade.omatsivut.NonSensitiveHakemusInfo.Oid
 import org.json4s._
 import org.json4s.native.Serialization._
@@ -9,7 +10,7 @@ import scala.util.{Failure, Success, Try}
 
 class InvalidJsonWebTokenException(msg: String) extends RuntimeException(msg)
 
-case class HakemusJWT(oid: Oid, initialHakukohdeOids: List[Oid], personOid: Oid)
+case class HakemusJWT(oid: Oid, answersFromThisSession: Set[AnswerId], personOid: Oid)
 
 class JsonWebToken(val secret: String) {
   implicit val jsonFormats = formats(NoTypeHints)
