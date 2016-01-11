@@ -3,13 +3,19 @@ package fi.vm.sade.omatsivut
 import fi.vm.sade.hakemuseditori.hakemus.HakemusInfo
 import fi.vm.sade.hakemuseditori.hakemus.domain._
 import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus.Answers
-import fi.vm.sade.hakemuseditori.lomake.domain.{AnswerId, QuestionNode}
+import fi.vm.sade.hakemuseditori.lomake.domain.{QuestionGroup, AnswerId, QuestionNode}
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants._
 
 object NonSensitiveHakemusInfo {
   type Oid = String
 
   val nonSensitiveContactDetails = List(ELEMENT_ID_EMAIL, ELEMENT_ID_PREFIX_PHONENUMBER + "1", ELEMENT_ID_NICKNAME, ELEMENT_ID_LAST_NAME)
+  val nonSensitiveAnswers = Set(
+    AnswerId(PHASE_PERSONAL, ELEMENT_ID_EMAIL),
+    AnswerId(PHASE_PERSONAL, ELEMENT_ID_PREFIX_PHONENUMBER + "1"),
+    AnswerId(PHASE_PERSONAL, ELEMENT_ID_NICKNAME),
+    AnswerId(PHASE_PERSONAL, ELEMENT_ID_LAST_NAME)
+  )
 
   protected case class NonSensitiveHakemusInfo(hakemusInfo: HakemusInfo)
 
@@ -35,25 +41,49 @@ object NonSensitiveHakemusInfo {
       case None => Map.empty[String, String]
     }))
 
-  def sanitizeHakemus(hakemus: Hakemus, visibleQuestions: List[QuestionNode]): Hakemus = {
-    val filteredAnswers = answersWithQuestions(hakemus.answers, visibleQuestions)
-    val stateWithoutValintatulos = hakemus.state match {
+  def answerIds(answers: Answers): Set[AnswerId] =
+    answers.foldLeft(Set.empty[AnswerId]) {
+      case (ids, (phaseId, phaseAnswers)) => ids ++ phaseAnswers.keys.map(AnswerId(phaseId, _))
+    }
+
+  def removeQuestionsWithAnswers(questions: List[QuestionNode], sensitiveAnswers: Set[AnswerId]): List[QuestionNode] = {
+    questions.map({
+      case qg: QuestionGroup => qg.copy(questions = removeQuestionsWithAnswers(qg.questions, sensitiveAnswers))
+      case q: QuestionNode => q
+    }).filterNot({
+      case qg: QuestionGroup => qg.flatten.forall(qln => qln.answerIds.isEmpty)
+      case q: QuestionNode => q.flatten.exists(_.answerIds.exists(sensitiveAnswers.contains))
+    })
+  }
+
+  def filterAnswers(answers: Answers, answerIds: Set[AnswerId]): Answers =
+    answers.foldLeft(Map.empty[String, Map[String, String]]) {
+      case (filteredAnswers, (phaseId, phaseAnswers)) =>
+        val answers = phaseAnswers.filterKeys(questionId => answerIds.contains(AnswerId(phaseId, questionId)))
+        if (answers.isEmpty) {
+          filteredAnswers
+        } else {
+          filteredAnswers + (phaseId -> answers)
+        }
+    }
+
+  def sanitizeHakemus(hakemus: Hakemus, nonSensitiveAnswers: Set[AnswerId]): Hakemus =
+    hakemus.copy(
+      answers = filterAnswers(hakemus.answers, nonSensitiveAnswers),
+      state = hakemus.state match {
       case s: Active => s.copy(valintatulos = None)
       case s: HakukausiPaattynyt => s.copy(valintatulos = None)
       case s: HakukierrosPaattynyt => s.copy(valintatulos = None)
       case s: HakemuksenTila => s
-    }
-    hakemus.copy(
-      answers = extend(filteredAnswers, nonSensitiveHenkilotiedot(hakemus)),
-      state = stateWithoutValintatulos)
-  }
+    })
 
-  def apply(sensitiveHakemusInfo: HakemusInfo, questions: List[QuestionNode]): NonSensitiveHakemusInfo = {
-    val nonSensitiveQuestions = questions // TODO
+  def sanitize(hakemusInfo: HakemusInfo, nonSensitiveAnswers: Set[AnswerId]): NonSensitiveHakemusInfo = {
+    val sensitiveAnswers = answerIds(hakemusInfo.hakemus.answers) &~ nonSensitiveAnswers
     NonSensitiveHakemusInfo(
-      sensitiveHakemusInfo.copy(
-        hakemus = sanitizeHakemus(sensitiveHakemusInfo.hakemus, nonSensitiveQuestions),
-        questions = nonSensitiveQuestions
-      ))
+      hakemusInfo.copy(
+        hakemus = sanitizeHakemus(hakemusInfo.hakemus, nonSensitiveAnswers),
+        questions = removeQuestionsWithAnswers(hakemusInfo.questions, sensitiveAnswers)
+      )
+    )
   }
 }

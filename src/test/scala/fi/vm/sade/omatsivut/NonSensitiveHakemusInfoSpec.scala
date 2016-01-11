@@ -30,7 +30,7 @@ class NonSensitiveHakemusInfoSpec extends HakemusApiSpecification with FixturePe
 
     "always has nonsensitive contact information" in {
       withHakemus(hakemusKorkeakoulutKevat2014Id) { hakemusInfo =>
-        val nonSensitiveInfo = NonSensitiveHakemusInfo.apply(hakemusInfo, List())
+        val nonSensitiveInfo = NonSensitiveHakemusInfo.sanitize(hakemusInfo, NonSensitiveHakemusInfo.nonSensitiveAnswers)
         nonSensitiveInfo.hakemusInfo.hakemus.answers.size must_== 1
         nonSensitiveInfo.hakemusInfo.hakemus.answers.get("henkilotiedot").get.size must_== NonSensitiveHakemusInfo.nonSensitiveContactDetails.size
 
