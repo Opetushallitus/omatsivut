@@ -24,8 +24,7 @@ class JsonWebTokenSpec extends MutableScalatraSpec with Mockito {
     }
 
     "return failure on invalid token signature" in {
-      val expectedSignature = ".SRqRG2MnOPddgwf_obkUUpmYi-fqB2tEZcd4bPaQPds"
-      val token = jwt.encode(HakemusJWT(hakemusOid, answersFromThisSession, personOid)).replace(expectedSignature, ".ArTpS2")
+      val token = "foobar"
       jwt.decode(token) must beFailedTry.withThrowable[InvalidJsonWebTokenException]
     }
 
