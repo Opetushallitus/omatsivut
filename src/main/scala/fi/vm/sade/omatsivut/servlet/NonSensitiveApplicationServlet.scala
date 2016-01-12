@@ -10,7 +10,7 @@ import fi.vm.sade.omatsivut.NonSensitiveHakemusInfo.answerIds
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.oppijantunnistus.{InvalidTokenException, OppijanTunnistusComponent}
 import fi.vm.sade.omatsivut.security.{HakemusJWT, JsonWebToken}
-import fi.vm.sade.omatsivut.{NonSensitiveHakemusInfoSerializer, NonSensitiveHakemus, NonSensitiveHakemusInfo, NonSensitiveHakemusSerializer}
+import fi.vm.sade.omatsivut.{NonSensitiveHakemus, NonSensitiveHakemusInfo, NonSensitiveHakemusInfoSerializer, NonSensitiveHakemusSerializer}
 import org.json4s.jackson.Serialization
 import org.scalatra._
 import org.scalatra.json.JacksonJsonSupport
