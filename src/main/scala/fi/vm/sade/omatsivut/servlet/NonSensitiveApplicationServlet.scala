@@ -1,33 +1,36 @@
 package fi.vm.sade.omatsivut.servlet
 
 import fi.vm.sade.hakemuseditori._
+import fi.vm.sade.hakemuseditori.hakemus.domain.HakemusMuutos
 import fi.vm.sade.hakemuseditori.hakemus.{HakemusInfo, HakemusRepositoryComponent}
-import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus.{Answers, HakutoiveData}
-import fi.vm.sade.hakemuseditori.hakemus.domain.{Hakemus, HakemusLike, HakemusMuutos}
 import fi.vm.sade.hakemuseditori.json.JsonFormats
-import fi.vm.sade.hakemuseditori.lomake.domain.{AnswerId, QuestionNode}
+import fi.vm.sade.hakemuseditori.lomake.domain.AnswerId
 import fi.vm.sade.hakemuseditori.user.Oppija
-import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants._
-import fi.vm.sade.omatsivut.NonSensitiveHakemusInfo
-import fi.vm.sade.omatsivut.NonSensitiveHakemusInfo.{answerIds, sanitizeHakemus, Oid}
+import fi.vm.sade.omatsivut.NonSensitiveHakemusInfo.answerIds
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.oppijantunnistus.{InvalidTokenException, OppijanTunnistusComponent}
 import fi.vm.sade.omatsivut.security.{HakemusJWT, JsonWebToken}
+import fi.vm.sade.omatsivut.{NonSensitiveHakemusInfoSerializer, NonSensitiveHakemus, NonSensitiveHakemusInfo, NonSensitiveHakemusSerializer}
 import org.json4s.jackson.Serialization
-import org.scalatra.json.JacksonJsonSupport
 import org.scalatra._
+import org.scalatra.json.JacksonJsonSupport
 
 import scala.util.{Failure, Success, Try}
 
-case class InsecureResponse(jsonWebToken: String, response: Any)
+sealed trait InsecureResponse {
+  def jsonWebToken: String
+}
+
+case class InsecureHakemus(jsonWebToken: String, response: NonSensitiveHakemus) extends InsecureResponse
+case class InsecureHakemusInfo(jsonWebToken: String, response: NonSensitiveHakemusInfo) extends InsecureResponse
 
 trait NonSensitiveApplicationServletContainer {
   this: HakemusRepositoryComponent with
     HakemusEditoriComponent with
     OppijanTunnistusComponent =>
 
-  class NonSensitiveApplicationServlet(val appConfig: AppConfig) extends OmatSivutServletBase with JacksonJsonSupport with JsonFormats with HakemusEditori with HakemusEditoriUserContext {
-
+  class NonSensitiveApplicationServlet(val appConfig: AppConfig) extends OmatSivutServletBase with JacksonJsonSupport with HakemusEditori with HakemusEditoriUserContext {
+    implicit val jsonFormats = JsonFormats.jsonFormats ++ List(new NonSensitiveHakemusSerializer, new NonSensitiveHakemusInfoSerializer)
     protected val applicationDescription = "Oppijan henkilökohtaisen palvelun REST API, jolla voi muokata hakemusta heikosti tunnistautuneena"
     private val hakemusEditori = newEditor(this)
     private val jwt = new JsonWebToken(appConfig.settings.hmacKey)
@@ -65,8 +68,8 @@ trait NonSensitiveApplicationServletContainer {
           val newAnswers = newAnswersFromTheSession(update, hakemusRepository.getHakemus(hakemusJWT.oid).get, hakemusJWT)
           hakemusEditori.updateHakemus(update) match {
             case Success(hakemus) =>
-              Ok(InsecureResponse(jwt.encode(HakemusJWT(hakemusJWT.oid, newAnswers, hakemusJWT.personOid)),
-                sanitizeHakemus(hakemus, newAnswers)))
+              Ok(InsecureHakemus(jwt.encode(HakemusJWT(hakemusJWT.oid, newAnswers, hakemusJWT.personOid)),
+                new NonSensitiveHakemus(hakemus, newAnswers)))
             case Failure(e: ForbiddenException) =>
               Forbidden("errors" -> "Forbidden")
             case Failure(e: ValidationException) =>
@@ -82,8 +85,8 @@ trait NonSensitiveApplicationServletContainer {
     get("/application/session") {
       getHakemusInfoFromBearerToken match {
         case Success(hakemusJWT) =>
-          InsecureResponse(jwt.encode(hakemusJWT),
-            NonSensitiveHakemusInfo.sanitize(hakemusRepository.getHakemus(hakemusJWT.oid).get, hakemusJWT.answersFromThisSession).hakemusInfo)
+          InsecureHakemusInfo(jwt.encode(hakemusJWT),
+            new NonSensitiveHakemusInfo(hakemusRepository.getHakemus(hakemusJWT.oid).get, hakemusJWT.answersFromThisSession))
         case Failure(e) => InternalServerError("error" -> e.getMessage)
       }
     }
@@ -95,8 +98,8 @@ trait NonSensitiveApplicationServletContainer {
             .findStoredApplicationByOid(hakemusOid)
             .getOrElse(throw new RuntimeException("Application not found: " + hakemusOid))
             .personOid
-          InsecureResponse(jwt.encode(HakemusJWT(hakemusOid, NonSensitiveHakemusInfo.nonSensitiveAnswers, personOid)),
-            NonSensitiveHakemusInfo.sanitize(hakemusRepository.getHakemus(hakemusOid).get, NonSensitiveHakemusInfo.nonSensitiveAnswers).hakemusInfo)
+          InsecureHakemusInfo(jwt.encode(HakemusJWT(hakemusOid, NonSensitiveHakemusInfo.nonSensitiveAnswers, personOid)),
+            new NonSensitiveHakemusInfo(hakemusRepository.getHakemus(hakemusOid).get, NonSensitiveHakemusInfo.nonSensitiveAnswers))
         case Failure(e: InvalidTokenException) =>
           NotFound("errorType" -> "invalidToken")
         case Failure(exception) =>
@@ -112,9 +115,8 @@ trait NonSensitiveApplicationServletContainer {
           val hakemusBeforeValidation = hakemusRepository.getHakemus(hakemusJWT.oid).get
           hakemusEditori.validateHakemus(update) match {
             case Some(hakemus) =>
-              InsecureResponse(jwt.encode(hakemusJWT),
-                NonSensitiveHakemusInfo.sanitize(hakemus, newAnswersFromTheSession(update, hakemusBeforeValidation, hakemusJWT)).hakemusInfo
-              )
+              InsecureHakemusInfo(jwt.encode(hakemusJWT),
+                new NonSensitiveHakemusInfo(hakemus, newAnswersFromTheSession(update, hakemusBeforeValidation, hakemusJWT)))
             case _ =>
               InternalServerError("error" -> "Internal service unavailable")
           }
