@@ -75,7 +75,6 @@ class NonSensitiveHakemusInfoSerializer extends CustomSerializer[NonSensitiveHak
 object NonSensitiveHakemusInfo {
   type Oid = String
 
-  val nonSensitiveContactDetails = List(ELEMENT_ID_EMAIL, ELEMENT_ID_PREFIX_PHONENUMBER + "1", ELEMENT_ID_NICKNAME, ELEMENT_ID_LAST_NAME)
   val nonSensitiveAnswers = Set(
     AnswerId(PHASE_PERSONAL, ELEMENT_ID_EMAIL),
     AnswerId(PHASE_PERSONAL, ELEMENT_ID_PREFIX_PHONENUMBER + "1"),
