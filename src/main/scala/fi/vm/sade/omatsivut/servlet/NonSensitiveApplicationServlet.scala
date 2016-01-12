@@ -98,8 +98,8 @@ trait NonSensitiveApplicationServletContainer {
             .findStoredApplicationByOid(hakemusOid)
             .getOrElse(throw new RuntimeException("Application not found: " + hakemusOid))
             .personOid
-          InsecureHakemusInfo(jwt.encode(HakemusJWT(hakemusOid, NonSensitiveHakemusInfo.nonSensitiveAnswers, personOid)),
-            new NonSensitiveHakemusInfo(hakemusRepository.getHakemus(hakemusOid).get, NonSensitiveHakemusInfo.nonSensitiveAnswers))
+          InsecureHakemusInfo(jwt.encode(HakemusJWT(hakemusOid, Set(), personOid)),
+            new NonSensitiveHakemusInfo(hakemusRepository.getHakemus(hakemusOid).get, Set()))
         case Failure(e: InvalidTokenException) =>
           NotFound("errorType" -> "invalidToken")
         case Failure(exception) =>
