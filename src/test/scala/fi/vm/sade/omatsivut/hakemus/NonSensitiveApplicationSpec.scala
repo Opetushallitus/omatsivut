@@ -12,8 +12,8 @@ import org.junit.runner.RunWith
 import org.specs2.runner.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class NonSensitiveApplicationSpec extends ScalatraTestSupport {
-  implicit val jsonFormats = JsonFormats.jsonFormats ++ List(new HakemuksenTilaSerializer, new NonSensitiveHakemusSerializer, new NonSensitiveHakemusInfoSerializer)
+class NonSensitiveApplicationSpec extends HakemusApiSpecification {
+  override implicit val jsonFormats = JsonFormats.jsonFormats ++ List(new HakemuksenTilaSerializer, new NonSensitiveHakemusSerializer, new NonSensitiveHakemusInfoSerializer)
   private val jwt = new JsonWebToken("akuankkaakuankka")
   val hakemusOid = "1.2.246.562.11.00000000178"
   val personOid = "1.2.246.562.24.14229104472"
@@ -52,6 +52,10 @@ class NonSensitiveApplicationSpec extends ScalatraTestSupport {
       "Koulutus-id" -> "1.2.246.562.20.18094409226",
       "Koulutus-id-educationcode" -> "koulutus_723111"))
 
+  def jwtAuthHeader(answers: Set[AnswerId]): Map[String, String] = {
+    Map("Authorization" -> s"Bearer ${jwt.encode(HakemusJWT(hakemusOid, answers, personOid))}")
+  }
+
   "NonSensitiveApplication" should {
     "has only nonsensitive contact info when fetched with a token" in {
       get("insecure/applications/application/token/dummytoken") {
@@ -63,8 +67,7 @@ class NonSensitiveApplicationSpec extends ScalatraTestSupport {
 
     "has nonsensitive contact info and answers stored in JWT when fetched with a JWT" in {
       val answersInJWT: Set[AnswerId] = Set(AnswerId("hakutoiveet", "54773037e4b0c2bb60201414"))
-      val hakemusJWT = HakemusJWT(hakemusOid, answersInJWT, personOid)
-      get("insecure/applications/application/session", headers = Map("Authorization" -> s"Bearer ${jwt.encode(hakemusJWT)}")) {
+      get("insecure/applications/application/session", headers = jwtAuthHeader(answersInJWT)) {
         val hakemusInfo = Serialization.read[InsecureHakemusInfo](body).response.hakemusInfo
         NonSensitiveHakemusInfo.answerIds(hakemusInfo.hakemus.answers) must beEqualTo(
           NonSensitiveHakemusInfo.nonSensitiveAnswers ++ answersInJWT)
@@ -78,11 +81,10 @@ class NonSensitiveApplicationSpec extends ScalatraTestSupport {
         val answersInPost = Hakemus.emptyAnswers ++ Map(
           "hakutoiveet" -> Map(
             "54773037e4b0c2bb60201414" -> "ope",
-            "54774050e4b0c2bb60201431" -> "dummy"))
-        val hakemusJWT = HakemusJWT(hakemusOid, answersInJWT, personOid)
+            "54774050e4b0c2bb60201431" -> "option_1"))
         post("insecure/applications/validate/" + hakemusOid,
           body = Serialization.write(HakemusMuutos(hakemusOid, "1.2.246.562.29.95390561488", hakutoiveData, answersInPost)),
-          headers = Map("Authorization" -> s"Bearer ${jwt.encode(hakemusJWT)}")) {
+          headers = jwtAuthHeader(answersInJWT)) {
           val hakemusInfo = Serialization.read[InsecureHakemusInfo](body).response.hakemusInfo
           NonSensitiveHakemusInfo.answerIds(hakemusInfo.hakemus.answers) must beEqualTo(
             NonSensitiveHakemusInfo.nonSensitiveAnswers ++ answersInJWT)
@@ -95,13 +97,47 @@ class NonSensitiveApplicationSpec extends ScalatraTestSupport {
           "hakutoiveet" -> Map(
             "54773037e4b0c2bb60201414" -> "ope",
             "54774050e4b0c2bb60201431" -> "option_1"))
-        val hakemusJWT = HakemusJWT(hakemusOid, answersInJWT, personOid)
         put("insecure/applications/" + hakemusOid,
           body = Serialization.write(HakemusMuutos(hakemusOid, "1.2.246.562.29.95390561488", hakutoiveData, answersInPost)),
-          headers = Map("Authorization" -> s"Bearer ${jwt.encode(hakemusJWT)}")) {
+          headers = jwtAuthHeader(answersInJWT)) {
           val hakemus = Serialization.read[InsecureHakemus](body).response.hakemus
           NonSensitiveHakemusInfo.answerIds(hakemus.answers) must beEqualTo(
             NonSensitiveHakemusInfo.nonSensitiveAnswers ++ answersInJWT)
+        }
+      }
+    }
+
+    "has only questions for hakutoive that has been removed and then added back" in {
+      val answersInJWT: Set[AnswerId] = Set()
+      put("insecure/applications/" + hakemusOid,
+        body = Serialization.write(HakemusMuutos(hakemusOid, "1.2.246.562.29.95390561488", List(hakutoiveData.head), Hakemus.emptyAnswers)),
+        headers = jwtAuthHeader(answersInJWT)) {
+        status must beEqualTo(200)
+        post("insecure/applications/validate/" + hakemusOid,
+          body = Serialization.write(HakemusMuutos(hakemusOid, "1.2.246.562.29.95390561488", hakutoiveData, Hakemus.emptyAnswers)),
+          headers = jwtAuthHeader(answersInJWT)) {
+          val hakemusInfo = Serialization.read[InsecureHakemusInfo](body).response.hakemusInfo
+          val hakutoive1QuestionIds = hakemusInfo.questions.flatMap(_.flatten.flatMap(_.answerIds)).toSet
+          hakemusInfo.questions.size must beEqualTo(1)
+          hakemusInfo.questions.head.title must beEqualTo("Taideyliopisto,  Sibelius-Akatemia - Jazzmusiikki, sävellys 5,5-vuotinen koulutus")
+
+          fixtureImporter.applyFixtures()
+
+          put("insecure/applications/" + hakemusOid,
+            body = Serialization.write(HakemusMuutos(hakemusOid, "1.2.246.562.29.95390561488", List(hakutoiveData.tail.head), Hakemus.emptyAnswers)),
+            headers = jwtAuthHeader(answersInJWT)) {
+            status must beEqualTo(200)
+            post("insecure/applications/validate/" + hakemusOid,
+              body = Serialization.write(HakemusMuutos(hakemusOid, "1.2.246.562.29.95390561488", hakutoiveData, Hakemus.emptyAnswers)),
+              headers = jwtAuthHeader(answersInJWT)) {
+              val hakemusInfo = Serialization.read[InsecureHakemusInfo](body).response.hakemusInfo
+              val hakutoive2QuestionIds = hakemusInfo.questions.flatMap(_.flatten.flatMap(_.answerIds)).toSet
+              hakemusInfo.questions.size must beEqualTo(1)
+              hakemusInfo.questions.head.title must beEqualTo("Taideyliopisto, Sibelius-Akatemia - Jazzmusiikki, sävellys 2,5-vuotinen koulutus")
+
+              (hakutoive1QuestionIds & hakutoive2QuestionIds) must beEqualTo(Set())
+            }
+          }
         }
       }
     }
