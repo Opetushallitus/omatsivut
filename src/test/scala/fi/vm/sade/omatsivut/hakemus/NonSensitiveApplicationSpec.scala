@@ -56,6 +56,8 @@ class NonSensitiveApplicationSpec extends HakemusApiSpecification {
     Map("Authorization" -> s"Bearer ${jwt.encode(HakemusJWT(hakemusOid, answers, personOid))}")
   }
 
+  sequential
+
   "NonSensitiveApplication" should {
     "has only nonsensitive contact info when fetched with a token" in {
       get("insecure/applications/application/token/dummytoken") {
@@ -107,7 +109,45 @@ class NonSensitiveApplicationSpec extends HakemusApiSpecification {
       }
     }
 
+    "has answers given during session after reload" in {
+      fixtureImporter.applyFixtures()
+      val answersInJWT: Set[AnswerId] = Set()
+      put("insecure/applications/" + hakemusOid,
+        body = Serialization.write(HakemusMuutos(hakemusOid, "1.2.246.562.29.95390561488", List(hakutoiveData.head), Hakemus.emptyAnswers)),
+        headers = jwtAuthHeader(answersInJWT)) {
+        status must beEqualTo(200)
+
+        val answersInPut = Map(
+          "hakutoiveet" -> Map(
+            "54773fd6e4b0c2bb60201430" -> "soitan ja laulan",
+            "54774050e4b0c2bb60201431" -> "option_0",
+            "54774088e4b0c2bb60201432-option_0" -> "",
+            "54774088e4b0c2bb60201432-option_1" -> ""))
+        put("insecure/applications/" + hakemusOid,
+          body = Serialization.write(HakemusMuutos(hakemusOid, "1.2.246.562.29.95390561488", hakutoiveData, Hakemus.emptyAnswers ++ answersInPut)),
+          headers = jwtAuthHeader(answersInJWT)) {
+          status must beEqualTo(200)
+          val answersInJWT = jwt.decode(Serialization.read[InsecureHakemus](body).jsonWebToken).get.answersFromThisSession
+
+          get("insecure/applications/application/session", headers = jwtAuthHeader(answersInJWT)) {
+            val hakemusInfo = Serialization.read[InsecureHakemusInfo](body).response.hakemusInfo
+            val hakutoiveetAnswers = hakemusInfo.hakemus.answers.get("hakutoiveet")
+            hakutoiveetAnswers.flatMap(_.get("54773fd6e4b0c2bb60201430")) must beSome("soitan ja laulan")
+            hakutoiveetAnswers.flatMap(_.get("54774050e4b0c2bb60201431")) must beSome("option_0")
+            hakutoiveetAnswers.flatMap(_.get("54774088e4b0c2bb60201432-option_0")) must beSome("")
+            hakutoiveetAnswers.flatMap(_.get("54774088e4b0c2bb60201432-option_1")) must beSome("")
+            hakemusInfo.questions.flatMap(_.flatten.flatMap(_.answerIds)).toSet must beEqualTo(Set(
+              AnswerId("hakutoiveet", "54773fd6e4b0c2bb60201430"),
+              AnswerId("hakutoiveet", "54774050e4b0c2bb60201431"),
+              AnswerId("hakutoiveet", "54774088e4b0c2bb60201432-option_0"),
+              AnswerId("hakutoiveet", "54774088e4b0c2bb60201432-option_1")))
+          }
+        }
+      }
+    }
+
     "has only questions for hakutoive that has been removed and then added back" in {
+      fixtureImporter.applyFixtures()
       val answersInJWT: Set[AnswerId] = Set()
       put("insecure/applications/" + hakemusOid,
         body = Serialization.write(HakemusMuutos(hakemusOid, "1.2.246.562.29.95390561488", List(hakutoiveData.head), Hakemus.emptyAnswers)),
