@@ -35,20 +35,37 @@ trait NonSensitiveApplicationServletContainer {
     private val hakemusEditori = newEditor(this)
     private val jwt = new JsonWebToken(appConfig.settings.hmacKey)
 
+    class UnauthorizedException(msg: String) extends RuntimeException(msg)
+    class ForbiddenException(msg: String) extends RuntimeException(msg)
+
+    error {
+      case e =>
+        logger.error(request.getMethod + " " + requestPath, e)
+        e match {
+          case e: UnauthorizedException => Unauthorized("error" -> "Unauthorized")
+          case e: ForbiddenException => Forbidden("error" -> "Forbidden")
+          case e: InvalidTokenException => Forbidden("error" -> "Forbidden")
+          case e: ValidationException => BadRequest(e.validationErrors)
+          case e: NoSuchElementException => NotFound("error" -> "Not found")
+          case e: Exception => InternalServerError("error" -> "Internal server error")
+        }
+    }
+
     def user = Oppija(getPersonOidFromSession)
 
     private def getPersonOidFromSession: String = {
-      getHakemusInfoFromBearerToken match {
+      jwtAuthorize match {
         case Success(hakemusJWT) => hakemusJWT.personOid
-        case _ => throw new RuntimeException("Invalid Json Web Token")
+        case Failure(e) => throw e
       }
     }
 
-    private def getHakemusInfoFromBearerToken: Try[HakemusJWT] = {
+    private def jwtAuthorize: Try[HakemusJWT] = {
       val bearerMatch = """Bearer (.+)""".r
       request.getHeader("Authorization") match {
-        case bearerMatch(token) => jwt.decode(token)
-        case _ => Failure(new RuntimeException("Invalid authorization header"))
+        case bearerMatch(jwtString) => jwt.decode(jwtString)
+          .transform(Success(_), e => Failure(new ForbiddenException(e.getMessage)))
+        case _ => Failure(new UnauthorizedException("Invalid Authorization header"))
       }
     }
 
@@ -57,72 +74,60 @@ trait NonSensitiveApplicationServletContainer {
       hakemusJWT.answersFromThisSession ++ nonPersistedAnswers
     }
 
+    private def fetchHakemus(oid: String): Try[HakemusInfo] = {
+      hakemusRepository.getHakemus(oid)
+        .fold[Try[HakemusInfo]](Failure(new NoSuchElementException(s"Hakemus $oid not found")))(Success(_))
+    }
+
     before() {
       contentType = formats("json")
     }
 
     put("/:oid") {
-      getHakemusInfoFromBearerToken match {
-        case Success(hakemusJWT) =>
-          val update = Serialization.read[HakemusMuutos](request.body)
-          val newAnswers = newAnswersFromTheSession(update, hakemusRepository.getHakemus(hakemusJWT.oid).get, hakemusJWT)
-          hakemusEditori.updateHakemus(update) match {
-            case Success(hakemus) =>
-              Ok(InsecureHakemus(jwt.encode(HakemusJWT(hakemusJWT.oid, newAnswers, hakemusJWT.personOid)),
-                new NonSensitiveHakemus(hakemus, newAnswers)))
-            case Failure(e: ForbiddenException) =>
-              Forbidden("errors" -> "Forbidden")
-            case Failure(e: ValidationException) =>
-              BadRequest(e.validationErrors)
-            case Failure(e: Throwable) =>
-              InternalServerError("error" -> "Internal service unavailable")
-          }
-        case Failure(e) =>
-          InternalServerError("error" -> e.getMessage)
-      }
+      (for {
+        token <- jwtAuthorize
+        update <- Try(Serialization.read[HakemusMuutos](request.body))
+        hakemus <- fetchHakemus(token.oid)
+        updatedHakemus <- hakemusEditori.updateHakemus(update)
+      } yield {
+        val newAnswers = newAnswersFromTheSession(update, hakemus, token)
+        Ok(InsecureHakemus(jwt.encode(HakemusJWT(token.oid, newAnswers, token.personOid)),
+          new NonSensitiveHakemus(updatedHakemus, newAnswers)))
+      }).get
     }
 
     get("/application/session") {
-      getHakemusInfoFromBearerToken match {
-        case Success(hakemusJWT) =>
-          InsecureHakemusInfo(jwt.encode(hakemusJWT),
-            new NonSensitiveHakemusInfo(hakemusRepository.getHakemus(hakemusJWT.oid).get, hakemusJWT.answersFromThisSession))
-        case Failure(e) => InternalServerError("error" -> e.getMessage)
-      }
+      (for {
+        token <- jwtAuthorize
+        hakemus <- fetchHakemus(token.oid)
+      } yield {
+        Ok(InsecureHakemusInfo(jwt.encode(token), new NonSensitiveHakemusInfo(hakemus, token.answersFromThisSession)))
+      }).get
     }
 
     get("/application/token/:token") {
-      oppijanTunnistusService.validateToken(params("token")) match {
-        case Success(hakemusOid) =>
-          val personOid = applicationRepository
-            .findStoredApplicationByOid(hakemusOid)
-            .getOrElse(throw new RuntimeException("Application not found: " + hakemusOid))
-            .personOid
-          InsecureHakemusInfo(jwt.encode(HakemusJWT(hakemusOid, Set(), personOid)),
-            new NonSensitiveHakemusInfo(hakemusRepository.getHakemus(hakemusOid).get, Set()))
-        case Failure(e: InvalidTokenException) =>
-          NotFound("errorType" -> "invalidToken")
-        case Failure(exception) =>
-          logger.error("Failed to validate token", exception)
-          InternalServerError("error" -> "Failed to validate token")
-      }
+      (for {
+        hakemusOid <- oppijanTunnistusService.validateToken(params("token"))
+        personOid <- applicationRepository.findStoredApplicationByOid(hakemusOid)
+          .fold[Try[String]](Failure(new NoSuchElementException(s"Hakemus $hakemusOid not found")))(h => Success(h.personOid))
+        hakemus <- fetchHakemus(hakemusOid)
+      } yield {
+        Ok(InsecureHakemusInfo(jwt.encode(HakemusJWT(hakemusOid, Set(), personOid)),
+          new NonSensitiveHakemusInfo(hakemus, Set())))
+      }).get
     }
 
     post("/validate/:oid") {
-      getHakemusInfoFromBearerToken match {
-        case Success(hakemusJWT) =>
-          val update = Serialization.read[HakemusMuutos](request.body)
-          val hakemusBeforeValidation = hakemusRepository.getHakemus(hakemusJWT.oid).get
-          hakemusEditori.validateHakemus(update) match {
-            case Some(hakemus) =>
-              InsecureHakemusInfo(jwt.encode(hakemusJWT),
-                new NonSensitiveHakemusInfo(hakemus, newAnswersFromTheSession(update, hakemusBeforeValidation, hakemusJWT)))
-            case _ =>
-              InternalServerError("error" -> "Internal service unavailable")
-          }
-        case Failure(e) =>
-          InternalServerError("error" -> e.getMessage)
-      }
+      (for {
+        token <- jwtAuthorize
+        update <- Try(Serialization.read[HakemusMuutos](request.body))
+        hakemus <- fetchHakemus(token.oid)
+        validatedHakemus <- hakemusEditori.validateHakemus(update)
+          .fold[Try[HakemusInfo]](Failure(new RuntimeException))(Success(_))
+      } yield {
+        Ok(InsecureHakemusInfo(jwt.encode(token),
+          new NonSensitiveHakemusInfo(validatedHakemus, newAnswersFromTheSession(update, hakemus, token))))
+      }).get
     }
   }
 
