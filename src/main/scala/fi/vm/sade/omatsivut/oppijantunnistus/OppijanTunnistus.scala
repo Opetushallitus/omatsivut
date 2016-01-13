@@ -34,7 +34,7 @@ class RemoteOppijanTunnistusService(verifyUrl: String, client: HttpClient = Defa
         Try(parse(resultString).extract[OppijanTunnistusVerification]) match {
           case Success(OppijanTunnistusVerification(true, Some(HakuAppMetadata(hakemusOid)))) => Success(hakemusOid)
           case Success(OppijanTunnistusVerification(false, _)) => Failure(new InvalidTokenException("invalid token"))
-          case Success(_) => Failure(new RuntimeException("invalid response from oppijan tunnistus, no metadata"))
+          case Success(_) => Failure(new InvalidTokenException("invalid token from oppijan tunnistus, no metadata"))
           case Failure(e) => Failure(new RuntimeException("invalid response from oppijan tunnistus", e))
         }
       case (code, _, resultString) =>

@@ -8,8 +8,6 @@ import pdi.jwt.{JwtAlgorithm, JwtJson4s}
 
 import scala.util.{Failure, Success, Try}
 
-class InvalidJsonWebTokenException(msg: String) extends RuntimeException(msg)
-
 case class HakemusJWT(oid: Oid, answersFromThisSession: Set[AnswerId], personOid: Oid)
 
 class JsonWebToken(val secret: String) {
@@ -28,9 +26,9 @@ class JsonWebToken(val secret: String) {
       case Success(value) =>
         Try(value.extract[HakemusJWT]) match {
           case Success(hakemusJWT) => Success(hakemusJWT)
-          case Failure(e) => Failure(new InvalidJsonWebTokenException("JSON claim invalid"))
+          case Failure(e) => Failure(new RuntimeException("Failed to deserialize JWT"))
         }
-      case Failure(e) => Failure(new InvalidJsonWebTokenException("Failed to decode JWT"))
+      case Failure(e) => Failure(new RuntimeException("Failed to decode JWT"))
     }
   }
 

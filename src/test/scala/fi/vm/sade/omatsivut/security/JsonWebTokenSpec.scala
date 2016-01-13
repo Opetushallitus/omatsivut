@@ -25,12 +25,12 @@ class JsonWebTokenSpec extends MutableScalatraSpec with Mockito {
 
     "return failure on invalid token signature" in {
       val token = "foobar"
-      jwt.decode(token) must beFailedTry.withThrowable[InvalidJsonWebTokenException]
+      jwt.decode(token) must beFailedTry.withThrowable[RuntimeException]
     }
 
     "throw exception on invalid claim" in {
       val token = JwtJson4s.encode(Map("lorem" -> "larem"), "secret", JwtAlgorithm.HS256)
-      jwt.decode(token) must beFailedTry.withThrowable[InvalidJsonWebTokenException]
+      jwt.decode(token) must beFailedTry.withThrowable[RuntimeException]
     }
 
     "throw runtime exception if initialized without a secret" in {
