@@ -1068,7 +1068,7 @@
           before(hakemusIncomplete.getPreference(0).moveDown)
 
           it("ei aiheuta validaatiovirhettä", function() {
-            hakemusIncomplete.statusMessage().should.equal("Muista tallentaa muutokset")
+            hakemusIncomplete.statusMessage().should.equal("Muista lähettää muutokset")
           })
 
           it("tallennus ei aiheuta virhettä", function() {
@@ -1193,7 +1193,7 @@
           it("tallennus toimii uudella yrittämällä", function() {
             return hakemusNivelKesa2013WithPeruskouluBaseEducation.saveWaitSuccess().then(function() {
               hakemusNivelKesa2013WithPeruskouluBaseEducation.saveError().should.equal("")
-              hakemusNivelKesa2013WithPeruskouluBaseEducation.statusMessage().should.equal("Kaikki muutokset tallennettu")
+              hakemusNivelKesa2013WithPeruskouluBaseEducation.statusMessage().should.equal("Kaikki muutokset lähetetty. Tarkista sähköpostivahvistus.")
             })
           })
         })
@@ -1778,7 +1778,7 @@
 
             it("ei tuota virheviestiä", function() {
               hakemusLisakysymyksenJatkokysymyksella.questionsForApplication().validationMessages()[4].should.equal("");
-              expect(hakemusLisakysymyksenJatkokysymyksella.statusMessage()).to.equal("Muista tallentaa muutokset")
+              expect(hakemusLisakysymyksenJatkokysymyksella.statusMessage()).to.equal("Muista lähettää muutokset")
             })
 
             describe("Ensimmäisen tason toiseen kysymykseen vastaaminen", function() {
@@ -1807,7 +1807,7 @@
 
               it("ei tuota virheviestiä", function() {
                 hakemusLisakysymyksenJatkokysymyksella.questionsForApplication().validationMessages()[5].should.equal("");
-                expect(hakemusLisakysymyksenJatkokysymyksella.statusMessage()).to.equal("Muista tallentaa muutokset")
+                expect(hakemusLisakysymyksenJatkokysymyksella.statusMessage()).to.equal("Muista lähettää muutokset")
               })
 
               describe("Toisen tason toiseen kysymykseen vastaaminen", function() {
@@ -2044,7 +2044,7 @@
 
             it("tallennusviesti näytetään", function() {
               hakemusNivelKesa2013WithPeruskouluBaseEducation.saveError().should.equal("")
-              hakemusNivelKesa2013WithPeruskouluBaseEducation.statusMessage().should.equal("Kaikki muutokset tallennettu")
+              hakemusNivelKesa2013WithPeruskouluBaseEducation.statusMessage().should.equal("Kaikki muutokset lähetetty. Tarkista sähköpostivahvistus.")
             })
             it("syötetty vastaus näytetään", function() {
               hakemusNivelKesa2013WithPeruskouluBaseEducation.questionsForApplication().getAnswer(0).should.equal("tekstivastaus 1")
@@ -2111,7 +2111,7 @@
 
           it("Tallennus onnistuu", function() {
             hakemusNivelKesa2013WithPeruskouluBaseEducation.saveError().should.equal("")
-            hakemusNivelKesa2013WithPeruskouluBaseEducation.statusMessage().should.equal("Kaikki muutokset tallennettu")
+            hakemusNivelKesa2013WithPeruskouluBaseEducation.statusMessage().should.equal("Kaikki muutokset lähetetty. Tarkista sähköpostivahvistus.")
           })
         })
 
@@ -2126,7 +2126,7 @@
 
           it("Tallennus onnistuu", function() {
             hakemusNivelKesa2013WithPeruskouluBaseEducation.saveError().should.equal("")
-            hakemusNivelKesa2013WithPeruskouluBaseEducation.statusMessage().should.equal("Kaikki muutokset tallennettu")
+            hakemusNivelKesa2013WithPeruskouluBaseEducation.statusMessage().should.equal("Kaikki muutokset lähetetty. Tarkista sähköpostivahvistus.")
           })
         })
 

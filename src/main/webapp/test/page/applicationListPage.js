@@ -158,7 +158,7 @@ function ApplicationListPage() {
       },
 
       waitValidationOk: function() {
-        return wait.until(function() { return api.statusMessage() == "Muista tallentaa muutokset" })()
+        return wait.until(function() { return api.statusMessage() == "Muista lähettää muutokset" })()
       },
 
       isSavingState: function (isSaving) {
