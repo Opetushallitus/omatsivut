@@ -32,6 +32,10 @@ require('./directives/applicationList')(listApp)
 require('./directives/notification')(listApp)
 require('./controllers/hakutoiveidenMuokkaus')(listApp, staticResources)
 
+listApp.config(function ($httpProvider) {
+  $httpProvider.interceptors.push(require('./interceptors/nonSensitiveHakemus'))
+})
+
 listApp.run(function ($rootScope, localization) {
   $rootScope.localization = localization
 })

@@ -81,6 +81,11 @@
             <version>1.7.2</version>
         </dependency>
         <dependency>
+            <groupId>com.pauldijou</groupId>
+            <artifactId>jwt-json4s-native-legacy_2.11</artifactId>
+            <version>0.4.1</version>
+        </dependency>
+        <dependency>
             <groupId>fi.vm.sade</groupId>
             <artifactId>hakemuseditori_2.11</artifactId>
             <version>0.1.2-SNAPSHOT</version>

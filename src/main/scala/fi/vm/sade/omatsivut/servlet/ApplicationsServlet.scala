@@ -22,7 +22,7 @@ import org.json4s.jackson.Serialization
 import org.scalatra._
 import org.scalatra.json._
 
-import scala.util.{Success, Failure}
+import scala.util.{Failure, Success}
 
 trait ApplicationsServletContainer {
   this: HakemusEditoriComponent with LomakeRepositoryComponent with
@@ -49,7 +49,6 @@ trait ApplicationsServletContainer {
     get("/") {
       hakemusEditori.fetchByPersonOid(personOid())
     }
-
 
     put("/:oid") {
       val content: String = request.body
@@ -125,7 +124,7 @@ trait ApplicationsServletContainer {
           }
 
         } catch {
-          case e =>
+          case e: Throwable =>
             logger.error("failure in background service call", e)
             InternalServerError("error" -> "Background service failed")
 

@@ -116,7 +116,9 @@
     "saveFailed_validationError": "Ei tallennettu - tarkista syöttämäsi tiedot.",
     "applicationPeriodNotActive": "Haku ei ole käynnissä.",
     "serverError": "Odottamaton virhe. Ota yhteyttä ylläpitoon.",
-    "valintatulosFailed": "Valintatuloksen hakemisessa tapahtui odottamaton virhe. Yritä myöhemmin uudelleen."
+    "valintatulosFailed": "Valintatuloksen hakemisessa tapahtui odottamaton virhe. Yritä myöhemmin uudelleen.",
+    "invalidToken": "Sähköpostilinkin tunniste on virheellinen!",
+    "noTokenAvailable": "Tunniste puuttuu!"
   },
 
   "errorPage": {
@@ -164,6 +166,7 @@
 
   "hakutoiveidenMuokkaus": {
     "title": "Hakutoiveiden muokkaus",
-    "infoNotification": "<strong>Huom! Kirjauduit sähköpostilinkin kautta muuttamaan hakutoiveitasi.</strong> Voit lisätä ja poistaa hakutoiveita ja muuttaa niiden järjestystä tällä sivulla 15.1.2016 alkaen. Jos haluat katsella koko hakemusta ja tehdä muita muutoksia hakemukseesi heti, niin kirjaudu verkkopankkitunnuksilla, mobiilivarmenteella tai sähköisellä henkilökortilla Oma Opintopolku -palveluun. <a href='https://opintopolku.fi/wp/oma-opintopolku-palvelu/'>Lue lisää Oma Opintopolku -palvelusta.</a>"
+    "infoNotification": "<strong>Huom! Kirjauduit sähköpostilinkin kautta muuttamaan hakutoiveitasi.</strong> Voit lisätä ja poistaa hakutoiveita ja muuttaa niiden järjestystä. Jos haluat katsella koko hakemusta ja tehdä muita muutoksia hakemukseesi, niin kirjaudu verkkopankkitunnuksilla, mobiilivarmenteella tai sähköisellä henkilökortilla Oma Opintopolku -palveluun. <a href='https://opintopolku.fi/wp/oma-opintopolku-palvelu/'>Lue lisää Oma Opintopolku -palvelusta.</a>",
+    "logoutPage": "<h2>Olet kirjautunut ulos järjestelmästä.</h2><p>Kiitos käynnistä!</p><p><a href='https://opintopolku.fi'>Opintopolku.fi</a></p>"
   }
 }

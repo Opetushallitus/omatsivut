@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Hakutoiveiden muokkaus / Ändring av ansökningsönskemål / Changing of application option preferences</title>
@@ -8,25 +8,46 @@
     <link href="css/hakutoiveidenMuokkaus.css" media="all" rel="stylesheet" type="text/css"/>
     <link href="fontello/css/fontello.css" rel="stylesheet" type="text/css" />
 </head>
-<body ng-controller="HakutoiveidenMuokkausController" class="hakemuseditori hakutoiveidenMuokkaus">
-<header id="siteheader">
-    <a href="/" class="logo">
-        <img ng-src="img/opintopolku_large-{{lang}}.png">
-    </a>
-    <div class="center">
-        <h1>{{ localization("hakutoiveidenMuokkaus.title") }}</h1>
-    </div>
-    <div class="right">
-    </div>
-</header>
+<body ng-controller="HakutoiveidenMuokkausController" class="hakemuseditori hakutoiveidenMuokkaus" ng-cloak>
+    <header id="siteheader">
+        <a href="/" class="logo">
+            <img ng-src="img/opintopolku_large-{{lang}}.png">
+        </a>
+        <div class="center">
+            <h1>{{ localization("hakutoiveidenMuokkaus.title") }}</h1>
+            <span ng-if="hakemus">
+                {{ localization("applicationPreview.applicationId") }}
+                {{ hakemus.oid }}
+            </span>
+        </div>
+        <div class="right" ng-class="{invisible: !hakemus}">
+            <span class="user">{{user.name}}</span>
+            <a class="logout" ng-click="logout()">{{ localization("button.logout") }}</a>
+        </div>
+    </header>
 
-<section class="content hakemus">
-    <notification message="{{ localization('hakutoiveidenMuokkaus.infoNotification') }}"></notification>
-</section>
+    <section class="content error" ng-if="error">
+        <div class="alert alert-danger">{{ localization("error." + error.errorType) }}</div>
+    </section>
 
-<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
-<script type="text/javascript" src="piwik/load"></script>
-<script src="hakemuseditori.js"></script>
-<script src="bundle.js"></script>
+    <section class="content hakemus" ng-if="hakemus">
+        <notification message="{{localization('hakutoiveidenMuokkaus.infoNotification')}}"></notification>
+        <application application="hakemus"></application>
+    </section>
+
+    <section class="content hakemus" ng-if="loggedOut">
+        <div class="alert alert-info" ng-bind-html="localization('hakutoiveidenMuokkaus.logoutPage')"></div>
+    </section>
+
+    <section class="content loading" ng-if="loading">
+        <div class="notification">
+            <img src="img/ajax-loader.gif">
+            {{ localization("message.loadingData") }}
+        </div>
+    </section>
+
+    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="hakemuseditori.js"></script>
+    <script src="bundle.js"></script>
 </body>
 </html>
