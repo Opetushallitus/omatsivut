@@ -26,9 +26,9 @@ class JsonWebToken(val secret: String) {
       case Success(value) =>
         Try(value.extract[HakemusJWT]) match {
           case Success(hakemusJWT) => Success(hakemusJWT)
-          case Failure(e) => Failure(new RuntimeException("Failed to deserialize JWT"))
+          case Failure(e) => Failure(new RuntimeException("Failed to deserialize JWT", e))
         }
-      case Failure(e) => Failure(new RuntimeException("Failed to decode JWT"))
+      case Failure(e) => Failure(new RuntimeException("Failed to decode JWT", e))
     }
   }
 
