@@ -56,7 +56,7 @@
   },
 
   "button": {
-    "save": "Spara ändringar",
+    "save": "Skicka ändringar",
     "sortUp_ariaLabel": "Flytta ansökningsönskemålet uppåt",
     "sortDown_ariaLabel": "Flytta ansökningsönskemålet neråt",
     "delete_confirm": "Ta bort",
@@ -73,8 +73,8 @@
     "loadingApplications": "Laddar ansökningsblanketter…",
     "loadingData": "Laddar...",
     "noApplications": "Du har inga ansökningsblanketter att bearbeta. Sök utbildningar med ordsökningen och fyll i ansökningsblanketten. Som identifierad användare kan du bearbeta din ansökan på denna sida under ansökningstiden.",
-    "validationOk": "Kom ihåg att spara ansökan.",
-    "changesSaved": "Alla ändringar sparade.",
+    "validationOk": "Kom ihåg att skicka ändringarna.",
+    "changesSaved": "Alla ändringar skickade. Kontrollera e-postbekräftelsen.",
     "yes": "Ja",
     "no": "Nej",
     "rememberSendAttachments": "Kom ihåg att skicka ansökningsblankettens <a>bilagor</a>.",
