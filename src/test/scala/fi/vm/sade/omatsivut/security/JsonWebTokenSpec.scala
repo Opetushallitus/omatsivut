@@ -11,7 +11,7 @@ import pdi.jwt.{JwtAlgorithm, JwtJson4s}
 @RunWith(classOf[JUnitRunner])
 class JsonWebTokenSpec extends MutableScalatraSpec with Mockito {
 
-  val jwt = new JsonWebToken("secret")
+  val jwt = new JsonWebToken("akuankkaakuankkaakuankkaakuankka")
   val hakemusOid = "1.2.3"
   val answersFromThisSession = Set(AnswerId("foo", "bar"), AnswerId("bar", "foo"))
   val personOid = "9.7.3"
