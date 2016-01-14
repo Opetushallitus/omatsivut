@@ -56,7 +56,7 @@
   },
 
   "button": {
-    "save": "Tallenna muutokset",
+    "save": "Lähetä muutokset",
     "sortUp_ariaLabel": "Siirrä hakutoivetta mieluisuusjärjestyksessä ylöspäin ",
     "sortDown_ariaLabel": "Siirrä hakutoivetta mieluisuusjärjestyksessä alaspäin",
     "delete_confirm": "Poista",
@@ -73,8 +73,8 @@
     "loadingApplications": "Hakemuksia ladataan...",
     "loadingData": "Lataa tietoja...",
     "noApplications": "Sinulla ei ole hakemuksia, joita on mahdollista muokata. Etsi koulutukset sanahaulla, ja täytä hakulomake. Tunnistautuneena voit tällä sivulla muokata hakemustasi hakuaikana.",
-    "validationOk": "Muista tallentaa muutokset",
-    "changesSaved": "Kaikki muutokset tallennettu",
+    "validationOk": "Muista lähettää muutokset",
+    "changesSaved": "Kaikki muutokset lähetetty. Tarkista sähköpostivahvistus.",
     "yes": "Kyllä",
     "no": "Ei",
     "rememberSendAttachments": "Muista lähettää hakemuksen <a>liitteet</a>.",
