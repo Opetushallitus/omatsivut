@@ -39,16 +39,16 @@ trait NonSensitiveApplicationServletContainer {
     class ForbiddenException(msg: String) extends RuntimeException(msg)
 
     error {
-      case e =>
+      case e: UnauthorizedException => Unauthorized("error" -> "Unauthorized")
+      case e: ForbiddenException => Forbidden("error" -> "Forbidden")
+      case e: InvalidTokenException => Forbidden("error" -> "Forbidden")
+      case e: ValidationException => BadRequest(e.validationErrors)
+      case e: NoSuchElementException =>
+        logger.warn(request.getMethod + " " + requestPath, e)
+        NotFound("error" -> "Not found")
+      case e: Exception =>
         logger.error(request.getMethod + " " + requestPath, e)
-        e match {
-          case e: UnauthorizedException => Unauthorized("error" -> "Unauthorized")
-          case e: ForbiddenException => Forbidden("error" -> "Forbidden")
-          case e: InvalidTokenException => Forbidden("error" -> "Forbidden")
-          case e: ValidationException => BadRequest(e.validationErrors)
-          case e: NoSuchElementException => NotFound("error" -> "Not found")
-          case e: Exception => InternalServerError("error" -> "Internal server error")
-        }
+        InternalServerError("error" -> "Internal server error")
     }
 
     def user = Oppija(getPersonOidFromSession)
