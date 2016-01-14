@@ -13,7 +13,7 @@ case class HakemusJWT(oid: Oid, answersFromThisSession: Set[AnswerId], personOid
 class JsonWebToken(val secret: String) {
   implicit val jsonFormats = formats(NoTypeHints)
 
-  if (secret.isEmpty) throw new RuntimeException("Secret cannot be empty")
+  if (secret.getBytes.size * 8 < 256) throw new RuntimeException("HMAC secret has to be at least 256 bits")
 
   val algo = JwtAlgorithm.HS256
 
