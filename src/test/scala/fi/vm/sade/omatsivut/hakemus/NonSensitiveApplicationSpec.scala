@@ -14,7 +14,7 @@ import org.specs2.runner.JUnitRunner
 @RunWith(classOf[JUnitRunner])
 class NonSensitiveApplicationSpec extends HakemusApiSpecification {
   override implicit val jsonFormats = JsonFormats.jsonFormats ++ List(new HakemuksenTilaSerializer, new NonSensitiveHakemusSerializer, new NonSensitiveHakemusInfoSerializer)
-  private val jwt = new JsonWebToken("akuankkaakuankka")
+  private val jwt = new JsonWebToken("akuankkaakuankkaakuankkaakuankka")
   val hakemusOid = "1.2.246.562.11.00000000178"
   val personOid = "1.2.246.562.24.14229104472"
   val hakutoiveData: List[HakutoiveData] = List(
