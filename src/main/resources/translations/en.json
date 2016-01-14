@@ -56,7 +56,7 @@
   },
 
   "button": {
-    "save": "Save changes",
+    "save": "Submit changes",
     "sortUp_ariaLabel": "Move your study program choice to a higher priority",
     "sortDown_ariaLabel": "Move your study program choice to a lower priority",
     "delete_confirm": "Delete",
@@ -73,8 +73,8 @@
     "loadingApplications": "Loading application forms...",
     "loadingData": "Loading...",
     "noApplications": "You don't have any applications that can be edited. Find study options with the search engine and fill in the application form. As an identified user you can edit your application form on this page during the application period.",
-    "validationOk": "Do not forget to save the changes",
-    "changesSaved": "All changes saved.",
+    "validationOk": "Remember to submit the changes.",
+    "changesSaved": "All changes submitted. Check the confirmation email.",
     "yes": "Yes",
     "no": "No",
     "rememberSendAttachments": "Remember to send the <a>attachments</a>.",
