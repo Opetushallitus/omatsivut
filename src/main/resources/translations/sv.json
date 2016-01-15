@@ -117,9 +117,9 @@
     "applicationPeriodNotActive": "Ansökan pågår inte.",
     "serverError": "Ett oväntat fel inträffade. Var vänlig och kontakta administrationen.",
     "valintatulosFailed": "Ett oväntat fel inträffade vid hämtning av antagningsresultaten. Försök senare på nytt.",
-    "invalidToken": "Ogiltig länk.",
-    "noTokenAvailable": "No token.",
-    "noActiveApplication": "Hakemustasi ei löytynyt."
+    "invalidToken": "Din ansökan kan inte visas eftersom länken är felaktig.",
+    "noTokenAvailable": "Det uppstod ett fel och din ansökan kan inte visas. Om du kopierade länken till denna sida från e-postmeddelandet, bör du kontrollera att alla tecken i addressen ingår.",
+    "noActiveApplication": "Din ansökan är inte längre aktiv."
   },
 
   "errorPage": {
