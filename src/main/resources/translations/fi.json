@@ -118,7 +118,7 @@
     "serverError": "Odottamaton virhe. Ota yhteyttä ylläpitoon.",
     "valintatulosFailed": "Valintatuloksen hakemisessa tapahtui odottamaton virhe. Yritä myöhemmin uudelleen.",
     "invalidToken": "Hakemustasi ei voida näyttää koska linkki on virheellinen.",
-    "noTokenAvailable": "Jotain meni vikaan ja hakemustasi ei voida näyttää.Jos kopioit linkin tälle sivulle sähköpostiviestistä niin tarkista, että kaikki osoitteen merkit ovat mukana.",
+    "noTokenAvailable": "Jotain meni vikaan ja hakemustasi ei voida näyttää. Jos kopioit linkin tälle sivulle sähköpostiviestistä niin tarkista, että kaikki osoitteen merkit ovat mukana.",
     "noActiveApplication": "Hakemuksesi ei ole enää aktiivinen."
   },
 
