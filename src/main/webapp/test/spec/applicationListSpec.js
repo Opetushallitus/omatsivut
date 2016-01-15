@@ -1147,7 +1147,7 @@
               hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send
             )
           it("virhe näytetään", function() {
-            hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).errorText().should.equal("Tallentaminen epäonnistui. Yritä myöhemmin uudelleen.")
+            hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).errorText().should.equal("Hakemuksen lähettäminen epäonnistui. Yritä myöhemmin uudelleen.")
           })
           it("nappi on enabloitu", function() {
             hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).confirmButtonEnabled().should.be.true
