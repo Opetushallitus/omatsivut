@@ -1,0 +1,10 @@
+{
+  "name": "omatsivut",
+
+  "Makefile": "no",
+
+  "projects": [
+    {"name": "omatsivut-web", "uses": "omatsivut-rest"},
+    {"name": "omatsivut-rest",   "uses": "oppijantunnistus valintarekisteri valinta-tulos-service"}
+  ]
+}
