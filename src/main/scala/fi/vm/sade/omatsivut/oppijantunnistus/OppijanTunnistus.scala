@@ -45,5 +45,9 @@ class RemoteOppijanTunnistusService(verifyUrl: String, client: HttpClient = Defa
 }
 
 class StubbedOppijanTunnistusService extends OppijanTunnistusService {
-  override def validateToken(token: String): Try[Oid] = Success("1.2.246.562.11.00000000178")
+  override def validateToken(token: String): Try[Oid] = token match {
+    case "secret" => Success("1.2.246.562.11.00000000178")
+    case "none" => Success("0.0.0.0.0.0")
+    case _ => Failure(new InvalidTokenException("invalid token"))
+  }
 }

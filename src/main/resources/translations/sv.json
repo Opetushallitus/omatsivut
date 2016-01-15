@@ -117,8 +117,9 @@
     "applicationPeriodNotActive": "Ansökan pågår inte.",
     "serverError": "Ett oväntat fel inträffade. Var vänlig och kontakta administrationen.",
     "valintatulosFailed": "Ett oväntat fel inträffade vid hämtning av antagningsresultaten. Försök senare på nytt.",
-    "invalidToken": "Ogiltig länk!",
-    "noTokenAvailable": "No token!"
+    "invalidToken": "Ogiltig länk.",
+    "noTokenAvailable": "No token.",
+    "noActiveApplication": "Hakemustasi ei löytynyt."
   },
 
   "errorPage": {

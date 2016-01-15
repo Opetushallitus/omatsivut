@@ -19,21 +19,28 @@ module.exports = function(app, staticResources) {
       $scope.loading = true
       $location.path('/').replace()
       var suffix = token ? 'token/' + token : 'session'
-      $http.get(baseUrl + suffix).success(function(response) {
-        $scope.loading = false
-        $scope.hakemus = new Hakemus(response)
-        var henkilotiedot = response.hakemus.answers.henkilotiedot
-        $scope.user = {
-          name: henkilotiedot.Kutsumanimi + ' ' + henkilotiedot.Sukunimi
-        }
-      }).error(function(response) {
-        $scope.loading = false
-        $scope.error = angular.extend({}, response)
-      })
+      $http.get(baseUrl + suffix).then(
+          function (response) {
+            $scope.loading = false
+            $scope.hakemus = new Hakemus(response.data)
+            var henkilotiedot = response.data.hakemus.answers.henkilotiedot
+            $scope.user = {
+              name: henkilotiedot.Kutsumanimi + ' ' + henkilotiedot.Sukunimi
+            }
+          },
+          function (response) {
+            $scope.loading = false
+            console.log(JSON.stringify(response))
+            if (404 === response.status) {
+              $scope.errorMessage = 'error.noActiveApplication'
+            } else if (401 === response.status || 403 === response.status) {
+              $scope.errorMessage = 'error.invalidToken'
+            } else {
+              $scope.errorMessage = 'error.serverError'
+            }
+          })
     } else {
-      $scope.error = {
-        errorType: 'noTokenAvailable'
-      }
+      $scope.errorMessage = 'error.noTokenAvailable'
     }
   })
 }

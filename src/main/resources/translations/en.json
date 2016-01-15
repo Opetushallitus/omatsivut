@@ -117,8 +117,9 @@
     "applicationPeriodNotActive": "Application period not ongoing.",
     "serverError": "Unexpected error. Contact administrator.",
     "valintatulosFailed": "An unexpected error occurred in retrieving the student selection results. Please try again later.",
-    "invalidToken": "Invalid token!",
-    "noTokenAvailable": "Missing token!"
+    "invalidToken": "Invalid link.",
+    "noTokenAvailable": "Invalid link.",
+    "noActiveApplication": "Your application was not found."
   },
 
   "errorPage": {

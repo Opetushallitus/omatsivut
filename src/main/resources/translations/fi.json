@@ -117,8 +117,9 @@
     "applicationPeriodNotActive": "Haku ei ole käynnissä.",
     "serverError": "Odottamaton virhe. Ota yhteyttä ylläpitoon.",
     "valintatulosFailed": "Valintatuloksen hakemisessa tapahtui odottamaton virhe. Yritä myöhemmin uudelleen.",
-    "invalidToken": "Sähköpostilinkin tunniste on virheellinen!",
-    "noTokenAvailable": "Tunniste puuttuu!"
+    "invalidToken": "Linkin tunniste on virheellinen.",
+    "noTokenAvailable": "Linkin tunnisteosa puuttuu.",
+    "noActiveApplication": "Hakemustasi ei löytynyt."
   },
 
   "errorPage": {
