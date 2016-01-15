@@ -11,16 +11,16 @@ import org.scalatra.servlet.ScalatraListener
 
 object JettyLauncher {
 
-  private def disableSSLHostNameVerification {
+  private def disableSSLHostNameVerification() {
     HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
       override def verify(hostname: String, session: SSLSession) = true
     })
   }
 
   def main(args: Array[String]) {
-    disableSSLHostNameVerification
+    disableSSLHostNameVerification()
     System.setProperty("omatsivut.port", System.getProperty("omatsivut.port", "7337"))
-    new JettyLauncher().start.join
+    new JettyLauncher().start.join()
   }
 }
 
@@ -28,7 +28,7 @@ class JettyLauncher(profile: Option[String] = None) {
   private val javaVersion: String = System.getProperty("java.version")
   if (!javaVersion.startsWith("1.8")) {
     System.err.println(s"""------------------------------
-                          |EXITING: Run omatsivut with Java 1.8, java.version was ${javaVersion}
+                          |EXITING: Run omatsivut with Java 1.8, java.version was $javaVersion
                           |------------------------------""".stripMargin)
     System.exit(1)
   }
@@ -70,7 +70,7 @@ class JettyLauncher(profile: Option[String] = None) {
   server.setHandler(handlers)
 
   def start = {
-    server.start
+    server.start()
     server
   }
 }
