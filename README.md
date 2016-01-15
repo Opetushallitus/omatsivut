@@ -119,17 +119,17 @@ Testien ajaminen onnistuneesti vaatii sitä, että tämän projektin rinnalta ha
 ## Testidata
 
 Testien ajaminen käynnistää embedded Mongo instanssin hakulomake-kannasta.
-Siihen ladataan fixtuuridata
-`haku/hakemus-api/src/main/resources/mongofixtures` kansiosta. Kyseisessä
-datassa on hakemusten personOid kentät muutettu vastaamaan testien käyttämää
-henkilöä. Fixtuurien lisäämistä varten löytyy scripti `haku/testfixtures`
-kansiosta.
 
-Testit käyttävät myös mokattuja ulkoisten palvelujen rajapintoja. Näiden
-mokkien data löytyy pääsääntöisesti
-`hakemuseditori/src/main/resources/hakemuseditorimockdata/` kansiosta,
-poikkeuksena koulutusdata joka sijaitsee kansiossa
-`haku/hakemus-api/src/main/resources/mockdata`.
+Fixture-data ladataan toisista projekteista maven-riippuvuuden kautta.
+Testejä kehittäessä fixture-dataa voi omalla päivittää asentamalla "mvn install"-komennolla uusia versioita projekteista.
+
+* valinta-tulos-service: [valinta-tulos-service/src/main/resources/fixtures/](https://github.com/Opetushallitus/valinta-tulos-service/tree/master/src/main/resources/fixtures)
+* hakemuseditori: Testit käyttävät myös mokattuja ulkoisten palvelujen rajapintoja. Näiden
+mokkien data löytyy pääsääntöisesti [hakemuseditori/src/main/resources/hakemuseditorimockdata/](https://github.com/Opetushallitus/hakemuseditori/tree/master/src/main/resources/hakemuseditorimockdata) kansiosta.
+* haku: [haku/hakemus-api/src/main/resources/mongofixtures](https://github.com/Opetushallitus/haku/hakemus-api/src/main/resources/mongofixtures) kansio ladataan testipalvelimen käynnistyessä. Kyseisessä
+datassa on hakemusten personOid kentät muutettu vastaamaan testien käyttämää
+henkilöä. Fixtuurien lisäämistä varten löytyy scripti [haku/testfixtures](https://github.com/Opetushallitus/haku/testfixtures)
+kansiosta. Koulutusdata joka sijaitsee kansiossa [haku/hakemus-api/src/main/resources/mockdata](https://github.com/Opetushallitus/haku/hakemus-api/src/main/resources/mockdata).
 
 ## Sovellusprofiili
 
