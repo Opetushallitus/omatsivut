@@ -30,7 +30,8 @@ class NonSensitiveHakemusInfo(sensitiveHakemusInfo: HakemusInfo, nonSensitiveAns
   private val sensitiveAnswers = NonSensitiveHakemusInfo.answerIds(sensitiveHakemusInfo.hakemus.answers) &~ (nonSensitiveAnswers ++ NonSensitiveHakemusInfo.nonSensitiveAnswers)
   val hakemusInfo = sensitiveHakemusInfo.copy(
     hakemus = new NonSensitiveHakemus(sensitiveHakemusInfo.hakemus, nonSensitiveAnswers).hakemus,
-    questions = removeQuestionsWithAnswers(sensitiveHakemusInfo.questions, sensitiveAnswers)
+    questions = removeQuestionsWithAnswers(sensitiveHakemusInfo.questions, sensitiveAnswers),
+    tulosOk = true // valintatulos is never shown, so always signal fetching it succeeded
   )
 
   def removeQuestionsWithAnswers(questions: List[QuestionNode], sensitiveAnswers: Set[AnswerId]): List[QuestionNode] = {
