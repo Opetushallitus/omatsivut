@@ -66,6 +66,19 @@ Komento ajaa kaikki testit, mukaan lukien yksikkötestit, REST-palvelujen testit
 
 ## Fronttidevaus
 
+*HUOM!*: Suuri osa fronttikoodista sijaitsee [hakemuseditori](https://github.com/Opetushallitus/hakemuseditori/tree/master/dist)
+-repositoriossa, mistä käytetään tiedostoja `hakemuseditori.js` ja `hakemuseditori-templates.js`.
+Nämä tiedostot haetaan paketoinnin yhteydessä npm:llä ja kopioidaan
+gulp-buildissa hakemistoon `src/main/webapp`.
+
+Jos muokkaat hakemuseditorin koodia ja haluat nopean kopioinnin omatsivut-applikaatioon
+jokaisen muokkauksen yhteydessä, tee näin:
+
+    cd ../hakemuseditori
+    ./gulp omatsivut dev
+
+### Omien sivujen front-buid työkalut
+
 Frontti paketoidaan gulpilla ja browserifyllä. Skripti `webbuild.sh` tekee tämän helpoksi.
 
 Paketoi frontti devausmoodissa (ei minifiointia):
@@ -79,17 +92,6 @@ Jatkuva fronttikäännös käyntiin näin (ei minimointia):
 Tuotantoa vastaava buildi
 
     ./webbuild.sh
-
-Suuri osa fronttikoodista sijaitsee [hakemuseditori](https://github.com/Opetushallitus/hakemuseditori/tree/master/dist)
--repositoriossa, mistä käytetään tiedostoja `hakemuseditori.js` ja `hakemuseditori-templates.js`.
-Nämä tiedostot haetaan paketoinnin yhteydessä npm:llä ja kopioidaan
-gulp-buildissa hakemistoon `src/main/webapp`.
-
-Jos muokkaat hakemuseditorin koodia ja haluat nopean kopioinnin omatsivut-applikaatioon
-jokaisen muokkauksen yhteydessä, tee näin:
-
-    cd ../hakemuseditori
-    ./gulp omatsivut dev
 
 Tyylit tehty lessillä. Css-fileet src-puussa generoidaan siitä ja ovat
 ignoroitu gitissä.
