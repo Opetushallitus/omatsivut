@@ -60,7 +60,7 @@ class NonSensitiveApplicationSpec extends HakemusApiSpecification {
 
   "NonSensitiveApplication" should {
     "has only nonsensitive contact info when fetched with a token" in {
-      get("insecure/applications/application/token/dummytoken") {
+      get("insecure/applications/application/token/secret") {
         val hakemusInfo = Serialization.read[InsecureHakemusInfo](body).response.hakemusInfo
         NonSensitiveHakemusInfo.answerIds(hakemusInfo.hakemus.answers) must beEqualTo(NonSensitiveHakemusInfo.nonSensitiveAnswers)
         hakemusInfo.questions must beEmpty
