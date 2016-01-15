@@ -110,16 +110,16 @@
     "loadingFailed": "Tietojen lataus epäonnistui. Yritä myöhemmin uudelleen.",
     "validationFailed": "Täytä kaikki tiedot",
     "validationFailed_httpError": "Tietojen haku epäonnistui. Yritä myöhemmin uudelleen.",
-    "saveFailed": "Tallentaminen epäonnistui. Yritä myöhemmin uudelleen.",
+    "saveFailed": "Hakemuksen lähettäminen epäonnistui. Yritä myöhemmin uudelleen.",
     "priorAcceptance": "Olet jo ottanut paikan vastaan tämän hakukauden yhteishaussa. Et voi ottaa vastaan toista paikkaa saman hakukauden aikana.",
     "saveFailed_sessionExpired": "Tallentaminen epäonnistui, sillä istunto on vanhentunut. Kirjaudu uudestaan sisään.",
     "saveFailed_validationError": "Ei tallennettu - tarkista syöttämäsi tiedot.",
     "applicationPeriodNotActive": "Haku ei ole käynnissä.",
     "serverError": "Odottamaton virhe. Ota yhteyttä ylläpitoon.",
     "valintatulosFailed": "Valintatuloksen hakemisessa tapahtui odottamaton virhe. Yritä myöhemmin uudelleen.",
-    "invalidToken": "Linkin tunniste on virheellinen.",
-    "noTokenAvailable": "Linkin tunnisteosa puuttuu.",
-    "noActiveApplication": "Hakemustasi ei löytynyt."
+    "invalidToken": "Hakemustasi ei voida näyttää koska linkki on virheellinen.",
+    "noTokenAvailable": "Jotain meni vikaan ja hakemustasi ei voida näyttää.Jos kopioit linkin tälle sivulle sähköpostiviestistä niin tarkista, että kaikki osoitteen merkit ovat mukana.",
+    "noActiveApplication": "Hakemuksesi ei ole enää aktiivinen."
   },
 
   "errorPage": {
