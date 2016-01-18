@@ -761,6 +761,14 @@
             ])
           })
 
+          it("varoitus yhden paikan säännöstä näkyy", function() {
+            var singleStudyPlaceEnforcement = hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).singleStudyPlaceEnforcement()
+            expect(singleStudyPlaceEnforcement).to.have.length(1)
+            expect(singleStudyPlaceEnforcement[0]).to.have.string("Voit ottaa vastaan samana lukukautena alkavasta koulutuksesta")
+            expect(singleStudyPlaceEnforcement[0]).to.have.string("vain yhden")
+            expect(singleStudyPlaceEnforcement[0]).to.have.string("korkeakoulututkintoon johtavan opiskelupaikan.")
+          })
+
           describe("paikan vastaanottaminen sitovasti", function() {
             before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VASTAANOTTANUT"))
             before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send)
