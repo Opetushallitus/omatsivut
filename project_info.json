@@ -4,7 +4,7 @@
   "Makefile": "no",
 
   "projects": [
-    {"name": "omatsivut-web", "uses": "omatsivut-rest"},
-    {"name": "omatsivut-rest",   "uses": "oppijantunnistus valintarekisteri valinta-tulos-service"}
+    {"name": "omatsivut-web", "uses": "omatsivut-rest piwik shibboleth"},
+    {"name": "omatsivut-rest",   "uses": "cas haku koulutusinformaatio oppijantunnistus shibboleth tarjonta valintarekisteri valinta-tulos-service"}
   ]
 }
