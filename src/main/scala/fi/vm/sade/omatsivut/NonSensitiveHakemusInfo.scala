@@ -77,8 +77,8 @@ object NonSensitiveHakemusInfo {
   type Oid = String
 
   val nonSensitiveAnswers = Set(
-    AnswerId(PHASE_PERSONAL, ELEMENT_ID_EMAIL),
-    AnswerId(PHASE_PERSONAL, ELEMENT_ID_PREFIX_PHONENUMBER + "1"),
+    //AnswerId(PHASE_PERSONAL, ELEMENT_ID_EMAIL),
+    //AnswerId(PHASE_PERSONAL, ELEMENT_ID_PREFIX_PHONENUMBER + "1"),
     AnswerId(PHASE_PERSONAL, ELEMENT_ID_NICKNAME),
     AnswerId(PHASE_PERSONAL, ELEMENT_ID_LAST_NAME)
   )
