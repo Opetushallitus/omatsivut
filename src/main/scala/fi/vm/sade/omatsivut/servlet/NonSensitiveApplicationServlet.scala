@@ -88,9 +88,9 @@ trait NonSensitiveApplicationServletContainer {
         token <- jwtAuthorize
         update <- Try(Serialization.read[HakemusMuutos](request.body))
         hakemus <- fetchHakemus(token.oid)
-        updatedHakemus <- hakemusEditori.updateHakemus(update)
+        newAnswers <- Success(newAnswersFromTheSession(update, hakemus, token))
+        updatedHakemus <- hakemusEditori.updateHakemus(NonSensitiveHakemusInfo.sanitizeHakemusMuutos(update, newAnswers))
       } yield {
-        val newAnswers = newAnswersFromTheSession(update, hakemus, token)
         Ok(InsecureHakemus(jwt.encode(HakemusJWT(token.oid, newAnswers, token.personOid)),
           new NonSensitiveHakemus(updatedHakemus, newAnswers)))
       }).get

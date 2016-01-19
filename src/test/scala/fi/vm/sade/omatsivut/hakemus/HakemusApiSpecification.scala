@@ -91,11 +91,12 @@ trait HakemusApiSpecification extends ScalatraTestSupport {
     hakemus.copy(hakutoiveet = hakemus.hakutoiveet.patch(emptyIndex, List(hakutoive), 1))
   }
 
-  def withSavedApplication[T](hakemus: Hakemus)(f: Application => T): T = {
-    val application = dao.find(new Application().setOid(hakemus.oid)).get(0)
+  def withSavedApplication[T](hakemus: Hakemus)(f: Application => T): T = withSavedApplication(hakemus.oid)(f)
+
+  def withSavedApplication[T](hakemusOid: String)(f: Application => T): T = {
+    val application = dao.find(new Application().setOid(hakemusOid)).get(0)
     f(application)
   }
-
   def hasSameHakuToiveet(hakemus1: Hakemus, hakemus2: Hakemus) = {
     hakemus1.hakutoiveet.equals(hakemus2.hakutoiveet)
   }
