@@ -118,6 +118,8 @@ Palvelin käyntiin (ks yllä) ja sitten [http://localhost:7337/omatsivut/test/ru
 
 Testien ajaminen onnistuneesti vaatii sitä, että tämän projektin rinnalta hakemistopuusta löytyy [valinta-tulos-service](https://github.com/Opetushallitus/valinta-tulos-service).
 
+Valinta-tulos-service.war muodostuu target:n alle komennolla `mvn clean compile`
+
 ## Testidata
 
 Testien ajaminen käynnistää embedded Mongo instanssin hakulomake-kannasta.
