@@ -83,6 +83,11 @@
     "acceptEducation": {
       "received": "Opiskelupaikka myönnetty",
       "latestAnswer": "Lähetä vastauksesi __aika__ mennessä tai menetät tarjotun opiskelupaikan.",
+      "onlyOnePossible": {
+        "1": "Voit ottaa vastaan samana lukukautena alkavasta koulutuksesta",
+        "2": "vain yhden",
+        "3": "korkeakoulututkintoon johtavan opiskelupaikan."
+      },
       "accept": "Otan opiskelupaikan vastaan sitovasti",
       "conditionalAccept": "Otan opiskelupaikan vastaan ehdollisesti",
       "conditionalAcceptInfo1": "Voit edelleen tulla varasijalta hyväksytyksi mieluisampaan hakutoiveeseen.",

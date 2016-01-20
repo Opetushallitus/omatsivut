@@ -270,6 +270,12 @@ function ApplicationListPage() {
             }).toArray()
           },
 
+          singleStudyPlaceEnforcement: function() {
+            return vastaanottoElement().find("[ng-if='haku().showSingleStudyPlaceEnforcement']").map(function() {
+              return $(this).text().trim()
+            }).toArray()
+          },
+
           vaihtoehdot: function() {
             return vastaanottoElement().find(".hakutoive-options label:visible").map(function() {
               return $(this).text().trim()
