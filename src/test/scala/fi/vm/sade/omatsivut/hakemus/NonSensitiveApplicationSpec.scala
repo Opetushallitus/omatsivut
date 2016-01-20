@@ -1,6 +1,8 @@
 package fi.vm.sade.omatsivut.hakemus
 
-import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus.HakutoiveData
+import java.io.Serializable
+
+import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus.{Answers, HakutoiveData}
 import fi.vm.sade.hakemuseditori.hakemus.domain.{Hakemus, HakemusMuutos}
 import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.hakemuseditori.lomake.domain.AnswerId
@@ -74,9 +76,21 @@ class NonSensitiveApplicationSpec extends HakemusApiSpecification {
         NonSensitiveHakemusInfo.answerIds(hakemusInfo.hakemus.answers) must beEqualTo(
           NonSensitiveHakemusInfo.nonSensitiveAnswers ++ answersInJWT)
         hakemusInfo.questions.flatMap(_.flatten.flatMap(_.answerIds)).toSet must beEqualTo(answersInJWT)
+
+      }
+
+    }
+    "does not allow updates beyond nonsensitive data" in {
+      val answersInJWT: Set[AnswerId] = Set(AnswerId("hakutoiveet", "54773037e4b0c2bb60201414"))
+      val updatedEmail = "updated@email.com"
+      put("insecure/applications/" + hakemusOid,
+        body = Serialization.write(HakemusMuutos(hakemusOid, "1.2.246.562.29.95390561488", hakutoiveData, Map("henkilotiedot" -> Map("Sähköposti" -> updatedEmail)))),
+        headers = jwtAuthHeader(answersInJWT)) {
+        withSavedApplication(hakemusOid){h =>
+          h.getEmail() must not be updatedEmail
+        }
       }
     }
-
     "does not have answers that have not been added in this session" in {
       "in validate result" in {
         val answersInJWT: Set[AnswerId] = Set(AnswerId("hakutoiveet", "54773037e4b0c2bb60201414"))

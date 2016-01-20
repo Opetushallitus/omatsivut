@@ -10,7 +10,7 @@ import org.json4s.{CustomSerializer, Extraction}
 
 class NonSensitiveHakemus(sensitiveHakemus: Hakemus, nonSensitiveAnswers: Set[AnswerId]) {
   val hakemus = sensitiveHakemus.copy(
-    answers = filterAnswers(sensitiveHakemus.answers, nonSensitiveAnswers ++ NonSensitiveHakemusInfo.nonSensitiveAnswers),
+    answers = NonSensitiveHakemusInfo.filterAnswers(sensitiveHakemus.answers, nonSensitiveAnswers ++ NonSensitiveHakemusInfo.nonSensitiveAnswers),
     state = sensitiveHakemus.state match {
       case s: Active => s.copy(valintatulos = None)
       case s: HakukausiPaattynyt => s.copy(valintatulos = None)
@@ -18,12 +18,7 @@ class NonSensitiveHakemus(sensitiveHakemus: Hakemus, nonSensitiveAnswers: Set[An
       case s: HakemuksenTila => s
     })
 
-  def filterAnswers(answers: Answers, answerIds: Set[AnswerId]): Answers =
-    answers.foldLeft(Map.empty[String, Map[String, String]]) {
-      case (filteredAnswers, (phaseId, phaseAnswers)) =>
-        val answers = phaseAnswers.filterKeys(questionId => answerIds.contains(AnswerId(phaseId, questionId)))
-        filteredAnswers + (phaseId -> answers)
-    }
+
 }
 
 class NonSensitiveHakemusInfo(sensitiveHakemusInfo: HakemusInfo, nonSensitiveAnswers: Set[AnswerId]) {
@@ -77,14 +72,20 @@ object NonSensitiveHakemusInfo {
   type Oid = String
 
   val nonSensitiveAnswers = Set(
-    AnswerId(PHASE_PERSONAL, ELEMENT_ID_EMAIL),
-    AnswerId(PHASE_PERSONAL, ELEMENT_ID_PREFIX_PHONENUMBER + "1"),
     AnswerId(PHASE_PERSONAL, ELEMENT_ID_NICKNAME),
     AnswerId(PHASE_PERSONAL, ELEMENT_ID_LAST_NAME)
   )
-
+  def sanitizeHakemusMuutos(hakemusMuutos: HakemusMuutos, nonSensitiveAnswers: Set[AnswerId]) = {
+    hakemusMuutos.copy(answers = NonSensitiveHakemusInfo.filterAnswers(hakemusMuutos.answers, nonSensitiveAnswers ++ NonSensitiveHakemusInfo.nonSensitiveAnswers))
+  }
   def answerIds(answers: Answers): Set[AnswerId] =
     answers.foldLeft(Set.empty[AnswerId]) {
       case (ids, (phaseId, phaseAnswers)) => ids ++ phaseAnswers.keys.map(AnswerId(phaseId, _))
+    }
+  def filterAnswers(answers: Answers, answerIds: Set[AnswerId]): Answers =
+    answers.foldLeft(Map.empty[String, Map[String, String]]) {
+      case (filteredAnswers, (phaseId, phaseAnswers)) =>
+        val answers = phaseAnswers.filterKeys(questionId => answerIds.contains(AnswerId(phaseId, questionId)))
+        filteredAnswers + (phaseId -> answers)
     }
 }
