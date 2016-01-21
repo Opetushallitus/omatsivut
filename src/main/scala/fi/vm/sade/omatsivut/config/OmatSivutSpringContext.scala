@@ -82,6 +82,7 @@ object OmatSivutSpringContext extends Logging {
     "fi.vm.sade.haku.oppija.common.koulutusinformaatio",
     "fi.vm.sade.haku.virkailija.koulutusinformaatio",
     "fi.vm.sade.haku.virkailija.lomakkeenhallinta.i18n",
+    "fi.vm.sade.haku.virkailija.viestintapalvelu",
     "fi.vm.sade.haku.oppija.common.organisaatio",
     "fi.vm.sade.haku.virkailija.lomakkeenhallinta.ohjausparametrit"
   ))

@@ -72,6 +72,10 @@ haku.app.username.to.sijoittelu={{haku_app_username_to_sijoittelu}}
 haku.app.password.to.sijoittelu={{haku_app_password_to_sijoittelu}}
 haku.app.username.to.suoritusrekisteri={{haku_app_username_to_suoritusrekisteri}}
 haku.app.password.to.suoritusrekisteri={{haku_app_password_to_suoritusrekisteri}}
+haku.app.username.to.haku={{haku_app_username_to_haku}}
+haku.app.password.to.haku={{haku_app_password_to_haku}}
+haku.app.username.to.viestintapalvelu={{haku_app_username_to_viestintapalvelu}}
+haku.app.password.to.viestintapalvelu={{haku_app_password_to_viestintapalvelu}}
 hakuperusteet.url.fi=https\://{{host_haku}}/hakuperusteet
 hakuperusteet.url.sv=https\://{{host_haku_sv}}/hakuperusteet
 hakuperusteet.url.en=https\://{{host_haku_en}}/hakuperusteet
@@ -113,6 +117,9 @@ cas.group-role-attribute=cn
 cas.group-search-base=ou\=groups
 cas.group-search-filter=(uniqueMember\={0})
 cas.sendRenew=false
+cas.service.haku=https\://{{host_virkailija}}/haku-app
+cas.service.viestintapalvelu=https://${host.virkailija}/viestintapalvelu
+cas.service.ryhmasahkoposti=https://${host.virkailija}/ryhmasahkoposti-service
 cas.service.authentication-service=https\://{{host_virkailija}}/authentication-service
 cas.service.organisaatio-service=https\://{{host_virkailija}}/organisaatio-service
 cas.user-search-base=ou\=people
@@ -152,6 +159,7 @@ ryhmasahkoposti.cas.password={{ ryhmasahkoposti_app_password_to_vtemailer }}
 ryhmasahkoposti.service.batch.size={{ email_batch_size }}
 ryhmasahkoposti.service.session.url=https://{{host_virkailija}}/ryhmasahkoposti-service/email/ok
 ryhmasahkoposti.service.email.url=https://{{host_virkailija}}/ryhmasahkoposti-service/email
+ryhmasahkoposti.rest.url=https://${host.virkailija}/ryhmasahkoposti-service/email
 
 # MUISTILISTA
 muistilista.url=https://{{host_oppija}}/app/#!/muistilista
