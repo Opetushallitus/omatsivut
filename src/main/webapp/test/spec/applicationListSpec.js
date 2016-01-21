@@ -18,6 +18,8 @@
   var hakemusKorkeakoulu = page.getApplication(hakemusKorkeakouluId)
   var hakemusKorkeakouluKevatId = "1.2.246.562.11.00000877687"
   var hakemusKorkeakouluKevat = page.getApplication(hakemusKorkeakouluKevatId)
+  var hakemusKorkeakouluJatkoHakuId = "1.2.246.562.11.00004590341"
+  var hakemusKorkeakouluJatkoHaku = page.getApplication(hakemusKorkeakouluJatkoHakuId)
   var hakemusKorkeakouluKevatWithJazzId = "1.2.246.562.11.00000000178"
   var hakemusKorkeakouluKevatWithJazz = page.getApplication(hakemusKorkeakouluKevatWithJazzId)
   var hakemusKorkeakouluYhteishakuSyksy2014Id = "1.2.246.562.11.00000877686"
@@ -162,7 +164,7 @@
 
       it('ensimmäisenä on uusin hakemus', function () {
         expect(ApplicationListPage().applications()[0]).to.deep.equal(
-          { applicationSystemName: 'Haku ammatilliseen erityisopettajankoulutukseen 2016' }
+          { applicationSystemName: 'Jatkotutkintohaku 2016' }
         )
       })
 
@@ -745,11 +747,11 @@
         })
 
         describe("kk haussa, kun ylempi toive on varalla ja alempi hyväksytty", function() {
-          before(page.applyValintatulosFixtureAndOpen("korkeakoulu-vastaanotettavissa-ehdollisesti", {"haku": "korkeakoulu-yhteishaku-kevat2015"}),
-            page.applyFixtureAndOpen({applicationOid: hakemusKorkeakouluKevatId}))
+          before(page.applyValintatulosFixtureAndOpen("korkeakoulu-vastaanotettavissa-ehdollisesti", {"haku": "korkeakoulu-jatkotutkintohaku"}),
+            page.applyFixtureAndOpen({applicationOid: hakemusKorkeakouluJatkoHakuId}))
 
           it("voi ottaa myös ehdollisesti vastaan", function() {
-            expect(hakemusKorkeakouluKevat.vastaanotto(0).vaihtoehdot()).to.deep.equal([
+            expect(hakemusKorkeakouluJatkoHaku.vastaanotto(0).vaihtoehdot()).to.deep.equal([
                   'Otan opiskelupaikan vastaan sitovasti',
                   'Otan opiskelupaikan vastaan ehdollisesti',
                   'En ota opiskelupaikkaa vastaan'
@@ -757,13 +759,13 @@
           })
 
           it("vastausaika näkyy", function() {
-            expect(hakemusKorkeakouluKevat.vastaanotto(0).info()).to.deep.equal([
+            expect(hakemusKorkeakouluJatkoHaku.vastaanotto(0).info()).to.deep.equal([
                   "Lähetä vastauksesi 10. tammikuuta 2100 klo 12.00 mennessä tai menetät tarjotun opiskelupaikan."
             ])
           })
 
           it("varoitus yhden paikan säännöstä näkyy", function() {
-            var singleStudyPlaceEnforcement = hakemusKorkeakouluKevat.vastaanotto(0).singleStudyPlaceEnforcement()
+            var singleStudyPlaceEnforcement = hakemusKorkeakouluJatkoHaku.vastaanotto(0).singleStudyPlaceEnforcement()
             expect(singleStudyPlaceEnforcement).to.have.length(1)
             expect(singleStudyPlaceEnforcement[0]).to.have.string("Voit ottaa vastaan samana lukukautena alkavasta koulutuksesta")
             expect(singleStudyPlaceEnforcement[0]).to.have.string("vain yhden")
@@ -771,34 +773,34 @@
           })
 
           describe("paikan vastaanottaminen sitovasti", function() {
-            before(hakemusKorkeakouluKevat.vastaanotto(0).selectOption("VASTAANOTTANUT"))
-            before(hakemusKorkeakouluKevat.vastaanotto(0).send)
+            before(hakemusKorkeakouluJatkoHaku.vastaanotto(0).selectOption("VASTAANOTTANUT"))
+            before(hakemusKorkeakouluJatkoHaku.vastaanotto(0).send)
 
             it("vastaanottotieto näkyy", function() {
-              expect(hakemusKorkeakouluKevat.valintatulokset()[0].tila).to.equal('Peruuntunut')
-              expect(hakemusKorkeakouluKevat.valintatulokset()[1].tila).to.equal('Opiskelupaikka vastaanotettu')
+              expect(hakemusKorkeakouluJatkoHaku.valintatulokset()[0].tila).to.equal('Peruuntunut')
+              expect(hakemusKorkeakouluJatkoHaku.valintatulokset()[1].tila).to.equal('Opiskelupaikka vastaanotettu')
             })
           })
 
           describe("paikan vastaanottaminen ehdollisesti", function() {
-            before(page.applyValintatulosFixtureAndOpen("korkeakoulu-vastaanotettavissa-ehdollisesti"))
-            before(hakemusKorkeakouluKevat.vastaanotto(0).selectOption("EHDOLLISESTI_VASTAANOTTANUT"))
-            before(hakemusKorkeakouluKevat.vastaanotto(0).send)
+            before(page.applyValintatulosFixtureAndOpen("korkeakoulu-vastaanotettavissa-ehdollisesti", {"haku": "korkeakoulu-jatkotutkintohaku"}))
+            before(hakemusKorkeakouluJatkoHaku.vastaanotto(0).selectOption("EHDOLLISESTI_VASTAANOTTANUT"))
+            before(hakemusKorkeakouluJatkoHaku.vastaanotto(0).send)
 
             it("vastaanottotieto näkyy", function() {
-              expect(hakemusKorkeakouluKevat.valintatulokset()[0].tila).to.equal('1. varasijalla')
-              expect(hakemusKorkeakouluKevat.valintatulokset()[1].tila).to.equal('Opiskelupaikka vastaanotettu ehdollisesti')
+              expect(hakemusKorkeakouluJatkoHaku.valintatulokset()[0].tila).to.equal('1. varasijalla')
+              expect(hakemusKorkeakouluJatkoHaku.valintatulokset()[1].tila).to.equal('Opiskelupaikka vastaanotettu ehdollisesti')
             })
           })
 
           describe("paikan hylkääminen", function() {
-            before(page.applyValintatulosFixtureAndOpen("korkeakoulu-vastaanotettavissa-ehdollisesti"))
-            before(hakemusKorkeakouluKevat.vastaanotto(0).selectOption("PERUNUT"))
-            before(hakemusKorkeakouluKevat.vastaanotto(0).send)
+            before(page.applyValintatulosFixtureAndOpen("korkeakoulu-vastaanotettavissa-ehdollisesti", {"haku": "korkeakoulu-jatkotutkintohaku"}))
+            before(hakemusKorkeakouluJatkoHaku.vastaanotto(0).selectOption("PERUNUT"))
+            before(hakemusKorkeakouluJatkoHaku.vastaanotto(0).send)
 
             it("perumistieto näkyy", function() {
-              expect(hakemusKorkeakouluKevat.valintatulokset()[0].tila).to.equal('1. varasijalla')
-              expect(hakemusKorkeakouluKevat.valintatulokset()[1].tila).to.equal('Peruit opiskelupaikan')
+              expect(hakemusKorkeakouluJatkoHaku.valintatulokset()[0].tila).to.equal('1. varasijalla')
+              expect(hakemusKorkeakouluJatkoHaku.valintatulokset()[1].tila).to.equal('Peruit opiskelupaikan')
             })
           })
         })
