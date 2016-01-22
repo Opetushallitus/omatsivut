@@ -17,7 +17,7 @@ if [ ! -z "`log`" ]; then
   diff
   echo
   echo "You can mark these as reviewed with the following command:"
-  echo "    git push origin head:localization-reviewed"
+  echo "    git push origin HEAD:localization-reviewed"
   exit 1
 else
   echo "no changes after localization review"
