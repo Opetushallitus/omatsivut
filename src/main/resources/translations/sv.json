@@ -84,7 +84,7 @@
       "received": "Studieplats beviljad",
       "latestAnswer": "Skicka svaret före __aika__, annars går du miste om den erbjudna studieplatsen.",
       "onlyOnePossible": {
-        "1": "Du kan ta emot",
+        "1": "OBS! Du kan ta emot",
         "2": "endast en",
         "3": "studieplats som leder till högskoleexamen i utbildning som börjar inom samma termin."
       },

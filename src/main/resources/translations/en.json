@@ -84,7 +84,7 @@
       "received": "Study place granted",
       "latestAnswer": "Submit your answer by __aika__, or you will lose the offered study place.",
       "onlyOnePossible": {
-        "1": "You may accept",
+        "1": "NB! You may accept",
         "2": "only one",
         "3": "study place leading to a higher education degree in Finland during one academic term."
       },
