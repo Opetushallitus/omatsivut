@@ -218,6 +218,11 @@
             <plugin>
                 <groupId>net.alchim31.maven</groupId>
                 <artifactId>scala-maven-plugin</artifactId>
+                <configuration>
+                    <args>
+                        <arg>-target:jvm-1.7</arg>
+                    </args>
+                </configuration>
                 <executions>
                     <execution>
                         <id>scala-compile-first</id>
