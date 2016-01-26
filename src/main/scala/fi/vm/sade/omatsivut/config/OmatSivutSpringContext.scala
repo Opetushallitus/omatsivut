@@ -8,7 +8,9 @@ import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.hakemus.it.dao.ApplicationOidDAO
 import fi.vm.sade.haku.oppija.hakemus.service.HakuPermissionService
 import fi.vm.sade.haku.oppija.hakemus.service.impl.HakuPermissionServiceMockImpl
-import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
+import fi.vm.sade.haku.oppija.lomake.domain.{User, ApplicationSystem}
+import fi.vm.sade.haku.oppija.lomake.service.Session
+import fi.vm.sade.haku.oppija.lomake.service.impl.SystemSession
 import fi.vm.sade.haku.virkailija.authentication.AuthenticationService
 import fi.vm.sade.haku.virkailija.authentication.impl.AuthenticationServiceMockImpl
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.tarjonta.HakuService
@@ -85,7 +87,9 @@ object OmatSivutSpringContext extends Logging {
     "fi.vm.sade.haku.virkailija.viestintapalvelu",
     "fi.vm.sade.haku.oppija.common.organisaatio",
     "fi.vm.sade.haku.virkailija.lomakkeenhallinta.ohjausparametrit"
-  ))
+  ),
+  excludeFilters = Array(new ComponentScan.Filter(`type` = FilterType.ASSIGNABLE_TYPE, value = Array[Class[_]](classOf[Session])))
+  )
   @ImportResource(Array("/META-INF/spring/logger-context.xml"))
   @Import(Array(classOf[OmatSivutMongoConfiguration], classOf[OmatSivutCacheConfiguration]))
   class Default extends OmatSivutConfiguration {
@@ -94,6 +98,10 @@ object OmatSivutSpringContext extends Logging {
     @Bean def authenticationService: AuthenticationService = new AuthenticationServiceMockImpl
 
     @Bean def hakuPermissionService: HakuPermissionService = new HakuPermissionServiceMockImpl
+
+    @Bean def userSession: Session = new SystemSession {
+      override def getUser(): User = new User("HAKIJA")
+    }
 
     @Bean def suoritusRekisteriService: SuoritusrekisteriService = new SuoritusrekisteriService {
 
