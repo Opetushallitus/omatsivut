@@ -19,13 +19,12 @@ log4j.appender.FILE.MaxBackupIndex=100
 log4j.logger.audit=INFO, Audit
 log4j.additivity.audit= false
 log4j.appender.Audit.Threshold=INFO
-log4j.appender.Audit.File=${user.home}/tomcat/logs/oph-omatsivut-audit.log
-log4j.appender.Audit=org.apache.log4j.RollingFileAppender
+log4j.appender.Audit=org.apache.log4j.FileAppender
+log4j.appender.Audit.immediateFlush=true
+log4j.appender.Audit.File=${user.home}/tomcat/logs/auditlog_omatsivut.log
 log4j.appender.Audit.Append=true
 log4j.appender.Audit.layout=org.apache.log4j.PatternLayout
 log4j.appender.Audit.layout.ConversionPattern=%d{ISO8601} %-5p {%X{user}} [%t] %-5p %c: %m%n
-log4j.appender.Audit.MaxFileSize=10MB
-log4j.appender.Audit.MaxBackupIndex=50
 {% endraw %}
 # Log omatsivut with INFO
 log4j.logger.fi.vm.sade.utils=INFO
