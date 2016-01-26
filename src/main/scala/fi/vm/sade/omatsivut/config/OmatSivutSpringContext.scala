@@ -8,7 +8,9 @@ import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.hakemus.it.dao.ApplicationOidDAO
 import fi.vm.sade.haku.oppija.hakemus.service.HakuPermissionService
 import fi.vm.sade.haku.oppija.hakemus.service.impl.HakuPermissionServiceMockImpl
-import fi.vm.sade.haku.oppija.lomake.domain.ApplicationSystem
+import fi.vm.sade.haku.oppija.lomake.domain.{User, ApplicationSystem}
+import fi.vm.sade.haku.oppija.lomake.service.Session
+import fi.vm.sade.haku.oppija.lomake.service.impl.{SystemSession, UserSession}
 import fi.vm.sade.haku.virkailija.authentication.AuthenticationService
 import fi.vm.sade.haku.virkailija.authentication.impl.AuthenticationServiceMockImpl
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.tarjonta.HakuService
@@ -18,6 +20,7 @@ import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.mongo.OmatSivutMongoConfiguration
 import fi.vm.sade.tarjonta.service.resources.v1.dto.HakuV1RDTO
 import fi.vm.sade.utils.slf4j.Logging
+import org.springframework.beans.factory.ObjectFactory
 import org.springframework.context.annotation._
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer
 import org.springframework.core.env.{MapPropertySource, MutablePropertySources}
@@ -94,6 +97,10 @@ object OmatSivutSpringContext extends Logging {
     @Bean def authenticationService: AuthenticationService = new AuthenticationServiceMockImpl
 
     @Bean def hakuPermissionService: HakuPermissionService = new HakuPermissionServiceMockImpl
+
+    @Bean def userSession: Session = new SystemSession {
+      override def getUser(): User = new User("OHP")
+    }
 
     @Bean def suoritusRekisteriService: SuoritusrekisteriService = new SuoritusrekisteriService {
 
