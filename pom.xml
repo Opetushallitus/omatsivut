@@ -92,13 +92,19 @@
         </dependency>
         <dependency>
             <groupId>fi.vm.sade</groupId>
-            <artifactId>scala-utils_2.11</artifactId>
-            <version>0.1.0-SNAPSHOT</version>
+            <artifactId>scala-security_2.11</artifactId>
+            <version>0.2.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>fi.vm.sade</groupId>
-            <artifactId>scala-security_2.11</artifactId>
-            <version>0.1.0-SNAPSHOT</version>
+            <groupId>org.http4s</groupId>
+            <artifactId>http4s-blaze-client_2.11</artifactId>
+            <version>0.10.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.scalaz.stream</groupId>
+            <artifactId>scalaz-stream_2.11</artifactId>
+            <version>0.7.3a</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>fi.vm.sade.koodisto</groupId>
@@ -119,6 +125,10 @@
               <exclusion>
                 <groupId>com.wordnik</groupId>
                 <artifactId>swagger-jaxrs_2.10</artifactId>
+              </exclusion>
+              <exclusion>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>*</artifactId>
               </exclusion>
             </exclusions>
         </dependency>
