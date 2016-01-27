@@ -8,8 +8,6 @@ case class ApplicationSettings(config: Config) extends GroupEmailerSettings(conf
 
   val captchaSettings = new CaptchaServiceSettings(config)
 
-  val casTicketUrl = config.getString("omatsivut.cas.ticket.url")
-
   val raamitUrl = config.getString("omatsivut.oppija-raamit.url")
 
   val piwikUrl = config.getString("omatsivut.piwik.url")
