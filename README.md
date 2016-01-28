@@ -4,13 +4,14 @@ Oppijan henkilökohtainen palvelu
 
 ## Teknologiat
 
-- Scala 2.11 (servereillä yhä JRE7)
+- Scala 2.11 (servereillä JRE8)
 - Frontissa Angular.js, gulp.js, npm
 - Testeissä Specs2, mocha, phantomjs. Kaikille toiminnoille automaattiset testit.
 
 ### JDK
 
-- Käytetään kehityksessä JDK8:a, mutta target version yhä 1.7
+- Käytetään kehityksessä ja sovelluksen ajamiseen JDK8:a, mutta target version yhä 1.7
+   - odotetaan scala 2.12:sta ja spring 4 upgradea ennen target version vaihtoa
 - JCE (Java Cryptography Extension)
    - Ilman laajennosta tulee virhe: "java.security.InvalidKeyException: Illegal key size"
    - Lataa Oraclen sivuilta ja kopioi tiedostot $JAVA_HOME/jre/lib/security
