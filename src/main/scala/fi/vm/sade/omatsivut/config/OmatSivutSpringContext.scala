@@ -116,8 +116,6 @@ object OmatSivutSpringContext extends Logging {
 
       override def getApplicationSystems: util.List[ApplicationSystem] = unsupportedIntegrationException
 
-      override def getApplicationSystems(b: Boolean): util.List[ApplicationSystem] = unsupportedIntegrationException
-
       override def getApplicationSystem(s: String): ApplicationSystem = unsupportedIntegrationException
 
       override def kayttaaJarjestelmanLomaketta(oid: String): Boolean = unsupportedIntegrationException
