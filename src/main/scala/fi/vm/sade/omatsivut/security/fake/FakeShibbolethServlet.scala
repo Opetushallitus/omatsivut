@@ -7,6 +7,7 @@ import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.omatsivut.security.CookieHelper.reqCookie
 import fi.vm.sade.omatsivut.security.{AuthenticationCipher, RemoteAuthenticationInfoService, ShibbolethCookie}
 import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
+import org.http4s.ParseException
 import org.scalatra.{Cookie, CookieOptions}
 
 /**
@@ -36,7 +37,15 @@ class FakeShibbolethServlet(val appConfig: AppConfig) extends OmatSivutServletBa
       }
       case _ => {
         val service = new RemoteAuthenticationInfoService(appConfig.settings.authenticationServiceConfig, appConfig.settings.securitySettings)
-        service.getHenkiloOID(hetu)
+        try {
+          service.getHenkiloOID(hetu)
+        }
+        catch {
+          case e: ParseException => {
+            logger.error(e.failure.details)
+            throw e
+          }
+        }
       }
     }
   }

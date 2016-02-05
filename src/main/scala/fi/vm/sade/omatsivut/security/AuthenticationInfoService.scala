@@ -1,50 +1,61 @@
 package fi.vm.sade.omatsivut.security
 
 import fi.vm.sade.omatsivut.config.{RemoteApplicationConfig, SecuritySettings}
-import fi.vm.sade.utils.cas.{CasClient, CasTicketRequest}
-import fi.vm.sade.utils.http.{DefaultHttpClient, HttpRequest}
+import fi.vm.sade.utils.cas.{CasParams, CasAuthenticatingClient, CasClient}
+import org.http4s._
+import org.http4s.client.blaze
+import org.http4s.client.blaze.BlazeClient
 import fi.vm.sade.utils.slf4j.Logging
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
 
-import scalaj.http.HttpOptions
+import scalaz.concurrent.Task
 
 class RemoteAuthenticationInfoService(val config: RemoteApplicationConfig, val securitySettings: SecuritySettings) extends Logging {
-  implicit val formats = DefaultFormats
+  private val blazeHttpClient: BlazeClient = blaze.defaultClient
+  private val casClient = new CasClient(securitySettings.casUrl, blazeHttpClient)
+  private val serviceUrl = config.url + "/"
+  private val casParams = CasParams(serviceUrl, securitySettings.casUsername, securitySettings.casPassword)
+  private val httpClient = new CasAuthenticatingClient(casClient, casParams, blazeHttpClient)
+  private val callerIdHeader = Header("Caller-Id", "omatsivut.omatsivut.backend")
 
-  private def getCookies(createNewSession: Boolean): List[String] =
-    new CasClient(securitySettings.casConfig).
-      getSessionCookies(CasTicketRequest(s"${config.url}/${config.ticketConsumerPath}", securitySettings.casUsername, securitySettings.casPassword), createNewSession)
+  def uriFromString(url: String): Uri = {
+    Uri.fromString(url).toOption.get
+  }
 
-  private def addHeaders(request: HttpRequest, createNewSession: Boolean = false): HttpRequest = {
-    request
-      .header("Cookie", getCookies(createNewSession).mkString("; "))
-      .header("Caller-Id", "omatsivut.omatsivut.backend")
+  type Decode[ResultType] = (Int, String, Request) => ResultType
+
+  private def runHttp[ResultType](request: Request)(decoder: (Int, String, Request) => ResultType): Task[ResultType] = {
+    for {
+      response <- httpClient.apply(request)
+      text <- response.as[String]
+    } yield {
+      decoder(response.status.code, text, request)
+    }
   }
 
   def getHenkiloOID(hetu: String) : Option[String] = {
-    def tryGet(h: String, createNewSession: Boolean = false, retryCount: Int = 0): Option[String] = {
-      val path: String = config.url + "/" + config.config.getString("get_oid.path") + "/" + hetu
-      val request = addHeaders(DefaultHttpClient.httpGet(path, HttpOptions.followRedirects(true)), createNewSession)
-      val (responseCode, headersMap, resultString) = request.responseWithHeaders()
+    val path: String = serviceUrl + config.config.getString("get_oid.path") + "/" + hetu
+    val request: Request = Request(uri = uriFromString(path), headers = Headers(callerIdHeader))
 
-      responseCode match {
-        case 401 if retryCount < 2 =>
-          tryGet(h, createNewSession = true, retryCount + 1)
-        case 404 => None
-        case 200 =>
+    def tryGet(retryCount: Int = 0): Option[String] =
+      runHttp[Option[String]](request) {
+        case (200, resultString, _) =>
           val json = parse(resultString)
           val oids: List[String] = for {
             JObject(child) <- json
             JField("oidHenkilo", JString(oid)) <- child
           } yield oid
           oids.headOption
-        case code =>
-          logger.error(s"Error fetching personOid. Response code=$code, content=$resultString")
+        case (401, resultString, _) if retryCount < 2 =>
+          logger.warn(s"Error fetching personOid (retrying, retryCount=$retryCount). Response code=401, content=$resultString")
+          tryGet(retryCount + 1)
+        case (404, _, _) => None
+        case (code, resultString, uri) =>
+          logger.error(s"Error fetching personOid (not retrying, retryCount=$retryCount). Response code=$code, content=$resultString")
           None
-      }
-    }
 
-    tryGet(hetu)
+      }.run
+    tryGet()
   }
 }

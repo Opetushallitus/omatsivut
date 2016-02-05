@@ -3,13 +3,10 @@ package fi.vm.sade.omatsivut.config
 import com.typesafe.config.Config
 import fi.vm.sade.groupemailer.GroupEmailerSettings
 import fi.vm.sade.utils.captcha.CaptchaServiceSettings
-import fi.vm.sade.utils.cas.CasConfig
 
 case class ApplicationSettings(config: Config) extends GroupEmailerSettings(config) {
 
   val captchaSettings = new CaptchaServiceSettings(config)
-
-  val casTicketUrl = config.getString("omatsivut.cas.ticket.url")
 
   val raamitUrl = config.getString("omatsivut.oppija-raamit.url")
 
@@ -51,7 +48,7 @@ object ApplicationSettingsParser extends fi.vm.sade.utils.config.ApplicationSett
 }
 
 class SecuritySettings(c: Config) {
-  val casConfig = CasConfig(c.getString("cas.url"))
+  val casUrl = c.getString("cas.url")
   val casUsername = c.getString("cas.username")
   val casPassword = c.getString("cas.password")
 }
