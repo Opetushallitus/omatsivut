@@ -14,7 +14,6 @@
     "ng-resource": "~1.2",
     "angular-module-sanitize": "~1.2",
     "angular-animate": "~1.2",
-    "angular-cookies": "~1.2",
     "moment": "^2.8.1"
   },
   "dependencies": {
