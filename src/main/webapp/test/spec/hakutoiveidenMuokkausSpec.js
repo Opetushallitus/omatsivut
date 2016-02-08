@@ -23,7 +23,7 @@
 
   describe('Hakemuksen muokkaus, kun hakemusta ei löydy', function () {
     before(
-      page.openPage("none")
+      page.openPage("1.2.246.562.11.0")
     )
 
     it("näytetään ilmoitus", function() {
@@ -33,7 +33,7 @@
 
   describe('Hakemuksen muokkaus', function () {
     before(
-      page.applyFixtureAndOpen({token: "secret"})
+      page.applyFixtureAndOpen({token: hakemusKorkeakouluKevatWithJazzId})
     )
 
     describe("Hakemuksen tietojen näyttäminen", function() {

@@ -20,7 +20,6 @@
   var hakemusKorkeakouluKevat = page.getApplication(hakemusKorkeakouluKevatId)
   var hakemusKorkeakouluJatkoHakuId = "1.2.246.562.11.00004590341"
   var hakemusKorkeakouluJatkoHaku = page.getApplication(hakemusKorkeakouluJatkoHakuId)
-  var hakemusKorkeakouluKevatWithJazzId = "1.2.246.562.11.00000000178"
   var hakemusKorkeakouluKevatWithJazz = page.getApplication(hakemusKorkeakouluKevatWithJazzId)
   var hakemusKorkeakouluYhteishakuSyksy2014Id = "1.2.246.562.11.00000877686"
   var hakemusKorkeakouluYhteishakuSyksy2014 = page.getApplication(hakemusKorkeakouluYhteishakuSyksy2014Id)
