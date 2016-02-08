@@ -244,6 +244,35 @@ function takeScreenshot() {
   }
 }
 
+function compareDOMIndex(el1, el2) {
+  function indexInTree(element, indexes) {
+    indexes = indexes || []
+    indexes.unshift(element.index())
+    if (element.parent().length)
+      indexInTree(element.parent(), indexes)
+    return indexes
+  }
+
+  function compareTrees(tree1, tree2) {
+    for (var i=0; i<tree1.length && i < tree2.length; i++) {
+      if (tree1[i] < tree2[i])
+        return -1
+      else if (tree1[i] > tree2[i])
+        return 1
+    }
+    return 0
+  }
+
+  return compareTrees(indexInTree(el1), indexInTree(el2))
+}
+
+function removeSpaces(text) {
+  return text.replace(/(\r\n|\n|\r)/gm,"").replace(/\s+/g," ").trim()
+}
+
+function trimText() {
+  return removeSpaces($(this).text())
+}
 
 (function improveMocha() {
   var origBefore = before
