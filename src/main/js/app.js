@@ -2,6 +2,7 @@ require("angular");
 require('ng-resource')(window, angular);
 require('angular-module-sanitize');
 require('angular-animate');
+require('angular-cookies');
 _ = require("underscore");
 require("../lib/ui-bootstrap-custom-tpls-0.10.0.min.js");
 require('./recursionHelper')
@@ -16,9 +17,16 @@ angular.module("templates", [])
 require("../webapp/hakemuseditori-templates.js")
 require("../templates/templates.js")
 
-var listApp = angular.module('listApp', ["ngResource", "ngSanitize", "ngAnimate", "RecursionHelper", "ui.bootstrap.typeahead", "template/typeahead/typeahead-popup.html", "template/typeahead/typeahead-match.html", "debounce", "exceptionOverride", "templates"], function($locationProvider) {
+var listApp = angular.module('listApp', ["ngResource", "ngSanitize", "ngAnimate", "ngCookies", "RecursionHelper", "ui.bootstrap.typeahead", "template/typeahead/typeahead-popup.html", "template/typeahead/typeahead-match.html", "debounce", "exceptionOverride", "templates"], function($locationProvider) {
   $locationProvider.html5Mode(false)
 });
+
+listApp.run(function($http, $cookies) {
+  $http.defaults.headers.common['clientSubSystemCode'] = "omatsivut.frontend";
+  if($cookies['CSRF']) {
+    $http.defaults.headers.common['CSRF'] = $cookies['CSRF'];
+  }
+})
 
 var staticResources = require('./staticResources')
 require('./localization')(listApp, staticResources)
