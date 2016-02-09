@@ -2216,6 +2216,7 @@
                   'Koulutus-id-aoIdentifier': '019',
                   'Koulutus-id-athlete': 'false',
                   'Koulutus-educationDegree': '22',
+                  'Koulutus-id-discretionary': 'false',
                   'Koulutus-id': '1.2.246.562.14.2014032812530780195965',
                   'Koulutus-id-educationcode': 'koulutus_020075' },
               hakuaikaId: "5474"
@@ -2242,6 +2243,7 @@
                   'Koulutus-id-aoIdentifier': '019',
                   'Koulutus-id-athlete': 'false',
                   'Koulutus-educationDegree': '22',
+                  'Koulutus-id-discretionary': 'false',
                   'Koulutus-id': '1.2.246.562.14.2014032812530780195965',
                   'Koulutus-id-educationcode': 'koulutus_020075' },
               hakuaikaId: "5474"
