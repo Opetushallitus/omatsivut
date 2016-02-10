@@ -26,16 +26,12 @@
 <script src="page/hakutoiveidenMuokkausPage.js"></script>
 <script src="spec/hakutoiveidenMuokkausSpec.js"></script>
 <script>
-    if (window.mochaPhantomJS) {
-        mochaPhantomJS.run()
-    } else {
-        var runner = mocha.run()
-        $(document).keyup(function(e) { 
-          if(e.keyCode==27) {
-              runner._abort = true
-          }
-        })
-    }
+    var runner = mocha.run()
+    $(document).keyup(function(e) { 
+      if(e.keyCode==27) {
+          runner._abort = true
+      }
+    })
 </script>
 <iframe id="testframe"></iframe>
 </body>
