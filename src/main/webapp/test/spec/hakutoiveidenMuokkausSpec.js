@@ -11,7 +11,7 @@
     }
   })
 
-  describe("Hakemuksen muokkaus väärällä tokenilla", function() {
+  describe("Hakutoiveiden muokkaus väärällä tokenilla", function() {
     before(
       page.openPage("väärä")
     )
@@ -21,7 +21,7 @@
     })
   })
 
-  describe('Hakemuksen muokkaus, kun hakemusta ei löydy', function () {
+  describe('Hakutoiveiden muokkaus, kun hakemusta ei löydy', function () {
     before(
       page.openPage("1.2.246.562.11.0")
     )
@@ -31,7 +31,7 @@
     })
   })
 
-  describe('Hakemuksen muokkaus', function () {
+  describe('Hakutoiveiden muokkaus "Korkeakoulujen yhteishaku kevät 2015"', function () {
     before(
       page.applyFixtureAndOpen({token: hakemusKorkeakouluKevatWithJazzId})
     )
@@ -39,6 +39,18 @@
     describe("Hakemuksen tietojen näyttäminen", function() {
       it('näkyy oikea hakemus', function () {
         expect(page.getApplication().name()).to.equal('Korkeakoulujen yhteishaku kevät 2015')
+      })
+    })
+  })
+
+  describe('Hakutoiveiden muokkaus "Yhteishaku ammatilliseen ja lukioon, kevät 2016"', function () {
+    before(
+        page.applyFixtureAndOpen({token: hakemusYhteishakuKevat2016})
+    )
+
+    describe("Hakemuksen tietojen näyttäminen", function() {
+      it('näkyy oikea hakemus', function () {
+        expect(page.getApplication().name()).to.equal('Yhteishaku ammatilliseen ja lukioon, kevät 2016')
       })
     })
   })
