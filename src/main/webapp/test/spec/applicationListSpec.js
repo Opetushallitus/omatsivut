@@ -163,7 +163,7 @@
 
       it('ensimmäisenä on uusin hakemus', function () {
         expect(ApplicationListPage().applications()[0]).to.deep.equal(
-          { applicationSystemName: 'Jatkotutkintohaku 2016' }
+          { applicationSystemName: 'Yhteishaku ammatilliseen ja lukioon, kevät 2016' }
         )
       })
 
