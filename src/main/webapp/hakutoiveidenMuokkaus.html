@@ -30,7 +30,7 @@
         <div class="alert alert-danger">{{ localization(errorMessage) }}</div>
     </section>
 
-    <section class="content hakemus" ng-if="hakemus">
+    <section id="appRoot" class="content hakemus" ng-if="hakemus">
         <notification message="{{localization('hakutoiveidenMuokkaus.infoNotification')}}"></notification>
         <application application="hakemus"></application>
     </section>
