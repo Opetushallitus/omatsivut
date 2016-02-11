@@ -10,34 +10,27 @@ class LanguageFilter extends ScalatraFilter with Logging{
   val cookieName = "i18next"
   val cookieMaxAge = 60 * 60 * 24 * 1800
 
+  val domainFi = "opintopolku"
+  val domainSv = "studieinfo"
+  val domainEn = "studyinfo"
+
   before() {
     checkLanguage(request, response)
   }
 
   private def checkLanguage(request: HttpServletRequest, response: HttpServletResponse) {
-    val (lang: Language.Language, setCookie: Boolean) = chooseLanguage(Option(request.getParameter("lang")), Option(request.getCookies()))
+    val (lang: Language.Language, setCookie: Boolean) = chooseLanguage(Option(request.getParameter("lang")), Option(request.getCookies()), request.getRequestURL.toString)
     if(setCookie) {
       addCookie(response, lang)
     }
     request.setAttribute("lang", lang)
   }
 
-  def chooseLanguage(paramVal: Option[String], cookies: Option[Array[Cookie]]): (Language.Language, Boolean) = {
-    paramVal match {
-      case Some(langStr) => {
-        Language.parse(langStr) match {
-          case Some(lang) => (lang, true)
-          case None => {
-            logger.warn("Unsupported language '" + langStr + "' using 'fi' instead")
-            (Language.fi, true)
-          }
-        }
-      }
-      case None => (langCookie(cookies).getOrElse(Language.fi), true)
-    }
+  def chooseLanguage(param: Option[String], cookies: Option[Array[Cookie]], url: String): (Language.Language, Boolean) = {
+    (chooseLanguageFromParam(param).orElse(chooseLanguageFromCookie(cookies)).orElse(chooseLanguageFromHost(url)).getOrElse(Language.fi), true)
   }
 
-  private def langCookie(cookies: Option[Array[Cookie]]) = {
+  private def chooseLanguageFromCookie(cookies: Option[Array[Cookie]]) = {
     reqCookie(cookies, {_.getName.equals(cookieName)})
   }
 
@@ -54,5 +47,17 @@ class LanguageFilter extends ScalatraFilter with Logging{
     cookie.setMaxAge(cookieMaxAge)
     cookie.setPath("/")
     response.addCookie(cookie)
+  }
+
+  private def chooseLanguageFromParam(param: Option[String]): Option[Language.Language] = {
+    param.flatMap(Language.parse(_))
+  }
+
+  private def chooseLanguageFromHost(url: String): Option[Language.Language] = url match {
+    case x if x.contains(domainFi) => Some(Language.fi)
+    case x if x.contains(domainSv) => Some(Language.sv)
+    case x if x.contains(domainEn) => Some(Language.en)
+    case x if x.contains("localhost") => Some(Language.en)
+    case default => None
   }
 }
