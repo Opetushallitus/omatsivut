@@ -62,7 +62,6 @@ function HakutoiveidenMuokkausPage() {
   function Application() {
     var api = {
       saveWaitSuccess: function() {
-        modifyApplicationScope(function(scope) { scope.application.updated = 0 })
         return wait.until(api.saveButton().isEnabled)()
           .then(api.saveButton().click)
           .then(wait.untilFalse(api.saveButton().isEnabled)) // Tallennus on joko alkanut tai valmis
@@ -201,15 +200,6 @@ function HakutoiveidenMuokkausPage() {
           })
         }).toArray()
         .filter(filter)
-    }
-
-    function modifyApplicationScope(manipulationFunction) {
-      var scope = getApplicationScope()
-      scope.$apply(function() { manipulationFunction(scope) })
-
-      function getApplicationScope() {
-        return testFrame().angular.element(getApplicationElement()).scope()
-      }
     }
 
     function getApplicationElement() {
