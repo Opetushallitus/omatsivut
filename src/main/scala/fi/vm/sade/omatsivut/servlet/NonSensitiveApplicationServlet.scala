@@ -70,7 +70,7 @@ trait NonSensitiveApplicationServletContainer {
     }
 
     private def newAnswersFromTheSession(update: HakemusMuutos, persistedHakemus: HakemusInfo, hakemusJWT: HakemusJWT): Set[AnswerId] = {
-      val nonPersistedAnswers = answerIds(update.answers) &~ answerIds(persistedHakemus.hakemus.answers)
+      val nonPersistedAnswers = answerIds(update.answers)
       hakemusJWT.answersFromThisSession ++ nonPersistedAnswers
     }
 

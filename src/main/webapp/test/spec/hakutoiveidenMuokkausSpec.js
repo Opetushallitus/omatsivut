@@ -111,7 +111,7 @@
               page.getApplication().isValidationErrorVisible().should.be.false
             })
 
-            it.skip("näytetään yhä uudet kysymykset", function() {
+            it("näytetään yhä uudet kysymykset", function() {
               var questionTitles = page.getApplication().questionsForApplication().titles()
               expect(questionTitles).to.deep.equal([
                 'Tällä alalla on terveydentilavaatimuksia, jotka voivat olla opiskelijaksi ottamisen esteenä. Onko sinulla terveydellisiä tekijöitä, jotka voivat olla opiskelijaksi ottamisen esteenä?',
@@ -121,7 +121,7 @@
             })
           })
 
-          describe.skip("tallentaminen", function() {
+          describe("tallentaminen", function() {
             before(
                 page.getApplication().saveWaitSuccess
             )
