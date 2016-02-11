@@ -133,7 +133,7 @@ function HakutoiveidenMuokkausPage() {
       },
 
       questionsForApplication: function () {
-        return Questions(function() { return getApplicationElement().find(".questions") })
+        return applicationApi.Questions(function() { return getApplicationElement().find(".questions") })
       },
 
       helpTextsForQuestions: function () {
