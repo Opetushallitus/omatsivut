@@ -69,7 +69,7 @@ trait NonSensitiveApplicationServletContainer {
       }
     }
 
-    private def newAnswersFromTheSession(update: HakemusMuutos, persistedHakemus: HakemusInfo, hakemusJWT: HakemusJWT): Set[AnswerId] = {
+    private def newAnswersFromTheSession(update: HakemusMuutos, hakemusJWT: HakemusJWT): Set[AnswerId] = {
       val nonPersistedAnswers = answerIds(update.answers)
       hakemusJWT.answersFromThisSession ++ nonPersistedAnswers
     }
@@ -87,8 +87,7 @@ trait NonSensitiveApplicationServletContainer {
       (for {
         token <- jwtAuthorize
         update <- Try(Serialization.read[HakemusMuutos](request.body))
-        hakemus <- fetchHakemus(token.oid)
-        newAnswers <- Success(newAnswersFromTheSession(update, hakemus, token))
+        newAnswers <- Success(newAnswersFromTheSession(update, token))
         updatedHakemus <- hakemusEditori.updateHakemus(NonSensitiveHakemusInfo.sanitizeHakemusMuutos(update, newAnswers))
       } yield {
         Ok(InsecureHakemus(jwt.encode(HakemusJWT(token.oid, newAnswers, token.personOid)),
@@ -121,12 +120,11 @@ trait NonSensitiveApplicationServletContainer {
       (for {
         token <- jwtAuthorize
         update <- Try(Serialization.read[HakemusMuutos](request.body))
-        hakemus <- fetchHakemus(token.oid)
         validatedHakemus <- hakemusEditori.validateHakemus(update)
           .fold[Try[HakemusInfo]](Failure(new RuntimeException))(Success(_))
       } yield {
         Ok(InsecureHakemusInfo(jwt.encode(token),
-          new NonSensitiveHakemusInfo(validatedHakemus, newAnswersFromTheSession(update, hakemus, token))))
+          new NonSensitiveHakemusInfo(validatedHakemus, newAnswersFromTheSession(update, token))))
       }).get
     }
   }
