@@ -57,7 +57,6 @@ class LanguageFilter extends ScalatraFilter with Logging{
     case x if x.contains(domainFi) => Some(Language.fi)
     case x if x.contains(domainSv) => Some(Language.sv)
     case x if x.contains(domainEn) => Some(Language.en)
-    case x if x.contains("localhost") => Some(Language.en)
     case default => None
   }
 }
