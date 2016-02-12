@@ -28,7 +28,7 @@ class LanguageFilterSpec extends MutableScalatraSpec {
     }
   }
 
-  /*"choose with unknown lang param value" should {
+  "choose with unknown lang param value" should {
     "use fi language" in {
       filter.chooseLanguage(Some("fr"), None, "http://localhost:7337/")  must_== ((Language.fi, true))
    }
@@ -56,7 +56,7 @@ class LanguageFilterSpec extends MutableScalatraSpec {
     "use fi language" in {
       filter.chooseLanguage(None, None, "http://localhost:7337/")  must_== ((Language.fi, true))
     }
-  }*/
+  }
 
   addFilter(filter, "/*")
 }
