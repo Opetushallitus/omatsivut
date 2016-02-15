@@ -10,9 +10,9 @@ class LanguageFilter extends ScalatraFilter with Logging{
   val cookieName = "i18next"
   val cookieMaxAge = 60 * 60 * 24 * 1800
 
-  val domainFi = "opintopolku"
-  val domainSv = "studieinfo"
-  val domainEn = "studyinfo"
+  val domainFi = "opintopolku.fi"
+  val domainSv = "studieinfo.fi"
+  val domainEn = "studyinfo.fi"
 
   before() {
     checkLanguage(request, response)
