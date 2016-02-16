@@ -1,5 +1,6 @@
 package fi.vm.sade.omatsivut.hakemus
 
+import fi.vm.sade.hakemuseditori.valintatulokset.domain.VastaanotaSitovasti
 import fi.vm.sade.omatsivut.{SharedAppConfig, PersonOid}
 import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.servlet.ClientSideVastaanotto
@@ -12,12 +13,12 @@ import org.specs2.runner.JUnitRunner
 class VastaanottoSpec extends HakemusApiSpecification with FixturePerson {
   sequential
 
-  "POST /applications/vastaanota/:hakuOid/:hakemusOid" should {
+  "POST /applications/vastaanota/:hakemusOid/hakukohde/:hakukohdeOid" should {
     "vastaanottaa paikan" in {
       fixtureImporter.applyFixtures()
       new RemoteValintatulosService(SharedAppConfig.appConfig.settings.valintaTulosServiceUrl).applyFixture("hyvaksytty-kesken-julkaistavissa")
 
-      authPost("secure/applications/vastaanota/1.2.246.562.5.2013080813081926341928/1.2.246.562.11.00000441369", Serialization.write(ClientSideVastaanotto("1.2.246.562.5.72607738902", "VASTAANOTTANUT"))) {
+      authPost("secure/applications/vastaanota/1.2.246.562.11.00000441369/hakukohde/1.2.246.562.5.72607738902", Serialization.write(ClientSideVastaanotto(VastaanotaSitovasti))) {
         status must_== 200
       }
     }
@@ -25,7 +26,7 @@ class VastaanottoSpec extends HakemusApiSpecification with FixturePerson {
     "hylkää pyynnön väärältä henkilöltä" in {
       new RemoteValintatulosService(SharedAppConfig.appConfig.settings.valintaTulosServiceUrl).applyFixture("hyvaksytty-kesken-julkaistavissa")
 
-      authPost("secure/applications/vastaanota/1.2.246.562.5.2013080813081926341928/1.2.246.562.11.00000441369", Serialization.write(ClientSideVastaanotto("1.2.246.562.5.72607738902", "VASTAANOTTANUT"))) {
+      authPost("secure/applications/vastaanota/1.2.246.562.11.00000441369/hakukohde/1.2.246.562.5.72607738902", Serialization.write(ClientSideVastaanotto(VastaanotaSitovasti))) {
         status must_== 404
       }(PersonOid("WRONG PERSON"))
     }

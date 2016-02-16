@@ -15,7 +15,7 @@ module.exports = function(listApp) {
       vastaanota: $resource("/omatsivut/secure/applications/vastaanota", null, {
         "post": {
           method: "POST",
-          url: "/omatsivut/secure/applications/vastaanota/:hakuOid/:applicationOid"
+          url: "/omatsivut/secure/applications/vastaanota/:hakemusOid/hakukohde/:hakukohdeOid"
         }
       }),
 

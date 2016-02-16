@@ -660,7 +660,7 @@
           })
 
           describe("valinnan jälkeen", function() {
-            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VASTAANOTTANUT"))
+            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VastaanotaSitovasti"))
 
             it("nappi on enabloitu", function() {
               hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).confirmButtonEnabled().should.be.true
@@ -669,7 +669,7 @@
           })
 
           describe("paikan vastaanottaminen", function() {
-            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VASTAANOTTANUT"))
+            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VastaanotaSitovasti"))
             before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send)
 
             it("vastaanottotieto näkyy", function() {
@@ -680,7 +680,7 @@
 
           describe("paikan hylkääminen", function() {
             before(page.applyValintatulosFixtureAndOpen("hyvaksytty-kesken-julkaistavissa"))
-            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("PERUNUT"))
+            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("Peru"))
             before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send)
 
             it("perumistieto näkyy", function() {
@@ -702,7 +702,7 @@
           })
 
           describe("paikan vastaanottaminen", function() {
-            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VASTAANOTTANUT"))
+            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VastaanotaSitovasti"))
             before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send)
 
             it("vastaanottotieto näkyy", function() {
@@ -729,7 +729,7 @@
           })
 
           describe("paikan vastaanottaminen sitovasti", function() {
-            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VASTAANOTTANUT"))
+            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VastaanotaSitovasti"))
             before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send)
 
             it("vastaanottotieto näkyy", function() {
@@ -745,7 +745,7 @@
 
           describe("paikan hylkääminen", function() {
             before(page.applyValintatulosFixtureAndOpen("vastaanotettavissa-ehdollisesti", {"haku": "toinen-aste-yhteishaku"}))
-            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("PERUNUT"))
+            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("Peru"))
             before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send)
 
             it("perumistieto näkyy", function() {
@@ -781,7 +781,7 @@
           })
 
           describe("paikan vastaanottaminen sitovasti", function() {
-            before(hakemusKorkeakouluJatkoHaku.vastaanotto(0).selectOption("VASTAANOTTANUT"))
+            before(hakemusKorkeakouluJatkoHaku.vastaanotto(0).selectOption("VastaanotaSitovasti"))
             before(hakemusKorkeakouluJatkoHaku.vastaanotto(0).send)
 
             it("vastaanottotieto näkyy", function() {
@@ -792,7 +792,7 @@
 
           describe("paikan vastaanottaminen ehdollisesti", function() {
             before(page.applyValintatulosFixtureAndOpen("korkeakoulu-vastaanotettavissa-ehdollisesti", {"haku": "korkeakoulu-jatkotutkintohaku"}))
-            before(hakemusKorkeakouluJatkoHaku.vastaanotto(0).selectOption("EHDOLLISESTI_VASTAANOTTANUT"))
+            before(hakemusKorkeakouluJatkoHaku.vastaanotto(0).selectOption("VastaanotaEhdollisesti"))
             before(hakemusKorkeakouluJatkoHaku.vastaanotto(0).send)
 
             it("vastaanottotieto näkyy", function() {
@@ -803,7 +803,7 @@
 
           describe("paikan hylkääminen", function() {
             before(page.applyValintatulosFixtureAndOpen("korkeakoulu-vastaanotettavissa-ehdollisesti", {"haku": "korkeakoulu-jatkotutkintohaku"}))
-            before(hakemusKorkeakouluJatkoHaku.vastaanotto(0).selectOption("PERUNUT"))
+            before(hakemusKorkeakouluJatkoHaku.vastaanotto(0).selectOption("Peru"))
             before(hakemusKorkeakouluJatkoHaku.vastaanotto(0).send)
 
             it("perumistieto näkyy", function() {
@@ -833,7 +833,7 @@
         })
 
         describe("ensimmäisen paikan sitova vastaanottaminen", function() {
-          before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VASTAANOTTANUT"))
+          before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VastaanotaSitovasti"))
           before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send)
 
           it("vastaanottotieto näkyy ja toinen paikka peruuntuu", function() {
@@ -848,7 +848,7 @@
 
         describe("toisen paikan sitova vastaanottaminen", function() {
           before(page.applyValintatulosFixtureAndOpen("hyvaksytty-kaikkiin"))
-          before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(1).selectOption("VASTAANOTTANUT"))
+          before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(1).selectOption("VastaanotaSitovasti"))
           before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(1).send)
 
           it("vastaanottotieto näkyy ja toinen paikka peruuntuu", function() {
@@ -876,7 +876,7 @@
         })
 
         describe("ensimmäisen paikan vastaanottaminen", function() {
-          before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VASTAANOTTANUT"))
+          before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VastaanotaSitovasti"))
           before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send)
 
           describe("jälkeen", function() {
@@ -889,7 +889,7 @@
           })
 
           describe("toisen paikan vastaanottaminen", function() {
-            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VASTAANOTTANUT"))
+            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VastaanotaSitovasti"))
             before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send)
 
             it("kumpikaan paikka ei ole enää vastaanotettavissa", function() {
@@ -1055,7 +1055,7 @@
         })
 
         describe("Kun paikka otetaan vastaan", function() {
-          before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VASTAANOTTANUT"))
+          before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VastaanotaSitovasti"))
           before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send)
 
           it("Oili-linkki tulee näkyviin", function() {
@@ -1067,7 +1067,7 @@
         before(page.applyValintatulosFixtureAndOpen("hyvaksytty-kaikkiin", {"haku": "korkeakoulu-erillishaku"}))
 
         describe("Kun ensimmäinen paikka otetaan vastaan", function() {
-          before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VASTAANOTTANUT"))
+          before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VastaanotaSitovasti"))
           before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send)
 
           it("Oili-linkki tulee näkyviin ja toinen paikka on yhä mahdollista vastaanottaa", function() {
@@ -1077,7 +1077,7 @@
 
 
           describe("Kun toinen paikka otetaan vastaan", function() {
-            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VASTAANOTTANUT"))
+            before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VastaanotaSitovasti"))
             before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send)
 
             it("Näkyy oili linkki molemmille paikoille", function() {
@@ -1213,7 +1213,7 @@
         describe("kun server ei vastaa", function() {
           before(
               function() { mockAjax.respondOnce("POST", "/omatsivut/secure/applications/vastaanota/1.2.246.562.5.2013080813081926341928/1.2.246.562.11.00000441369", 400, "") },
-              hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VASTAANOTTANUT"),
+              hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VastaanotaSitovasti"),
               hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send
             )
           it("virhe näytetään", function() {
@@ -1227,7 +1227,7 @@
         describe("kun session on vanhentunut", function() {
           before(
             function() { mockAjax.respondOnce("POST", "/omatsivut/secure/applications/vastaanota/1.2.246.562.5.2013080813081926341928/1.2.246.562.11.00000441369", 401, "") },
-            hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VASTAANOTTANUT"),
+            hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VastaanotaSitovasti"),
             hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send
           )
           it("virhe näytetään", function() {
@@ -1238,7 +1238,7 @@
         describe("kun serveriltä tulee odottamaton virhe", function() {
           before(
             function() { mockAjax.respondOnce("POST", "/omatsivut/secure/applications/vastaanota/1.2.246.562.5.2013080813081926341928/1.2.246.562.11.00000441369", 500, "") },
-            hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VASTAANOTTANUT"),
+            hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VastaanotaSitovasti"),
             hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send
           )
           it("virhe näytetään", function() {
@@ -2381,7 +2381,7 @@
       })
 
       describe("Paikan vastaanotto", function() {
-        before(erillishaku.vastaanotto(0).selectOption("VASTAANOTTANUT"))
+        before(erillishaku.vastaanotto(0).selectOption("VastaanotaSitovasti"))
         before(erillishaku.vastaanotto(0).send)
 
         it("Toimii", function() {
@@ -2449,7 +2449,7 @@
         })
 
         describe("jos annetaan vastaanottotieto", function() {
-          before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VASTAANOTTANUT"))
+          before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VastaanotaSitovasti"))
 
           it("vastaanottonappi on enabloitu", function () {
             hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).confirmButtonEnabled().should.be.true
