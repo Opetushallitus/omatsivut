@@ -43,9 +43,9 @@
     })
   })
 
-  describe('Hakutoiveiden muokkaus "Yhteishaku ammatilliseen ja lukioon, kevät 2016"', function () {
+  describe('Hakutoiveiden muokkaus "Yhteishaku ammatilliseen ja lukioon, kevät 2016", ammatillisia', function () {
     before(
-        page.applyFixtureAndOpen({token: hakemusYhteishakuKevat2016})
+        page.applyFixtureAndOpen({token: hakemusYhteishakuKevat2016Ammatillisia})
     )
 
     describe("Linkin avaamisen jälkeen", function() {
@@ -74,7 +74,8 @@
           expect(questionTitles).to.deep.equal([
             'Tällä alalla on terveydentilavaatimuksia, jotka voivat olla opiskelijaksi ottamisen esteenä. Onko sinulla terveydellisiä tekijöitä, jotka voivat olla opiskelijaksi ottamisen esteenä?',
             'Tässä koulutuksessa opiskelijaksi ottamisen esteenä voi olla aiempi päätös opiskeluoikeuden peruuttamisessa. Onko opiskeluoikeutesi aiemmin peruutettu terveydentilasi tai muiden henkilöiden turvallisuuden vaarantamisen takia?',
-            'Haetko urheilijan ammatilliseen koulutukseen?'
+            'Haetko urheilijan ammatilliseen koulutukseen?',
+            'Oppisopimuskoulutus'
           ])
         })
 
@@ -116,7 +117,8 @@
               expect(questionTitles).to.deep.equal([
                 'Tällä alalla on terveydentilavaatimuksia, jotka voivat olla opiskelijaksi ottamisen esteenä. Onko sinulla terveydellisiä tekijöitä, jotka voivat olla opiskelijaksi ottamisen esteenä?',
                 'Tässä koulutuksessa opiskelijaksi ottamisen esteenä voi olla aiempi päätös opiskeluoikeuden peruuttamisessa. Onko opiskeluoikeutesi aiemmin peruutettu terveydentilasi tai muiden henkilöiden turvallisuuden vaarantamisen takia?',
-                'Haetko urheilijan ammatilliseen koulutukseen?'
+                'Haetko urheilijan ammatilliseen koulutukseen?',
+                'Oppisopimuskoulutus'
               ])
             })
           })
@@ -129,6 +131,45 @@
             it("onnistuu", function() {
 
             })
+          })
+        })
+      })
+    })
+
+
+    describe('Hakutoiveiden muokkaus "Yhteishaku ammatilliseen ja lukioon, kevät 2016", pelkkä lukio', function () {
+      before(
+          page.applyFixtureAndOpen({token: hakemusYhteishakuKevat2016PelkkaLukio})
+      )
+
+      describe("Linkin avaamisen jälkeen", function() {
+        it('näkyy oikea hakemus', function () {
+          expect(page.getApplication().name()).to.equal('Yhteishaku ammatilliseen ja lukioon, kevät 2016')
+        })
+      })
+
+      describe("kun lisätään hakukohde", function() {
+        before(
+            page.getApplication().getPreference(1).selectOpetusPiste("Helsingin Diakoniaopisto"),
+            page.getApplication().getPreference(1).selectKoulutus(1)
+        )
+
+        describe("lisäämisen jälkeen", function() {
+          it("seuraava hakukohde tulee muokattavaksi", function() {
+            page.getApplication().getPreference(1).isEditable().should.be.true
+          })
+
+          it("lisätty hakutoive on edelleen muokattavissa", function() {
+            page.getApplication().getPreference(1).isEditable().should.be.true
+          })
+
+          it("näytetään uudet kysymykset", function() {
+            var questionTitles = page.getApplication().questionsForApplication().titles()
+            expect(questionTitles).to.deep.equal([
+              'Haetko koulutukseen harkintaan perustuvassa valinnassa?',
+              'Oppisopimuskoulutus',
+              'Työkokemus kuukausina'
+            ])
           })
         })
       })
