@@ -157,7 +157,7 @@ ryhmasahkoposti.cas.password={{ ryhmasahkoposti_app_password_to_vtemailer }}
 # RYHMÄSÄHKÖPOSTI
 ryhmasahkoposti.service.batch.size={{ email_batch_size }}
 ryhmasahkoposti.service.email.url=https://{{host_virkailija}}/ryhmasahkoposti-service/email
-ryhmasahkoposti.rest.url={{ryhmasahkoposti.service.email}}
+ryhmasahkoposti.rest.url=https://{{host_virkailija}}/ryhmasahkoposti-service/email
 
 # MUISTILISTA
 muistilista.url=https://{{host_oppija}}/app/#!/muistilista
