@@ -169,7 +169,7 @@ function ApplicationListPage() {
       },
 
       saveButton: function () {
-        return applicationApi.Button(function() { return getApplicationElement().find(".save-btn").first() }) 
+        return applicationApi.Button(function() { return getApplicationElement().find(".save-btn").last() }) 
       },
 
       getPreference: function (index) {
@@ -237,13 +237,6 @@ function ApplicationListPage() {
 
           isVisible: function() {
             return application.find(".henkilotiedot").is(":visible")
-          },
-
-          saveButton: function() {
-            function element() {
-              return application.find("henkilotiedot").parent().find("button")
-            }
-            return applicationApi.Button(element)
           }
         }
       },
