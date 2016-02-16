@@ -150,15 +150,13 @@ environment={{ymparisto}}
 
 # CAS
 cas.url={{ cas_url }}
-ryhmasahkoposti.cas.service=https://{{host_virkailija}}/ryhmasahkoposti-service/j_spring_cas_security_check
+ryhmasahkoposti.cas.service=https://{{host_virkailija}}/ryhmasahkoposti-service/
 ryhmasahkoposti.cas.username={{ ryhmasahkoposti_app_username_to_vtemailer }}
 ryhmasahkoposti.cas.password={{ ryhmasahkoposti_app_password_to_vtemailer }}
 
 # RYHMÄSÄHKÖPOSTI
 ryhmasahkoposti.service.batch.size={{ email_batch_size }}
-ryhmasahkoposti.service.session.url=https://{{host_virkailija}}/ryhmasahkoposti-service/email/ok
 ryhmasahkoposti.service.email.url=https://{{host_virkailija}}/ryhmasahkoposti-service/email
-ryhmasahkoposti.rest.url=https://${host.virkailija}/ryhmasahkoposti-service/email
 
 # MUISTILISTA
 muistilista.url=https://{{host_oppija}}/app/#!/muistilista
