@@ -251,7 +251,7 @@
 
         it("yhteystietoja voi muokata", function() {
           hakemusKorkeakouluKevat.yhteystiedot().isVisible().should.be.true
-          hakemusKorkeakouluKevat.yhteystiedot().saveButton().isVisible().should.be.true
+          hakemusKorkeakouluKevat.saveButton().isVisible().should.be.true
         })
       })
 
