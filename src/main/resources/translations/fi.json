@@ -48,7 +48,7 @@
       "Perunut": "Peruit_opiskelupaikan",
       "Peruuntunut": "Peruuntunut",
       "VarasijaltaHyvaksytty": "Hyväksytty_varasijalta",
-      "Vastaanottanut": "Opiskelupaikka_vastaanotettu",
+      "VastaanottanutSitovasti": "Opiskelupaikka_vastaanotettu",
       "Hylatty": "Et_saanut_opiskelupaikkaa.",
       "EhdollisestiVastaanottanut": "Opiskelupaikka_vastaanotettu ehdollisesti",
       "EiVastaanotettuMaaraAikana": "Et_ottanut_opiskelupaikkaa_vastaan määräaikaan mennessä"
@@ -102,9 +102,9 @@
         "subject": "Opintopolku: Vastauksesi on vastaanotettu",
         "body": "Hei,\n\nOlemme vastaanottaneet %s vastauksesi:\n%s\n\nÄlä vastaa tähän viestiin - viesti on lähetetty automaattisesti.",
         "tila": {
-          "VASTAANOTTANUT": "Otan opiskelupaikan vastaan sitovasti",
-          "PERUNUT": "En ota opiskelupaikkaa vastaan",
-          "EHDOLLISESTI_VASTAANOTTANUT": "Otan opiskelupaikan vastaan ehdollisesti"
+          "VastaanotaSitovasti": "Otan opiskelupaikan vastaan sitovasti",
+          "Peru": "En ota opiskelupaikkaa vastaan",
+          "VastaanotaEhdollisesti": "Otan opiskelupaikan vastaan ehdollisesti"
         }
       }
     }
