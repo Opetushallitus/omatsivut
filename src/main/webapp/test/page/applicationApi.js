@@ -1,5 +1,6 @@
 var hakemusKorkeakouluKevatWithJazzId = "1.2.246.562.11.00000000178"
-var hakemusYhteishakuKevat2016 = "1.2.246.562.11.00004883029"
+var hakemusYhteishakuKevat2016Ammatillisia = "1.2.246.562.11.00004883029"
+var hakemusYhteishakuKevat2016PelkkaLukio = "1.2.246.562.11.00004883579"
 
 function ApplicationApi() {
   var applicationApi = {
