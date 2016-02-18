@@ -43,7 +43,7 @@
     })
   })
 
-  describe('Hakutoiveiden muokkaus "Yhteishaku ammatilliseen ja lukioon, kevät 2016", ammatillisia', function () {
+  describe('Hakutoiveiden muokkaus "Yhteishaku ammatilliseen ja lukioon, kevät 2016", kun valittuna ammatillisia', function () {
     before(
         page.applyFixtureAndOpen({token: hakemusYhteishakuKevat2016Ammatillisia})
     )
@@ -135,43 +135,80 @@
         })
       })
     })
+  })
 
+  describe('Hakutoiveiden muokkaus "Yhteishaku ammatilliseen ja lukioon, kevät 2016", kun valittuna pelkkä lukio', function () {
+    before(
+        page.applyFixtureAndOpen({token: hakemusYhteishakuKevat2016PelkkaLukio})
+    )
 
-    describe('Hakutoiveiden muokkaus "Yhteishaku ammatilliseen ja lukioon, kevät 2016", pelkkä lukio', function () {
+    describe("Linkin avaamisen jälkeen", function() {
+      it('näkyy oikea hakemus', function () {
+        expect(page.getApplication().name()).to.equal('Yhteishaku ammatilliseen ja lukioon, kevät 2016')
+      })
+    })
+
+    describe("kun lisätään ammatillinen hakukohde", function() {
       before(
-          page.applyFixtureAndOpen({token: hakemusYhteishakuKevat2016PelkkaLukio})
+          page.getApplication().getPreference(1).selectOpetusPiste("Helsingin Diakoniaopisto"),
+          page.getApplication().getPreference(1).selectKoulutus(1)
       )
 
-      describe("Linkin avaamisen jälkeen", function() {
-        it('näkyy oikea hakemus', function () {
-          expect(page.getApplication().name()).to.equal('Yhteishaku ammatilliseen ja lukioon, kevät 2016')
-        })
+      it("seuraava hakukohde tulee muokattavaksi", function() {
+        page.getApplication().getPreference(1).isEditable().should.be.true
       })
 
-      describe("kun lisätään hakukohde", function() {
-        before(
-            page.getApplication().getPreference(1).selectOpetusPiste("Helsingin Diakoniaopisto"),
-            page.getApplication().getPreference(1).selectKoulutus(1)
-        )
+      it("lisätty hakutoive on edelleen muokattavissa", function() {
+        page.getApplication().getPreference(1).isEditable().should.be.true
+      })
 
-        describe("lisäämisen jälkeen", function() {
-          it("seuraava hakukohde tulee muokattavaksi", function() {
-            page.getApplication().getPreference(1).isEditable().should.be.true
-          })
+      it("näytetään uudet kysymykset", function() {
+        var questionTitles = page.getApplication().questionsForApplication().titles()
+        expect(questionTitles).to.deep.equal([
+          'Haetko koulutukseen harkintaan perustuvassa valinnassa?',
+          'Oppisopimuskoulutus',
+          'Työkokemus kuukausina'
+        ])
+      })
+    })
 
-          it("lisätty hakutoive on edelleen muokattavissa", function() {
-            page.getApplication().getPreference(1).isEditable().should.be.true
-          })
+    describe("kun lisätään lukion urheilulinja hakukohde", function() {
+      before(
+          page.getApplication().getPreference(1).selectOpetusPiste("Mäkelänrinteen lukio"),
+          page.getApplication().getPreference(1).selectKoulutus(0)
+      )
 
-          it("näytetään uudet kysymykset", function() {
-            var questionTitles = page.getApplication().questionsForApplication().titles()
-            expect(questionTitles).to.deep.equal([
-              'Haetko koulutukseen harkintaan perustuvassa valinnassa?',
-              'Oppisopimuskoulutus',
-              'Työkokemus kuukausina'
-            ])
-          })
-        })
+      it("seuraava hakukohde tulee muokattavaksi", function() {
+        page.getApplication().getPreference(1).isEditable().should.be.true
+      })
+
+      it("lisätty hakutoive on edelleen muokattavissa", function() {
+        page.getApplication().getPreference(1).isEditable().should.be.true
+      })
+
+      it("näytetään urheilijan lisäkysymykset", function() {
+        var questionTitles = page.getApplication().questionsForApplication().titles()
+        expect(questionTitles).to.deep.equal([
+          'Aiemmat opinnot',
+          'Liikunnanopettajan nimi',
+          'Lukuaineiden keskiarvo tai arvio siitä',
+          'Pakollisen liikunnan arvosana tai arvio siitä',
+          'Urheilu',
+          'Urheilulaji nro 1, jolla haet urheiluoppilaitokseen',
+          'Lajiliitto',
+          'Urheilulaji nro 2, jolla haet urheiluoppilaitokseen',
+          'Lajiliitto',
+          'Urheilusaavutukset',
+          'Urheilusaavutukset',
+          'Valmentajan yhteystiedot',
+          'Nimi',
+          'Puhelinnumero',
+          'Sähköpostiosoite',
+          'Valmennusryhmä',
+          'Maajoukkue/Lajiliitto',
+          'Alue/Piiri',
+          'Urheiluseura ja sen valmennusryhmä tai joukkue'
+        ])
       })
     })
   })
