@@ -440,7 +440,7 @@
       })
     })
 
-    describe("valintatulokset", function() {
+    describe("valintatulokset, kun haku on päättynyt", function() {
       before(page.applyFixtureAndOpen({applicationOid: hakemusYhteishakuKevat2013WithForeignBaseEducationId}))
 
       var hakuaikatieto = "Opiskelijavalinta on kesken. Tulokset julkaistaan viimeistään 11. kesäkuuta 2014."
@@ -963,6 +963,56 @@
             expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[1].hakukohde).to.equal('Salon lukio Lukio')
             expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[1].tila).to.equal('Peruuntunut')
           })
+        })
+      })
+    })
+
+    describe("valintatulokset, kun haku on käynnissä", function() {
+      before(page.applyFixtureAndOpen({applicationOid: hakemusYhteishakuKevat2013WithForeignBaseEducationId, overrideStart: daysFromNow(0)}))
+      describe("jos ei ole vielä tuloksia", function() {
+        before(
+            page.applyValintatulosFixtureAndOpen("ei tuloksia", {"haku": "korkeakoulu-erillishaku"})
+        )
+        it("hakemusta voi muokata", function () {
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.preferencesForApplication().length).to.equal(2)
+        })
+
+        it("valintatuloksia ei näytetä", function () {
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset().length).to.equal(0)
+        })
+      })
+      describe("jos kaikki on vielä kesken", function() {
+        before(
+            page.applyValintatulosFixtureAndOpen("julkaisematon-peruuntunut", {"haku": "korkeakoulu-erillishaku"})
+        )
+        it("hakemusta voi muokata", function () {
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.preferencesForApplication().length).to.equal(2)
+        })
+
+        it("valintatuloksia ei näytetä", function () {
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset().length).to.equal(0)
+        })
+      })
+      describe("jos on saanut paikan kk erillishaussa", function() {
+        before(
+            page.applyValintatulosFixtureAndOpen("hyvaksytty-ylempi-sijoittelematon", {"haku": "korkeakoulu-erillishaku"})
+        )
+        it("hakemusta ei voi muokata", function () {
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.preferencesForApplication().length).to.equal(0)
+        })
+
+        it("valintatulokset näytetään", function () {
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].tila).to.equal('Opiskelijavalinta kesken')
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[1].hakukohde).to.equal('Salon lukio Lukio')
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[1].tila).to.equal('Hyväksytty')
+        })
+
+        it("paikka on otettavissa vastaan", function() {
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotettavia()).to.equal(1)
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).vaihtoehdot()).to.deep.equal([
+            'Otan opiskelupaikan vastaan sitovasti',
+            'En ota opiskelupaikkaa vastaan'
+          ])
         })
       })
     })
