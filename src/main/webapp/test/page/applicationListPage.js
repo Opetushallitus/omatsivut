@@ -38,6 +38,9 @@ function ApplicationListPage() {
             if (params.overrideStart != null) {
               return fixtures.setApplicationStart(params.applicationOid, params.overrideStart)
             }
+            else {
+              fixtures.resetApplicationStart(params.applicationOid)
+            }
           })
           .then(function () {
             if(params.invertPriority) {

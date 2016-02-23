@@ -189,6 +189,13 @@ fixtures = {
     return this.setHakuData(applicationId, f)
   },
 
+  resetApplicationStart: function(applicationId) {
+    var f = function(hakuOid) {
+      return Q($.ajax({url: "/omatsivut/util/fixtures/haku/" + hakuOid + "/resetStart", type: "PUT"}))
+    }
+    return this.setHakuData(applicationId, f)
+  },
+
   setInvertedPriority: function(applicationId) {
     var f = function (hakuOid) {
       return Q($.ajax({url: "/omatsivut/util/fixtures/haku/" + hakuOid + "/invertPriority", type: "PUT"}))
