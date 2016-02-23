@@ -88,7 +88,7 @@ trait ApplicationsServletContainer {
 
       val clientVastaanotto = Serialization.read[ClientSideVastaanotto](request.body)
       try{
-        if(valintatulosService.vastaanota(henkiloOid, hakukohdeOid, clientVastaanotto.vastaanottoAction)) {
+        if(valintatulosService.vastaanota(henkiloOid, hakemusOid, hakukohdeOid, clientVastaanotto.vastaanottoAction)) {
           sendEmail(clientVastaanotto)
           //TODO
           //auditLogger.log(SaveVastaanotto(personOid(), hakemusOid, hakuOid, vastaanotto))
