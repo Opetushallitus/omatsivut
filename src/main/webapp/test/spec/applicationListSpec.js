@@ -164,7 +164,7 @@
 
       it('ensimmäisenä on uusin hakemus', function () {
         expect(ApplicationListPage().applications()[0]).to.deep.equal(
-          { applicationSystemName: 'Yhteishaku ammatilliseen ja lukioon, kevät 2016' }
+          { applicationSystemName: 'Jatkotutkintohaku 2016' }
         )
       })
 
@@ -755,7 +755,7 @@
         })
 
         describe("kk haussa, kun ylempi toive on varalla ja alempi hyväksytty", function() {
-          before(page.applyValintatulosFixtureAndOpen("korkeakoulu-vastaanotettavissa-ehdollisesti", {"haku": "korkeakoulu-jatkotutkintohaku"}),
+          before(page.applyValintatulosFixtureAndOpen("korkeakoulu-vastaanotettavissa-ehdollisesti", {"haku": "korkeakoulu-jatkotutkintohaku", "hakuoid" : "1.2.246.562.29.62858726037"}),
             page.applyFixtureAndOpen({applicationOid: hakemusKorkeakouluJatkoHakuId}))
 
           it("voi ottaa myös ehdollisesti vastaan", function() {
@@ -791,7 +791,7 @@
           })
 
           describe("paikan vastaanottaminen ehdollisesti", function() {
-            before(page.applyValintatulosFixtureAndOpen("korkeakoulu-vastaanotettavissa-ehdollisesti", {"haku": "korkeakoulu-jatkotutkintohaku"}))
+            before(page.applyValintatulosFixtureAndOpen("korkeakoulu-vastaanotettavissa-ehdollisesti", {"haku": "korkeakoulu-jatkotutkintohaku", "hakuoid" : "1.2.246.562.29.62858726037"}))
             before(hakemusKorkeakouluJatkoHaku.vastaanotto(0).selectOption("VastaanotaEhdollisesti"))
             before(hakemusKorkeakouluJatkoHaku.vastaanotto(0).send)
 
@@ -802,7 +802,7 @@
           })
 
           describe("paikan hylkääminen", function() {
-            before(page.applyValintatulosFixtureAndOpen("korkeakoulu-vastaanotettavissa-ehdollisesti", {"haku": "korkeakoulu-jatkotutkintohaku"}))
+            before(page.applyValintatulosFixtureAndOpen("korkeakoulu-vastaanotettavissa-ehdollisesti", {"haku": "korkeakoulu-jatkotutkintohaku", "hakuoid" : "1.2.246.562.29.62858726037"}))
             before(hakemusKorkeakouluJatkoHaku.vastaanotto(0).selectOption("Peru"))
             before(hakemusKorkeakouluJatkoHaku.vastaanotto(0).send)
 
@@ -950,7 +950,7 @@
         })
 
         describe("jos ei ole ottanut paikkaa vastaan määräaikaan mennessä", function() {
-          before(page.applyValintatulosFixtureAndOpen("perunut-ei-vastaanottanut-maaraaikana"))
+          before(page.applyValintatulosFixtureAndOpen("perunut-ei-vastaanottanut-maaraaikana", {"ohjausparametrit": "vastaanotto-loppunut"}))
           it("hakemusta ei voi muokata", function () {
             expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.preferencesForApplication().length).to.equal(0)
           })
@@ -1212,7 +1212,7 @@
 
         describe("kun server ei vastaa", function() {
           before(
-              function() { mockAjax.respondOnce("POST", "/omatsivut/secure/applications/vastaanota/1.2.246.562.5.2013080813081926341928/1.2.246.562.11.00000441369", 400, "") },
+              function() { mockAjax.respondOnce("POST", "/omatsivut/secure/applications/vastaanota/1.2.246.562.11.00000441369/hakukohde/1.2.246.562.5.72607738902", 400, "") },
               hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VastaanotaSitovasti"),
               hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send
             )
@@ -1226,7 +1226,7 @@
 
         describe("kun session on vanhentunut", function() {
           before(
-            function() { mockAjax.respondOnce("POST", "/omatsivut/secure/applications/vastaanota/1.2.246.562.5.2013080813081926341928/1.2.246.562.11.00000441369", 401, "") },
+            function() { mockAjax.respondOnce("POST", "/omatsivut/secure/applications/vastaanota/1.2.246.562.11.00000441369/hakukohde/1.2.246.562.5.72607738902", 401, "") },
             hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VastaanotaSitovasti"),
             hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send
           )
@@ -1237,7 +1237,7 @@
 
         describe("kun serveriltä tulee odottamaton virhe", function() {
           before(
-            function() { mockAjax.respondOnce("POST", "/omatsivut/secure/applications/vastaanota/1.2.246.562.5.2013080813081926341928/1.2.246.562.11.00000441369", 500, "") },
+            function() { mockAjax.respondOnce("POST", "/omatsivut/secure/applications/vastaanota/1.2.246.562.11.00000441369/hakukohde/1.2.246.562.5.72607738902", 500, "") },
             hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VastaanotaSitovasti"),
             hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send
           )
