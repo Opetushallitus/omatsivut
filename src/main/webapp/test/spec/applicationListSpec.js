@@ -1063,8 +1063,8 @@
           })
         })
       })
-      describe("Jos on saanut kaksi paikkaa kk erillishaussa", function() {
-        before(page.applyValintatulosFixtureAndOpen("hyvaksytty-kaikkiin", {"haku": "korkeakoulu-erillishaku"}))
+      describe("Jos on saanut kaksi paikkaa kk haussa, jossa yhden paikan sääntö ei ole voimassa", function() {
+        before(page.applyValintatulosFixtureAndOpen("hyvaksytty-kaikkiin", {"haku": "korkeakoulu-erillishaku-ei-yhden-paikan-saantoa"}))
 
         describe("Kun ensimmäinen paikka otetaan vastaan", function() {
           before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VastaanotaSitovasti"))
@@ -1087,6 +1087,7 @@
           })
         })
       })
+
       describe("Jos on ottanut paikan vastaan 2. asteen haussa", function() {
         before(page.applyValintatulosFixtureAndOpen("hyvaksytty-vastaanottanut", {"haku": "toinen-aste-yhteishaku"}))
         describe("Oili-ilmoittautumislinkki", function () {
