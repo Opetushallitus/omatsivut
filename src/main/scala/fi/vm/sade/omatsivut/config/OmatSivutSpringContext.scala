@@ -118,19 +118,6 @@ object OmatSivutSpringContext extends Logging {
       override def getChanges(s: String, date: Date): util.List[String] = unsupportedIntegrationException
     }
 
-    @Bean def hakuService: HakuService = new HakuService {
-
-      override def getRelatedApplicationOptionIds(s: String): util.List[String] = unsupportedIntegrationException
-
-      override def getApplicationSystems: util.List[ApplicationSystem] = unsupportedIntegrationException
-
-      override def getApplicationSystem(s: String): ApplicationSystem = unsupportedIntegrationException
-
-      override def kayttaaJarjestelmanLomaketta(oid: String): Boolean = unsupportedIntegrationException
-
-      override def getRawApplicationSystem(oid: String): HakuV1RDTO = unsupportedIntegrationException
-    }
-
     @Bean def valintaService: ValintaService = new ValintaService {
       override def getHakemus(asOid: String, applicationOid: String): HakemusDTO = unsupportedIntegrationException
 
