@@ -86,7 +86,8 @@ object OmatSivutSpringContext extends Logging {
     "fi.vm.sade.haku.virkailija.lomakkeenhallinta.i18n",
     "fi.vm.sade.haku.virkailija.viestintapalvelu",
     "fi.vm.sade.haku.oppija.common.organisaatio",
-    "fi.vm.sade.haku.virkailija.lomakkeenhallinta.ohjausparametrit"
+    "fi.vm.sade.haku.virkailija.lomakkeenhallinta.ohjausparametrit",
+    "fi.vm.sade.haku.virkailija.lomakkeenhallinta.tarjonta.impl"
   ),
   excludeFilters = Array(new ComponentScan.Filter(`type` = FilterType.ASSIGNABLE_TYPE, value = Array[Class[_]](classOf[Session])))
   )
