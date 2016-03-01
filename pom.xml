@@ -88,7 +88,7 @@
         <dependency>
             <groupId>fi.vm.sade</groupId>
             <artifactId>hakemuseditori_2.11</artifactId>
-            <version>0.1.3-SNAPSHOT</version>
+            <version>0.1.4-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>fi.vm.sade</groupId>
