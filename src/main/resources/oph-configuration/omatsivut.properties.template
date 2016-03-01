@@ -121,6 +121,7 @@ cas.service.viestintapalvelu=https://${host.virkailija}/viestintapalvelu
 cas.service.ryhmasahkoposti=https://${host.virkailija}/ryhmasahkoposti-service
 cas.service.authentication-service=https\://{{host_virkailija}}/authentication-service
 cas.service.organisaatio-service=https\://{{host_virkailija}}/organisaatio-service
+cas.service.suoritusrekisteri=https://${host.virkailija}/suoritusrekisteri
 cas.user-search-base=ou\=people
 cas.user-search-filter=(|(mail\={0})(uid\={0}))
 customAttribute.webservice.url.backend=https://{{host_virkailija}}/authentication-service/services/customAttributeService
