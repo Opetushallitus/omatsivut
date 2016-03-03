@@ -86,9 +86,13 @@ trait ApplicationsServletContainer {
       val hakukohdeOid = params("hakukohdeOid")
       val henkiloOid = personOid()
 
-      val clientVastaanotto = Serialization.read[ClientSideVastaanotto](request.body)
-      try{
-        if(valintatulosService.vastaanota(henkiloOid, hakemusOid, hakukohdeOid, clientVastaanotto.vastaanottoAction)) {
+      vastaanota(hakemusOid, hakukohdeOid, henkiloOid, request.body)
+    }
+
+    private def vastaanota(hakemusOid: String, hakukohdeOid: String, henkiloOid: String, requestBody: String): Product with Serializable = {
+      val clientVastaanotto = Serialization.read[ClientSideVastaanotto](requestBody)
+      try {
+        if (valintatulosService.vastaanota(henkiloOid, hakemusOid, hakukohdeOid, clientVastaanotto.vastaanottoAction)) {
           sendEmail(clientVastaanotto)
           //TODO
           //auditLogger.log(SaveVastaanotto(personOid(), hakemusOid, hakuOid, vastaanotto))
@@ -105,7 +109,6 @@ trait ApplicationsServletContainer {
         case e: Throwable =>
           logger.error("failure in background service call", e)
           InternalServerError("error" -> "Background service failed")
-
       }
     }
 
