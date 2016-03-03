@@ -94,7 +94,7 @@ trait ApplicationsServletContainer {
       }
     }
 
-    private def vastaanota(hakemusOid: String, hakukohdeOid: String, henkiloOid: String, requestBody: String): Product with Serializable = {
+    private def vastaanota(hakemusOid: String, hakukohdeOid: String, henkiloOid: String, requestBody: String): ActionResult = {
       val clientVastaanotto = Serialization.read[ClientSideVastaanotto](requestBody)
       try {
         if (valintatulosService.vastaanota(henkiloOid, hakemusOid, hakukohdeOid, clientVastaanotto.vastaanottoAction)) {
@@ -102,7 +102,7 @@ trait ApplicationsServletContainer {
           //TODO
           //auditLogger.log(SaveVastaanotto(personOid(), hakemusOid, hakuOid, vastaanotto))
           hakemusRepository.getHakemus(hakemusOid) match {
-            case Some(hakemus) => hakemus
+            case Some(hakemus) => Ok(hakemus)
             case _ => NotFound("error" -> "Not found")
           }
         }
