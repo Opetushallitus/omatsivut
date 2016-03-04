@@ -128,7 +128,7 @@
   },
 
   "info": {
-    "expiredToken": "<strong>Obs! Du loggade in för att ändra dina ansökningsönskemål via en e-post länk.</strong><p>Ansökningstiden är slut och ansökningsönskemålen kan inte därför längre redigeras. Om du vill se hela din ansökan eller ändra dina kontaktuppgifter kan du göra det i Min Studieinfo -tjänsten. <a href='https://studieinfo.fi/wp/min-studieinfo-tjansten/'>Läs mera om Min Studieinfo -tjänsten.</a></p>"
+    "expiredToken": "<strong>Obs! Du loggade in för att ändra dina ansökningsönskemål via en e-post länk.</strong><p>Ansökningstiden är slut och du kan därför inte längre ändra dina ansökningsönskemål. Om du vill se hela din ansökan eller ändra dina kontaktuppgifter kan du göra det i Min Studieinfo -tjänsten. <a href='https://studieinfo.fi/wp/min-studieinfo-tjansten/'>Läs mera om Min Studieinfo -tjänsten.</a></p>"
   },
 
   "errorPage": {
