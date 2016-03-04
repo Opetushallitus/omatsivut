@@ -15,11 +15,13 @@ trait OppijanTunnistusService {
   def validateToken(token: String): Try[Oid]
 }
 
-case class OppijanTunnistusVerification(valid: Boolean, metadata: Option[HakuAppMetadata])
+case class OppijanTunnistusVerification(exists: Boolean, valid: Boolean, metadata: Option[HakuAppMetadata])
 
 case class HakuAppMetadata(hakemusOid: Oid)
 
 class InvalidTokenException(msg: String) extends RuntimeException(msg)
+
+class ExpiredTokenException(msg: String) extends RuntimeException(msg)
 
 class RemoteOppijanTunnistusService(verifyUrl: String, client: HttpClient = DefaultHttpClient) extends OppijanTunnistusService {
   implicit val formats = DefaultFormats
@@ -32,8 +34,9 @@ class RemoteOppijanTunnistusService(verifyUrl: String, client: HttpClient = Defa
     request.responseWithHeaders() match {
       case (200, _, resultString) =>
         Try(parse(resultString).extract[OppijanTunnistusVerification]) match {
-          case Success(OppijanTunnistusVerification(true, Some(HakuAppMetadata(hakemusOid)))) => Success(hakemusOid)
-          case Success(OppijanTunnistusVerification(false, _)) => Failure(new InvalidTokenException("invalid token"))
+          case Success(OppijanTunnistusVerification(_, true, Some(HakuAppMetadata(hakemusOid)))) => Success(hakemusOid)
+          case Success(OppijanTunnistusVerification(false, false, _)) => Failure(new InvalidTokenException("invalid token"))
+          case Success(OppijanTunnistusVerification(true, false, _)) => Failure(new ExpiredTokenException("expired token"))
           case Success(_) => Failure(new InvalidTokenException("invalid token from oppijan tunnistus, no metadata"))
           case Failure(e) => Failure(new RuntimeException("invalid response from oppijan tunnistus", e))
         }
@@ -47,6 +50,7 @@ class RemoteOppijanTunnistusService(verifyUrl: String, client: HttpClient = Defa
 class StubbedOppijanTunnistusService extends OppijanTunnistusService {
   override def validateToken(token: String): Try[Oid] = token match {
     case hakemusId if hakemusId.startsWith("1.2.246.562.11.") => Success(hakemusId)
+    case "expiredToken" => Failure(new ExpiredTokenException("expired token"))
     case _ => Failure(new InvalidTokenException("invalid token"))
   }
 }

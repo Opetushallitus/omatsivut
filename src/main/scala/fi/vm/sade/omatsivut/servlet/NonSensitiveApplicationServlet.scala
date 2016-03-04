@@ -8,7 +8,7 @@ import fi.vm.sade.hakemuseditori.lomake.domain.AnswerId
 import fi.vm.sade.hakemuseditori.user.Oppija
 import fi.vm.sade.omatsivut.NonSensitiveHakemusInfo.answerIds
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
-import fi.vm.sade.omatsivut.oppijantunnistus.{InvalidTokenException, OppijanTunnistusComponent}
+import fi.vm.sade.omatsivut.oppijantunnistus.{ExpiredTokenException, InvalidTokenException, OppijanTunnistusComponent}
 import fi.vm.sade.omatsivut.security.{HakemusJWT, JsonWebToken}
 import fi.vm.sade.omatsivut.{NonSensitiveHakemus, NonSensitiveHakemusInfo, NonSensitiveHakemusInfoSerializer, NonSensitiveHakemusSerializer}
 import org.json4s.jackson.Serialization
@@ -42,6 +42,7 @@ trait NonSensitiveApplicationServletContainer {
       case e: UnauthorizedException => Unauthorized("error" -> "Unauthorized")
       case e: ForbiddenException => Forbidden("error" -> "Forbidden")
       case e: InvalidTokenException => Forbidden("error" -> "Forbidden")
+      case e: ExpiredTokenException => Forbidden("error" -> "expiredToken")
       case e: ValidationException => BadRequest(e.validationErrors)
       case e: NoSuchElementException =>
         logger.warn(request.getMethod + " " + requestPath, e)

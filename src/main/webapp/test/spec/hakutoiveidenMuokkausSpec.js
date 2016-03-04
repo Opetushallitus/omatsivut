@@ -21,6 +21,16 @@
     })
   })
 
+  describe("Hakutoiveiden muokkaus vanhentuneella tokenilla", function() {
+    before(
+        page.openPage("expiredToken")
+    )
+
+    it("näytetään infoviesti", function() {
+      expect(page.alertMsg()).to.contain('Hakuaika on päättynyt eikä hakutoiveita voi enää muokata')
+    })
+  })
+
   describe('Hakutoiveiden muokkaus, kun hakemusta ei löydy', function () {
     before(
       page.openPage("1.2.246.562.11.0")

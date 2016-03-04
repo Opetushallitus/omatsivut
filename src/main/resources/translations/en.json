@@ -127,6 +127,10 @@
     "noActiveApplication": "Your application has been inactivated."
   },
 
+  "info": {
+    "expiredToken": "<strong>Note! You logged in via an e-mail link to modify your study programme choices.</strong><p>The application period has ended and therefore you cannot anymore change your study programme choices. If you want to see your whole application or change your contact details, please log in to My Studyinfo -service. <a href='https://studyinfo.fi/wp2/en/my-studyinfo-service/'>Read more about My Studyinfo -service.</a></p>"
+  },
+
   "errorPage": {
     "noApplicationsFound": {
       "title": "No applications found",

@@ -127,6 +127,10 @@
     "noActiveApplication": "Hakemuksesi ei ole enää aktiivinen."
   },
 
+  "info": {
+    "expiredToken": "<strong>Huom! Kirjauduit sähköpostilinkin kautta muuttamaan hakutoiveitasi.</strong><p>Hakuaika on päättynyt eikä hakutoiveita voi enää muokata. Jos haluat katsella koko hakemusta ja päivittää yhteystietojasi, niin kirjaudu verkkopankkitunnuksilla, mobiilivarmenteella tai sähköisellä henkilökortilla Oma Opintopolku -palveluun. <a href='https://opintopolku.fi/wp/oma-opintopolku-palvelu/'>Lue lisää Oma Opintopolku -palvelusta.</a></p>"
+  },
+
   "errorPage": {
     "noApplicationsFound": {
       "title": "Henkilötunnuksellasi ei löytynyt hakemuksia",

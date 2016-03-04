@@ -30,9 +30,10 @@ module.exports = function(app, staticResources) {
           },
           function (response) {
             $scope.loading = false
-            console.log(JSON.stringify(response))
             if (404 === response.status) {
               $scope.errorMessage = 'error.noActiveApplication'
+            } else if (response.data && response.data.error === 'expiredToken') {
+              $scope.infoMessage = 'info.expiredToken'
             } else if (401 === response.status || 403 === response.status) {
               $scope.errorMessage = 'error.invalidToken'
             } else {
