@@ -24,7 +24,7 @@ class RemoteOppijanTunnistusServiceSpec extends MutableScalatraSpec with Mockito
       val client = mock[HttpClient]
       val request = mock[HttpRequest]
 
-      val response = ("valid" -> true) ~ ("metadata" -> ("hakemusOid" -> expectedHakemusOid))
+      val response = ("exists" -> true) ~ ("valid" -> true) ~ ("metadata" -> ("hakemusOid" -> expectedHakemusOid))
 
       request.header(Matchers.any[String], Matchers.any[String]).returns(request)
       request.responseWithHeaders().returns((200, Map(), compact(render(response))))
@@ -37,13 +37,26 @@ class RemoteOppijanTunnistusServiceSpec extends MutableScalatraSpec with Mockito
       val client = mock[HttpClient]
       val request = mock[HttpRequest]
 
-      val response = "valid" -> false
+      val response = ("exists" -> false) ~ ("valid" -> false)
 
       request.header(Matchers.any[String], Matchers.any[String]).returns(request)
       request.responseWithHeaders().returns((200, Map(), compact(render(response))))
       client.httpGet(serviceUrl + "/" + testToken).returns(request)
 
       validateToken(testToken, client) must beFailedTry.withThrowable[InvalidTokenException]
+    }
+
+    "return expired token exception when token has expired" in {
+      val client = mock[HttpClient]
+      val request = mock[HttpRequest]
+
+      val response = ("exists" -> true) ~ ("valid" -> false)
+
+      request.header(Matchers.any[String], Matchers.any[String]).returns(request)
+      request.responseWithHeaders().returns((200, Map(), compact(render(response))))
+      client.httpGet(serviceUrl + "/" + testToken).returns(request)
+
+      validateToken(testToken, client) must beFailedTry.withThrowable[ExpiredTokenException]
     }
 
     "returns RuntimeException if oppijan tunnistus does not respond 200" in {
