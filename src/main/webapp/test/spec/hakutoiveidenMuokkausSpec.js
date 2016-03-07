@@ -27,7 +27,7 @@
     )
 
     it("näytetään infoviesti", function() {
-      expect(page.alertMsg()).to.contain('Hakuaika on päättynyt eikä hakutoiveita voi enää muokata')
+      expect(page.alertMsg()).to.contain('Hakuaika on päättynyt etkä voi enää tehdä muutoksia hakutoiveisiisi')
     })
   })
 
