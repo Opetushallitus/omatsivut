@@ -2227,6 +2227,7 @@
                   'Koulutus-educationDegree': '22',
                   'Koulutus-id-discretionary': 'false',
                   'Koulutus-id': '1.2.246.562.14.2014032812530780195965',
+                  'Koulutus-requiredBaseEducations': '',
                   'Koulutus-id-educationcode': 'koulutus_020075' },
               hakuaikaId: "5474"
           }
@@ -2254,6 +2255,7 @@
                   'Koulutus-educationDegree': '22',
                   'Koulutus-id-discretionary': 'false',
                   'Koulutus-id': '1.2.246.562.14.2014032812530780195965',
+                  'Koulutus-requiredBaseEducations': '',
                   'Koulutus-id-educationcode': 'koulutus_020075' },
               hakuaikaId: "5474"
           }
