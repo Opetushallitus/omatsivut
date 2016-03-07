@@ -128,7 +128,8 @@
   },
 
   "info": {
-    "expiredToken": "<strong>Note! You logged in via an e-mail link to modify your study programme choices.</strong><p>The application period has ended and therefore you cannot change your study programme choices anymore. If you want to see your whole application or change your contact details, please log in to My Studyinfo -service. <a href='https://studyinfo.fi/wp2/en/my-studyinfo-service/'>Read more about My Studyinfo -service.</a></p>"
+    "expiredToken": "<strong>Note! You logged in via an e-mail link to modify your study programme choices.</strong><p>The application period has ended and therefore you cannot change your study programme choices anymore. If you want to see your whole application or change your contact details, please log in to My Studyinfo -service. <a href='https://studyinfo.fi/wp2/en/my-studyinfo-service/'>Read more about My Studyinfo -service.</a></p>",
+    "baseEducationConflict": "Please note that your previous education does not give you eligibility to apply to this study programme. Check the admission criteria in the study programme description."
   },
 
   "errorPage": {
