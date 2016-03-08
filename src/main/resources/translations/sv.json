@@ -127,6 +127,11 @@
     "noActiveApplication": "Din ansökan är inte längre aktiv."
   },
 
+  "info": {
+    "expiredToken": "<strong>Obs! Du loggade in för att ändra dina ansökningsönskemål via en e-post länk.</strong><p>Ansökningstiden är slut och du kan därför inte längre ändra dina ansökningsönskemål. Om du vill se hela din ansökan eller ändra dina kontaktuppgifter kan du göra det i Min Studieinfo -tjänsten. <a href='https://studieinfo.fi/wp/min-studieinfo-tjansten/'>Läs mera om Min Studieinfo -tjänsten.</a></p>",
+    "baseEducationConflict": "Du observerar väl att din grundutbildning inte ger dig ansökningsbehörighet till detta ansökningsmål. Se mer information i ansökningsmålets antagningsgrunder."
+  },
+
   "errorPage": {
     "noApplicationsFound": {
       "title": "Inga ansökningsblanketter hittades med din personbeteckning.",

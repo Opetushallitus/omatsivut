@@ -121,6 +121,7 @@ cas.service.viestintapalvelu=https://${host.virkailija}/viestintapalvelu
 cas.service.ryhmasahkoposti=https://${host.virkailija}/ryhmasahkoposti-service
 cas.service.authentication-service=https\://{{host_virkailija}}/authentication-service
 cas.service.organisaatio-service=https\://{{host_virkailija}}/organisaatio-service
+cas.service.suoritusrekisteri=https://${host.virkailija}/suoritusrekisteri
 cas.user-search-base=ou\=people
 cas.user-search-filter=(|(mail\={0})(uid\={0}))
 customAttribute.webservice.url.backend=https://{{host_virkailija}}/authentication-service/services/customAttributeService
@@ -145,6 +146,7 @@ root.organisaatio.oid=1.2.246.562.10.00000000001
 user.home.conf=${user.home}/oph-configuration
 user.webservice.url.backend=https\://{{host_virkailija}}/authentication-service/services/userService
 web.url.cas=https\://${host.cas}/cas
+tarjonta.v1.haku.resource.url=https\://${host.virkailija}/tarjonta-service/rest/v1/haku
 
 environment={{ymparisto}}
 

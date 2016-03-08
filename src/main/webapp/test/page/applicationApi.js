@@ -142,6 +142,9 @@ function ApplicationApi() {
         numberElement: function () {
           return el().find(".row-number")
         },
+        el: function() {
+          return el()
+        },
         remove: function () {
           var parent = el().parent()
           var itemCount = parent.children().length

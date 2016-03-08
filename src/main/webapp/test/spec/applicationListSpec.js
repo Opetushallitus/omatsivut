@@ -29,6 +29,7 @@
   var hakemusErityisopetuksena = page.getApplication(hakemusErityisopetuksenaId)
   var hakemusLisakysymyksenJatkokysymyksella = page.getApplication("1.2.246.562.11.00001305319")
   var hakemusOnkoKeskiarvoaKysymyksella = page.getApplication("1.2.246.562.11.00004102043")
+  var yhteishakuAmmatillinenLukioKevat2016 = page.getApplication("1.2.246.562.11.00004886042")
 
   afterEach(function() {
     expect(window.uiError || null).to.be.null
@@ -186,6 +187,14 @@
 
       it("hakuaika näkyy", function() {
         hakemusNivelKesa2013WithPeruskouluBaseEducation.applicationPeriods().should.equal("Hakuaika päättyy 1. joulukuuta 2100 klo 07.00")
+      })
+
+      it("pohjakoulutus ristiriita näytetään", function() {
+        yhteishakuAmmatillinenLukioKevat2016.getPreference(0).el().find('.baseEducationNotification:visible').length.should.equal(1)
+      })
+
+      it("pohjakoulutus ristiriita ei näytetä", function() {
+        hakemusKorkeakouluKevat.getPreference(0).el().find('.baseEducationNotification:visible').length.should.equal(0)
       })
 
       it.skip("tallennusaikaleima näkyy", function() {
@@ -2268,6 +2277,7 @@
                   'Koulutus-educationDegree': '22',
                   'Koulutus-id-discretionary': 'false',
                   'Koulutus-id': '1.2.246.562.14.2014032812530780195965',
+                  'Koulutus-requiredBaseEducations': '',
                   'Koulutus-id-educationcode': 'koulutus_020075' },
               hakuaikaId: "5474"
           }
@@ -2295,6 +2305,7 @@
                   'Koulutus-educationDegree': '22',
                   'Koulutus-id-discretionary': 'false',
                   'Koulutus-id': '1.2.246.562.14.2014032812530780195965',
+                  'Koulutus-requiredBaseEducations': '',
                   'Koulutus-id-educationcode': 'koulutus_020075' },
               hakuaikaId: "5474"
           }

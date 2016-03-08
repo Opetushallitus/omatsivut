@@ -86,7 +86,9 @@ object OmatSivutSpringContext extends Logging {
     "fi.vm.sade.haku.virkailija.lomakkeenhallinta.i18n",
     "fi.vm.sade.haku.virkailija.viestintapalvelu",
     "fi.vm.sade.haku.oppija.common.organisaatio",
-    "fi.vm.sade.haku.virkailija.lomakkeenhallinta.ohjausparametrit"
+    "fi.vm.sade.haku.virkailija.lomakkeenhallinta.ohjausparametrit",
+    "fi.vm.sade.haku.virkailija.lomakkeenhallinta.tarjonta.impl",
+    "fi.vm.sade.haku.oppija.common.suoritusrekisteri.impl"
   ),
   excludeFilters = Array(new ComponentScan.Filter(`type` = FilterType.ASSIGNABLE_TYPE, value = Array[Class[_]](classOf[Session])))
   )
@@ -101,34 +103,6 @@ object OmatSivutSpringContext extends Logging {
 
     @Bean def userSession: Session = new SystemSession {
       override def getUser(): User = new User("HAKIJA")
-    }
-
-    @Bean def suoritusRekisteriService: SuoritusrekisteriService = new SuoritusrekisteriService {
-
-      override def getArvosanat(s: String): util.List[ArvosanaDTO] = unsupportedIntegrationException
-
-      override def getOpiskelijatiedot(s: String): util.List[OpiskelijaDTO] = unsupportedIntegrationException
-
-      override def getSuoritukset(s: String): util.Map[String, util.List[SuoritusDTO]] = unsupportedIntegrationException
-
-      override def getSuoritukset(s: String, s1: String): util.Map[String, util.List[SuoritusDTO]] = unsupportedIntegrationException
-
-      override def getSuoritukset(s: String, s1: String, date: Date): util.Map[String, util.List[SuoritusDTO]] = unsupportedIntegrationException
-
-      override def getChanges(s: String, date: Date): util.List[String] = unsupportedIntegrationException
-    }
-
-    @Bean def hakuService: HakuService = new HakuService {
-
-      override def getRelatedApplicationOptionIds(s: String): util.List[String] = unsupportedIntegrationException
-
-      override def getApplicationSystems: util.List[ApplicationSystem] = unsupportedIntegrationException
-
-      override def getApplicationSystem(s: String): ApplicationSystem = unsupportedIntegrationException
-
-      override def kayttaaJarjestelmanLomaketta(oid: String): Boolean = unsupportedIntegrationException
-
-      override def getRawApplicationSystem(oid: String): HakuV1RDTO = unsupportedIntegrationException
     }
 
     @Bean def valintaService: ValintaService = new ValintaService {
