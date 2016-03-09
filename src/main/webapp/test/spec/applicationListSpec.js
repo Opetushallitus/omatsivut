@@ -758,7 +758,7 @@
           before(
             page.applyValintatulosFixtureAndOpen("korkeakoulu-vastaanotettavissa-ehdollisesti", {"haku": "korkeakoulu-jatkotutkintohaku", "hakuoid" : "1.2.246.562.29.62858726037"}),
             page.applyFixtureAndOpen({applicationOid: hakemusKorkeakouluJatkoHakuId}),
-            wait.forMilliseconds(500)
+            wait.forMilliseconds(1000)
           )
 
           it("voi ottaa myös ehdollisesti vastaan", function() {
