@@ -755,8 +755,11 @@
         })
 
         describe("kk haussa, kun ylempi toive on varalla ja alempi hyväksytty", function() {
-          before(page.applyValintatulosFixtureAndOpen("korkeakoulu-vastaanotettavissa-ehdollisesti", {"haku": "korkeakoulu-jatkotutkintohaku", "hakuoid" : "1.2.246.562.29.62858726037"}),
-            page.applyFixtureAndOpen({applicationOid: hakemusKorkeakouluJatkoHakuId}))
+          before(
+            page.applyValintatulosFixtureAndOpen("korkeakoulu-vastaanotettavissa-ehdollisesti", {"haku": "korkeakoulu-jatkotutkintohaku", "hakuoid" : "1.2.246.562.29.62858726037"}),
+            page.applyFixtureAndOpen({applicationOid: hakemusKorkeakouluJatkoHakuId}),
+            wait.forMilliseconds(500)
+          )
 
           it("voi ottaa myös ehdollisesti vastaan", function() {
             expect(hakemusKorkeakouluJatkoHaku.vastaanotto(0).vaihtoehdot()).to.deep.equal([
@@ -781,8 +784,10 @@
           })
 
           describe("paikan vastaanottaminen sitovasti", function() {
-            before(hakemusKorkeakouluJatkoHaku.vastaanotto(0).selectOption("VastaanotaSitovasti"))
-            before(hakemusKorkeakouluJatkoHaku.vastaanotto(0).send)
+            before(
+              hakemusKorkeakouluJatkoHaku.vastaanotto(0).selectOption("VastaanotaSitovasti"),
+              hakemusKorkeakouluJatkoHaku.vastaanotto(0).send
+            )
 
             it("vastaanottotieto näkyy", function() {
               expect(hakemusKorkeakouluJatkoHaku.valintatulokset()[0].tila).to.equal('Peruuntunut')
