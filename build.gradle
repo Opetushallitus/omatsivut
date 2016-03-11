@@ -16,7 +16,8 @@ task(zipIt, type: Zip) {
     doFirst {
         // Renames omatsivut*.war to omatsivut.war
         fileTree(from: '.', include: '**/target/omatsivut*.war').files.each { oneFile ->
-            oneFile.renameTo(file('omatsivut.war'))
+            String replaced = oneFile.path.replaceFirst('-[a-zA-Z0-9.]-SNAPSHOT\\.war','.war')
+            oneFile.renameTo(file(replaced))
         }
     }
 
