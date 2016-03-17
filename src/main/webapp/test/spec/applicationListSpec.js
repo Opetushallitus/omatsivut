@@ -980,7 +980,7 @@
       before(page.applyFixtureAndOpen({applicationOid: hakemusYhteishakuKevat2013WithForeignBaseEducationId, overrideStart: daysFromNow(0)}))
       describe("jos ei ole vielä tuloksia", function() {
         before(
-            page.applyValintatulosFixtureAndOpen("ei tuloksia", {"haku": "korkeakoulu-erillishaku"})
+            page.applyValintatulosFixtureAndOpen("ei-tuloksia", {"haku": "korkeakoulu-erillishaku"})
         )
         it("hakemusta voi muokata", function () {
           expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.preferencesForApplication().length).to.equal(2)
