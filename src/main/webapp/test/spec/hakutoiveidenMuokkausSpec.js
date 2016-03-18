@@ -53,7 +53,8 @@
     })
   })
 
-  describe('Hakutoiveiden muokkaus "Yhteishaku ammatilliseen ja lukioon, kevät 2016", kun valittuna ammatillisia', function () {
+  /* Aikaan sidottu testi, älä kirjoita aikaan sidottuja testejä jotka menee rikki parin kuukauden päästä. Disabled for now. -HH */
+  describe.skip('Hakutoiveiden muokkaus "Yhteishaku ammatilliseen ja lukioon, kevät 2016", kun valittuna ammatillisia', function () {
     before(
         page.applyFixtureAndOpen({token: hakemusYhteishakuKevat2016Ammatillisia})
     )
@@ -146,8 +147,8 @@
       })
     })
   })
-
-  describe('Hakutoiveiden muokkaus "Yhteishaku ammatilliseen ja lukioon, kevät 2016", kun valittuna pelkkä lukio', function () {
+  /* Aikaan sidottu testi, älä kirjoita aikaan sidottuja testejä jotka menee rikki parin kuukauden päästä. Disabled for now. -HH */
+  describe.skip('Hakutoiveiden muokkaus "Yhteishaku ammatilliseen ja lukioon, kevät 2016", kun valittuna pelkkä lukio', function () {
     before(
         page.applyFixtureAndOpen({token: hakemusYhteishakuKevat2016PelkkaLukio})
     )
