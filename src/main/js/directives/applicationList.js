@@ -8,6 +8,9 @@ module.exports = function(listApp) {
       templateUrl: 'templates/applicationList.html',
 
       link: function ($scope, element, attrs) {
+        $scope.$on("hakutoive-vastaanotettu", function() {
+          loadApplications()
+        })
         $scope.loadApplications = loadApplications
         loadApplications()
 
