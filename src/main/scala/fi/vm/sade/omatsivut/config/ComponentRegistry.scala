@@ -92,7 +92,7 @@ class ComponentRegistry(val config: AppConfig)
 
   private def configureKoodistoService: KoodistoService = config match {
     case _: StubbedExternalDeps => new StubbedKoodistoService
-    case _ => new RemoteKoodistoService(config.settings.koodistoUrl, springContext)
+    case _ => new RemoteKoodistoService(config.settings.koodistoUrl, springContext, AppConfig.clientSubSystemCode)
   }
 
   private def configureHakumaksuService: HakumaksuServiceWrapper = config match {

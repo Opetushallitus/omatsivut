@@ -8,6 +8,9 @@ import fi.vm.sade.utils.slf4j.Logging
 import fi.vm.sade.utils.tcp.{PortChecker, PortFromSystemPropertyOrFindFree}
 
 object AppConfig extends Logging {
+
+  val clientSubSystemCode = "omatsivut"
+
   private implicit val settingsParser = ApplicationSettingsParser
   val embeddedMongoPortChooser = new PortFromSystemPropertyOrFindFree("omatsivut.embeddedmongo.port")
 
