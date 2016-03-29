@@ -8,14 +8,15 @@ import fi.vm.sade.hakemuseditori.hakemus.{HakemusSpringContext, ImmutableLegacyA
 import fi.vm.sade.hakemuseditori.lomake.AddedQuestionFinder
 import fi.vm.sade.hakemuseditori.lomake.domain.Lomake
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
-import fi.vm.sade.omatsivut.{ScalatraTestSupport, SharedAppConfig}
+import fi.vm.sade.omatsivut.SharedAppConfig
 import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.omatsivut.fixtures.TestFixture._
 import org.junit.runner.RunWith
+import org.specs2.mutable.Specification
 import org.specs2.runner.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class AddedQuestionFinderSpec extends ScalatraTestSupport {
+class AddedQuestionFinderSpec extends Specification {
 
   implicit val lang = Language.fi
   val answersWithNewHakutoive = Map(AnswerHelper.preferencePhaseKey -> HakutoiveetConverter.convertToAnswers(List(ammattistartti), Hakemus.emptyAnswers ))
@@ -23,6 +24,7 @@ class AddedQuestionFinderSpec extends ScalatraTestSupport {
   import scala.collection.JavaConversions._
 
   lazy val (applicationSystemNivelKesa2013, applicationNivelKesa2013WithPeruskouluBaseEducationApp) = {
+      val springContext: HakemusSpringContext = SharedAppConfig.componentRegistry.springContext
       val as = springContext.applicationSystemService.getApplicationSystem(TestFixture.applicationSystemNivelKesa2013Oid)
       val app = springContext.applicationDAO.find(new Application().setOid(TestFixture.hakemusNivelKesa2013WithPeruskouluBaseEducationId)).toList.head
       (as, app)
@@ -34,6 +36,10 @@ class AddedQuestionFinderSpec extends ScalatraTestSupport {
   }
 
   lazy val lomake = Lomake(applicationSystemNivelKesa2013)
+
+  step {
+    lomake
+  }
 
   "RelatedQuestionHelper" should {
     "Report zero additional questions when not adding any answers" in {
