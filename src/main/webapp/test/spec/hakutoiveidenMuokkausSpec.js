@@ -55,7 +55,7 @@
 
   describe('Hakutoiveiden muokkaus "Yhteishaku ammatilliseen ja lukioon, kevät 2016", kun valittuna ammatillisia', function () {
     before(
-        page.applyFixtureAndOpen({token: hakemusYhteishakuKevat2016Ammatillisia})
+        page.applyFixtureAndOpen({token: hakemusYhteishakuKevat2016Ammatillisia, applicationOid: hakemusYhteishakuKevat2016Ammatillisia, overrideStart: daysFromNow(0)})
     )
 
     describe("Linkin avaamisen jälkeen", function() {
@@ -149,7 +149,7 @@
 
   describe('Hakutoiveiden muokkaus "Yhteishaku ammatilliseen ja lukioon, kevät 2016", kun valittuna pelkkä lukio', function () {
     before(
-        page.applyFixtureAndOpen({token: hakemusYhteishakuKevat2016PelkkaLukio})
+        page.applyFixtureAndOpen({token: hakemusYhteishakuKevat2016PelkkaLukio, applicationOid: hakemusYhteishakuKevat2016PelkkaLukio, overrideStart: daysFromNow(0)})
     )
 
     describe("Linkin avaamisen jälkeen", function() {

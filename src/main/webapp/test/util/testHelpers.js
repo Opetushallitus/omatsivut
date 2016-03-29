@@ -273,6 +273,10 @@ function compareDOMIndex(el1, el2) {
   return compareTrees(indexInTree(el1), indexInTree(el2))
 }
 
+function daysFromNow(days) {
+  return new Date().getTime()+days*24*60*60*1000
+}
+
 function removeSpaces(text) {
   return text.replace(/(\r\n|\n|\r)/gm,"").replace(/\s+/g," ").trim()
 }

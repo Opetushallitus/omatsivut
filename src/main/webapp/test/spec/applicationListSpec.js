@@ -2751,10 +2751,6 @@
     return _.flatten([_.difference(arr1, arr2), _.difference(arr2, arr1)])
   }
 
-  function daysFromNow(days) {
-    return new Date().getTime()+days*24*60*60*1000
-  }
-
   function hakuajat() {
     var regexp = _(arguments).map(function(text) {
       var index = arguments.length > 1 ? "\\d\\. " : ""
