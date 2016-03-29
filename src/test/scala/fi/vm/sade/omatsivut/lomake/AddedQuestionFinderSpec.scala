@@ -19,6 +19,7 @@ import org.specs2.runner.JUnitRunner
 class AddedQuestionFinderSpec extends Specification {
 
   implicit val lang = Language.fi
+  val answersWithNewHakutoive = Map(AnswerHelper.preferencePhaseKey -> HakutoiveetConverter.convertToAnswers(List(ammattistartti), Hakemus.emptyAnswers ))
 
   import scala.collection.JavaConversions._
 
@@ -32,6 +33,12 @@ class AddedQuestionFinderSpec extends Specification {
   def haku(implicit lang: Language.Language) = SharedAppConfig.componentRegistry.tarjontaService.haku(TestFixture.applicationSystemNivelKesa2013Oid, lang).get
   def hakemusMuutos(implicit lang: Language.Language) = {
     SharedAppConfig.componentRegistry.hakemusConverter.convertToHakemus(Some(Lomake(applicationSystemNivelKesa2013)), haku, wrap(applicationNivelKesa2013WithPeruskouluBaseEducationApp)).toHakemusMuutos
+  }
+
+  lazy val lomake = Lomake(applicationSystemNivelKesa2013)
+
+  step {
+    lomake
   }
 
   "RelatedQuestionHelper" should {
@@ -59,7 +66,4 @@ class AddedQuestionFinderSpec extends Specification {
   def findAddedQuestions(newAnswers: Answers, oldAnswers: Answers) = {
     AddedQuestionFinder.findAddedQuestions(lomake, newAnswers, oldAnswers).toList
   }
-
-  val lomake = Lomake(applicationSystemNivelKesa2013)
-  val answersWithNewHakutoive = Map(AnswerHelper.preferencePhaseKey -> HakutoiveetConverter.convertToAnswers(List(ammattistartti), Hakemus.emptyAnswers ))
 }
