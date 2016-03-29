@@ -3,13 +3,13 @@ package fi.vm.sade.omatsivut.security
 import fi.vm.sade.hakemuseditori.lomake.domain.AnswerId
 import org.json4s.JsonDSL.WithBigDecimal._
 import org.junit.runner.RunWith
-import org.scalatra.test.specs2.MutableScalatraSpec
 import org.specs2.mock.Mockito
+import org.specs2.mutable.Specification
 import org.specs2.runner.JUnitRunner
 import pdi.jwt.{JwtAlgorithm, JwtJson4s}
 
 @RunWith(classOf[JUnitRunner])
-class JsonWebTokenSpec extends MutableScalatraSpec with Mockito {
+class JsonWebTokenSpec extends Specification with Mockito {
 
   val jwt = new JsonWebToken("akuankkaakuankkaakuankkaakuankka")
   val hakemusOid = "1.2.3"
