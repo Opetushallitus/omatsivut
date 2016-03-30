@@ -60,6 +60,10 @@ class NonSensitiveApplicationSpec extends HakemusApiSpecification {
 
   sequential
 
+  step {
+    fixtureImporter.applyFixtures()
+  }
+
   "NonSensitiveApplication" should {
     "has only nonsensitive contact info when fetched with a token" in {
       get("insecure/applications/application/token/" + hakemusOid) {
@@ -122,7 +126,6 @@ class NonSensitiveApplicationSpec extends HakemusApiSpecification {
     }
 
     "has answers given during session after reload" in {
-      fixtureImporter.applyFixtures()
       val answersInJWT: Set[AnswerId] = Set()
       put("insecure/applications/" + hakemusOid,
         body = Serialization.write(HakemusMuutos(hakemusOid, "1.2.246.562.29.95390561488", List(hakutoiveData.head), Hakemus.emptyAnswers)),
@@ -159,7 +162,6 @@ class NonSensitiveApplicationSpec extends HakemusApiSpecification {
     }
 
     "has only questions for hakutoive that has been removed and then added back" in {
-      fixtureImporter.applyFixtures()
       val answersInJWT: Set[AnswerId] = Set()
       put("insecure/applications/" + hakemusOid,
         body = Serialization.write(HakemusMuutos(hakemusOid, "1.2.246.562.29.95390561488", List(hakutoiveData.head), Hakemus.emptyAnswers)),

@@ -11,6 +11,7 @@ import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.omatsivut.SharedAppConfig
 import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.omatsivut.fixtures.TestFixture._
+import fi.vm.sade.omatsivut.fixtures.hakemus.ApplicationFixtureImporter
 import org.junit.runner.RunWith
 import org.specs2.mutable.Specification
 import org.specs2.runner.JUnitRunner
@@ -25,20 +26,21 @@ class AddedQuestionFinderSpec extends Specification {
 
   lazy val (applicationSystemNivelKesa2013, applicationNivelKesa2013WithPeruskouluBaseEducationApp) = {
       val springContext: HakemusSpringContext = SharedAppConfig.componentRegistry.springContext
+      val fixtureImporter: ApplicationFixtureImporter = new ApplicationFixtureImporter(springContext)
+      fixtureImporter.applyFixtures()
       val as = springContext.applicationSystemService.getApplicationSystem(TestFixture.applicationSystemNivelKesa2013Oid)
       val app = springContext.applicationDAO.find(new Application().setOid(TestFixture.hakemusNivelKesa2013WithPeruskouluBaseEducationId)).toList.head
       (as, app)
   }
+  lazy val lomake = Lomake(applicationSystemNivelKesa2013)
 
   def haku(implicit lang: Language.Language) = SharedAppConfig.componentRegistry.tarjontaService.haku(TestFixture.applicationSystemNivelKesa2013Oid, lang).get
   def hakemusMuutos(implicit lang: Language.Language) = {
     SharedAppConfig.componentRegistry.hakemusConverter.convertToHakemus(Some(Lomake(applicationSystemNivelKesa2013)), haku, wrap(applicationNivelKesa2013WithPeruskouluBaseEducationApp)).toHakemusMuutos
   }
 
-  lazy val lomake = Lomake(applicationSystemNivelKesa2013)
-
-  step {
-    lomake
+  def findAddedQuestions(newAnswers: Answers, oldAnswers: Answers) = {
+    AddedQuestionFinder.findAddedQuestions(lomake, newAnswers, oldAnswers).toList
   }
 
   "RelatedQuestionHelper" should {
@@ -61,9 +63,5 @@ class AddedQuestionFinderSpec extends Specification {
       removedQuestions.length must_== 0
     }
 
-  }
-
-  def findAddedQuestions(newAnswers: Answers, oldAnswers: Answers) = {
-    AddedQuestionFinder.findAddedQuestions(lomake, newAnswers, oldAnswers).toList
   }
 }
