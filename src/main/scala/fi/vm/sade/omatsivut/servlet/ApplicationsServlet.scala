@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 
 import fi.vm.sade.groupemailer.{EmailData, EmailMessage, EmailRecipient, GroupEmailComponent}
-import fi.vm.sade.hakemuseditori.auditlog.{AuditLoggerComponent, SaveVastaanotto}
+import fi.vm.sade.hakemuseditori.auditlog.{AuditLoggerComponent}
 import fi.vm.sade.hakemuseditori.hakemus.domain.HakemusMuutos
 import fi.vm.sade.hakemuseditori.hakemus.{ApplicationValidatorComponent, HakemusRepositoryComponent, SpringContextComponent}
 import fi.vm.sade.hakemuseditori.json.JsonFormats
@@ -12,7 +12,7 @@ import fi.vm.sade.hakemuseditori.localization.TranslationsComponent
 import fi.vm.sade.hakemuseditori.lomake.LomakeRepositoryComponent
 import fi.vm.sade.hakemuseditori.user.Oppija
 import fi.vm.sade.hakemuseditori.valintatulokset.ValintatulosServiceComponent
-import fi.vm.sade.hakemuseditori.valintatulokset.domain.Vastaanotto
+import fi.vm.sade.hakemuseditori.valintatulokset.domain._
 import fi.vm.sade.hakemuseditori._
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.hakemuspreview.HakemusPreviewGeneratorComponent
@@ -22,7 +22,7 @@ import org.json4s.jackson.Serialization
 import org.scalatra._
 import org.scalatra.json._
 
-import scala.util.{Failure, Success}
+import scala.util.{Try, Failure, Success}
 
 trait ApplicationsServletContainer {
   this: HakemusEditoriComponent with LomakeRepositoryComponent with
@@ -81,60 +81,63 @@ trait ApplicationsServletContainer {
       }
     }
 
-    post("/vastaanota/:hakuOid/:hakemusOid") {
+    post("/vastaanota/:hakemusOid/hakukohde/:hakukohdeOid") {
       val hakemusOid = params("hakemusOid")
-      val hakuOid = params("hakuOid")
-      val henkilo = personOid()
-      if (!applicationRepository.exists(henkilo, hakemusOid)) {
+      val hakukohdeOid = params("hakukohdeOid")
+      val henkiloOid = personOid()
+
+      val hakemusKuuluuHakijalle = applicationRepository.exists(henkiloOid, hakemusOid)
+      if (!hakemusKuuluuHakijalle) {
         NotFound("error" -> "Not found")
       } else {
-        val clientVastaanotto = Serialization.read[ClientSideVastaanotto](request.body)
-        val vastaanotto = Vastaanotto(clientVastaanotto.hakukohdeOid, clientVastaanotto.tila, henkilo, "Muokkaus Omat Sivut -palvelussa")
-        try{
-          val ret = if(valintaRekisteriService.isEnabled) {
-            valintaRekisteriService.vastaanota(henkilo, vastaanotto.hakukohdeOid, henkilo)
-          } else {
-            valintatulosService.vastaanota(hakemusOid, hakuOid, vastaanotto)
-          }
-          if(ret) {
-            // Send a confirmation e-mail
-            if (!clientVastaanotto.email.equals("")) {
-              val subject = translations.getTranslation("message", "acceptEducation", "email", "subject")
-
-              val dateFormat = new SimpleDateFormat(translations.getTranslation("message", "acceptEducation", "email", "dateFormat"))
-              val dateAndTime = dateFormat.format(Calendar.getInstance().getTime())
-              val answer = translations.getTranslation("message", "acceptEducation", "email", "tila", clientVastaanotto.tila)
-              val aoInfoRow = List(answer, clientVastaanotto.tarjoajaNimi, clientVastaanotto.hakukohdeNimi).mkString(" - ")
-              val body = translations.getTranslation("message", "acceptEducation", "email", "body")
-                            .format(dateAndTime, aoInfoRow)
-                            .replace("\n", "\n<br>")
-
-              val email = EmailMessage("omatsivut", subject, body, html = true)
-              val recipients = List(EmailRecipient(clientVastaanotto.email))
-              groupEmailService.sendMailWithoutTemplate(EmailData(email, recipients))
-            }
-            auditLogger.log(SaveVastaanotto(personOid(), hakemusOid, hakuOid, vastaanotto))
-            hakemusRepository.getHakemus(hakemusOid) match {
-              case Some(hakemus) => hakemus
-              case _ => NotFound("error" -> "Not found")
-            }
-          }
-          else {
-            Forbidden("error" -> "Not receivable")
-          }
-
-        } catch {
-          case e: Throwable =>
-            logger.error("failure in background service call", e)
-            InternalServerError("error" -> "Background service failed")
-
-        }
-
+        vastaanota(hakemusOid, hakukohdeOid, henkiloOid, request.body)
       }
     }
+
+    private def vastaanota(hakemusOid: String, hakukohdeOid: String, henkiloOid: String, requestBody: String): ActionResult = {
+      val clientVastaanotto = Serialization.read[ClientSideVastaanotto](requestBody)
+      try {
+        if (valintatulosService.vastaanota(henkiloOid, hakemusOid, hakukohdeOid, clientVastaanotto.vastaanottoAction)) {
+          sendEmail(clientVastaanotto)
+          //TODO
+          //auditLogger.log(SaveVastaanotto(personOid(), hakemusOid, hakuOid, vastaanotto))
+          hakemusRepository.getHakemus(hakemusOid) match {
+            case Some(hakemus) => Ok(hakemus)
+            case _ => NotFound("error" -> "Not found")
+          }
+        }
+        else {
+          Forbidden("error" -> "Not receivable")
+        }
+
+      } catch {
+        case e: Throwable =>
+          logger.error("failure in background service call", e)
+          InternalServerError("error" -> "Background service failed")
+      }
+    }
+
+    private def sendEmail(clientVastaanotto: ClientSideVastaanotto) = {
+      if ("" != clientVastaanotto.email) {
+        val subject = translations.getTranslation("message", "acceptEducation", "email", "subject")
+
+        val dateFormat = new SimpleDateFormat(translations.getTranslation("message", "acceptEducation", "email", "dateFormat"))
+        val dateAndTime = dateFormat.format(Calendar.getInstance().getTime())
+        val answer = translations.getTranslation("message", "acceptEducation", "email", "tila", clientVastaanotto.vastaanottoAction.toString)
+        val aoInfoRow = List(answer, clientVastaanotto.tarjoajaNimi, clientVastaanotto.hakukohdeNimi).mkString(" - ")
+        val body = translations.getTranslation("message", "acceptEducation", "email", "body")
+          .format(dateAndTime, aoInfoRow)
+          .replace("\n", "\n<br>")
+
+        val email = EmailMessage("omatsivut", subject, body, html = true)
+        val recipients = List(EmailRecipient(clientVastaanotto.email))
+        groupEmailService.sendMailWithoutTemplate(EmailData(email, recipients))
+      }
+    }
+
   }
 }
 
-case class ClientSideVastaanotto(hakukohdeOid: String, tila: String, email: String = "",
+case class ClientSideVastaanotto(vastaanottoAction: VastaanottoAction, email: String = "",
                                  hakukohdeNimi: String = "", tarjoajaNimi: String = "")
 

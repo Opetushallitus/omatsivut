@@ -48,7 +48,7 @@
       "Perunut": "You_have_cancelled_the study place",
       "Peruuntunut": "Cancelled_automatically",
       "VarasijaltaHyvaksytty": "Accepted_from_reserve place",
-      "Vastaanottanut": "You_have_confirmed_the study place",
+      "VastaanottanutSitovasti": "You_have_confirmed_the study place",
       "Hylatty": "You_have_not_received a study place.",
       "EhdollisestiVastaanottanut": "You_have_confirmed_the study place conditionally",
       "EiVastaanotettuMaaraAikana": "You_have_not_confirmed_the study place within the set time"
@@ -102,9 +102,9 @@
         "subject": "Studyinfo: Your answer has been received",
         "body": "Hello,\n\nWe have received %s your answer:\n%s\n\nDo not reply to this message – the message has been sent automatically.",
         "tila": {
-          "VASTAANOTTANUT": "I confirm the granted study place",
-          "PERUNUT": "I do not confirm the study place",
-          "EHDOLLISESTI_VASTAANOTTANUT": "I confirm the study place conditionally"
+          "VastaanotaSitovasti": "I confirm the granted study place",
+          "Peru": "I do not confirm the study place",
+          "VastaanotaEhdollisesti": "I confirm the study place conditionally"
         }
       }
     }

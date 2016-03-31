@@ -171,12 +171,15 @@ fixtures = {
 
   applyValintatulos: function(fixtureName, otherFixtures) {
     var query = ""
-    if(otherFixtures != null) {
-      if(otherFixtures.ohjausparametrit != null) {
+    if(otherFixtures) {
+      if(otherFixtures.ohjausparametrit) {
         query = "&ohjausparametrit=" + otherFixtures.ohjausparametrit
       }
-      if(otherFixtures.haku != null) {
-        query = query +"&haku=" + otherFixtures.haku
+      if(otherFixtures.haku) {
+        query = query + "&haku=" + otherFixtures.haku
+      }
+      if(otherFixtures.hakuoid) {
+        query = query + "&useHakuOid=" + otherFixtures.hakuoid
       }
     }
     return Q($.ajax({url: "/omatsivut/util/fixtures/valintatulos/apply?fixturename=" + fixtureName + query, type: "PUT"}))

@@ -94,3 +94,5 @@ activemq-data
 #gatling
 gatling/
 gradle/
+
+valintarekisteri-it-db
