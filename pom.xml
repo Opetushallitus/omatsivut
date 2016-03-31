@@ -5,7 +5,7 @@
     <artifactId>omatsivut</artifactId>
     <packaging>war</packaging>
     <description>omatsivut</description>
-    <version>yhdenpaikansaanto-SNAPSHOT</version>
+    <version>1.0-SNAPSHOT</version>
     <name>omatsivut</name>
     <organization>
         <name>fi.vm.sade</name>
@@ -88,7 +88,7 @@
         <dependency>
             <groupId>fi.vm.sade</groupId>
             <artifactId>hakemuseditori_2.11</artifactId>
-            <version>yhdenpaikansaanto-SNAPSHOT</version>
+            <version>14.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>fi.vm.sade</groupId>
@@ -125,7 +125,7 @@
         <dependency>
             <groupId>fi.vm.sade.haku</groupId>
             <artifactId>hakemus-api</artifactId>
-            <version>yhdenpaikansaanto-SNAPSHOT</version>
+            <version>14.0-SNAPSHOT</version>
             <exclusions>
               <exclusion>
                 <groupId>com.wordnik</groupId>
@@ -228,7 +228,7 @@
                         <artifactItem>
                             <groupId>fi.vm.sade</groupId>
                             <artifactId>valinta-tulos-service</artifactId>
-                            <version>yhdenpaikansaanto-SNAPSHOT</version>
+                            <version>1.0-SNAPSHOT</version>
                             <type>war</type>
                             <outputDirectory>./target</outputDirectory>
                             <destFileName>valinta-tulos-service.war</destFileName>
