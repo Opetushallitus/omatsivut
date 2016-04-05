@@ -5,7 +5,7 @@
     <artifactId>omatsivut</artifactId>
     <packaging>war</packaging>
     <description>omatsivut</description>
-    <version>1.0-SNAPSHOT</version>
+    <version>BUG-804-SNAPSHOT</version>
     <name>omatsivut</name>
     <organization>
         <name>fi.vm.sade</name>
@@ -88,7 +88,7 @@
         <dependency>
             <groupId>fi.vm.sade</groupId>
             <artifactId>hakemuseditori_2.11</artifactId>
-            <version>14.0-SNAPSHOT</version>
+            <version>BUG-804-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>fi.vm.sade</groupId>
