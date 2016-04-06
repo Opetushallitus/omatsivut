@@ -25,7 +25,7 @@
     "gulp-if": "^1.2.4",
     "gulp-ng-annotate": "^0.5.2",
     "baconjs": "^0.7.24",
-    "hakemuseditori": "git://github.com/Opetushallitus/hakemuseditori.git"
+    "hakemuseditori": "git://github.com/Opetushallitus/hakemuseditori.git#PROD_WITHOUT_VALINTAREKISTERI"
   },
   "scripts": {
     "dev": "./gulp dev",
