@@ -147,7 +147,7 @@ user.home.conf=${user.home}/oph-configuration
 user.webservice.url.backend=https\://{{host_virkailija}}/authentication-service/services/userService
 web.url.cas=https\://${host.cas}/cas
 tarjonta.v1.haku.resource.url=https\://${host.virkailija}/tarjonta-service/rest/v1/haku
-
+ohjausparametrit.resource.url=https\://${host.virkailija}/ohjausparametrit-service/api/v1/rest/parametri
 environment={{ymparisto}}
 
 # CAS
