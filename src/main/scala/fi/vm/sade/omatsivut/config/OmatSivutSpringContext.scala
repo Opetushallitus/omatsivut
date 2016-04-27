@@ -4,6 +4,7 @@ import java.util
 import java.util.Date
 
 import fi.vm.sade.haku.oppija.common.suoritusrekisteri.{ArvosanaDTO, OpiskelijaDTO, SuoritusDTO, SuoritusrekisteriService}
+import fi.vm.sade.haku.oppija.configuration.UrlConfiguration
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.hakemus.it.dao.ApplicationOidDAO
 import fi.vm.sade.haku.oppija.hakemus.service.HakuPermissionService
@@ -70,6 +71,8 @@ object OmatSivutSpringContext extends Logging {
     @Bean def hakumaksuService = null
 
     @Bean def sendMailService = null
+
+    @Bean def urlConfiguration: UrlConfiguration = new UrlConfiguration()
   }
 
   @Configuration
@@ -112,6 +115,8 @@ object OmatSivutSpringContext extends Logging {
 
       override def fetchValintaData(application: Application): util.Map[String, String] = unsupportedIntegrationException
     }
+
+    @Bean def urlConfiguration: UrlConfiguration = new UrlConfiguration()
 
     def unsupportedIntegrationException: Nothing = {
       throw new scala.UnsupportedOperationException("This integration is supported and should not be called in omatsivut")
