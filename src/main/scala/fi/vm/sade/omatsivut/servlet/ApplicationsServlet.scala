@@ -5,6 +5,7 @@ import java.util.Calendar
 
 import fi.vm.sade.groupemailer.{EmailData, EmailMessage, EmailRecipient, GroupEmailComponent}
 import fi.vm.sade.hakemuseditori.auditlog.{AuditLoggerComponent}
+import fi.vm.sade.hakemuseditori.domain.Language
 import fi.vm.sade.hakemuseditori.hakemus.domain.HakemusMuutos
 import fi.vm.sade.hakemuseditori.hakemus.{ApplicationValidatorComponent, HakemusRepositoryComponent, SpringContextComponent}
 import fi.vm.sade.hakemuseditori.json.JsonFormats
@@ -86,11 +87,13 @@ trait ApplicationsServletContainer {
       val hakukohdeOid = params("hakukohdeOid")
       val henkiloOid = personOid()
 
-      val hakemusKuuluuHakijalle = applicationRepository.exists(henkiloOid, hakemusOid)
-      if (!hakemusKuuluuHakijalle) {
-        NotFound("error" -> "Not found")
-      } else {
-        vastaanota(hakemusOid, hakukohdeOid, henkiloOid, request.body)
+      applicationRepository.findStoredApplicationByPersonAndOid(henkiloOid, hakemusOid) match {
+
+        case Some(hakemus) if tarjontaService.haku(hakemus.hakuOid, Language.fi).exists(_.published) =>
+          vastaanota(hakemusOid, hakukohdeOid, henkiloOid, request.body)
+
+        case _ => NotFound("error" -> "Not found")
+
       }
     }
 
