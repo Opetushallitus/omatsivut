@@ -153,6 +153,12 @@
     describe("Hakemuksen tietojen näyttäminen", function() {
       before(page.applyFixtureAndOpen({}))
 
+      it('julkaisemattoman haun hakemus ei näy sivulla', function () {
+        expect(ApplicationListPage().applications()).to.not.contain({
+          applicationSystemName: 'Ei julkaistu haku (ei pitäisi näkyä omilla sivuilla)'
+        })
+      })
+
       it('hakemuslistassa on hakemus henkilölle 010101-123N', function () {
         expect(ApplicationListPage().applications()).to.contain(
           { applicationSystemName: 'Ammatillisen koulutuksen ja lukiokoulutuksen kevään 2014 yhteishaku' }
