@@ -1,25 +1,22 @@
 package fi.vm.sade.omatsivut.config
 
 import java.util
-import java.util.Date
 
-import fi.vm.sade.haku.oppija.common.suoritusrekisteri.{ArvosanaDTO, OpiskelijaDTO, SuoritusDTO, SuoritusrekisteriService}
 import fi.vm.sade.haku.oppija.configuration.UrlConfiguration
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.hakemus.it.dao.ApplicationOidDAO
 import fi.vm.sade.haku.oppija.hakemus.service.HakuPermissionService
 import fi.vm.sade.haku.oppija.hakemus.service.impl.HakuPermissionServiceMockImpl
-import fi.vm.sade.haku.oppija.lomake.domain.{User, ApplicationSystem}
+import fi.vm.sade.haku.oppija.lomake.domain.User
 import fi.vm.sade.haku.oppija.lomake.service.Session
 import fi.vm.sade.haku.oppija.lomake.service.impl.SystemSession
 import fi.vm.sade.haku.virkailija.authentication.AuthenticationService
 import fi.vm.sade.haku.virkailija.authentication.impl.AuthenticationServiceMockImpl
-import fi.vm.sade.haku.virkailija.lomakkeenhallinta.tarjonta.HakuService
 import fi.vm.sade.haku.virkailija.valinta.ValintaService
 import fi.vm.sade.haku.virkailija.valinta.dto.{HakemusDTO, HakijaDTO}
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.mongo.OmatSivutMongoConfiguration
-import fi.vm.sade.tarjonta.service.resources.v1.dto.HakuV1RDTO
+import fi.vm.sade.properties.OphProperties
 import fi.vm.sade.utils.slf4j.Logging
 import org.springframework.context.annotation._
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer
@@ -36,6 +33,9 @@ object OmatSivutSpringContext extends Logging {
     appContext.getEnvironment.setActiveProfiles(configuration.springConfiguration.profile)
     customPropertiesHack(appContext, configuration)
     appContext.register(configuration.springConfiguration.getClass)
+    val urlConfiguration = new UrlConfiguration()
+    OphProperties.merge(urlConfiguration.overrides, configuration.settings.toProperties)
+    appContext.getBeanFactory.registerSingleton(classOf[UrlConfiguration].getCanonicalName, urlConfiguration)
     appContext.refresh()
     appContext
   }
@@ -72,7 +72,6 @@ object OmatSivutSpringContext extends Logging {
 
     @Bean def sendMailService = null
 
-    @Bean def urlConfiguration: UrlConfiguration = new UrlConfiguration()
   }
 
   @Configuration
@@ -115,8 +114,6 @@ object OmatSivutSpringContext extends Logging {
 
       override def fetchValintaData(application: Application): util.Map[String, String] = unsupportedIntegrationException
     }
-
-    @Bean def urlConfiguration: UrlConfiguration = new UrlConfiguration()
 
     def unsupportedIntegrationException: Nothing = {
       throw new scala.UnsupportedOperationException("This integration is supported and should not be called in omatsivut")
