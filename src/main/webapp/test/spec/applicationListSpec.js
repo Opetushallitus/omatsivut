@@ -808,7 +808,7 @@
 
             it("vastaanottotieto näkyy", function() {
               expect(hakemusKorkeakouluJatkoHaku.valintatulokset()[0].tila).to.equal('1. varasijalla')
-              expect(hakemusKorkeakouluJatkoHaku.valintatulokset()[1].tila).to.equal('Opiskelupaikka vastaanotettu ehdollisesti')
+              expect(hakemusKorkeakouluJatkoHaku.valintatulokset()[1].tila).to.equal('Opiskelupaikka vastaanotettu ja jonotan ylempää')
             })
           })
 
