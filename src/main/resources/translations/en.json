@@ -89,7 +89,7 @@
         "3": "study place leading to a higher education degree in Finland during one academic term."
       },
       "accept": "I confirm the granted study place",
-      "conditionalAccept": "I confirm the study place conditionally",
+      "conditionalAccept": "I confirm the study place but I will wait for a higher study place",
       "conditionalAcceptInfo1": "You can still get accepted from a waiting list to a higher prioritized study programme.",
       "conditionalAcceptInfo2": "The confirmation will become binding if you are not offered a study place from a study programme with higher priority.",
       "reject": "I do not confirm the study place",
