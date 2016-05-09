@@ -1077,8 +1077,11 @@
       describe("Jos on saanut ehdollisesti paikan, muttei vielä ottanut sitä vastaan", function() {
         before(page.applyValintatulosFixtureAndOpen("hyvaksytty-ehdollisesti-kesken-julkaistavissa"))
 
-        describe("Oili-ilmoittautumislinkki", function () {
-          it("Piilotetaan", function() {
+        describe("Ennen vastaanottoa", function () {
+          it("Näkyy ehdollisesti hyväksyttynä", function() {
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].tila).to.equal('Hyväksytty (ehdollinen)')
+          })
+          it("Oili-ilmoittautumislinkki piilotetaan", function() {
             expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.ilmoittautuminen(0).visible).to.equal(false)
           })
         })
@@ -1090,6 +1093,10 @@
           it("vastaanottotieto näkyy", function() {
             expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].tila).to.equal('Opiskelupaikka vastaanotettu')
             expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[1].tila).to.equal('Peruuntunut')
+          })
+
+          it("näytetään tieto valinnan ehdollisuudesta", function() {
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.ilmoittautuminen(0).title()).to.equal('Opiskelijavalintasi on vielä ehdollinen. Kallion lukio - Lukion ilmaisutaitolinja')
           })
 
           it("Oili-linkki ei tule näkyviin", function() {
