@@ -50,7 +50,7 @@
       "VarasijaltaHyvaksytty": "Hyväksytty_varasijalta",
       "VastaanottanutSitovasti": "Opiskelupaikka_vastaanotettu",
       "Hylatty": "Et_saanut_opiskelupaikkaa.",
-      "EhdollisestiVastaanottanut": "Opiskelupaikka_vastaanotettu ehdollisesti",
+      "EhdollisestiVastaanottanut": "Opiskelupaikka_vastaanotettu_ja_jonotan_ylempää",
       "EiVastaanotettuMaaraAikana": "Et_ottanut_opiskelupaikkaa_vastaan määräaikaan mennessä"
     }
   },
