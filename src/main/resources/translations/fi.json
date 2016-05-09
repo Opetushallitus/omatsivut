@@ -39,6 +39,7 @@
     "postalCode": "Postinumero",
 
     "resultState": {
+      "EhdollinenPostfix": " (ehdollinen)",
       "Hyvaksytty": "Hyväksytty",
       "Kesken": "Opiskelijavalinta_kesken",
       "HarkinnanvaraisestiHyvaksytty": "Hyväksytty",
@@ -156,7 +157,9 @@
 
   "registration": {
     "pleaseRegister": "Ilmoittaudu lukukaudelle",
-    "goToRegistration": "Siirry ilmoittautumaan"
+    "goToRegistration": "Siirry ilmoittautumaan",
+    "conditionalAcceptanceTitle": "Opiskelijavalintasi on vielä ehdollinen.",
+    "conditionalAcceptanceInfo": "Pääset ilmoittautumaan vasta valinnan vahvistamisen jälkeen."
   },
 
   "emailNote": {
