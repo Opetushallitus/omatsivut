@@ -50,7 +50,7 @@
       "VarasijaltaHyvaksytty": "Accepted_from_reserve place",
       "VastaanottanutSitovasti": "You_have_confirmed_the study place",
       "Hylatty": "You_have_not_received a study place.",
-      "EhdollisestiVastaanottanut": "You_have_confirmed_the study place conditionally",
+      "EhdollisestiVastaanottanut": "You_have_confirmed_the_study_place_and_want_to_wait_for_a_higher_study_place",
       "EiVastaanotettuMaaraAikana": "You_have_not_confirmed_the study place within the set time"
     }
   },
