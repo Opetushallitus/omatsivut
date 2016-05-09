@@ -213,7 +213,7 @@ function ApplicationListPage() {
       ilmoittautuminen: function(index) {
         var el = getApplicationElement(applicationIndex).find(".ilmoittautuminen-item").eq(index)
         return {
-          visible: el.is(":visible"),
+          visible: el.find("a").is(":visible"),
           linkUrl: el.find("a").attr("href"),
           title: function() {
             return removeSpaces(el.find("header").text())
