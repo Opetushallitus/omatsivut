@@ -123,7 +123,7 @@ trait ApplicationsServletContainer {
         val subject = translations.getTranslation("message", "acceptEducation", "email", "subject")
 
         val dateFormat = new SimpleDateFormat(translations.getTranslation("message", "acceptEducation", "email", "dateFormat"))
-        val dateAndTime = dateFormat.format(Calendar.getInstance().getTime())
+        val dateAndTime = dateFormat.format(Calendar.getInstance().getTime)
         val answer = translations.getTranslation("message", "acceptEducation", "email", "tila", clientVastaanotto.vastaanottoAction.toString)
         val aoInfoRow = List(answer, clientVastaanotto.tarjoajaNimi, clientVastaanotto.hakukohdeNimi).mkString(" - ")
         val body = translations.getTranslation("message", "acceptEducation", "email", "body")

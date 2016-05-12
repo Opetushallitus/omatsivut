@@ -127,7 +127,7 @@ class ComponentRegistry(val config: AppConfig)
   def newMuistilistaServlet = new MuistilistaServlet(config)
   def newNonSensitiveApplicationServlet = new NonSensitiveApplicationServlet(config)
 
-  def start {
+  def start() {
     try {
       config.onStart
       pool.execute(runningLogger)
@@ -136,12 +136,12 @@ class ComponentRegistry(val config: AppConfig)
       }
     } catch {
       case e: Exception =>
-        stop
+        stop()
         throw e
     }
   }
 
-  def stop {
+  def stop() {
     config.onStop
   }
 
