@@ -38,4 +38,3 @@ oppija_raamit_url: "https://itest-oppija.oph.ware.fi"
 email_batch_size: 500
 recaptcha_verify_url: "https://www.google.com/recaptcha/api/siteverify"
 recaptcha_secret: ""
-valintarekisteri_url: ""

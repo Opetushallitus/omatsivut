@@ -5,9 +5,7 @@ import javax.net.ssl._
 import fi.vm.sade.omatsivut.config.AppConfig
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.server.handler.HandlerCollection
-import org.eclipse.jetty.servlet.DefaultServlet
 import org.eclipse.jetty.webapp.WebAppContext
-import org.scalatra.servlet.ScalatraListener
 
 object JettyLauncher {
 
@@ -54,18 +52,6 @@ class JettyLauncher(profile: Option[String] = None) {
     context
   }
   handlers.addHandler(valintatulosservice)
-
-  val valintarekisteri = {
-    val context = new WebAppContext()
-    context.setResourceBase("src/main/webapp")
-    context.setContextPath("/valintarekisteri")
-    context.setInitParameter(ScalatraListener.LifeCycleKey, "fi.vm.sade.omatsivut.valintarekisteri.MockedValintarekisteriScalatraBootstrap")
-    context.addEventListener(new ScalatraListener)
-    context.addServlet(classOf[DefaultServlet], "/")
-    profile.foreach(context.setAttribute("valintarekisteri.profile", _))
-    context
-  }
-  handlers.addHandler(valintarekisteri)
 
   server.setHandler(handlers)
 

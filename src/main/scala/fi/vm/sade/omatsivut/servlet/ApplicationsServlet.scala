@@ -4,7 +4,8 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 
 import fi.vm.sade.groupemailer.{EmailData, EmailMessage, EmailRecipient, GroupEmailComponent}
-import fi.vm.sade.hakemuseditori.auditlog.{AuditLoggerComponent}
+import fi.vm.sade.hakemuseditori._
+import fi.vm.sade.hakemuseditori.auditlog.AuditLoggerComponent
 import fi.vm.sade.hakemuseditori.domain.Language
 import fi.vm.sade.hakemuseditori.hakemus.domain.HakemusMuutos
 import fi.vm.sade.hakemuseditori.hakemus.{ApplicationValidatorComponent, HakemusRepositoryComponent, SpringContextComponent}
@@ -14,22 +15,19 @@ import fi.vm.sade.hakemuseditori.lomake.LomakeRepositoryComponent
 import fi.vm.sade.hakemuseditori.user.Oppija
 import fi.vm.sade.hakemuseditori.valintatulokset.ValintatulosServiceComponent
 import fi.vm.sade.hakemuseditori.valintatulokset.domain._
-import fi.vm.sade.hakemuseditori._
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.hakemuspreview.HakemusPreviewGeneratorComponent
 import fi.vm.sade.omatsivut.security.AuthenticationRequiringServlet
-import fi.vm.sade.omatsivut.valintarekisteri.ValintaRekisteriComponent
 import org.json4s.jackson.Serialization
 import org.scalatra._
 import org.scalatra.json._
 
-import scala.util.{Try, Failure, Success}
+import scala.util.{Failure, Success}
 
 trait ApplicationsServletContainer {
   this: HakemusEditoriComponent with LomakeRepositoryComponent with
     HakemusRepositoryComponent with
     ValintatulosServiceComponent with
-    ValintaRekisteriComponent with
     ApplicationValidatorComponent with
     HakemusPreviewGeneratorComponent with
     SpringContextComponent with

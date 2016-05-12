@@ -7,6 +7,6 @@
 
   "projects": [
     {"name": "omatsivut-web", "uses": "omatsivut-rest piwik shibboleth"},
-    {"name": "omatsivut-rest",   "uses": "activemq cas haku koulutusinformaatio-rest oppijan-tunnistus shibboleth tarjonta-rest valintarekisteri valinta-tulos-service"}
+    {"name": "omatsivut-rest",   "uses": "activemq cas haku koulutusinformaatio-rest oppijan-tunnistus shibboleth tarjonta-rest valinta-tulos-service"}
   ]
 }
