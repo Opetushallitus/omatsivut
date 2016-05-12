@@ -39,7 +39,7 @@
     "postalCode": "Postnummer",
 
     "resultState": {
-      "EhdollinenPostfix": "TODO SV (ehdollinen)",
+      "EhdollinenPostfix": " (villkorlig)",
       "Hyvaksytty": "Godkänd",
       "Kesken": "Studerandeantagningen_oavslutad",
       "HarkinnanvaraisestiHyvaksytty": "Godkänd_enligt_prövning",
@@ -158,8 +158,8 @@
   "registration": {
     "pleaseRegister": "Anmäl dig till terminen",
     "goToRegistration": "Anmäl dig",
-    "conditionalAcceptanceTitle": "TODO SV: Opiskelijavalintasi on vielä ehdollinen.",
-    "conditionalAcceptanceInfo": "TODO SV: Pääset ilmoittautumaan vasta valinnan vahvistamisen jälkeen."
+    "conditionalAcceptanceTitle": "Studerandeantagningen är ännu villkorlig.",
+    "conditionalAcceptanceInfo": "Du kan anmäla dig först efter att antagningen har bekräftats."
   },
 
   "emailNote": {

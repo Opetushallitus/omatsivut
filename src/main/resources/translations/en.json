@@ -39,7 +39,7 @@
     "postalCode": "Postal code",
 
     "resultState": {
-      "EhdollinenPostfix": "TODO EN (conditional)",
+      "EhdollinenPostfix": " (conditional)",
       "Hyvaksytty": "Accepted",
       "Kesken": "Student_admission_process_unfinished",
       "HarkinnanvaraisestiHyvaksytty": "Discretionary_admission",
@@ -158,8 +158,8 @@
   "registration": {
     "pleaseRegister": "Register for the semester",
     "goToRegistration": "Go to registration",
-    "conditionalAcceptanceTitle": "TODO EN: Opiskelijavalintasi on vielä ehdollinen.",
-    "conditionalAcceptanceInfo": "TODO EN: Pääset ilmoittautumaan vasta valinnan vahvistamisen jälkeen."
+    "conditionalAcceptanceTitle": "The student admission is still conditional.",
+    "conditionalAcceptanceInfo": "You can register after the admission has been confirmed."
   },
 
   "emailNote": {
