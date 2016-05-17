@@ -39,6 +39,7 @@
     "postalCode": "Postal code",
 
     "resultState": {
+      "EhdollinenPostfix": " (conditional)",
       "Hyvaksytty": "Accepted",
       "Kesken": "Student_admission_process_unfinished",
       "HarkinnanvaraisestiHyvaksytty": "Discretionary_admission",
@@ -156,7 +157,9 @@
 
   "registration": {
     "pleaseRegister": "Register for the semester",
-    "goToRegistration": "Go to registration"
+    "goToRegistration": "Go to registration",
+    "conditionalAcceptanceTitle": "The student admission is still conditional.",
+    "conditionalAcceptanceInfo": "You can register after the admission has been confirmed."
   },
 
   "emailNote": {

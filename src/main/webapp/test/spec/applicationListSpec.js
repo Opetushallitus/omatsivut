@@ -1074,6 +1074,36 @@
           })
         })
       })
+      describe("Jos on saanut ehdollisesti paikan, muttei vielä ottanut sitä vastaan", function() {
+        before(page.applyValintatulosFixtureAndOpen("hyvaksytty-ehdollisesti-kesken-julkaistavissa"))
+
+        describe("Ennen vastaanottoa", function () {
+          it("Näkyy ehdollisesti hyväksyttynä", function() {
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].tila).to.equal('Hyväksytty (ehdollinen)')
+          })
+          it("Oili-ilmoittautumislinkki piilotetaan", function() {
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.ilmoittautuminen(0).visible).to.equal(false)
+          })
+        })
+
+        describe("Kun paikka otetaan vastaan", function() {
+          before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VastaanotaSitovasti"))
+          before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send)
+
+          it("vastaanottotieto näkyy", function() {
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].tila).to.equal('Opiskelupaikka vastaanotettu')
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[1].tila).to.equal('Peruuntunut')
+          })
+
+          it("näytetään tieto valinnan ehdollisuudesta", function() {
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.ilmoittautuminen(0).title()).to.equal('Opiskelijavalintasi on vielä ehdollinen. Kallion lukio - Lukion ilmaisutaitolinja')
+          })
+
+          it("Oili-linkki ei tule näkyviin", function() {
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.ilmoittautuminen(0).visible).to.equal(false)
+          })
+        })
+      })
       describe("Jos on saanut kaksi paikkaa kk haussa, jossa yhden paikan sääntö ei ole voimassa", function() {
         before(page.applyValintatulosFixtureAndOpen("hyvaksytty-kaikkiin", {"haku": "korkeakoulu-erillishaku-ei-yhden-paikan-saantoa"}))
 
