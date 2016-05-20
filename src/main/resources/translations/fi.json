@@ -51,7 +51,7 @@
       "VarasijaltaHyvaksytty": "Hyväksytty_varasijalta",
       "VastaanottanutSitovasti": "Opiskelupaikka_vastaanotettu",
       "Hylatty": "Et_saanut_opiskelupaikkaa.",
-      "EhdollisestiVastaanottanut": "Opiskelupaikka_vastaanotettu_ja_jonotan_ylempää",
+      "EhdollisestiVastaanottanut": "Ottanut_paikan_vastaan_ja_jonottaa_ylempään",
       "EiVastaanotettuMaaraAikana": "Et_ottanut_opiskelupaikkaa_vastaan määräaikaan mennessä"
     }
   },
@@ -90,9 +90,9 @@
         "3": "korkeakoulututkintoon johtavan opiskelupaikan."
       },
       "accept": "Otan opiskelupaikan vastaan sitovasti",
-      "conditionalAccept": "Otan opiskelupaikan vastaan ehdollisesti",
-      "conditionalAcceptInfo1": "Voit edelleen tulla varasijalta hyväksytyksi mieluisampaan hakutoiveeseen.",
-      "conditionalAcceptInfo2": "Vastaanotto muuttuu sitovaksi, jos sinua ei valita ylempiin hakutoiveisiin.",
+      "conditionalAccept": "Otan opiskelupaikan vastaan mutta jään odottamaan ylemmällä sijalla olevaa opiskelupaikkaa",
+      "conditionalAcceptInfo1": "Jos sinua ei valita varasijalta ylempään hakukohteeseen, tämä opiskelupaikan vastaanotto jää voimaan.",
+      "conditionalAcceptInfo2": "Jos sinut valitaan varasijalta ylempään hakukohteeseen, sinun ei tarvitse erikseen ottaa sitä vastaan, vaan opiskelupaikka vahvistuu sinulle automaattisesti.",
       "reject": "En ota opiskelupaikkaa vastaan",
       "responseReceived": "Vastauksesi on vastaanotettu.",
       "invalidEmail": "Virheellinen sähköpostiosoite",
@@ -105,7 +105,7 @@
         "tila": {
           "VastaanotaSitovasti": "Otan opiskelupaikan vastaan sitovasti",
           "Peru": "En ota opiskelupaikkaa vastaan",
-          "VastaanotaEhdollisesti": "Otan opiskelupaikan vastaan ehdollisesti"
+          "VastaanotaEhdollisesti": "Otan opiskelupaikan vastaan mutta jään odottamaan ylemmällä sijalla olevaa opiskelupaikkaa."
         }
       }
     }
