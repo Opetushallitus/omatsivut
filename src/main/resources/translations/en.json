@@ -51,7 +51,7 @@
       "VarasijaltaHyvaksytty": "Accepted_from_reserve place",
       "VastaanottanutSitovasti": "You_have_confirmed_the study place",
       "Hylatty": "You_have_not_received a study place.",
-      "EhdollisestiVastaanottanut": "You_have_confirmed_the_study_place_and_want_to_wait_for_a_higher_study_place",
+      "EhdollisestiVastaanottanut": "You_have_confirmed_the_study_place_and_are_queueing_for_a_study_place_with_higher_priority",
       "EiVastaanotettuMaaraAikana": "You_have_not_confirmed_the study place within the set time"
     }
   },
@@ -90,9 +90,9 @@
         "3": "study place leading to a higher education degree in Finland during one academic term."
       },
       "accept": "I confirm the granted study place",
-      "conditionalAccept": "I confirm the study place but I will wait for a higher study place",
-      "conditionalAcceptInfo1": "You can still get accepted from a waiting list to a higher prioritized study programme.",
-      "conditionalAcceptInfo2": "The confirmation will become binding if you are not offered a study place from a study programme with higher priority.",
+      "conditionalAccept": "I confirm the study place, but remain in queue for a study place which I have prioritised higher in my application.",
+      "conditionalAcceptInfo1": "If you are not accepted to the study place you are queueing for, this confirmation remains valid.",
+      "conditionalAcceptInfo2": "If you are accepted to the study place you are queueing for, you do not need to confirm that study place. It will be automatically confirmed.",
       "reject": "I do not confirm the study place",
       "responseReceived": "Your answer has been sent.",
       "invalidEmail": "Invalid e-mail",
@@ -105,7 +105,7 @@
         "tila": {
           "VastaanotaSitovasti": "I confirm the granted study place",
           "Peru": "I do not confirm the study place",
-          "VastaanotaEhdollisesti": "I confirm the study place conditionally"
+          "VastaanotaEhdollisesti": "I confirm the study place, but remain in queue for a study place which I have prioritised higher in my application"
         }
       }
     }
