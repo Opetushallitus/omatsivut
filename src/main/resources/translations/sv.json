@@ -108,7 +108,8 @@
           "VastaanotaEhdollisesti": "Jag tar emot studieplatsen men väntar på en studieplats med högre prioritet."
         }
       }
-    }
+    },
+    "siirtohaku": "HUOM! Ottaessasi vastaan opiskelupaikan siirtohaussa luovut olemassa olevasta opiskeluoikeudestasi."
   },
 
   "error": {
