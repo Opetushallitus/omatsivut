@@ -770,7 +770,7 @@
           it("voi ottaa myös ehdollisesti vastaan", function() {
             expect(hakemusKorkeakouluJatkoHaku.vastaanotto(0).vaihtoehdot()).to.deep.equal([
                   'Otan opiskelupaikan vastaan sitovasti',
-                  'Otan opiskelupaikan vastaan ehdollisesti',
+                  'Otan opiskelupaikan vastaan mutta jään odottamaan ylemmällä sijalla olevaa opiskelupaikkaa',
                   'En ota opiskelupaikkaa vastaan'
             ])
           })
@@ -808,7 +808,7 @@
 
             it("vastaanottotieto näkyy", function() {
               expect(hakemusKorkeakouluJatkoHaku.valintatulokset()[0].tila).to.equal('1. varasijalla')
-              expect(hakemusKorkeakouluJatkoHaku.valintatulokset()[1].tila).to.equal('Opiskelupaikka vastaanotettu ja jonotan ylempää')
+              expect(hakemusKorkeakouluJatkoHaku.valintatulokset()[1].tila).to.equal('Ottanut paikan vastaan ja jonottaa ylempään')
             })
           })
 
