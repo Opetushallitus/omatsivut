@@ -108,7 +108,8 @@
           "VastaanotaEhdollisesti": "I confirm the study place, but remain in queue for a study place which I have prioritised higher in my application"
         }
       }
-    }
+    },
+    "siirtohaku": "HUOM! Ottaessasi vastaan opiskelupaikan siirtohaussa luovut olemassa olevasta opiskeluoikeudestasi."
   },
 
   "error": {

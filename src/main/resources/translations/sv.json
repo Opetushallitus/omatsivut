@@ -108,7 +108,8 @@
           "VastaanotaEhdollisesti": "Jag tar emot studieplatsen villkorligt"
         }
       }
-    }
+    },
+    "siirtohaku": "HUOM! Ottaessasi vastaan opiskelupaikan siirtohaussa luovut olemassa olevasta opiskeluoikeudestasi."
   },
 
   "error": {
