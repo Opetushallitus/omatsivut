@@ -51,7 +51,7 @@
       "VarasijaltaHyvaksytty": "Accepted_from_reserve place",
       "VastaanottanutSitovasti": "You_have_confirmed_the study place",
       "Hylatty": "You_have_not_received a study place.",
-      "EhdollisestiVastaanottanut": "You_have_confirmed_the_study_place_and_are_queueing_for_a_study_place_with_higher_priority",
+      "EhdollisestiVastaanottanut": "You_have_confirmed_the_study_place_and_are_on_a_wait_list_for_a_higher_preference_study_place",
       "EiVastaanotettuMaaraAikana": "You_have_not_confirmed_the study place within the set time"
     }
   },
@@ -90,9 +90,9 @@
         "3": "study place leading to a higher education degree in Finland during one academic term."
       },
       "accept": "I confirm the granted study place",
-      "conditionalAccept": "I confirm the study place, but remain in queue for a study place which I have prioritised higher in my application.",
-      "conditionalAcceptInfo1": "If you are not accepted to the study place you are queueing for, this confirmation remains valid.",
-      "conditionalAcceptInfo2": "If you are accepted to the study place you are queueing for, you do not need to confirm that study place. It will be automatically confirmed.",
+      "conditionalAccept": "I confirm the study place, but remain on a wait list for a study place with higher preference.",
+      "conditionalAcceptInfo1": "If you are not accepted to a study place you are waiting for, this confirmation remains valid.",
+      "conditionalAcceptInfo2": "If you are accepted to a study place you are waiting for, you do not need to confirm that study place. It will be automatically confirmed.",
       "reject": "I do not confirm the study place",
       "responseReceived": "Your answer has been sent.",
       "invalidEmail": "Invalid e-mail",
@@ -105,7 +105,7 @@
         "tila": {
           "VastaanotaSitovasti": "I confirm the granted study place",
           "Peru": "I do not confirm the study place",
-          "VastaanotaEhdollisesti": "I confirm the study place, but remain in queue for a study place which I have prioritised higher in my application"
+          "VastaanotaEhdollisesti": "I confirm the study place, but remain on a wait list for a study place with higher preference"
         }
       }
     }
