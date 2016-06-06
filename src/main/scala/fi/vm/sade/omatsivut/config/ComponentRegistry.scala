@@ -13,6 +13,7 @@ import fi.vm.sade.hakemuseditori.localization.TranslationsComponent
 import fi.vm.sade.hakemuseditori.lomake.{LomakeRepository, LomakeRepositoryComponent}
 import fi.vm.sade.hakemuseditori.ohjausparametrit.{OhjausparametritComponent, OhjausparametritService}
 import fi.vm.sade.hakemuseditori.tarjonta.{TarjontaComponent, TarjontaService}
+import fi.vm.sade.hakemuseditori.viestintapalvelu.{ViestintapalveluService, ViestintapalveluComponent}
 import fi.vm.sade.hakemuseditori.valintatulokset._
 import fi.vm.sade.hakemuseditori.{HakemusEditoriComponent, RemoteSendMailServiceWrapper, SendMailServiceWrapper, StubbedSendMailServiceWrapper}
 import fi.vm.sade.omatsivut.config.AppConfig._
@@ -49,6 +50,7 @@ class ComponentRegistry(val config: AppConfig)
           FixtureServletContainer with
           KoodistoServletContainer with
           TarjontaComponent with
+          ViestintapalveluComponent with
           KoodistoComponent with
           OppijanTunnistusComponent with
           NonSensitiveApplicationServletContainer {
@@ -76,6 +78,11 @@ class ComponentRegistry(val config: AppConfig)
   private def configureTarjontaService: TarjontaService = config match {
     case _: StubbedExternalDeps => new StubbedTarjontaService()
     case _ => CachedRemoteTarjontaService(config.settings.tarjontaUrl)
+  }
+
+  private def configureViestintapalveluService: ViestintapalveluService = config match {
+    case _: StubbedExternalDeps => new StubbedViestintapalveluService()
+    case _ => new RemoteViestintapalveluService(config.settings.viestintapalveluUrl)
   }
 
   private def configureOppijanTunnistusService: OppijanTunnistusService = config match {
@@ -110,6 +117,7 @@ class ComponentRegistry(val config: AppConfig)
   val lomakeRepository: LomakeRepository = new RemoteLomakeRepository
   val hakemusConverter: HakemusConverter = new HakemusConverter
   val tarjontaService: TarjontaService = configureTarjontaService
+  val viestintapalveluService: ViestintapalveluService = configureViestintapalveluService
   val koodistoService: KoodistoService = configureKoodistoService
   val groupEmailService: GroupEmailService = configureGroupEmailService
   val captchaService: CaptchaService = new RemoteCaptchaService(config.settings.captchaSettings)

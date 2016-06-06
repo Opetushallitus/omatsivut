@@ -48,6 +48,7 @@ omatsivut.koulutusinformaatio.basketitems.url=https\://{{host_haku}}/basket/item
 omatsivut.ohjausparametrit.url=https\://{{host_virkailija}}/ohjausparametrit-service/api/v1/rest/parametri
 
 omatsivut.tarjonta.url=https\://{{host_virkailija}}/tarjonta-service/rest/v1
+omatsivut.viestintapalvelu.url=https\://{{host_virkailija}}/viestintapalvelu/api/v1
 
 # for hakemus-api
 koulutusinformaatio.ao.resource.url=https\://{{host_haku}}/ao

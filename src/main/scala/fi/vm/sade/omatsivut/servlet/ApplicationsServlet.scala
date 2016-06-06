@@ -1,5 +1,6 @@
 package fi.vm.sade.omatsivut.servlet
 
+import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.Calendar
 
@@ -8,13 +9,14 @@ import fi.vm.sade.hakemuseditori._
 import fi.vm.sade.hakemuseditori.auditlog.AuditLoggerComponent
 import fi.vm.sade.hakemuseditori.domain.Language
 import fi.vm.sade.hakemuseditori.hakemus.domain.HakemusMuutos
-import fi.vm.sade.hakemuseditori.hakemus.{ApplicationValidatorComponent, HakemusRepositoryComponent, SpringContextComponent}
+import fi.vm.sade.hakemuseditori.hakemus.{HakemusInfo, ApplicationValidatorComponent, HakemusRepositoryComponent, SpringContextComponent}
 import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.hakemuseditori.localization.TranslationsComponent
 import fi.vm.sade.hakemuseditori.lomake.LomakeRepositoryComponent
 import fi.vm.sade.hakemuseditori.user.Oppija
 import fi.vm.sade.hakemuseditori.valintatulokset.ValintatulosServiceComponent
 import fi.vm.sade.hakemuseditori.valintatulokset.domain._
+import fi.vm.sade.hakemuseditori.viestintapalvelu.ViestintapalveluComponent
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.hakemuspreview.HakemusPreviewGeneratorComponent
 import fi.vm.sade.omatsivut.security.AuthenticationRequiringServlet
@@ -27,6 +29,7 @@ import scala.util.{Failure, Success}
 trait ApplicationsServletContainer {
   this: HakemusEditoriComponent with LomakeRepositoryComponent with
     HakemusRepositoryComponent with
+    ViestintapalveluComponent with
     ValintatulosServiceComponent with
     ApplicationValidatorComponent with
     HakemusPreviewGeneratorComponent with
@@ -43,6 +46,16 @@ trait ApplicationsServletContainer {
 
     before() {
       contentType = formats("json")
+    }
+
+    get("/tuloskirje/:hakuOid") {
+      val hakuOid = params("hakuOid")
+      hakemusEditori.fetchTuloskirje(personOid(), hakuOid) match {
+        case Some(tuloskirje) => Ok(tuloskirje, Map(
+          "Content-Type" -> "application/octet-stream",
+          "Content-Disposition" -> "attachment; filename=tuloskirje.pdf"))
+        case None => InternalServerError("error" -> "Internal service unavailable")
+      }
     }
 
     get("/") {

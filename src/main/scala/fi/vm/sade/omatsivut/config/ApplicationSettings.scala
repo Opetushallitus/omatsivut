@@ -24,6 +24,7 @@ case class ApplicationSettings(config: Config) extends GroupEmailerSettings(conf
 
   val ohjausparametritUrl = config.getString("omatsivut.ohjausparametrit.url")
   val tarjontaUrl = config.getString("omatsivut.tarjonta.url")
+  val viestintapalveluUrl = config.getString("omatsivut.viestintapalvelu.url")
   val koodistoUrl = config.getString("cas.service.koodisto-service")
 
   val aesKey = config.getString("omatsivut.crypto.aes.key")

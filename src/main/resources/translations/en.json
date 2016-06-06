@@ -66,7 +66,8 @@
     "vastaanota_confirm": "Confirm your answer. The choice cannot be cancelled.",
     "vastaanota_ariaLabel": "Send the answer by choosing this two times",
     "logout": "Log out",
-    "showApplication": "Show application form"
+    "showApplication": "Show application form",
+    "downloadLetter": "Letter (__luotu__)"
   },
 
   "message": {

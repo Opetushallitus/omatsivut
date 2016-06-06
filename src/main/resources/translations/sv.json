@@ -66,7 +66,8 @@
     "vastaanota_confirm": "Bekräfta svaret. Valet går inte att annullera.",
     "vastaanota_ariaLabel": "Skicka svaret genom att välja detta två gånger",
     "logout": "Logga ut",
-    "showApplication": "Visa ansökningsblankett"
+    "showApplication": "Visa ansökningsblankett",
+    "downloadLetter": "Brev (__luotu__)"
   },
 
   "message": {

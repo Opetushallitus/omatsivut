@@ -36,7 +36,7 @@ class AddedQuestionFinderSpec extends Specification {
 
   def haku(implicit lang: Language.Language) = SharedAppConfig.componentRegistry.tarjontaService.haku(TestFixture.applicationSystemNivelKesa2013Oid, lang).get
   def hakemusMuutos(implicit lang: Language.Language) = {
-    SharedAppConfig.componentRegistry.hakemusConverter.convertToHakemus(Some(Lomake(applicationSystemNivelKesa2013)), haku, wrap(applicationNivelKesa2013WithPeruskouluBaseEducationApp)).toHakemusMuutos
+    SharedAppConfig.componentRegistry.hakemusConverter.convertToHakemus(None, Some(Lomake(applicationSystemNivelKesa2013)), haku, wrap(applicationNivelKesa2013WithPeruskouluBaseEducationApp)).toHakemusMuutos
   }
 
   def findAddedQuestions(newAnswers: Answers, oldAnswers: Answers) = {

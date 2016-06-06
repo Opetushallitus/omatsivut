@@ -84,6 +84,18 @@ trait NonSensitiveApplicationServletContainer {
       contentType = formats("json")
     }
 
+    get("/tuloskirje/:hakuOid") {
+      val hakuOid = params("hakuOid")
+      (for {
+        token <- jwtAuthorize
+        tuloskirje <- fetchTuloskirje(token.personOid, hakuOid)
+      } yield {
+        Ok(tuloskirje, Map(
+          "Content-Type" -> "application/octet-stream",
+          "Content-Disposition" -> "attachment; filename=tuloskirje.pdf"))
+      }).get
+    }
+
     put("/:oid") {
       (for {
         token <- jwtAuthorize
