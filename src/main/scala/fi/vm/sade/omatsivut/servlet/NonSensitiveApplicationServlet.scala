@@ -88,11 +88,14 @@ trait NonSensitiveApplicationServletContainer {
       val hakuOid = params("hakuOid")
       (for {
         token <- jwtAuthorize
-        tuloskirje <- fetchTuloskirje(token.personOid, hakuOid)
+        tuloskirje <- Try(fetchTuloskirje(token.personOid, hakuOid))
       } yield {
-        Ok(tuloskirje, Map(
-          "Content-Type" -> "application/octet-stream",
-          "Content-Disposition" -> "attachment; filename=tuloskirje.pdf"))
+        tuloskirje match {
+          case Some(data) => Ok(tuloskirje, Map(
+            "Content-Type" -> "application/octet-stream",
+            "Content-Disposition" -> "attachment; filename=tuloskirje.pdf"))
+          case None => InternalServerError("error" -> "Internal Server Error")
+        }
       }).get
     }
 
