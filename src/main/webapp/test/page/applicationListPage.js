@@ -97,6 +97,10 @@ function ApplicationListPage() {
         }).toArray()
     },
 
+    tuloskirjeet: function () {
+      return S(".tuloskirje").text().trim()
+    },
+
     getApplication: function(applicationIndex) {
       return Application(applicationIndex)
     },

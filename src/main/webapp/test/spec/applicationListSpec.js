@@ -1137,6 +1137,15 @@
           })
         })
       })
+
+      describe("Hakija näkee julkaistun tuloskirjeen", function() {
+        before(page.applyValintatulosFixtureAndOpen("hyvaksytty-vastaanottanut", {"haku": "toinen-aste-yhteishaku"}))
+        describe("Tuloskirjeen-latauslinkki", function () {
+          it("Näkyy", function() {
+            expect(ApplicationListPage().tuloskirjeet()).to.equal('Tuloskirje (14.11.2016)')
+          })
+        })
+      })
     })
 
     describe("hakemuksen tila", function() {
