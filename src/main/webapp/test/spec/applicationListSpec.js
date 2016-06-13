@@ -480,8 +480,10 @@
           hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal(hakuaikatieto)
         })
 
-        it("valintatuloksia ei näytetä", function () {
-          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset().length).to.equal(0)
+        it("valintatulokset näytetään KESKEN-tilassa", function () {
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset().length).to.equal(2)
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].tila).to.equal('Opiskelijavalinta kesken')
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[1].tila).to.equal('Opiskelijavalinta kesken')
         })
       })
 
