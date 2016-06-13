@@ -626,9 +626,9 @@
           })
 
           it("tuloslistaus on näkyvissä", function() {
-            hakemusErityisopetuksena.resultTableTitle().should.equal("Valintatilanne  Kesken")
             expect(hakemusErityisopetuksena.valintatulokset()[0].tila).to.equal('Opiskelijavalinta kesken')
             expect(hakemusErityisopetuksena.valintatulokset()[1].tila).to.equal('Hyväksytty')
+            hakemusErityisopetuksena.resultTableTitle().should.equal("Valintatilanne  Kesken")
           })
 
           it("paikka on vastaanotettavissa", function() {
