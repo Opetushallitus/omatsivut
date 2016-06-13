@@ -22,7 +22,7 @@ class OmatSivutMochaTest extends Specification {
     val stdoutWriter = new PrintWriter(stdoutStream)
     val stderrWriter = new PrintWriter(stderrStream)
 
-    val pb = Seq("node_modules/mocha-phantomjs/bin/mocha-phantomjs", "-R", "xunit", "http://localhost:"+AppConfig.embeddedJettyPortChooser.chosenPort+"/omatsivut/test/runner.html?grep=monta%20hakuaikaa")
+    val pb = Seq("node_modules/mocha-phantomjs/bin/mocha-phantomjs", "-R", "xunit", "http://localhost:"+AppConfig.embeddedJettyPortChooser.chosenPort+"/omatsivut/test/runner.html")
     val res = pb.!(ProcessLogger(stdoutWriter.println, stderrWriter.println))
     stdoutWriter.close()
     stderrWriter.close()
