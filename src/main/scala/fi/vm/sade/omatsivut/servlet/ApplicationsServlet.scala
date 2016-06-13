@@ -6,10 +6,10 @@ import java.util.Calendar
 
 import fi.vm.sade.groupemailer.{EmailData, EmailMessage, EmailRecipient, GroupEmailComponent}
 import fi.vm.sade.hakemuseditori._
-import fi.vm.sade.hakemuseditori.auditlog.AuditLoggerComponent
+import fi.vm.sade.hakemuseditori.auditlog.{AuditLoggerComponent, SaveVastaanotto}
 import fi.vm.sade.hakemuseditori.domain.Language
 import fi.vm.sade.hakemuseditori.hakemus.domain.HakemusMuutos
-import fi.vm.sade.hakemuseditori.hakemus.{HakemusInfo, ApplicationValidatorComponent, HakemusRepositoryComponent, SpringContextComponent}
+import fi.vm.sade.hakemuseditori.hakemus.{ApplicationValidatorComponent, HakemusInfo, HakemusRepositoryComponent, SpringContextComponent}
 import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.hakemuseditori.localization.TranslationsComponent
 import fi.vm.sade.hakemuseditori.lomake.LomakeRepositoryComponent
@@ -101,20 +101,19 @@ trait ApplicationsServletContainer {
       applicationRepository.findStoredApplicationByPersonAndOid(henkiloOid, hakemusOid) match {
 
         case Some(hakemus) if tarjontaService.haku(hakemus.hakuOid, Language.fi).exists(_.published) =>
-          vastaanota(hakemusOid, hakukohdeOid, henkiloOid, request.body)
+          vastaanota(hakemusOid, hakukohdeOid, hakemus.hakuOid, henkiloOid, request.body)
 
         case _ => NotFound("error" -> "Not found")
 
       }
     }
 
-    private def vastaanota(hakemusOid: String, hakukohdeOid: String, henkiloOid: String, requestBody: String): ActionResult = {
+    private def vastaanota(hakemusOid: String, hakukohdeOid: String, hakuOid: String, henkiloOid: String, requestBody: String): ActionResult = {
       val clientVastaanotto = Serialization.read[ClientSideVastaanotto](requestBody)
       try {
         if (valintatulosService.vastaanota(henkiloOid, hakemusOid, hakukohdeOid, clientVastaanotto.vastaanottoAction)) {
           sendEmail(clientVastaanotto)
-          //TODO
-          //auditLogger.log(SaveVastaanotto(personOid(), hakemusOid, hakuOid, vastaanotto))
+          auditLogger.log(SaveVastaanotto(henkiloOid, hakemusOid, hakukohdeOid, hakuOid, clientVastaanotto.vastaanottoAction))
           hakemusRepository.getHakemus(hakemusOid) match {
             case Some(hakemus) => Ok(hakemus)
             case _ => NotFound("error" -> "Not found")
