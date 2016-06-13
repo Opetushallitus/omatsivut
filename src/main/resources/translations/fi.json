@@ -109,7 +109,8 @@
           "VastaanotaEhdollisesti": "Otan opiskelupaikan vastaan mutta jään odottamaan ylemmällä sijalla olevaa opiskelupaikkaa."
         }
       }
-    }
+    },
+    "siirtohaku": "HUOM! Ottaessasi vastaan opiskelupaikan siirtohaussa luovut olemassa olevasta opiskeluoikeudestasi."
   },
 
   "error": {
