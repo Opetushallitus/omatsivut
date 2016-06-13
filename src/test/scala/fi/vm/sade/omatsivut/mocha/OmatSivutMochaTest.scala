@@ -1,6 +1,6 @@
 package fi.vm.sade.omatsivut.mocha
 
-import java.io.{ByteArrayOutputStream, PrintWriter}
+import java.io.{ByteArrayOutputStream, File, PrintWriter}
 
 import fi.vm.sade.omatsivut.SharedJetty
 import fi.vm.sade.omatsivut.config.AppConfig
@@ -29,7 +29,9 @@ class OmatSivutMochaTest extends Specification {
 
     val plainTestRunOutput: String = stdoutStream.toString
     val testOutput = plainTestRunOutput.split("\n").filter(_.startsWith("<")).mkString("\n")
-    new PrintWriter("target/surefire-reports/mocha-tests.xml") {
+    val testReportsDirOnBamboo: String = "target/surefire-reports"
+    new File(testReportsDirOnBamboo).mkdirs()
+    new PrintWriter(testReportsDirOnBamboo + "/mocha-tests.xml") {
       write(testOutput)
       close()
     }
