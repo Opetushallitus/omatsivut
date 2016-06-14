@@ -535,6 +535,22 @@
         })
       })
 
+      describe("kun 2. asteen valinta on kesken, mutta tuloksia ei saa vielä julkaista", function() {
+        before(page.applyValintatulosFixtureAndOpen("hyvaksytty-ylempi-varalla", {"haku": "toinen-aste-yhteishaku", "ohjausparametrit": "tuloksia-ei-viela-saa-julkaista"}))
+
+        it("hakemusta ei voi muokata", function () {
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.preferencesForApplication().length).to.equal(0)
+        })
+
+        it("hakuaikatieto näkyy", function() {
+          hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal(hakuaikatieto)
+        })
+
+        it("valintatuloksia ei näytetä", function () {
+          expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset().length).to.equal(0)
+        })
+      })
+
       describe("Hylätty", function() {
         before(page.applyValintatulosFixtureAndOpen("hylatty-julkaistavissa"))
 
