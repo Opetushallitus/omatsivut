@@ -36,7 +36,8 @@ class OmatSivutMochaTest extends Specification {
       close()
     }
     System.err.println(stderrStream.toString)
-    println(s"Test output:\n$plainTestRunOutput")
+    println(s"Test output for mocha tests XML report:\n$testOutput")
+    println(s"Full test run est output:\n$plainTestRunOutput")
 
     if (res != 0) {
       failure("Mocha tests failed")
