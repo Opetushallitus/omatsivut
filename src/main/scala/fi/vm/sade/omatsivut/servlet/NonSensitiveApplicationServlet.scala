@@ -76,7 +76,7 @@ trait NonSensitiveApplicationServletContainer {
     }
 
     private def fetchHakemus(oid: String): Try[HakemusInfo] = {
-      hakemusRepository.getHakemus(oid)
+      hakemusRepository.getHakemus(oid, fetchTulos = false)
         .fold[Try[HakemusInfo]](Failure(new NoSuchElementException(s"Hakemus $oid not found")))(Success(_))
     }
 
