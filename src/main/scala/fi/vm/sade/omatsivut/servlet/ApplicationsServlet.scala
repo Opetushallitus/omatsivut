@@ -112,7 +112,12 @@ trait ApplicationsServletContainer {
       val clientVastaanotto = Serialization.read[ClientSideVastaanotto](requestBody)
       try {
         if (valintatulosService.vastaanota(henkiloOid, hakemusOid, hakukohdeOid, clientVastaanotto.vastaanottoAction)) {
-          sendEmail(clientVastaanotto)
+          try {
+            sendEmail(clientVastaanotto)
+          } catch {
+            case e: Exception => logger.error(s"""Vastaanottosähköpostin lähetys epäonnistui: haku / hakukohde / hakemus / hakija / email / clientVastaanotto :
+              $hakuOid / $hakukohdeOid / $hakemusOid / $henkiloOid / ${clientVastaanotto.email} / $clientVastaanotto""".stripMargin)
+          }
           auditLogger.log(SaveVastaanotto(henkiloOid, hakemusOid, hakukohdeOid, hakuOid, clientVastaanotto.vastaanottoAction))
           hakemusRepository.getHakemus(hakemusOid) match {
             case Some(hakemus) => Ok(hakemus)
