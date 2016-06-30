@@ -79,7 +79,7 @@ trait TuloskirjeetServletContainer {
       }
     }
 
-    get("") {
+    get("/tuloskirje.pdf") {
       (for {
         token <- jwtAuthorize
         tuloskirje <- Try(fetchTuloskirjeFromFileSystem(token.oid))
