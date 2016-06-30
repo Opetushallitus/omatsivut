@@ -47,24 +47,6 @@ trait TuloskirjeetServletContainer {
         InternalServerError("error" -> "Internal server error")
     }
 
-    def user = Oppija(getPersonOidFromSession)
-
-    private def getPersonOidFromSession: String = {
-      jwtAuthorize match {
-        case Success(hakemusJWT) => hakemusJWT.personOid
-        case Failure(e) => throw e
-      }
-    }
-
-    private def jwtAuthorize: Try[HakemusJWT] = {
-      val bearerMatch = """Bearer (.+)""".r
-      request.getHeader("Authorization") match {
-        case bearerMatch(jwtString) => jwt.decode(jwtString)
-          .transform(Success(_), e => Failure(new ForbiddenException(e.getMessage)))
-        case _ => Failure(new UnauthorizedException("Invalid Authorization header"))
-      }
-    }
-
     def fetchTuloskirjeFromFileSystem(hakemusOid: String): Option[Array[Byte]] = {
       val path = s"$fileSystemUrl/$hakemusOid.pdf"
       val file = new File(path)
@@ -79,11 +61,10 @@ trait TuloskirjeetServletContainer {
       }
     }
 
-    get("/tuloskirje.pdf") {
-      log(s"Getting tuloskirje.pdf")
+    get("/:token/tuloskirje.pdf") {
       (for {
-        token <- jwtAuthorize
-        tuloskirje <- Try(fetchTuloskirjeFromFileSystem(token.oid))
+        hakemusOid <- oppijanTunnistusService.validateToken(params("token"))
+        tuloskirje <- Try(fetchTuloskirjeFromFileSystem(hakemusOid))
       } yield {
         tuloskirje match {
           case Some(data) => Ok(tuloskirje, Map(
