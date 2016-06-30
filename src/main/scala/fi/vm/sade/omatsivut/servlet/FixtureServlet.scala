@@ -58,6 +58,17 @@ trait FixtureServletContainer {
         }
       }
 
+      put("/fixtures/haku/:oid/overrideHakuKierrosPaattyy/:timestamp") {
+        tarjontaService match {
+          case service: StubbedTarjontaService => {
+            service.modifyHakukierrosPaattyy(params("oid"), params("timestamp").toLong)
+            Ok
+          }
+          case _ => InternalServerError
+        }
+      }
+
+
       put("/fixtures/haku/:oid/invertPriority") {
         tarjontaService match {
           case service: StubbedTarjontaService => {
@@ -87,6 +98,18 @@ trait FixtureServletContainer {
           case _ => InternalServerError
         }
       }
+
+      put("/fixtures/haku/:oid/resetHakuPaattyy") {
+        tarjontaService match {
+          case service: StubbedTarjontaService => {
+            service.resetHakukierrosPaattyy(params("oid"))
+            Ok
+          }
+          case _ => InternalServerError
+        }
+      }
+
+
     }
   }
 }

@@ -12,12 +12,13 @@ import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.omatsivut.fixtures.hakemus.ApplicationFixtureImporter
 import fi.vm.sade.omatsivut.{PersonOid, ScalatraTestSupport}
 import fi.vm.sade.utils.json4s.GenericJsonFormats
+import fi.vm.sade.utils.slf4j.Logging
 import org.json4s.JsonAST.JObject
 import org.json4s._
 import org.json4s.jackson.Serialization
 import org.json4s.reflect.TypeInfo
 
-trait HakemusApiSpecification extends ScalatraTestSupport {
+trait HakemusApiSpecification extends ScalatraTestSupport with Logging {
   implicit val jsonFormats: Formats = JsonFormats.jsonFormats ++ List(new HakemuksenTilaSerializer)
 
   private lazy val dao: ApplicationDAO = springContext.applicationDAO
@@ -67,6 +68,18 @@ trait HakemusApiSpecification extends ScalatraTestSupport {
       put("util/fixtures/haku/" + hakuOid + "/overrideStart/" + (new Date().getTime + daysFromNow*24*60*60*1000), Iterable.empty) { }
     }
   }
+
+  def setHakukierrosPaattyy(hakuOid: String, daysFromNow: Long)(implicit personOid: PersonOid) = {
+      put("util/fixtures/haku/" + hakuOid + "/overrideHakuKierrosPaattyy/" + (new Date().getTime + daysFromNow*24*60*60*1000), Iterable.empty) { }
+  }
+
+  def resetHakukierrosPaattyy(applicationId: String)(implicit personOid: PersonOid) = {
+    withApplications { applications =>
+      val hakuOid = applications.find(_.hakemus.oid == applicationId).map(_.hakemus.haku.oid).get
+      put("util/fixtures/haku/" + hakuOid + "/resetHakuPaattyy") {}
+    }
+  }
+
 
   def modifyHakemus[T](oid: String)(modification: (Hakemus => Hakemus))(f: Hakemus => T)(implicit personOid: PersonOid): T = {
     withHakemusWithEmptyAnswers(oid) { hakemus =>
