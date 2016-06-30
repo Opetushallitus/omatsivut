@@ -53,6 +53,7 @@ class ComponentRegistry(val config: AppConfig)
           ViestintapalveluComponent with
           KoodistoComponent with
           OppijanTunnistusComponent with
+          TuloskirjeetServletContainer with
           NonSensitiveApplicationServletContainer {
 
   private def configureOhjausparametritService: OhjausparametritService = config match {
@@ -134,6 +135,7 @@ class ComponentRegistry(val config: AppConfig)
   def newKoodistoServlet = new KoodistoServlet
   def newMuistilistaServlet = new MuistilistaServlet(config)
   def newNonSensitiveApplicationServlet = new NonSensitiveApplicationServlet(config)
+  def newTuloskirjeetServlet = new TuloskirjeetServlet(config)
 
   def start() {
     try {
