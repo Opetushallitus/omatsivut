@@ -56,7 +56,7 @@ trait TuloskirjeetServletContainer {
         None
       } else {
         val fileStream = new FileInputStream(file);
-        val byteArray = IOUtils.toByteArray(fileStream)
+        val byteArray: Array[Byte] = IOUtils.toByteArray(fileStream)
         IOUtils.closeQuietly(fileStream)
         Some(byteArray)
       }
@@ -68,7 +68,7 @@ trait TuloskirjeetServletContainer {
         tuloskirje <- Try(fetchTuloskirjeFromFileSystem(hakemusOid))
       } yield {
         tuloskirje match {
-          case Some(data) => Ok(tuloskirje, Map(
+          case Some(data) => Ok(data, Map(
             "Content-Type" -> "application/octet-stream",
             "Content-Disposition" -> "attachment; filename=tuloskirje.pdf"))
           case None => InternalServerError("error" -> "Internal Server Error")
