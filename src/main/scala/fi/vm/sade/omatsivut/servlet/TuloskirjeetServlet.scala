@@ -1,6 +1,6 @@
 package fi.vm.sade.omatsivut.servlet
 
-import java.io.File
+import java.io.{FileInputStream, File}
 
 import fi.vm.sade.hakemuseditori._
 import fi.vm.sade.hakemuseditori.hakemus.domain.HakemusMuutos
@@ -13,6 +13,7 @@ import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.oppijantunnistus.{ExpiredTokenException, InvalidTokenException, OppijanTunnistusComponent}
 import fi.vm.sade.omatsivut.security.{HakemusJWT, JsonWebToken}
 import fi.vm.sade.omatsivut.{NonSensitiveHakemus, NonSensitiveHakemusInfo, NonSensitiveHakemusInfoSerializer, NonSensitiveHakemusSerializer}
+import org.apache.commons.io.IOUtils
 import org.json4s.jackson.Serialization
 import org.scalatra._
 import org.scalatra.json.JacksonJsonSupport
@@ -54,9 +55,9 @@ trait TuloskirjeetServletContainer {
       if(!file.exists()) {
         None
       } else {
-        val source = scala.io.Source.fromFile(file)
-        val byteArray = source.map(_.toByte).toArray
-        source.close()
+        val fileStream = new FileInputStream(file);
+        val byteArray = IOUtils.toByteArray(fileStream)
+        IOUtils.closeQuietly(fileStream)
         Some(byteArray)
       }
     }
