@@ -80,6 +80,7 @@ trait TuloskirjeetServletContainer {
     }
 
     get("/tuloskirje.pdf") {
+      log(s"Getting tuloskirje.pdf")
       (for {
         token <- jwtAuthorize
         tuloskirje <- Try(fetchTuloskirjeFromFileSystem(token.oid))
