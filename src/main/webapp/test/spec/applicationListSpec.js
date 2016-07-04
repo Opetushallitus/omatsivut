@@ -2417,6 +2417,15 @@
           hakemusYhteishakuKevat2014WithForeignBaseEducation.previewLink().hasClass("disabled").should.equal(true)
         })
       })
+      describe("Synteettinen hakemus", function() {
+        before(
+            page.applyFixtureAndOpen({applicationOid: hakemusKorkeakouluJatkoHakuId}),
+            wait.forMilliseconds(1000)
+        )
+        it("linkkiä ei näytetä", function() {
+          hakemusKorkeakouluJatkoHaku.previewLink().is(':hidden').should.equal(true)
+        })
+      })
     })
 
     describe("Erillishaku ilman hakulomaketta", function() {
