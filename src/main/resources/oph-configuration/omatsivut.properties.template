@@ -12,8 +12,6 @@ host.haku={{host_haku}}
 host.haku.sv={{host_haku_sv}}
 host.haku.en={{host_haku_en}}
 host.ldap={{host_ldap}}
-activemq.brokerurl={{activemq_brokerurl}}
-activemq.jmxurl={{activemq_jmxurl}}
 auth.mode={{auth_mode}}
 env.loglevel={{env_loglevel}}
 host.cas={{host_cas}}
@@ -99,17 +97,6 @@ spring_security_default_access=permitAll
 accessRight.webservice.url.backend=https\://{{host_virkailija}}/authentication-service/services/accessRightService
 accessRightAdmin.webservice.url.backend=https\://{{host_virkailija}}/authentication-service/services/accessRightAdminService
 accessRightHistory.webservice.url.backend=https\://{{host_virkailija}}/authentication-service/services/accessRightHistoryService
-activemq.queue.name.log.error=Sade.Log_Error
-activemq.queue.name.log=Sade.Log
-activemq.queue.name.mail=Sade.Email
-activeMq.queueName.organisaatio=fi.vm.sade.organisaatio.service
-activeMq.queueNameHaku=fi.vm.sade.tarjonta.haku.service
-activeMq.queueNameTarjontaAdmin=fi.vm.sade.tarjonta.admin.service
-activeMq.queueNameTarjontaPublic=fi.vm.sade.tarjonta.public.service
-activeMq.targetDestination.learningopportunityprovider.public=fi.vm.sade.learningopportunityprovider.public.service
-activeMq.targetDestination.organisaatio=fi.vm.sade.organisaatio.service
-activeMq.targetDestinationAdmin.tarjonta=fi.vm.sade.tarjonta.admin.service
-activeMq.targetDestinationPublic.tarjonta=fi.vm.sade.tarjonta.public.service
 cas.group-role-attribute=cn
 cas.group-search-base=ou\=groups
 cas.group-search-filter=(uniqueMember\={0})

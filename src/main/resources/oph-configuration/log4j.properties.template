@@ -37,7 +37,5 @@ log4j.logger.org.apache.cxf=ERROR
 log4j.logger.org.springframework=WARN
 log4j.logger.org.vaadin=ERROR
 log4j.logger.javax.sql=ERROR
-log4j.logger.org.apache.activemq=INFO
-log4j.logger.org.apache.activemq.spring={{env_loglevel}}
 # cas session + singlelogout tracing
 log4j.logger.org.jasig.cas.client.session=INFO

@@ -1,7 +1,5 @@
 package fi.vm.sade.omatsivut.config
 
-import java.util.concurrent.Executors
-
 import fi.vm.sade.groupemailer.{GroupEmailComponent, GroupEmailService}
 import fi.vm.sade.hakemuseditori.auditlog.{AuditContext, AuditLogger, AuditLoggerComponent}
 import fi.vm.sade.hakemuseditori.domain.Language.Language
@@ -106,15 +104,13 @@ class ComponentRegistry(val config: AppConfig)
     case _ => new RemoteSendMailServiceWrapper(springContext)
   }
 
-  private lazy val runningLogger = new RunnableLogger
-  private lazy val pool = Executors.newSingleThreadExecutor
   lazy val springContext = new HakemusSpringContext(OmatSivutSpringContext.createApplicationContext(config))
   val hakumaksuService: HakumaksuServiceWrapper = configureHakumaksuService
   val sendMailService: SendMailServiceWrapper = configureSendMailService
   val koulutusInformaatioService: KoulutusInformaatioService = configureKoulutusInformaatioService
   val ohjausparametritService: OhjausparametritService = configureOhjausparametritService
   val valintatulosService: ValintatulosService = configureValintatulosService
-  val auditLogger: AuditLogger = new AuditLoggerFacade(runningLogger)
+  val auditLogger: AuditLogger = new AuditLoggerFacade()
   val lomakeRepository: LomakeRepository = new RemoteLomakeRepository
   val hakemusConverter: HakemusConverter = new HakemusConverter
   val tarjontaService: TarjontaService = configureTarjontaService
@@ -140,7 +136,6 @@ class ComponentRegistry(val config: AppConfig)
   def start() {
     try {
       config.onStart
-      pool.execute(runningLogger)
       if (config.isInstanceOf[IT]) {
         new ApplicationFixtureImporter(springContext).applyFixtures()
       }

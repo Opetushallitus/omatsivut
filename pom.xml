@@ -127,11 +127,6 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>fi.vm.sade.log</groupId>
-            <artifactId>log-client</artifactId>
-            <version>8.0</version>
-        </dependency>
-        <dependency>
             <groupId>fi.vm.sade</groupId>
             <artifactId>scala-group-emailer_2.11</artifactId>
             <version>0.2.0-SNAPSHOT</version>
