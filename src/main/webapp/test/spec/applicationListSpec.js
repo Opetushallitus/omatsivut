@@ -101,7 +101,7 @@
       it("otsikko on ruotsiksi", function() {
         expect(S("h1:first").text().trim()).to.equal('Mina ansökningsblanketter')
       })
-      it('hakemuslistassa on hakemus henkilölle 010101-123N', function () {
+      it('hakemuslistassa on hakemus henkilölle 010100A939R', function () {
         expect(ApplicationListPage().applications()).to.contain(
           { applicationSystemName: 'Gemensam ansökan till yrkes- och gymnasieutbildning våren 2014' }
         )
@@ -110,7 +110,7 @@
         )
       })
 
-      it("henkilön 010101-123N hakutoiveet ovat näkyvissä", function () {
+      it("henkilön 010100A939R hakutoiveet ovat näkyvissä", function () {
         expect(page.getApplication(hakemusNivelKesa2013WithPeruskouluBaseEducationId).preferencesForApplication()).to.deep.equal([
           {
             "hakutoive.Opetuspiste": "Amiedu, Valimotie 8",
@@ -148,7 +148,7 @@
   })
 
   describe('Hakemuslistaus', function () {
-    before(session.init("010101-123N","fi"))
+    before(session.init("010100A939R","fi"))
 
     describe("Hakemuksen tietojen näyttäminen", function() {
       before(page.applyFixtureAndOpen({}))
@@ -159,7 +159,7 @@
         })
       })
 
-      it('hakemuslistassa on hakemus henkilölle 010101-123N', function () {
+      it('hakemuslistassa on hakemus henkilölle 010100A939R', function () {
         expect(ApplicationListPage().applications()).to.contain(
           { applicationSystemName: 'Ammatillisen koulutuksen ja lukiokoulutuksen kevään 2014 yhteishaku' }
         )
@@ -174,7 +174,7 @@
         )
       })
 
-      it("henkilön 010101-123N hakutoiveet ovat näkyvissä", function () {
+      it("henkilön 010100A939R hakutoiveet ovat näkyvissä", function () {
         expect(hakemusNivelKesa2013WithPeruskouluBaseEducation.preferencesForApplication()).to.deep.equal([
           {
             "hakutoive.Opetuspiste": "Amiedu, Valimotie 8",

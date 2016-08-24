@@ -29,7 +29,7 @@ class PreviewSimulation extends Simulation {
 			.get("""/omatsivut/login"""))
 		.pause(2)
 		.exec(http("Get applications")
-			.get("""/omatsivut/Shibboleth.sso/fakesession?hetu=010101-123N""")
+			.get("""/omatsivut/Shibboleth.sso/fakesession?hetu=010100A939R""")
 			.resources(http("request_2")
 			.get( """/omatsivut/secure/applications""")
 			.headers(headers_4)))

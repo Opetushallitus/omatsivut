@@ -1,7 +1,7 @@
 var prevLang = "fi"
 
 function ApplicationListPage() {
-  var testHetu = "010101-123N"
+  var testHetu = "010100A939R"
   var applicationApi = ApplicationApi()
 
   var api = {

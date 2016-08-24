@@ -20,7 +20,7 @@ class ErillishakuFixtureImporter(appConfig: AppConfig, springContext: HakemusSpr
       "Hakija",
       OppijaConstants.SUKUPUOLI_MIES,
       OppijaConstants.EDUCATION_LANGUAGE_FI,
-      "010101-123N",
+      "010100A939R",
       "foobar@example.com",
       "9.1.1995",
       "fi",
