@@ -65,14 +65,14 @@ class UpdateApplicationSpec extends HakemusApiSpecification with FixturePerson w
             change.getModifier must_== "oppija 1.2.246.562.24.14229104472"
             change.getReason must_== "Muokkaus omatsivut -palvelussa"
             change.getChanges.toList.map(_.toMap) must_== List(
-              Map("field" -> "539158b8e4b0b56e67d2c74b", "old value" -> "En tiedä mihin muualle hakisin", "new value" -> "yes sir"),
-              Map("field" -> "preference4-Opetuspiste-id", "new value" -> ""),
               Map("field" -> "preference5-Opetuspiste-id", "new value" -> ""),
-              Map("field" -> "preference5-Koulutus-id", "new value" -> ""),
+              Map("field" -> "539158b8e4b0b56e67d2c74b", "old value" -> "En tiedä mihin muualle hakisin", "new value" -> "yes sir"),
               Map("field" -> "preference4-Koulutus-id", "new value" -> ""),
               Map("field" -> "eligibility_1_2_246_562_14_2014040212501070122979", "new value" -> "NOT_CHECKED:UNKNOWN:null"),
-              Map("field" -> "eligibility_1_2_246_562_14_2014032812530780195965", "new value" -> "NOT_CHECKED:UNKNOWN:null"),
-              Map("field" -> "eligibility_1_2_246_562_14_2014032610154661183054", "new value" -> "NOT_CHECKED:UNKNOWN:null")
+              Map("field" -> "preference5-Koulutus-id", "new value" -> ""),
+              Map("field" -> "eligibility_1_2_246_562_14_2014032610154661183054", "new value" -> "NOT_CHECKED:UNKNOWN:null"),
+              Map("field" -> "preference4-Opetuspiste-id", "new value" -> ""),
+              Map("field" -> "eligibility_1_2_246_562_14_2014032812530780195965", "new value" -> "NOT_CHECKED:UNKNOWN:null")
             )
             application.getNotes.size must_== 3 // two existing notes + new note at position 0
           val note: ApplicationNote = application.getNotes.get(0)
