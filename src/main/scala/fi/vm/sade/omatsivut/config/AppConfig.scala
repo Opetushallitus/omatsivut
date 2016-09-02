@@ -1,8 +1,9 @@
 package fi.vm.sade.omatsivut.config
 
 import com.typesafe.config.Config
+import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.omatsivut.security.{AuthenticationContext, ProductionAuthenticationContext, TestAuthenticationContext}
-import fi.vm.sade.utils.config.{ConfigTemplateProcessor, ApplicationSettingsLoader}
+import fi.vm.sade.utils.config.{ApplicationSettingsLoader, ConfigTemplateProcessor}
 import fi.vm.sade.utils.mongo.{EmbeddedMongo, MongoServer}
 import fi.vm.sade.utils.slf4j.Logging
 import fi.vm.sade.utils.tcp.{PortChecker, PortFromSystemPropertyOrFindFree}
