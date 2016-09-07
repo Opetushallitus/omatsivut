@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link href='http://fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700' rel='stylesheet' type='text/css'>
+    <link href="example-application.css" media="all" rel="stylesheet" type="text/css"/>
+    <title>Hakemuseditori example application</title>
+</head>
+
+<body aria-busy="true">
+    <h1>Hakemuseditorin esimerkkisovellus</h1>
+    <div>
+        <h2>Esimerkki muokattavasta hakemuksesta</h2>
+        <div ng-controller="MuokattavaHakemus">
+            <application application="application"></application>
+        </div>
+    </div>
+    <div>
+        <h2>Esimerkki hakemuksesta, missä voit ottaa paikan vastaan</h2>
+        <div ng-controller="VastaanotettavaHakemus">
+            <application application="application"></application>
+        </div>
+    </div>
+    <div class="hakemuseditori">
+        <h2>Esimerkki valintatuloksesta, missä voit ottaa paikan vastaan</h2>
+        <div ng-controller="VastaanotettavaHakemus">
+            <valintatulos data="application.state.valintatulos" final="true"></valintatulos>
+        </div>
+    </div>
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="hakemuseditori.js"></script>
+    <script src="bundle.js"></script>
+</body>
+</html>

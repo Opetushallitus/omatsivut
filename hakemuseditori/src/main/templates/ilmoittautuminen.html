@@ -1,0 +1,9 @@
+<div class="ilmoittautuminen-item fade-transitions" ng-repeat="tulos in hakukohteet()">
+    <header>
+        <strong ng-if="tulos.ehdollisestiHyvaksyttavissa">{{ localization('registration.conditionalAcceptanceTitle') }}</strong>
+        <strong ng-if="!tulos.ehdollisestiHyvaksyttavissa">{{ localization('registration.pleaseRegister') }}</strong>
+        {{ tulos.tarjoajaNimi }} - {{ tulos.hakukohdeNimi }}
+    </header>
+    <span ng-if="tulos.ehdollisestiHyvaksyttavissa">{{ localization('registration.conditionalAcceptanceInfo') }}</span>
+    <a ng-if="!tulos.ehdollisestiHyvaksyttavissa" href="{{ tulos.ilmoittautumistila.ilmoittautumistapa.url }}">{{ localization('registration.goToRegistration') }}</a>
+</div>
