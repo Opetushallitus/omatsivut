@@ -1,6 +1,8 @@
 package fi.vm.sade.omatsivut.config
 
+import java.time.Duration
 import java.util
+import java.util.Optional
 
 import fi.vm.sade.haku.oppija.configuration.UrlConfiguration
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
@@ -110,7 +112,7 @@ object OmatSivutSpringContext extends Logging {
 
       override def getHakija(asOid: String, application: String): HakijaDTO = unsupportedIntegrationException
 
-      override def fetchValintaData(application: Application): util.Map[String, String] = unsupportedIntegrationException
+      override def fetchValintaData(application: Application, optional: Optional[Duration]): util.Map[String, String] = unsupportedIntegrationException
     }
 
     def unsupportedIntegrationException: Nothing = {
