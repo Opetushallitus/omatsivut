@@ -2,7 +2,7 @@
 
 Tämä on [omatsivu](https://github.com/Opetushallitus/omatsivut) -palvelussa käytetty hakemuseditori, jolla käyttäjä tekee muutoksia hakemuksiinsa.
 
-Tarkoituksena on ottaa editori käyttöön myös muissa sovelluksissa, kun se on sovitettu toimimaan ilman Omatsivut-applikaatiota.
+Tarkoituksena oli ottaa editori käyttöön myös muissa sovelluksissa, kun se on sovitettu toimimaan ilman [Omatsivut-applikaatiota](../omatsivut). Tätä ei kuitenkaan tapahtunut, joten tiukasti omiinsivuihin kytketty hakemuseditori siirrettiin takaisin yhteiseen repostitoryyn.
 
 ## Client-side
 
