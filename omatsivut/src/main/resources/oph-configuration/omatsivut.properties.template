@@ -9,8 +9,6 @@
 
 # Aseta vähintään nämä ympäristökohtaiset arvot
 host.haku={{host_haku}}
-host.haku.sv={{host_haku_sv}}
-host.haku.en={{host_haku_en}}
 host.ldap={{host_ldap}}
 auth.mode={{auth_mode}}
 env.loglevel={{env_loglevel}}

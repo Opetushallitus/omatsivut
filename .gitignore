@@ -54,3 +54,5 @@ node_modules
 
 # OPH configuration vars for devel (for use with templated profile on server)
 oph_vars
+
+npm-debug.log

@@ -17,7 +17,7 @@ host_haku: "testi.opintopolku.fi"
 host_haku_sv: "testi.opintopolku.fi"
 host_haku_en: "testi.opintopolku.fi"
 host_ldap: "testi.opintopolku.fi"
-host_virkailija: "itest-virkailija.oph.ware.fi"
+host_virkailija: localhost
 host_virkailija_sv: "testi.opintopolku.fi"
 host_virkailija_en: "testi.opintopolku.fi"
 host_oppija: "testi.opintopolku.fi"

@@ -4,10 +4,11 @@ import java.time.Duration
 import java.util
 import java.util.Optional
 
+import fi.vm.sade.hakemuseditori.hakumaksu.{HakumaksuServiceWrapper, StubbedHakumaksuServiceWrapper}
 import fi.vm.sade.haku.oppija.configuration.UrlConfiguration
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.hakemus.it.dao.ApplicationOidDAO
-import fi.vm.sade.haku.oppija.hakemus.service.HakuPermissionService
+import fi.vm.sade.haku.oppija.hakemus.service.{HakuPermissionService, HakumaksuService}
 import fi.vm.sade.haku.oppija.hakemus.service.impl.HakuPermissionServiceMockImpl
 import fi.vm.sade.haku.oppija.lomake.domain.User
 import fi.vm.sade.haku.oppija.lomake.service.Session
