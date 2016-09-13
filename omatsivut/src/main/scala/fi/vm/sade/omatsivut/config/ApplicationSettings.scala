@@ -7,7 +7,7 @@ import fi.vm.sade.utils.captcha.CaptchaServiceSettings
 
 case class ApplicationSettings(config: Config) extends GroupEmailerSettings(config) {
   
-  val ophUrlProperties = new OphUrlProperties(config)
+  val ophUrlProperties =  AppConfig.ophUrlProperties
   
   val captchaSettings = new CaptchaServiceSettings(config)
 

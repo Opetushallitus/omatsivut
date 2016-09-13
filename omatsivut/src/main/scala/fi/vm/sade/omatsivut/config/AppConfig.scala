@@ -12,6 +12,8 @@ object AppConfig extends Logging {
 
   val clientSubSystemCode = "omatsivut"
 
+  var ophUrlProperties: OphUrlProperties = null
+
   private implicit val settingsParser = ApplicationSettingsParser
   val embeddedMongoPortChooser = new PortFromSystemPropertyOrFindFree("omatsivut.embeddedmongo.port")
 
@@ -39,15 +41,18 @@ object AppConfig extends Logging {
   }
 
   class Default extends AppConfig with ExternalProps {
+    ophUrlProperties = new OphUrlProperties(false)
     def springConfiguration = new OmatSivutSpringContext.Default()
     override def usesFakeAuthentication = settings.environment.isDev || settings.environment.isLuokka || settings.environment.isKoulutus || settings.environment.isVagrant
   }
 
   class LocalTestingWithTemplatedVars(val templateAttributesFile: String = System.getProperty("omatsivut.vars")) extends AppConfig with TemplatedProps with MockAuthentication {
+    ophUrlProperties = new OphUrlProperties(false)
     def springConfiguration = new OmatSivutSpringContext.Default()
   }
 
   class Dev extends AppConfig with ExampleTemplatedProps with MockAuthentication with StubbedExternalDeps {
+    ophUrlProperties = new OphUrlProperties(false)
     def springConfiguration = new OmatSivutSpringContext.Dev()
 
     override lazy val settings = ConfigTemplateProcessor.createSettings("omatsivut", templateAttributesFile)
@@ -55,6 +60,7 @@ object AppConfig extends Logging {
   }
 
   class IT extends EmbbeddedMongo with MockAuthentication with StubbedExternalDeps {
+    ophUrlProperties = new OphUrlProperties(true)
     def springConfiguration = new OmatSivutSpringContext.Dev()
   }
 
@@ -63,7 +69,7 @@ object AppConfig extends Logging {
   }
 
   trait ExternalProps {
-    def configFile = System.getProperty("user.home") + "/oph-configuration/omatsivut.properties"
+    def configFile = System.getProperty("user.home") + "/oph-configuration/common.properties"
     lazy val settings = ApplicationSettingsLoader.loadSettings(configFile)
   }
 
