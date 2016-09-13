@@ -10,8 +10,12 @@ class OphUrlProperties extends OphProperties("/omatsivut-oph.properties") {
   def this(config: Config) {
     this()
     addOptionalFiles(Paths.get(sys.props.getOrElse("user.home", ""), "/oph-configuration/common.properties").toString)
-    addOverride("url-oppija", config.getValue("host.haku").unwrapped().asInstanceOf[String])
-    addOverride("url-virkailija", "http://" + config.getValue("host.virkailija").unwrapped().asInstanceOf[String] + ":"
-      + AppConfig.embeddedJettyPortChooser.chosenPort.toString)
+    addOverride("host.oppija", "localhost:"+AppConfig.embeddedJettyPortChooser.chosenPort.toString)
+    addOverride("host.virkailija", "localhost:"+AppConfig.embeddedJettyPortChooser.chosenPort.toString)
+
+
+    //addOverride("host.oppija", config.getValue("host.haku").unwrapped().asInstanceOf[String])
+    //addOverride("host.virkailija", "http://" + config.getValue("host.virkailija").unwrapped().asInstanceOf[String] + ":"
+    //  + AppConfig.embeddedJettyPortChooser.chosenPort.toString)
   }
 }

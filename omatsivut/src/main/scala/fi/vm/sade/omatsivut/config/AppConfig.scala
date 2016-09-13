@@ -96,7 +96,6 @@ object AppConfig extends Logging {
     override lazy val settings = ConfigTemplateProcessor.createSettings("omatsivut", templateAttributesFile)
       .withOverride("mongo.db.name", "hakulomake")
       .withOverride("mongodb.oppija.uri", "mongodb://localhost:" + embeddedMongoPortChooser.chosenPort)
-      .withOverride("host.haku", "localhost")
   }
 
   trait MockAuthentication extends AppConfig {
