@@ -15,6 +15,7 @@ env.loglevel={{env_loglevel}}
 host.cas={{host_cas}}
 host.ilb={{host_ilb}}
 host.virkailija={{host_virkailija}}
+host.oppija={{host_oppija}}
 ldap.manager.password={{ldap_manager_password}}
 ldap.manager-password={{ldap_manager_password}}
 ldap.manager.userdn={{ldap_manager_userdn}}
