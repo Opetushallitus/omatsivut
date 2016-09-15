@@ -94,7 +94,8 @@ object AppConfig extends Logging {
     }
 
     override lazy val settings = ConfigTemplateProcessor.createSettings("omatsivut", templateAttributesFile)
-      .withOverride("omatsivut.valinta-tulos-service.url", "http://localhost:"+ embeddedJettyPortChooser.chosenPort + "/valinta-tulos-service")
+      .withOverride("host.virkailija", "http://localhost:"+ embeddedJettyPortChooser.chosenPort)
+      .withOverride("host.oppija", "http://localhost:"+ embeddedJettyPortChooser.chosenPort)
       .withOverride("mongo.db.name", "hakulomake")
       .withOverride("mongodb.oppija.uri", "mongodb://localhost:" + embeddedMongoPortChooser.chosenPort)
   }
