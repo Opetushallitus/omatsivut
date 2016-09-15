@@ -7,8 +7,8 @@ import fi.vm.sade.utils.captcha.CaptchaServiceSettings
 
 case class ApplicationSettings(config: Config) extends GroupEmailerSettings(config) {
   
-  val ophUrlProperties =  AppConfig.ophUrlProperties
-  
+  val ophUrlProperties = new OphUrlProperties(config.getString("host.oppija"), config.getString("host.virkailija"))
+
   val captchaSettings = new CaptchaServiceSettings(config)
 
   val raamitUrl = ophUrlProperties.url("oppija-raamit.base")
