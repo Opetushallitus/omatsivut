@@ -1,7 +1,6 @@
 package fi.vm.sade.omatsivut.config
 
 import com.typesafe.config.Config
-import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.omatsivut.security.{AuthenticationContext, ProductionAuthenticationContext, TestAuthenticationContext}
 import fi.vm.sade.utils.config.{ApplicationSettingsLoader, ConfigTemplateProcessor}
 import fi.vm.sade.utils.mongo.{EmbeddedMongo, MongoServer}
@@ -9,7 +8,6 @@ import fi.vm.sade.utils.slf4j.Logging
 import fi.vm.sade.utils.tcp.{PortChecker, PortFromSystemPropertyOrFindFree}
 
 object AppConfig extends Logging {
-
   val clientSubSystemCode = "omatsivut"
 
   private implicit val settingsParser = ApplicationSettingsParser
@@ -94,8 +92,6 @@ object AppConfig extends Logging {
     }
 
     override lazy val settings = ConfigTemplateProcessor.createSettings("omatsivut", templateAttributesFile)
-      .withOverride("host.virkailija", "http://localhost:"+ embeddedJettyPortChooser.chosenPort)
-      .withOverride("host.oppija", "http://localhost:"+ embeddedJettyPortChooser.chosenPort)
       .withOverride("mongo.db.name", "hakulomake")
       .withOverride("mongodb.oppija.uri", "mongodb://localhost:" + embeddedMongoPortChooser.chosenPort)
   }
