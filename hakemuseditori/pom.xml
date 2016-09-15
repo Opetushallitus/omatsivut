@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>hakemuseditori_2.11</artifactId>
+    <version>15.0-SNAPSHOT</version>
+    <name>Hakemuseditori</name>
+    <description></description>
+
+    <parent>
+        <groupId>fi.vm.sade</groupId>
+        <version>1.1-SNAPSHOT</version>
+        <artifactId>omatsivut-parent</artifactId>
+        <relativePath>../</relativePath>
+    </parent>
+
+    <properties>
+        <SpringVersion>3.2.9.RELEASE</SpringVersion>
+    </properties>
+
+    <dependencies>
+    <dependency>
+      <groupId>org.scala-lang</groupId>
+      <artifactId>scala-library</artifactId>
+      <version>2.11.7</version>
+    </dependency>
+    <dependency><groupId>org.apache.commons</groupId><artifactId>commons-compress</artifactId><version>1.9</version></dependency>
+    <dependency><groupId>org.slf4j</groupId><artifactId>slf4j-log4j12</artifactId><version>1.7.6</version></dependency>
+    <dependency><groupId>fi.vm.sade</groupId><artifactId>scala-utils_2.11</artifactId><version>0.3.0-SNAPSHOT</version></dependency>
+    <dependency><groupId>fi.vm.sade.koodisto</groupId><artifactId>koodisto-api</artifactId><version>2016-04-SNAPSHOT</version></dependency>
+    <dependency><groupId>fi.vm.sade.haku</groupId><artifactId>hakemus-api</artifactId><version>14.0-SNAPSHOT</version></dependency>
+    <!-- patch for transitive dependency problem -->
+    <dependency><groupId>com.sun.jersey</groupId><artifactId>jersey-client</artifactId><version>1.17.1</version></dependency>
+    <!-- patch for transitive dependency problem -->
+    <dependency><groupId>org.springframework</groupId><artifactId>spring-jms</artifactId><version>${SpringVersion}</version></dependency>
+    <dependency><groupId>org.springframework</groupId><artifactId>spring-core</artifactId><version>${SpringVersion}</version></dependency>
+    <dependency><groupId>org.springframework</groupId><artifactId>spring-context</artifactId><version>${SpringVersion}</version></dependency>
+    <dependency><groupId>com.google.guava</groupId><artifactId>guava</artifactId><version>15.0</version></dependency>
+  </dependencies>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>net.alchim31.maven</groupId>
+          <artifactId>scala-maven-plugin</artifactId>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+    <plugins>
+      <plugin>
+        <groupId>net.alchim31.maven</groupId>
+        <artifactId>scala-maven-plugin</artifactId>
+          <configuration>
+            <args>
+                <arg>-target:jvm-1.7</arg>
+            </args>
+          </configuration>
+          <executions>
+          <execution>
+            <id>scala-compile-first</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>add-source</goal>
+              <goal>compile</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>scala-test-compile</id>
+            <phase>process-test-resources</phase>
+            <goals>
+              <goal>testCompile</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+    <repositories>
+        <repository>
+            <id>oph-sade-artifactory-snapshots</id>
+            <url>https://artifactory.oph.ware.fi/artifactory/oph-sade-snapshot-local</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>oph-sade-artifactory-releases</id>
+            <url>https://artifactory.oph.ware.fi/artifactory/oph-sade-release-local</url>
+        </repository>
+        <repository>
+            <id>repository.jboss.org</id>
+            <name>JBoss Repository</name>
+            <url>http://repository.jboss.org/nexus/content/groups/public-jboss/</url>
+        </repository>
+        <repository>
+            <id>public</id>
+            <url>http://maven.nuxeo.org/nexus/content/repositories/public/</url>
+        </repository>
+    </repositories>
+</project>

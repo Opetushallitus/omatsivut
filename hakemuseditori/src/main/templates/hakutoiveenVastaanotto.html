@@ -1,0 +1,54 @@
+<form name="vastaanottoForm" novalidate>
+  <div ng-form name="innerForm" class="hakutoiveenVastaanotto fade-transitions" ng-repeat="hakutoive in hakutoiveet()">
+      <header class="hakutoiveenVastaanotto-caption thumb-up">
+          <strong>{{ localization('message.acceptEducation.received') }}</strong>
+           {{ hakutoive.tarjoajaNimi }} - {{ hakutoive.hakukohdeNimi }}
+      </header>
+
+      <div class="hakutoive-vastaanotettavissa" ng-if="hakutoive.vastaanottoDeadline">
+           {{ localization('message.acceptEducation.latestAnswer', {
+            aika: formatTimestamp(hakutoive.vastaanottoDeadline)
+          }) }}
+      </div>
+      <div class="hakutoive-vain-yksi-valittavissa" ng-if="haku().showSingleStudyPlaceEnforcement">
+          {{ localization('message.acceptEducation.onlyOnePossible.1') }}
+          <span class="vain-yksi">{{ localization('message.acceptEducation.onlyOnePossible.2') }}</span>
+          {{ localization('message.acceptEducation.onlyOnePossible.3') }}
+      </div>
+      <div class="hakutoive-siirtohaku {{siirtohakuClass}}" ng-if="haku().korkeakouluhaku && haku().siirtohaku">
+          {{ localization('message.siirtohaku') }}
+      </div>
+
+      <ul class="hakutoive-options">
+          <li><label><input type="radio" name="vastaanotettavaHakutoive" value="VastaanotaSitovasti" ng-model="vastaanottoAction" ng-disabled="inputIsDisabled()" ng-click="flashSiirtohakuNotification()"/>{{ localization('message.acceptEducation.accept') }}</label></li>
+          <li ng-show="hakutoive.vastaanotettavuustila == 'VASTAANOTETTAVISSA_EHDOLLISESTI'">
+              <label>
+              <input type="radio" name="vastaanotettavaHakutoive" value="VastaanotaEhdollisesti"
+                     ng-model="vastaanottoAction" ng-disabled="inputIsDisabled()"/>{{ localization('message.acceptEducation.conditionalAccept') }}
+              </label>
+              <ul class="info">
+                  <li>{{ localization('message.acceptEducation.conditionalAcceptInfo1') }}</li>
+                  <li>{{ localization('message.acceptEducation.conditionalAcceptInfo2') }}</li>
+              </ul>
+          </li>
+          <li><label><input type="radio" name="vastaanotettavaHakutoive" value="Peru" ng-model="vastaanottoAction" ng-disabled="inputIsDisabled()"/>{{ localization('message.acceptEducation.reject') }}</label></li>
+      </ul>
+
+      <div>
+          <span class="ajax-spinner" ng-show="ajaxPending"></span>
+          <button class="vastaanota-btn" disable-click-focus
+                  ng-click="vastaanotaHakutoive(hakutoive)"
+                  ng-disabled="vastaanottoAction.length==0 || inputIsDisabled()"
+                  aria-label="{{ localization('button.vastaanota_ariaLabel') }}"
+                  ng-bind="localization('button.vastaanota')">
+          </button>
+          <span ng-if="!vastaanottoSentSuccessfully" class="status-message note">
+              {{ localization('message.acceptEducation.cannotChangeAnswer') }}
+          </span>
+          <span ng-if="vastaanottoSentSuccessfully" class="status-message success">
+              {{ localization('message.acceptEducation.responseReceived') }}
+          </span>
+          <span ng-bind="error" class="status-message error" ></span>
+      </div>
+  </div>
+</form>

@@ -1,0 +1,116 @@
+@import "../common.less";
+
+@info-text-color: #539BB4;
+
+.hakutoiveenVastaanotto {
+  border: 1px solid #D8D8D8;
+  padding: 3em 7em 2em 7em;
+  margin: 1.7em 0;
+
+  .status-message.success {
+    color: green;
+  }
+
+  .vastaanota-btn:not([disabled]) {
+    background: #539bb4;
+    color: white;
+
+    &:hover {
+      background: #418095;
+    }
+  }
+
+  label.email {
+    display: block;
+    margin: 10px 0 16px 0;
+
+    span.label {
+      display: block;
+    }
+
+    input[type="email"] {
+      width: 20em;
+    }
+  }
+
+  .hakutoive-vastaanotettavissa {
+    color: @info-text-color;
+    margin-top: 8px;
+  }
+
+  .hakutoive-vain-yksi-valittavissa {
+    color: @info-text-color;
+    line-height: 15px;
+    margin-top: 4px;
+    .vain-yksi {
+      font-weight: bold;
+    }
+  }
+
+  .hakutoive-siirtohaku {
+    color: @info-text-color;
+    margin-top: 4px;
+    opacity: 1;
+  }
+  .siirtohaku-fade-out {
+    opacity: 0;
+  }
+  .siirtohaku-fade-in {
+    -webkit-transition-delay: 0.1s;
+    transition-delay: 0.1s;
+    -webkit-transition-duration: 0.7s;
+    transition-duration: 0.7s;
+    -webkit-transition-timing-function: cubic-bezier(0.7, 3, 0.2, -2);
+    transition-timing-function: cubic-bezier(0.7, 3, 0.2, -2);
+    opacity: 1;
+  }
+
+  ul.info {
+    margin-left: 24px;
+    line-height: 19px;
+    color: #4a4a4a;
+
+    li:before {
+      content: "•";
+      vertical-align: middle;
+      font-size: 20px;
+      margin-right: 3px;
+    }
+  }
+
+  .hakutoive-options {
+    margin: 10px 0;
+
+    input {
+      margin: 5px 10px 5px 0px;
+      vertical-align: bottom;
+    }
+  }
+
+  .status-message {
+    margin-left: 5px;
+  }
+
+  .hakutoiveenVastaanotto-caption {
+    .dialog-header-font();
+    strong {
+      .dialog-header-font-strong();
+      margin-right: 10px;
+    }
+  }
+}
+
+.thumb-up {
+  position: relative;
+  &:before {
+    content: "";
+    background: url("../img/hakemuseditori/thumb-up.png") center center no-repeat;
+    background-size: 42px 42px;
+    width: 42px;
+    height: 42px;
+    position: absolute;
+    left: -50px;
+    display: inline-block;
+    top: -11px;
+  }
+}

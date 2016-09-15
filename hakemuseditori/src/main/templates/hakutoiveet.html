@@ -1,0 +1,60 @@
+<div class="preference-list" ng-class="{validating: validating}" sortable sortable-item=".preference-list-item" sortable-moved="movePreference">
+    <div class="overlay"></div>
+    <div class="preference-list-item" aria-label="{{ ($index+1) + '. ' + hakutoive.data.Opetuspiste + ' - ' + hakutoive.data.Koulutus }}" ng-repeat="hakutoive in application.hakutoiveet" ng-controller="hakutoiveController" ng-class="{'inactive': isEditingDisabled() && hakutoive.isNew}">
+        <div class="preference-list-item-layout" ng-show="isNonPrioritizedAndEditable()">
+
+            <div class="item-content" ng-show="application.haku.usePriority">
+                <span class="row-number">{{$index+1}}</span>
+            </div>
+
+            <div class="item-content">
+                <div class="sort-arrow-container" ng-show="application.haku.usePriority">
+                    <button class="sort-arrow-up" aria-label="{{ localization('button.sortUp_ariaLabel') }}" ng-disabled="!application.canMovePreference($index, $index-1)" disable-click-focus></button>
+                    <button class="sort-arrow-down" aria-label="{{ localization('button.sortDown_ariaLabel') }}" ng-disabled="!application.canMovePreference($index, $index+1)" disable-click-focus></button>
+                </div>
+            </div>
+            <div class="item-content">
+                <div class="row opetuspiste">
+                    <label ng-bind="hakutoive.data.Opetuspiste" ng-show="isEditingDisabled()"></label>
+
+                    <input type="text" ng-change="opetuspisteModified()"
+                           placeholder="{{localization('label.chooseLocation')}}"
+                           ng-model="hakutoive.data.Opetuspiste"
+                           typeahead="opetuspiste.name for opetuspiste in findOpetuspiste($viewValue)"
+                           typeahead-loading="loadingLocations"
+                           typeahead-on-select="opetuspisteValittu($item, $model, $label)"
+                           ng-show="!isEditingDisabled()"/>
+                </div>
+
+                <div class="row koulutus">
+                    <span ng-bind="hakutoive.data.Koulutus" ng-show="isEditingDisabled()"></span>
+
+                    <select ng-model="valittuKoulutus"
+                            ng-options="koulutus.name for koulutus in koulutusList"
+                            ng-change="koulutusValittu($index)" ng-show="isKoulutusSelectable()">
+                    </select>
+                    <span class="instruction ajax-spinner-small" ng-show="isLoadingKoulutusList()">{{ localization("message.loadingData") }}</span>
+                    <div class="validation-message error" ng-if="hakutoive.errors.length">{{hakutoive.errors.join(', ')}}</div>
+                    <div class="alert alert-info aoPaymentNotification" ng-if="hakutoive.showPaymentNotification">
+                        {{ localization("payment.aoNotification") }}
+                    </div>
+                    <div class="alert alert-info baseEducationNotification" ng-if="showNotification('baseEducationConflict')">
+                        {{ localization("info.baseEducationConflict") }}
+                    </div>
+                </div>
+
+                <div class="row hakuaika" ng-if="hakutoive.kohdekohtainenHakuaika != null && !application.preferenceLocked($index)">
+                    {{ localization('label.applicationPeriodEnds') }} <time formatted-time="hakutoive.kohdekohtainenHakuaika.end" format="LLL" />
+                </div>
+            </div>
+
+            <div class="item-content">
+                <div class="application-preference-locked" ng-if="application.preferenceLocked($index)">
+                    {{localization('label.applicationPeriodPassed') }}
+                </div>
+
+                <button ng-show="canRemovePreference($index)" class="delete-btn" disable-click-focus confirm confirm-text="{{localization('button.delete_confirm')}}" confirm-action="removeHakutoive($index)" aria-label="{{ localization('button.delete_ariaLabel') }}"></button>
+            </div>
+        </div>
+    </div>
+</div>

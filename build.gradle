@@ -15,7 +15,7 @@ String zipFileName = ""
 task(zipIt, type: Zip) {
     doFirst {
         // Renames omatsivut*.war to omatsivut.war
-        fileTree(from: '.', include: '**/target/omatsivut*.war').files.each { oneFile ->
+        fileTree(from: '.', include: '**/omatsivut/target/omatsivut*.war').files.each { oneFile ->
             String replaced = oneFile.path.replaceFirst('-[a-zA-Z0-9.]+-SNAPSHOT\\.war','.war')
             oneFile.renameTo(file(replaced))
         }
@@ -25,8 +25,8 @@ task(zipIt, type: Zip) {
 
     destinationDir new File(buildDir, "distributions")
     archiveName zipFileName
-    from 'src/main/resources'
-    from 'target'
+    from 'omatsivut/src/main/resources'
+    from 'omatsivut/target'
 }
 
 // Task for copying the .zip file to

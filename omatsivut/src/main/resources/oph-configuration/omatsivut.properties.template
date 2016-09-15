@@ -1,0 +1,151 @@
+#
+# TÄHÄN TIEDOSTOON EI SAA TALLENTAA YMPÄRISTÖKOHTAISIA ARVOJA MUUTOIN KUIN MUUTTUJINA!!!
+#
+# TÄMÄN TIEDOSTON NIMEÄ TAI POLKUA EI SAA MUUTTAA
+#
+# Tämä tiedosto toimii pohjana oph-configuration/omatsivut.properties tiedostolle,
+# joka asettaa tomcatin ympäristökohtaiset arvot.
+#
+
+# Aseta vähintään nämä ympäristökohtaiset arvot
+host.haku={{host_haku}}
+host.ldap={{host_ldap}}
+auth.mode={{auth_mode}}
+env.loglevel={{env_loglevel}}
+host.cas={{host_cas}}
+host.ilb={{host_ilb}}
+host.virkailija={{host_virkailija}}
+host.oppija={{host_oppija}}
+ldap.manager.password={{ldap_manager_password}}
+ldap.manager-password={{ldap_manager_password}}
+ldap.manager.userdn={{ldap_manager_userdn}}
+
+omatsivut.crypto.aes.key={{omatsivut_crypto_aes_key}}
+omatsivut.crypto.hmac.key={{omatsivut_crypto_hmac_key}}
+
+cas.url=https://{{host_cas}}/cas
+cas.username={{omatsivut_haku_app_username}}
+cas.password={{omatsivut_haku_app_password}}
+
+omatsivut.oppija-raamit.url={{oppija_raamit_url}}
+omatsivut.piwik.url=https://{{host_oppija}}/wp/wp-content/themes/ophver3/js/piwik.js
+omatsivut.authentication-service.url=https://{{host_virkailija}}/authentication-service
+omatsivut.authentication-service.username={{omatsivut_authentication_service_username}}
+omatsivut.authentication-service.password={{omatsivut_authentication_service_password}}
+omatsivut.authentication-service.ticket_consumer_path=j_spring_cas_security_check
+omatsivut.authentication-service.get_oid.path=resources/s2s/byHetu
+
+omatsivut.valinta-tulos-service.url=https://{{host_virkailija}}/valinta-tulos-service
+
+omatsivut.koulutusinformaatio.ao.url=https\://{{host_haku}}/ao
+omatsivut.koulutusinformaatio.lop.url=https\://{{host_haku}}/lop
+omatsivut.koulutusinformaatio.basketitems.url=https\://{{host_haku}}/basket/items
+
+
+omatsivut.ohjausparametrit.url=https\://{{host_virkailija}}/ohjausparametrit-service/api/v1/rest/parametri
+
+omatsivut.tarjonta.url=https\://{{host_virkailija}}/tarjonta-service/rest/v1
+omatsivut.viestintapalvelu.url=https\://{{host_virkailija}}/viestintapalvelu/api/v1
+omatsivut.tuloskirjeet.filesystem.url=/data00/tuloskirjeet
+
+# for hakemus-api
+koulutusinformaatio.ao.resource.url=https\://{{host_haku}}/ao
+tarjonta.data.url=https\://{{host_virkailija}}/tarjonta-service/rest/
+tarjonta.haku.resource.url=https\://{{host_virkailija}}/tarjonta-service/rest/haku
+tarjonta.hakukohde.resource.url=https\://{{host_virkailija}}/tarjonta-service/rest/hakukohde
+tarjonta.v1.hakukohde.resource.url=https\://{{host_virkailija}}/tarjonta-service/rest/v1/hakukohde
+authentication.app.username.to.organisaatioservice={{authentication_app_username_to_organisaatioservice}}
+authentication.app.password.to.organisaatioservice={{authentication_app_password_to_organisaatioservice}}
+email.from={{email_from}}
+email.replyTo={{email_replyTo}}
+email.smtp.host={{email_smtp_host}}
+email.smtp.port={{email_smtp_port}}
+hakemus.aes.key={{hakemus_aes_key}}
+hakemus.aes.salt={{hakemus_aes_salt}}
+hakemus.sha.salt={{hakemus_sha_salt}}
+haku.app.username.to.usermanagement={{haku_app_username_to_usermanagement}}
+haku.app.password.to.usermanagement={{haku_app_password_to_usermanagement}}
+haku.app.username.to.valintalaskenta={{haku_app_username_to_valintalaskenta}}
+haku.app.password.to.valintalaskenta={{haku_app_password_to_valintalaskenta}}
+haku.app.username.to.suoritusrekisteri={{haku_app_username_to_suoritusrekisteri}}
+haku.app.password.to.suoritusrekisteri={{haku_app_password_to_suoritusrekisteri}}
+haku.app.username.to.haku={{haku_app_username_to_haku}}
+haku.app.password.to.haku={{haku_app_password_to_haku}}
+haku.app.username.to.viestintapalvelu={{haku_app_username_to_viestintapalvelu}}
+haku.app.password.to.viestintapalvelu={{haku_app_password_to_viestintapalvelu}}
+hakuperusteet.url.fi=https\://{{host_haku}}/hakuperusteet
+hakuperusteet.url.sv=https\://{{host_haku_sv}}/hakuperusteet
+hakuperusteet.url.en=https\://{{host_haku_en}}/hakuperusteet
+mongo.db.name=hakulomake
+mongo.db.maxpoolsize=100
+mongodb.oppija.uri=mongodb://{{mongodb_hakemus_auth}}@{{mongodb_hakemus_host}}:{{mongodb_hakemus_port}}
+mongodb.url=${mongodb.oppija.uri}/${mongo.db.name}?maxpoolsize=${mongo.db.maxpoolsize}
+onlyBackgroundValidation=
+oppijantunnistus.create.url=https\://{{host_virkailija}}/oppijan-tunnistus/api/v1/token
+oppijantunnistus.verify.url=https\://{{host_virkailija}}/oppijan-tunnistus/api/v1/token
+scheduler.run={{haku_scheduler_run}}
+scheduler.delay={{haku_scheduler_delay}}
+scheduler.sendMail={{haku_scheduler_sendMail}}
+user.oid.prefix=1.2.246.562.24
+application.oid.prefix = 1.2.246.562.11
+
+server.name={{ansible_hostname}}
+
+# Oletusarvoja
+spring_security_default_access=permitAll
+accessRight.webservice.url.backend=https\://{{host_virkailija}}/authentication-service/services/accessRightService
+accessRightAdmin.webservice.url.backend=https\://{{host_virkailija}}/authentication-service/services/accessRightAdminService
+accessRightHistory.webservice.url.backend=https\://{{host_virkailija}}/authentication-service/services/accessRightHistoryService
+cas.group-role-attribute=cn
+cas.group-search-base=ou\=groups
+cas.group-search-filter=(uniqueMember\={0})
+cas.sendRenew=false
+cas.service.haku=https\://{{host_virkailija}}/haku-app
+cas.service.viestintapalvelu=https://${host.virkailija}/viestintapalvelu
+cas.service.ryhmasahkoposti=https://${host.virkailija}/ryhmasahkoposti-service
+cas.service.authentication-service=https\://{{host_virkailija}}/authentication-service
+cas.service.organisaatio-service=https\://{{host_virkailija}}/organisaatio-service
+cas.service.suoritusrekisteri=https://${host.virkailija}/suoritusrekisteri
+cas.user-search-base=ou\=people
+cas.user-search-filter=(|(mail\={0})(uid\={0}))
+customAttribute.webservice.url.backend=https://{{host_virkailija}}/authentication-service/services/customAttributeService
+flyway.initOnMigrate=true
+cas.service.koodisto-service=https://{{host_virkailija}}/koodisto-service
+koodi.public.webservice.url.backend=https://{{host_virkailija}}/koodisto-service/services/koodiService
+koodisto.public.webservice.url.backend=https://{{host_virkailija}}/koodisto-service/services/koodistoService
+jpa.schemaUpdate=validate
+jpa.showSql=false
+ldap.cache.size=10000
+ldap.data.dir=${user.home}/data
+ldap.filter.people=uid\=%u
+ldap.index.cache.size=10000
+ldap.manager-dn=${ldap.manager.userdn}
+ldap.search.base.people=ou=People,dc=opintopolku,dc=fi
+ldap.url=ldap://${host.ldap}
+ldap.url.with.base=ldap\://${host.ldap}/dc\=opintopolku,dc\=fi
+log4j.properties.file=${user.home.conf}/log4j.properties
+oid.rest.url.backend=${host.ilb}/oid-service/rest/oid
+oid.webservice.url.backend=${host.ilb}/services/oidService
+root.organisaatio.oid=1.2.246.562.10.00000000001
+user.home.conf=${user.home}/oph-configuration
+user.webservice.url.backend=https\://{{host_virkailija}}/authentication-service/services/userService
+web.url.cas=https\://${host.cas}/cas
+tarjonta.v1.haku.resource.url=https\://${host.virkailija}/tarjonta-service/rest/v1/haku
+ohjausparametrit.resource.url=https\://${host.virkailija}/ohjausparametrit-service/api/v1/rest/parametri
+environment={{ymparisto}}
+
+# CAS
+cas.url={{ cas_url }}
+ryhmasahkoposti.cas.service=https://{{host_virkailija}}/ryhmasahkoposti-service/
+ryhmasahkoposti.cas.username={{ ryhmasahkoposti_app_username_to_vtemailer }}
+ryhmasahkoposti.cas.password={{ ryhmasahkoposti_app_password_to_vtemailer }}
+
+# RYHMÄSÄHKÖPOSTI
+ryhmasahkoposti.service.batch.size={{ email_batch_size }}
+ryhmasahkoposti.service.email.url=https://{{host_virkailija}}/ryhmasahkoposti-service/email
+ryhmasahkoposti.rest.url=https://{{host_virkailija}}/ryhmasahkoposti-service/email
+
+# MUISTILISTA
+muistilista.url=https://{{host_oppija}}/app/#!/muistilista
+recaptcha.verify.url={{recaptcha_verify_url}}
+recaptcha.secret={{recaptcha_secret}}
