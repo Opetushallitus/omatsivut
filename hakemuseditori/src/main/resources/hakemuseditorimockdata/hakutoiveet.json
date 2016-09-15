@@ -1,0 +1,59 @@
+{
+  "1.2.246.562.14.2014032812530780195965": {
+    "Opetuspiste-id": "1.2.246.562.10.49832689993",
+    "Opetuspiste": "Turun Kristillinen opisto",
+    "Koulutus": "Kymppiluokka",
+    "Koulutus-id-kaksoistutkinto": "false",
+    "Koulutus-id-sora": "false",
+    "Koulutus-id-vocational": "true",
+    "Koulutus-id-lang": "FI",
+    "Koulutus-id-aoIdentifier": "019",
+    "Koulutus-id-athlete": "false",
+    "Koulutus-educationDegree": "22",
+    "Koulutus-id": "1.2.246.562.14.2014032812530780195965",
+    "Opetuspiste-id-parents": "1.2.246.562.10.49832689993,1.2.246.562.10.99018323263,1.2.246.562.10.00000000001",
+    "Koulutus-id-educationcode": "koulutus_020075"
+  },
+  "1.2.246.562.14.2014030415375012208392": {
+    "Opetuspiste": "Etelä-Savon ammattiopisto,  Otavankatu 4",
+    "Opetuspiste-id": "1.2.246.562.10.290189957610",
+    "Koulutus": "Ammattistartti",
+    "Koulutus-id": "1.2.246.562.14.2014030415375012208392",
+    "Koulutus-educationDegree": "32",
+    "Koulutus-id-sora": "false",
+    "Koulutus-id-aoIdentifier": "028",
+    "Koulutus-id-kaksoistutkinto": "false",
+    "Koulutus-id-vocational": "true",
+    "Koulutus-id-educationcode": "koulutus_039996",
+    "Koulutus-id-athlete": "false"
+    },
+
+  "1.2.246.562.14.2014040912353139913320": {
+    "Opetuspiste": "Ahlmanin ammattiopisto",
+    "Opetuspiste-id": "1.2.246.562.10.60222091211",
+    "Koulutus": "Ammattistartti",
+    "Koulutus-id": "1.2.246.562.14.2014040912353139913320",
+    "Koulutus-educationDegree": "32",
+    "Koulutus-id-lang": "FI",
+    "Koulutus-id-sora": "false",
+    "Koulutus-id-aoIdentifier": "028",
+    "Koulutus-id-kaksoistutkinto": "false",
+    "Koulutus-id-vocational": "true",
+    "Koulutus-id-educationcode": "koulutus_039996",
+    "Koulutus-id-athlete": "false"
+  },
+  "1.2.246.562.5.31982630126": {
+    "Opetuspiste": "Ypäjän Hevosopisto",
+    "Opetuspiste-id": "1.2.246.562.10.79872001635",
+    "Koulutus": "Hevostalouden perustutkinto, pk",
+    "Koulutus-id": "1.2.246.562.5.31982630126",
+    "Koulutus-educationDegree": "32",
+    "Koulutus-id-lang": "FI",
+    "Koulutus-id-sora": "false",
+    "Koulutus-id-aoIdentifier": "215",
+    "Koulutus-id-kaksoistutkinto": "true",
+    "Koulutus-id-vocational": "true",
+    "Koulutus-id-educationcode": "koulutus_361104",
+    "Koulutus-id-athlete": "false"
+  }
+}

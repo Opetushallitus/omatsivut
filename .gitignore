@@ -93,3 +93,10 @@ gatling/
 gradle/
 
 valintarekisteri-it-db
+
+node_modules
+example-application/bundle.js
+.idea*
+*.iml
+dev
+target

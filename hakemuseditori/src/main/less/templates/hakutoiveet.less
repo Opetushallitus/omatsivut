@@ -1,0 +1,207 @@
+@import "../common.less";
+
+.preference-list {
+  position: relative;
+  .overlay {
+    display: none;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background: url(../img/hakemuseditori/ajax-loader.gif) rgba(255,255,255, 0.5) no-repeat center center;
+    z-index: 1;
+  }
+  &.validating .overlay {
+    display: block;
+  }
+}
+
+.preference-list-item {
+  max-height: 200px;
+  overflow: hidden;
+  width: 100%;
+  margin-bottom: 2px;
+
+  .preference-list-item-layout {
+    display: table;
+    width: 100%;
+
+    .item-content {
+      display: table-cell;
+      vertical-align: middle;
+      background: #f5f5f5;
+    }
+  }
+
+  // Numero
+
+  .item-content:first-child {
+    font-size: 42px;
+    width: 85px;
+    text-align: center;
+    background: #ebebeb;
+    color: #525252;
+    position: relative;
+  }
+
+  .sort-arrow-container {
+    height: 44px;
+    display: block;
+    position: relative;
+    left: -10px;
+  }
+
+  .sort-arrow(@direction) {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    background: url("../img/hakemuseditori/sort-arrow-@{direction}.png") center center no-repeat @sort-arrow-color;
+    background-size: 7px 8px;
+
+    &[disabled] {
+      background-image: url("../img/hakemuseditori/sort-arrow-@{direction}-disabled.png");
+      background-color: #e0e0e0;
+
+      &:hover {
+        background-color: #e0e0e0;
+        cursor: default;
+      }
+    }
+
+    &:hover {
+      background-color: @sort-arrow-hover-color;
+    }
+  }
+
+  .sort-arrow-down {
+    .sort-arrow("down");
+    bottom: 0;
+  }
+
+  .sort-arrow-up {
+    .sort-arrow("up");
+    top: 0;
+  }
+
+  // Opetuspiste
+
+  .item-content:nth-child(3) {
+    padding: 15px 0px 15px 33px;
+
+    .row+.row {
+      margin-top: 8px;
+    }
+
+    .label-column {
+      width: 25%;
+      display: inline-block;
+      font-weight: bold;
+    }
+
+    .value-column {
+      display: inline-block;
+      vertical-align: top;
+      width: 74%;
+    }
+
+    input, select {
+      width: 100%;
+    }
+
+    .opetuspiste label {
+      .preference-font();
+    }
+
+    .hakuaika {
+      text-transform: uppercase;
+      color: #999;
+      font-size: 11px;
+    }
+  }
+
+  label > span.label {
+    width: 20%;
+    display: inline-block;
+    font-weight: bold;
+  }
+
+  // Remove
+
+  .item-content:last-child {
+    width: 15%;
+    text-align: right;
+    padding-right: 15px;
+    padding-left: 20px;
+
+    .application-preference-locked {
+      display: inline-block;
+      text-transform: uppercase;
+      white-space: nowrap;
+      color: #999;
+      font-size: 11px;
+      &:after {
+        content: "";
+        background: url("../img/hakemuseditori/lock.png") center center no-repeat;
+        background-size: 15px 20px;
+        width: 15px;
+        height: 20px;
+        display: inline-block;
+        vertical-align: -15%;
+        margin-left: 10px;
+      }
+    }
+  }
+
+  // Inactive row
+
+  &.inactive {
+    button, .item-content div {
+      display: none;
+    }
+
+    .row-number {
+      font-size: 18px;
+      display: block;
+    }
+  }
+}
+
+// Transitions
+
+.preference-list-item {
+  .item-content {
+    transition: background-color 1000ms;
+  }
+
+  &.saved {
+    .item-content {
+      background: @save-highlight-question-color;
+    }
+  }
+
+  &.ng-leave {
+    -webkit-transition:0.5s all;
+    transition:0.5s all;
+    max-height: 120px;
+    overflow: hidden;
+  }
+
+  &.ng-leave-active {
+    max-height: 0px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+  }
+
+  &.ng-enter {
+    -webkit-transition:0.5s all;
+    transition:0.5s all;
+    max-height: 0px;
+    overflow: hidden;
+    padding-top: 0px;
+    padding-bottom: 0px;
+  }
+
+  &.ng-enter-active {
+    max-height: 120px;
+  }
+}
