@@ -42,6 +42,8 @@ object AppConfig extends Logging {
 
   class Default extends AppConfig with ExternalProps {
     ophUrlProperties = new OphUrlProperties(false)
+    ophUrlProperties.addOverride("host.oppija", settings.getStringWithDefault("host.oppija", "NOT-DEFINED=host.oppija"))
+    ophUrlProperties.addOverride("host.virkailija", settings.getStringWithDefault("host.virkailija", "NOT-DEFINED=host.virkailija"))
     def springConfiguration = new OmatSivutSpringContext.Default()
     override def usesFakeAuthentication = settings.environment.isDev || settings.environment.isLuokka || settings.environment.isKoulutus || settings.environment.isVagrant
   }
@@ -53,6 +55,8 @@ object AppConfig extends Logging {
 
   class Dev extends AppConfig with ExampleTemplatedProps with MockAuthentication with StubbedExternalDeps {
     ophUrlProperties = new OphUrlProperties(false)
+    ophUrlProperties.addOverride("host.oppija", settings.getStringWithDefault("host.oppija", "NOT-DEFINED=host.oppija"))
+    ophUrlProperties.addOverride("host.virkailija", settings.getStringWithDefault("host.virkailija", "NOT-DEFINED=host.virkailija"))
     def springConfiguration = new OmatSivutSpringContext.Dev()
 
     override lazy val settings = ConfigTemplateProcessor.createSettings("omatsivut", templateAttributesFile)
