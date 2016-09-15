@@ -1,0 +1,65 @@
+<div ng-switch="isGroup()" ng-controller="additionalQuestionController">
+    <div ng-switch-when="true" class="question-group">
+        <div ng-if="level == 0" class="application-section-heading">
+            <span ng-show="questionNode.title.length > 0">{{localization("label.questionGroupWithTitle")}}:</span>
+            <span ng-show="questionNode.title.length == 0">{{localization("label.questionGroupWithoutTitle")}}:</span>
+            {{ questionNode.title }}
+        </div>
+        <label ng-if="level > 0" class="question-group-title">{{ questionNode.title }}:</label>
+
+        <div ng-class="{ 'question-group-indent': level > 0, 'question-group-section': level == 0 }" ng-repeat="subItem in questionNode.questionNodes">
+            <question question-node="subItem" application="application" level="level+1">
+            </question>
+        </div>
+    </div>
+
+    <div ng-switch-when="false" class="question">
+        <div class="infoText" ng-if="questionNode.questionType === 'RichText'" ng-bind-html="questionNode.title"></div>
+        <label ng-if="questionNode.questionType !== 'RichText'" class="title" ng-bind-html="questionNode.title"></label>
+        <i class="icon-info-circled verboseHelp" ng-if="questionNode.verboseHelp" title="{{questionNode.verboseHelp}}"></i>
+        <span class="validation-message error">{{ questionNode.errors.join(', ') }}</span>
+        <div class="instruction helptext" ng-if="questionNode.help" ng-bind-html="questionNode.help"></div>
+
+        <span class="answer"
+              ng-init="questionType = questionNode.questionType === 'Text' && questionNode.maxlength > 100 ? 'TextArea' : questionNode.questionType"
+              ng-switch="questionType">
+            <input type="text" ng-switch-when="Text"
+                   ng-model-options="{updateOn: 'blur'}"
+                   ng-change="questionAnswered()"
+                   ng-model="questionNode.answer"
+                   maxlength="{{questionNode.maxlength}}"/>
+            <textarea ng-switch-when="TextArea"
+                      ng-model="questionNode.answer"
+                      ng-change="questionAnswered()"
+                      ng-model-options="{updateOn: 'blur'}"
+                      maxlength="{{questionNode.maxlength}}"
+                      rows="{{questionNode.rows || 4}}"
+                      cols="{{questionNode.cols || 80}}"
+                    />
+            <select ng-switch-when="Dropdown"
+                    ng-model="questionNode.answer"
+                    ng-options="option.value as option.title for option in questionNode.options"
+                    ng-change="questionAnswered()">
+            </select>
+
+            <div ng-switch-when="Radio">
+                <label class="radio-button-item" ng-repeat="option in questionNode.options">
+                    <input name="{{questionNode.id.questionId}}" type="radio"
+                           ng-model="questionNode.answer"
+                           ng-change="questionAnswered()"
+                           value={{option.value}} />
+                    <span ng-bind-html="option.title"></span>
+                </label>
+            </div>
+
+            <div ng-switch-when="Checkbox">
+                <label class="radio-button-item" ng-repeat="option in questionNode.options">
+                    <input type="checkbox"
+                           ng-change="questionAnswered()"
+                           ng-model="questionNode.answer[option.value]">
+                    <span ng-bind-html="option.title"></span>
+                </label>
+            </div>
+        </span>
+    </div>
+</div>
