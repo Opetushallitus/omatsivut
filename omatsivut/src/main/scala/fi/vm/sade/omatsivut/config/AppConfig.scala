@@ -1,8 +1,9 @@
 package fi.vm.sade.omatsivut.config
 
 import com.typesafe.config.Config
+import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.omatsivut.security.{AuthenticationContext, ProductionAuthenticationContext, TestAuthenticationContext}
-import fi.vm.sade.utils.config.{ConfigTemplateProcessor, ApplicationSettingsLoader}
+import fi.vm.sade.utils.config.{ApplicationSettingsLoader, ConfigTemplateProcessor}
 import fi.vm.sade.utils.mongo.{EmbeddedMongo, MongoServer}
 import fi.vm.sade.utils.slf4j.Logging
 import fi.vm.sade.utils.tcp.{PortChecker, PortFromSystemPropertyOrFindFree}
@@ -55,6 +56,8 @@ object AppConfig extends Logging {
 
   class IT extends EmbbeddedMongo with MockAuthentication with StubbedExternalDeps {
     def springConfiguration = new OmatSivutSpringContext.Dev()
+    OphUrlProperties.addOverride("url-oppija", "http://localhost:" + AppConfig.embeddedJettyPortChooser.chosenPort.toString)
+    OphUrlProperties.addOverride("url-virkailija", "http://localhost:" + AppConfig.embeddedJettyPortChooser.chosenPort.toString)
   }
 
   class ImmediateCookieTimeout extends IT {
@@ -62,7 +65,7 @@ object AppConfig extends Logging {
   }
 
   trait ExternalProps {
-    def configFile = System.getProperty("user.home") + "/oph-configuration/omatsivut.properties"
+    def configFile = System.getProperty("user.home") + "/oph-configuration/common.properties"
     lazy val settings = ApplicationSettingsLoader.loadSettings(configFile)
   }
 
