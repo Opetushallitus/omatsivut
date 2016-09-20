@@ -14,7 +14,6 @@ trait SecuredSessionServletContainer {
       val info = getAuthenticationInfo(request)
       info.personOid match {
         case (Some(oid)) => {
-          auditLogger.log(Login(info))
           response.redirect(redirectUri)
         }
         case _ => redirectToShibbolethLogin(response, authenticationContext.ssoContextPath)
