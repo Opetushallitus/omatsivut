@@ -120,6 +120,7 @@ class ComponentRegistry(val config: AppConfig)
   val captchaService: CaptchaService = new RemoteCaptchaService(config.settings.captchaSettings)
   val oppijanTunnistusService = configureOppijanTunnistusService
 
+  def newAuditLoginFilter = new AuditLoginFilter(auditLogger, config.settings.vetumaUrl)
   def muistilistaService(language: Language): MuistilistaService = new MuistilistaService(language)
   def newApplicationValidator: ApplicationValidator = new ApplicationValidator
   def newHakemusPreviewGenerator(language: Language): HakemusPreviewGenerator = new HakemusPreviewGenerator(language)

@@ -15,6 +15,7 @@ case class ApplicationSettings(config: Config) extends GroupEmailerSettings(conf
   val securitySettings = new SecuritySettings(config)
   val authenticationServiceConfig = getRemoteApplicationConfig(config.getConfig("omatsivut.authentication-service"))
 
+  val vetumaUrl = config.getString("omatsivut.vetuma.url")
   val valintaTulosServiceUrl = config.getString("omatsivut.valinta-tulos-service.url")
   val koulutusinformaatioAoUrl = config.getString("omatsivut.koulutusinformaatio.ao.url")
   val koulutusinformaatioLopUrl = config.getString("omatsivut.koulutusinformaatio.lop.url")

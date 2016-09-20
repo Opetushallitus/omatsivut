@@ -33,6 +33,7 @@ omatsivut_haku_app_username: ""
 omatsivut_haku_app_password: ""
 omatsivut_authentication_service_username: ""
 omatsivut_authentication_service_password: ""
+omatsivut_vetuma_url: "fakevetuma"
 ymparisto: "dev"
 oppija_raamit_url: "https://itest-oppija.oph.ware.fi"
 email_batch_size: 500
