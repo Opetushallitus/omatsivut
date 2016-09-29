@@ -31,6 +31,7 @@ class ErillishakuFixtureImporter(appConfig: AppConfig, springContext: HakemusSpr
       "FIN",
       "FIN",
       "091",
+      false,
       "FIN"
     )
 

@@ -56,8 +56,11 @@ object AppConfig extends Logging {
 
   class IT extends EmbbeddedMongo with MockAuthentication with StubbedExternalDeps {
     def springConfiguration = new OmatSivutSpringContext.Dev()
+
+    // Testien vaatimat overridet
     OphUrlProperties.addOverride("url-oppija", "http://localhost:" + AppConfig.embeddedJettyPortChooser.chosenPort.toString)
     OphUrlProperties.addOverride("url-virkailija", "http://localhost:" + AppConfig.embeddedJettyPortChooser.chosenPort.toString)
+    OphUrlProperties.addOverride("omatsivut.vetuma.base", "http://localhost:" + AppConfig.embeddedJettyPortChooser.chosenPort.toString)
   }
 
   class ImmediateCookieTimeout extends IT {
