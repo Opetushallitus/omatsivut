@@ -1,6 +1,5 @@
 #!/bin/bash -e
 find node_modules -name ".git" | rev | cut -c6- | rev | xargs rm -fr
-# make sure we get latest version
-rm -fr node_modules/hakemuseditori
+(cd hakemuseditori && npm install && ./gulp)
 npm install
 ./gulp $@
