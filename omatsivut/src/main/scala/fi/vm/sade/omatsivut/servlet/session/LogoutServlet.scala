@@ -3,6 +3,7 @@ package fi.vm.sade.omatsivut.servlet.session
 import javax.servlet.http.HttpServletRequest
 
 import fi.vm.sade.hakemuseditori.auditlog.{AuditLogger, AuditLoggerComponent}
+import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.omatsivut.auditlog.Logout
 import fi.vm.sade.omatsivut.security.AuthenticationContext
 import fi.vm.sade.omatsivut.security.AuthenticationInfoParser._
@@ -26,7 +27,7 @@ trait LogoutServletContainer {
 
     def redirectToShibbolethLogout(request: HttpServletRequest, response: RichResponse): Unit = {
       val returnUrl = request.getContextPath + "/session/reset"
-      response.redirect(authenticationContext.ssoContextPath + "/Shibboleth.sso/Logout?return=" + returnUrl)
+      response.redirect(authenticationContext.ssoContextPath + OphUrlProperties.url("shibboleth.logout", returnUrl))
     }
   }
 }
