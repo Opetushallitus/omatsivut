@@ -24,7 +24,7 @@ case class ApplicationSettings(config: Config) extends GroupEmailerSettings(conf
 
   val muistilistaUrl = OphUrlProperties.url("koulutusinformaatio.muistilista")
 
-  val ohjausparametritUrl = OphUrlProperties.url("ohjausparametrit.kaikki")
+  val ohjausparametritUrl = OphUrlProperties.url("ohjausparametrit-service.kaikki")
   val tarjontaUrl = OphUrlProperties.url("tarjonta-service.base")
   val viestintapalveluUrl = OphUrlProperties.url("viestintapalvelu.base")
   val koodistoUrl = OphUrlProperties.url("koodisto-service.base")
