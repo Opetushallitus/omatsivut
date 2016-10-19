@@ -1,27 +1,27 @@
 module.exports = function(listApp) {
   listApp.factory("restResources", ["$resource", "$http", function($resource, $http) {
     return {
-      applications: $resource("/omatsivut/secure/applications", null, {
+      applications: $resource(window.url("omatsivut.applications"), null, {
         "update": {
           method: "PUT",
-          url: "/omatsivut/secure/applications/:id"
+          url: window.url("omatsivut.applications.update")
         }
       }),
 
       validate: function(application) {
-        return $http.post("/omatsivut/secure/applications/validate/" + application.oid, application.toJson())
+        return $http.post(window.url( "omatsivut.applications.validate", application.oid), application.toJson())
       },
 
-      vastaanota: $resource("/omatsivut/secure/applications/vastaanota", null, {
+      vastaanota: $resource(window.url("omatsivut.applications.vastaanota"), null, {
         "post": {
           method: "POST",
-          url: "/omatsivut/secure/applications/vastaanota/:hakemusOid/hakukohde/:hakukohdeOid"
+          url: window.url("omatsivut.applications.vastaanota.post")
         }
       }),
 
-      postOffice: $resource("/omatsivut/koodisto/postitoimipaikka/:postalCode"),
-      koulutukset: $resource("/omatsivut/koulutusinformaatio/koulutukset/:asId/:opetuspisteId"),
-      opetuspisteet: $resource("/omatsivut/koulutusinformaatio/opetuspisteet/:query")
+      postOffice: $resource(window.url("omatsivut.postitoimipaikka")),
+      koulutukset: $resource(window.url("omatsivut.koulutukset")),
+      opetuspisteet: $resource(window.url("omatsivut.opetuspisteet"))
     }
   }])
 }

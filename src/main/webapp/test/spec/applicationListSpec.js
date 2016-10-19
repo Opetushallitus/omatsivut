@@ -2400,10 +2400,10 @@
         hakemusErityisopetuksena.getPreference(2).isNew().should.equal(true)
       })
 
-      after(page.applyFixtureAndOpen({applicationOid: hakemusYhteishakuKevat2014WithForeignBaseEducationId}))
     })
 
     describe("Näytä hakemus -linkki", function() {
+      before(page.applyFixtureAndOpen({applicationOid: hakemusYhteishakuKevat2014WithForeignBaseEducationId}))
       describe("Kun hakemusta ei ole muokattu", function() {
         it("linkki avaa esikatselusivun", function() {
           hakemusYhteishakuKevat2014WithForeignBaseEducation.previewLink().text().should.equal("Näytä hakemus")

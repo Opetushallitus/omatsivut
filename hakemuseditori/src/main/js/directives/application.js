@@ -4,7 +4,7 @@ var util = require("../util")
 var Question = require("../question").Question
 
 module.exports = function(app) {
-  app.directive("application", ["$http", "$sce", "restResources", "applicationValidator", "settings", "debounce", "localization", "$timeout", function ($http, $sce, restResources, applicationValidator, settings, debounce, localization, $timeout) {
+  app.directive("application", ["$sce", "restResources", "applicationValidator", "settings", "debounce", "localization", "$timeout", function ($sce, restResources, applicationValidator, settings, debounce, localization, $timeout) {
     return {
       restrict: 'E',
       scope: {
@@ -76,6 +76,8 @@ module.exports = function(app) {
             $scope.$emit("hakutoive-vastaanotettu", hakutoive)
           }, 0)
         }
+
+        $scope.url = window.url;
 
         function applicationChanged() {
           $scope.applicationForm.$setDirty()

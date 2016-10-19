@@ -6,10 +6,10 @@
 
         <div class="timestamp-row" ng-show="application.haku.jarjestelmanHakulomake">
             <i ng-show="application.hasForm" aria-hidden="true" class="icon-doc-text"></i>
-            <a class="preview" ng-href="/omatsivut/secure/applications/preview/{{application.oid}}" ng-show="application.hasForm" ng-class="{disabled: applicationForm.$dirty|| statusMessageType=='pending' || isValidating}" target="_blank">{{ localization('button.showApplication') }}</a>
+            <a class="preview" ng-href="{{url('omatsivut.applications.preview',application.oid)}}" ng-show="application.hasForm" ng-class="{disabled: applicationForm.$dirty|| statusMessageType=='pending' || isValidating}" target="_blank">{{ localization('button.showApplication') }}</a>
             <span ng-if="tuloskirjeForHaku(application.tuloskirjeet, application.haku.oid)">
                 <span class="delimiter"> | </span>
-                <a class="tuloskirje" ng-href="/omatsivut/secure/applications/tuloskirje/{{application.haku.oid}}" ng-show="application.hasForm" ng-class="{disabled: applicationForm.$dirty|| statusMessageType=='pending' || isValidating}" target="_blank">
+                <a class="tuloskirje" ng-href="{{url('omatsivut.applications.tuloskirje',application.haku.oid)}}" ng-show="application.hasForm" ng-class="{disabled: applicationForm.$dirty|| statusMessageType=='pending' || isValidating}" target="_blank">
                     {{ localization('button.downloadLetter', {
                     luotu: tuloskirjeForHaku(application.tuloskirjeet, application.haku.oid).createdDate
                     }) }}
@@ -20,7 +20,7 @@
                 {{ timestampLabel() }} <time formatted-time="application.updated" format="LLL" />
             </span>
             <div callout="attachments">
-                <localized-link key="message.rememberSendAttachments" href="{{ '/omatsivut/secure/applications/preview/' + application.oid + '#liitteet'}}" target="_blank"></localized-link>
+                <localized-link key="message.rememberSendAttachments" href="{{url('omatsivut.applications.preview', application.oid) + '#liitteet'}}" target="_blank"></localized-link>
             </div>
         </div>
     </section>

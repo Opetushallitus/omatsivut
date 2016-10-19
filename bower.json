@@ -1,0 +1,14 @@
+{
+  "name": "omatsivut",
+  "version": "13.0.1",
+  "homepage": "https://github.com/Opetushallitus/omatsivut",
+  "authors": [],
+  "license": "EUPL, Version 1.1",
+  "private": true,
+  "ignore": [
+    "**/*"
+  ],
+  "dependencies": {
+    "oph_urls.js": "https://raw.githubusercontent.com/Opetushallitus/java-utils/master/java-properties/javascript/oph_urls.js"
+  }
+}
