@@ -31,7 +31,7 @@ module.exports = function(app) {
     }
   }])
 
-  app.controller("hakutoiveController", ["$scope", "$http", "$timeout", "settings", "restResources", function($scope, $http, $timeout, settings, restResources) {
+  app.controller("hakutoiveController", ["$scope", "$timeout", "settings", "restResources", function($scope, $timeout, settings, restResources) {
     $scope.isEditingDisabled = function() { return !$scope.hakutoive.isNew || !$scope.application.isEditable($scope.$index) }
 
     $scope.isKoulutusSelectable = function() { return !$scope.isEditingDisabled() && this.hakutoive.hasOpetuspiste() && !_.isEmpty($scope.koulutusList) }

@@ -35,7 +35,7 @@ module.exports = function(listApp) {
         function error(err) {
           switch (err.status) {
             case 401:
-              document.location.replace("/omatsivut/login")
+              document.location.replace(window.url("omatsivut.login"))
               break;
             case 404:
               $scope.applicationStatusMessage = "errorPage.noApplicationsFound.text"

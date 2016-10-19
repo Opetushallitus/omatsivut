@@ -12,7 +12,7 @@ var gulp = require('gulp'),
 var jsFiles = 'src/main/js/**/*.js';
 var isWatch
 var localEditor = false
-var editorLocation = "node_modules/hakemuseditori"
+var editorLocation = "hakemuseditori"
 
 function handleError(err) {
     console.log(err.toString());

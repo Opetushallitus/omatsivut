@@ -81,12 +81,14 @@ node_modules
 oph_vars
 
 # generated js and css files
-omatsivut/src/main/webapp/bundle.js
-omatsivut/src/main/webapp/hakemuseditori*
-omatsivut/src/main/webapp/css/
-omatsivut/src/main/templates/templates.js
-omatsivut/src/main/less/hakemuseditori
-omatsivut/src/main/webapp/img/hakemuseditori
+src/main/webapp/bundle.js
+src/main/webapp/hakemuseditori*
+src/main/webapp/css/
+src/main/templates/templates.js
+src/main/less/hakemuseditori
+src/main/webapp/img/hakemuseditori
+
+hakemuseditori/dist/*
 
 #gatling
 gatling/
