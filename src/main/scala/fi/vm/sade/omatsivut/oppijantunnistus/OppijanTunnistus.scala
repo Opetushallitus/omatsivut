@@ -1,6 +1,7 @@
 package fi.vm.sade.omatsivut.oppijantunnistus
 
 import fi.vm.sade.omatsivut.NonSensitiveHakemusInfo.Oid
+import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.utils.http.{DefaultHttpClient, HttpClient}
 import org.json4s._
 import org.json4s.native.JsonMethods._
@@ -23,12 +24,12 @@ class InvalidTokenException(msg: String) extends RuntimeException(msg)
 
 class ExpiredTokenException(msg: String) extends RuntimeException(msg)
 
-class RemoteOppijanTunnistusService(verifyUrl: String, client: HttpClient = DefaultHttpClient) extends OppijanTunnistusService {
+class RemoteOppijanTunnistusService(client: HttpClient = DefaultHttpClient) extends OppijanTunnistusService {
   implicit val formats = DefaultFormats
 
   def validateToken(token: String): Try[Oid] = {
 
-    val request = client.httpGet(verifyUrl + s"/$token")
+    val request = client.httpGet(OphUrlProperties.url("oppijan-tunnistus.verify", token))
                     .header("Caller-Id", "omatsivut.omatsivut.backend")
 
     request.responseWithHeaders() match {

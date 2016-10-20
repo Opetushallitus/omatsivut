@@ -35,7 +35,7 @@ trait FixtureServletContainer {
 
       put("/fixtures/valintatulos/apply") {
         val query = request.queryString
-        new RemoteValintatulosService(appConfig.settings.valintaTulosServiceUrl).applyFixtureWithQuery(query)
+        new RemoteValintatulosService().applyFixtureWithQuery(request.multiParameters)
         Ok
       }
 

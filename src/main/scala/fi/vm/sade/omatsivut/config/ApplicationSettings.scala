@@ -9,31 +9,13 @@ case class ApplicationSettings(config: Config) extends GroupEmailerSettings(conf
 
   val captchaSettings = new CaptchaServiceSettings(config)
 
-  val raamitUrl = OphUrlProperties.url("oppija-raamit.base")
-
-  val piwikUrl = OphUrlProperties.url("piwik.base")
-
   val securitySettings = new SecuritySettings(config)
   val authenticationServiceConfig = getRemoteApplicationConfig(config.getConfig("omatsivut.authentication-service"))
 
-  val vetumaUrl = OphUrlProperties.url("omatsivut.vetuma.base");
-  val valintaTulosServiceUrl = OphUrlProperties.url("valinta-tulos-service.base")
-  val koulutusinformaatioAoUrl = OphUrlProperties.url("koulutusinformaatio.ao")
-  val koulutusinformaatioLopUrl = OphUrlProperties.url("koulutusinformaatio.lop")
-  val koulutusinformaationBIUrl = OphUrlProperties.url("koulutusinformaatio.basketitems")
-
-  val muistilistaUrl = OphUrlProperties.url("koulutusinformaatio.muistilista")
-
-  val ohjausparametritUrl = OphUrlProperties.url("ohjausparametrit-service.kaikki")
-  val tarjontaUrl = OphUrlProperties.url("tarjonta-service.base")
-  val viestintapalveluUrl = OphUrlProperties.url("viestintapalvelu.base")
-  val koodistoUrl = OphUrlProperties.url("koodisto-service.base")
   val tuloskirjeetFileSystemUrl = config.getString("omatsivut.tuloskirjeet.filesystem.url")
 
   val aesKey = config.getString("omatsivut.crypto.aes.key")
   val hmacKey = config.getString("omatsivut.crypto.hmac.key")
-
-  val oppijanTunnistusVerifyUrl = OphUrlProperties.url("oppijan-tunnistus.verify")
 
   private def getRemoteApplicationConfig(config: Config) = {
     RemoteApplicationConfig(
@@ -51,7 +33,7 @@ object ApplicationSettingsParser extends fi.vm.sade.utils.config.ApplicationSett
 }
 
 class SecuritySettings(c: Config) {
-  val casUrl = OphUrlProperties.url("cas.base")
+  val casUrl = OphUrlProperties.url("cas.url")
   val casUsername = c.getString("cas.username")
   val casPassword = c.getString("cas.password")
 }

@@ -2,12 +2,9 @@ package fi.vm.sade.hakemuseditori.viestintapalvelu
 
 import java.net.URL
 
-import fi.vm.sade.hakemuseditori.domain.Language
-import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus
 import fi.vm.sade.hakemuseditori.http.HttpCall
 import fi.vm.sade.hakemuseditori.json.JsonFormats
-import fi.vm.sade.hakemuseditori.tarjonta.domain.{KohteenHakuaika, Hakukohde, Haku}
-import fi.vm.sade.utils.http.DefaultHttpClient
+import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.utils.slf4j.Logging
 import org.apache.commons.io.IOUtils
 
@@ -31,14 +28,14 @@ trait ViestintapalveluComponent {
     }
   }
 
-  class RemoteViestintapalveluService(viestintapalveluUrl: String) extends ViestintapalveluService with HttpCall {
+  class RemoteViestintapalveluService() extends ViestintapalveluService with HttpCall {
     override def fetchHakijanTuloskirjeet(hakijaOid: String) : List[Letter] = {
-      val url = viestintapalveluUrl + "/luotettu/letter/list/person/" + hakijaOid
+      val url = OphUrlProperties.url("viestintapalvelu.tuloskirjeet", hakijaOid)
       Try(withHttpGet("Viestintapalvelu fetch tuloskirjeet", url, {_.flatMap(ViestintapalveluParser.parseLetters)}).getOrElse(List())).getOrElse(List())
     }
 
     override def fetchTuloskirje(id: Long) : Option[Array[Byte]] = {
-      val url = viestintapalveluUrl + "/luotettu/letter/receiverLetter/" + id
+      val url =  OphUrlProperties.url("viestintapalvelu.tuloskirje", id.toString)
       Try(IOUtils.toByteArray(new URL(url).openStream())).toOption
     }
   }

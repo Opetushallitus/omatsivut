@@ -11,9 +11,10 @@ import fi.vm.sade.hakemuseditori.localization.TranslationsComponent
 import fi.vm.sade.hakemuseditori.lomake.{LomakeRepository, LomakeRepositoryComponent}
 import fi.vm.sade.hakemuseditori.ohjausparametrit.{OhjausparametritComponent, OhjausparametritService}
 import fi.vm.sade.hakemuseditori.tarjonta.{TarjontaComponent, TarjontaService}
-import fi.vm.sade.hakemuseditori.viestintapalvelu.{ViestintapalveluService, ViestintapalveluComponent}
+import fi.vm.sade.hakemuseditori.viestintapalvelu.{ViestintapalveluComponent, ViestintapalveluService}
 import fi.vm.sade.hakemuseditori.valintatulokset._
 import fi.vm.sade.hakemuseditori.{HakemusEditoriComponent, RemoteSendMailServiceWrapper, SendMailServiceWrapper, StubbedSendMailServiceWrapper}
+import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.omatsivut.config.AppConfig._
 import fi.vm.sade.omatsivut.fixtures.hakemus.ApplicationFixtureImporter
 import fi.vm.sade.omatsivut.hakemuspreview.HakemusPreviewGeneratorComponent
@@ -56,12 +57,12 @@ class ComponentRegistry(val config: AppConfig)
 
   private def configureOhjausparametritService: OhjausparametritService = config match {
     case _: StubbedExternalDeps => new StubbedOhjausparametritService()
-    case _ => CachedRemoteOhjausparametritService(config.settings.ohjausparametritUrl)
+    case _ => CachedRemoteOhjausparametritService(OphUrlProperties.url("ohjausparametrit-service.kaikki"))
   }
 
   private def configureKoulutusInformaatioService: KoulutusInformaatioService = config match {
     case x: StubbedExternalDeps => new StubbedKoulutusInformaatioService
-    case _ => CachedKoulutusInformaatioService(new RemoteKoulutusService(config.settings.koulutusinformaatioAoUrl, config.settings.koulutusinformaationBIUrl, config.settings.koulutusinformaatioLopUrl))
+    case _ => CachedKoulutusInformaatioService(new RemoteKoulutusService(OphUrlProperties.url("koulutusinformaatio-app.ao"), OphUrlProperties.url("koulutusinformaatio-app.lop"), OphUrlProperties.url("koulutusinformaatio-app.basketitems")))
   }
 
   private def configureGroupEmailService: GroupEmailService = config match {
@@ -70,28 +71,28 @@ class ComponentRegistry(val config: AppConfig)
   }
 
   private def configureValintatulosService: ValintatulosService = config match {
-    case x: StubbedExternalDeps => new FailingRemoteValintatulosService(config.settings.valintaTulosServiceUrl)
-    case _ => new RemoteValintatulosService(config.settings.valintaTulosServiceUrl)
+    case x: StubbedExternalDeps => new FailingRemoteValintatulosService()
+    case _ => new RemoteValintatulosService()
   }
 
   private def configureTarjontaService: TarjontaService = config match {
     case _: StubbedExternalDeps => new StubbedTarjontaService()
-    case _ => CachedRemoteTarjontaService(config.settings.tarjontaUrl)
+    case _ => CachedRemoteTarjontaService()
   }
 
   private def configureViestintapalveluService: ViestintapalveluService = config match {
     case _: StubbedExternalDeps => new StubbedViestintapalveluService()
-    case _ => new RemoteViestintapalveluService(config.settings.viestintapalveluUrl)
+    case _ => new RemoteViestintapalveluService()
   }
 
   private def configureOppijanTunnistusService: OppijanTunnistusService = config match {
     case _: StubbedExternalDeps => new StubbedOppijanTunnistusService()
-    case _ => new RemoteOppijanTunnistusService(config.settings.oppijanTunnistusVerifyUrl)
+    case _ => new RemoteOppijanTunnistusService()
   }
 
   private def configureKoodistoService: KoodistoService = config match {
     case _: StubbedExternalDeps => new StubbedKoodistoService
-    case _ => new RemoteKoodistoService(config.settings.koodistoUrl, springContext, AppConfig.clientSubSystemCode)
+    case _ => new RemoteKoodistoService(springContext, AppConfig.clientSubSystemCode)
   }
 
   private def configureHakumaksuService: HakumaksuServiceWrapper = config match {
@@ -120,7 +121,7 @@ class ComponentRegistry(val config: AppConfig)
   val captchaService: CaptchaService = new RemoteCaptchaService(config.settings.captchaSettings)
   val oppijanTunnistusService = configureOppijanTunnistusService
 
-  def newAuditLoginFilter = new AuditLoginFilter(auditLogger, config.settings.vetumaUrl)
+  def newAuditLoginFilter = new AuditLoginFilter(auditLogger, OphUrlProperties.url("vetuma.url"))
   def muistilistaService(language: Language): MuistilistaService = new MuistilistaService(language)
   def newApplicationValidator: ApplicationValidator = new ApplicationValidator
   def newHakemusPreviewGenerator(language: Language): HakemusPreviewGenerator = new HakemusPreviewGenerator(language)

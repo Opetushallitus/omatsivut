@@ -6,7 +6,7 @@ import fi.vm.sade.omatsivut.security.{AuthenticationContext, ProductionAuthentic
 import fi.vm.sade.utils.config.{ApplicationSettingsLoader, ConfigTemplateProcessor}
 import fi.vm.sade.utils.mongo.{EmbeddedMongo, MongoServer}
 import fi.vm.sade.utils.slf4j.Logging
-import fi.vm.sade.utils.tcp.{PortChecker, PortFromSystemPropertyOrFindFree}
+import fi.vm.sade.utils.tcp.{PortFromSystemPropertyOrFindFree}
 
 object AppConfig extends Logging {
 
@@ -60,7 +60,7 @@ object AppConfig extends Logging {
     // Testien vaatimat overridet
     OphUrlProperties.addOverride("url-oppija", "http://localhost:" + AppConfig.embeddedJettyPortChooser.chosenPort.toString)
     OphUrlProperties.addOverride("url-virkailija", "http://localhost:" + AppConfig.embeddedJettyPortChooser.chosenPort.toString)
-    OphUrlProperties.addOverride("omatsivut.vetuma.base", "http://localhost:" + AppConfig.embeddedJettyPortChooser.chosenPort.toString)
+    OphUrlProperties.addOverride("vetuma.url", "http://localhost:" + AppConfig.embeddedJettyPortChooser.chosenPort.toString)
   }
 
   class ImmediateCookieTimeout extends IT {

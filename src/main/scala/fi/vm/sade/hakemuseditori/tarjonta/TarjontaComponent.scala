@@ -9,7 +9,8 @@ import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.hakemuseditori.memoize.TTLOptionalMemoize
 import fi.vm.sade.hakemuseditori.ohjausparametrit.OhjausparametritComponent
 import fi.vm.sade.hakemuseditori.ohjausparametrit.domain.HaunAikataulu
-import fi.vm.sade.hakemuseditori.tarjonta.domain.{KohteenHakuaika, Hakukohde, Haku}
+import fi.vm.sade.hakemuseditori.tarjonta.domain.{Haku, Hakukohde, KohteenHakuaika}
+import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.utils.slf4j.Logging
 import org.json4s.JsonAST.JValue
 
@@ -127,8 +128,8 @@ trait TarjontaComponent {
   }
 
   object CachedRemoteTarjontaService {
-    def apply(tarjontaUrl: String): TarjontaService = {
-      val service = new RemoteTarjontaService(tarjontaUrl)
+    def apply(): TarjontaService = {
+      val service = new RemoteTarjontaService()
       val hakuMemo = TTLOptionalMemoize.memoize(service.haku _, "tarjonta haku", 4 * 60 * 60, 128)
       val hakukohdeMemo = TTLOptionalMemoize.memoize(service.hakukohde _, "tarjonta hakukohde", 4 * 60 * 60, 1024)
 
@@ -139,9 +140,9 @@ trait TarjontaComponent {
     }
   }
 
-  class RemoteTarjontaService(tarjontaUrl: String) extends TarjontaService with HttpCall {
+  class RemoteTarjontaService() extends TarjontaService with HttpCall {
     override def haku(oid: String, lang: Language.Language) : Option[Haku] = {
-      withHttpGet("Tarjonta fetch haku", tarjontaUrl + "/haku/" + oid, {_.flatMap(TarjontaParser.parseHaku).map({ tarjontaHaku =>
+      withHttpGet("Tarjonta fetch haku", OphUrlProperties.url("tarjonta-service.haku", oid), {_.flatMap(TarjontaParser.parseHaku).map({ tarjontaHaku =>
           val haunAikataulu = ohjausparametritService.haunAikataulu(oid)
           Haku(tarjontaHaku, lang).copy(aikataulu = haunAikataulu)
         })}
@@ -149,7 +150,7 @@ trait TarjontaComponent {
     }
 
     override def hakukohde(oid: String): Option[Hakukohde] = {
-      withHttpGet( "Tarjonta fetch hakukohde", tarjontaUrl + "/hakukohde/" + oid, {_.flatMap(TarjontaParser.parseHakukohde)})
+      withHttpGet( "Tarjonta fetch hakukohde", OphUrlProperties.url("tarjonta-service.hakukohde", oid), {_.flatMap(TarjontaParser.parseHakukohde)})
     }
   }
 }

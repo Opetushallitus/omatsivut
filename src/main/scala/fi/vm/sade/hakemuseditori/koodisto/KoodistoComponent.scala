@@ -1,10 +1,12 @@
 package fi.vm.sade.hakemuseditori.koodisto
 
-import fi.vm.sade.haku.virkailija.lomakkeenhallinta.koodisto.impl.{KoodistoServiceMockImpl, KoodistoServiceImpl}
+import fi.vm.sade.haku.virkailija.lomakkeenhallinta.koodisto.impl.{KoodistoServiceImpl, KoodistoServiceMockImpl}
 import fi.vm.sade.koodisto.util.CachingKoodistoClient
 import fi.vm.sade.hakemuseditori.domain.Language.Language
 import fi.vm.sade.hakemuseditori.hakemus.{HakemusSpringContext, SpringContextComponent}
-import fi.vm.sade.hakemuseditori.memoize.{TTLOptionalMemoize, TTLCache}
+import fi.vm.sade.hakemuseditori.memoize.{TTLCache, TTLOptionalMemoize}
+import fi.vm.sade.omatsivut.OphUrlProperties
+
 import scala.collection.JavaConverters._
 
 trait KoodistoService {
@@ -36,8 +38,8 @@ trait KoodistoComponent {
   def koodistoService: KoodistoService
 }
 
-class RemoteKoodistoService(koodistoUrl: String, springContext: HakemusSpringContext, clientSubSystemCode: String) extends KoodistoService {
-  lazy val client = new CachingKoodistoClient(koodistoUrl).setClientSubSystemCode(clientSubSystemCode)
+class RemoteKoodistoService(springContext: HakemusSpringContext, clientSubSystemCode: String) extends KoodistoService {
+  lazy val client = new CachingKoodistoClient(OphUrlProperties.url("koodisto-service.base")).setClientSubSystemCode(clientSubSystemCode)
   lazy val service = new KoodistoServiceImpl(client, springContext.organizationService)
 }
 
