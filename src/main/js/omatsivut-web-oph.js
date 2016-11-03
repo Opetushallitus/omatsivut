@@ -1,4 +1,4 @@
-window.urls.properties={
+window.urls.addProperties({
   "omatsivut.applications": "/omatsivut/secure/applications",
   "omatsivut.applications.update": "/omatsivut/secure/applications/:id",
   "omatsivut.applications.validate": "/omatsivut/secure/applications/validate/$1",
@@ -11,4 +11,4 @@ window.urls.properties={
   "omatsivut.login": "/omatsivut/login",
   "omatsivut.applications.preview": "/omatsivut/secure/applications/preview/$1",
   "omatsivut.applications.tuloskirje": "/omatsivut/secure/applications/tuloskirje/$1",
-};
+});
