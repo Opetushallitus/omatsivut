@@ -154,3 +154,5 @@ recaptcha.secret={{recaptcha_secret}}
 
 # VETUMA
 omatsivut.vetuma.url={{omatsivut_vetuma_url}}
+shibboleth.logout={{shibboleth_logout}}
+shibboleth.login={{shibboleth_login}}
