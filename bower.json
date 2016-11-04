@@ -9,6 +9,6 @@
     "**/*"
   ],
   "dependencies": {
-    "oph_urls.js": "https://raw.githubusercontent.com/Opetushallitus/java-utils/master/java-properties/javascript/oph_urls.js"
+    "oph_urls.js": "https://raw.githubusercontent.com/Opetushallitus/oph-urls-js/master/oph_urls.js"
   }
 }

@@ -26,6 +26,15 @@
  */
 
 (function(exportDest) {
+    var version="1.0"
+
+    if(exportDest.urls) {
+        if(exportDest.urls.version !== version)   {
+            console.log("'Mismatching oph_urls.js. First loaded (and in use):", exportDest.urls.version, " second loaded (not in use): ", version)
+        }
+        return
+    }
+
     exportDest.urls = function() {
         var urls_config = {}
         var omitEmptyValuesFromQuerystring = false
@@ -130,6 +139,7 @@
         return ret
     }
 
+    exportDest.urls.version = version
     exportDest.urls.properties = {}
     exportDest.urls.defaults = {}
     exportDest.urls.override = {}
