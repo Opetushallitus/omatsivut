@@ -3,5 +3,7 @@
 
   "Makefile": "no",
 
-  "csrf": "omatsivut-front ok, backend: ?"
+  "csrf": "omatsivut-front ok, backend: ?",
+
+  "includes": ["koodisto-client"]
 }
