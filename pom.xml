@@ -267,7 +267,7 @@
                         <exclude>**/*Spec.java</exclude>
                         <exclude>**/*Test.java</exclude>
                     </includes>
-                    <argLine>-Xms512M -Xmx1G -XX:MaxPermSize=512M -DJAVA8_HOME=${env.JAVA8_HOME} -Xss2m</argLine>
+                    <argLine>-Xms512M -Xmx2G -Xss2m</argLine>
                     <systemProperties>
 
                     </systemProperties>
