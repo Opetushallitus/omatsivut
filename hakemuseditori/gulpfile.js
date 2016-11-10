@@ -39,7 +39,7 @@ gulp.task('lint', function() {
 gulp.task("templates", function() {
   pipeToTargets(gulp.src("src/main/templates/**/*.html")
     .pipe(templates("hakemuseditori-templates.js", { root:"templates/"}))
-  )    
+  )
 })
 
 gulp.task('less-example', function () {
@@ -61,7 +61,7 @@ gulp.task('browserify-editor', ["templates"], function() {
     .pipe(gulpif(compress, ngAnnotate()))
     .pipe(gulpif(compress, uglify({ mangle: true })))
   )
-  
+
 })
 
 gulp.task('browserify-example', function() {
@@ -82,7 +82,7 @@ function pipeToTargets(pipeline) {
 }
 
 gulp.task('omatsivut', function() {
-  distTargets.push("../omatsivut/src/main/webapp")
+  distTargets.push("../src/main/webapp")
 })
 
 gulp.task('haku-app', function() {
