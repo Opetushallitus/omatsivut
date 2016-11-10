@@ -17,7 +17,7 @@ import fi.vm.sade.hakemuseditori.tarjonta.TarjontaComponent
 import fi.vm.sade.hakemuseditori.tarjonta.domain.Haku
 import fi.vm.sade.hakemuseditori.user.User
 import fi.vm.sade.hakemuseditori.valintatulokset.ValintatulosServiceComponent
-import fi.vm.sade.hakemuseditori.viestintapalvelu.ViestintapalveluComponent
+import fi.vm.sade.hakemuseditori.viestintapalvelu.TuloskirjeComponent
 import fi.vm.sade.haku.oppija.hakemus.aspect.ApplicationDiffUtil
 import fi.vm.sade.haku.oppija.hakemus.domain.{Application, ApplicationNote}
 import fi.vm.sade.haku.oppija.lomake.domain.ApplicationPeriod
@@ -31,7 +31,7 @@ import scala.util.{Failure, Success, Try}
 trait HakemusRepositoryComponent {
   this: LomakeRepositoryComponent with ApplicationValidatorComponent with HakemusConverterComponent
     with SpringContextComponent with AuditLoggerComponent with TarjontaComponent with OhjausparametritComponent
-    with ViestintapalveluComponent
+    with TuloskirjeComponent
     with ValintatulosServiceComponent with HakumaksuComponent with SendMailComponent =>
 
   import scala.collection.JavaConversions._
@@ -191,7 +191,6 @@ trait HakemusRepositoryComponent {
 
     private def fetchHakemukset(query: Application, fetchTulos: Boolean)(implicit lang: Language): List[HakemusInfo] = {
       timed("Application fetch", 1000){
-        val letters = viestintapalveluService.fetchHakijanTuloskirjeet(query.getPersonOid)
         val legacyApplications: List[ImmutableLegacyApplicationWrapper] = timed("Application fetch DAO", 1000){
           dao.find(query).toList
         }.map(ImmutableLegacyApplicationWrapper.wrap)
@@ -211,14 +210,14 @@ trait HakemusRepositoryComponent {
             } else {
               (None, true)
             }
-            val letterForHaku = letters.filter(_.hakuOid.equals(haku.oid))
-            val hakemus = timed("fetchHakemukset -> hakemusConverter.convertToHakemus", 100) { hakemusConverter.convertToHakemus(Some(letterForHaku), lomakeOption, haku, application, valintatulos) }
+            val letterForHaku = tuloskirjeService.getTuloskirjeInfo(haku.oid, application.oid)
+            val hakemus = timed("fetchHakemukset -> hakemusConverter.convertToHakemus", 100) { hakemusConverter.convertToHakemus(letterForHaku, lomakeOption, haku, application, valintatulos) }
             timed("fetchHakemukset -> auditLogger.log", 100) { auditLogger.log(ShowHakemus(application.personOid, hakemus.oid, haku.oid)) }
 
             lomakeOption match {
               case Some(lomake) if haku.applicationPeriods.exists(_.active) =>
                 timed("fetchHakemukset -> applicationValidator.validateAndFindQuestions", 100) { applicationValidator.validateAndFindQuestions(haku, lomake, withNoPreferenceSpesificAnswers(hakemus), application) match {
-                    case (app, errors, questions) => HakemusInfo(hakemusConverter.convertToHakemus(Some(letterForHaku), Some(lomake), haku, app, valintatulos), errors, questions, tulosOk, None)
+                    case (app, errors, questions) => HakemusInfo(hakemusConverter.convertToHakemus(letterForHaku, Some(lomake), haku, app, valintatulos), errors, questions, tulosOk, None)
                   }
                 }
               case _ =>

@@ -37,8 +37,8 @@ trait HakemusConverterComponent {
     val preferencePhaseKey = OppijaConstants.PHASE_APPLICATION_OPTIONS
     val requiredBaseEducationsKey = "Koulutus-requiredBaseEducations"
 
-    def convertToHakemus(letters: Option[List[Letter]], lomake: Option[Lomake], haku: Haku, application: ImmutableLegacyApplicationWrapper)(implicit lang: Language.Language) : Hakemus = {
-      convertToHakemus(letters, lomake, haku, application, None)
+    def convertToHakemus(tuloskirje: Option[Tuloskirje], lomake: Option[Lomake], haku: Haku, application: ImmutableLegacyApplicationWrapper)(implicit lang: Language.Language) : Hakemus = {
+      convertToHakemus(tuloskirje, lomake, haku, application, None)
     }
 
     def valintatulosHasSomeResults(valintatulos: Option[Valintatulos]): Boolean = {
@@ -46,7 +46,7 @@ trait HakemusConverterComponent {
       return hakutoiveet.exists(hakutoive => (hakutoive \ "valintatila").extract[String] != "KESKEN")
     }
 
-    def convertToHakemus(lettersOpt: Option[List[Letter]], lomake: Option[Lomake], haku: Haku, application: ImmutableLegacyApplicationWrapper, valintatulos: Option[Valintatulos])(implicit lang: Language.Language) : Hakemus = {
+    def convertToHakemus(tuloskirje: Option[Tuloskirje], lomake: Option[Lomake], haku: Haku, application: ImmutableLegacyApplicationWrapper, valintatulos: Option[Valintatulos])(implicit lang: Language.Language) : Hakemus = {
       val koulutusTaustaAnswers: util.Map[String, String] = application.phaseAnswers(educationPhaseKey)
       val receivedTime =  application.received.map(_.getTime)
       val answers = application.answers
@@ -70,14 +70,12 @@ trait HakemusConverterComponent {
         )
       }).toMap
 
-      val letters = lettersOpt.getOrElse(List())
-
       Hakemus(
         application.oid,
         receivedTime,
         application.updated.map(_.getTime).orElse(receivedTime),
         tila(haku, application, hakutoiveet, valintatulos),
-        letters.map(letter => Tuloskirje(letter.hakuOid,LetterFormatter.timestamp.parseMillis(letter.timestamp))),
+        tuloskirje,
         hakutoiveet,
         haku,
         EducationBackground(koulutusTaustaAnswers.get(baseEducationKey), !Try {koulutusTaustaAnswers.get("ammatillinenTutkintoSuoritettu").toBoolean}.getOrElse(false)),

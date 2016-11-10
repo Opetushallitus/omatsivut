@@ -15,7 +15,7 @@ import fi.vm.sade.hakemuseditori.ohjausparametrit.OhjausparametritComponent
 import fi.vm.sade.hakemuseditori.tarjonta.TarjontaComponent
 import fi.vm.sade.hakemuseditori.user.User
 import fi.vm.sade.hakemuseditori.valintatulokset.{NoOpValintatulosService, ValintatulosService, ValintatulosServiceComponent}
-import fi.vm.sade.hakemuseditori.viestintapalvelu.ViestintapalveluComponent
+import fi.vm.sade.hakemuseditori.viestintapalvelu.TuloskirjeComponent
 import fi.vm.sade.utils.slf4j.Logging
 import org.json4s.jackson.Serialization
 import org.springframework.context.ApplicationContext
@@ -24,7 +24,7 @@ import scala.util.{Try, Failure, Success}
 
 trait HakemusEditoriComponent extends ApplicationValidatorComponent with TarjontaComponent with OhjausparametritComponent
     with LomakeRepositoryComponent with HakemusRepositoryComponent with ValintatulosServiceComponent with KoulutusInformaatioComponent with Logging
-    with ViestintapalveluComponent
+    with TuloskirjeComponent
     with TranslationsComponent with SpringContextComponent with AuditLoggerComponent with HakemusConverterComponent with KoodistoComponent
     with HakumaksuComponent with SendMailComponent {
 
@@ -41,8 +41,8 @@ trait HakemusEditoriComponent extends ApplicationValidatorComponent with Tarjont
     def user(): User
 
     def fetchTuloskirje(personOid: String, hakuOid: String): Option[Array[Byte]] = {
-      val tuloskirjeet = viestintapalveluService.fetchHakijanTuloskirjeet(personOid)
-      tuloskirjeet.find(_.hakuOid.equals(hakuOid)).map(tuloskirje => viestintapalveluService.fetchTuloskirje(tuloskirje.id)).flatten
+      val hakemukset = hakemusRepository.fetchHakemukset(personOid)
+      hakemukset.find(_.hakemus.haku.oid.equals(hakuOid)).map(hakemus => tuloskirjeService.fetchTuloskirje(hakuOid, hakemus.hakemus.oid)).flatten
     }
 
     def fetchByPersonOid(personOid: String): List[HakemusInfo] = hakemusRepository.fetchHakemukset(personOid)
@@ -119,7 +119,7 @@ abstract class StandaloneHakemusEditoriComponent(
 class StubbedHakemusEditoriContext(auditContext: AuditContext, appContext: ApplicationContext, translations: Translations) extends StandaloneHakemusEditoriComponent(auditContext, translations) {
   override lazy val springContext = new HakemusSpringContext(appContext)
   override lazy val tarjontaService = new StubbedTarjontaService
-  override lazy val viestintapalveluService = new StubbedViestintapalveluService
+  override lazy val tuloskirjeService = new StubbedTuloskirjeService
   override lazy val koodistoService = new StubbedKoodistoService
   override lazy val ohjausparametritService = new StubbedOhjausparametritService
   override lazy val koulutusInformaatioService = new StubbedKoulutusInformaatioService
