@@ -15,7 +15,7 @@ function Hakemus(json) {
     this.henkilotiedot = convertHenkilotiedot(json.hakemus.answers.henkilotiedot)
     this.persistedAnswers = json.hakemus.answers
     this.additionalQuestions = Question.getQuestions(json.questions, this)
-    this.tuloskirjeet = copy(formatTuloskirjeet(json.hakemus.tuloskirjeet))
+    this.tuloskirje = copy(formatTuloskirje(json.hakemus.tuloskirje))
     this.tulosOk = json.tulosOk
     this.requiredPaymentState = json.hakemus.requiredPaymentState
     this.calculatedValues = {
@@ -28,15 +28,15 @@ function Hakemus(json) {
 
 function copy(json) { return $.extend(true, {}, json) }
 
-function formatTuloskirjeet(tuloskirjeet) {
-  return _(tuloskirjeet).map(function(tuloskirje){
+function formatTuloskirje(tuloskirje) {
+  if(tuloskirje) {
     var date = new Date(tuloskirje.created)
     var yyyy = date.getFullYear()
     var mm = date.getMonth() + 1
     var dd  = date.getDate()
     tuloskirje.createdDate = dd + "." + mm + "." + yyyy
-    return tuloskirje;
-  })
+  }
+  return tuloskirje;
 }
 
 function convertHenkilotiedot(json) {
