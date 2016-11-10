@@ -23,6 +23,7 @@ import scala.util.{Failure, Success, Try}
 trait TuloskirjeetServletContainer {
   this: HakemusRepositoryComponent with
     HakemusEditoriComponent with
+    HakemusRepositoryComponent with
     OppijanTunnistusComponent =>
 
   class TuloskirjeetServlet(val appConfig: AppConfig) extends OmatSivutServletBase {
@@ -48,8 +49,8 @@ trait TuloskirjeetServletContainer {
         InternalServerError("error" -> "Internal server error")
     }
 
-    def fetchTuloskirjeFromFileSystem(hakemusOid: String): Option[Array[Byte]] = {
-      val path = s"$fileSystemUrl/$hakemusOid.pdf"
+    def fetchTuloskirjeFromFileSystem(hakuOid: String, hakemusOid: String): Option[Array[Byte]] = {
+      val path = s"$fileSystemUrl/$hakuOid/$hakemusOid.pdf"
       val file = new File(path)
       log(s"Getting tuloskirje from $path")
       if(!file.exists()) {
@@ -65,13 +66,14 @@ trait TuloskirjeetServletContainer {
     get("/:token/tuloskirje.pdf") {
       (for {
         hakemusOid <- oppijanTunnistusService.validateToken(params("token"))
-        tuloskirje <- Try(fetchTuloskirjeFromFileSystem(hakemusOid))
+        hakemusInfo <- Try(hakemusRepository.getHakemus(hakemusOid, false).getOrElse(throw new NoSuchElementException))
+        tuloskirje <- Try(fetchTuloskirjeFromFileSystem(hakemusInfo.hakemus.haku.oid, hakemusOid))
       } yield {
         tuloskirje match {
           case Some(data) => Ok(data, Map(
             "Content-Type" -> "application/octet-stream",
             "Content-Disposition" -> "attachment; filename=tuloskirje.pdf"))
-          case None => InternalServerError("error" -> "Internal Server Error")
+          case None => throw new NoSuchElementException
         }
       }).get
     }
