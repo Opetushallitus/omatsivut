@@ -11,7 +11,7 @@ import fi.vm.sade.hakemuseditori.localization.TranslationsComponent
 import fi.vm.sade.hakemuseditori.lomake.{LomakeRepository, LomakeRepositoryComponent}
 import fi.vm.sade.hakemuseditori.ohjausparametrit.{OhjausparametritComponent, OhjausparametritService}
 import fi.vm.sade.hakemuseditori.tarjonta.{TarjontaComponent, TarjontaService}
-import fi.vm.sade.hakemuseditori.viestintapalvelu.{ViestintapalveluComponent, ViestintapalveluService}
+import fi.vm.sade.hakemuseditori.viestintapalvelu.{TuloskirjeService, TuloskirjeComponent}
 import fi.vm.sade.hakemuseditori.valintatulokset._
 import fi.vm.sade.hakemuseditori.{HakemusEditoriComponent, RemoteSendMailServiceWrapper, SendMailServiceWrapper, StubbedSendMailServiceWrapper}
 import fi.vm.sade.omatsivut.OphUrlProperties
@@ -49,7 +49,7 @@ class ComponentRegistry(val config: AppConfig)
           FixtureServletContainer with
           KoodistoServletContainer with
           TarjontaComponent with
-          ViestintapalveluComponent with
+          TuloskirjeComponent with
           KoodistoComponent with
           OppijanTunnistusComponent with
           TuloskirjeetServletContainer with
@@ -80,9 +80,9 @@ class ComponentRegistry(val config: AppConfig)
     case _ => CachedRemoteTarjontaService()
   }
 
-  private def configureViestintapalveluService: ViestintapalveluService = config match {
-    case _: StubbedExternalDeps => new StubbedViestintapalveluService()
-    case _ => new RemoteViestintapalveluService()
+  private def configureTuloskirjeService: TuloskirjeService = config match {
+    case _: StubbedExternalDeps => new StubbedTuloskirjeService()
+    case _ => new SharedDirTuloskirjeService(config)
   }
 
   private def configureOppijanTunnistusService: OppijanTunnistusService = config match {
@@ -115,7 +115,7 @@ class ComponentRegistry(val config: AppConfig)
   val lomakeRepository: LomakeRepository = new RemoteLomakeRepository
   val hakemusConverter: HakemusConverter = new HakemusConverter
   val tarjontaService: TarjontaService = configureTarjontaService
-  val viestintapalveluService: ViestintapalveluService = configureViestintapalveluService
+  val tuloskirjeService: TuloskirjeService = configureTuloskirjeService
   val koodistoService: KoodistoService = configureKoodistoService
   val groupEmailService: GroupEmailService = configureGroupEmailService
   val captchaService: CaptchaService = new RemoteCaptchaService(config.settings.captchaSettings)

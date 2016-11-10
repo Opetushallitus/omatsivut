@@ -12,7 +12,7 @@ object Hakemus {
 }
 
 case class Hakemus(oid: String, received: Option[Long], updated: Option[Long], state: HakemuksenTila,
-                   tuloskirjeet: List[Tuloskirje] = Nil,
+                   tuloskirje: Option[Tuloskirje] = None,
                    hakutoiveet: List[Hakutoive] = Nil, haku: Haku, educationBackground: EducationBackground,
                    answers: Answers, postOffice: Option[String], requiresAdditionalInfo: Boolean,
                    hasForm: Boolean, requiredPaymentState: Option[String],
