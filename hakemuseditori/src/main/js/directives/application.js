@@ -24,9 +24,6 @@ module.exports = function(app) {
           else
             return localization("label.applicationUpdated")
         }
-        $scope.tuloskirjeForHaku = function(tuloskirjeet,hakuOid) {
-          return _(tuloskirjeet).findWhere({'hakuOid':hakuOid})
-        }
         $scope.shouldSaveButtonBeDisabled = function() {
           return $scope.applicationForm.$pristine || $scope.statusMessageType=='pending' || !$scope.isSaveable || $scope.isValidating
         }
