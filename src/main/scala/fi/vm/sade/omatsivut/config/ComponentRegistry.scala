@@ -62,7 +62,7 @@ class ComponentRegistry(val config: AppConfig)
 
   private def configureKoulutusInformaatioService: KoulutusInformaatioService = config match {
     case x: StubbedExternalDeps => new StubbedKoulutusInformaatioService
-    case _ => CachedKoulutusInformaatioService(new RemoteKoulutusService(OphUrlProperties.url("koulutusinformaatio-app.ao"), OphUrlProperties.url("koulutusinformaatio-app.lop"), OphUrlProperties.url("koulutusinformaatio-app.basketitems")))
+    case _ => CachedKoulutusInformaatioService(new RemoteKoulutusService())
   }
 
   private def configureGroupEmailService: GroupEmailService = config match {

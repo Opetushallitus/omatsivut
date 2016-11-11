@@ -1,13 +1,12 @@
 package fi.vm.sade.hakemuseditori.koulutusinformaatio
 
-import java.net.URLEncoder
-
 import fi.vm.sade.hakemuseditori.domain.Language.Language
 import fi.vm.sade.hakemuseditori.fixtures.JsonFixtureMaps
 import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.hakemuseditori.koulutusinformaatio.domain.{Koulutus, Opetuspiste}
 import fi.vm.sade.hakemuseditori.lomake.LomakeRepositoryComponent
 import fi.vm.sade.hakemuseditori.memoize.TTLOptionalMemoize
+import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.utils.http.DefaultHttpClient
 import fi.vm.sade.utils.slf4j.Logging
 import org.json4s._
@@ -60,13 +59,13 @@ trait KoulutusInformaatioComponent {
     }
   }
 
-  class RemoteKoulutusService(koulutusinformaatioAoUrl: String, koulutusinformaationBIUrl: String, koulutusinformaatioLopUrl: String) extends KoulutusInformaatioService with JsonFormats with Logging {
+  class RemoteKoulutusService() extends KoulutusInformaatioService with JsonFormats with Logging {
     import org.json4s.jackson.JsonMethods._
 
     private def wrapAsOption[A](l: List[A]): Option[List[A]] = if (!l.isEmpty) Some(l) else None
 
     def opetuspisteet(asId: String, query: String, lang: Language): Option[List[Opetuspiste]] = {
-      val (_, _, resultString) = DefaultHttpClient.httpGet(koulutusinformaatioLopUrl + "/search/" + URLEncoder.encode(query, "UTF-8"))
+      val (_, _, resultString) = DefaultHttpClient.httpGet(OphUrlProperties.url("koulutusinformaatio-app.lop.search", query))
         .param("asId", asId)
         .param("lang", lang.toString)
         .param("ongoing", "true")
@@ -76,13 +75,13 @@ trait KoulutusInformaatioComponent {
     }
 
     def opetuspiste(id: String, lang: Language): Option[Opetuspiste] = {
-      DefaultHttpClient.httpGet(koulutusinformaatioLopUrl + "/" + id).response.flatMap { resultString =>
+      DefaultHttpClient.httpGet(OphUrlProperties.url("koulutusinformaatio-app.lop", id)).response.flatMap { resultString =>
         parse(resultString).extract[Option[Opetuspiste]]
       }
     }
 
     def koulutukset(asId: String, opetuspisteId: String, baseEducation: Option[String], vocational: String, uiLang: Language): Option[List[Koulutus]] = {
-      var request = DefaultHttpClient.httpGet(koulutusinformaatioAoUrl + "/search/" + asId + "/" + opetuspisteId)
+      var request = DefaultHttpClient.httpGet(OphUrlProperties.url("koulutusinformaatio-app.ao.search", asId, opetuspisteId))
         .param("uiLang", uiLang.toString)
         .param("ongoing", "true")
       if(!lomakeRepository.lomakeByOid(asId).map(_.baseEducationDoesNotRestrictApplicationOptions).getOrElse(false)) {
@@ -97,7 +96,7 @@ trait KoulutusInformaatioComponent {
     }
 
     def koulutus(aoId: String, lang: Language): Option[Koulutus] = {
-      val request = DefaultHttpClient.httpGet(koulutusinformaatioAoUrl + "/" + aoId)
+      val request = DefaultHttpClient.httpGet(OphUrlProperties.url("koulutusinformaatio-app.ao", aoId))
         .param("lang", lang.toString)
         .param("uiLang", lang.toString)
 
@@ -108,7 +107,7 @@ trait KoulutusInformaatioComponent {
     }
 
     def koulutusWithHaku(aoIds: List[String], lang: Language): Option[List[KoulutusInformaatioBasketItem]] = {
-      var request = DefaultHttpClient.httpGet(koulutusinformaationBIUrl)
+      var request = DefaultHttpClient.httpGet(OphUrlProperties.url("koulutusinformaatio-app.basketitems"))
         .param("uiLang", lang.toString)
       aoIds.foreach(a =>  {
         request = request.param("aoId", a)
