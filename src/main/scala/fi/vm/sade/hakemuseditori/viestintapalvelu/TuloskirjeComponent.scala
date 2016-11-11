@@ -2,6 +2,7 @@ package fi.vm.sade.hakemuseditori.viestintapalvelu
 
 import java.io.{FileInputStream, File}
 
+import fi.vm.sade.hakemuseditori.auditlog.{FetchTuloskirje, AuditLoggerComponent}
 import fi.vm.sade.hakemuseditori.hakemus.domain.Tuloskirje
 import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
@@ -9,6 +10,7 @@ import fi.vm.sade.utils.slf4j.Logging
 import org.apache.commons.io.IOUtils
 
 trait TuloskirjeComponent {
+  this: AuditLoggerComponent  =>
 
   val tuloskirjeService: TuloskirjeService
 
@@ -34,13 +36,14 @@ trait TuloskirjeComponent {
 
     override def fetchTuloskirje(hakuOid:String, hakemusOid: String) : Option[Array[Byte]] = {
       val file = getFileName(hakuOid, hakemusOid)
-      logger.info(s"Fetching tuloskirje from $file")
       if (file.exists()) {
         val fileStream = new FileInputStream(file);
         val byteArray: Array[Byte] = IOUtils.toByteArray(fileStream)
         IOUtils.closeQuietly(fileStream)
+        auditLogger.log(FetchTuloskirje(hakuOid, hakemusOid))
         Some(byteArray)
       } else {
+        logger.warn("Ei löytynyt tuloskirjettä: " + file)
         None
       }
     }
