@@ -10,8 +10,25 @@
             <span ng-bind="tulos.tarjoajaNimi"></span>
             <span ng-bind="tulos.hakukohdeNimi"></span>
         </td>
-        <td>
-            <span ng-bind="valintatulosText(tulos)"></span>
+        <td class="vastaanottotieto">
+            <span class="ajax-spinner" ng-show="ajaxPending"></span>
+            <div ng-hide="ajaxPending">
+                <div>
+                    <span ng-bind="valintatulosText(tulos)"></span>
+                </div>
+                <div class="update-vastaanottotieto" ng-show="tulos.vastaanottotila == 'EHDOLLISESTI_VASTAANOTTANUT'">
+                    <div>
+                        <input type="checkbox" ng-model="enableConfirmation" /> Lopetan jonotuksen ja muutan vastaanoton sitovaksi
+                    </div>
+                    <div class="confirm-update-vastaanottotieto">
+                        <button
+                                ng-disabled="!enableConfirmation"
+                                ng-click="vastaanotaSitovasti(hakemus, tulos)"
+                                ng-init="enableConfirmation=false">Vahvista muutos</button>
+                        <i>HUOM! Muutosta ei voi perua</i>
+                    </div>
+                </div>
+            </div>
         </td>
     </tr>
 </table>

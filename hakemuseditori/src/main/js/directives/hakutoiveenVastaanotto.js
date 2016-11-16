@@ -1,5 +1,6 @@
 module.exports = function(app) {
-  app.directive("hakutoiveenVastaanotto", ["localization", "restResources", "$timeout", function (localization, restResources, $timeout) {
+  app.directive("hakutoiveenVastaanotto", ["localization", "restResources", "$timeout", "VASTAANOTTO_ACTION",
+    function (localization, restResources, $timeout, VASTAANOTTO_ACTION) {
     return {
       restrict: 'E',
       scope: {
@@ -14,6 +15,7 @@ module.exports = function(app) {
         scope.localization = localization
         scope.ajaxPending = false
         scope.error = ""
+        scope.VASTAANOTTO_ACTION = VASTAANOTTO_ACTION
         try {
           scope.email = scope.$parent.$parent.application.henkilotiedot['Sähköposti'].answer
         }
