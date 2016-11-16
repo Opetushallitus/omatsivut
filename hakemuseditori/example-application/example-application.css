@@ -410,26 +410,61 @@
   text-transform: none;
   color: #777777;
 }
-.hakemuseditori .result-list td {
-  padding: 4px 4px;
+.hakemuseditori .result-list tbody td {
+  padding: 10px;
   vertical-align: top;
-  background: #f5f5f5;
   margin-bottom: 1px;
 }
-.hakemuseditori .result-list td:first-child {
+.hakemuseditori .result-list tbody td:first-child {
   padding-right: 10px;
 }
-.hakemuseditori .result-list td:last-child {
-  width: 1px;
+.hakemuseditori .result-list tbody td:last-child {
   vertical-align: top;
   text-transform: uppercase;
   padding-right: 10px;
 }
-.hakemuseditori .result-list tr + tr {
+.hakemuseditori .result-list tbody td .update-vastaanottotieto {
+  text-transform: none;
+}
+.hakemuseditori .result-list tbody td .update-vastaanottotieto div {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+.hakemuseditori .result-list tbody td .update-vastaanottotieto div .confirm-update-vastaanottotieto {
+  padding: 1em;
+}
+.hakemuseditori .result-list tbody td .update-vastaanottotieto div .confirm-update-vastaanottotieto i {
+  font-size: 0.9em;
+  padding-left: 1em;
+}
+.hakemuseditori .result-list tbody td .update-vastaanottotieto button {
+  background: #159ECB;
+  border-radius: 2px;
+  height: 35px;
+  font-family: 'Helvetica Neue', helvetica, arial, sans-serif;
+  font-size: 15px;
+  color: #FFFFFF;
+}
+.hakemuseditori .result-list tbody td .update-vastaanottotieto button:hover {
+  background: #00B5EF;
+}
+.hakemuseditori .result-list tbody td .update-vastaanottotieto button:disabled {
+  background: #CCCCCC;
+}
+.hakemuseditori .result-list tbody .vastaanottotieto {
+  width: 40%;
+}
+.hakemuseditori .result-list tbody tr + tr {
   border-top: 3px solid white;
 }
-.hakemuseditori .result-list tr.accepted {
+.hakemuseditori .result-list tbody tr.accepted {
   font-weight: bold;
+}
+.hakemuseditori .result-list tbody tr:nth-of-type(even) {
+  background: #EBF8FB;
+}
+.hakemuseditori .result-list tbody tr:nth-of-type(odd) {
+  background: #F7F7F7;
 }
 .hakemuseditori .result-status {
   font-style: italic;

@@ -1,17 +1,18 @@
 var util = require("../util")
 
 module.exports = function(app) {
-  app.directive("valintatulos", ["localization", "restResources", "settings", function (localization, restResources, settings) {
+  app.directive("valintatulos", ["localization", "restResources", "settings", "VASTAANOTTOTILA", "VASTAANOTTO_ACTION", function (localization, restResources, settings, VASTAANOTTOTILA, VASTAANOTTO_ACTION) {
     return {
       restrict: 'E',
       scope: {
         valintatulos: '&data',
+        hakemus: '=application',
         isFinal: '&final'
       },
       templateUrl: 'templates/valintatulos.html',
       link: function ($scope, element, attrs) {
         $scope.localization = localization
-
+        $scope.VASTAANOTTOTILA = VASTAANOTTOTILA
         $scope.formatDate = function(dt) {
           if (dt == null)
             return ""
@@ -26,7 +27,7 @@ module.exports = function(app) {
         $scope.valintatulosText = function(valintatulos) {
           var key = util.underscoreToCamelCase(valintatulos.valintatila)
 
-          if (["VASTAANOTTANUT_SITOVASTI", "EI_VASTAANOTETTU_MAARA_AIKANA", "EHDOLLISESTI_VASTAANOTTANUT"].indexOf(valintatulos.vastaanottotila) >= 0) {
+          if ([VASTAANOTTOTILA.VASTAANOTTANUT_SITOVASTI, VASTAANOTTOTILA.EI_VASTAANOTETTU_MAARA_AIKANA, VASTAANOTTOTILA.EHDOLLISESTI_VASTAANOTTANUT].indexOf(valintatulos.vastaanottotila) >= 0) {
             key = util.underscoreToCamelCase(valintatulos.vastaanottotila)
             return localization("label.resultState." + key)
           } else if (!_.isEmpty(tilanKuvaus(valintatulos))) {
@@ -48,6 +49,47 @@ module.exports = function(app) {
             return localization("label.resultState." + key, {
               varasija: valintatulos.varasijanumero ? valintatulos.varasijanumero + "." : ""
             })
+          }
+        }
+
+        $scope.vastaanotaSitovasti = function(hakemus, hakukohde) {
+          var email = ''
+          try {
+            email = hakemus.henkilotiedot['Sähköposti'].answer
+          }
+          catch (e) {
+            email = ''
+          }
+          $scope.ajaxPending = true
+
+          restResources.vastaanota.post({hakemusOid: hakemus.oid, hakukohdeOid: hakukohde.hakukohdeOid}, {
+            vastaanottoAction: { action: VASTAANOTTO_ACTION.VASTAANOTA_SITOVASTI },
+            email: email,
+            hakukohdeNimi: hakukohde.hakukohdeNimi,
+            tarjoajaNimi: hakukohde.tarjoajaNimi
+          }, onSuccess, onError)
+
+          function onSuccess(updatedApplication) {
+            $scope.ajaxPending = false
+            $scope.error = ""
+            $scope.vastaanottoSentSuccessfully = true
+            $timeout(function() {
+              $scope.callback(hakutoive, updatedApplication)
+            }, 3500);
+          }
+
+          function onError(err) {
+            $scope.ajaxPending = false
+            var saveError = (function () {
+              if (err.status == 401)
+                return "error.saveFailed_sessionExpired"
+              else if (err.status == 500)
+                return "error.serverError"
+              else if (err.status == 403)
+                return "error.priorAcceptance"
+              else
+                return "error.saveFailed"
+            })()
           }
         }
 

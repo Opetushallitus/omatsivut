@@ -1,6 +1,7 @@
 module.exports = function(app) {
   require('./applicationValidator')(app)
   require('./angularBacon')(app)
+  require('./constants')(app)
   require('./directives/confirm')(app)
   require('./directives/question')(app)
   require('./directives/localizedLink')(app)
