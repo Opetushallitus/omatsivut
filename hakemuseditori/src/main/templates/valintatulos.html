@@ -18,14 +18,14 @@
                 </div>
                 <div class="update-vastaanottotieto" ng-show="tulos.vastaanottotila == 'EHDOLLISESTI_VASTAANOTTANUT'">
                     <div>
-                        <input type="checkbox" ng-model="enableConfirmation" /> Lopetan jonotuksen ja muutan vastaanoton sitovaksi
+                        <input type="checkbox" ng-model="enableConfirmation" /> {{ localization('label.acceptConditionallyAccepted') }}
                     </div>
                     <div class="confirm-update-vastaanottotieto">
                         <button
                                 ng-disabled="!enableConfirmation"
                                 ng-click="vastaanotaSitovasti(hakemus, tulos)"
-                                ng-init="enableConfirmation=false">Vahvista muutos</button>
-                        <i>HUOM! Muutosta ei voi perua</i>
+                                ng-init="enableConfirmation=false">{{ localization('button.confirmChange') }}</button>
+                        <i>{{ localization('label.cannotUndoChanges') }}</i>
                     </div>
                 </div>
             </div>
