@@ -37,6 +37,8 @@
     "mobilePhone": "Mobile phone number",
     "streetAddress": "Street address",
     "postalCode": "Postal code",
+    "acceptConditionallyAccepted": "I want to be removed from the waiting list and confirm this study place",
+    "cannotUndoChanges": "NB: You cannot change your choice later",
 
     "resultState": {
       "EhdollinenPostfix": " (conditional)",
@@ -67,7 +69,8 @@
     "vastaanota_ariaLabel": "Send the answer by choosing this two times",
     "logout": "Log out",
     "showApplication": "Show application form",
-    "downloadLetter": "Letter (__luotu__)"
+    "downloadLetter": "Letter (__luotu__)",
+    "confirmChange": "Confirm your choice"
   },
 
   "message": {

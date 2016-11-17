@@ -37,6 +37,8 @@
     "mobilePhone": "Mobiltelefonnummer",
     "streetAddress": "Näradress",
     "postalCode": "Postnummer",
+    "acceptConditionallyAccepted": "Jag avstår från att köa och tar emot denna plats bindande",
+    "cannotUndoChanges": "Obs! Ändringen går inte att annullera",
 
     "resultState": {
       "EhdollinenPostfix": " (villkorlig)",
@@ -67,7 +69,8 @@
     "vastaanota_ariaLabel": "Skicka svaret genom att välja detta två gånger",
     "logout": "Logga ut",
     "showApplication": "Visa ansökningsblankett",
-    "downloadLetter": "Brev (__luotu__)"
+    "downloadLetter": "Brev (__luotu__)",
+    "confirmChange": "Bekräfta ändringen"
   },
 
   "message": {
