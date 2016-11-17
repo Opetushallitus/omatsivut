@@ -371,7 +371,13 @@ function ApplicationListPage() {
 
       calloutText: function() {
         var callout = getApplicationElement().find("div[callout]:visible")
+        console.log("Callout link", callout.attr("href"))
         return callout.text().trim()
+      },
+
+      calloutLink: function() {
+        var callout = getApplicationElement().find("div[callout]:visible")
+        return callout.find("a").attr("href")
       },
 
       isEditable: function() {

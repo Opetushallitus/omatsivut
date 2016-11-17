@@ -2737,6 +2737,7 @@
           )
           it("liitepyyntö näytetään", function () {
             hakemusKorkeakoulu.calloutText().should.equal("Muista lähettää hakemuksen liitteet.")
+            hakemusKorkeakoulu.calloutLink().should.equal("/omatsivut/secure/applications/preview/1.2.246.562.11.00000877699#liitteet")
           })
         })
 
