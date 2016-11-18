@@ -162,7 +162,7 @@ Hakemus.prototype = {
 
   vastaanotettavatHakutoiveet: function() {
     return _(this.valintatulosHakutoiveet()).filter(function(hakutoive) {
-      return hakutoive.vastaanotettavuustila === "VASTAANOTETTAVISSA_SITOVASTI" || hakutoive.vastaanotettavuustila === "VASTAANOTETTAVISSA_EHDOLLISESTI"
+      return (hakutoive.vastaanotettavuustila === "VASTAANOTETTAVISSA_SITOVASTI" || hakutoive.vastaanotettavuustila === "VASTAANOTETTAVISSA_EHDOLLISESTI") && hakutoive.vastaanottotila == "KESKEN"
     })
   },
 
