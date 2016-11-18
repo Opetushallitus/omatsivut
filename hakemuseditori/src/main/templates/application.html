@@ -55,8 +55,12 @@
     </section>
 
     <section class="hakutoiveen-vastaanotto" ng-if="application.vastaanotettavatHakutoiveet().length > 0">
-        <hakutoiveen-vastaanotto application-oid="application.oid" haku="application.haku" hakutoiveet="application.vastaanotettavatHakutoiveet()" callback="hakutoiveVastaanotettu">
-        </hakutoiveen-vastaanotto>
+        <hakutoiveen-vastaanotto
+                application-oid="application.oid"
+                haku="application.haku"
+                hakutoiveet="application.vastaanotettavatHakutoiveet()"
+                callback="hakutoiveVastaanotettu"
+        ></hakutoiveen-vastaanotto>
     </section>
 
     <section class="ilmoittautuminen" ng-if="application.ilmoittautumisLinkit().length > 0">
@@ -73,7 +77,12 @@
         <section class="application-section application-valintatulos" ng-if="application.resultFetchedSuccessfully() &&
                                                                              application.hasSomeResults() &&
                                                                              (application.hasSomeNonKeskenResults() || !application.editHakutoiveetEnabled())">
-            <valintatulos application="application" data="application.state.valintatulos" final="application.allResultsAvailable()"></valintatulos>
+            <valintatulos
+                    application="application"
+                    data="application.state.valintatulos"
+                    final="application.allResultsAvailable()"
+                    callback="hakutoiveVastaanotettu"
+            ></valintatulos>
         </section>
 
         <section ng-show="application.hasForm" class="application-section hakutoiveet" ng-if="application.editHakutoiveetEnabled()">

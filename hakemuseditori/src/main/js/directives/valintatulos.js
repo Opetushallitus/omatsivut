@@ -7,12 +7,14 @@ module.exports = function(app) {
       scope: {
         valintatulos: '&data',
         hakemus: '=application',
-        isFinal: '&final'
+        isFinal: '&final',
+        callback: '=callback'
       },
       templateUrl: 'templates/valintatulos.html',
       link: function ($scope, element, attrs) {
         $scope.localization = localization
         $scope.VASTAANOTTOTILA = VASTAANOTTOTILA
+        $scope.error = false
         $scope.formatDate = function(dt) {
           if (dt == null)
             return ""
@@ -80,7 +82,7 @@ module.exports = function(app) {
 
           function onError(err) {
             $scope.ajaxPending = false
-            var saveError = (function () {
+            $scope.error = (function () {
               if (err.status == 401)
                 return "error.saveFailed_sessionExpired"
               else if (err.status == 500)
