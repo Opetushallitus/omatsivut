@@ -11,21 +11,24 @@
             <span ng-bind="tulos.hakukohdeNimi"></span>
         </td>
         <td class="vastaanottotieto">
-            <span class="ajax-spinner" ng-show="ajaxPending"></span>
-            <div ng-hide="ajaxPending">
+            <div>
                 <div>
                     <span ng-bind="valintatulosText(tulos)"></span>
                 </div>
                 <div class="update-vastaanottotieto" ng-show="tulos.vastaanottotila == 'EHDOLLISESTI_VASTAANOTTANUT'">
-                    <div>
-                        <input type="checkbox" ng-model="enableConfirmation" /> {{ localization('label.acceptConditionallyAccepted') }}
-                    </div>
-                    <div class="confirm-update-vastaanottotieto">
-                        <button
-                                ng-disabled="!enableConfirmation"
-                                ng-click="vastaanotaSitovasti(hakemus, tulos)"
-                                ng-init="enableConfirmation=false">{{ localization('button.confirmChange') }}</button>
-                        <i>{{ localization('label.cannotUndoChanges') }}</i>
+                    <span class="ajax-spinner" ng-show="ajaxPending"></span>
+                    <div ng-hide="ajaxPending">
+                        <div>
+                            <input type="checkbox" ng-model="enableConfirmation" /> {{ localization('label.acceptConditionallyAccepted') }}
+                        </div>
+                        <div class="confirm-update-vastaanottotieto">
+                            <button
+                                    ng-disabled="!enableConfirmation"
+                                    ng-click="vastaanotaSitovasti(hakemus, tulos)"
+                                    ng-init="enableConfirmation=false">{{ localization('button.confirmChange') }}</button>
+                            <i>{{ localization('label.cannotUndoChanges') }}</i>
+                        </div>
+                        <span class="status-message error" ng-show="error">{{ localization(error) }}</span>
                     </div>
                 </div>
             </div>
