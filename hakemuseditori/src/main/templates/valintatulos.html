@@ -28,7 +28,7 @@
                                     ng-init="enableConfirmation=false">{{ localization('button.confirmChange') }}</button>
                             <i>{{ localization('label.cannotUndoChanges') }}</i>
                         </div>
-                        <span class="status-message error" ng-show="error">{{ localization(error) }}</span>
+                        <span class="status-message error" ng-show="error">{{ getError() }}</span>
                     </div>
                 </div>
             </div>
