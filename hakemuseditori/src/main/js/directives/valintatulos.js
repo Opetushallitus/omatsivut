@@ -26,6 +26,12 @@ module.exports = function(app) {
           $scope.status = value ? localization("label.resultsFinal") : localization("label.resultsPending")
         })
 
+        $scope.getError = function() {
+          if ($scope.error) {
+            return localization($scope.error)
+          }
+        }
+
         $scope.valintatulosText = function(valintatulos) {
           var key = util.underscoreToCamelCase(valintatulos.valintatila)
 
