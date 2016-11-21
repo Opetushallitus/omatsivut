@@ -1,6 +1,15 @@
 var util = require("../util")
 
 module.exports = function(app) {
+  app.directive('ignoreDirty', [function() {
+    return {
+      restrict: 'A',
+      require: 'ngModel',
+      link: function(scope, elm, attrs, ctrl) {
+        ctrl.$pristine = false;
+      }
+    }
+  }]);
   app.directive("valintatulos", ["localization", "restResources", "settings", "VASTAANOTTOTILA", "VASTAANOTTO_ACTION", function (localization, restResources, settings, VASTAANOTTOTILA, VASTAANOTTO_ACTION) {
     return {
       restrict: 'E',

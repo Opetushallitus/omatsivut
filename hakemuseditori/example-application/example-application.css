@@ -425,6 +425,7 @@
 }
 .hakemuseditori .result-list tbody td .update-vastaanottotieto {
   text-transform: none;
+  font-weight: 100;
 }
 .hakemuseditori .result-list tbody td .update-vastaanottotieto div {
   padding-top: 4px;
