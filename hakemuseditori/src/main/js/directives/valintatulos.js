@@ -82,7 +82,7 @@ module.exports = function(app) {
             $scope.error = ""
             $scope.vastaanottoSentSuccessfully = true
             $timeout(function() {
-              $scope.callback(hakutoive, updatedApplication)
+              $scope.callback(hakukohde, updatedApplication)
             }, 3500);
           }
 
