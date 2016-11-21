@@ -19,7 +19,7 @@
                     <span class="ajax-spinner" ng-show="ajaxPending"></span>
                     <div ng-hide="ajaxPending">
                         <div>
-                            <input type="checkbox" ng-model="enableConfirmation" /> {{ localization('label.acceptConditionallyAccepted') }}
+                            <input type="checkbox" ng-model="enableConfirmation"  ignore-dirty/> {{ localization('label.acceptConditionallyAccepted') }}
                         </div>
                         <div class="confirm-update-vastaanottotieto">
                             <button
