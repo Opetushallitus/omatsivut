@@ -1,7 +1,7 @@
 var util = require("../util")
 
 module.exports = function(app) {
-  app.directive("valintatulos", ["localization", "restResources", "settings", "VASTAANOTTOTILA", "VASTAANOTTO_ACTION", function (localization, restResources, settings, VASTAANOTTOTILA, VASTAANOTTO_ACTION) {
+  app.directive("valintatulos", ["$timeout", "localization", "restResources", "settings", "VASTAANOTTOTILA", "VASTAANOTTO_ACTION", function ($timeout, localization, restResources, settings, VASTAANOTTOTILA, VASTAANOTTO_ACTION) {
     return {
       restrict: 'E',
       scope: {
