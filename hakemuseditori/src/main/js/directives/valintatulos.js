@@ -1,7 +1,7 @@
 var util = require("../util")
 
 module.exports = function(app) {
-  app.directive("valintatulos", ["$timeout", "localization", "restResources", "settings", "VASTAANOTTOTILA", "VASTAANOTTO_ACTION", function ($timeout, localization, restResources, settings, VASTAANOTTOTILA, VASTAANOTTO_ACTION) {
+  app.directive("valintatulos", [localization", "restResources", "settings", "VASTAANOTTOTILA", "VASTAANOTTO_ACTION", function (localization, restResources, settings, VASTAANOTTOTILA, VASTAANOTTO_ACTION) {
     return {
       restrict: 'E',
       scope: {
@@ -81,9 +81,7 @@ module.exports = function(app) {
             $scope.ajaxPending = false
             $scope.error = ""
             $scope.vastaanottoSentSuccessfully = true
-            $timeout(function() {
-              $scope.callback(hakukohde, updatedApplication)
-            }, 3500);
+            $scope.callback(hakukohde, updatedApplication)
           }
 
           function onError(err) {
