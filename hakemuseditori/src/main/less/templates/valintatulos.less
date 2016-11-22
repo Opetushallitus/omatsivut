@@ -4,11 +4,12 @@
   border-collapse: collapse;
   width: 100%;
   line-height: 125%;
-  font-size: 12px;
+  font-size: 14px;
 
   th {
     .section-heading-font(@font-color);
     font-weight: normal;
+    font-size: 16px;
     padding-bottom: 8px;
     line-height: 20px;
 
@@ -24,11 +25,11 @@
 
       &:first-child {
         padding-right: 10px;
+        width: 30%;
       }
 
       &:last-child {
         vertical-align: top;
-        text-transform: uppercase;
         padding-right: 10px;
       }
       .update-vastaanottotieto {
@@ -68,14 +69,15 @@
     tr + tr {
       border-top: 3px solid white;
     }
-    tr.accepted {
-      font-weight: bold;
-    }
-    tr:nth-of-type(even) {
-      background: #EBF8FB;
-    }
-    tr:nth-of-type(odd) {
+    tr {
       background: #F7F7F7;
+
+    }
+    .accepted {
+      background: #EBF8FB;
+      .valintatulos-otsake {
+        font-weight: bold;
+      }
     }
   }
 }

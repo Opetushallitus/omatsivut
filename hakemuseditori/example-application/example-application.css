@@ -396,13 +396,14 @@
   border-collapse: collapse;
   width: 100%;
   line-height: 125%;
-  font-size: 12px;
+  font-size: 14px;
 }
 .hakemuseditori .result-list th {
   font-family: 'Helvetica Neue', helvetica, arial, sans-serif;
   font-size: 12px;
   text-transform: uppercase;
   font-weight: normal;
+  font-size: 16px;
   padding-bottom: 8px;
   line-height: 20px;
 }
@@ -417,10 +418,10 @@
 }
 .hakemuseditori .result-list tbody td:first-child {
   padding-right: 10px;
+  width: 30%;
 }
 .hakemuseditori .result-list tbody td:last-child {
   vertical-align: top;
-  text-transform: uppercase;
   padding-right: 10px;
 }
 .hakemuseditori .result-list tbody td .update-vastaanottotieto {
@@ -458,14 +459,14 @@
 .hakemuseditori .result-list tbody tr + tr {
   border-top: 3px solid white;
 }
-.hakemuseditori .result-list tbody tr.accepted {
-  font-weight: bold;
+.hakemuseditori .result-list tbody tr {
+  background: #F7F7F7;
 }
-.hakemuseditori .result-list tbody tr:nth-of-type(even) {
+.hakemuseditori .result-list tbody .accepted {
   background: #EBF8FB;
 }
-.hakemuseditori .result-list tbody tr:nth-of-type(odd) {
-  background: #F7F7F7;
+.hakemuseditori .result-list tbody .accepted .valintatulos-otsake {
+  font-weight: bold;
 }
 .hakemuseditori .result-status {
   font-style: italic;
