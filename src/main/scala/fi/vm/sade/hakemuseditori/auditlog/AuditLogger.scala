@@ -1,8 +1,11 @@
 package fi.vm.sade.hakemuseditori.auditlog
 
+import fi.vm.sade.auditlog.haku.LogMessage
+import fi.vm.sade.auditlog.{ApplicationType, Audit}
 import fi.vm.sade.hakemuseditori.hakemus.SpringContextComponent
 import fi.vm.sade.utils.slf4j.Logging
-import org.slf4j.LoggerFactory
+import scala.collection.JavaConversions._
+
 
 trait AuditLoggerComponent {
   this: SpringContextComponent =>
@@ -11,10 +14,12 @@ trait AuditLoggerComponent {
   val auditContext: AuditContext
 
   class AuditLoggerFacade extends AuditLogger {
-    protected val auditLog4jLogger = LoggerFactory.getLogger("audit")
+    private val (virkailija, opiskelija) = (new Audit("omatsivut", ApplicationType.VIRKAILIJA),
+      new Audit("omatsivut", ApplicationType.OPISKELIJA))
 
     def log(event: AuditEvent) {
-      auditLog4jLogger.info(event.toLogMessage)
+      val msg = new LogMessage(event.toLogMessage)
+      if(event.isUserOppija) opiskelija.log(msg) else virkailija.log(msg)
     }
   }
 }
