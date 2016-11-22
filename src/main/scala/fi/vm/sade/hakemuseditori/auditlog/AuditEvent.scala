@@ -1,7 +1,11 @@
 package fi.vm.sade.hakemuseditori.auditlog
 
+trait OpiskelijaEvent {
+
+}
+
 trait AuditEvent {
-  def toLogMessage: String
+  def toLogMessage: Map[String, String]
 }
 
 trait AuditContext {
