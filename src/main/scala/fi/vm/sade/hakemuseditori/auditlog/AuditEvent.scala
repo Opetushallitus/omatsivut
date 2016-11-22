@@ -1,10 +1,7 @@
 package fi.vm.sade.hakemuseditori.auditlog
 
-trait OpiskelijaEvent {
-
-}
-
 trait AuditEvent {
+  def isUserOppija: Boolean
   def toLogMessage: Map[String, String]
 }
 
