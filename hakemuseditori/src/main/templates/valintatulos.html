@@ -13,16 +13,19 @@
         <td class="vastaanottotieto">
             <div>
                 <div>
-                    <span ng-bind="valintatulosText(tulos)"></span>
+                    <span ng-bind="valintatulosText(tulos)" class="valintatulos-otsake"></span>
                 </div>
                 <div class="update-vastaanottotieto" ng-show="tulos.vastaanottotila == 'EHDOLLISESTI_VASTAANOTTANUT'">
                     <span class="ajax-spinner" ng-show="ajaxPending"></span>
                     <div ng-hide="ajaxPending">
                         <div>
-                            <input type="checkbox" ng-model="enableConfirmation"  ignore-dirty/> {{ localization('label.acceptConditionallyAccepted') }}
+                            <label>
+                                <input type="checkbox" ng-model="enableConfirmation" ignore-dirty/>
+                                {{ localization('label.acceptConditionallyAccepted') }}
+                            </label>
                         </div>
                         <div class="confirm-update-vastaanottotieto">
-                            <button
+                            <button id="confirmChangeButton"
                                     ng-disabled="!enableConfirmation"
                                     ng-click="vastaanotaSitovasti(hakemus, tulos)"
                                     ng-init="enableConfirmation=false">{{ localization('button.confirmChange') }}</button>
