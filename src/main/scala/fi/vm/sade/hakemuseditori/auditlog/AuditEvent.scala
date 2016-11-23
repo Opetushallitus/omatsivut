@@ -1,7 +1,8 @@
 package fi.vm.sade.hakemuseditori.auditlog
 
 trait AuditEvent {
-  def toLogMessage: String
+  def isUserOppija: Boolean
+  def toLogMessage: Map[String, String]
 }
 
 trait AuditContext {
