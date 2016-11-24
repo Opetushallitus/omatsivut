@@ -1,6 +1,6 @@
 package fi.vm.sade.hakemuseditori.auditlog
 
-import fi.vm.sade.auditlog.haku.LogMessage
+import fi.vm.sade.auditlog.omatsivut.LogMessage._
 import fi.vm.sade.auditlog.{ApplicationType, Audit}
 import fi.vm.sade.hakemuseditori.hakemus.SpringContextComponent
 import fi.vm.sade.utils.slf4j.Logging
@@ -18,7 +18,7 @@ trait AuditLoggerComponent {
       new Audit("omatsivut", ApplicationType.OPISKELIJA))
 
     def log(event: AuditEvent) {
-      val msg = new LogMessage(event.toLogMessage)
+      val msg = new LogMessageBuilder().addAll(event.toLogMessage).build()
       if(event.isUserOppija) opiskelija.log(msg) else virkailija.log(msg)
     }
   }
