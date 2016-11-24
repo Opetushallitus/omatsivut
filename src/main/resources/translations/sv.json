@@ -37,6 +37,8 @@
     "mobilePhone": "Mobiltelefonnummer",
     "streetAddress": "Näradress",
     "postalCode": "Postnummer",
+    "acceptConditionallyAccepted": "Jag avstår från att köa och tar emot denna plats bindande",
+    "cannotUndoChanges": "Obs! Ändringen går inte att annullera",
 
     "resultState": {
       "EhdollinenPostfix": " (villkorlig)",
@@ -50,7 +52,7 @@
       "Peruuntunut": "Ansökan_har_blivit_annullerad",
       "VarasijaltaHyvaksytty": "Godkänd_från_reservplats",
       "VastaanottanutSitovasti": "Du_har_tagit_emot_studieplatsen",
-      "Hylatty": "Du_har_inte_fått_någon_studieplats.",
+      "Hylatty": "Du_har_inte_fått_en_studieplats.",
       "EhdollisestiVastaanottanut": "Du_har_tagit_emot_studieplatsen_och_köar_för_en_högre_studieplats",
       "EiVastaanotettuMaaraAikana": "Du_har_inte_tagit_emot studieplatsen inom utsatt tid"
     }
@@ -67,7 +69,8 @@
     "vastaanota_ariaLabel": "Skicka svaret genom att välja detta två gånger",
     "logout": "Logga ut",
     "showApplication": "Visa ansökningsblankett",
-    "downloadLetter": "Brev (__luotu__)"
+    "downloadLetter": "Brev (__luotu__)",
+    "confirmChange": "Bekräfta ändringen"
   },
 
   "message": {

@@ -396,13 +396,14 @@
   border-collapse: collapse;
   width: 100%;
   line-height: 125%;
-  font-size: 12px;
+  font-size: 14px;
 }
 .hakemuseditori .result-list th {
   font-family: 'Helvetica Neue', helvetica, arial, sans-serif;
   font-size: 12px;
   text-transform: uppercase;
   font-weight: normal;
+  font-size: 16px;
   padding-bottom: 8px;
   line-height: 20px;
 }
@@ -410,25 +411,61 @@
   text-transform: none;
   color: #777777;
 }
-.hakemuseditori .result-list td {
-  padding: 4px 4px;
+.hakemuseditori .result-list tbody td {
+  padding: 10px;
   vertical-align: top;
-  background: #f5f5f5;
   margin-bottom: 1px;
 }
-.hakemuseditori .result-list td:first-child {
+.hakemuseditori .result-list tbody td:first-child {
   padding-right: 10px;
+  width: 30%;
 }
-.hakemuseditori .result-list td:last-child {
-  width: 1px;
+.hakemuseditori .result-list tbody td:last-child {
   vertical-align: top;
-  text-transform: uppercase;
   padding-right: 10px;
 }
-.hakemuseditori .result-list tr + tr {
+.hakemuseditori .result-list tbody td .update-vastaanottotieto {
+  text-transform: none;
+  font-weight: 100;
+}
+.hakemuseditori .result-list tbody td .update-vastaanottotieto div {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+.hakemuseditori .result-list tbody td .update-vastaanottotieto div .confirm-update-vastaanottotieto {
+  padding: 1em;
+}
+.hakemuseditori .result-list tbody td .update-vastaanottotieto div .confirm-update-vastaanottotieto i {
+  font-size: 0.9em;
+  padding-left: 1em;
+}
+.hakemuseditori .result-list tbody td .update-vastaanottotieto button {
+  background: #159ECB;
+  border-radius: 2px;
+  height: 35px;
+  font-family: 'Helvetica Neue', helvetica, arial, sans-serif;
+  font-size: 15px;
+  color: #FFFFFF;
+}
+.hakemuseditori .result-list tbody td .update-vastaanottotieto button:hover {
+  background: #00B5EF;
+}
+.hakemuseditori .result-list tbody td .update-vastaanottotieto button:disabled {
+  background: #CCCCCC;
+}
+.hakemuseditori .result-list tbody .vastaanottotieto {
+  width: 40%;
+}
+.hakemuseditori .result-list tbody tr + tr {
   border-top: 3px solid white;
 }
-.hakemuseditori .result-list tr.accepted {
+.hakemuseditori .result-list tbody tr {
+  background: #F7F7F7;
+}
+.hakemuseditori .result-list tbody .accepted {
+  background: #EBF8FB;
+}
+.hakemuseditori .result-list tbody .accepted .valintatulos-otsake {
   font-weight: bold;
 }
 .hakemuseditori .result-status {

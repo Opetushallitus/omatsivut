@@ -37,6 +37,8 @@
     "mobilePhone": "Matkapuhelinnumero",
     "streetAddress": "Lähiosoite",
     "postalCode": "Postinumero",
+    "acceptConditionallyAccepted": "Luovun jonotuksesta ja muutan vastaanoton sitovaksi",
+    "cannotUndoChanges": "Huom! Muutosta ei voi perua",
 
     "resultState": {
       "Hyvaksytty": "Hyväksytty",
@@ -66,7 +68,8 @@
     "vastaanota_ariaLabel": "Lähetä vastaus valitsemalla tämä kaksi kertaa",
     "logout": "Kirjaudu ulos",
     "showApplication": "Näytä hakemus",
-    "downloadLetter": "Tuloskirje (__luotu__)"
+    "downloadLetter": "Tuloskirje (__luotu__)",
+    "confirmChange": "Vahvista muutos"
   },
 
   "message": {

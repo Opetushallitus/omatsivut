@@ -4,11 +4,12 @@
   border-collapse: collapse;
   width: 100%;
   line-height: 125%;
-  font-size: 12px;
+  font-size: 14px;
 
   th {
     .section-heading-font(@font-color);
     font-weight: normal;
+    font-size: 16px;
     padding-bottom: 8px;
     line-height: 20px;
 
@@ -17,32 +18,67 @@
       color: @font-color-light;
     }
   }
-
-  td {
-    padding: 4px 4px;
-    vertical-align: top;
-
-    &:first-child {
-      padding-right: 10px;
-    }
-
-    &:last-child {
-      width: 1px; // force as small as possible
+  tbody {
+    td {
+      padding: 10px;
       vertical-align: top;
-      text-transform: uppercase;
-      padding-right: 10px;
+
+      &:first-child {
+        padding-right: 10px;
+        width: 30%;
+      }
+
+      &:last-child {
+        vertical-align: top;
+        padding-right: 10px;
+      }
+      .update-vastaanottotieto {
+        text-transform: none;
+        font-weight: 100;
+        div {
+          padding-top: 4px;
+          padding-bottom: 4px;
+          .confirm-update-vastaanottotieto {
+            padding: 0.5em 0 0.1em 1.2em;
+            i {
+              font-size: 0.9em;
+              padding-left: 1em;
+            }
+          }
+        }
+        button {
+          background: #159ECB;
+          border-radius: 2px;
+          height: 35px;
+          font-family: 'Helvetica Neue', helvetica, arial, sans-serif;;
+          font-size: 15px;
+          color: #FFFFFF;
+        }
+        button:hover {
+          background: #00B5EF;
+        }
+        button:disabled {
+          background: #CCCCCC;
+        }
+      }
+      margin-bottom: 1px;
     }
+    .vastaanottotieto {
+      width: 40%;
+    }
+    tr + tr {
+      border-top: 3px solid white;
+    }
+    tr {
+      background: #F7F7F7;
 
-    background: @table-background;
-    margin-bottom: 1px;
-  }
-
-  tr+tr {
-    border-top: 3px solid white;
-  }
-
-  tr.accepted {
-    font-weight: bold;
+    }
+    .accepted {
+      background: #EBF8FB;
+      .valintatulos-otsake {
+        font-weight: bold;
+      }
+    }
   }
 }
 

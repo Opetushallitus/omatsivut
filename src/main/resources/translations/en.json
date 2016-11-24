@@ -37,6 +37,8 @@
     "mobilePhone": "Mobile phone number",
     "streetAddress": "Street address",
     "postalCode": "Postal code",
+    "acceptConditionallyAccepted": "I want to be removed from the waiting list and confirm this study place",
+    "cannotUndoChanges": "NB: You cannot change your choice later",
 
     "resultState": {
       "EhdollinenPostfix": " (conditional)",
@@ -67,7 +69,8 @@
     "vastaanota_ariaLabel": "Send the answer by choosing this two times",
     "logout": "Log out",
     "showApplication": "Show application form",
-    "downloadLetter": "Letter (__luotu__)"
+    "downloadLetter": "Letter (__luotu__)",
+    "confirmChange": "Confirm your choice"
   },
 
   "message": {
@@ -91,7 +94,7 @@
         "3": "study place leading to a higher education degree in Finland during one academic term."
       },
       "accept": "I confirm the granted study place",
-      "conditionalAccept": "I confirm the study place, but remain on a wait list for a study place with higher preference.",
+      "conditionalAccept": "I confirm the study place, but remain on a waiting list for a study place with higher preference.",
       "conditionalAcceptInfo1": "If you are not accepted to a study place you are waiting for, this confirmation remains valid.",
       "conditionalAcceptInfo2": "If you are accepted to a study place you are waiting for, you do not need to confirm that study place. It will be automatically confirmed.",
       "reject": "I do not confirm the study place",
@@ -106,7 +109,7 @@
         "tila": {
           "VastaanotaSitovasti": "I confirm the granted study place",
           "Peru": "I do not confirm the study place",
-          "VastaanotaEhdollisesti": "I confirm the study place, but remain on a wait list for a study place with higher preference"
+          "VastaanotaEhdollisesti": "I confirm the study place, but remain on a waiting list for a study place with higher preference"
         }
       }
     },

@@ -10,8 +10,31 @@
             <span ng-bind="tulos.tarjoajaNimi"></span>
             <span ng-bind="tulos.hakukohdeNimi"></span>
         </td>
-        <td>
-            <span ng-bind="valintatulosText(tulos)"></span>
+        <td class="vastaanottotieto">
+            <div>
+                <div>
+                    <span ng-bind="valintatulosText(tulos)" class="valintatulos-otsake"></span>
+                </div>
+                <div class="update-vastaanottotieto" ng-show="tulos.vastaanottotila == 'EHDOLLISESTI_VASTAANOTTANUT'">
+                    <span class="ajax-spinner" ng-show="ajaxPending"></span>
+                    <div ng-hide="ajaxPending">
+                        <div>
+                            <label>
+                                <input type="checkbox" ng-model="enableConfirmation" ignore-dirty/>
+                                {{ localization('label.acceptConditionallyAccepted') }}
+                            </label>
+                        </div>
+                        <div class="confirm-update-vastaanottotieto">
+                            <button id="confirmChangeButton"
+                                    ng-disabled="!enableConfirmation"
+                                    ng-click="vastaanotaSitovasti(hakemus, tulos)"
+                                    ng-init="enableConfirmation=false">{{ localization('button.confirmChange') }}</button>
+                            <i>{{ localization('label.cannotUndoChanges') }}</i>
+                        </div>
+                        <span class="status-message error" ng-show="error">{{ getError() }}</span>
+                    </div>
+                </div>
+            </div>
         </td>
     </tr>
 </table>

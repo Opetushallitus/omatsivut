@@ -99,14 +99,14 @@ gulp.task('watch', function() {
     isWatch = true
     livereload.listen();
     gulp.watch(['src/main/webapp/**/*.js', 'src/main/webapp/**/*.css', 'src/main/webapp/**/*.html'], livereload.changed);
-    gulp.watch(['src/main/templates/**/*.html'], ['compile-dev'])
+    gulp.watch([editorLocation + "/src/main/less/**", 'src/main/templates/**/*.html'], ['compile-dev'])
     gulp.watch([jsFiles, 'src/main/webapp/hakemuseditori.js', 'src/main/webapp/hakemuseditori-templates.js'],['lint', 'browserify']);
     gulp.watch(['src/main/less/**/*.less'],['less']);
 });
 
 gulp.task('local-editor', function() {
     localEditor = true
-    editorLocation = "../hakemuseditori"
+    editorLocation = "hakemuseditori"
 });
 
 gulp.task('dev-local-editor', ['local-editor', 'dev']);
