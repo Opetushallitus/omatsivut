@@ -12,16 +12,12 @@ Oppijan henkilökohtainen palvelu
 
 - Käytetään kehityksessä ja sovelluksen ajamiseen JDK8:a, mutta target version yhä 1.7
    - odotetaan scala 2.12:sta ja spring 4 upgradea ennen target version vaihtoa
-- JCE (Java Cryptography Extension)
+- JCE (Java Cryptography Extension) (tämä täytyy tsekata. Tarvitaanko oikeasti?)
    - Ilman laajennosta tulee virhe: "java.security.InvalidKeyException: Illegal key size"
    - Lataa Oraclen sivuilta ja kopioi tiedostot $JAVA_HOME/jre/lib/security
 
     http://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html
 - Java-versio vähintään 1.8 update 40 (aiemmilla tarvitaan flägi `-XX:-EliminateAutoBox`)
-
-Lisää JAVA_HOME ympäristömuuttujat polkuun:
-
-    export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
 
 ## Webbuild
 
@@ -37,12 +33,26 @@ Jos testeistä tulee IDE:llä yllättäviä `StackOverflow`-exceptioneita, anna 
 
 ### Käynnistä sovellus IDEAsta
 
+    mvn clean install
+    
+Tämä luo ./target-kansion alle valinta-tulos-service.war -tiedoston
+
 Aja JettyLauncher-luokka.
 
 - jotta impersonointi/autentikoinnin ohitus onnistuu, anna parametri `-Domatsivut.profile=it`.
 - lisäksi `-Xss2M`, ettei stäkki lopu fikstuuridatalla, jossa on erittäin syviä rakenteita
 
-### Offline-käyttö (skipRaamit) ja käyttö IE9:llä
+#### Ajo luokkaa vasten
+
+Sovellusta voi ajaa luokkaa vasten `default` -profiililla. Tällöin luokalta kannattaa kopioida
+omaan kotihakemistoon oph-configuration, jolloin propertiet saa kuntoon.
+
+Konsoliin tulee virheitä johtuen siitä, että JettyLauncher käynnistää paikallisen
+valinta-tulos-servicen ja se yritää käyttää paikallista PostgreSQl-kantaa. Tämä ei sinänsä
+estä sovelluksen käyttöä. Tälle voisi kuitenkin jossakin vaiheessa jotakin tehdä, kuten
+jotakin siihen tapaan, että default-profiililla lokaalia VTS:ää ei ajeta.
+
+##### Offline-käyttö (skipRaamit) ja käyttö IE9:llä
 
 Kun sovellusta ajetaan `-Domatsivut.profile=it`-parametrillä, toimii se ilman verkkoyhteyttä vaikkapa junassa.
 Selaimessa sovellus kuitenkin lataa "oppija-raamit" testiympäristön serveriltä, johon sinulla ei välttämättä ole pääsyä.
@@ -136,7 +146,7 @@ datassa on hakemusten personOid kentät muutettu vastaamaan testien käyttämä�
 henkilöä. Fixtuurien lisäämistä varten löytyy scripti [haku/testfixtures](https://github.com/Opetushallitus/haku/tree/master/testfixtures)
 kansiosta. Koulutusdata joka sijaitsee kansiossa [haku/hakemus-api/src/main/resources/mockdata](https://github.com/Opetushallitus/haku/tree/master/hakemus-api/src/main/resources/mockdata).
 
-## Sovellusprofiili
+## Sovellusprofiilit
 
 Sovellus tukee eri profiileita. Profiili määritellään `omatsivut.profile` system propertyllä, esim `-Domatsivut.profile=it`.
 Profiili määrittää lähinnä, mistä propertyt haetaan, mutta sen avulla myös voidaan mockata palveluita. Ks `AppConfig.scala`.
