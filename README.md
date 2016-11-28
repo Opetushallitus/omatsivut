@@ -12,12 +12,16 @@ Oppijan henkilökohtainen palvelu
 
 - Käytetään kehityksessä ja sovelluksen ajamiseen JDK8:a, mutta target version yhä 1.7
    - odotetaan scala 2.12:sta ja spring 4 upgradea ennen target version vaihtoa
-- JCE (Java Cryptography Extension) (tämä täytyy tsekata. Tarvitaanko oikeasti?)
+- JCE (Java Cryptography Extension)
    - Ilman laajennosta tulee virhe: "java.security.InvalidKeyException: Illegal key size"
    - Lataa Oraclen sivuilta ja kopioi tiedostot $JAVA_HOME/jre/lib/security
 
     http://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html
 - Java-versio vähintään 1.8 update 40 (aiemmilla tarvitaan flägi `-XX:-EliminateAutoBox`)
+
+Lisää JAVA_HOME ympäristömuuttujat polkuun:		
+	
+    export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
 
 ## Webbuild
 
