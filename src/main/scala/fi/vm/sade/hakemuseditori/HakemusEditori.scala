@@ -42,7 +42,7 @@ trait HakemusEditoriComponent extends ApplicationValidatorComponent with Tarjont
 
     def fetchTuloskirje(personOid: String, hakuOid: String): Option[Array[Byte]] = {
       val hakemukset = hakemusRepository.fetchHakemukset(personOid)
-      hakemukset.find(_.hakemus.haku.oid.equals(hakuOid)).map(hakemus => tuloskirjeService.fetchTuloskirje(hakuOid, hakemus.hakemus.oid)).flatten
+      hakemukset.find(_.hakemus.haku.oid.equals(hakuOid)).map(hakemus => tuloskirjeService.fetchTuloskirje(hakuOid, hakemus.hakemus.oid, personOid)).flatten
     }
 
     def fetchByPersonOid(personOid: String): List[HakemusInfo] = hakemusRepository.fetchHakemukset(personOid)

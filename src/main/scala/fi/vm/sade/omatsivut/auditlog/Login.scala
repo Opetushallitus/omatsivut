@@ -5,5 +5,5 @@ import fi.vm.sade.omatsivut.security.AuthenticationInfo
 
 case class Login(authInfo: AuthenticationInfo, target: String = "Session") extends AuditEvent {
   def isUserOppija = true
-  def toLogMessage = Map("message" -> "Käyttäjä kirjautui sisään", "user" -> authInfo.toString)
+  def toLogMessage = Map("message" -> "Käyttäjä kirjautui sisään", "id" -> authInfo.toString)
 }

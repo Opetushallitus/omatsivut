@@ -8,5 +8,5 @@ case class UpdateHakemus(user: User, hakemusOid: String, hakuOid: String, origin
     case u: Oppija => true
     case _ => false
   }
-  def toLogMessage = Map("message" -> "Tallennettu päivitetty hakemus haussa", "hakuOid" -> hakuOid, "hakemusOid" -> hakemusOid, "userOid" -> user.oid)
+  def toLogMessage = Map("message" -> "Tallennettu päivitetty hakemus haussa", "hakuOid" -> hakuOid, "hakemusOid" -> hakemusOid, "id" -> user.oid)
 }

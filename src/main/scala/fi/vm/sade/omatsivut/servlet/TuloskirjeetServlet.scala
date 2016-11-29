@@ -43,7 +43,7 @@ trait TuloskirjeetServletContainer {
       (for {
         hakemusOid <- oppijanTunnistusService.validateToken(params("token"))
         hakemusInfo <- Try(hakemusRepository.getHakemus(hakemusOid, false).getOrElse(throw new NoSuchElementException))
-        tuloskirje <- Try(tuloskirjeService.fetchTuloskirje(hakemusInfo.hakemus.haku.oid, hakemusOid))
+        tuloskirje <- Try(tuloskirjeService.fetchTuloskirje(hakemusInfo.hakemus.haku.oid, hakemusOid, ""))
       } yield {
         tuloskirje match {
           case Some(data: Array[Byte]) => Ok(data, Map(
