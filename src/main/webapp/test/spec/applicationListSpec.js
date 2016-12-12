@@ -2564,7 +2564,7 @@
 
         describe("virheellisen tiedon tallennusyrityksen jälkeen", function() {
           before(page.applyFixtureAndOpen({}))
-          before(setData(hakemusYhteishakuKevat2013WithForeignBaseEducation, invalidData), hakemusYhteishakuKevat2013WithForeignBaseEducation.saveWaitError)
+          before(setData(hakemusYhteishakuKevat2013WithForeignBaseEducation, invalidData), hakemusYhteishakuKevat2013WithForeignBaseEducation.saveWaitReady)
 
           describe("validointivirheet", function() {
             it("validointivirheet näkyvät", function() {
