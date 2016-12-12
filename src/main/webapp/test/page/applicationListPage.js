@@ -161,6 +161,11 @@ function ApplicationListPage() {
         return wait.until(function() { return api.statusMessage() != status && api.saveError().length > 0 })()
       },
 
+      saveWaitReady: function() {
+        api.saveButton().click()
+        return wait.until(function() { return api.isSavingState(false) })()
+      },
+
       waitValidationErrorForRequiredQuestion: function() {
         return wait.until(function() { return getApplicationElement().find(".validation-message.error").text() == "Pakollinen tieto." })()
       },
