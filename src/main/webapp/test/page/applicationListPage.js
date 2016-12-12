@@ -161,11 +161,6 @@ function ApplicationListPage() {
         return wait.until(function() { return api.statusMessage() != status && api.saveError().length > 0 })()
       },
 
-      saveWaitReady: function() {
-        api.saveButton().click()
-        return wait.until(function() { return api.isSavingState(false) })()
-      },
-
       waitValidationErrorForRequiredQuestion: function() {
         return wait.until(function() { return getApplicationElement().find(".validation-message.error").text() == "Pakollinen tieto." })()
       },
@@ -315,11 +310,11 @@ function ApplicationListPage() {
       },
 
       statusMessage: function() {
-        return getApplicationElement().find("[name='applicationForm'] .status-message").first().text()
+        return getApplicationElement().find("[name='applicationForm'] .status-message:visible").first().text()
       },
 
       saveError: function() {
-        return getApplicationElement().find("[name='applicationForm'] .status-message.error").first().text()
+        return getApplicationElement().find("[name='applicationForm'] .status-message.error:visible").first().text()
       },
 
       emptyPreferencesForApplication: function () {
