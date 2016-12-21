@@ -16,7 +16,6 @@ import fi.vm.sade.haku.oppija.lomake.validation.ValidationInput.ValidationContex
 import fi.vm.sade.haku.oppija.lomake.validation.{ElementTreeValidator, ValidationInput, ValidationResult}
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants._
 import fi.vm.sade.utils.slf4j.Logging
-
 import scala.collection.JavaConversions._
 
 trait ApplicationValidatorComponent {
@@ -31,22 +30,28 @@ trait ApplicationValidatorComponent {
 
     def validate(lomake: Lomake, hakemusMuutos: HakemusMuutos, haku: Haku)(implicit lang: Language.Language): List[ValidationError] = {
       val storedApplication = applicationRepository.findStoredApplicationByOid(hakemusMuutos.oid).getOrElse(throw new RuntimeException(s"Application ${hakemusMuutos.oid} not found"))
+
       val updatedApplication = update(hakemusMuutos, lomake, storedApplication)
-      validateHakutoiveetAndAnswers(updatedApplication, storedApplication, lomake) ++
-        errorsForUnknownAnswers(lomake, hakemusMuutos) ++
-        errorsForEditingInactiveHakuToive(updatedApplication, storedApplication, haku, lomake)
+      val duplicateSelectionsInApplications = validateDuplicateApplicationAnswersForPerson(storedApplication, lomake, hakemusMuutos)
+      val validationErrors = validateHakutoiveetAndAnswers(updatedApplication, storedApplication, lomake)
+      val unknownAnswersErrors = errorsForUnknownAnswers(lomake, hakemusMuutos)
+      val inactiveErrors = errorsForEditingInactiveHakuToive(updatedApplication, storedApplication, haku, lomake)
+      val result = duplicateSelectionsInApplications ++ validationErrors ++ unknownAnswersErrors ++ inactiveErrors
+      result.distinct
     }
 
     def validateAndFindQuestions(lomake: Lomake, hakemusMuutos: HakemusMuutos, haku: Haku, user: User)(implicit lang: Language.Language): HakemusInfo = {
       withErrorLogging {
         val storedApplication = applicationRepository.findStoredApplicationByOid(hakemusMuutos.oid).getOrElse(throw new RuntimeException(s"Application ${hakemusMuutos.oid} not found"))
+        lazy val duplicateSelectionsInApplications: List[ValidationError] = validateDuplicateApplicationAnswersForPerson(storedApplication, lomake, hakemusMuutos)
+        lazy val paymentInfo = getPaymentInfo(storedApplication.phaseAnswers(PHASE_EDUCATION), hakemusMuutos.preferences, haku.oid)
 
         user.checkAccessToUserData(storedApplication.personOid)
 
-        val paymentInfo = getPaymentInfo(storedApplication.phaseAnswers(PHASE_EDUCATION), hakemusMuutos.preferences, haku.oid)
-
         validateAndFindQuestions(haku, lomake, hakemusMuutos, storedApplication) match {
-          case (app, errors, questions) => HakemusInfo(hakemusConverter.convertToHakemus(None, Some(lomake), haku, app), errors, questions, Some(paymentInfo))
+          case (app, errors, questions) =>
+            val resultErrors = duplicateSelectionsInApplications ++ errors
+            HakemusInfo(hakemusConverter.convertToHakemus(None, Some(lomake), haku, app), resultErrors.distinct, questions, Some(paymentInfo))
         }
       } ("Error validating application: " + hakemusMuutos.oid)
     }
@@ -73,7 +78,7 @@ trait ApplicationValidatorComponent {
         val updatedApplication = update(newHakemus, lomake, storedApplication)
         val validationErrors: List[ValidationError] = validateHakutoiveetAndAnswers(updatedApplication, storedApplication, lomake) ++
           errorsForEditingInactiveHakuToive(updatedApplication, storedApplication, haku, lomake)
-        val questions = AddedQuestionFinder.findQuestions(lomake)(storedApplication, newHakemus, tarjontaService.filterHakutoiveOidsByActivity(true, newHakemus.preferences, haku))
+        val questions = AddedQuestionFinder.findQuestions(lomake)(storedApplication, newHakemus, tarjontaService.filterHakutoiveOidsByActivity(activity = true, hakutoiveet = newHakemus.preferences, haku = haku))
         (updatedApplication, validationErrors, questions)
       } ("Error validating application: " + newHakemus.oid)
     }
@@ -96,15 +101,15 @@ trait ApplicationValidatorComponent {
     private def errorsForEditingInactiveHakuToive(updatedApplication: ImmutableLegacyApplicationWrapper, storedApplication: ImmutableLegacyApplicationWrapper, haku: Haku, lomake: Lomake)(implicit lang: Language.Language): List[ValidationError] = {
       val oldHakuToiveet = HakutoiveetConverter.convertFromAnswers(storedApplication.answers, Some(lomake.maxHakutoiveet))
       val newHakuToiveet = HakutoiveetConverter.convertFromAnswers(updatedApplication.answers.mapValues(_.toMap), Some(lomake.maxHakutoiveet))
-      val oldInactiveHakuToiveet: List[String] = tarjontaService.filterHakutoiveOidsByActivity(false, oldHakuToiveet, haku)
-      val newInactiveHakuToiveet: List[String] = tarjontaService.filterHakutoiveOidsByActivity(false, newHakuToiveet, haku)
+      val oldInactiveHakuToiveet: List[String] = tarjontaService.filterHakutoiveOidsByActivity(activity = false, hakutoiveet = oldHakuToiveet, haku = haku)
+      val newInactiveHakuToiveet: List[String] = tarjontaService.filterHakutoiveOidsByActivity(activity = false, hakutoiveet = newHakuToiveet, haku = haku)
       val newHakutoiveetWithIndex = newHakuToiveet.zipWithIndex
 
       val addedInActiveHakutoiveet = newInactiveHakuToiveet.filter(!oldInactiveHakuToiveet.contains(_))
 
       val errorsForAdded = addedInActiveHakutoiveet.flatMap { hakukohdeOid =>
         newHakutoiveetWithIndex.find { case (hakutoive: HakutoiveData, index: Int) =>
-          hakutoive.get("Koulutus-id").map { _ == hakukohdeOid }.getOrElse(false)
+          hakutoive.get("Koulutus-id").contains(hakukohdeOid)
         }.map(_._2)
       }.map((index) => new ValidationError("preference"+(index+1) + "-Koulutus", translations.getTranslation("error", "applicationPeriodNotActive")))
 
@@ -116,7 +121,7 @@ trait ApplicationValidatorComponent {
         else
           List.empty
 
-      if (errorsForAdded.size != 0)
+      if (errorsForAdded.nonEmpty)
         errorsForAdded
       else
         errorsForOtherModifications
@@ -138,11 +143,11 @@ trait ApplicationValidatorComponent {
           case (PHASE_PERSONAL, questionId, _) if List(ELEMENT_ID_FIN_ADDRESS, ELEMENT_ID_FIN_POSTAL_NUMBER, ELEMENT_ID_EMAIL, ELEMENT_ID_COUNTRY_OF_RESIDENCY).contains(questionId) || questionId.startsWith(ELEMENT_ID_PREFIX_PHONENUMBER) => true
           case (phaseId, questionId, _) => acceptedAnswerIds.contains(AnswerId(phaseId, questionId))
         }
-      unknownAnswers
-        .map{ case (phaseId, questionId, answer) =>{
+      unknownAnswers.map {
+        case (phaseId, questionId, answer) =>
           logger.warn(acceptedAnswerIds.toString())
-          ValidationError(questionId, "unknown answer id")}
-        }
+          ValidationError(questionId, "unknown answer id")
+      }
     }
 
     private def convertoToValidationErrors(validationResult: ValidationResult)(implicit lang: Language.Language) : List[ValidationError] = {
@@ -153,6 +158,38 @@ trait ApplicationValidatorComponent {
 
     private def convertToValidationInput(lomake: Lomake, application: ImmutableLegacyApplicationWrapper): ValidationInput = {
       new ValidationInput(lomake.form, FlatAnswers.flatten(application.answers), application.oid, lomake.oid, ValidationContext.applicant_modify)
+    }
+
+    private def validateDuplicateApplicationAnswersForPerson(application: ImmutableLegacyApplicationWrapper, form: Lomake, applicationChanges: HakemusMuutos)(implicit lang: Language.Language): List[ValidationError] = {
+      val updatedApplication = update(applicationChanges, form, application)
+      val allApplicationsByPerson = applicationRepository.applicationsByPersonOid(application.personOid)
+      // Applications for given person but without the current application
+      val applicationsForSystemApplication = allApplicationsByPerson.filter(application => application.hakuOid == applicationChanges.hakuOid && application.oid != updatedApplication.oid)
+      val allApplicationAnswers = applicationsForSystemApplication.flatMap(_.answers.get(PHASE_APPLICATION_OPTIONS))
+      val allApplicationAnswerKeys = allApplicationAnswers.flatMap(applicationOptionKeys(_, form.maxHakutoiveet))
+      val currentApplicationAnswers = updatedApplication.answers.getOrElse(PHASE_APPLICATION_OPTIONS, Map.empty)
+      val currentApplicationAnswerKeys = applicationOptionKeys(currentApplicationAnswers, form.maxHakutoiveet)
+      currentApplicationAnswerKeys.toList.flatMap { key =>
+        if(allApplicationAnswerKeys.contains(key)) Option(ValidationError(key.errorKey, "Et voi syöttää samaa hakutoivetta useaan kertaan. Hakutoive löytyy jo toisesta hakemuksesta."))
+        else None
+      }
+    }
+
+    private case class ApplicationOptionKey(organisation: String, preference: String)(val errorKey: String)
+
+    private def applicationOptionKey(applicationOptions: HakutoiveData, organisationKey: String, preferenceKey: String, errorKey: String): Option[ApplicationOptionKey] = {
+      for {
+        organisation <- applicationOptions.get(organisationKey)
+        preference <- applicationOptions.get(preferenceKey)
+        if organisation.nonEmpty && preference.nonEmpty
+      } yield ApplicationOptionKey(organisation, preference)(errorKey)
+    }
+
+    private def applicationOptionKeys(applicationOptions: HakutoiveData, maxApplicationOptions: Int): Iterable[ApplicationOptionKey] = {
+      for {
+        index <- 1 to maxApplicationOptions
+        key <- applicationOptionKey(applicationOptions, PREFERENCE_ORGANIZATION_ID.format(index), PREFERENCE_ID.format(index), PREFERENCE_NAME.format(index))
+      } yield key
     }
   }
 }
