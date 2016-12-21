@@ -131,7 +131,7 @@
         <dependency>
             <groupId>fi.vm.sade.haku</groupId>
             <artifactId>hakemus-api</artifactId>
-            <version>14.0-SNAPSHOT</version>
+            <version>14.0-feature_kevaan_kk_muutokset-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>com.wordnik</groupId>
