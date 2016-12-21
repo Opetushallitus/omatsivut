@@ -144,7 +144,7 @@ trait HakemusRepositoryComponent {
     }
 
     private def updateChangeHistory(application: Application, originalApplication: Application, user: User) {
-      val changes = ApplicationDiffUtil.addHistoryBasedOnChangedAnswers(application, originalApplication, user.toString, "Muokkaus " + auditContext.systemName + " -palvelussa");
+      val changes = ApplicationDiffUtil.addHistoryBasedOnChangedAnswers(application, originalApplication, user.toString, "Muokkaus " + auditContext.systemName + " -palvelussa")
 
       val changedKeys: Set[String] = changes.toList.flatMap(_.toMap.get("field")).toSet
       val changedPhases: List[String] = application.getAnswers.toMap.toList.filter { case (vaihe, vastaukset) =>
@@ -159,22 +159,23 @@ trait HakemusRepositoryComponent {
 
   class ApplicationFinder {
     def findStoredApplicationByOid(oid: String): Option[ImmutableLegacyApplicationWrapper] = {
-      findStoredApplication(new Application().setOid(oid))
+      findStoredApplication(new Application().setOid(oid)).headOption.map(wrap)
     }
 
     def exists(personOid: String, hakemusOid: String) = {
-      findStoredApplicationByPersonAndOid(personOid, hakemusOid).isDefined;
+      findStoredApplicationByPersonAndOid(personOid, hakemusOid).isDefined
     }
 
     def findStoredApplicationByPersonAndOid(personOid: String, oid: String) = {
       findStoredApplicationByOid(oid).filter(application => personOid.equals(application.personOid))
     }
 
-    private def findStoredApplication(query: Application) = {
-      val applications = timed("Application fetch DAO", 1000){
-        dao.find(query).toList
-      }
-      applications.headOption.map(wrap)
+    def applicationsByPersonOid(personOid: String): Iterable[ImmutableLegacyApplicationWrapper] = {
+      findStoredApplication(new Application().setPersonOid(personOid)).map(wrap)
+    }
+
+    private def findStoredApplication(query: Application): Iterable[Application] = {
+      timed("Application fetch DAO", 1000)(dao.find(query).toVector)
     }
   }
 
