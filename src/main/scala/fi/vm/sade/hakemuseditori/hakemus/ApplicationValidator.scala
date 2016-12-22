@@ -170,7 +170,7 @@ trait ApplicationValidatorComponent {
       val currentApplicationAnswers = updatedApplication.answers.getOrElse(PHASE_APPLICATION_OPTIONS, Map.empty)
       val currentApplicationAnswerKeys = applicationOptionKeys(currentApplicationAnswers, form.maxHakutoiveet)
       currentApplicationAnswerKeys.toList.flatMap { key =>
-        if(allApplicationAnswerKeys.contains(key)) Option(ValidationError(key.errorKey, "Et voi syöttää samaa hakutoivetta useaan kertaan. Hakutoive löytyy jo toisesta hakemuksesta."))
+        if (allApplicationAnswerKeys.contains(key)) Option(ValidationError(key.errorKey, translations.getTranslation("error", "existingSelectionAvailable")))
         else None
       }
     }
