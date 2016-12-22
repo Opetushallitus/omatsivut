@@ -130,7 +130,8 @@
     "valintatulosFailed": "Ett oväntat fel inträffade vid hämtning av antagningsresultaten. Försök senare på nytt.",
     "invalidToken": "Din ansökan kan inte visas eftersom länken är felaktig.",
     "noTokenAvailable": "Det uppstod ett fel och din ansökan kan inte visas. Om du kopierade länken till denna sida från e-postmeddelandet, bör du kontrollera att alla tecken i addressen ingår.",
-    "noActiveApplication": "Din ansökan är inte längre aktiv."
+    "noActiveApplication": "Din ansökan är inte längre aktiv.",
+    "existingSelectionAvailable": "Du kan inte ange detta ansökningsmål, eftersom ansökningmålet är redan angett på an annan ansökan. Ansökningsmålet kan finnas endast på en ansökan"
   },
 
   "info": {
