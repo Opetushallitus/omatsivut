@@ -63,8 +63,8 @@ module.exports = function(app) {
           }
         }, true)
 
-        $scope.$on("questionAnswered", function() {
-          validateHakutoiveet(false)
+        $scope.$on("questionAnswered", function(event, inputId) {
+          validateHakutoiveet(false, inputId)
         })
 
         $scope.hakutoiveVastaanotettu = function(hakutoive, updated) {
@@ -82,7 +82,7 @@ module.exports = function(app) {
             setStatusMessage("")
         }
 
-        function validateHakutoiveet(skipQuestions) {
+        function validateHakutoiveet(skipQuestions, inputId) {
           applicationValidatorBounced($scope.application, beforeBackendValidation, success, error)
 
           function beforeBackendValidation() {
@@ -99,6 +99,15 @@ module.exports = function(app) {
             $scope.application.notifications = data.response.hakemus.notifications
             $scope.application.tuloskirjeet = data.response.hakemus.tuloskirjeet
             updateValidationMessages([], skipQuestions)
+
+            // Dirty hack to return focus to input after repainting
+            // TODO: Maybe don't repaint dom at each onChange?
+            if (inputId) {
+              $timeout(function () {
+                var el = $element.find("#" + inputId);
+                if (el.length > 0) { el[0].focus(); }
+              }, 0);
+            }
           }
 
           function error(data) {
@@ -135,6 +144,15 @@ module.exports = function(app) {
             }
 
             updateValidationMessages(errors, skipQuestions)
+
+            // Same dirty hack as in the success handler
+            if (inputId) {
+              $timeout(function () {
+                var el = $element.find("#" + inputId);
+                if (el.length > 0) { el[0].focus(); }
+              }, 0);
+            }
+
           }
         }
 
