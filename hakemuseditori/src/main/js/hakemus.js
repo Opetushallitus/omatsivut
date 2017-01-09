@@ -286,15 +286,46 @@ Hakemus.prototype = {
     return -1
   },
 
+  compareQuestionMapsIgnoring: function (oldQuestions, newQuestions, ignored) {
+    var areEqual = false;
+
+    if (_.keys(oldQuestions).length === _.keys(newQuestions).length) {
+      areEqual = _.every(newQuestions, function (question, id) {
+        if (oldQuestions[id]) {
+          var oldQ = _.omit(oldQuestions[id], ignored);
+          var Q = _.omit(question, ignored);
+          return angular.equals(oldQ, Q);
+        } else {
+          return false;
+        }
+      });
+    } else {
+      areEqual = false;
+    }
+
+    return areEqual;
+  },
+
   importQuestions: function(questions) {
-    this.additionalQuestions = (function mergeOldAnswers(old, questions) {
-      var oldQuestions = Question.questionMap(old)
-      _(Question.questionMap(questions)).each(function(newQuestion, id) {
-        if (oldQuestions[id] != null)
-          newQuestion.answer = oldQuestions[id].answer
-      })
-      return questions
-    })(this.additionalQuestions, questions)
+    var currentQuestions = Question.questionMap(this.additionalQuestions);
+    var newQuestions = Question.questionMap(questions);
+    var equalQuestions = this.compareQuestionMapsIgnoring(currentQuestions, newQuestions, ['answer', 'errors']);
+
+    if (equalQuestions) {
+      return this.additionalQuestions;
+    } else {
+
+      this.additionalQuestions = (function mergeOldAnswers(old, questions) {
+        var oldQuestions = Question.questionMap(old);
+        _(Question.questionMap(questions)).each(function(newQuestion, id) {
+          if (oldQuestions[id] != null)
+            newQuestion.answer = oldQuestions[id].answer;
+        });
+        return questions;
+      })(this.additionalQuestions, questions);
+
+      return this.additionalQuestions;
+    }
   },
 
   updateValidationMessages: function(errors, skipQuestions) {
