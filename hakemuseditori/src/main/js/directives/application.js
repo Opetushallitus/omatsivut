@@ -14,7 +14,7 @@ module.exports = function(app) {
 
       link: function ($scope, $element, attrs) {
         $scope.localization = localization
-        var applicationValidatorBounced = debounce(applicationValidator(), settings.modelDebounce);
+        var applicationValidatorBounced = debounce(applicationValidator(), settings.modelDebounce)
         $scope.isSaveable = true
         $scope.isValidating = false
 
@@ -64,7 +64,7 @@ module.exports = function(app) {
         }, true)
 
         $scope.$on("questionAnswered", function() {
-          validateHakutoiveet(false);
+          validateHakutoiveet(false)
         })
 
         $scope.hakutoiveVastaanotettu = function(hakutoive, updated) {
@@ -83,7 +83,7 @@ module.exports = function(app) {
         }
 
         function validateHakutoiveet(skipQuestions) {
-          applicationValidatorBounced($scope.application, beforeBackendValidation, success, error);
+          applicationValidatorBounced($scope.application, beforeBackendValidation, success, error)
 
           function beforeBackendValidation() {
             setValidatingIndicator(true)
@@ -99,7 +99,6 @@ module.exports = function(app) {
             $scope.application.notifications = data.response.hakemus.notifications
             $scope.application.tuloskirjeet = data.response.hakemus.tuloskirjeet
             updateValidationMessages([], skipQuestions)
-
           }
 
           function error(data) {
@@ -136,7 +135,6 @@ module.exports = function(app) {
             }
 
             updateValidationMessages(errors, skipQuestions)
-
           }
         }
 
