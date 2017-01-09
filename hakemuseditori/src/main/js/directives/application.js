@@ -63,20 +63,7 @@ module.exports = function(app) {
           }
         }, true)
 
-        function focusInfo(selector) {
-          var focusObj = {};
-          var input = $element.find(selector)[0];
-          var caretPos = input.selectionStart;
-          if (input && caretPos) {
-            focusObj = {
-              el: input,
-              caretPos: caretPos
-            };
-          }
-          return focusObj;
-        }
-
-        $scope.$on("questionAnswered", function(event) {
+        $scope.$on("questionAnswered", function() {
           validateHakutoiveet(false);
         })
 
@@ -95,7 +82,7 @@ module.exports = function(app) {
             setStatusMessage("")
         }
 
-        function validateHakutoiveet(skipQuestions, focusObj) {
+        function validateHakutoiveet(skipQuestions) {
           applicationValidatorBounced($scope.application, beforeBackendValidation, success, error);
 
           function beforeBackendValidation() {
