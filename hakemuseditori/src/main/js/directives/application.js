@@ -63,8 +63,26 @@ module.exports = function(app) {
           }
         }, true)
 
+        function focusInfo(selector) {
+          var focusObj = {};
+          var input = $element.find(selector)[0];
+          var caretPos = input.selectionStart;
+          if (input && caretPos) {
+            focusObj = {
+              el: input,
+              caretPos: caretPos
+            };
+          }
+          return focusObj;
+        }
+
         $scope.$on("questionAnswered", function(event, inputId) {
-          validateHakutoiveet(false, inputId)
+          if (inputId) {
+            var focusObj = focusInfo("#" + inputId);
+            validateHakutoiveet(false, focusObj);
+          } else {
+            validateHakutoiveet(false);
+          }
         })
 
         $scope.hakutoiveVastaanotettu = function(hakutoive, updated) {
@@ -82,11 +100,25 @@ module.exports = function(app) {
             setStatusMessage("")
         }
 
-        function validateHakutoiveet(skipQuestions, inputId) {
+        function validateHakutoiveet(skipQuestions, focusObj) {
           applicationValidatorBounced($scope.application, beforeBackendValidation, success, error)
 
           function beforeBackendValidation() {
             setValidatingIndicator(true)
+          }
+
+          function returnFocusOn(focusObj) {
+            return function focusOn () {
+              var el = focusObj.el;
+              if (el) {
+                el.focus();
+                var val = el.value;
+                el.value = "";
+                el.value = val;
+                el.selectionStart = focusObj.caretPos;
+                el.selectionEnd = focusObj.caretPos;
+              }
+            };
           }
 
           function success(data) {
@@ -102,11 +134,8 @@ module.exports = function(app) {
 
             // Dirty hack to return focus to input after repainting
             // TODO: Maybe don't repaint dom at each onChange?
-            if (inputId) {
-              $timeout(function () {
-                var el = $element.find("#" + inputId);
-                if (el.length > 0) { el[0].focus(); }
-              }, 0);
+            if (!_.isEmpty(focusObj)) {
+              $timeout(returnFocusOn(focusObj), 0);
             }
           }
 
@@ -146,11 +175,8 @@ module.exports = function(app) {
             updateValidationMessages(errors, skipQuestions)
 
             // Same dirty hack as in the success handler
-            if (inputId) {
-              $timeout(function () {
-                var el = $element.find("#" + inputId);
-                if (el.length > 0) { el[0].focus(); }
-              }, 0);
+            if (!_.isEmpty(focusObj)) {
+              $timeout(returnFocusOn(focusObj), 0);
             }
 
           }
