@@ -14,7 +14,8 @@ module.exports = function(app) {
 
       link: function ($scope, $element, attrs) {
         $scope.localization = localization
-        var applicationValidatorBounced = debounce(applicationValidator(), settings.modelDebounce)
+        var applicationValidatorBounced = debounce(applicationValidator(), settings.modelDebounce);
+        var textInputValidatorBounced = debounce(applicationValidator(), 2000);
         $scope.isSaveable = true
         $scope.isValidating = false
 
@@ -101,7 +102,11 @@ module.exports = function(app) {
         }
 
         function validateHakutoiveet(skipQuestions, focusObj) {
-          applicationValidatorBounced($scope.application, beforeBackendValidation, success, error)
+          if (_.isEmpty(focusObj)) {
+            applicationValidatorBounced($scope.application, beforeBackendValidation, success, error);
+          } else {
+            textInputValidatorBounced($scope.application, beforeBackendValidation, success, error);
+          }
 
           function beforeBackendValidation() {
             setValidatingIndicator(true)
