@@ -26,8 +26,8 @@ module.exports = function(app) {
 
   app.controller("additionalQuestionController", ["$scope", "localization", function($scope, localization) {
     $scope.localization = localization
-    $scope.questionAnswered = function(questionId) {
-      $scope.$emit("questionAnswered", questionId)
+    $scope.questionAnswered = function() {
+      $scope.$emit("questionAnswered")
     }
   }])
 

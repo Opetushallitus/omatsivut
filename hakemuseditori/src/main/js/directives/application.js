@@ -15,7 +15,6 @@ module.exports = function(app) {
       link: function ($scope, $element, attrs) {
         $scope.localization = localization
         var applicationValidatorBounced = debounce(applicationValidator(), settings.modelDebounce);
-        var textInputValidatorBounced = debounce(applicationValidator(), 2000);
         $scope.isSaveable = true
         $scope.isValidating = false
 
@@ -77,13 +76,8 @@ module.exports = function(app) {
           return focusObj;
         }
 
-        $scope.$on("questionAnswered", function(event, inputId) {
-          if (inputId) {
-            var focusObj = focusInfo("#" + inputId);
-            validateHakutoiveet(false, focusObj);
-          } else {
-            validateHakutoiveet(false);
-          }
+        $scope.$on("questionAnswered", function(event) {
+          validateHakutoiveet(false);
         })
 
         $scope.hakutoiveVastaanotettu = function(hakutoive, updated) {
@@ -102,28 +96,10 @@ module.exports = function(app) {
         }
 
         function validateHakutoiveet(skipQuestions, focusObj) {
-          if (_.isEmpty(focusObj)) {
-            applicationValidatorBounced($scope.application, beforeBackendValidation, success, error);
-          } else {
-            textInputValidatorBounced($scope.application, beforeBackendValidation, success, error);
-          }
+          applicationValidatorBounced($scope.application, beforeBackendValidation, success, error);
 
           function beforeBackendValidation() {
             setValidatingIndicator(true)
-          }
-
-          function returnFocusOn(focusObj) {
-            return function focusOn () {
-              var el = focusObj.el;
-              if (el) {
-                el.focus();
-                var val = el.value;
-                el.value = "";
-                el.value = val;
-                el.selectionStart = focusObj.caretPos;
-                el.selectionEnd = focusObj.caretPos;
-              }
-            };
           }
 
           function success(data) {
@@ -137,11 +113,6 @@ module.exports = function(app) {
             $scope.application.tuloskirjeet = data.response.hakemus.tuloskirjeet
             updateValidationMessages([], skipQuestions)
 
-            // Dirty hack to return focus to input after repainting
-            // TODO: Maybe don't repaint dom at each onChange?
-            if (!_.isEmpty(focusObj)) {
-              $timeout(returnFocusOn(focusObj), 0);
-            }
           }
 
           function error(data) {
@@ -178,11 +149,6 @@ module.exports = function(app) {
             }
 
             updateValidationMessages(errors, skipQuestions)
-
-            // Same dirty hack as in the success handler
-            if (!_.isEmpty(focusObj)) {
-              $timeout(returnFocusOn(focusObj), 0);
-            }
 
           }
         }
