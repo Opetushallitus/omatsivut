@@ -26,13 +26,11 @@
             <input id="{{questionNode.id.questionId}}" type="text"
                    ng-switch-when="Text"
                    ng-blur="questionAnswered()"
-                   ng-focus="focused($event)"
                    ng-model="questionNode.answer"
                    maxlength="{{questionNode.maxlength}}"/>
             <textarea id="{{questionNode.id.questionId}}"
                       ng-switch-when="TextArea"
                       ng-model="questionNode.answer"
-                      ng-focus="focused($event)"
                       ng-blur="questionAnswered()"
                       maxlength="{{questionNode.maxlength}}"
                       rows="{{questionNode.rows || 4}}"

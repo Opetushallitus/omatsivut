@@ -67,16 +67,6 @@ module.exports = function(app) {
           validateHakutoiveet(false)
         })
 
-        $scope.$on("focusedElement", function (event, element) {
-          if (element) {
-            $scope.focusedElementId = element.id;
-            $scope.textSelection = {
-              start: element.selectionStart,
-              end: element.selectionEnd
-            };
-          }
-        })
-
         $scope.hakutoiveVastaanotettu = function(hakutoive, updated) {
           $scope.application.mergeSavedApplication(updated.hakemus)
           $timeout(function() {
@@ -99,16 +89,6 @@ module.exports = function(app) {
             setValidatingIndicator(true)
           }
 
-          function focusElement (element) {
-            $timeout(function () {
-              var el = angular.element(element)[0];
-              el.focus();
-              var val = el.value;
-              el.value = '';
-              el.value = val;
-            }, 10);
-          }
-
           function success(data) {
             setStatusMessage(localization("message.validationOk"), "info")
             $scope.isSaveable = true
@@ -119,9 +99,6 @@ module.exports = function(app) {
             $scope.application.notifications = data.response.hakemus.notifications
             $scope.application.tuloskirjeet = data.response.hakemus.tuloskirjeet
             updateValidationMessages([], skipQuestions)
-            if ($scope.focusedElementId) {
-              focusElement("#" + $scope.focusedElementId);
-            }
           }
 
           function error(data) {
@@ -158,9 +135,6 @@ module.exports = function(app) {
             }
 
             updateValidationMessages(errors, skipQuestions)
-            if ($scope.focusedElementId) {
-              focusElement("#" + $scope.focusedElementId);
-            }
           }
         }
 
