@@ -29,6 +29,9 @@ module.exports = function(app) {
     $scope.questionAnswered = function() {
       $scope.$emit("questionAnswered")
     }
+    $scope.focused = function ($event) {
+      $scope.$emit("focusedElement", $event.target);
+    }
   }])
 
   app.controller("hakutoiveController", ["$scope", "$timeout", "settings", "restResources", function($scope, $timeout, settings, restResources) {
