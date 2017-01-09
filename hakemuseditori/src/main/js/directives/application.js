@@ -60,6 +60,7 @@ module.exports = function(app) {
         $scope.$watch(getAnswers, function(answers, oldAnswers) {
           if (!_.isEqual(oldAnswers, answers)) {
             applicationChanged()
+            validateHakutoiveet(true)
           }
         }, true)
 
