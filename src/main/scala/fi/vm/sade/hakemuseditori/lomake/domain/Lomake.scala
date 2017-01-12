@@ -9,14 +9,6 @@ import scala.collection.JavaConversions._
 
 case class Lomake(oid: String, form: Form, private val additionalInformation: List[Element], maxHakutoiveet: Int, baseEducationDoesNotRestrictApplicationOptions: Boolean) {
   def requiresAdditionalInfo(application: ImmutableLegacyApplicationWrapper): Boolean = {
-    /*
-    // Other possible ways to write this and to make it a bit more clear
-    val solution1 = !(for(addInfo <- additionalInformation)
-      yield ElementWrapper.wrapFiltered(addInfo, application.flatAnswers)
-      ).filterNot(_.children.isEmpty).isEmpty
-    val solution2 = !additionalInformation.map(addInfo => ElementWrapper.wrapFiltered(addInfo, application.flatAnswers)).forall(_.children.isEmpty)
-    val solution3 = !additionalInformation.forall(ElementWrapper.wrapFiltered(_, application.flatAnswers).children.isEmpty)
-    */
     !application.attachments.isEmpty ||
       !(for(addInfo <- additionalInformation)
       yield ElementWrapper.wrapFiltered(addInfo, application.flatAnswers)
