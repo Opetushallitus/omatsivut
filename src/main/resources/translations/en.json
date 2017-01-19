@@ -130,7 +130,8 @@
     "valintatulosFailed": "An unexpected error occurred in retrieving the student selection results. Please try again later.",
     "invalidToken": "Your application cannot be viewed because the link is not valid.",
     "noTokenAvailable": "Something went wrong and your application cannot be viewed. If you copied the link from the email to this page, check that all the characters in the address are included.",
-    "noActiveApplication": "Your application has been inactivated."
+    "noActiveApplication": "Your application has been inactivated.",
+    "existingSelectionAvailable": "You cannot select same study place multiple times. Study place is already selected in another application"
   },
 
   "info": {
