@@ -51,7 +51,7 @@ trait ApplicationValidatorComponent {
         validateAndFindQuestions(haku, lomake, hakemusMuutos, storedApplication) match {
           case (app, errors, questions) =>
             val resultErrors = duplicateSelectionsInApplications ++ errors
-            HakemusInfo(hakemusConverter.convertToHakemus(None, Some(lomake), haku, app), resultErrors.distinct, questions, Some(paymentInfo))
+            HakemusInfo(hakemusConverter.convertToHakemus(None, Some(lomake), haku, app), resultErrors.distinct, questions, true, Some(paymentInfo))
         }
       } ("Error validating application: " + hakemusMuutos.oid)
     }

@@ -211,6 +211,8 @@ trait HakemusRepositoryComponent {
             } else {
               (None, true)
             }
+
+            val kelaURL: Option[String] = valintatulos.map(_ \ "kelaURL").flatMap(_.extractOpt[String])
             val letterForHaku = tuloskirjeService.getTuloskirjeInfo(haku.oid, application.oid)
             val hakemus = timed("fetchHakemukset -> hakemusConverter.convertToHakemus", 100) { hakemusConverter.convertToHakemus(letterForHaku, lomakeOption, haku, application, valintatulos) }
             timed("fetchHakemukset -> auditLogger.log", 100) { auditLogger.log(ShowHakemus(application.personOid, hakemus.oid, haku.oid)) }
@@ -218,11 +220,11 @@ trait HakemusRepositoryComponent {
             lomakeOption match {
               case Some(lomake) if haku.applicationPeriods.exists(_.active) =>
                 timed("fetchHakemukset -> applicationValidator.validateAndFindQuestions", 100) { applicationValidator.validateAndFindQuestions(haku, lomake, withNoPreferenceSpesificAnswers(hakemus), application) match {
-                    case (app, errors, questions) => HakemusInfo(hakemusConverter.convertToHakemus(letterForHaku, Some(lomake), haku, app, valintatulos), errors, questions, tulosOk, None)
+                    case (app, errors, questions) => HakemusInfo(hakemusConverter.convertToHakemus(letterForHaku, Some(lomake), haku, app, valintatulos), errors, questions, tulosOk, kelaURL, None)
                   }
                 }
               case _ =>
-                HakemusInfo(hakemus, List(), List(), tulosOk, None)
+                HakemusInfo(hakemus, List(), List(), tulosOk, kelaURL, None)
             }
           }
         }).sortBy[Option[Long]](_.hakemus.received).reverse
