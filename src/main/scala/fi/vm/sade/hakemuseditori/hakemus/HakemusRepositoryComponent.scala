@@ -7,7 +7,7 @@ import fi.vm.sade.hakemuseditori.auditlog._
 import fi.vm.sade.hakemuseditori.domain.Language
 import fi.vm.sade.hakemuseditori.domain.Language.Language
 import fi.vm.sade.hakemuseditori.hakemus.ImmutableLegacyApplicationWrapper.{LegacyApplicationAnswers, wrap}
-import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus.Answers
+import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus.{Valintatulos, Answers}
 import fi.vm.sade.hakemuseditori.hakemus.domain._
 import fi.vm.sade.hakemuseditori.hakumaksu.HakumaksuComponent
 import fi.vm.sade.hakemuseditori.lomake.LomakeRepositoryComponent
@@ -25,6 +25,7 @@ import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 import fi.vm.sade.utils.Timer._
 import fi.vm.sade.utils.slf4j.Logging
 import org.joda.time.LocalDateTime
+import org.json4s.DefaultFormats
 
 import scala.util.{Failure, Success, Try}
 
@@ -189,7 +190,10 @@ trait HakemusRepositoryComponent {
     def getHakemus(hakemusOid: String, fetchTulos: Boolean = true)(implicit lang: Language): Option[HakemusInfo] = {
       fetchHakemukset(new Application().setOid(hakemusOid), fetchTulos).headOption
     }
-
+    private def getKelaUrl(valintatulos: Option[Valintatulos]): Option[String] = {
+      implicit val formats = DefaultFormats
+      valintatulos.map(_ \ "kelaURL").flatMap(_.extractOpt[String])
+    }
     private def fetchHakemukset(query: Application, fetchTulos: Boolean)(implicit lang: Language): List[HakemusInfo] = {
       timed("Application fetch", 1000){
         val legacyApplications: List[ImmutableLegacyApplicationWrapper] = timed("Application fetch DAO", 1000){
@@ -211,8 +215,7 @@ trait HakemusRepositoryComponent {
             } else {
               (None, true)
             }
-
-            val kelaURL: Option[String] = valintatulos.map(_ \ "kelaURL").flatMap(_.extractOpt[String])
+            val kelaURL: Option[String] = getKelaUrl(valintatulos)
             val letterForHaku = tuloskirjeService.getTuloskirjeInfo(haku.oid, application.oid)
             val hakemus = timed("fetchHakemukset -> hakemusConverter.convertToHakemus", 100) { hakemusConverter.convertToHakemus(letterForHaku, lomakeOption, haku, application, valintatulos) }
             timed("fetchHakemukset -> auditLogger.log", 100) { auditLogger.log(ShowHakemus(application.personOid, hakemus.oid, haku.oid)) }
