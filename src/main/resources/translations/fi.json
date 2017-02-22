@@ -5,7 +5,12 @@
 
   "sidebar": {
     "opintopolku": "Oma opintopolku",
-    "applications": "Omat hakemukset"
+    "applications": "Omat hakemukset",
+    "opintoetuudet": {
+      "title": "Kelan opintoetuudet",
+      "pikaopas": "Pikaopas opintoetuuksiin",
+      "opintotukihakemus": "Tee opintotukihakemus"
+    }
   },
 
   "label": {
