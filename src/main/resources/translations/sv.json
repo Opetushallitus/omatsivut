@@ -5,7 +5,12 @@
 
   "sidebar": {
     "opintopolku": "Min Studieinfo",
-    "applications": "Mina ansökningsblanketter"
+    "applications": "Mina ansökningsblanketter",
+    "opintoetuudet": {
+      "title": "Kelan opintoetuudet",
+      "pikaopas": "Pikaopas opintoetuuksiin",
+      "opintotukihakemus": "Tee opintotukihakemus"
+    }
   },
 
   "label": {

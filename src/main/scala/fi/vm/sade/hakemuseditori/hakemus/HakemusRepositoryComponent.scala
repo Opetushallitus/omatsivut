@@ -215,7 +215,7 @@ trait HakemusRepositoryComponent {
             } else {
               (None, true)
             }
-            val kelaURL: Option[String] = getKelaUrl(valintatulos)
+            val kelaURL: Option[String] = Some("http://kela.fi")//getKelaUrl(valintatulos)
             val letterForHaku = tuloskirjeService.getTuloskirjeInfo(haku.oid, application.oid)
             val hakemus = timed("fetchHakemukset -> hakemusConverter.convertToHakemus", 100) { hakemusConverter.convertToHakemus(letterForHaku, lomakeOption, haku, application, valintatulos) }
             timed("fetchHakemukset -> auditLogger.log", 100) { auditLogger.log(ShowHakemus(application.personOid, hakemus.oid, haku.oid)) }

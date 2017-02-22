@@ -17,6 +17,10 @@
                     {{ localization("sidebar.applications") }}
                 </li>
             </ul>
+            <div ng-show="kelaURL">
+                <h3>{{ localization("sidebar.opintoetuudet.title") }}</h3>
+                <a href="{{kelaURL}}">{{ localization("sidebar.opintoetuudet.opintotukihakemus") }}</a>
+            </div>
         </div>
         <application-list></application-list>
     </div>
