@@ -1092,6 +1092,9 @@
           it("Oili-linkki tulee näkyviin", function() {
             expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.ilmoittautuminen(0).visible).to.equal(true)
           })
+          it("Kela-linkki tulee näkyviin", function() {
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.ilmoittautuminen(0).visible).to.equal(true)
+          })
         })
       })
       describe("Jos on saanut ehdollisesti paikan, muttei vielä ottanut sitä vastaan", function() {

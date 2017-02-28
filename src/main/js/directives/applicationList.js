@@ -1,7 +1,7 @@
 var Hakemus = require('./hakemuseditori').Hakemus
 
 module.exports = function(listApp) {
-  listApp.directive("applicationList", ["localization", "restResources", "$rootScope", function (localization, restResources, $rootScope) {
+  listApp.directive("applicationList", ["localization", "restResources", function (localization, restResources) {
     return {
       restrict: 'E',
       scope: true,
@@ -21,12 +21,6 @@ module.exports = function(listApp) {
         }
 
         function success(data) {
-          $rootScope.kelaURL = _.chain(data)
-            .map(function(d) {return d.kelaURL;})
-            .filter(function(k) {return k != undefined;})
-            .head()
-            .value()
-
           $scope.applications = _.map(data, function(json) { return new Hakemus(json) })
           if($scope.applications.length > 0) {
             $scope.applicationStatusMessage = ""

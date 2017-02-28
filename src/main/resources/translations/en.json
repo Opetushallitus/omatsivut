@@ -5,12 +5,7 @@
 
   "sidebar": {
     "opintopolku": "My Studyinfo",
-    "applications": "My applications",
-    "opintoetuudet": {
-      "title": "Kelan opintoetuudet",
-      "pikaopas": "Pikaopas opintoetuuksiin",
-      "opintotukihakemus": "Tee opintotukihakemus"
-    }
+    "applications": "My applications"
   },
 
   "label": {
@@ -170,7 +165,15 @@
     "pleaseRegister": "Register for the semester",
     "goToRegistration": "Go to registration",
     "conditionalAcceptanceTitle": "The student admission is still conditional.",
-    "conditionalAcceptanceInfo": "You can register after the admission has been confirmed."
+    "conditionalAcceptanceInfo": "You can register after the admission has been confirmed.",
+    "whatToDoNext": "Mitä teen seuraavaksi",
+    "notifyKela": "(Kela saa tiedon opiskelupaikan vastaanotosta)",
+    "here": "tästä",
+    "opintoetuudet": {
+      "studentFinancialAid": "Kelan opintoetuudet",
+      "pikaopas": "Pikaopas opintoetuuksiin",
+      "opintotukihakemus": "Tee opintotukihakemus"
+    }
   },
 
   "emailNote": {

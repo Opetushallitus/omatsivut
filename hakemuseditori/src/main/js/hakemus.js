@@ -174,6 +174,12 @@ Hakemus.prototype = {
     })
   },
 
+  kelaURL: function() {
+    return _.chain(this.valintatulosHakutoiveet()).map(function(tulos) {
+      return tulos.kelaURL
+    }).filter(function(k) {return k}).head().value()
+  },
+
   hasResultState: function(resultStates) {
     if (!_.isArray(resultStates))
       resultStates = [resultStates]
