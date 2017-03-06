@@ -110,6 +110,7 @@ class UpdateApplicationSpec extends HakemusApiSpecification with FixturePerson w
 
     "apply hiddenValues on the form" in {
       fixtureImporter.applyFixtures()
+      fixtureImporter.applyFixtures(selector = "application/00000441368.json")
 
       def removeDiscretionaryFlags(hakemus: Hakemus) = {
         // remove the discretionary flag to be able to test that it is automatically applied from the form
@@ -130,6 +131,7 @@ class UpdateApplicationSpec extends HakemusApiSpecification with FixturePerson w
 
 
     "reject answers to unknown questions" in {
+      fixtureImporter.applyFixtures()
       modifyHakemus(hakemusNivelKesa2013WithPeruskouluBaseEducationId)(answerExtraQuestion(hakutoiveet, "unknown", "hacking")) { hakemus =>
         status must_== 400
       }
@@ -167,6 +169,7 @@ class UpdateApplicationSpec extends HakemusApiSpecification with FixturePerson w
 
     "reject update of application that is not ACTIVE or INCOMPLETE" in {
       setupFixture("submittedApplication")
+      fixtureImporter.applyFixtures(fixtureName = "submittedApplication", selector = "application/00000441368.json")
       modifyHakemus(hakemusYhteishakuKevat2014WithForeignBaseEducationId)((hakemus) => hakemus) { hakemus =>
         status must_== 403
       }
@@ -174,6 +177,7 @@ class UpdateApplicationSpec extends HakemusApiSpecification with FixturePerson w
 
     "reject update of application that is in post processing" in {
       setupFixture("postProcessingFailed")
+      fixtureImporter.applyFixtures(fixtureName = "postProcessingFailed", selector = "application/00000441368.json")
       modifyHakemus(hakemusYhteishakuKevat2014WithForeignBaseEducationId)((hakemus) => hakemus) { hakemus =>
         status must_== 403
       }

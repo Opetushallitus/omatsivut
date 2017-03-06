@@ -61,7 +61,10 @@ function ApplicationApi() {
           switch (inputType(input)) {
             case "TEXT":
             case "TEXTAREA":
-              input.val(answer).change(); break;
+              input.val(answer);
+              input.change();
+              input.blur();
+              break;
             case "CHECKBOX":
               var option = _(input).find(function(item) { return $(item).parent().text().trim() == answer })
               $(option).click()

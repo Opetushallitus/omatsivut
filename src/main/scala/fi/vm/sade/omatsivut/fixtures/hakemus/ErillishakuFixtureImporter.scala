@@ -33,7 +33,7 @@ class ErillishakuFixtureImporter(appConfig: AppConfig, springContext: HakemusSpr
       "091",
       false,
       "FIN",
-      ""
+      "NOT_REQUIRED"
     )
 
     val hakukohde: String = "1.2.246.562.5.72607738902"

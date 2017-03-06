@@ -2725,7 +2725,7 @@
     })
 
     describe("Liitepyyntölinkki", function() {
-      before(page.applyFixtureAndOpen({}))
+      before(page.applyFixtureAndOpen({applicationOid: hakemusKorkeakouluId}))
       describe("Jos tallennettuun hakemukseen liittyy lisätietopyyntöjä", function() {
         describe("Jos hakukohteita muokataan", function() {
           before(
@@ -2756,7 +2756,10 @@
       })
 
       describe("Jos tallennettuun hakemukseen ei liity lisätietopyyntöjä", function() {
-        before(hakemusNivelKesa2013WithPeruskouluBaseEducation.getPreference(0).moveDown, hakemusNivelKesa2013WithPeruskouluBaseEducation.saveWaitSuccess)
+        before(
+            page.applyFixtureAndOpen({applicationOid: hakemusNivelKesa2013WithPeruskouluBaseEducationId}),
+            hakemusNivelKesa2013WithPeruskouluBaseEducation.getPreference(0).moveDown,
+            hakemusNivelKesa2013WithPeruskouluBaseEducation.saveWaitSuccess)
         it("liitepyyntöjä ei näytetä", function() {
           hakemusNivelKesa2013WithPeruskouluBaseEducation.calloutText().should.equal("")
         })
