@@ -177,13 +177,9 @@
     "goToRegistration": "Anmäl dig",
     "conditionalAcceptanceTitle": "Studerandeantagningen är ännu villkorlig.",
     "conditionalAcceptanceInfo": "Du kan anmäla dig först efter att antagningen har bekräftats.",
-    "whatToDoNext": "Mitä teen seuraavaksi",
-    "notifyKela": "(Kela saa tiedon opiskelupaikan vastaanotosta)",
-    "here": "tästä",
     "opintoetuudet": {
-      "studentFinancialAid": "Hae opintotukea",
-      "pikaopas": "Pikaopas opintoetuuksiin",
-      "opintotukihakemus": "Tee opintotukihakemus"
+      "studentFinancialAid": "Siirry Kelan asiointipalveluun",
+      "opintotukihakemus": "Gör studiestödsansökan"
     }
   },
 
