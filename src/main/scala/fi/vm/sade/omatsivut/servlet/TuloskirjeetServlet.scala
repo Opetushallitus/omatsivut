@@ -42,7 +42,7 @@ trait TuloskirjeetServletContainer {
     get("/:token/tuloskirje.pdf") {
       (for {
         hakemusOid <- oppijanTunnistusService.validateToken(params("token"))
-        hakemusInfo <- Try(hakemusRepository.getHakemus(hakemusOid, false).getOrElse(throw new NoSuchElementException))
+        hakemusInfo <- Try(hakemusRepository.getHakemus(hakemusOid, _ =>false).getOrElse(throw new NoSuchElementException))
         tuloskirje <- Try(tuloskirjeService.fetchTuloskirje(hakemusInfo.hakemus.haku.oid, hakemusOid, ""))
       } yield {
         tuloskirje match {
