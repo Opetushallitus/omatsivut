@@ -177,13 +177,8 @@
     "goToRegistration": "Siirry ilmoittautumaan",
     "conditionalAcceptanceTitle": "Opiskelijavalintasi on vielä ehdollinen.",
     "conditionalAcceptanceInfo": "Pääset ilmoittautumaan vasta valinnan vahvistamisen jälkeen.",
-    "getStudentFinancialAid": "Hae opintotukea Kelan palvelussa",
-    "whatToDoNext": "Mitä teen seuraavaksi",
-    "notifyKela": "(Kela saa tiedon opiskelupaikan vastaanotosta)",
-    "here": "tästä",
     "opintoetuudet": {
-      "studentFinancialAid": "Hae opintotukea",
-      "pikaopas": "Pikaopas opintoetuuksiin",
+      "studentFinancialAid": "Siirry Kelan asiointipalveluun",
       "opintotukihakemus": "Tee opintotukihakemus"
     }
   },

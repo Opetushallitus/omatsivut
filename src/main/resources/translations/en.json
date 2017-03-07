@@ -177,13 +177,9 @@
     "goToRegistration": "Go to registration",
     "conditionalAcceptanceTitle": "The student admission is still conditional.",
     "conditionalAcceptanceInfo": "You can register after the admission has been confirmed.",
-    "whatToDoNext": "Mitä teen seuraavaksi",
-    "notifyKela": "(Kela saa tiedon opiskelupaikan vastaanotosta)",
-    "here": "tästä",
     "opintoetuudet": {
-      "studentFinancialAid": "Kelan opintoetuudet",
-      "pikaopas": "Pikaopas opintoetuuksiin",
-      "opintotukihakemus": "Tee opintotukihakemus"
+      "studentFinancialAid": "Siirry Kelan asiointipalveluun",
+      "opintotukihakemus": "Apply for student financial aid"
     }
   },
 
