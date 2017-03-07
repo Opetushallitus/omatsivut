@@ -1035,7 +1035,7 @@
       })
       describe("jos on saanut paikan kk erillishaussa", function() {
         before(
-            page.applyValintatulosFixtureAndOpen("hyvaksytty-ylempi-sijoittelematon", {"haku": "korkeakoulu-erillishaku"})
+            page.applyValintatulosFixtureAndOpen("hyvaksytty-ylempi-sijoittelematon", {"haku": "korkeakoulu-erillishaku-ei-sijoittelua"})
         )
         it("hakemusta ei voi muokata", function () {
           expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.preferencesForApplication().length).to.equal(0)
@@ -1125,7 +1125,7 @@
         })
       })
       describe("Jos on saanut kaksi paikkaa kk haussa, jossa yhden paikan sääntö ei ole voimassa", function() {
-        before(page.applyValintatulosFixtureAndOpen("hyvaksytty-kaikkiin", {"haku": "korkeakoulu-erillishaku-ei-yhden-paikan-saantoa"}))
+        before(page.applyValintatulosFixtureAndOpen("hyvaksytty-kaikkiin", {"haku": "korkeakoulu-erillishaku-ei-yhden-paikan-saantoa-ei-sijoittelua"}))
 
         describe("Kun ensimmäinen paikka otetaan vastaan", function() {
           before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VastaanotaSitovasti"))

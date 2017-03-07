@@ -18,4 +18,6 @@ object SharedJetty {
   def start {
     jettyLauncher.start
   }
+
+  def main(args: Array[String]) = start
 }
