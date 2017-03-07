@@ -60,4 +60,6 @@ case class ImmutableLegacyApplicationWrapper(
                                               requiredPaymentState: Option[String]) {
   def phaseAnswers(phase: String): Map[String, String] = answers.getOrElse(phase, Map.empty)
   lazy val flatAnswers = FlatAnswers.flatten(answers)
+
+  def henkilotunnus: Option[String] = answers.get("henkilotiedot").flatMap(_.get("Henkilotunnus"))
 }
