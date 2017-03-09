@@ -42,6 +42,7 @@
 
     "resultState": {
       "EhdollinenPostfix": " (villkorlig)",
+      "EhdollisenHyvaksymisenEhdonKentanNimi": "ehdollisenHyvaksymisenEhtoSV",
       "Hyvaksytty": "Godkänd",
       "Kesken": "Studerandeantagningen_oavslutad",
       "HarkinnanvaraisestiHyvaksytty": "Godkänd_enligt_prövning",
