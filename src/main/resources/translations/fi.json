@@ -51,6 +51,7 @@
 
     "resultState": {
       "EhdollinenPostfix": " (ehdollinen)",
+      "EhdollisenHyvaksymisenEhdonKentanNimi": "ehdollisenHyvaksymisenEhtoFI",
       "Hyvaksytty": "Hyväksytty",
       "HyvaksyttyKesken": "Hyväksytty_(odottaa_ylempien_hakukohteiden_tuloksia)",
       "Kesken": "Opiskelijavalinta_kesken",

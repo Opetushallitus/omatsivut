@@ -51,6 +51,7 @@
 
     "resultState": {
       "EhdollinenPostfix": " (conditional)",
+      "EhdollisenHyvaksymisenEhdonKentanNimi": "ehdollisenHyvaksymisenEhtoEN",
       "Hyvaksytty": "Accepted",
       "HyvaksyttyKesken": "Accepted_(awaiting_results_from_your_higher_preferences)",
       "Kesken": "Student_admission_process_unfinished",
