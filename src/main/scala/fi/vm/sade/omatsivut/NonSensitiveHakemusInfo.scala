@@ -11,14 +11,7 @@ import org.json4s.{CustomSerializer, Extraction}
 class NonSensitiveHakemus(sensitiveHakemus: Hakemus, nonSensitiveAnswers: Set[AnswerId]) {
   val hakemus = sensitiveHakemus.copy(
     answers = NonSensitiveHakemusInfo.filterAnswers(sensitiveHakemus.answers, nonSensitiveAnswers ++ NonSensitiveHakemusInfo.nonSensitiveAnswers),
-    state = sensitiveHakemus.state match {
-      case s: Active => s.copy(valintatulos = None)
-      case s: HakukausiPaattynyt => s.copy(valintatulos = None)
-      case s: HakukierrosPaattynyt => s.copy(valintatulos = None)
-      case s: HakemuksenTila => s
-    })
-
-
+    state = sensitiveHakemus.state)
 }
 
 class NonSensitiveHakemusInfo(sensitiveHakemusInfo: HakemusInfo, nonSensitiveAnswers: Set[AnswerId]) {
