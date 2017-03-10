@@ -62,4 +62,5 @@ case class ImmutableLegacyApplicationWrapper(
   lazy val flatAnswers = FlatAnswers.flatten(answers)
 
   def henkilotunnus: Option[String] = answers.get("henkilotiedot").flatMap(_.get("Henkilotunnus"))
+  def sähköposti: Option[String] = answers.get("henkilotiedot").flatMap(_.get("Sähköposti"))
 }
