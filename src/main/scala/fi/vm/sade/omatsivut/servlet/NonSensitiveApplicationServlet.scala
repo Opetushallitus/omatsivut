@@ -38,22 +38,25 @@ trait VastaanottoEmailContainer {
     HakemusEditoriComponent with
     GroupEmailComponent =>
 
-  def vastaanota(hakemusOid: String, hakukohdeOid: String, hakuOid: String, henkiloOid: String, requestBody: String)(implicit jsonFormats: Formats, language: Language): ActionResult = {
+  def vastaanota(hakemusOid: String, hakukohdeOid: String, hakuOid: String, henkiloOid: String, requestBody: String, emailOpt: Option[String])(implicit jsonFormats: Formats, language: Language): ActionResult = {
     def sendEmail(clientVastaanotto: ClientSideVastaanotto) = {
-      if ("" != clientVastaanotto.email) {
-        val subject = translations.getTranslation("message", "acceptEducation", "email", "subject")
+      emailOpt match {
+        case Some(email: String) =>
+          val subject = translations.getTranslation("message", "acceptEducation", "email", "subject")
 
-        val dateFormat = new SimpleDateFormat(translations.getTranslation("message", "acceptEducation", "email", "dateFormat"))
-        val dateAndTime = dateFormat.format(Calendar.getInstance().getTime)
-        val answer = translations.getTranslation("message", "acceptEducation", "email", "tila", clientVastaanotto.vastaanottoAction.toString)
-        val aoInfoRow = List(answer, clientVastaanotto.tarjoajaNimi, clientVastaanotto.hakukohdeNimi).mkString(" - ")
-        val body = translations.getTranslation("message", "acceptEducation", "email", "body")
-          .format(dateAndTime, aoInfoRow)
-          .replace("\n", "\n<br>")
+          val dateFormat = new SimpleDateFormat(translations.getTranslation("message", "acceptEducation", "email", "dateFormat"))
+          val dateAndTime = dateFormat.format(Calendar.getInstance().getTime)
+          val answer = translations.getTranslation("message", "acceptEducation", "email", "tila", clientVastaanotto.vastaanottoAction.toString)
+          val aoInfoRow = List(answer, clientVastaanotto.tarjoajaNimi, clientVastaanotto.hakukohdeNimi).mkString(" - ")
+          val body = translations.getTranslation("message", "acceptEducation", "email", "body")
+            .format(dateAndTime, aoInfoRow)
+            .replace("\n", "\n<br>")
 
-        val email = EmailMessage("omatsivut", subject, body, html = true)
-        val recipients = List(EmailRecipient(clientVastaanotto.email))
-        groupEmailService.sendMailWithoutTemplate(EmailData(email, recipients))
+          val emailMessage = EmailMessage("omatsivut", subject, body, html = true)
+          val recipients = List(EmailRecipient(email))
+          groupEmailService.sendMailWithoutTemplate(EmailData(emailMessage, recipients))
+        case _ =>
+
       }
     }
     val clientVastaanotto = Serialization.read[ClientSideVastaanotto](requestBody)
@@ -64,7 +67,7 @@ trait VastaanottoEmailContainer {
         } catch {
           case e: Exception => logger.error(
             s"""Vastaanottosähköpostin lähetys epäonnistui: haku / hakukohde / hakemus / hakija / email / clientVastaanotto :
-            $hakuOid / $hakukohdeOid / $hakemusOid / $henkiloOid / ${clientVastaanotto.email} / $clientVastaanotto""".stripMargin)
+            $hakuOid / $hakukohdeOid / $hakemusOid / $henkiloOid / ${emailOpt} / $clientVastaanotto""".stripMargin)
         }
         auditLogger.log(SaveVastaanotto(henkiloOid, hakemusOid, hakukohdeOid, hakuOid, clientVastaanotto.vastaanottoAction))
         hakemusRepository.getHakemus(hakemusOid) match {
@@ -194,7 +197,7 @@ trait NonSensitiveApplicationServletContainer {
       applicationRepository.findStoredApplicationByPersonAndOid(henkiloOid, hakemusOid) match {
 
         case Some(hakemus) if tarjontaService.haku(hakemus.hakuOid, Language.fi).exists(_.published) =>
-          vastaanota(hakemusOid, hakukohdeOid, hakemus.hakuOid, henkiloOid, request.body)
+          vastaanota(hakemusOid, hakukohdeOid, hakemus.hakuOid, henkiloOid, request.body, hakemus.sähköposti)
 
         case _ => NotFound("error" -> "Not found")
 
