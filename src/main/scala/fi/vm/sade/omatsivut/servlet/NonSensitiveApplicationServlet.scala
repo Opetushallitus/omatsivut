@@ -1,6 +1,14 @@
 package fi.vm.sade.omatsivut.servlet
 
+import java.text.SimpleDateFormat
+import java.util.Calendar
+
+import fi.vm.sade.groupemailer.{GroupEmailComponent, EmailData, EmailRecipient, EmailMessage}
 import fi.vm.sade.hakemuseditori._
+import fi.vm.sade.hakemuseditori.auditlog.SaveVastaanotto
+import fi.vm.sade.hakemuseditori.domain.Language
+import fi.vm.sade.hakemuseditori.domain.Language
+import fi.vm.sade.hakemuseditori.domain.Language.Language
 import fi.vm.sade.hakemuseditori.hakemus.domain.HakemusMuutos
 import fi.vm.sade.hakemuseditori.hakemus.{ImmutableLegacyApplicationWrapper, HakemusInfo, HakemusRepositoryComponent}
 import fi.vm.sade.hakemuseditori.json.JsonFormats
@@ -11,6 +19,7 @@ import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.oppijantunnistus.{ExpiredTokenException, InvalidTokenException, OppijanTunnistusComponent}
 import fi.vm.sade.omatsivut.security.{HakemusJWT, JsonWebToken}
 import fi.vm.sade.omatsivut.{NonSensitiveHakemus, NonSensitiveHakemusInfo, NonSensitiveHakemusInfoSerializer, NonSensitiveHakemusSerializer}
+import org.json4s.Formats
 import org.json4s.jackson.Serialization
 import org.scalatra._
 import org.scalatra.json.JacksonJsonSupport
@@ -24,13 +33,67 @@ sealed trait InsecureResponse {
 case class InsecureHakemus(jsonWebToken: String, response: NonSensitiveHakemus) extends InsecureResponse
 case class InsecureHakemusInfo(jsonWebToken: String, response: NonSensitiveHakemusInfo) extends InsecureResponse
 
+trait VastaanottoEmailContainer {
+  this: HakemusRepositoryComponent with
+    HakemusEditoriComponent with
+    GroupEmailComponent =>
+
+  def vastaanota(hakemusOid: String, hakukohdeOid: String, hakuOid: String, henkiloOid: String, requestBody: String)(implicit jsonFormats: Formats, language: Language): ActionResult = {
+    def sendEmail(clientVastaanotto: ClientSideVastaanotto) = {
+      if ("" != clientVastaanotto.email) {
+        val subject = translations.getTranslation("message", "acceptEducation", "email", "subject")
+
+        val dateFormat = new SimpleDateFormat(translations.getTranslation("message", "acceptEducation", "email", "dateFormat"))
+        val dateAndTime = dateFormat.format(Calendar.getInstance().getTime)
+        val answer = translations.getTranslation("message", "acceptEducation", "email", "tila", clientVastaanotto.vastaanottoAction.toString)
+        val aoInfoRow = List(answer, clientVastaanotto.tarjoajaNimi, clientVastaanotto.hakukohdeNimi).mkString(" - ")
+        val body = translations.getTranslation("message", "acceptEducation", "email", "body")
+          .format(dateAndTime, aoInfoRow)
+          .replace("\n", "\n<br>")
+
+        val email = EmailMessage("omatsivut", subject, body, html = true)
+        val recipients = List(EmailRecipient(clientVastaanotto.email))
+        groupEmailService.sendMailWithoutTemplate(EmailData(email, recipients))
+      }
+    }
+    val clientVastaanotto = Serialization.read[ClientSideVastaanotto](requestBody)
+    try {
+      if (valintatulosService.vastaanota(henkiloOid, hakemusOid, hakukohdeOid, clientVastaanotto.vastaanottoAction)) {
+        try {
+          sendEmail(clientVastaanotto)
+        } catch {
+          case e: Exception => logger.error(
+            s"""Vastaanottosähköpostin lähetys epäonnistui: haku / hakukohde / hakemus / hakija / email / clientVastaanotto :
+            $hakuOid / $hakukohdeOid / $hakemusOid / $henkiloOid / ${clientVastaanotto.email} / $clientVastaanotto""".stripMargin)
+        }
+        auditLogger.log(SaveVastaanotto(henkiloOid, hakemusOid, hakukohdeOid, hakuOid, clientVastaanotto.vastaanottoAction))
+        hakemusRepository.getHakemus(hakemusOid) match {
+          case Some(hakemus) => Ok(hakemus)
+          case _ => NotFound("error" -> "Not found")
+        }
+      }
+      else {
+        Forbidden("error" -> "Not receivable")
+      }
+
+    } catch {
+      case e: Throwable =>
+        logger.error("failure in background service call", e)
+        InternalServerError("error" -> "Background service failed")
+    }
+  }
+
+}
+
 trait NonSensitiveApplicationServletContainer {
   this: HakemusRepositoryComponent with
     HakemusEditoriComponent with
+    GroupEmailComponent with
+    VastaanottoEmailContainer with
     OppijanTunnistusComponent =>
 
-  class NonSensitiveApplicationServlet(val appConfig: AppConfig) extends OmatSivutServletBase with JacksonJsonSupport with HakemusEditori with HakemusEditoriUserContext {
-    implicit val jsonFormats = JsonFormats.jsonFormats ++ List(new NonSensitiveHakemusSerializer, new NonSensitiveHakemusInfoSerializer)
+  class NonSensitiveApplicationServlet(val appConfig: AppConfig) extends OmatSivutServletBase with JsonFormats with JacksonJsonSupport with HakemusEditori with HakemusEditoriUserContext {
+    override implicit val jsonFormats = JsonFormats.jsonFormats ++ List(new NonSensitiveHakemusSerializer, new NonSensitiveHakemusInfoSerializer)
     protected val applicationDescription = "Oppijan henkilökohtaisen palvelun REST API, jolla voi muokata hakemusta heikosti tunnistautuneena"
     private val hakemusEditori = newEditor(this)
     private val jwt = new JsonWebToken(appConfig.settings.hmacKey)
@@ -121,6 +184,21 @@ trait NonSensitiveApplicationServletContainer {
       } yield {
         Ok(InsecureHakemusInfo(jwt.encode(token), new NonSensitiveHakemusInfo(hakemus, token.answersFromThisSession)))
       }).get
+    }
+
+    post("/vastaanota/:hakemusOid/hakukohde/:hakukohdeOid") {
+      val hakemusOid = params("hakemusOid")
+      val hakukohdeOid = params("hakukohdeOid")
+      val henkiloOid = getPersonOidFromSession
+
+      applicationRepository.findStoredApplicationByPersonAndOid(henkiloOid, hakemusOid) match {
+
+        case Some(hakemus) if tarjontaService.haku(hakemus.hakuOid, Language.fi).exists(_.published) =>
+          vastaanota(hakemusOid, hakukohdeOid, hakemus.hakuOid, henkiloOid, request.body)
+
+        case _ => NotFound("error" -> "Not found")
+
+      }
     }
 
     get("/application/token/:token") {
