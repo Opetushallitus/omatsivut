@@ -107,7 +107,7 @@ case class QuestionsPreview(implicit translations: Translations, language: Langu
       case e: SocialSecurityNumber  => textQuestionPreview(ew, answers)
       case e: TextQuestion          => textQuestionPreview(ew, answers, showEmptyValues)
       case e: DateQuestion          => textQuestionPreview(ew, answers)
-      case e: RichText              => List(textPreview(ew))
+      case e: RichText              => List(richTextPreview(ew))
       case e =>
         logger.warn("Ignoring element " + e.getType + ": " + e.getId)
         Nil
@@ -272,6 +272,10 @@ case class QuestionsPreview(implicit translations: Translations, language: Langu
 
   def textPreview(element: ElementWrapper) = {
     div(`class` := "text")(element.title)
+  }
+
+  def richTextPreview(element: ElementWrapper) = {
+    div(`class` := "text")(raw(element.title))
   }
 
   def linkPreview(element: ElementWrapper, link: Link) = {
