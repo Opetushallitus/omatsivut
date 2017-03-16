@@ -24,7 +24,7 @@ module.exports = function(app) {
         $scope.localization = localization
         $scope.VASTAANOTTOTILA = VASTAANOTTOTILA
         $scope.error = false
-        $scope.language = readLanguageCookie();
+        $scope.language = localization.language
 
         $scope.formatDate = function(dt) {
           if (dt == null)
@@ -65,7 +65,7 @@ module.exports = function(app) {
           } else if(hyvaksytty(valintatulos) && valintatulos.ehdollisestiHyvaksyttavissa) {
             var ehdollisenHyvaksymisenKenttaEhto = localization("label.resultState.EhdollisenHyvaksymisenEhdonKentanNimi")
             if (valintatulos.ehdollisenHyvaksymisenEhtoKoodi != undefined && valintatulos.ehdollisenHyvaksymisenEhtoKoodi != null) {
-              return localization("label.resultState." + key) + ' ' + valintatulos[ehdollisenHyvaksymisenKenttaEhto];
+              return localization("label.resultState." + key) + ' (' + valintatulos[ehdollisenHyvaksymisenKenttaEhto] + ')';
             }
             return localization("label.resultState." + key) + localization("label.resultState.EhdollinenPostfix")
           } else {
