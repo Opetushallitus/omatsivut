@@ -21,5 +21,9 @@ module.exports = function(listApp, resources) {
       else
         return replaceVars(val, vars || {})
     }
+    
+    var language = function () {
+      return resources.language
+    }
   }])
 }
