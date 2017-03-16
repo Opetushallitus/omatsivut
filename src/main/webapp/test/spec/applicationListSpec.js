@@ -1124,7 +1124,18 @@
           })
         })
       })
-      describe("Jos on saanut kaksi paikkaa kk haussa, jossa yhden paikan sääntö ei ole voimassa", function() {
+
+        describe("Jos on saanut ehdollisesti paikan, muttei vielä ottanut sitä vastaan näyttää ehdollisen hyvaksymisen syyn", function() {
+            before(page.applyValintatulosFixtureAndOpen("hyvaksytty-ehdollisesti-syy-kesken-julkaistavissa"))
+
+            describe("Ennen vastaanottoa suomi", function () {
+              it("Näkyy ehdollisesti hyväksyttynä", function () {
+                expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].tila).to.equal('Hyväksytty (ehto suomi)')
+              })
+            })
+        })
+
+            describe("Jos on saanut kaksi paikkaa kk haussa, jossa yhden paikan sääntö ei ole voimassa", function() {
         before(page.applyValintatulosFixtureAndOpen("hyvaksytty-kaikkiin", {"haku": "korkeakoulu-erillishaku-ei-yhden-paikan-saantoa-ei-sijoittelua"}))
 
         describe("Kun ensimmäinen paikka otetaan vastaan", function() {
