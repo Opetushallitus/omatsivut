@@ -9,6 +9,7 @@ import fi.vm.sade.hakemuseditori.auditlog.SaveVastaanotto
 import fi.vm.sade.hakemuseditori.domain.Language
 import fi.vm.sade.hakemuseditori.domain.Language
 import fi.vm.sade.hakemuseditori.domain.Language.Language
+import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus.Valintatulos
 import fi.vm.sade.hakemuseditori.hakemus.domain.HakemusMuutos
 import fi.vm.sade.hakemuseditori.hakemus.{ImmutableLegacyApplicationWrapper, HakemusInfo, HakemusRepositoryComponent}
 import fi.vm.sade.hakemuseditori.json.JsonFormats
@@ -19,7 +20,9 @@ import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.oppijantunnistus.{ExpiredTokenException, InvalidTokenException, OppijanTunnistusComponent}
 import fi.vm.sade.omatsivut.security.{HakemusJWT, JsonWebToken}
 import fi.vm.sade.omatsivut.{NonSensitiveHakemus, NonSensitiveHakemusInfo, NonSensitiveHakemusInfoSerializer, NonSensitiveHakemusSerializer}
-import org.json4s.Formats
+import org.apache.commons.lang3.StringUtils
+import org.json4s.JsonAST.JField
+import org.json4s._
 import org.json4s.jackson.Serialization
 import org.scalatra._
 import org.scalatra.json.JacksonJsonSupport
@@ -145,7 +148,32 @@ trait NonSensitiveApplicationServletContainer {
       def fetchTulosForNonHetuHakemus(hakemus: ImmutableLegacyApplicationWrapper) = {
         hakemus.henkilotunnus.isEmpty
       }
-      hakemusRepository.getHakemus(oid, fetchTulosForHakemus = fetchTulosForNonHetuHakemus)
+      def removeOiliFromValintatulos(v: Valintatulos) = {
+        v.transformField {
+          case ("hakutoiveet", a:JArray) => ("hakutoiveet", JArray(a.arr.map(ht => {
+            // removes all ilmoittautumis information
+            /*ht.removeField {
+              case JField("ilmoittautumistila", JObject(s)) => true
+              case _ => false
+            }*/
+
+            // removes only ilmoittautumistapa (OILI)
+            ht.transformField {
+              case JField("ilmoittautumistila", i: JObject) => {
+                ("ilmoittautumistila", i.removeField {
+                  case JField("ilmoittautumistapa", JObject(s)) => true
+                  case _ => false
+                })
+              }
+            }
+
+          })))
+        }
+      }
+
+      hakemusRepository.getHakemus(oid,
+        fetchTulosForHakemus = fetchTulosForNonHetuHakemus,
+        transformValintatulos = removeOiliFromValintatulos)
         .fold[Try[HakemusInfo]](Failure(new NoSuchElementException(s"Hakemus $oid not found")))(Success(_))
     }
 
