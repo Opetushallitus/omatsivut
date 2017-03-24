@@ -35,7 +35,7 @@
     </section>
 
     <section id="appRoot" class="content hakemus" ng-if="hakemus">
-        <notification message="{{localization('hakutoiveidenMuokkaus.infoNotification')}}"></notification>
+        <notification ng-hide="allowVastaanottoNotification" message="{{localization('hakutoiveidenMuokkaus.infoNotification')}}"></notification>
         <application application="hakemus"></application>
     </section>
 
