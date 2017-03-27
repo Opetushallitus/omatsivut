@@ -41,7 +41,8 @@ trait VastaanottoEmailContainer {
     HakemusEditoriComponent with
     GroupEmailComponent =>
 
-  def vastaanota(hakemusOid: String, hakukohdeOid: String, hakuOid: String, henkiloOid: String, requestBody: String, emailOpt: Option[String])(implicit jsonFormats: Formats, language: Language): ActionResult = {
+  def vastaanota(hakemusOid: String, hakukohdeOid: String, hakuOid: String, henkiloOid: String, requestBody: String, emailOpt: Option[String],
+                 fetchHakemus: () => Option[HakemusInfo])(implicit jsonFormats: Formats, language: Language): ActionResult = {
     def sendEmail(clientVastaanotto: ClientSideVastaanotto) = {
       emailOpt match {
         case Some(email: String) =>
@@ -73,7 +74,7 @@ trait VastaanottoEmailContainer {
             $hakuOid / $hakukohdeOid / $hakemusOid / $henkiloOid / ${emailOpt} / $clientVastaanotto""".stripMargin)
         }
         auditLogger.log(SaveVastaanotto(henkiloOid, hakemusOid, hakukohdeOid, hakuOid, clientVastaanotto.vastaanottoAction))
-        hakemusRepository.getHakemus(hakemusOid) match {
+        fetchHakemus() match {
           case Some(hakemus) => Ok(hakemus)
           case _ => NotFound("error" -> "Not found")
         }
@@ -225,7 +226,7 @@ trait NonSensitiveApplicationServletContainer {
       applicationRepository.findStoredApplicationByPersonAndOid(henkiloOid, hakemusOid) match {
 
         case Some(hakemus) if tarjontaService.haku(hakemus.hakuOid, Language.fi).exists(_.published) =>
-          vastaanota(hakemusOid, hakukohdeOid, hakemus.hakuOid, henkiloOid, request.body, hakemus.sähköposti)
+          vastaanota(hakemusOid, hakukohdeOid, hakemus.hakuOid, henkiloOid, request.body, hakemus.sähköposti, () => fetchHakemus(hakemusOid).toOption)
 
         case _ => NotFound("error" -> "Not found")
 

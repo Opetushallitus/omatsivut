@@ -104,7 +104,7 @@ trait ApplicationsServletContainer {
       applicationRepository.findStoredApplicationByPersonAndOid(henkiloOid, hakemusOid) match {
 
         case Some(hakemus) if tarjontaService.haku(hakemus.hakuOid, Language.fi).exists(_.published) =>
-          vastaanota(hakemusOid, hakukohdeOid, hakemus.hakuOid, henkiloOid, request.body, hakemus.sähköposti)
+          vastaanota(hakemusOid, hakukohdeOid, hakemus.hakuOid, henkiloOid, request.body, hakemus.sähköposti, () => hakemusRepository.getHakemus(hakemusOid))
 
         case _ => NotFound("error" -> "Not found")
 
