@@ -140,7 +140,7 @@ trait ApplicationValidatorComponent {
       }
       val unknownAnswers: List[(String, String, String)] = flatAnswers
         .filterNot {
-          case (PHASE_PERSONAL, questionId, _) if List(ELEMENT_ID_FIN_ADDRESS, ELEMENT_ID_FIN_POSTAL_NUMBER, ELEMENT_ID_EMAIL, ELEMENT_ID_COUNTRY_OF_RESIDENCY).contains(questionId) || questionId.startsWith(ELEMENT_ID_PREFIX_PHONENUMBER) => true
+          case (PHASE_PERSONAL, questionId, _) if List(ELEMENT_ID_FIN_ADDRESS, ELEMENT_ID_FIN_POSTAL_NUMBER, ELEMENT_ID_EMAIL, ELEMENT_ID_EMAIL_DOUBLE, ELEMENT_ID_COUNTRY_OF_RESIDENCY).contains(questionId) || questionId.startsWith(ELEMENT_ID_PREFIX_PHONENUMBER) => true
           case (phaseId, questionId, _) => acceptedAnswerIds.contains(AnswerId(phaseId, questionId))
         }
       unknownAnswers.map {
