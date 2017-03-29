@@ -2,7 +2,7 @@
     <label>
         <div class="label-column">{{ localization("label.email")}}</div>
         <div class="value-column">
-            <input type="text" ng-model="yhteystiedot['Sähköposti'].answer" clearable-input />
+            <input type="text" ng-model="yhteystiedot['Sähköposti'].answer" ng-change="yhteystiedot['SähköpostiUudelleen'].answer=yhteystiedot['Sähköposti'].answer" clearable-input />
             <span class="validation-message error">{{ yhteystiedot['Sähköposti'].errors.join(', ') }}</span>
         </div>
     </label>

@@ -97,7 +97,7 @@ trait HakemusRepositoryComponent {
 
     private def checkOnlyContactInfoChanges(lomake: Lomake, originalApplication: ImmutableLegacyApplicationWrapper, newAnswers: ImmutableLegacyApplicationWrapper.LegacyApplicationAnswers) {
       def isContactInformationChange(key: String): Boolean = {
-        List(OppijaConstants.ELEMENT_ID_FIN_ADDRESS, OppijaConstants.ELEMENT_ID_EMAIL, OppijaConstants.ELEMENT_ID_FIN_POSTAL_NUMBER).contains(key) ||
+        List(OppijaConstants.ELEMENT_ID_FIN_ADDRESS, OppijaConstants.ELEMENT_ID_EMAIL, OppijaConstants.ELEMENT_ID_EMAIL_DOUBLE, OppijaConstants.ELEMENT_ID_FIN_POSTAL_NUMBER).contains(key) ||
           key.startsWith(OppijaConstants.ELEMENT_ID_PREFIX_PHONENUMBER)
       }
 
