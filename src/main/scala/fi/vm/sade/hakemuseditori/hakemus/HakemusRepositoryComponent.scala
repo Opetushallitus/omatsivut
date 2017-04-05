@@ -7,7 +7,7 @@ import fi.vm.sade.hakemuseditori.auditlog._
 import fi.vm.sade.hakemuseditori.domain.Language
 import fi.vm.sade.hakemuseditori.domain.Language.Language
 import fi.vm.sade.hakemuseditori.hakemus.ImmutableLegacyApplicationWrapper.{LegacyApplicationAnswers, wrap}
-import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus.Answers
+import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus.{Valintatulos, Answers}
 import fi.vm.sade.hakemuseditori.hakemus.domain._
 import fi.vm.sade.hakemuseditori.hakumaksu.HakumaksuComponent
 import fi.vm.sade.hakemuseditori.lomake.LomakeRepositoryComponent
@@ -183,14 +183,17 @@ trait HakemusRepositoryComponent {
     private val applicationValidator: ApplicationValidator = newApplicationValidator
 
     def fetchHakemukset(personOid: String)(implicit lang: Language.Language): List[HakemusInfo] = {
-      fetchHakemukset(new Application().setPersonOid(personOid), fetchTulos = true)
+      fetchHakemukset(new Application().setPersonOid(personOid), _ => true, v => v)
     }
 
-    def getHakemus(hakemusOid: String, fetchTulos: Boolean = true)(implicit lang: Language): Option[HakemusInfo] = {
-      fetchHakemukset(new Application().setOid(hakemusOid), fetchTulos).headOption
+    def getHakemus(hakemusOid: String, fetchTulosForHakemus: ImmutableLegacyApplicationWrapper => Boolean = _ => true,
+                   transformValintatulos: Valintatulos => Valintatulos = vt => vt)(implicit lang: Language): Option[HakemusInfo] = {
+      fetchHakemukset(new Application().setOid(hakemusOid), fetchTulosForHakemus, transformValintatulos).headOption
     }
 
-    private def fetchHakemukset(query: Application, fetchTulos: Boolean)(implicit lang: Language): List[HakemusInfo] = {
+    private def fetchHakemukset(query: Application,
+                                fetchTulosForHakemus: ImmutableLegacyApplicationWrapper => Boolean,
+                                transformValintatulos: Valintatulos => Valintatulos)(implicit lang: Language): List[HakemusInfo] = {
       timed("Application fetch", 1000){
         val legacyApplications: List[ImmutableLegacyApplicationWrapper] = timed("Application fetch DAO", 1000){
           dao.find(query).toList
@@ -206,11 +209,16 @@ trait HakemusRepositoryComponent {
           for {
             haku <- hakuOption
           } yield {
+            val fetchTulos = fetchTulosForHakemus(application)
             val (valintatulos, tulosOk) = if (fetchTulos) {
-              timed("fetchHakemukset -> fetchValintatulos", 100) { fetchValintatulos(application, haku, lomakeOption) }
+              timed("fetchHakemukset -> fetchValintatulos", 100) { fetchValintatulos(application, haku, lomakeOption) match {
+                case (Some(vt), tulosOk) => (Some(transformValintatulos(vt)), tulosOk)
+                case fetched => fetched
+              } }
             } else {
               (None, true)
             }
+            val adsf: Option[Valintatulos] = valintatulos
             val letterForHaku = tuloskirjeService.getTuloskirjeInfo(haku.oid, application.oid)
             val hakemus = timed("fetchHakemukset -> hakemusConverter.convertToHakemus", 100) { hakemusConverter.convertToHakemus(letterForHaku, lomakeOption, haku, application, valintatulos) }
             timed("fetchHakemukset -> auditLogger.log", 100) { auditLogger.log(ShowHakemus(application.personOid, hakemus.oid, haku.oid)) }

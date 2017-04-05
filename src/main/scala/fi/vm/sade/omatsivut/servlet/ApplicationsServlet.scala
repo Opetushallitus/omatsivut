@@ -5,15 +5,17 @@ import java.util.Calendar
 
 import fi.vm.sade.groupemailer.{EmailData, EmailMessage, EmailRecipient, GroupEmailComponent}
 import fi.vm.sade.hakemuseditori._
-import fi.vm.sade.hakemuseditori.auditlog.{AuditLoggerComponent, SaveVastaanotto}
+import fi.vm.sade.hakemuseditori.auditlog.{AuditLogger, AuditLoggerComponent, SaveVastaanotto}
 import fi.vm.sade.hakemuseditori.domain.Language
+import fi.vm.sade.hakemuseditori.domain.Language
+import fi.vm.sade.hakemuseditori.domain.Language.Language
 import fi.vm.sade.hakemuseditori.hakemus.domain.HakemusMuutos
 import fi.vm.sade.hakemuseditori.hakemus.{ApplicationValidatorComponent, HakemusRepositoryComponent, SpringContextComponent}
 import fi.vm.sade.hakemuseditori.json.JsonFormats
-import fi.vm.sade.hakemuseditori.localization.TranslationsComponent
+import fi.vm.sade.hakemuseditori.localization.{Translations, TranslationsComponent}
 import fi.vm.sade.hakemuseditori.lomake.LomakeRepositoryComponent
 import fi.vm.sade.hakemuseditori.user.Oppija
-import fi.vm.sade.hakemuseditori.valintatulokset.ValintatulosServiceComponent
+import fi.vm.sade.hakemuseditori.valintatulokset.{ValintatulosService, ValintatulosServiceComponent}
 import fi.vm.sade.hakemuseditori.valintatulokset.domain._
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.hakemuspreview.HakemusPreviewGeneratorComponent
@@ -24,6 +26,8 @@ import org.scalatra.json._
 
 import scala.util.{Failure, Success}
 
+
+
 trait ApplicationsServletContainer {
   this: HakemusEditoriComponent with LomakeRepositoryComponent with
     HakemusRepositoryComponent with
@@ -33,9 +37,11 @@ trait ApplicationsServletContainer {
     SpringContextComponent with
     AuditLoggerComponent with
     GroupEmailComponent with
+    VastaanottoEmailContainer with
     TranslationsComponent =>
 
-  class ApplicationsServlet(val appConfig: AppConfig) extends OmatSivutServletBase with JacksonJsonSupport with JsonFormats with AuthenticationRequiringServlet with HakemusEditoriUserContext {
+  class ApplicationsServlet(val appConfig: AppConfig) extends OmatSivutServletBase with JsonFormats with JacksonJsonSupport with AuthenticationRequiringServlet with HakemusEditoriUserContext {
+
     def user = Oppija(personOid())
     private val hakemusEditori = newEditor(this)
 
@@ -98,61 +104,19 @@ trait ApplicationsServletContainer {
       applicationRepository.findStoredApplicationByPersonAndOid(henkiloOid, hakemusOid) match {
 
         case Some(hakemus) if tarjontaService.haku(hakemus.hakuOid, Language.fi).exists(_.published) =>
-          vastaanota(hakemusOid, hakukohdeOid, hakemus.hakuOid, henkiloOid, request.body)
+          vastaanota(hakemusOid, hakukohdeOid, hakemus.hakuOid, henkiloOid, request.body, hakemus.sähköposti, () => hakemusRepository.getHakemus(hakemusOid))
 
         case _ => NotFound("error" -> "Not found")
 
       }
     }
 
-    private def vastaanota(hakemusOid: String, hakukohdeOid: String, hakuOid: String, henkiloOid: String, requestBody: String): ActionResult = {
-      val clientVastaanotto = Serialization.read[ClientSideVastaanotto](requestBody)
-      try {
-        if (valintatulosService.vastaanota(henkiloOid, hakemusOid, hakukohdeOid, clientVastaanotto.vastaanottoAction)) {
-          try {
-            sendEmail(clientVastaanotto)
-          } catch {
-            case e: Exception => logger.error(s"""Vastaanottosähköpostin lähetys epäonnistui: haku / hakukohde / hakemus / hakija / email / clientVastaanotto :
-              $hakuOid / $hakukohdeOid / $hakemusOid / $henkiloOid / ${clientVastaanotto.email} / $clientVastaanotto""".stripMargin)
-          }
-          auditLogger.log(SaveVastaanotto(henkiloOid, hakemusOid, hakukohdeOid, hakuOid, clientVastaanotto.vastaanottoAction))
-          hakemusRepository.getHakemus(hakemusOid) match {
-            case Some(hakemus) => Ok(hakemus)
-            case _ => NotFound("error" -> "Not found")
-          }
-        }
-        else {
-          Forbidden("error" -> "Not receivable")
-        }
 
-      } catch {
-        case e: Throwable =>
-          logger.error("failure in background service call", e)
-          InternalServerError("error" -> "Background service failed")
-      }
-    }
 
-    private def sendEmail(clientVastaanotto: ClientSideVastaanotto) = {
-      if ("" != clientVastaanotto.email) {
-        val subject = translations.getTranslation("message", "acceptEducation", "email", "subject")
 
-        val dateFormat = new SimpleDateFormat(translations.getTranslation("message", "acceptEducation", "email", "dateFormat"))
-        val dateAndTime = dateFormat.format(Calendar.getInstance().getTime)
-        val answer = translations.getTranslation("message", "acceptEducation", "email", "tila", clientVastaanotto.vastaanottoAction.toString)
-        val aoInfoRow = List(answer, clientVastaanotto.tarjoajaNimi, clientVastaanotto.hakukohdeNimi).mkString(" - ")
-        val body = translations.getTranslation("message", "acceptEducation", "email", "body")
-          .format(dateAndTime, aoInfoRow)
-          .replace("\n", "\n<br>")
-
-        val email = EmailMessage("omatsivut", subject, body, html = true)
-        val recipients = List(EmailRecipient(clientVastaanotto.email))
-        groupEmailService.sendMailWithoutTemplate(EmailData(email, recipients))
-      }
-    }
 
   }
 }
 
-case class ClientSideVastaanotto(vastaanottoAction: VastaanottoAction, email: String = "",
-                                 hakukohdeNimi: String = "", tarjoajaNimi: String = "")
+case class ClientSideVastaanotto(vastaanottoAction: VastaanottoAction, hakukohdeNimi: String = "", tarjoajaNimi: String = "")
 

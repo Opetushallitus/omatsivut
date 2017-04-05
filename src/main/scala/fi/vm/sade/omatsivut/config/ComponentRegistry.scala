@@ -5,6 +5,7 @@ import fi.vm.sade.hakemuseditori.auditlog.{AuditContext, AuditLogger, AuditLogge
 import fi.vm.sade.hakemuseditori.domain.Language.Language
 import fi.vm.sade.hakemuseditori.hakemus._
 import fi.vm.sade.hakemuseditori.hakumaksu.{HakumaksuServiceWrapper, RemoteHakumaksuServiceWrapper, StubbedHakumaksuServiceWrapper}
+import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.hakemuseditori.koodisto.{KoodistoComponent, KoodistoService, RemoteKoodistoService, StubbedKoodistoService}
 import fi.vm.sade.hakemuseditori.koulutusinformaatio.{KoulutusInformaatioComponent, KoulutusInformaatioService}
 import fi.vm.sade.hakemuseditori.localization.TranslationsComponent
@@ -40,6 +41,7 @@ class ComponentRegistry(val config: AppConfig)
           HakemusPreviewGeneratorComponent with
           HakemusConverterComponent with
           HakemusEditoriComponent with
+          VastaanottoEmailContainer with
           ApplicationsServletContainer with
           MuistilistaServletContainer with
           CaptchaServiceComponent with

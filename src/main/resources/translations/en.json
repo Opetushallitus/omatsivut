@@ -45,15 +45,15 @@
       "Hyvaksytty": "Accepted",
       "Kesken": "Student_admission_process_unfinished",
       "HarkinnanvaraisestiHyvaksytty": "Discretionary_admission",
-      "Varalla": "On_a_reserve_place___varasija__",
-      "VarallaPvm": "On_a_reserve_place___varasija__ Reserve places are filled until __varasijaPvm__.",
+      "Varalla": "Number___varasija___on the waiting list",
+      "VarallaPvm": "Number___varasija___on the waiting list Reserve places are filled until __varasijaPvm__.",
       "Peruutettu": "Cancelled",
       "Perunut": "You_have_cancelled_the study place",
       "Peruuntunut": "Cancelled_automatically",
-      "VarasijaltaHyvaksytty": "Accepted_from_reserve place",
+      "VarasijaltaHyvaksytty": "Accepted_from_a_waiting_list",
       "VastaanottanutSitovasti": "You_have_confirmed_the study place",
       "Hylatty": "You_have_not_received a study place.",
-      "EhdollisestiVastaanottanut": "You_have_confirmed_the_study_place_and_are_on_a_wait_list_for_a_higher_preference_study_place",
+      "EhdollisestiVastaanottanut": "You_have_confirmed_the_study_place_and_are_on_a_waiting_list_for_a_higher_preference_study_place",
       "EiVastaanotettuMaaraAikana": "You_have_not_confirmed_the study place within the set time"
     }
   },
@@ -186,6 +186,7 @@
 
   "hakutoiveidenMuokkaus": {
     "title": "Modify study programme choices",
+    "titleWithVastaanotto": "Confirm your study place",
     "infoNotification": "<strong>Note! You logged in via an e-mail link to modify your study programme choices.</strong> You can add and remove study programme choices and change their order. If you want to see your whole application and do other modifications to it, please log in to My Studyinfo -service. <a href='https://studyinfo.fi/wp2/en/my-studyinfo-service/'>Read more about My Studyinfo -service.</a>",
     "logoutPage": "<h2>You have logged out.</h2><p>Thank you for your visit!</p><p><a href='https://studyinfo.fi'>Studyinfo.fi</a></p>"
   }

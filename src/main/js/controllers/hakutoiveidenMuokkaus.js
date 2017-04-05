@@ -24,6 +24,11 @@ module.exports = function(app, staticResources) {
             $scope.loading = false
             $scope.hakemus = new Hakemus(response.data)
             var henkilotiedot = response.data.hakemus.answers.henkilotiedot
+            if(henkilotiedot.Henkilotunnus) {
+              $scope.allowVastaanotto = false
+            } else {
+              $scope.allowVastaanotto = true
+            }
             $scope.user = {
               name: henkilotiedot.Kutsumanimi + ' ' + henkilotiedot.Sukunimi
             }
