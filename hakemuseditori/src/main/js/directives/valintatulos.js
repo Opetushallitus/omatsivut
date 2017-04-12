@@ -42,9 +42,19 @@ module.exports = function(app) {
             return localization($scope.error)
           }
         }
-
-        $scope.valintatulosText = function(valintatulos) {
-          var key = util.underscoreToCamelCase(valintatulos.valintatila)
+        $scope.isHyvaksyttyKesken = function(valintatulos, valintatulokset) {
+          if(valintatulos.valintatila === "HYVAKSYTTY") {
+            var firstKeskenIndex = _.findIndex(valintatulokset, function(v) { return v.valintatila === "KESKEN" })
+            if(firstKeskenIndex != -1) {
+              var valintatulosIndex = _.findIndex(valintatulokset, function(v) { return v.hakukohdeOid === valintatulos.hakukohdeOid})
+              return firstKeskenIndex < valintatulosIndex;
+            }
+          }
+          return false;
+        }
+        $scope.valintatulosText = function(valintatulos, valintatulokset) {
+          var isHyvaksyttyKesken = $scope.isHyvaksyttyKesken(valintatulos, valintatulokset)
+          var key = isHyvaksyttyKesken ? "HyvaksyttyKesken" : util.underscoreToCamelCase(valintatulos.valintatila)
 
           if ([VASTAANOTTOTILA.VASTAANOTTANUT_SITOVASTI, VASTAANOTTOTILA.EI_VASTAANOTETTU_MAARA_AIKANA, VASTAANOTTOTILA.EHDOLLISESTI_VASTAANOTTANUT].indexOf(valintatulos.vastaanottotila) >= 0) {
             key = util.underscoreToCamelCase(valintatulos.vastaanottotila)
