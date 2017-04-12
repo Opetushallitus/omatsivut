@@ -9,6 +9,14 @@
             <span class="row-number">{{$index+1}}.</span>
             <span ng-bind="tulos.tarjoajaNimi"></span>
             <span ng-bind="tulos.hakukohdeNimi"></span>
+            <span class="hyvaksytty-kesken" ng-show="isHyvaksyttyKesken(tulos, valintatulos().hakutoiveet)">
+                <span>{{ localization('label.acceptedUnfinished.text') }}</span>
+                <ol>
+                    <li>{{ localization('label.acceptedUnfinished.rules.1') }}</li>
+                    <li>{{ localization('label.acceptedUnfinished.rules.2') }}</li>
+                </ol>
+                <a href="{{ localization('label.acceptedUnfinished.href') }}">{{ localization('label.acceptedUnfinished.link') }}</a>
+            </span>
         </td>
         <td class="vastaanottotieto">
             <div>
