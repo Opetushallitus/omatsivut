@@ -9,6 +9,15 @@
   },
 
   "label": {
+    "acceptedUnfinished": {
+      "text": "Du kommer att bli erbjuden en studieplats i detta ansökningsmål om följande villkor uppfylls:",
+      "rules": {
+        "1" : "Du blir inte godkänd till något av de ansökningsmål som du har prioriterat högre",
+        "2" : "Du har inte tagit emot en studieplats som leder till högskoleexamen i någon annan utbildning som börjar under samma termin."
+      },
+      "link" : "Ytterligare information",
+      "href" : "https://studieinfo.fi/wp/stod-for-studievalet/gemensam-ansokan/gemensam-ansokan-till-hogskolor/antagningsresultaten-i-gemensam-ansokan-till-hogskolor/"
+    },
     "applicationPeriod": "Ansökningstid",
     "applicationPeriodActive": "Ansökan pågår",
     "applicationPeriodEnds": "Ansökningstiden utgår",
@@ -43,6 +52,7 @@
     "resultState": {
       "EhdollinenPostfix": " (villkorlig)",
       "Hyvaksytty": "Godkänd",
+      "HyvaksyttyKesken": "Godkänd_(väntar_på_resultat_från_högre_ansökningsmål)",
       "Kesken": "Studerandeantagningen_oavslutad",
       "HarkinnanvaraisestiHyvaksytty": "Godkänd_enligt_prövning",
       "Varalla": "__varasija__ _på_reservplats",

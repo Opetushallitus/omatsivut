@@ -9,6 +9,15 @@
   },
 
   "label": {
+    "acceptedUnfinished": {
+      "text": "Sinulle tarjotaan opiskelupaikkaa tässä hakukohteessa, jos seuraavat kaksi ehtoa täyttyvät:",
+      "rules": {
+        "1" : "Et tule hyväksytyksi hakukohteeseen, joka on ilmoittamassasi mieluisuusjärjestyksessä tätä hakukohdetta ylempänä",
+        "2" : "Et ole ottanut vastaan suomalaiseen korkeakoulututkintoon johtavaa opiskelupaikkaa mistään muusta samana lukukautena alkavasta koulutuksesta"
+      },
+      "link" : "Lisätietoja",
+      "href" : "https://opintopolku.fi/wp/valintojen-tuki/yhteishaku/korkeakoulujen-yhteishaku/korkeakoulujen-yhteishaun-valintojen-tulokset/"
+    },
     "applicationPeriod": "Hakuaika",
     "applicationPeriodActive": "Haku käynnissä",
     "applicationPeriodEnds": "Hakuaika päättyy",
@@ -43,6 +52,7 @@
     "resultState": {
       "EhdollinenPostfix": " (ehdollinen)",
       "Hyvaksytty": "Hyväksytty",
+      "HyvaksyttyKesken": "Hyväksytty_(odottaa_ylempien_hakukohteiden_tuloksia)",
       "Kesken": "Opiskelijavalinta_kesken",
       "HarkinnanvaraisestiHyvaksytty": "Hyväksytty",
       "Varalla": "__varasija__ varasijalla",

@@ -9,6 +9,15 @@
   },
 
   "label": {
+    "acceptedUnfinished": {
+      "text": "You will be offered a study place in this programme if the following conditions are met:",
+      "rules": {
+        "1" : "You are not offered a place in any of your higher preferences shown above and",
+        "2" : "You have not already accepted another study place leading to a higher education degree in Finland in a study programme that begins during the same academic term"
+      },
+      "link" : "Additional information",
+      "href" : "https://studyinfo.fi/wp2/en/higher-education/applying/admission-results-of-joint-application-to-higher-education-2017/"
+    },
     "applicationPeriod": "Application period",
     "applicationPeriodActive": "In progress",
     "applicationPeriodEnds": "Application period ends",
@@ -43,6 +52,7 @@
     "resultState": {
       "EhdollinenPostfix": " (conditional)",
       "Hyvaksytty": "Accepted",
+      "HyvaksyttyKesken": "Accepted_(awaiting_results_from_your_higher_preferences)",
       "Kesken": "Student_admission_process_unfinished",
       "HarkinnanvaraisestiHyvaksytty": "Discretionary_admission",
       "Varalla": "Number___varasija___on the waiting list",
