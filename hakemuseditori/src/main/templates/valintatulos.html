@@ -13,7 +13,7 @@
         <td class="vastaanottotieto">
             <div>
                 <div>
-                    <span ng-bind="valintatulosText(tulos)" class="valintatulos-otsake"></span>
+                    <span ng-bind="valintatulosText(tulos, valintatulos().hakutoiveet)" class="valintatulos-otsake"></span>
                 </div>
                 <div class="update-vastaanottotieto" ng-show="tulos.vastaanottotila == 'EHDOLLISESTI_VASTAANOTTANUT'">
                     <span class="ajax-spinner" ng-show="ajaxPending"></span>
