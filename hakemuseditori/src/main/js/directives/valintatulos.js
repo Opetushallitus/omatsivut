@@ -63,6 +63,10 @@ module.exports = function(app) {
             if(valintatulos.valintatila === "HYLATTY"){
               return localization("label.resultState." + key) + " " + tilanKuvaus(valintatulos)
             } else if(hyvaksytty(valintatulos) && valintatulos.ehdollisestiHyvaksyttavissa) {
+              var ehdollisenHyvaksymisenKenttaEhto = localization("label.resultState.EhdollisenHyvaksymisenEhdonKentanNimi")
+              if (valintatulos.ehdollisenHyvaksymisenEhtoKoodi != undefined && valintatulos.ehdollisenHyvaksymisenEhtoKoodi != null) {
+                  return localization("label.resultState." + key) + ' (' + valintatulos[ehdollisenHyvaksymisenKenttaEhto] + ')';
+              }
               return localization("label.resultState." + key) + localization("label.resultState.EhdollinenPostfix")
             } else {
               return tilanKuvaus(valintatulos)
