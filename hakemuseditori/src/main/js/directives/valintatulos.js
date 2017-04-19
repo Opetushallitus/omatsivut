@@ -24,6 +24,8 @@ module.exports = function(app) {
         $scope.localization = localization
         $scope.VASTAANOTTOTILA = VASTAANOTTOTILA
         $scope.error = false
+        $scope.language = localization.language
+
         $scope.formatDate = function(dt) {
           if (dt == null)
             return ""
@@ -61,6 +63,10 @@ module.exports = function(app) {
             if(valintatulos.valintatila === "HYLATTY"){
               return localization("label.resultState." + key) + " " + tilanKuvaus(valintatulos)
             } else if(hyvaksytty(valintatulos) && valintatulos.ehdollisestiHyvaksyttavissa) {
+              var ehdollisenHyvaksymisenKenttaEhto = localization("label.resultState.EhdollisenHyvaksymisenEhdonKentanNimi")
+              if (valintatulos.ehdollisenHyvaksymisenEhtoKoodi != undefined && valintatulos.ehdollisenHyvaksymisenEhtoKoodi != null) {
+                  return localization("label.resultState." + key) + ' (' + valintatulos[ehdollisenHyvaksymisenKenttaEhto] + ')';
+              }
               return localization("label.resultState." + key) + localization("label.resultState.EhdollinenPostfix")
             } else {
               return tilanKuvaus(valintatulos)
@@ -71,6 +77,10 @@ module.exports = function(app) {
               varasijaPvm: $scope.formatDate(valintatulos.varasijojaTaytetaanAsti)
             })
           } else if(hyvaksytty(valintatulos) && valintatulos.ehdollisestiHyvaksyttavissa) {
+            var ehdollisenHyvaksymisenKenttaEhto = localization("label.resultState.EhdollisenHyvaksymisenEhdonKentanNimi")
+            if (valintatulos.ehdollisenHyvaksymisenEhtoKoodi != undefined && valintatulos.ehdollisenHyvaksymisenEhtoKoodi != null) {
+              return localization("label.resultState." + key) + ' (' + valintatulos[ehdollisenHyvaksymisenKenttaEhto] + ')';
+            }
             return localization("label.resultState." + key) + localization("label.resultState.EhdollinenPostfix")
           } else {
             return localization("label.resultState." + key, {

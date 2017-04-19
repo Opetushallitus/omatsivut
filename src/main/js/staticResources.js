@@ -1,6 +1,7 @@
 var resources = {
   init: function(callback) {
     var language = readLanguageCookie()
+    resources.language = language
     setTimeformat(language)
     loadTranslations(language, function(translations) {
       resources.translations = translations
