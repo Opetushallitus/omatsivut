@@ -229,7 +229,7 @@
                         <artifactItem>
                             <groupId>fi.vm.sade</groupId>
                             <artifactId>valinta-tulos-service</artifactId>
-                            <version>4.2-rc1-SNAPSHOT</version>
+                            <version>4.2-SNAPSHOT</version>
                             <type>war</type>
                             <outputDirectory>./target</outputDirectory>
                             <destFileName>valinta-tulos-service.war</destFileName>
