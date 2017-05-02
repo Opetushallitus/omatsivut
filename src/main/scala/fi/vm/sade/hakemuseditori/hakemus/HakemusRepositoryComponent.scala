@@ -191,10 +191,6 @@ trait HakemusRepositoryComponent {
                    transformValintatulos: Valintatulos => Valintatulos = vt => vt)(implicit lang: Language): Option[HakemusInfo] = {
       fetchHakemukset(new Application().setOid(hakemusOid), fetchTulosForHakemus, transformValintatulos).headOption
     }
-    private def getKelaUrl(valintatulos: Option[Valintatulos]): Option[String] = {
-      implicit val formats = DefaultFormats
-      valintatulos.map(_ \ "kelaURL").flatMap(_.extractOpt[String])
-    }
     private def fetchHakemukset(query: Application,
                                 fetchTulosForHakemus: ImmutableLegacyApplicationWrapper => Boolean,
                                 transformValintatulos: Valintatulos => Valintatulos)(implicit lang: Language): List[HakemusInfo] = {
@@ -222,7 +218,6 @@ trait HakemusRepositoryComponent {
             } else {
               (None, true)
             }
-            val kelaURL: Option[String] = getKelaUrl(valintatulos)
             val letterForHaku = tuloskirjeService.getTuloskirjeInfo(haku.oid, application.oid)
             val hakemus = timed("fetchHakemukset -> hakemusConverter.convertToHakemus", 100) { hakemusConverter.convertToHakemus(letterForHaku, lomakeOption, haku, application, valintatulos) }
             timed("fetchHakemukset -> auditLogger.log", 100) { auditLogger.log(ShowHakemus(application.personOid, hakemus.oid, haku.oid)) }
@@ -230,11 +225,11 @@ trait HakemusRepositoryComponent {
             lomakeOption match {
               case Some(lomake) if haku.applicationPeriods.exists(_.active) =>
                 timed("fetchHakemukset -> applicationValidator.validateAndFindQuestions", 100) { applicationValidator.validateAndFindQuestions(haku, lomake, withNoPreferenceSpesificAnswers(hakemus), application) match {
-                    case (app, errors, questions) => HakemusInfo(hakemusConverter.convertToHakemus(letterForHaku, Some(lomake), haku, app, valintatulos), errors, questions, tulosOk, kelaURL, None)
+                    case (app, errors, questions) => HakemusInfo(hakemusConverter.convertToHakemus(letterForHaku, Some(lomake), haku, app, valintatulos), errors, questions, tulosOk, None)
                   }
                 }
               case _ =>
-                HakemusInfo(hakemus, List(), List(), tulosOk, kelaURL, None)
+                HakemusInfo(hakemus, List(), List(), tulosOk, None)
             }
           }
         }).sortBy[Option[Long]](_.hakemus.received).reverse
