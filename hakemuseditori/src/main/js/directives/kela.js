@@ -3,7 +3,7 @@ module.exports = function(app) {
     return {
       restrict: 'E',
       scope: {
-        kelaURL: '&kelaURL'
+        kela: '&kela'
       },
       templateUrl: 'templates/kela.html',
       link: function (scope, element, attrs) {
