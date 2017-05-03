@@ -149,7 +149,7 @@ trait NonSensitiveApplicationServletContainer {
       def fetchTulosForNonHetuHakemus(hakemus: ImmutableLegacyApplicationWrapper) = {
         hakemus.henkilotunnus.isEmpty
       }
-      def removeOiliFromValintatulos(v: Valintatulos) = {
+      def removeKelaUrlFromValintatulos(v: Valintatulos) = {
         v.transformField {
           case ("hakutoiveet", a:JArray) => ("hakutoiveet", JArray(a.arr.map(ht => {
             // removes kela URL
@@ -157,24 +157,13 @@ trait NonSensitiveApplicationServletContainer {
               case JField("kelaURL", i: JString) => true
               case _ => false
             }
-
-            // removes only ilmoittautumistapa (OILI)
-            ht.transformField {
-              case JField("ilmoittautumistila", i: JObject) => {
-                ("ilmoittautumistila", i.removeField {
-                  case JField("ilmoittautumistapa", JObject(s)) => true
-                  case _ => false
-                })
-              }
-            }
-
           })))
         }
       }
 
       hakemusRepository.getHakemus(oid,
         fetchTulosForHakemus = fetchTulosForNonHetuHakemus,
-        transformValintatulos = removeOiliFromValintatulos)
+        transformValintatulos = removeKelaUrlFromValintatulos)
         .fold[Try[HakemusInfo]](Failure(new NoSuchElementException(s"Hakemus $oid not found")))(Success(_))
     }
 
