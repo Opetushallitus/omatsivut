@@ -152,11 +152,11 @@ trait NonSensitiveApplicationServletContainer {
       def removeOiliFromValintatulos(v: Valintatulos) = {
         v.transformField {
           case ("hakutoiveet", a:JArray) => ("hakutoiveet", JArray(a.arr.map(ht => {
-            // removes all ilmoittautumis information
-            /*ht.removeField {
-              case JField("ilmoittautumistila", JObject(s)) => true
+            // removes kela URL
+            ht.removeField {
+              case JField("kelaURL", i: JString) => true
               case _ => false
-            }*/
+            }
 
             // removes only ilmoittautumistapa (OILI)
             ht.transformField {
