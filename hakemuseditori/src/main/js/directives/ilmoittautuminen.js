@@ -7,8 +7,8 @@ module.exports = function(app) {
       },
       templateUrl: 'templates/ilmoittautuminen.html',
       link: function (scope, element, attrs) {
-        scope.localization = localization
+        scope.localization = localization;
       }
     }
   }])
-}
+};

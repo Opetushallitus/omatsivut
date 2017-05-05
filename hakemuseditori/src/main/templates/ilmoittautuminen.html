@@ -5,5 +5,5 @@
         {{ tulos.tarjoajaNimi }} - {{ tulos.hakukohdeNimi }}
     </header>
     <span ng-if="tulos.ehdollisestiHyvaksyttavissa">{{ localization('registration.conditionalAcceptanceInfo') }}</span>
-    <a ng-if="!tulos.ehdollisestiHyvaksyttavissa" href="{{ tulos.ilmoittautumistila.ilmoittautumistapa.url }}">{{ localization('registration.goToRegistration') }}</a>
+    <a ng-if="!tulos.ehdollisestiHyvaksyttavissa" href="{{ tulos.ilmoittautumistila.ilmoittautumistapa.url + '?token=' + window.sessionStorage.getItem('bearerToken') }}">{{ localization('registration.goToRegistration') }}</a>
 </div>
