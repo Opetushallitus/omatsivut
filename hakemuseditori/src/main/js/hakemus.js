@@ -180,6 +180,12 @@ Hakemus.prototype = {
     }).filter(function(k) {return k}).head().value()
   },
 
+  oiliUrl: function() {
+    return _.chain(this.valintatulosHakutoiveet()).map(function(tulos) {
+        return tulos.ilmoittautumistila.ilmoittautumistapa.url + '?token=' + window.sessionStorage.getItem('bearerToken');
+    }).filter(function(k) {return k}).head().value()
+  },
+
   hasResultState: function(resultStates) {
     if (!_.isArray(resultStates))
       resultStates = [resultStates]
