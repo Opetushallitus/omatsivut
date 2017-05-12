@@ -228,7 +228,7 @@ trait NonSensitiveApplicationServletContainer {
         hakemus <- fetchHakemus(hakemusOid)
       } yield {
         Ok(InsecureHakemusInfo(jwt.encode(HakemusJWT(hakemusOid, Set(), personOid)),
-          new NonSensitiveHakemusInfo(hakemus, Set())))
+          new NonSensitiveHakemusInfo(hakemus, Set()), oiliJwt = jwt.createOiliJwt(personOid)))
       }).get
     }
 
