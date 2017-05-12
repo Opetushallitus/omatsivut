@@ -22,6 +22,7 @@ var nonSensitiveHakemusInterceptor = {
   response: function(response) {
     if (shouldAuthenticate(response.config) && response.data && response.data.jsonWebToken) {
       util.setBearerToken(response.data.jsonWebToken)
+      response.oiliJwt = response.data.oiliJwt
       response.data = response.data.response
     }
     return response
