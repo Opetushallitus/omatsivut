@@ -21,6 +21,7 @@ function Hakemus(json) {
     this.calculatedValues = {
       postOffice: json.hakemus.postOffice
     }
+    this.oiliJwt = null
   } catch (e) {
     throw e;
   }
@@ -182,7 +183,8 @@ Hakemus.prototype = {
 
   oiliUrl: function() {
     return _.chain(this.valintatulosHakutoiveet()).map(function(tulos) {
-        return tulos.ilmoittautumistila.ilmoittautumistapa.url + '?token=' + window.sessionStorage.getItem('bearerToken');
+        var baseUrl = tulos.ilmoittautumistila.ilmoittautumistapa.url;
+        return baseUrl.endsWith('/oili/') ? baseUrl : baseUrl + '?token=' + this.oiliJwt;
     }).filter(function(k) {return k}).head().value()
   },
 
