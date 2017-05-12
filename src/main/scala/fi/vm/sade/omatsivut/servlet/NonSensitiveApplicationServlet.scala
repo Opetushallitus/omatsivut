@@ -3,15 +3,14 @@ package fi.vm.sade.omatsivut.servlet
 import java.text.SimpleDateFormat
 import java.util.Calendar
 
-import fi.vm.sade.groupemailer.{GroupEmailComponent, EmailData, EmailRecipient, EmailMessage}
+import fi.vm.sade.groupemailer.{EmailData, EmailMessage, EmailRecipient, GroupEmailComponent}
 import fi.vm.sade.hakemuseditori._
 import fi.vm.sade.hakemuseditori.auditlog.SaveVastaanotto
-import fi.vm.sade.hakemuseditori.domain.Language
 import fi.vm.sade.hakemuseditori.domain.Language
 import fi.vm.sade.hakemuseditori.domain.Language.Language
 import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus.Valintatulos
 import fi.vm.sade.hakemuseditori.hakemus.domain.HakemusMuutos
-import fi.vm.sade.hakemuseditori.hakemus.{ImmutableLegacyApplicationWrapper, HakemusInfo, HakemusRepositoryComponent}
+import fi.vm.sade.hakemuseditori.hakemus.{HakemusInfo, HakemusRepositoryComponent, ImmutableLegacyApplicationWrapper}
 import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.hakemuseditori.lomake.domain.AnswerId
 import fi.vm.sade.hakemuseditori.user.Oppija
@@ -20,7 +19,6 @@ import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.oppijantunnistus.{ExpiredTokenException, InvalidTokenException, OppijanTunnistusComponent}
 import fi.vm.sade.omatsivut.security.{HakemusJWT, JsonWebToken}
 import fi.vm.sade.omatsivut.{NonSensitiveHakemus, NonSensitiveHakemusInfo, NonSensitiveHakemusInfoSerializer, NonSensitiveHakemusSerializer}
-import org.apache.commons.lang3.StringUtils
 import org.json4s.JsonAST.JField
 import org.json4s._
 import org.json4s.jackson.Serialization
@@ -34,7 +32,7 @@ sealed trait InsecureResponse {
 }
 
 case class InsecureHakemus(jsonWebToken: String, response: NonSensitiveHakemus) extends InsecureResponse
-case class InsecureHakemusInfo(jsonWebToken: String, response: NonSensitiveHakemusInfo) extends InsecureResponse
+case class InsecureHakemusInfo(jsonWebToken: String, response: NonSensitiveHakemusInfo, oiliJwt: String = null) extends InsecureResponse
 
 trait VastaanottoEmailContainer {
   this: HakemusRepositoryComponent with
@@ -203,7 +201,7 @@ trait NonSensitiveApplicationServletContainer {
         token <- jwtAuthorize
         hakemus <- fetchHakemus(token.oid)
       } yield {
-        Ok(InsecureHakemusInfo(jwt.encode(token), new NonSensitiveHakemusInfo(hakemus, token.answersFromThisSession)))
+        Ok(InsecureHakemusInfo(jwt.encode(token), new NonSensitiveHakemusInfo(hakemus, token.answersFromThisSession), oiliJwt = jwt.createOiliJwt(token.personOid)))
       }).get
     }
 
