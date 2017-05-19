@@ -176,7 +176,11 @@
     "pleaseRegister": "Ilmoittaudu lukukaudelle",
     "goToRegistration": "Siirry ilmoittautumaan",
     "conditionalAcceptanceTitle": "Opiskelijavalintasi on vielä ehdollinen.",
-    "conditionalAcceptanceInfo": "Pääset ilmoittautumaan vasta valinnan vahvistamisen jälkeen."
+    "conditionalAcceptanceInfo": "Pääset ilmoittautumaan vasta valinnan vahvistamisen jälkeen.",
+    "opintoetuudet": {
+      "studentFinancialAid": "Siirry Kelan asiointipalveluun",
+      "opintotukihakemus": "Tee opintotukihakemus"
+    }
   },
 
   "emailNote": {
