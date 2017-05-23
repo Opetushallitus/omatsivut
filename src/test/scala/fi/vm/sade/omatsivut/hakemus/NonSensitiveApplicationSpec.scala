@@ -1,17 +1,16 @@
 package fi.vm.sade.omatsivut.hakemus
 
-import java.io.Serializable
-
-import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus.{Answers, HakutoiveData}
+import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus.HakutoiveData
 import fi.vm.sade.hakemuseditori.hakemus.domain.{Hakemus, HakemusMuutos}
 import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.hakemuseditori.lomake.domain.AnswerId
 import fi.vm.sade.omatsivut._
-import fi.vm.sade.omatsivut.security.{HakemusJWT, JsonWebToken}
+import fi.vm.sade.omatsivut.security.{HakemusJWT, JsonWebToken, OiliJWT}
 import fi.vm.sade.omatsivut.servlet.{InsecureHakemus, InsecureHakemusInfo}
 import org.json4s.jackson.Serialization
 import org.junit.runner.RunWith
 import org.specs2.runner.JUnitRunner
+import pdi.jwt.{JwtAlgorithm, JwtJson4s}
 
 @RunWith(classOf[JUnitRunner])
 class NonSensitiveApplicationSpec extends HakemusApiSpecification {
@@ -80,10 +79,20 @@ class NonSensitiveApplicationSpec extends HakemusApiSpecification {
         NonSensitiveHakemusInfo.answerIds(hakemusInfo.hakemus.answers) must beEqualTo(
           NonSensitiveHakemusInfo.nonSensitiveAnswers ++ answersInJWT)
         hakemusInfo.questions.flatMap(_.flatten.flatMap(_.answerIds)).toSet must beEqualTo(answersInJWT)
-
       }
-
     }
+
+    "has oiliJWT when fetched with a JWT" in {
+      val answersInJWT: Set[AnswerId] = Set(AnswerId("hakutoiveet", "54773037e4b0c2bb60201414"))
+      get("insecure/applications/application/session", headers = jwtAuthHeader(answersInJWT)) {
+        val hakemusInfo = Serialization.read[InsecureHakemusInfo](body)
+        hakemusInfo.oiliJwt mustNotEqual(null)
+        val decoded = JwtJson4s.decodeJson(hakemusInfo.oiliJwt, "akuankkaakuankkaakuankkaakuankka", Seq(JwtAlgorithm.HS256)).get.extract[OiliJWT]
+        decoded.hakijaOid mustEqual("1.2.246.562.24.14229104472")
+        decoded.expires must be_>(System.currentTimeMillis)
+      }
+    }
+
     "does not allow updates beyond nonsensitive data" in {
       val answersInJWT: Set[AnswerId] = Set(AnswerId("hakutoiveet", "54773037e4b0c2bb60201414"))
       val updatedEmail = "updated@email.com"

@@ -11,6 +11,7 @@ module.exports = function(app) {
   require('./directives/application')(app)
   require('./directives/hakutoiveenVastaanotto')(app)
   require('./directives/ilmoittautuminen')(app)
+  require('./directives/kela')(app)
   require('./directives/hakutoiveet')(app)
   require('./directives/valintatulos')(app)
   require('./directives/henkilotiedot')(app)
