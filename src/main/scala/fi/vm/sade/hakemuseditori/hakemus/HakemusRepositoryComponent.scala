@@ -25,6 +25,7 @@ import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 import fi.vm.sade.utils.Timer._
 import fi.vm.sade.utils.slf4j.Logging
 import org.joda.time.LocalDateTime
+import org.json4s.DefaultFormats
 
 import scala.util.{Failure, Success, Try}
 
@@ -190,7 +191,6 @@ trait HakemusRepositoryComponent {
                    transformValintatulos: Valintatulos => Valintatulos = vt => vt)(implicit lang: Language): Option[HakemusInfo] = {
       fetchHakemukset(new Application().setOid(hakemusOid), fetchTulosForHakemus, transformValintatulos).headOption
     }
-
     private def fetchHakemukset(query: Application,
                                 fetchTulosForHakemus: ImmutableLegacyApplicationWrapper => Boolean,
                                 transformValintatulos: Valintatulos => Valintatulos)(implicit lang: Language): List[HakemusInfo] = {
@@ -218,7 +218,6 @@ trait HakemusRepositoryComponent {
             } else {
               (None, true)
             }
-            val adsf: Option[Valintatulos] = valintatulos
             val letterForHaku = tuloskirjeService.getTuloskirjeInfo(haku.oid, application.oid)
             val hakemus = timed("fetchHakemukset -> hakemusConverter.convertToHakemus", 100) { hakemusConverter.convertToHakemus(letterForHaku, lomakeOption, haku, application, valintatulos) }
             timed("fetchHakemukset -> auditLogger.log", 100) { auditLogger.log(ShowHakemus(application.personOid, hakemus.oid, haku.oid)) }

@@ -63,9 +63,13 @@
         ></hakutoiveen-vastaanotto>
     </section>
 
-    <section class="ilmoittautuminen" ng-if="application.ilmoittautumisLinkit().length > 0">
-        <ilmoittautuminen hakukohteet="application.ilmoittautumisLinkit()">
+    <section class="ilmoittautuminen">
+        <ilmoittautuminen ng-show="application.ilmoittautumisLinkit().length > 0"
+                          hakukohteet="application.ilmoittautumisLinkit()"
+                          oili="application.oiliUrl()">
         </ilmoittautuminen>
+        <kela ng-show="application.kelaURL()" kela="application.kelaURL()">
+        </kela>
     </section>
 
     <form name="applicationForm" novalidate>

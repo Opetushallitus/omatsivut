@@ -1,6 +1,12 @@
 .ilmoittautuminen {
+  padding: 15px 0px;
+
+  a,a:visited {
+    color: #0093ba;
+  }
+
   .ilmoittautuminen-item {
-    padding: 20px 0px;
+    padding: 10px 0px;
   }
 
   .ilmoittautuminen-item+.ilmoittautuminen-item {
@@ -9,10 +15,15 @@
 
   header {
     .dialog-header-font();
+    font-family: 'Helvetica Neue', helvetica, arial, sans-serif;
+    font-size: 14px;
 
     strong {
-      .dialog-header-font-strong();
+      .dialog-header-font();
+      font-family: 'Helvetica Neue', helvetica, arial, sans-serif;
+      font-size: 15px;
       margin-right: 10px;
+      text-transform: uppercase;
     }
   }
 }
