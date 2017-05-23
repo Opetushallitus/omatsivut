@@ -91,7 +91,8 @@ object OmatSivutSpringContext extends Logging {
     "fi.vm.sade.haku.oppija.common.organisaatio",
     "fi.vm.sade.haku.virkailija.lomakkeenhallinta.ohjausparametrit",
     "fi.vm.sade.haku.virkailija.lomakkeenhallinta.tarjonta.impl",
-    "fi.vm.sade.haku.oppija.common.suoritusrekisteri.impl"
+    "fi.vm.sade.haku.oppija.common.suoritusrekisteri.impl",
+    "fi.vm.sade.haku.virkailija.authentication.impl"
   ),
   excludeFilters = Array(new ComponentScan.Filter(`type` = FilterType.ASSIGNABLE_TYPE, value = Array[Class[_]](classOf[Session])))
   )
@@ -116,7 +117,7 @@ object OmatSivutSpringContext extends Logging {
     }
 
     def unsupportedIntegrationException: Nothing = {
-      throw new scala.UnsupportedOperationException("This integration is supported and should not be called in omatsivut")
+      throw new scala.UnsupportedOperationException("This integration is unsupported and should not be called in omatsivut")
     }
   }
 }
