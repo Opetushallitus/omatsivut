@@ -14,24 +14,17 @@ trait AuditLoggerComponent {
   val auditContext: AuditContext
 
   class AuditLoggerFacade extends AuditLogger {
+    private val (virkailija, opiskelija) = (new Audit("omatsivut", ApplicationType.VIRKAILIJA),
+      new Audit("omatsivut", ApplicationType.OPISKELIJA))
 
     def log(event: AuditEvent) {
       val msg = new LogMessageBuilder().addAll(event.toLogMessage).build()
-      if (event.isUserOppija) {
-        AuditLoggerWrapper.opiskelijaLogger.log(msg)
-      } else {
-        AuditLoggerWrapper.virkailijaLogger.log(msg)
-      }
+      if(event.isUserOppija) opiskelija.log(msg) else virkailija.log(msg)
     }
   }
 }
 
 trait AuditLogger extends Logging {
   def log(event: AuditEvent)
-}
-
-object AuditLoggerWrapper {
-  val (virkailijaLogger, opiskelijaLogger) = (new Audit("omatsivut", ApplicationType.VIRKAILIJA),
-    new Audit("omatsivut", ApplicationType.OPISKELIJA))
 }
 
