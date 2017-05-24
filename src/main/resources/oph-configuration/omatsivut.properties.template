@@ -156,3 +156,8 @@ recaptcha.secret={{recaptcha_secret}}
 omatsivut.vetuma.url={{omatsivut_vetuma_url}}
 shibboleth.logout={{shibboleth_logout}}
 shibboleth.login={{shibboleth_login}}
+
+# (Ainakin) nämä propertiet valuvat hakemus-apista ja ne täytyy määritellä täällä, jotta resolvautuvat hakemus-apin luokissa
+cas.service.oppijanumerorekisteri-service=https://${host.virkailija}/oppijanumerorekisteri-service
+cas.service.kayttooikeus-service=https://${host.virkailija}/kayttooikeus-service
+haku.langCookie={{ haku_lang_cookie | default('i18next') }}
