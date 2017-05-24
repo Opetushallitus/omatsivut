@@ -15,17 +15,15 @@ trait AuditLoggerComponent {
 
   class AuditLoggerFacade extends AuditLogger {
 
+    private val audit = new Audit("omatsivut", ApplicationType.OPISKELIJA)
+
     def log(event: AuditEvent) {
       val msg = new LogMessageBuilder().addAll(event.toLogMessage).build()
-      AuditWrapper.audit.log(msg)
+      audit.log(msg)
     }
   }
 }
 
 trait AuditLogger extends Logging {
   def log(event: AuditEvent)
-}
-
-object AuditWrapper {
-  val audit = new Audit("omatsivut", ApplicationType.OPISKELIJA)
 }
