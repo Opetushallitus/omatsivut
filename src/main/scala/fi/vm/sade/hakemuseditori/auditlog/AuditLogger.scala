@@ -17,11 +17,7 @@ trait AuditLoggerComponent {
 
     def log(event: AuditEvent) {
       val msg = new LogMessageBuilder().addAll(event.toLogMessage).build()
-      if (event.isUserOppija) {
-        AuditLoggerWrapper.opiskelijaLogger.log(msg)
-      } else {
-        AuditLoggerWrapper.virkailijaLogger.log(msg)
-      }
+      AuditWrapper.audit.log(msg)
     }
   }
 }
@@ -30,8 +26,6 @@ trait AuditLogger extends Logging {
   def log(event: AuditEvent)
 }
 
-object AuditLoggerWrapper {
-  val (virkailijaLogger, opiskelijaLogger) = (new Audit("omatsivut", ApplicationType.VIRKAILIJA),
-    new Audit("omatsivut", ApplicationType.OPISKELIJA))
+object AuditWrapper {
+  val audit = new Audit("omatsivut", ApplicationType.OPISKELIJA)
 }
-
