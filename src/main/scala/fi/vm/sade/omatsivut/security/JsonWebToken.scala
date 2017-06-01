@@ -9,6 +9,7 @@ import pdi.jwt.{JwtAlgorithm, JwtJson4s}
 import scala.util.{Failure, Success, Try}
 
 case class HakemusJWT(oid: Oid, answersFromThisSession: Set[AnswerId], personOid: Oid)
+case class OiliJWT(hakijaOid: Oid, expires: Long)
 
 class JsonWebToken(val secret: String) {
   implicit val jsonFormats = formats(NoTypeHints)
@@ -17,8 +18,13 @@ class JsonWebToken(val secret: String) {
 
   val algo = JwtAlgorithm.HS256
 
-  def encode(hakemus: HakemusJWT) = {
+  def encode(hakemus: HakemusJWT): String = {
     JwtJson4s.encode(write(hakemus), secret, algo)
+  }
+
+  def createOiliJwt(hakijaOid: String): String = {
+    val oiliJwt = OiliJWT(hakijaOid, System.currentTimeMillis + (3600 * 2 * 1000)) //two hours expiry time
+    JwtJson4s.encode(write(oiliJwt), secret, algo)
   }
 
   def decode(token: String): Try[HakemusJWT] = {
@@ -31,5 +37,4 @@ class JsonWebToken(val secret: String) {
       case Failure(e) => Failure(new RuntimeException("Failed to decode JWT", e))
     }
   }
-
 }

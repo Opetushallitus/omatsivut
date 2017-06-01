@@ -23,6 +23,7 @@ module.exports = function(app, staticResources) {
           function (response) {
             $scope.loading = false
             $scope.hakemus = new Hakemus(response.data)
+            $scope.hakemus.oiliJwt = response.oiliJwt
             var henkilotiedot = response.data.hakemus.answers.henkilotiedot
             if(henkilotiedot.Henkilotunnus) {
               $scope.allowVastaanotto = false

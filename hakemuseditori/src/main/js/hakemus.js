@@ -21,6 +21,7 @@ function Hakemus(json) {
     this.calculatedValues = {
       postOffice: json.hakemus.postOffice
     }
+    this.oiliJwt = null
   } catch (e) {
     throw e;
   }
@@ -172,6 +173,20 @@ Hakemus.prototype = {
         tulos.ilmoittautumistila.ilmoittauduttavissa &&
         tulos.ilmoittautumistila.ilmoittautumistapa != null && tulos.ilmoittautumistila.ilmoittautumistapa.url
     })
+  },
+
+  kelaURL: function() {
+    return _.chain(this.valintatulosHakutoiveet()).map(function(tulos) {
+      return tulos.kelaURL
+    }).filter(function(k) {return k}).head().value()
+  },
+
+  oiliUrl: function() {
+    var oiliJwt = this.oiliJwt;
+    return _.chain(this.valintatulosHakutoiveet()).map(function(tulos) {
+        var baseUrl = tulos.ilmoittautumistila.ilmoittautumistapa.url;
+        return baseUrl.endsWith('/oili/') ? baseUrl : baseUrl + '?token=' + oiliJwt;
+    }).filter(function(k) {return k}).head().value()
   },
 
   hasResultState: function(resultStates) {

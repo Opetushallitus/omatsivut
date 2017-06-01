@@ -176,7 +176,11 @@
     "pleaseRegister": "Anmäl dig till terminen",
     "goToRegistration": "Anmäl dig",
     "conditionalAcceptanceTitle": "Studerandeantagningen är ännu villkorlig.",
-    "conditionalAcceptanceInfo": "Du kan anmäla dig först efter att antagningen har bekräftats."
+    "conditionalAcceptanceInfo": "Du kan anmäla dig först efter att antagningen har bekräftats.",
+    "opintoetuudet": {
+      "studentFinancialAid": "Förflytta dig till FPAs E-tjänster",
+      "opintotukihakemus": "Gör studiestödsansökan"
+    }
   },
 
   "emailNote": {
