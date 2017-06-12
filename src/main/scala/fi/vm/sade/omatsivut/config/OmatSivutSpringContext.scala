@@ -114,6 +114,8 @@ object OmatSivutSpringContext extends Logging {
       override def getHakija(asOid: String, application: String): HakijaDTO = unsupportedIntegrationException
 
       override def fetchValintaData(application: Application, valintaTimeout: Optional[Duration]): util.Map[String, String] = unsupportedIntegrationException
+
+      override def getHakijaFromValintarekisteri(asOid: String, application: String): HakijaDTO = unsupportedIntegrationException
     }
 
     def unsupportedIntegrationException: Nothing = {
