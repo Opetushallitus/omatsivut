@@ -54,7 +54,7 @@ class RemoteValintatulosService extends ValintatulosService with JsonFormats wit
   }
 
 
-  override def getValintatulos(hakemusOid: String, hakuOid: String) = {
+  override def getValintatulos(hakemusOid: String, hakuOid: String): Option[Valintatulos] = {
     val url = OphUrlProperties.url("valinta-tulos-service.valintatulos", hakuOid, hakemusOid)
     val request = DefaultHttpClient.httpGet(url)
 
@@ -77,7 +77,7 @@ class RemoteValintatulosService extends ValintatulosService with JsonFormats wit
     }
   }
 
-  override def vastaanota(henkiloOid: String, hakemusOid: String, hakukohdeOid: String, vastaanotto: VastaanottoAction) = {
+  override def vastaanota(henkiloOid: String, hakemusOid: String, hakukohdeOid: String, vastaanotto: VastaanottoAction): Boolean = {
     import org.json4s.jackson.Serialization
 
     val url = OphUrlProperties.url("valinta-tulos-service.vastaanota", henkiloOid, hakemusOid, hakukohdeOid)

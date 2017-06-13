@@ -21,9 +21,19 @@ trait AuditLoggerComponent {
       val msg = new LogMessageBuilder().addAll(event.toLogMessage).build()
       audit.log(msg)
     }
+
+    override def logDiff(event: AuditEvent, diff: Iterable[(String, String, String)]): Unit = {
+      var msg = new LogMessageBuilder().addAll(event.toLogMessage)
+      diff.foreach(triplet => {
+        msg = msg.add(triplet._1, triplet._3, triplet._2)
+      })
+      val message = msg.build()
+      audit.log(message)
+    }
   }
 }
 
 trait AuditLogger extends Logging {
   def log(event: AuditEvent)
+  def logDiff(event: AuditEvent, diff: Iterable[(String, String, String)])
 }
