@@ -5,6 +5,7 @@ import fi.vm.sade.hakemuseditori.user.{Oppija, User}
 
 import scala.collection.immutable
 
+//TODO improve the diff handling, possibly by improving the AuditEvent (which this extends) to allow for more generic log text fomation
 case class UpdateHakemus(user: User, hakemusOid: String, hakuOid: String, originalAnswers: Answers, updatedAnswers: Answers, target: String = "Hakemus") extends AuditEvent {
   override def isUserOppija = user match {
     case u: Oppija => true
