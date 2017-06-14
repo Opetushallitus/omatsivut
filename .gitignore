@@ -102,3 +102,4 @@ example-application/bundle.js
 *.iml
 dev
 target
+!/gradle/wrapper/gradle-wrapper.jar
