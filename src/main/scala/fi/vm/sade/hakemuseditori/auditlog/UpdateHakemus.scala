@@ -19,13 +19,11 @@ case class UpdateHakemus(user: User, hakemusOid: String, hakuOid: String, origin
 
   /**
     * Gets a list of triplets that contain (key, original value, new value)
-    * @return
+    * @return an #Iterable[#DiffTriplet]
     */
-  private[hakemuseditori] def getAnswerDiff: Iterable[(String, String, String)] = {
-
-
+  private[hakemuseditori] def getAnswerDiff: Iterable[DiffTriplet] = {
     //this thing assumes that the Answers type contains only ONE nested map inside the outer map
-    val diff: immutable.Iterable[(String, String, String)] = updatedAnswers.flatMap(keyVal => {
+    val diff: Iterable[DiffTriplet] = updatedAnswers.flatMap(keyVal => {
       val key1: String = keyVal._1
       val updated: Map[String, String] = keyVal._2
 
@@ -33,14 +31,12 @@ case class UpdateHakemus(user: User, hakemusOid: String, hakuOid: String, origin
 
       val diff = (original.toSet diff updated.toSet).toMap[String, String]
 
-      val diffTriplets: immutable.Iterable[(String, String, String)] = diff.map(keyVal => {
+      val diffTriplets: Iterable[DiffTriplet] = diff.map(keyVal => {
         val key2 = keyVal._1
-        (s"$key1.$key2", original.getOrElse(key2, ""), updated.getOrElse(key2, ""))
+        DiffTriplet(s"$key1.$key2", original.getOrElse(key2, ""), updated.getOrElse(key2, ""))
       })
       diffTriplets
-    }).filter(triple => !triple._2.isEmpty || !triple._3.isEmpty)
-
-
+    }).filter(triple => !triple.oldValue.isEmpty || !triple.newValue.isEmpty)
     diff
   }
 }

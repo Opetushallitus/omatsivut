@@ -22,10 +22,10 @@ trait AuditLoggerComponent {
       audit.log(msg)
     }
 
-    override def logDiff(event: AuditEvent, diff: Iterable[(String, String, String)]): Unit = {
+    override def logDiff(event: AuditEvent, diff: Iterable[DiffTriplet]): Unit = {
       var msg = new LogMessageBuilder().addAll(event.toLogMessage)
       diff.foreach(triplet => {
-        msg = msg.add(triplet._1, triplet._3, triplet._2)
+        msg = msg.add(triplet.key, triplet.newValue, triplet.oldValue)
       })
       val message = msg.build()
       audit.log(message)
@@ -35,5 +35,13 @@ trait AuditLoggerComponent {
 
 trait AuditLogger extends Logging {
   def log(event: AuditEvent)
-  def logDiff(event: AuditEvent, diff: Iterable[(String, String, String)])
+  def logDiff(event: AuditEvent, diff: Iterable[DiffTriplet])
 }
+
+/**
+  * Used as parameter for logDiff function
+  * @param key
+  * @param oldValue
+  * @param newValue
+  */
+private[hakemuseditori] case class DiffTriplet(key: String, oldValue: String, newValue: String)
