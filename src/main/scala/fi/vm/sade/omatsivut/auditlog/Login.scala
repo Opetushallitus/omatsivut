@@ -13,7 +13,7 @@ case class Login(authInfo: AuthenticationInfo, target: String = "Session") exten
     val shib = authInfo.shibbolethCookie
     Map(
       "message" -> "Käyttäjä kirjautui sisään",
-      "user.id" -> authInfo.personOid.getOrElse(""),
-      "user.session" -> shib.map(_.toString).getOrElse("(no shibboleth cookie)"))
+      "userId" -> authInfo.personOid.getOrElse(""),
+      "userSession" -> shib.map(_.toString).getOrElse("(no shibboleth cookie)"))
   }
 }
