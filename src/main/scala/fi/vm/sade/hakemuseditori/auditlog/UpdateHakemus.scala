@@ -1,9 +1,8 @@
 package fi.vm.sade.hakemuseditori.auditlog
 
+import fi.vm.sade.hakemuseditori.auditlog.Operation.Operation
 import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus.Answers
 import fi.vm.sade.hakemuseditori.user.{Oppija, User}
-
-import scala.collection.immutable
 
 //TODO improve the diff handling, possibly by improving the AuditEvent (which this extends) to allow for more generic log text fomation
 case class UpdateHakemus(user: User, hakemusOid: String, hakuOid: String, originalAnswers: Answers, updatedAnswers: Answers, target: String = "Hakemus") extends AuditEvent {
@@ -16,6 +15,8 @@ case class UpdateHakemus(user: User, hakemusOid: String, hakuOid: String, origin
     "hakuOid" -> hakuOid,
     "hakemusOid" -> hakemusOid,
     "id" -> user.oid)
+
+  override def operation: Operation = Operation.UPDATE
 
   /**
     * Gets a list of triplets that contain (key, original value, new value)
@@ -36,7 +37,9 @@ case class UpdateHakemus(user: User, hakemusOid: String, hakuOid: String, origin
         DiffTriplet(s"$key1.$key2", original.getOrElse(key2, ""), updated.getOrElse(key2, ""))
       })
       diffTriplets
-    }).filter(triple => !triple.oldValue.isEmpty || !triple.newValue.isEmpty)
+
+      //remove ones where both are empty or equal
+    }).filter(triple => (!triple.oldValue.isEmpty || !triple.newValue.isEmpty) && !triple.newValue.equals(triple.oldValue))
     diff
   }
 }
