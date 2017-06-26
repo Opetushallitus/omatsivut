@@ -44,10 +44,11 @@ module.exports = function(app) {
         }
         $scope.isHyvaksyttyKesken = function(valintatulos, valintatulokset) {
           if(valintatulos.valintatila === "HYVAKSYTTY") {
-            var firstKeskenIndex = _.findIndex(valintatulokset, function(v) { return v.valintatila === "KESKEN" })
+            var firstKeskenIndex = _.findIndex(valintatulokset, function(v) { return v.valintatila === "KESKEN" || v.valintatila === "VARALLA"})
             if(firstKeskenIndex != -1) {
               var valintatulosIndex = _.findIndex(valintatulokset, function(v) { return v.hakukohdeOid === valintatulos.hakukohdeOid})
-              return firstKeskenIndex < valintatulosIndex;
+              // If hyvaksytty hakemus is not vastaanotettavissa it belongs to kk haku with sijoittelu
+              return firstKeskenIndex < valintatulosIndex && valintatulos.vastaanotettavuustila === "EI_VASTAANOTETTAVISSA";
             }
           }
           return false;
