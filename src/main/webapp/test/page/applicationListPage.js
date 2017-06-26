@@ -201,7 +201,7 @@ function ApplicationListPage() {
             var el = $(this)
             return {
               hakukohde: el.find("[ng-bind='tulos.tarjoajaNimi']").text() + " " + el.find("[ng-bind='tulos.hakukohdeNimi']").text(),
-              tila: el.find("[ng-bind='valintatulosText(tulos)']").text().trim().replace(nbsp, " ")
+              tila: el.find("[ng-bind='valintatulosText(tulos, valintatulos().hakutoiveet)']").text().trim().replace(nbsp, " ")
             }
           }).toArray()
       },
