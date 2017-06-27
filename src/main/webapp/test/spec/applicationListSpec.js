@@ -2496,7 +2496,7 @@
         "Sähköposti": "joku@jossain.fi",
         "Matkapuhelinnumero": "0401234987",
         "Lähiosoite": "uusi katu",
-        "Postinumero": "00500"
+        "Postinumero": "00100"
       }
 
       var invalidData = {

@@ -366,9 +366,16 @@ Hakemus.prototype = {
     return unhandled
 
     function clearErrors() {
-      _(hakutoiveMap).each(function(item) { item.setErrors() })
-      if (!skipQuestions)
-        _(questionMap).each(function(item) { item.setErrors() })
+      _(hakutoiveMap).each(function(item) {
+        item.setErrors()
+      });
+      if (!skipQuestions) {
+        _(questionMap).each(function(item) {
+          if (item.hasOwnProperty("setErrors")) {
+            item.setErrors();
+          }
+        })
+      }
     }
 
     function updateErrors(questionId, errors) {
