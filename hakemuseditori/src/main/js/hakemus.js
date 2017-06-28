@@ -371,8 +371,10 @@ Hakemus.prototype = {
       });
       if (!skipQuestions) {
         _(questionMap).each(function(item) {
-          if (item.hasOwnProperty("setErrors")) {
-            item.setErrors();
+          try {
+            item.setErrors()
+          } catch (e) {
+            console.log("For some unfathomable reason item.setErrors() is not defined here although it should be! Should be fixed hakemus.js#updateValidationMessages().");
           }
         })
       }
