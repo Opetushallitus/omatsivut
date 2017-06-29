@@ -4,7 +4,7 @@ function HakutoiveidenMuokkausPage() {
   var api = {
 
     isVisible: function() {
-      return S("h1").text().trim() === "Hakutoiveiden muokkaus" && (api.alertMsg().length > 0 || api.getApplication().name().length > 0)
+        return $("h1").text().trim() === "Hakutoiveiden muokkaus väärällä tokenilla" && (api.alertMsg().length > 0 || api.getApplication().name().length > 0)
     },
 
     openPage: function(token, pageLoadedCheck) {
