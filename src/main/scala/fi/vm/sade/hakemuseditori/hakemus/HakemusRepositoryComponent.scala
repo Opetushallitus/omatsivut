@@ -62,7 +62,9 @@ trait HakemusRepositoryComponent {
           dao.update(applicationQuery, applicationJavaObject)
         }
         sendMailService.sendModifiedEmail(applicationJavaObject)
-        auditLogger.log(UpdateHakemus(user, hakemus.oid, haku.oid, originalApplication.answers, checkedAnswers))
+
+        val auditEvent = UpdateHakemus(user, hakemus.oid, haku.oid, originalApplication.answers, checkedAnswers)
+        auditLogger.logDiff(auditEvent, auditEvent.getAnswerDiff)
         hakemusConverter.convertToHakemus(None, Some(lomake), haku, wrap(applicationJavaObject))
       }
     }

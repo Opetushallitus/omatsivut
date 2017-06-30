@@ -33,7 +33,7 @@ class JettyLauncher(profile: Option[String] = None) {
   val server = new Server(AppConfig.embeddedJettyPortChooser.chosenPort)
   val handlers = new HandlerCollection()
 
-  val omatsivut = {
+  val omatsivut: WebAppContext = {
     val context = new WebAppContext()
     context.setResourceBase("src/main/webapp")
     context.setContextPath("/omatsivut")
@@ -43,7 +43,7 @@ class JettyLauncher(profile: Option[String] = None) {
   }
   handlers.addHandler(omatsivut)
 
-  val valintatulosservice = {
+  val valintatulosservice: WebAppContext = {
     System.setProperty("valintatulos.profile", "it-externalHakemus")
     System.setProperty("hakemus.embeddedmongo.port", AppConfig.embeddedMongoPortChooser.chosenPort.toString)
     val context = new WebAppContext()
@@ -55,7 +55,7 @@ class JettyLauncher(profile: Option[String] = None) {
 
   server.setHandler(handlers)
 
-  def start = {
+  def start: Server = {
     server.start()
     server
   }
