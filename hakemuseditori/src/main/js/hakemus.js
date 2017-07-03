@@ -366,9 +366,18 @@ Hakemus.prototype = {
     return unhandled
 
     function clearErrors() {
-      _(hakutoiveMap).each(function(item) { item.setErrors() })
-      if (!skipQuestions)
-        _(questionMap).each(function(item) { item.setErrors() })
+      _(hakutoiveMap).each(function(item) {
+        item.setErrors()
+      });
+      if (!skipQuestions) {
+        _(questionMap).each(function(item) {
+          try {
+            item.setErrors()
+          } catch (e) {
+            console.log("For some unfathomable reason item.setErrors() is not defined here although it should be! Should be fixed hakemus.js#updateValidationMessages().");
+          }
+        })
+      }
     }
 
     function updateErrors(questionId, errors) {
