@@ -3,6 +3,7 @@ package fi.vm.sade.omatsivut.servlet
 import java.text.SimpleDateFormat
 import java.util.Calendar
 
+import fi.vm.sade.ataru.AtaruServiceComponent
 import fi.vm.sade.groupemailer.{EmailData, EmailMessage, EmailRecipient, GroupEmailComponent}
 import fi.vm.sade.hakemuseditori._
 import fi.vm.sade.hakemuseditori.auditlog.{AuditLogger, AuditLoggerComponent, SaveVastaanotto}
@@ -30,6 +31,7 @@ import scala.util.{Failure, Success}
 
 trait ApplicationsServletContainer {
   this: HakemusEditoriComponent with LomakeRepositoryComponent with
+    AtaruServiceComponent with
     HakemusRepositoryComponent with
     ValintatulosServiceComponent with
     ApplicationValidatorComponent with
@@ -44,6 +46,7 @@ trait ApplicationsServletContainer {
 
     def user = Oppija(personOid())
     private val hakemusEditori = newEditor(this)
+    private val ataruService = newAtaruService()
 
     protected val applicationDescription = "Oppijan henkilökohtaisen palvelun REST API, jolla voi hakea ja muokata hakemuksia ja omia tietoja"
 
@@ -62,7 +65,8 @@ trait ApplicationsServletContainer {
     }
 
     get("/") {
-      hakemusEditori.fetchByPersonOid(personOid())
+//      hakemusEditori.fetchByPersonOid(personOid())
+      ataruService.findApplications(personOid())
     }
 
     put("/:oid") {
