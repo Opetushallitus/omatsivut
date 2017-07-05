@@ -44,10 +44,10 @@ trait AtaruServiceComponent  {
             Map(),
             Option("Helsinki"),
             false,
-            false,
+            true,
             None,
             Map())
-          HakemusInfo(hakemus, List(), List(), true, None)
+          HakemusInfo(hakemus, List(), List(), true, None, "Ataru")
         })
         .filter(a => a != null)
     }

@@ -2,7 +2,7 @@
     <section class="application-header">
         <h2>{{application.haku.name }}</h2>
 
-        <application-periods haku="application.haku"></application-periods>
+        <application-periods haku="application.haku" ng-if="application.hakemusSource != 'Ataru'"></application-periods>
 
         <div class="timestamp-row" ng-show="application.haku.jarjestelmanHakulomake">
             <i ng-show="application.hasForm" aria-hidden="true" class="icon-doc-text"></i>
@@ -25,7 +25,7 @@
         </div>
     </section>
 
-    <section class="application-status" role="presentation">
+    <section class="application-status" role="presentation" ng-if="application.hakemusSource != 'Ataru'">
         <div class="application-status-item" ng-if="!application.haku.active && application.state.id != 'HAKUKIERROSPAATTYNYT' && !application.allResultsAvailable() && application.vastaanotettavatHakutoiveet().length == 0">
             {{ localization('label.applicationPeriodEnded') }}
             <span ng-if="application.haku.aikataulu.julkistus">
@@ -54,7 +54,7 @@
         </div>
     </section>
 
-    <section class="hakutoiveen-vastaanotto" ng-if="application.vastaanotettavatHakutoiveet().length > 0">
+    <section class="hakutoiveen-vastaanotto" ng-if="application.vastaanotettavatHakutoiveet().length > 0 && application.hakemusSource != 'Ataru'">
         <hakutoiveen-vastaanotto
                 application-oid="application.oid"
                 haku="application.haku"
@@ -63,7 +63,7 @@
         ></hakutoiveen-vastaanotto>
     </section>
 
-    <section class="ilmoittautuminen">
+    <section class="ilmoittautuminen" ng-if="application.hakemusSource != 'Ataru'">
         <ilmoittautuminen ng-show="application.ilmoittautumisLinkit().length > 0"
                           hakukohteet="application.ilmoittautumisLinkit()"
                           oili="application.oiliUrl()">
@@ -72,7 +72,7 @@
         </kela>
     </section>
 
-    <form name="applicationForm" novalidate>
+    <form name="applicationForm" novalidate ng-if="application.hakemusSource != 'Ataru'">
 
         <section class="application-section application-valintatulos-error" ng-if="!application.resultFetchedSuccessfully()">
             <span role="status" class="status-message error">{{ localization("error.valintatulosFailed") }}</span>

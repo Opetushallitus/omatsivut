@@ -4,13 +4,13 @@ import fi.vm.sade.hakemuseditori.hakemus.HakemusInfo.{ApplicationOptionOid, Shou
 import fi.vm.sade.hakemuseditori.hakemus.domain.{Hakemus, ValidationError}
 import fi.vm.sade.hakemuseditori.lomake.domain.QuestionNode
 
-case class HakemusInfo(hakemus: Hakemus, errors: List[ValidationError], questions: List[QuestionNode], tulosOk: Boolean, paymentInfo: Option[Map[ApplicationOptionOid, ShouldPay]])
+case class HakemusInfo(hakemus: Hakemus, errors: List[ValidationError], questions: List[QuestionNode], tulosOk: Boolean, paymentInfo: Option[Map[ApplicationOptionOid, ShouldPay]], hakemusSource: String)
 
 object HakemusInfo {
   type ApplicationOptionOid = String
   type ShouldPay = Boolean
 
-  def apply(hakemus: Hakemus, errors: List[ValidationError], questions: List[QuestionNode], paymentInfo: Option[Map[ApplicationOptionOid, ShouldPay]]): HakemusInfo = {
-    HakemusInfo(hakemus, errors, questions, tulosOk = true, paymentInfo)
+  def apply(hakemus: Hakemus, errors: List[ValidationError], questions: List[QuestionNode], paymentInfo: Option[Map[ApplicationOptionOid, ShouldPay]], hakemusSource: String = "HakuApp"): HakemusInfo = {
+    HakemusInfo(hakemus, errors, questions, tulosOk = true, paymentInfo, hakemusSource)
   }
 }
