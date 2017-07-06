@@ -7,6 +7,7 @@ import fi.vm.sade.hakemuseditori.lomake.LomakeRepositoryComponent
 import fi.vm.sade.hakemuseditori.tarjonta.TarjontaComponent
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.hakemus.domain.Application.State
+import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.utils.http.HttpClient
 import org.json4s.DefaultFormats
 import org.json4s.native.JsonMethods
@@ -37,7 +38,7 @@ trait AtaruServiceComponent  {
 
     private def getApplications(): List[(Application, String)] = {
       httpClient
-        .httpGet("http://localhost:8351/hakemus/api/secure/applications/1.2.246.562.24.14229104472")
+        .httpGet(OphUrlProperties.url("ataru.applications.modify", "1.2.246.562.24.14229104472"))
         .responseWithHeaders() match {
         case (200, _, body) => {
           JsonMethods
