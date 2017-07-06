@@ -36,9 +36,9 @@ trait AtaruServiceComponent  {
       }
     }
 
-    private def getApplications(): List[(Application, String)] = {
+    private def getApplications(personOid: String): List[(Application, String)] = {
       httpClient
-        .httpGet(OphUrlProperties.url("ataru.applications.modify", "1.2.246.562.24.14229104472"))
+        .httpGet(OphUrlProperties.url("ataru.applications.modify", personOid))
         .responseWithHeaders() match {
         case (200, _, body) => {
           JsonMethods
@@ -58,7 +58,7 @@ trait AtaruServiceComponent  {
     }
 
     def findApplications(personOid: String): List[HakemusInfo] = {
-      getApplications()
+      getApplications(personOid)
         .map { case (a: Application, s: String) => (ImmutableLegacyApplicationWrapper.wrap(a), s) }
         .filter { case (a: ImmutableLegacyApplicationWrapper, _) => !a.state.equals("PASSIVE") }
         .map { case (a: ImmutableLegacyApplicationWrapper, s: String) => {
