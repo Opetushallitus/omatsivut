@@ -6,7 +6,7 @@
 
         <div class="timestamp-row" ng-show="application.haku.jarjestelmanHakulomake">
             <i ng-show="application.hasForm" aria-hidden="true" class="icon-doc-text"></i>
-            <a class="preview" ng-href="{{url('omatsivut.applications.preview',application.oid)}}" ng-show="application.hasForm" ng-class="{disabled: applicationForm.$dirty|| statusMessageType=='pending' || isValidating}" target="_blank">{{ localization('button.showApplication') }}</a>
+            <a class="preview" ng-href="{{ application.secret ? url('ataru.applications.modify', application.secret) : url('omatsivut.applications.preview',application.oid)}}" ng-show="application.hasForm" ng-class="{disabled: applicationForm.$dirty|| statusMessageType=='pending' || isValidating}" target="_blank">{{ localization('button.showApplication') }}</a>
             <span ng-if="application.tuloskirje && application.tuloskirje.createdDate">
                 <span class="delimiter"> | </span>
                 <a class="tuloskirje" ng-href="{{url('omatsivut.applications.tuloskirje',application.haku.oid)}}" ng-show="application.hasForm" ng-class="{disabled: applicationForm.$dirty|| statusMessageType=='pending' || isValidating}" target="_blank">
