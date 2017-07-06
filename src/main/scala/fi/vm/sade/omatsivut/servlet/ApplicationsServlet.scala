@@ -21,6 +21,7 @@ import fi.vm.sade.hakemuseditori.valintatulokset.domain._
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.hakemuspreview.HakemusPreviewGeneratorComponent
 import fi.vm.sade.omatsivut.security.AuthenticationRequiringServlet
+import fi.vm.sade.utils.http.DefaultHttpClient
 import org.json4s.jackson.Serialization
 import org.scalatra._
 import org.scalatra.json._
@@ -46,7 +47,7 @@ trait ApplicationsServletContainer {
 
     def user = Oppija(personOid())
     private val hakemusEditori = newEditor(this)
-    private val ataruService = newAtaruService()
+    private val ataruService = newAtaruService(DefaultHttpClient)
 
     protected val applicationDescription = "Oppijan henkilökohtaisen palvelun REST API, jolla voi hakea ja muokata hakemuksia ja omia tietoja"
 
