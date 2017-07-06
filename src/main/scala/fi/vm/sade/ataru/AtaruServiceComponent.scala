@@ -11,7 +11,7 @@ import fi.vm.sade.utils.http.HttpClient
 import org.json4s.DefaultFormats
 import org.json4s.native.JsonMethods
 
-case class AtaruApplication(key: String, state: String, haku: String)
+case class AtaruApplication(key: String, state: String, haku: String, secret: String)
 
 trait AtaruServiceComponent  {
   this: LomakeRepositoryComponent
@@ -35,7 +35,7 @@ trait AtaruServiceComponent  {
       }
     }
 
-    private def getApplications(): List[Application] = {
+    private def getApplications(): List[(Application, String)] = {
       httpClient
         .httpGet("http://localhost:8351/hakemus/api/secure/applications/1.2.246.562.24.14229104472")
         .responseWithHeaders() match {
@@ -48,6 +48,7 @@ trait AtaruServiceComponent  {
               application.setOid(aa.key)
               application.setApplicationSystemId(aa.haku) // haku OID
               application.setState(getState(aa))
+              (application, aa.secret)
             })
         }
         case (status, _, body) =>
@@ -57,11 +58,11 @@ trait AtaruServiceComponent  {
 
     def findApplications(personOid: String): List[HakemusInfo] = {
       getApplications()
-        .map(ImmutableLegacyApplicationWrapper.wrap)
-        .filter(a => !a.state.equals("PASSIVE"))
-        .map(a => {
+        .map { case (a: Application, s: String) => (ImmutableLegacyApplicationWrapper.wrap(a), s) }
+        .filter { case (a: ImmutableLegacyApplicationWrapper, _) => !a.state.equals("PASSIVE") }
+        .map { case (a: ImmutableLegacyApplicationWrapper, s: String) => {
           val haku = tarjontaService.haku(a.hakuOid, Language.fi)
-          if (!haku.isEmpty) {
+          if (haku.nonEmpty) {
             val hakemus = Hakemus(
               a.oid,
               Option(System.currentTimeMillis()),
@@ -76,12 +77,13 @@ trait AtaruServiceComponent  {
               false,
               true,
               None,
-              Map())
+              Map(),
+              Option(s))
             HakemusInfo(hakemus, List(), List(), true, None, "Ataru")
           } else {
             null
           }
-        })
+        }}
         .filter(a => a != null)
     }
   }

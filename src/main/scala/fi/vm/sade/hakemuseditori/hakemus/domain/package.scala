@@ -16,7 +16,7 @@ case class Hakemus(oid: String, received: Option[Long], updated: Option[Long], s
                    hakutoiveet: List[Hakutoive] = Nil, haku: Haku, educationBackground: EducationBackground,
                    answers: Answers, postOffice: Option[String], requiresAdditionalInfo: Boolean,
                    hasForm: Boolean, requiredPaymentState: Option[String],
-                   notifications: Map[String, Map[String, Boolean]]) extends HakemusLike {
+                   notifications: Map[String, Map[String, Boolean]], secret: Option[String] = None) extends HakemusLike {
   def preferences = hakutoiveet.map(_.hakemusData.getOrElse(Map.empty))
 
   def toHakemusMuutos = HakemusMuutos(oid, haku.oid, hakutoiveet.map(_.hakemusData.getOrElse(Map.empty)), answers)
