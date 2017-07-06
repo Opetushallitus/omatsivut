@@ -234,7 +234,7 @@ trait HakemusRepositoryComponent {
                 HakemusInfo(hakemus, List(), List(), tulosOk, None, "HakuApp")
             }
           }
-        }).sortBy[Option[Long]](_.hakemus.received).reverse
+        })
       }
     }
 

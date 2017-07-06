@@ -66,8 +66,7 @@ trait ApplicationsServletContainer {
     }
 
     get("/") {
-//      hakemusEditori.fetchByPersonOid(personOid())
-      ataruService.findApplications(personOid())
+      { ataruService.findApplications(personOid()) ::: hakemusEditori.fetchByPersonOid(personOid()) }.sortBy[Option[Long]](_.hakemus.received).reverse
     }
 
     put("/:oid") {
