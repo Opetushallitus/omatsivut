@@ -5,6 +5,7 @@ import fi.vm.sade.hakemuseditori.hakemus.domain.{Active, EducationBackground, Ha
 import fi.vm.sade.hakemuseditori.hakemus.{HakemusInfo, ImmutableLegacyApplicationWrapper}
 import fi.vm.sade.hakemuseditori.lomake.LomakeRepositoryComponent
 import fi.vm.sade.hakemuseditori.tarjonta.TarjontaComponent
+import fi.vm.sade.hakemuseditori.tarjonta.domain.Haku
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.hakemus.domain.Application.State
 import fi.vm.sade.omatsivut.OphUrlProperties
@@ -62,7 +63,7 @@ trait AtaruServiceComponent  {
         .map { case (a: Application, s: String) => (ImmutableLegacyApplicationWrapper.wrap(a), s) }
         .filter { case (a: ImmutableLegacyApplicationWrapper, _) => !a.state.equals("PASSIVE") }
         .map { case (a: ImmutableLegacyApplicationWrapper, s: String) => {
-          val haku = tarjontaService.haku(a.hakuOid, Language.fi)
+          val haku: Option[Haku] = tarjontaService.haku(a.hakuOid, Language.fi)
           if (haku.nonEmpty) {
             val hakemus = Hakemus(
               a.oid,
@@ -80,7 +81,7 @@ trait AtaruServiceComponent  {
               None,
               Map(),
               Option(s))
-            HakemusInfo(hakemus, List(), List(), true, None, "Ataru")
+            HakemusInfo(hakemus, List(), List(), true, None, "Ataru", OphUrlProperties.url("ataru.hakija.url"))
           } else {
             null
           }

@@ -227,11 +227,11 @@ trait HakemusRepositoryComponent {
             lomakeOption match {
               case Some(lomake) if haku.applicationPeriods.exists(_.active) =>
                 timed("fetchHakemukset -> applicationValidator.validateAndFindQuestions", 100) { applicationValidator.validateAndFindQuestions(haku, lomake, withNoPreferenceSpesificAnswers(hakemus), application) match {
-                    case (app, errors, questions) => HakemusInfo(hakemusConverter.convertToHakemus(letterForHaku, Some(lomake), haku, app, valintatulos), errors, questions, tulosOk, None, "HakuApp")
+                    case (app, errors, questions) => HakemusInfo(hakemusConverter.convertToHakemus(letterForHaku, Some(lomake), haku, app, valintatulos), errors, questions, tulosOk, None, "HakuApp", "")
                   }
                 }
               case _ =>
-                HakemusInfo(hakemus, List(), List(), tulosOk, None, "HakuApp")
+                HakemusInfo(hakemus, List(), List(), tulosOk, None, "HakuApp", "")
             }
           }
         })

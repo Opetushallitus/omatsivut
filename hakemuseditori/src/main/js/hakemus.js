@@ -23,6 +23,7 @@ function Hakemus(json) {
     }
     this.oiliJwt = null
     this.hakemusSource = json.hakemusSource
+    if (this.hakemusSource === 'Ataru') this.ataruHakijaUrl = json.ataruHakijaUrl
     this.secret = json.hakemus.secret
   } catch (e) {
     throw e;
