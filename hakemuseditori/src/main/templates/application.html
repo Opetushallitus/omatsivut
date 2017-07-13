@@ -2,7 +2,7 @@
     <section class="application-header">
         <h2>{{application.haku.name }}</h2>
 
-        <application-periods haku="application.haku" ng-if="application.hakemusSource != 'Ataru'"></application-periods>
+        <application-periods haku="application.haku"></application-periods>
 
         <div class="timestamp-row" ng-show="application.haku.jarjestelmanHakulomake || application.hakemusSource === 'Ataru'">
             <i ng-show="application.hasForm" aria-hidden="true" class="icon-doc-text"></i>
