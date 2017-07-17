@@ -1,20 +1,19 @@
 package fi.vm.sade.omatsivut.config
 
-import fi.vm.sade.ataru.AtaruServiceComponent
+import fi.vm.sade.ataru.{AtaruService, AtaruServiceComponent}
 import fi.vm.sade.groupemailer.{GroupEmailComponent, GroupEmailService}
 import fi.vm.sade.hakemuseditori.auditlog.{AuditContext, AuditLogger, AuditLoggerComponent}
 import fi.vm.sade.hakemuseditori.domain.Language.Language
 import fi.vm.sade.hakemuseditori.hakemus._
 import fi.vm.sade.hakemuseditori.hakumaksu.{HakumaksuServiceWrapper, RemoteHakumaksuServiceWrapper, StubbedHakumaksuServiceWrapper}
-import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.hakemuseditori.koodisto.{KoodistoComponent, KoodistoService, RemoteKoodistoService, StubbedKoodistoService}
 import fi.vm.sade.hakemuseditori.koulutusinformaatio.{KoulutusInformaatioComponent, KoulutusInformaatioService}
 import fi.vm.sade.hakemuseditori.localization.TranslationsComponent
 import fi.vm.sade.hakemuseditori.lomake.{LomakeRepository, LomakeRepositoryComponent}
 import fi.vm.sade.hakemuseditori.ohjausparametrit.{OhjausparametritComponent, OhjausparametritService}
 import fi.vm.sade.hakemuseditori.tarjonta.{TarjontaComponent, TarjontaService}
-import fi.vm.sade.hakemuseditori.viestintapalvelu.{TuloskirjeComponent, TuloskirjeService}
 import fi.vm.sade.hakemuseditori.valintatulokset._
+import fi.vm.sade.hakemuseditori.viestintapalvelu.{TuloskirjeComponent, TuloskirjeService}
 import fi.vm.sade.hakemuseditori.{HakemusEditoriComponent, RemoteSendMailServiceWrapper, SendMailServiceWrapper, StubbedSendMailServiceWrapper}
 import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.omatsivut.config.AppConfig._
@@ -26,6 +25,7 @@ import fi.vm.sade.omatsivut.oppijantunnistus.{OppijanTunnistusComponent, Oppijan
 import fi.vm.sade.omatsivut.servlet._
 import fi.vm.sade.omatsivut.servlet.session.{LogoutServletContainer, SecuredSessionServletContainer}
 import fi.vm.sade.utils.captcha.CaptchaServiceComponent
+import fi.vm.sade.utils.http.DefaultHttpClient
 
 class ComponentRegistry(val config: AppConfig)
   extends SpringContextComponent with
@@ -109,6 +109,11 @@ class ComponentRegistry(val config: AppConfig)
     case _ => new RemoteSendMailServiceWrapper(springContext)
   }
 
+  private def configureAtaruService: AtaruService = config match {
+    case _: StubbedExternalDeps => new StubbedAtaruService
+    case _ => new RemoteAtaruService(DefaultHttpClient)
+  }
+
   lazy val springContext = new HakemusSpringContext(OmatSivutSpringContext.createApplicationContext(config))
   val hakumaksuService: HakumaksuServiceWrapper = configureHakumaksuService
   val sendMailService: SendMailServiceWrapper = configureSendMailService
@@ -124,6 +129,7 @@ class ComponentRegistry(val config: AppConfig)
   val groupEmailService: GroupEmailService = configureGroupEmailService
   val captchaService: CaptchaService = new RemoteCaptchaService(config.settings.captchaSettings)
   val oppijanTunnistusService = configureOppijanTunnistusService
+  val ataruService: AtaruService = configureAtaruService
 
   def newAuditLoginFilter = new AuditLoginFilter(auditLogger, OphUrlProperties.url("vetuma.url"))
   def muistilistaService(language: Language): MuistilistaService = new MuistilistaService(language)

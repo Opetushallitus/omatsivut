@@ -19,13 +19,15 @@ trait AtaruServiceComponent  {
   this: LomakeRepositoryComponent
     with TarjontaComponent =>
 
-  def newAtaruService(httpClient: HttpClient): AtaruService = {
-    new AtaruService(httpClient)
+  val ataruService: AtaruService
+
+  class StubbedAtaruService extends AtaruService {
+    override def findApplications(personOid: String): List[HakemusInfo] = List()
   }
 
-  implicit val formats = DefaultFormats
+  class RemoteAtaruService(httpClient: HttpClient) extends AtaruService {
 
-  class AtaruService(httpClient: HttpClient) {
+    implicit val formats = DefaultFormats
 
     private def getState(ataruApplication: AtaruApplication): State = {
       ataruApplication.state match {
@@ -89,4 +91,8 @@ trait AtaruServiceComponent  {
         .filter(a => a != null)
     }
   }
+}
+
+trait AtaruService {
+  def findApplications(personOid: String): List[HakemusInfo]
 }

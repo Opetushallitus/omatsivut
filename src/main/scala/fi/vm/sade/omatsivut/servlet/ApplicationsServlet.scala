@@ -1,53 +1,45 @@
 package fi.vm.sade.omatsivut.servlet
 
-import java.text.SimpleDateFormat
-import java.util.Calendar
-
 import fi.vm.sade.ataru.AtaruServiceComponent
-import fi.vm.sade.groupemailer.{EmailData, EmailMessage, EmailRecipient, GroupEmailComponent}
+import fi.vm.sade.groupemailer.GroupEmailComponent
 import fi.vm.sade.hakemuseditori._
-import fi.vm.sade.hakemuseditori.auditlog.{AuditLogger, AuditLoggerComponent, SaveVastaanotto}
+import fi.vm.sade.hakemuseditori.auditlog.AuditLoggerComponent
 import fi.vm.sade.hakemuseditori.domain.Language
-import fi.vm.sade.hakemuseditori.domain.Language
-import fi.vm.sade.hakemuseditori.domain.Language.Language
 import fi.vm.sade.hakemuseditori.hakemus.domain.HakemusMuutos
 import fi.vm.sade.hakemuseditori.hakemus.{ApplicationValidatorComponent, HakemusRepositoryComponent, SpringContextComponent}
 import fi.vm.sade.hakemuseditori.json.JsonFormats
-import fi.vm.sade.hakemuseditori.localization.{Translations, TranslationsComponent}
+import fi.vm.sade.hakemuseditori.localization.TranslationsComponent
 import fi.vm.sade.hakemuseditori.lomake.LomakeRepositoryComponent
 import fi.vm.sade.hakemuseditori.user.Oppija
-import fi.vm.sade.hakemuseditori.valintatulokset.{ValintatulosService, ValintatulosServiceComponent}
+import fi.vm.sade.hakemuseditori.valintatulokset.ValintatulosServiceComponent
 import fi.vm.sade.hakemuseditori.valintatulokset.domain._
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.hakemuspreview.HakemusPreviewGeneratorComponent
 import fi.vm.sade.omatsivut.security.AuthenticationRequiringServlet
-import fi.vm.sade.utils.http.DefaultHttpClient
 import org.json4s.jackson.Serialization
 import org.scalatra._
 import org.scalatra.json._
 
 import scala.util.{Failure, Success}
 
-
-
 trait ApplicationsServletContainer {
-  this: HakemusEditoriComponent with LomakeRepositoryComponent with
-    AtaruServiceComponent with
-    HakemusRepositoryComponent with
-    ValintatulosServiceComponent with
-    ApplicationValidatorComponent with
-    HakemusPreviewGeneratorComponent with
-    SpringContextComponent with
-    AuditLoggerComponent with
-    GroupEmailComponent with
-    VastaanottoEmailContainer with
-    TranslationsComponent =>
+  this: HakemusEditoriComponent with
+        LomakeRepositoryComponent with
+        AtaruServiceComponent with
+        HakemusRepositoryComponent with
+        ValintatulosServiceComponent with
+        ApplicationValidatorComponent with
+        HakemusPreviewGeneratorComponent with
+        SpringContextComponent with
+        AuditLoggerComponent with
+        GroupEmailComponent with
+        VastaanottoEmailContainer with
+        TranslationsComponent =>
 
   class ApplicationsServlet(val appConfig: AppConfig) extends OmatSivutServletBase with JsonFormats with JacksonJsonSupport with AuthenticationRequiringServlet with HakemusEditoriUserContext {
 
     def user = Oppija(personOid())
     private val hakemusEditori = newEditor(this)
-    private val ataruService = newAtaruService(DefaultHttpClient)
 
     protected val applicationDescription = "Oppijan henkilökohtaisen palvelun REST API, jolla voi hakea ja muokata hakemuksia ja omia tietoja"
 
