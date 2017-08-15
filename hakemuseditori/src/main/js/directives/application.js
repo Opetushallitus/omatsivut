@@ -44,7 +44,7 @@ module.exports = function(app) {
         }
 
         function getAnswers() {
-          var answersToAdditionalQuestions =  _(Question.questionMap($scope.application.additionalQuestions)).map(function(item, key) { return item.answer })
+          var answersToAdditionalQuestions = _(Question.questionMap($scope.application.additionalQuestions)).map(function(item, key) { return item.answer })
           var otherAnswers = _($scope.application.henkilotiedot).map(function(item) { return item.answer })
           return answersToAdditionalQuestions.concat(otherAnswers)
         }

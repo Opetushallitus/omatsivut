@@ -22,6 +22,9 @@ function Hakemus(json) {
       postOffice: json.hakemus.postOffice
     }
     this.oiliJwt = null
+    this.hakemusSource = json.hakemusSource
+    if (this.hakemusSource === 'Ataru') this.ataruHakijaUrl = json.ataruHakijaUrl
+    this.secret = json.hakemus.secret
   } catch (e) {
     throw e;
   }
@@ -41,11 +44,13 @@ function formatTuloskirje(tuloskirje) {
 }
 
 function convertHenkilotiedot(json) {
-  var fields = ["Sähköposti", "matkapuhelinnumero1", "asuinmaa", "lahiosoite", "Postinumero"]
-  return _(fields).reduce(function(memo, key) {
-    memo[key] = new Question({ id: key }, json[key])
-    return memo
-  } , {})
+  if (!_.isUndefined(json)) {
+    var fields = ["Sähköposti", "matkapuhelinnumero1", "asuinmaa", "lahiosoite", "Postinumero"]
+    return _(fields).reduce(function (memo, key) {
+      memo[key] = new Question({id: key}, json[key])
+      return memo
+    }, {})
+  }
 }
 
 function convertHakutoiveet(hakutoiveet) {

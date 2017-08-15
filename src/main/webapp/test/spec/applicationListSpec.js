@@ -716,7 +716,7 @@
           })
         })
 
-        describe("vastaanotto varsinaisen vastaanootttoajan jälkeen", function() {
+        describe("vastaanotto varsinaisen vastaanoottoajan jälkeen", function() {
           before(page.applyValintatulosFixtureAndOpen("hyvaksytty-kesken-julkaistavissa", {"ohjausparametrit": "vastaanotto-loppunut-iso-buffer"}))
 
           describe("ennen vastaanottoa", function() {

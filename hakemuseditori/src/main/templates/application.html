@@ -4,9 +4,13 @@
 
         <application-periods haku="application.haku"></application-periods>
 
-        <div class="timestamp-row" ng-show="application.haku.jarjestelmanHakulomake">
+        <div class="timestamp-row" ng-show="application.haku.jarjestelmanHakulomake || application.hakemusSource === 'Ataru'">
             <i ng-show="application.hasForm" aria-hidden="true" class="icon-doc-text"></i>
-            <a class="preview" ng-href="{{url('omatsivut.applications.preview',application.oid)}}" ng-show="application.hasForm" ng-class="{disabled: applicationForm.$dirty|| statusMessageType=='pending' || isValidating}" target="_blank">{{ localization('button.showApplication') }}</a>
+            <a class="preview"
+               ng-href="{{ application.secret ? application.ataruHakijaUrl + url('ataru.applications.modify', application.secret) : url('omatsivut.applications.preview',application.oid)}}"
+               ng-show="application.hasForm"
+               ng-class="{disabled: applicationForm.$dirty|| statusMessageType=='pending' || isValidating}"
+               target="_blank">{{ localization('button.showApplication') }}</a>
             <span ng-if="application.tuloskirje && application.tuloskirje.createdDate">
                 <span class="delimiter"> | </span>
                 <a class="tuloskirje" ng-href="{{url('omatsivut.applications.tuloskirje',application.haku.oid)}}" ng-show="application.hasForm" ng-class="{disabled: applicationForm.$dirty|| statusMessageType=='pending' || isValidating}" target="_blank">
@@ -25,7 +29,7 @@
         </div>
     </section>
 
-    <section class="application-status" role="presentation">
+    <section class="application-status" role="presentation" ng-if="application.hakemusSource != 'Ataru'">
         <div class="application-status-item" ng-if="!application.haku.active && application.state.id != 'HAKUKIERROSPAATTYNYT' && !application.allResultsAvailable() && application.vastaanotettavatHakutoiveet().length == 0">
             {{ localization('label.applicationPeriodEnded') }}
             <span ng-if="application.haku.aikataulu.julkistus">
@@ -54,7 +58,7 @@
         </div>
     </section>
 
-    <section class="hakutoiveen-vastaanotto" ng-if="application.vastaanotettavatHakutoiveet().length > 0">
+    <section class="hakutoiveen-vastaanotto" ng-if="application.vastaanotettavatHakutoiveet().length > 0 && application.hakemusSource != 'Ataru'">
         <hakutoiveen-vastaanotto
                 application-oid="application.oid"
                 haku="application.haku"
@@ -63,7 +67,7 @@
         ></hakutoiveen-vastaanotto>
     </section>
 
-    <section class="ilmoittautuminen">
+    <section class="ilmoittautuminen" ng-if="application.hakemusSource != 'Ataru'">
         <ilmoittautuminen ng-show="application.ilmoittautumisLinkit().length > 0"
                           hakukohteet="application.ilmoittautumisLinkit()"
                           oili="application.oiliUrl()">
@@ -72,7 +76,7 @@
         </kela>
     </section>
 
-    <form name="applicationForm" novalidate>
+    <form name="applicationForm" novalidate ng-hide="application.hakemusSource === 'Ataru'">
 
         <section class="application-section application-valintatulos-error" ng-if="!application.resultFetchedSuccessfully()">
             <span role="status" class="status-message error">{{ localization("error.valintatulosFailed") }}</span>

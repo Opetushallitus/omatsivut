@@ -17,7 +17,6 @@
 section.application-header {
   background: @header-background;
   padding: 17px @application-padding-left;
-  margin: 0;
 
   a, a:visited {
 
@@ -28,6 +27,14 @@ section.application-header {
     color: @timestamp-color;
   }
 
+}
+
+section.application-header:not(:last-child) {
+  margin: 0;
+}
+
+section.application-header:last-child {
+  margin: 15px 0;
 }
 
 .timestamp-row {

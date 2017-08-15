@@ -61,6 +61,8 @@ object AppConfig extends Logging {
     OphUrlProperties.addOverride("url-oppija", "http://localhost:" + AppConfig.embeddedJettyPortChooser.chosenPort.toString)
     OphUrlProperties.addOverride("url-virkailija", "http://localhost:" + AppConfig.embeddedJettyPortChooser.chosenPort.toString)
     OphUrlProperties.addOverride("vetuma.url", "http://localhost:" + AppConfig.embeddedJettyPortChooser.chosenPort.toString)
+    OphUrlProperties.addOverride("protocol_ataru_hakija", "http")
+    OphUrlProperties.addOverride("host_ataru_hakija", "localhost:8351")
   }
 
   class ImmediateCookieTimeout extends IT {
