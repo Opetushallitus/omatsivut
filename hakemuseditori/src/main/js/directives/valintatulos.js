@@ -61,7 +61,9 @@ module.exports = function(app) {
             key = util.underscoreToCamelCase(valintatulos.vastaanottotila)
             return localization("label.resultState." + key)
           } else if (!_.isEmpty(tilanKuvaus(valintatulos))) {
-            if(valintatulos.valintatila === "HYLATTY"){
+            if(valintatulos.valintatila === "PERUNUT"){
+              return localization("label.resultState." + key)
+            } else if(valintatulos.valintatila === "HYLATTY"){
               return localization("label.resultState." + key) + " " + tilanKuvaus(valintatulos)
             } else if(hyvaksytty(valintatulos) && valintatulos.ehdollisestiHyvaksyttavissa) {
               var ehdollisenHyvaksymisenKenttaEhto = localization("label.resultState.EhdollisenHyvaksymisenEhdonKentanNimi")
