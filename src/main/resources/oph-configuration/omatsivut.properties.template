@@ -94,6 +94,9 @@ scheduler.sendMail={{haku_scheduler_sendMail}}
 user.oid.prefix=1.2.246.562.24
 application.oid.prefix = 1.2.246.562.11
 
+host.alb.virkailija={{host_alb_virkailija}}
+schema.alb.virkailija={{schema_alb_virkailija}}
+
 server.name={{ansible_hostname}}
 
 # Oletusarvoja
