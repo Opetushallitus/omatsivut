@@ -2,13 +2,19 @@ package fi.vm.sade.hakemuseditori.hakemus.domain
 
 import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus._
 import fi.vm.sade.hakemuseditori.tarjonta.domain.{Haku, KohteenHakuaika}
-import org.json4s.JValue
+import org.json4s.{DefaultFormats, JValue}
 
 object Hakemus {
   type Valintatulos = JValue
   type Answers = Map[String, Map[String, String]]
   type HakutoiveData = Map[String, String]
   val emptyAnswers = Map.empty.asInstanceOf[Map[String, Map[String, String]]]
+
+  def valintatulosHasSomeResults(valintatulos: Option[Valintatulos]): Boolean = {
+    implicit val formats = DefaultFormats
+    val hakutoiveet: List[JValue] = valintatulos.map(_ \ "hakutoiveet").map(_.children).getOrElse(List.empty)
+    hakutoiveet.exists(hakutoive => (hakutoive \ "valintatila").extract[String] != "KESKEN")
+  }
 }
 
 case class Hakemus(oid: String, received: Option[Long], updated: Option[Long], state: HakemuksenTila,

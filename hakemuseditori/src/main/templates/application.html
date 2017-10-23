@@ -29,7 +29,7 @@
         </div>
     </section>
 
-    <section class="application-status" role="presentation" ng-if="application.hakemusSource != 'Ataru'">
+    <section class="application-status" role="presentation">
         <div class="application-status-item" ng-if="!application.haku.active && application.state.id != 'HAKUKIERROSPAATTYNYT' && !application.allResultsAvailable() && application.vastaanotettavatHakutoiveet().length == 0">
             {{ localization('label.applicationPeriodEnded') }}
             <span ng-if="application.haku.aikataulu.julkistus">
@@ -58,7 +58,7 @@
         </div>
     </section>
 
-    <section class="hakutoiveen-vastaanotto" ng-if="application.vastaanotettavatHakutoiveet().length > 0 && application.hakemusSource != 'Ataru'">
+    <section class="hakutoiveen-vastaanotto" ng-if="application.vastaanotettavatHakutoiveet().length > 0">
         <hakutoiveen-vastaanotto
                 application-oid="application.oid"
                 haku="application.haku"
@@ -67,7 +67,7 @@
         ></hakutoiveen-vastaanotto>
     </section>
 
-    <section class="ilmoittautuminen" ng-if="application.hakemusSource != 'Ataru'">
+    <section class="ilmoittautuminen">
         <ilmoittautuminen ng-show="application.ilmoittautumisLinkit().length > 0"
                           hakukohteet="application.ilmoittautumisLinkit()"
                           oili="application.oiliUrl()">
@@ -76,7 +76,7 @@
         </kela>
     </section>
 
-    <form name="applicationForm" novalidate ng-hide="application.hakemusSource === 'Ataru'">
+    <form name="applicationForm" novalidate>
 
         <section class="application-section application-valintatulos-error" ng-if="!application.resultFetchedSuccessfully()">
             <span role="status" class="status-message error">{{ localization("error.valintatulosFailed") }}</span>
