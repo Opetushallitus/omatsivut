@@ -1,7 +1,6 @@
 package fi.vm.sade.hakemuseditori.hakemus
 
 import java.util
-import java.util.Date
 
 import com.google.common.collect.ImmutableSet
 import fi.vm.sade.hakemuseditori.domain.Language
@@ -12,9 +11,8 @@ import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.hakemuseditori.koodisto.KoodistoComponent
 import fi.vm.sade.hakemuseditori.koulutusinformaatio.KoulutusInformaatioComponent
 import fi.vm.sade.hakemuseditori.lomake.domain.Lomake
-import fi.vm.sade.hakemuseditori.tarjonta.domain.Haku
+import fi.vm.sade.hakemuseditori.tarjonta.domain.{Haku, Hakuaika}
 import fi.vm.sade.hakemuseditori.tarjonta.{TarjontaComponent, TarjontaService}
-import fi.vm.sade.hakemuseditori.viestintapalvelu.{LetterFormatter, Letter}
 import fi.vm.sade.haku.oppija.hakemus.service.EducationRequirementsUtil._
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.Types.MergedAnswers
@@ -39,11 +37,6 @@ trait HakemusConverterComponent {
 
     def convertToHakemus(tuloskirje: Option[Tuloskirje], lomake: Option[Lomake], haku: Haku, application: ImmutableLegacyApplicationWrapper)(implicit lang: Language.Language) : Hakemus = {
       convertToHakemus(tuloskirje, lomake, haku, application, None)
-    }
-
-    def valintatulosHasSomeResults(valintatulos: Option[Valintatulos]): Boolean = {
-      val hakutoiveet: List[JValue] = valintatulos.map(_ \ "hakutoiveet").map(_.children).getOrElse(List.empty)
-      return hakutoiveet.exists(hakutoive => (hakutoive \ "valintatila").extract[String] != "KESKEN")
     }
 
     def convertToHakemus(tuloskirje: Option[Tuloskirje], lomake: Option[Lomake], haku: Haku, application: ImmutableLegacyApplicationWrapper, valintatulos: Option[Valintatulos])(implicit lang: Language.Language) : Hakemus = {
@@ -97,8 +90,8 @@ trait HakemusConverterComponent {
       if (application.isPostProcessing) {
         PostProcessing()
       } else {
-        if (anyApplicationPeriodEnded(haku, hakutoiveet)) {
-          val now = new LocalDateTime().toDate.getTime // Use LocalDateTime so that we can use TimeWarp in tests
+        val now = new LocalDateTime().toDate.getTime // Use LocalDateTime so that we can use TimeWarp in tests
+        if (Hakuaika.anyApplicationPeriodEnded(haku, hakutoiveet.map(_.kohdekohtainenHakuaika), now)) {
           if (haku.aikataulu.flatMap(_.hakukierrosPaattyy.map(_ < now)).getOrElse(false)) {
             HakukierrosPaattynyt(valintatulos = valintatulos)
           }
@@ -144,14 +137,8 @@ trait HakemusConverterComponent {
     }
 
     def anyApplicationPeriodEnded(haku: Haku, application: ImmutableLegacyApplicationWrapper, lomake: Option[Lomake])(implicit lang: Language): Boolean = {
-      anyApplicationPeriodEnded(haku, convertHakuToiveet(application, lomake))
-    }
-
-    private def anyApplicationPeriodEnded(haku: Haku, hakutoiveet: List[Hakutoive]): Boolean = {
       val now = new LocalDateTime().toDate.getTime // Use LocalDateTime so that we can use TimeWarp in tests
-      haku.applicationPeriods.exists(_.end < now) || hakutoiveet.exists { hakutoive =>
-        hakutoive.kohdekohtainenHakuaika.map(_.end < now).getOrElse(false)
-      }
+      Hakuaika.anyApplicationPeriodEnded(haku, convertHakuToiveet(application, lomake).map(_.kohdekohtainenHakuaika), now)
     }
 
     private def convertHakuToiveet(application: ImmutableLegacyApplicationWrapper, lomake: Option[Lomake])(implicit lang: Language): List[Hakutoive] = {

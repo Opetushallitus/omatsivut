@@ -159,7 +159,7 @@ Hakemus.prototype = {
   },
 
   editHakutoiveetEnabled: function() {
-    return this.state && (this.state.id == 'ACTIVE' || this.state.id == 'INCOMPLETE')
+    return this.state && (this.state.id == 'ACTIVE' || this.state.id == 'INCOMPLETE') && this.hakemusSource !== 'Ataru'
   },
 
   editHenkilotiedotEnabled: function() {
