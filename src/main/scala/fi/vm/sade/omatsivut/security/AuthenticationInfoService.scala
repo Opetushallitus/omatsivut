@@ -1,22 +1,21 @@
 package fi.vm.sade.omatsivut.security
 
 import fi.vm.sade.omatsivut.config.{RemoteApplicationConfig, SecuritySettings}
-import fi.vm.sade.utils.cas.{CasParams, CasAuthenticatingClient, CasClient}
+import fi.vm.sade.utils.cas.{CasAuthenticatingClient, CasClient, CasParams}
+import fi.vm.sade.utils.slf4j.Logging
 import org.http4s._
 import org.http4s.client.blaze
-import org.http4s.client.blaze.BlazeClient
-import fi.vm.sade.utils.slf4j.Logging
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
 
 import scalaz.concurrent.Task
 
 class RemoteAuthenticationInfoService(val config: RemoteApplicationConfig, val securitySettings: SecuritySettings) extends Logging {
-  private val blazeHttpClient: BlazeClient = blaze.defaultClient
+  private val blazeHttpClient = blaze.defaultClient
   private val casClient = new CasClient(securitySettings.casUrl, blazeHttpClient)
   private val serviceUrl = config.url + "/"
   private val casParams = CasParams(serviceUrl, securitySettings.casUsername, securitySettings.casPassword)
-  private val httpClient = new CasAuthenticatingClient(casClient, casParams, blazeHttpClient)
+  private val httpClient = CasAuthenticatingClient(casClient, casParams, blazeHttpClient, Some("omatsivut.omatsivut.backend"), "JSESSIONID")
   private val callerIdHeader = Header("Caller-Id", "omatsivut.omatsivut.backend")
 
   def uriFromString(url: String): Uri = {
@@ -26,12 +25,7 @@ class RemoteAuthenticationInfoService(val config: RemoteApplicationConfig, val s
   type Decode[ResultType] = (Int, String, Request) => ResultType
 
   private def runHttp[ResultType](request: Request)(decoder: (Int, String, Request) => ResultType): Task[ResultType] = {
-    for {
-      response <- httpClient.apply(request)
-      text <- response.as[String]
-    } yield {
-      decoder(response.status.code, text, request)
-    }
+    httpClient.fetch(request)(r => r.as[String].map(body => decoder(r.status.code, body, request)))
   }
 
   def getHenkiloOID(hetu: String) : Option[String] = {
