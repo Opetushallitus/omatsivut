@@ -33,7 +33,7 @@ class UpdateApplicationSpec extends HakemusApiSpecification with FixturePerson w
 
     "accept valid application" in {
       modifyHakemus (hakemusNivelKesa2013WithPeruskouluBaseEducationId){ hakemus => hakemus} { hakemus =>
-        val result: JValue = JsonMethods.parse(body)
+        val result: JValue = JsonMethods.parse(body, useBigDecimalForDouble = false)
         status must_== 200
         hasSameHakuToiveet(hakemus, result.extract[Hakemus]) must_== true
       }
@@ -42,7 +42,7 @@ class UpdateApplicationSpec extends HakemusApiSpecification with FixturePerson w
     "save application" in {
       modifyHakemus(hakemusNivelKesa2013WithPeruskouluBaseEducationId)(answerExtraQuestion(hakutoiveet, "539158b8e4b0b56e67d2c74b", "yes sir")) { newHakemus =>
         status must_== 200
-        val result: JValue = JsonMethods.parse(body)
+        val result: JValue = JsonMethods.parse(body, useBigDecimalForDouble = false)
         hasSameHakuToiveet(newHakemus, result.extract[Hakemus]) must_== true
         // verify saved application
         withSavedApplication(newHakemus) { application =>
