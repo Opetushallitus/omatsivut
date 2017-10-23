@@ -61,7 +61,7 @@ class RemoteValintatulosService extends ValintatulosService with JsonFormats wit
     timed("ValintatulosService get", 1000){request.responseWithHeaders} match {
       case (200, _, resultString) => {
         try {
-          parse(resultString).extractOpt[JValue].map(_.extract[Valintatulos])
+          parse(resultString, useBigDecimalForDouble = false).extractOpt[JValue].map(_.extract[Valintatulos])
         } catch {
           case e:Exception => {
             logger.error("Error processing response from valinta-tulos-service at " + url + ", response was " + resultString, e)
