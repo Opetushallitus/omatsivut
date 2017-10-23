@@ -3,7 +3,7 @@ package fi.vm.sade.omatsivut.security
 import fi.vm.sade.hakemuseditori.lomake.domain.AnswerId
 import org.json4s.JsonDSL.WithBigDecimal._
 import org.json4s.NoTypeHints
-import org.json4s.native.Serialization.formats
+import org.json4s.jackson.Serialization.formats
 import org.junit.runner.RunWith
 import org.specs2.mock.Mockito
 import org.specs2.mutable.Specification
