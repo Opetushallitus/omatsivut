@@ -34,7 +34,7 @@ class RemoteOppijanTunnistusService(client: HttpClient = DefaultHttpClient) exte
 
     request.responseWithHeaders() match {
       case (200, _, resultString) =>
-        Try(parse(resultString).extract[OppijanTunnistusVerification]) match {
+        Try(parse(resultString, useBigDecimalForDouble = false).extract[OppijanTunnistusVerification]) match {
           case Success(OppijanTunnistusVerification(_, true, Some(HakuAppMetadata(hakemusOid)))) => Success(hakemusOid)
           case Success(OppijanTunnistusVerification(false, false, _)) => Failure(new InvalidTokenException("invalid token"))
           case Success(OppijanTunnistusVerification(true, false, _)) => Failure(new ExpiredTokenException("expired token"))
