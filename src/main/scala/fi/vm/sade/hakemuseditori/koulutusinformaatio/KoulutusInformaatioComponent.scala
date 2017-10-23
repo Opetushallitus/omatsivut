@@ -30,12 +30,12 @@ trait KoulutusInformaatioComponent {
 
     def opetuspiste(id: String, lang: Language) = {
       val text = io.Source.fromInputStream(getClass.getResourceAsStream("/hakemuseditorimockdata/opetuspisteet.json")).mkString
-      parse(text).extract[Map[String, List[Opetuspiste]]].values.flatten.find(_.id == id)
+      parse(text, useBigDecimalForDouble = false).extract[Map[String, List[Opetuspiste]]].values.flatten.find(_.id == id)
     }
 
     def koulutusWithHaku(aoIds: List[String], lang: Language): Option[List[KoulutusInformaatioBasketItem]] = {
       val text = io.Source.fromInputStream(getClass.getResourceAsStream("/hakemuseditorimockdata/basketinfo.json")).mkString
-      val allBasketItems = parse(text).extract[Option[List[KoulutusInformaatioBasketItem]]].getOrElse(List())
+      val allBasketItems = parse(text, useBigDecimalForDouble = false).extract[Option[List[KoulutusInformaatioBasketItem]]].getOrElse(List())
       Some(allBasketItems.filter( bi => bi.applicationOptions.filter( ao => aoIds.contains(ao.id)).nonEmpty))
     }
   }
@@ -71,12 +71,12 @@ trait KoulutusInformaatioComponent {
         .param("ongoing", "true")
         .responseWithHeaders
 
-      wrapAsOption(parse(resultString).extract[List[Opetuspiste]])
+      wrapAsOption(parse(resultString, useBigDecimalForDouble = false).extract[List[Opetuspiste]])
     }
 
     def opetuspiste(id: String, lang: Language): Option[Opetuspiste] = {
       DefaultHttpClient.httpGet(OphUrlProperties.url("koulutusinformaatio-app.lop", id)).response.flatMap { resultString =>
-        parse(resultString).extract[Option[Opetuspiste]]
+        parse(resultString, useBigDecimalForDouble = false).extract[Option[Opetuspiste]]
       }
     }
 
@@ -92,7 +92,7 @@ trait KoulutusInformaatioComponent {
       }
       val (_, _, resultString) = request.responseWithHeaders
 
-      wrapAsOption(parse(resultString).extract[List[Koulutus]])
+      wrapAsOption(parse(resultString, useBigDecimalForDouble = false).extract[List[Koulutus]])
     }
 
     def koulutus(aoId: String, lang: Language): Option[Koulutus] = {
@@ -102,7 +102,7 @@ trait KoulutusInformaatioComponent {
 
       val (responseCode, headersMap, resultString) = request.responseWithHeaders()
       withWarnLogging{
-        parse(resultString).extract[Option[Koulutus]]
+        parse(resultString, useBigDecimalForDouble = false).extract[Option[Koulutus]]
       }(s"Parsing response from ${request.getUrl} failed:\n$resultString" , None)
     }
 
@@ -115,7 +115,7 @@ trait KoulutusInformaatioComponent {
 
       val (responseCode, headersMap, resultString) = request.responseWithHeaders
       withWarnLogging{
-        parse(resultString).extract[Option[List[KoulutusInformaatioBasketItem]]]
+        parse(resultString, useBigDecimalForDouble = false).extract[Option[List[KoulutusInformaatioBasketItem]]]
       }(s"Parsing response from ${request.getUrl} failed:\n$resultString" , None)
     }
   }

@@ -3,7 +3,7 @@ package fi.vm.sade.omatsivut.oppijantunnistus
 import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.utils.http.{HttpClient, HttpRequest}
 import org.json4s.JsonDSL._
-import org.json4s.native.JsonMethods._
+import org.json4s.jackson.JsonMethods._
 import org.junit.runner.RunWith
 import org.mockito.Matchers
 import org.scalatra.test.specs2.MutableScalatraSpec

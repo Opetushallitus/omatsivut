@@ -16,11 +16,12 @@ import fi.vm.sade.hakemuseditori.valintatulokset.domain._
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.hakemuspreview.HakemusPreviewGeneratorComponent
 import fi.vm.sade.omatsivut.security.AuthenticationRequiringServlet
+import org.json4s.{DefaultFormats, Formats}
 import org.json4s.jackson.Serialization
 import org.scalatra._
 import org.scalatra.json._
 
-import scala.util.{Failure, Success}
+import scala.util.{Failure, Success, Try}
 
 trait ApplicationsServletContainer {
   this: HakemusEditoriComponent with
@@ -58,11 +59,11 @@ trait ApplicationsServletContainer {
     }
 
     get("/") {
-      val (ataruApplications, ataruApplicationsLoaded) = ataruService.findApplications(personOid()) match {
-        case Left(e) =>
+      val (ataruApplications, ataruApplicationsLoaded) = Try(ataruService.findApplications(personOid())) match {
+        case Failure(e) =>
           logger.warn("Failed to fetch ataru applications", e)
           (List.empty, false)
-        case Right(applications) =>
+        case Success(applications) =>
           (applications, true)
       }
       Map(
