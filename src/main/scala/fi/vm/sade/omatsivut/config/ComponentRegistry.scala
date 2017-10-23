@@ -25,7 +25,6 @@ import fi.vm.sade.omatsivut.oppijantunnistus.{OppijanTunnistusComponent, Oppijan
 import fi.vm.sade.omatsivut.servlet._
 import fi.vm.sade.omatsivut.servlet.session.{LogoutServletContainer, SecuredSessionServletContainer}
 import fi.vm.sade.utils.captcha.CaptchaServiceComponent
-import fi.vm.sade.utils.http.DefaultHttpClient
 
 class ComponentRegistry(val config: AppConfig)
   extends SpringContextComponent with
@@ -111,7 +110,7 @@ class ComponentRegistry(val config: AppConfig)
 
   private def configureAtaruService: AtaruService = config match {
     case _: StubbedExternalDeps => new StubbedAtaruService
-    case _ => new RemoteAtaruService(DefaultHttpClient)
+    case _ => new RemoteAtaruService(config)
   }
 
   lazy val springContext = new HakemusSpringContext(OmatSivutSpringContext.createApplicationContext(config))

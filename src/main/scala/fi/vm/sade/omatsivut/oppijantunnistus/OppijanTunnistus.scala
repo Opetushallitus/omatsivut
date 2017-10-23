@@ -4,7 +4,7 @@ import fi.vm.sade.omatsivut.NonSensitiveHakemusInfo.Oid
 import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.utils.http.{DefaultHttpClient, HttpClient}
 import org.json4s._
-import org.json4s.native.JsonMethods._
+import org.json4s.jackson.JsonMethods._
 
 import scala.util.{Failure, Success, Try}
 
@@ -34,7 +34,7 @@ class RemoteOppijanTunnistusService(client: HttpClient = DefaultHttpClient) exte
 
     request.responseWithHeaders() match {
       case (200, _, resultString) =>
-        Try(parse(resultString).extract[OppijanTunnistusVerification]) match {
+        Try(parse(resultString, useBigDecimalForDouble = false).extract[OppijanTunnistusVerification]) match {
           case Success(OppijanTunnistusVerification(_, true, Some(HakuAppMetadata(hakemusOid)))) => Success(hakemusOid)
           case Success(OppijanTunnistusVerification(false, false, _)) => Failure(new InvalidTokenException("invalid token"))
           case Success(OppijanTunnistusVerification(true, false, _)) => Failure(new ExpiredTokenException("expired token"))

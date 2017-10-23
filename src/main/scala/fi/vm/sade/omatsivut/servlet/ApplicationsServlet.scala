@@ -16,6 +16,7 @@ import fi.vm.sade.hakemuseditori.valintatulokset.domain._
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.hakemuspreview.HakemusPreviewGeneratorComponent
 import fi.vm.sade.omatsivut.security.AuthenticationRequiringServlet
+import org.json4s.{DefaultFormats, Formats}
 import org.json4s.jackson.Serialization
 import org.scalatra._
 import org.scalatra.json._

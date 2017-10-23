@@ -37,7 +37,7 @@ trait OhjausparametritComponent {
 
       responseCode match {
         case 200 =>
-          parse(resultString).extractOpt[JValue].flatMap(OhjausparametritParser.parseHaunAikataulu(_))
+          parse(resultString, useBigDecimalForDouble = false).extractOpt[JValue].flatMap(OhjausparametritParser.parseHaunAikataulu(_))
         case _ => None
       }
     }
