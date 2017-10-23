@@ -159,11 +159,11 @@ Hakemus.prototype = {
   },
 
   editHakutoiveetEnabled: function() {
-    return this.state && (this.state.id == 'ACTIVE' || this.state.id == 'INCOMPLETE')
+    return this.state && (this.state.id === 'ACTIVE' || this.state.id === 'INCOMPLETE') && this.hakemusSource !== 'Ataru'
   },
 
   editHenkilotiedotEnabled: function() {
-    return this.editHakutoiveetEnabled() || (this.state && this.state.id == "HAKUKAUSIPAATTYNYT")
+    return this.editHakutoiveetEnabled() || (this.state && this.state.id === "HAKUKAUSIPAATTYNYT" && this.hakemusSource !== 'Ataru')
   },
 
   vastaanotettavatHakutoiveet: function() {
