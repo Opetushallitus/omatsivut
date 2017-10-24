@@ -109,13 +109,19 @@ trait ApplicationsServletContainer {
       val hakukohdeOid = params("hakukohdeOid")
       val henkiloOid = personOid()
 
-      applicationRepository.findStoredApplicationByPersonAndOid(henkiloOid, hakemusOid) match {
-
-        case Some(hakemus) if tarjontaService.haku(hakemus.hakuOid, Language.fi).exists(_.published) =>
-          vastaanota(hakemusOid, hakukohdeOid, hakemus.hakuOid, henkiloOid, request.body, hakemus.sähköposti, () => hakemusRepository.getHakemus(hakemusOid))
-
-        case _ => NotFound("error" -> "Not found")
-
+      hakemusRepository.getHakemus(hakemusOid)
+        .orElse(ataruService.findApplications(henkiloOid).find(_.hakemus.oid == hakemusOid)) match {
+        case Some(hakemus) if tarjontaService.haku(hakemus.hakemus.haku.oid, Language.fi).exists(_.published) =>
+          vastaanota(
+            hakemusOid,
+            hakukohdeOid,
+            hakemus.hakemus.haku.oid,
+            henkiloOid,
+            request.body,
+            hakemus.hakemus.email,
+            () => Some(hakemus)
+          )
+        case None => NotFound("error" -> "Not found")
       }
     }
 

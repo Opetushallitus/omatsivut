@@ -17,12 +17,22 @@ object Hakemus {
   }
 }
 
-case class Hakemus(oid: String, received: Option[Long], updated: Option[Long], state: HakemuksenTila,
+case class Hakemus(oid: String,
+                   received: Option[Long],
+                   updated: Option[Long],
+                   state: HakemuksenTila,
                    tuloskirje: Option[Tuloskirje] = None,
-                   hakutoiveet: List[Hakutoive] = Nil, haku: Haku, educationBackground: EducationBackground,
-                   answers: Answers, postOffice: Option[String], requiresAdditionalInfo: Boolean,
-                   hasForm: Boolean, requiredPaymentState: Option[String],
-                   notifications: Map[String, Map[String, Boolean]], secret: Option[String] = None) extends HakemusLike {
+                   hakutoiveet: List[Hakutoive] = Nil,
+                   haku: Haku,
+                   educationBackground: EducationBackground,
+                   answers: Answers,
+                   postOffice: Option[String],
+                   email: Option[String],
+                   requiresAdditionalInfo: Boolean,
+                   hasForm: Boolean,
+                   requiredPaymentState: Option[String],
+                   notifications: Map[String, Map[String, Boolean]],
+                   secret: Option[String] = None) extends HakemusLike {
   def preferences = hakutoiveet.map(_.hakemusData.getOrElse(Map.empty))
 
   def toHakemusMuutos = HakemusMuutos(oid, haku.oid, hakutoiveet.map(_.hakemusData.getOrElse(Map.empty)), answers)
