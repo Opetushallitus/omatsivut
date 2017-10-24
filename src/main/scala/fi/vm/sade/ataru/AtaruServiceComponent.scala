@@ -125,6 +125,7 @@ trait AtaruServiceComponent  {
               educationBackground = EducationBackground("base_education", false),
               answers = Map(),
               postOffice = None,
+              email = None, // FIXME
               requiresAdditionalInfo = false,
               hasForm = true,
               requiredPaymentState = None,

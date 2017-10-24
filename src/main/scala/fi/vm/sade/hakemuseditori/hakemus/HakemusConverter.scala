@@ -77,6 +77,7 @@ trait HakemusConverterComponent {
           .flatMap(_.get("Postinumero"))
           .flatMap(koodistoService.postOfficeTranslations)
           .flatMap((translations: Map[String,String]) => translations.get(lang.toString)),
+        application.sähköposti,
         lomake.map(_.requiresAdditionalInfo(application)).getOrElse(false),
         lomake.isDefined,
         application.requiredPaymentState,
