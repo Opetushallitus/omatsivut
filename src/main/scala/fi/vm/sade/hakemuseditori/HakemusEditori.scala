@@ -59,8 +59,7 @@ trait HakemusEditoriComponent extends ApplicationValidatorComponent
     def user(): User
 
     def fetchTuloskirje(personOid: String, hakuOid: String): Option[Array[Byte]] = {
-      val hakemukset = hakemusRepository.fetchHakemukset(personOid).find(_.hakemus.haku.oid == hakuOid)
-        .orElse(ataruService.findApplications(personOid).find(_.hakemus.haku.oid == hakuOid))
+      val hakemukset = fetchByPersonOid(personOid).find(_.hakemus.haku.oid == hakuOid)
       hakemukset.flatMap(hakemus => tuloskirjeService.fetchTuloskirje(hakuOid, hakemus.hakemus.oid, personOid))
     }
 
