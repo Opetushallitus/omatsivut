@@ -201,7 +201,11 @@ trait NonSensitiveApplicationServletContainer {
         token <- jwtAuthorize
         hakemus <- fetchHakemus(token.oid)
       } yield {
-        Ok(InsecureHakemusInfo(jwt.encode(token), new NonSensitiveHakemusInfo(hakemus, token.answersFromThisSession), oiliJwt = jwt.createOiliJwt(token.personOid)))
+        Ok(InsecureHakemusInfo(
+          jwt.encode(token),
+          new NonSensitiveHakemusInfo(hakemus, token.answersFromThisSession),
+          oiliJwt = jwt.createOiliJwt(token.personOid)
+        ))
       }).get
     }
 
@@ -210,25 +214,30 @@ trait NonSensitiveApplicationServletContainer {
       val hakukohdeOid = params("hakukohdeOid")
       val henkiloOid = getPersonOidFromSession
 
-      applicationRepository.findStoredApplicationByPersonAndOid(henkiloOid, hakemusOid) match {
-
-        case Some(hakemus) if tarjontaService.haku(hakemus.hakuOid, Language.fi).exists(_.published) =>
-          vastaanota(hakemusOid, hakukohdeOid, hakemus.hakuOid, henkiloOid, request.body, hakemus.sähköposti, () => fetchHakemus(hakemusOid).toOption)
-
-        case _ => NotFound("error" -> "Not found")
-
+      hakemusEditori.fetchByHakemusOid(henkiloOid, hakemusOid) match {
+        case Some(hakemus) => vastaanota(
+          hakemusOid,
+          hakukohdeOid,
+          hakemus.hakemus.haku.oid,
+          henkiloOid,
+          request.body,
+          hakemus.hakemus.email,
+          () => fetchHakemus(hakemusOid).toOption
+        )
+        case None => NotFound("error" -> "Not found")
       }
     }
 
     get("/application/token/:token") {
       (for {
         hakemusOid <- oppijanTunnistusService.validateToken(params("token"))
-        personOid <- applicationRepository.findStoredApplicationByOid(hakemusOid)
-          .fold[Try[String]](Failure(new NoSuchElementException(s"Hakemus $hakemusOid not found")))(h => Success(h.personOid))
         hakemus <- fetchHakemus(hakemusOid)
       } yield {
-        Ok(InsecureHakemusInfo(jwt.encode(HakemusJWT(hakemusOid, Set(), personOid)),
-          new NonSensitiveHakemusInfo(hakemus, Set()), oiliJwt = jwt.createOiliJwt(personOid)))
+        Ok(InsecureHakemusInfo(
+          jwt.encode(HakemusJWT(hakemusOid, Set(), hakemus.hakemus.personOid)),
+          new NonSensitiveHakemusInfo(hakemus, Set()),
+          oiliJwt = jwt.createOiliJwt(hakemus.hakemus.personOid)
+        ))
       }).get
     }
 

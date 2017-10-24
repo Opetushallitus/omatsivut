@@ -65,6 +65,7 @@ trait HakemusConverterComponent {
 
       Hakemus(
         application.oid,
+        application.personOid,
         receivedTime,
         application.updated.map(_.getTime).orElse(receivedTime),
         tila(haku, application, hakutoiveet, valintatulos),
