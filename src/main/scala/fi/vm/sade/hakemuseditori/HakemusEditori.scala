@@ -59,7 +59,8 @@ trait HakemusEditoriComponent extends ApplicationValidatorComponent
       hakemukset.flatMap(hakemus => tuloskirjeService.fetchTuloskirje(hakuOid, hakemus.hakemus.oid, personOid))
     }
 
-    def fetchByPersonOid(personOid: String): List[HakemusInfo] = hakemusRepository.fetchHakemukset(personOid)
+    def fetchByPersonOid(personOid: String): List[HakemusInfo] =
+      (ataruService.findApplications(personOid) ::: hakemusRepository.fetchHakemukset(personOid)).sortBy[Option[Long]](_.hakemus.received).reverse
 
     def fetchByHakemusOid(hakemusOid: String): Option[HakemusInfo] = hakemusRepository.getHakemus(hakemusOid)
 
