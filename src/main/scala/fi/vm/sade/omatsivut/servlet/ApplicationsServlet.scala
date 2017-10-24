@@ -25,7 +25,6 @@ import scala.util.{Failure, Success}
 trait ApplicationsServletContainer {
   this: HakemusEditoriComponent with
         LomakeRepositoryComponent with
-        AtaruServiceComponent with
         HakemusRepositoryComponent with
         ValintatulosServiceComponent with
         ApplicationValidatorComponent with
@@ -106,18 +105,16 @@ trait ApplicationsServletContainer {
       val hakukohdeOid = params("hakukohdeOid")
       val henkiloOid = personOid()
 
-      hakemusRepository.getHakemus(hakemusOid)
-        .orElse(ataruService.findApplications(henkiloOid).find(_.hakemus.oid == hakemusOid)) match {
-        case Some(hakemus) if tarjontaService.haku(hakemus.hakemus.haku.oid, Language.fi).exists(_.published) =>
-          vastaanota(
-            hakemusOid,
-            hakukohdeOid,
-            hakemus.hakemus.haku.oid,
-            henkiloOid,
-            request.body,
-            hakemus.hakemus.email,
-            () => Some(hakemus)
-          )
+      hakemusEditori.fetchByHakemusOid(henkiloOid, hakemusOid) match {
+        case Some(hakemus) => vastaanota(
+          hakemusOid,
+          hakukohdeOid,
+          hakemus.hakemus.haku.oid,
+          henkiloOid,
+          request.body,
+          hakemus.hakemus.email,
+          () => Some(hakemus)
+        )
         case None => NotFound("error" -> "Not found")
       }
     }
