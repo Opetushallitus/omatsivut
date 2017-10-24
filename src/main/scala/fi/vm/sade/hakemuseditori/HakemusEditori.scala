@@ -23,6 +23,11 @@ import org.springframework.context.ApplicationContext
 
 import scala.util.{Failure, Success, Try}
 
+sealed trait HakemusResult
+case class FullSuccess(hakemukset: List[HakemusInfo]) extends HakemusResult
+case class PartialSuccess(hakemukset: List[HakemusInfo], exceptions: List[Throwable]) extends HakemusResult
+case class FullFailure(exceptions: List[Throwable]) extends HakemusResult
+
 trait HakemusEditoriComponent extends ApplicationValidatorComponent
   with AtaruServiceComponent
   with TarjontaComponent
@@ -59,7 +64,16 @@ trait HakemusEditoriComponent extends ApplicationValidatorComponent
       hakemukset.flatMap(hakemus => tuloskirjeService.fetchTuloskirje(hakuOid, hakemus.hakemus.oid, personOid))
     }
 
-    def fetchByPersonOid(personOid: String): List[HakemusInfo] = hakemusRepository.fetchHakemukset(personOid)
+    def fetchByPersonOid(personOid: String): HakemusResult = {
+      (Try(ataruService.findApplications(personOid)), Try(hakemusRepository.fetchHakemukset(personOid))) match {
+        case (Success(ahs), Success(hhs)) => FullSuccess((ahs ::: hhs).sortBy[Option[Long]](_.hakemus.received).reverse)
+        case (Failure(at), Failure(ht)) => FullFailure(List(at, ht))
+        case (ahs, hhs) => PartialSuccess(
+          (ahs.getOrElse(List.empty) ::: hhs.getOrElse(List.empty)).sortBy[Option[Long]](_.hakemus.received).reverse,
+          ahs.failed.toOption.toList ::: hhs.failed.toOption.toList
+        )
+      }
+    }
 
     def fetchByHakemusOid(hakemusOid: String): Option[HakemusInfo] = hakemusRepository.getHakemus(hakemusOid)
 

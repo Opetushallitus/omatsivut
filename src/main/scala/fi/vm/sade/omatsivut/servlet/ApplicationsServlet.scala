@@ -20,7 +20,7 @@ import org.json4s.jackson.Serialization
 import org.scalatra._
 import org.scalatra.json._
 
-import scala.util.{Failure, Success, Try}
+import scala.util.{Failure, Success}
 
 trait ApplicationsServletContainer {
   this: HakemusEditoriComponent with
@@ -58,18 +58,16 @@ trait ApplicationsServletContainer {
     }
 
     get("/") {
-      val (ataruApplications, ataruApplicationsLoaded) = Try(ataruService.findApplications(personOid())) match {
-        case Failure(e) =>
-          logger.warn("Failed to fetch ataru applications", e)
-          (List.empty, false)
-        case Success(applications) =>
-          (applications, true)
+      hakemusEditori.fetchByPersonOid(personOid()) match {
+        case FullSuccess(hs) =>
+          Map("allApplicationsFetched" -> true, "applications" -> hs)
+        case FullFailure(ts) =>
+          ts.foreach(logger.error("Failed to fetch applications", _))
+          throw ts.head
+        case PartialSuccess(hs, ts) =>
+          ts.foreach(logger.warn("Failed to fetch all applications", _))
+          Map("allApplicationsFetched" -> false, "applications" -> hs)
       }
-      Map(
-        "allApplicationsFetched" -> ataruApplicationsLoaded,
-        "applications" -> {
-          ataruApplications ::: hakemusEditori.fetchByPersonOid(personOid())
-        }.sortBy[Option[Long]](_.hakemus.received).reverse)
     }
 
     put("/:oid") {
