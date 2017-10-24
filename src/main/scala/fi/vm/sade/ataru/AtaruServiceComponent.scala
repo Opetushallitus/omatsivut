@@ -116,6 +116,7 @@ trait AtaruServiceComponent  {
           case (a, Some(haku), Some(hakukohteet), valintatulos, tuloskirje) =>
             val hakemus = Hakemus(
               oid = a.oid,
+              personOid = personOid,
               received = None,
               updated = None,
               state = state(now, haku, hakukohteet, a, valintatulos.getOrElse(None)),

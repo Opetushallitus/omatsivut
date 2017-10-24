@@ -18,6 +18,7 @@ object Hakemus {
 }
 
 case class Hakemus(oid: String,
+                   personOid: String,
                    received: Option[Long],
                    updated: Option[Long],
                    state: HakemuksenTila,
