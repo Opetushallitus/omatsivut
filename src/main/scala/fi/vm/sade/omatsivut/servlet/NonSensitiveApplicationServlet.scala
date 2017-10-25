@@ -151,9 +151,10 @@ trait NonSensitiveApplicationServletContainer {
       hakemusJWT.answersFromThisSession ++ nonPersistedAnswers
     }
 
-    private def fetchHakemus(oid: String): Try[HakemusInfo] = {
-      hakemusRepository.getHakemus(oid, FetchIfNoHetuOrToinenAste)
-        .fold[Try[HakemusInfo]](Failure(new NoSuchElementException(s"Hakemus $oid not found")))(h => Success(h.withoutKelaUrl))
+    private def fetchHakemus(hakemusOid: String, personOid: Option[String]): Try[HakemusInfo] = {
+      personOid.map(hakemusEditori.fetchByHakemusOid(_, hakemusOid, FetchIfNoHetuOrToinenAste))
+        .getOrElse(hakemusRepository.getHakemus(hakemusOid, FetchIfNoHetuOrToinenAste))
+        .fold[Try[HakemusInfo]](Failure(new NoSuchElementException(s"Hakemus $hakemusOid not found")))(h => Success(h.withoutKelaUrl))
     }
 
     before() {
@@ -190,7 +191,7 @@ trait NonSensitiveApplicationServletContainer {
     get("/application/session") {
       (for {
         token <- jwtAuthorize
-        hakemus <- fetchHakemus(token.oid)
+        hakemus <- fetchHakemus(token.oid, Some(token.personOid))
       } yield {
         Ok(InsecureHakemusInfo(
           jwt.encode(token),
@@ -222,7 +223,7 @@ trait NonSensitiveApplicationServletContainer {
     get("/application/token/:token") {
       (for {
         metadata <- oppijanTunnistusService.validateToken(params("token"))
-        hakemus <- fetchHakemus(metadata.hakemusOid)
+        hakemus <- fetchHakemus(metadata.hakemusOid, metadata.personOid)
       } yield {
         Ok(InsecureHakemusInfo(
           jwt.encode(HakemusJWT(metadata.hakemusOid, Set(), hakemus.hakemus.personOid)),
