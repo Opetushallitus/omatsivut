@@ -13,12 +13,12 @@ trait OppijanTunnistusComponent {
 }
 
 trait OppijanTunnistusService {
-  def validateToken(token: String): Try[Oid]
+  def validateToken(token: String): Try[OppijantunnistusMetadata]
 }
 
-case class OppijanTunnistusVerification(exists: Boolean, valid: Boolean, metadata: Option[HakuAppMetadata])
+case class OppijanTunnistusVerification(exists: Boolean, valid: Boolean, metadata: Option[OppijantunnistusMetadata])
 
-case class HakuAppMetadata(hakemusOid: Oid)
+case class OppijantunnistusMetadata(hakemusOid: Oid, personOid: Option[Oid])
 
 class InvalidTokenException(msg: String) extends RuntimeException(msg)
 
@@ -27,7 +27,7 @@ class ExpiredTokenException(msg: String) extends RuntimeException(msg)
 class RemoteOppijanTunnistusService(client: HttpClient = DefaultHttpClient) extends OppijanTunnistusService {
   implicit val formats = DefaultFormats
 
-  def validateToken(token: String): Try[Oid] = {
+  def validateToken(token: String): Try[OppijantunnistusMetadata] = {
 
     val request = client.httpGet(OphUrlProperties.url("oppijan-tunnistus.verify", token))
                     .header("Caller-Id", "omatsivut.omatsivut.backend")
@@ -35,7 +35,7 @@ class RemoteOppijanTunnistusService(client: HttpClient = DefaultHttpClient) exte
     request.responseWithHeaders() match {
       case (200, _, resultString) =>
         Try(parse(resultString, useBigDecimalForDouble = false).extract[OppijanTunnistusVerification]) match {
-          case Success(OppijanTunnistusVerification(_, true, Some(HakuAppMetadata(hakemusOid)))) => Success(hakemusOid)
+          case Success(OppijanTunnistusVerification(_, true, Some(metadata))) => Success(metadata)
           case Success(OppijanTunnistusVerification(false, false, _)) => Failure(new InvalidTokenException("invalid token"))
           case Success(OppijanTunnistusVerification(true, false, _)) => Failure(new ExpiredTokenException("expired token"))
           case Success(_) => Failure(new InvalidTokenException("invalid token from oppijan tunnistus, no metadata"))
@@ -49,8 +49,8 @@ class RemoteOppijanTunnistusService(client: HttpClient = DefaultHttpClient) exte
 }
 
 class StubbedOppijanTunnistusService extends OppijanTunnistusService {
-  override def validateToken(token: String): Try[Oid] = token match {
-    case hakemusId if hakemusId.startsWith("1.2.246.562.11.") => Success(hakemusId)
+  override def validateToken(token: String): Try[OppijantunnistusMetadata] = token match {
+    case hakemusId if hakemusId.startsWith("1.2.246.562.11.") => Success(OppijantunnistusMetadata(hakemusId, None))
     case "expiredToken" => Failure(new ExpiredTokenException("expired token"))
     case _ => Failure(new InvalidTokenException("invalid token"))
   }

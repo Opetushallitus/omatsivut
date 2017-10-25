@@ -41,9 +41,9 @@ trait TuloskirjeetServletContainer {
 
     get("/:token/tuloskirje.pdf") {
       (for {
-        hakemusOid <- oppijanTunnistusService.validateToken(params("token"))
-        hakemusInfo <- Try(hakemusRepository.getHakemus(hakemusOid, DontFetch).getOrElse(throw new NoSuchElementException))
-        tuloskirje <- Try(tuloskirjeService.fetchTuloskirje(hakemusInfo.hakemus.haku.oid, hakemusOid, ""))
+        metadata <- oppijanTunnistusService.validateToken(params("token"))
+        hakemusInfo <- Try(hakemusRepository.getHakemus(metadata.hakemusOid, DontFetch).getOrElse(throw new NoSuchElementException))
+        tuloskirje <- Try(tuloskirjeService.fetchTuloskirje(hakemusInfo.hakemus.haku.oid, metadata.hakemusOid, ""))
       } yield {
         tuloskirje match {
           case Some(data: Array[Byte]) => Ok(data, Map(

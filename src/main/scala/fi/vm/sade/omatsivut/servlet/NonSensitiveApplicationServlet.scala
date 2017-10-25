@@ -221,11 +221,11 @@ trait NonSensitiveApplicationServletContainer {
 
     get("/application/token/:token") {
       (for {
-        hakemusOid <- oppijanTunnistusService.validateToken(params("token"))
-        hakemus <- fetchHakemus(hakemusOid)
+        metadata <- oppijanTunnistusService.validateToken(params("token"))
+        hakemus <- fetchHakemus(metadata.hakemusOid)
       } yield {
         Ok(InsecureHakemusInfo(
-          jwt.encode(HakemusJWT(hakemusOid, Set(), hakemus.hakemus.personOid)),
+          jwt.encode(HakemusJWT(metadata.hakemusOid, Set(), hakemus.hakemus.personOid)),
           new NonSensitiveHakemusInfo(hakemus, Set()),
           oiliJwt = jwt.createOiliJwt(hakemus.hakemus.personOid)
         ))
