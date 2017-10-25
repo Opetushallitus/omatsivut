@@ -10,7 +10,9 @@ case class HakemusInfo(hakemus: Hakemus,
                        tulosOk: Boolean,
                        paymentInfo: Option[Map[ApplicationOptionOid, ShouldPay]],
                        hakemusSource: String,
-                       ataruHakijaUrl: String)
+                       ataruHakijaUrl: String) {
+  def withoutKelaUrl: HakemusInfo = copy(hakemus = hakemus.withoutKelaUrl)
+}
 
 object HakemusInfo {
   type ApplicationOptionOid = String
