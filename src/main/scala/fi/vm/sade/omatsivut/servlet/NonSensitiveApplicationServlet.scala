@@ -9,7 +9,7 @@ import fi.vm.sade.hakemuseditori.auditlog.SaveVastaanotto
 import fi.vm.sade.hakemuseditori.domain.Language
 import fi.vm.sade.hakemuseditori.domain.Language.Language
 import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus.Valintatulos
-import fi.vm.sade.hakemuseditori.hakemus.domain.HakemusMuutos
+import fi.vm.sade.hakemuseditori.hakemus.domain.{Hakemus, HakemusMuutos}
 import fi.vm.sade.hakemuseditori.hakemus.{HakemusInfo, HakemusRepositoryComponent, ImmutableLegacyApplicationWrapper}
 import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.hakemuseditori.lomake.domain.AnswerId
@@ -147,22 +147,9 @@ trait NonSensitiveApplicationServletContainer {
       def fetchTulosForNonHetuHakemus(hakemus: ImmutableLegacyApplicationWrapper) = {
         hakemus.henkilotunnus.isEmpty
       }
-      def removeKelaUrlFromValintatulos(v: Valintatulos) = {
-        v.transformField {
-          case ("hakutoiveet", a:JArray) => ("hakutoiveet", JArray(a.arr.map(ht => {
-            // removes kela URL
-            ht.removeField {
-              case JField("kelaURL", i: JString) => true
-              case _ => false
-            }
-          })))
-        }
-      }
 
-      hakemusRepository.getHakemus(oid,
-        fetchTulosForHakemus = fetchTulosForNonHetuHakemus,
-        transformValintatulos = removeKelaUrlFromValintatulos)
-        .fold[Try[HakemusInfo]](Failure(new NoSuchElementException(s"Hakemus $oid not found")))(Success(_))
+      hakemusRepository.getHakemus(oid, fetchTulosForHakemus = fetchTulosForNonHetuHakemus)
+        .fold[Try[HakemusInfo]](Failure(new NoSuchElementException(s"Hakemus $oid not found")))(h => Success(h.withoutKelaUrl))
     }
 
     before() {
