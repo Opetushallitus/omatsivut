@@ -54,15 +54,20 @@ trait HakemusEditoriComponent extends ApplicationValidatorComponent
     def user(): User
 
     def fetchTuloskirje(personOid: String, hakuOid: String): Option[Array[Byte]] = {
-      val hakemukset = fetchByPersonOid(personOid).find(_.hakemus.haku.oid == hakuOid)
+      val hakemukset = fetchByPersonOid(personOid, DontFetch).find(_.hakemus.haku.oid == hakuOid)
       hakemukset.flatMap(hakemus => tuloskirjeService.fetchTuloskirje(hakuOid, hakemus.hakemus.oid, personOid))
     }
 
-    def fetchByPersonOid(personOid: String): List[HakemusInfo] =
-      (ataruService.findApplications(personOid) ::: hakemusRepository.fetchHakemukset(personOid)).sortBy[Option[Long]](_.hakemus.received).reverse
+    def fetchByPersonOid(personOid: String,
+                         valintatulosFetchStrategy: ValintatulosFetchStrategy): List[HakemusInfo] =
+      (ataruService.findApplications(personOid, valintatulosFetchStrategy) ::: hakemusRepository.fetchHakemukset(personOid, valintatulosFetchStrategy))
+        .sortBy[Option[Long]](_.hakemus.received).reverse
 
-    def fetchByHakemusOid(personOid: String, hakemusOid: String): Option[HakemusInfo] = hakemusRepository.getHakemus(hakemusOid, Fetch)
-      .orElse(ataruService.findApplications(personOid).find(_.hakemus.oid == hakemusOid))
+    def fetchByHakemusOid(personOid: String,
+                          hakemusOid: String,
+                          valintatulosFetchStrategy: ValintatulosFetchStrategy): Option[HakemusInfo] =
+      hakemusRepository.getHakemus(hakemusOid, valintatulosFetchStrategy)
+        .orElse(ataruService.findApplications(personOid, valintatulosFetchStrategy).find(_.hakemus.oid == hakemusOid))
 
     def opetuspisteet(asId: String, query: String, lang: Option[String]): Option[List[Opetuspiste]] = koulutusInformaatioService.opetuspisteet(asId, query, parseLang(lang))
 
