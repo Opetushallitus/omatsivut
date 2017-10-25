@@ -6,7 +6,7 @@ import fi.vm.sade.hakemuseditori._
 import fi.vm.sade.hakemuseditori.auditlog.AuditLoggerComponent
 import fi.vm.sade.hakemuseditori.domain.Language
 import fi.vm.sade.hakemuseditori.hakemus.domain.HakemusMuutos
-import fi.vm.sade.hakemuseditori.hakemus.{ApplicationValidatorComponent, HakemusRepositoryComponent, SpringContextComponent}
+import fi.vm.sade.hakemuseditori.hakemus.{ApplicationValidatorComponent, DontFetch, Fetch, HakemusRepositoryComponent, SpringContextComponent}
 import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.hakemuseditori.localization.TranslationsComponent
 import fi.vm.sade.hakemuseditori.lomake.LomakeRepositoryComponent
@@ -57,7 +57,7 @@ trait ApplicationsServletContainer {
     }
 
     get("/") {
-      hakemusEditori.fetchByPersonOid(personOid()) match {
+      hakemusEditori.fetchByPersonOid(personOid(), Fetch) match {
         case FullSuccess(hs) =>
           Map("allApplicationsFetched" -> true, "applications" -> hs)
         case FullFailure(ts) =>
@@ -105,7 +105,7 @@ trait ApplicationsServletContainer {
       val hakukohdeOid = params("hakukohdeOid")
       val henkiloOid = personOid()
 
-      hakemusEditori.fetchByHakemusOid(henkiloOid, hakemusOid) match {
+      hakemusEditori.fetchByHakemusOid(henkiloOid, hakemusOid, Fetch) match {
         case Some(hakemus) => vastaanota(
           hakemusOid,
           hakukohdeOid,

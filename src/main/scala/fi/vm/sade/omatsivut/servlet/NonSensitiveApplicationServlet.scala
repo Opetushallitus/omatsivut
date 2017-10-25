@@ -205,7 +205,7 @@ trait NonSensitiveApplicationServletContainer {
       val hakukohdeOid = params("hakukohdeOid")
       val henkiloOid = getPersonOidFromSession
 
-      hakemusEditori.fetchByHakemusOid(henkiloOid, hakemusOid) match {
+      hakemusEditori.fetchByHakemusOid(henkiloOid, hakemusOid, FetchIfNoHetuOrToinenAste) match {
         case Some(hakemus) => vastaanota(
           hakemusOid,
           hakukohdeOid,
@@ -213,7 +213,7 @@ trait NonSensitiveApplicationServletContainer {
           henkiloOid,
           request.body,
           hakemus.hakemus.email,
-          () => fetchHakemus(hakemusOid).toOption
+          () => Some(hakemus)
         )
         case None => NotFound("error" -> "Not found")
       }

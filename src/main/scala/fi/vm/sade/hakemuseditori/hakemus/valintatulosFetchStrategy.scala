@@ -24,5 +24,5 @@ object FetchIfNoHetuOrToinenAste extends ValintatulosFetchStrategy {
   override def legacy(haku: Haku, h: ImmutableLegacyApplicationWrapper): Boolean =
     h.henkilotunnus.isEmpty || haku.toisenasteenhaku
 
-  override def ataru(haku: Haku, h: AtaruApplication): Boolean = false
+  override def ataru(haku: Haku, h: AtaruApplication): Boolean = false // FIXME
 }

@@ -59,12 +59,20 @@ trait HakemusEditoriComponent extends ApplicationValidatorComponent
     def user(): User
 
     def fetchTuloskirje(personOid: String, hakuOid: String): Option[Array[Byte]] = {
-      val hakemukset = fetchByPersonOid(personOid).find(_.hakemus.haku.oid == hakuOid)
+      val hakemukset = fetchByPersonOid(personOid, DontFetch) match {
+        case FullSuccess(hs) => hs.find(_.hakemus.haku.oid == hakuOid)
+        case PartialSuccess(_, ts) => throw ts.head
+        case FullFailure(ts) => throw ts.head
+      }
       hakemukset.flatMap(hakemus => tuloskirjeService.fetchTuloskirje(hakuOid, hakemus.hakemus.oid, personOid))
     }
 
-    def fetchByPersonOid(personOid: String): HakemusResult = {
-      (Try(ataruService.findApplications(personOid)), Try(hakemusRepository.fetchHakemukset(personOid))) match {
+    def fetchByPersonOid(personOid: String,
+                         valintatulosFetchStrategy: ValintatulosFetchStrategy): HakemusResult = {
+      (
+        Try(ataruService.findApplications(personOid, valintatulosFetchStrategy)),
+        Try(hakemusRepository.fetchHakemukset(personOid, valintatulosFetchStrategy))
+      ) match {
         case (Success(ahs), Success(hhs)) => FullSuccess((ahs ::: hhs).sortBy[Option[Long]](_.hakemus.received).reverse)
         case (Failure(at), Failure(ht)) => FullFailure(List(at, ht))
         case (ahs, hhs) => PartialSuccess(
@@ -74,8 +82,11 @@ trait HakemusEditoriComponent extends ApplicationValidatorComponent
       }
     }
 
-    def fetchByHakemusOid(personOid: String, hakemusOid: String): Option[HakemusInfo] = hakemusRepository.getHakemus(hakemusOid, Fetch)
-      .orElse(ataruService.findApplications(personOid).find(_.hakemus.oid == hakemusOid))
+    def fetchByHakemusOid(personOid: String,
+                          hakemusOid: String,
+                          valintatulosFetchStrategy: ValintatulosFetchStrategy): Option[HakemusInfo] =
+      hakemusRepository.getHakemus(hakemusOid, valintatulosFetchStrategy)
+        .orElse(ataruService.findApplications(personOid, valintatulosFetchStrategy).find(_.hakemus.oid == hakemusOid))
 
     def opetuspisteet(asId: String, query: String, lang: Option[String]): Option[List[Opetuspiste]] = koulutusInformaatioService.opetuspisteet(asId, query, parseLang(lang))
 
