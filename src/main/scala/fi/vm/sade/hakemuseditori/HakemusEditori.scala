@@ -13,6 +13,7 @@ import fi.vm.sade.hakemuseditori.koulutusinformaatio.KoulutusInformaatioComponen
 import fi.vm.sade.hakemuseditori.localization.{Translations, TranslationsComponent}
 import fi.vm.sade.hakemuseditori.lomake.LomakeRepositoryComponent
 import fi.vm.sade.hakemuseditori.ohjausparametrit.OhjausparametritComponent
+import fi.vm.sade.hakemuseditori.oppijanumerorekisteri.OppijanumerorekisteriComponent
 import fi.vm.sade.hakemuseditori.tarjonta.TarjontaComponent
 import fi.vm.sade.hakemuseditori.user.User
 import fi.vm.sade.hakemuseditori.valintatulokset.{NoOpValintatulosService, ValintatulosService, ValintatulosServiceComponent}
@@ -25,6 +26,7 @@ import scala.util.{Failure, Success, Try}
 
 trait HakemusEditoriComponent extends ApplicationValidatorComponent
   with AtaruServiceComponent
+  with OppijanumerorekisteriComponent
   with TarjontaComponent
   with OhjausparametritComponent
   with LomakeRepositoryComponent
@@ -139,6 +141,7 @@ abstract class StandaloneHakemusEditoriComponent(
 class StubbedHakemusEditoriContext(auditContext: AuditContext, appContext: ApplicationContext, translations: Translations) extends StandaloneHakemusEditoriComponent(auditContext, translations) {
   override lazy val springContext = new HakemusSpringContext(appContext)
   override lazy val ataruService = new StubbedAtaruService
+  override lazy val oppijanumerorekisteriService = new StubbedOppijanumerorekisteriService
   override lazy val tarjontaService = new StubbedTarjontaService
   override lazy val tuloskirjeService = new StubbedTuloskirjeService
   override lazy val koodistoService = new StubbedKoodistoService
