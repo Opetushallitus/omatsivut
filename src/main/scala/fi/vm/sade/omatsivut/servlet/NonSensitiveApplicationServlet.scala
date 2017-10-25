@@ -10,7 +10,7 @@ import fi.vm.sade.hakemuseditori.domain.Language
 import fi.vm.sade.hakemuseditori.domain.Language.Language
 import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus.Valintatulos
 import fi.vm.sade.hakemuseditori.hakemus.domain.{Hakemus, HakemusMuutos}
-import fi.vm.sade.hakemuseditori.hakemus.{HakemusInfo, HakemusRepositoryComponent, ImmutableLegacyApplicationWrapper}
+import fi.vm.sade.hakemuseditori.hakemus.{FetchIfNoHetu, HakemusInfo, HakemusRepositoryComponent, ImmutableLegacyApplicationWrapper}
 import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.hakemuseditori.lomake.domain.AnswerId
 import fi.vm.sade.hakemuseditori.user.Oppija
@@ -144,11 +144,7 @@ trait NonSensitiveApplicationServletContainer {
     }
 
     private def fetchHakemus(oid: String): Try[HakemusInfo] = {
-      def fetchTulosForNonHetuHakemus(hakemus: ImmutableLegacyApplicationWrapper) = {
-        hakemus.henkilotunnus.isEmpty
-      }
-
-      hakemusRepository.getHakemus(oid, fetchTulosForHakemus = fetchTulosForNonHetuHakemus)
+      hakemusRepository.getHakemus(oid, FetchIfNoHetu)
         .fold[Try[HakemusInfo]](Failure(new NoSuchElementException(s"Hakemus $oid not found")))(h => Success(h.withoutKelaUrl))
     }
 
