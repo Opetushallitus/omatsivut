@@ -11,6 +11,7 @@ import fi.vm.sade.hakemuseditori.koulutusinformaatio.{KoulutusInformaatioCompone
 import fi.vm.sade.hakemuseditori.localization.TranslationsComponent
 import fi.vm.sade.hakemuseditori.lomake.{LomakeRepository, LomakeRepositoryComponent}
 import fi.vm.sade.hakemuseditori.ohjausparametrit.{OhjausparametritComponent, OhjausparametritService}
+import fi.vm.sade.hakemuseditori.oppijanumerorekisteri.{OppijanumerorekisteriComponent, OppijanumerorekisteriService}
 import fi.vm.sade.hakemuseditori.tarjonta.{TarjontaComponent, TarjontaService}
 import fi.vm.sade.hakemuseditori.valintatulokset._
 import fi.vm.sade.hakemuseditori.viestintapalvelu.{TuloskirjeComponent, TuloskirjeService}
@@ -42,6 +43,7 @@ class ComponentRegistry(val config: AppConfig)
           HakemusConverterComponent with
           HakemusEditoriComponent with
           AtaruServiceComponent with
+          OppijanumerorekisteriComponent with
           VastaanottoEmailContainer with
           ApplicationsServletContainer with
           MuistilistaServletContainer with
@@ -113,6 +115,11 @@ class ComponentRegistry(val config: AppConfig)
     case _ => new RemoteAtaruService(config)
   }
 
+  private def configureOppijanumerorekisteriService: OppijanumerorekisteriService = config match {
+    case _: StubbedExternalDeps => new StubbedOppijanumerorekisteriService
+    case _ => new RemoteOppijanumerorekisteriService(config)
+  }
+
   lazy val springContext = new HakemusSpringContext(OmatSivutSpringContext.createApplicationContext(config))
   val hakumaksuService: HakumaksuServiceWrapper = configureHakumaksuService
   val sendMailService: SendMailServiceWrapper = configureSendMailService
@@ -129,6 +136,7 @@ class ComponentRegistry(val config: AppConfig)
   val captchaService: CaptchaService = new RemoteCaptchaService(config.settings.captchaSettings)
   val oppijanTunnistusService = configureOppijanTunnistusService
   val ataruService: AtaruService = configureAtaruService
+  val oppijanumerorekisteriService: OppijanumerorekisteriService = configureOppijanumerorekisteriService
 
   def newAuditLoginFilter = new AuditLoginFilter(auditLogger, OphUrlProperties.url("vetuma.url"))
   def muistilistaService(language: Language): MuistilistaService = new MuistilistaService(language)
