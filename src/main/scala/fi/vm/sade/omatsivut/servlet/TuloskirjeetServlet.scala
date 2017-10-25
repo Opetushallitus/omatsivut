@@ -1,14 +1,14 @@
 package fi.vm.sade.omatsivut.servlet
 
 import fi.vm.sade.hakemuseditori._
-import fi.vm.sade.hakemuseditori.hakemus.{DontFetch, HakemusRepositoryComponent}
+import fi.vm.sade.hakemuseditori.hakemus.{FetchIfNoHetu, HakemusInfo, HakemusRepositoryComponent}
+import fi.vm.sade.hakemuseditori.user.Oppija
 import fi.vm.sade.hakemuseditori.viestintapalvelu.TuloskirjeComponent
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.oppijantunnistus.{ExpiredTokenException, InvalidTokenException, OppijanTunnistusComponent}
-import fi.vm.sade.omatsivut.security.JsonWebToken
 import org.scalatra._
 
-import scala.util.Try
+import scala.util.{Failure, Success, Try}
 
 trait TuloskirjeetServletContainer {
   this: HakemusRepositoryComponent with
@@ -17,9 +17,11 @@ trait TuloskirjeetServletContainer {
     TuloskirjeComponent with
     OppijanTunnistusComponent =>
 
-  class TuloskirjeetServlet(val appConfig: AppConfig) extends OmatSivutServletBase {
+  class TuloskirjeetServlet(val appConfig: AppConfig) extends OmatSivutServletBase with HakemusEditoriUserContext {
     protected val applicationDescription = "REST API tuloskirjeille"
-    private val jwt = new JsonWebToken(appConfig.settings.hmacKey)
+    private val hakemusEditori = newEditor(this)
+
+    def user(): Oppija = throw new RuntimeException("No user available")
 
     class UnauthorizedException(msg: String) extends RuntimeException(msg)
 
@@ -39,10 +41,16 @@ trait TuloskirjeetServletContainer {
         InternalServerError("error" -> "Internal server error")
     }
 
+    private def fetchHakemus(hakemusOid: String, personOid: Option[String]): Try[HakemusInfo] = {
+      personOid.map(hakemusEditori.fetchByHakemusOid(_, hakemusOid, FetchIfNoHetu))
+        .getOrElse(hakemusRepository.getHakemus(hakemusOid, FetchIfNoHetu))
+        .fold[Try[HakemusInfo]](Failure(new NoSuchElementException(s"Hakemus $hakemusOid not found")))(Success(_))
+    }
+
     get("/:token/tuloskirje.pdf") {
       (for {
         metadata <- oppijanTunnistusService.validateToken(params("token"))
-        hakemusInfo <- Try(hakemusRepository.getHakemus(metadata.hakemusOid, DontFetch).getOrElse(throw new NoSuchElementException))
+        hakemusInfo <- fetchHakemus(metadata.hakemusOid, metadata.personOid)
         tuloskirje <- Try(tuloskirjeService.fetchTuloskirje(hakemusInfo.hakemus.haku.oid, metadata.hakemusOid, ""))
       } yield {
         tuloskirje match {
