@@ -1,7 +1,7 @@
 package fi.vm.sade.omatsivut.servlet
 
 import fi.vm.sade.hakemuseditori._
-import fi.vm.sade.hakemuseditori.hakemus.{FetchIfNoHetu, HakemusInfo, HakemusRepositoryComponent}
+import fi.vm.sade.hakemuseditori.hakemus.{FetchIfNoHetuOrToinenAste, HakemusInfo, HakemusRepositoryComponent}
 import fi.vm.sade.hakemuseditori.user.Oppija
 import fi.vm.sade.hakemuseditori.viestintapalvelu.TuloskirjeComponent
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
@@ -42,8 +42,8 @@ trait TuloskirjeetServletContainer {
     }
 
     private def fetchHakemus(hakemusOid: String, personOid: Option[String]): Try[HakemusInfo] = {
-      personOid.map(hakemusEditori.fetchByHakemusOid(_, hakemusOid, FetchIfNoHetu))
-        .getOrElse(hakemusRepository.getHakemus(hakemusOid, FetchIfNoHetu))
+      personOid.map(hakemusEditori.fetchByHakemusOid(_, hakemusOid, FetchIfNoHetuOrToinenAste))
+        .getOrElse(hakemusRepository.getHakemus(hakemusOid, FetchIfNoHetuOrToinenAste))
         .fold[Try[HakemusInfo]](Failure(new NoSuchElementException(s"Hakemus $hakemusOid not found")))(Success(_))
     }
 

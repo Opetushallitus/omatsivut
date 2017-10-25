@@ -6,6 +6,7 @@ import fi.vm.sade.hakemuseditori.domain.Language
 import fi.vm.sade.hakemuseditori.hakemus.{HakemusInfo, ValintatulosFetchStrategy}
 import fi.vm.sade.hakemuseditori.hakemus.domain.{Active, EducationBackground, HakemuksenTila, Hakemus, HakukausiPaattynyt, HakukierrosPaattynyt}
 import fi.vm.sade.hakemuseditori.lomake.LomakeRepositoryComponent
+import fi.vm.sade.hakemuseditori.oppijanumerorekisteri.OppijanumerorekisteriComponent
 import fi.vm.sade.hakemuseditori.tarjonta.TarjontaComponent
 import fi.vm.sade.hakemuseditori.tarjonta.domain.{Haku, Hakuaika, Hakukohde}
 import fi.vm.sade.hakemuseditori.valintatulokset.ValintatulosServiceComponent
@@ -32,6 +33,7 @@ case class AtaruApplication(oid: String,
 trait AtaruServiceComponent  {
   this: LomakeRepositoryComponent
     with TarjontaComponent
+    with OppijanumerorekisteriComponent
     with ValintatulosServiceComponent
     with TuloskirjeComponent =>
 
@@ -105,6 +107,7 @@ trait AtaruServiceComponent  {
     def findApplications(personOid: String,
                          valintatulosFetchStrategy: ValintatulosFetchStrategy): List[HakemusInfo] = {
       val now = new LocalDateTime().toDate.getTime
+      val henkilo = oppijanumerorekisteriService.henkilo(personOid)
       getApplications(personOid)
         .map(a => (
           a,
@@ -114,7 +117,7 @@ trait AtaruServiceComponent  {
         ))
         .collect {
           case (a, Some(haku), Some(hakukohteet), tuloskirje) =>
-            val valintatulos = Try(if (valintatulosFetchStrategy.ataru(haku, a)) {
+            val valintatulos = Try(if (valintatulosFetchStrategy.ataru(haku, henkilo, a)) {
               valintatulosService.getValintatulos(a.oid, a.haku)
             } else {
               None
