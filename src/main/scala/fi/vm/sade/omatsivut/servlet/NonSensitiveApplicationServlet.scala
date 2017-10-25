@@ -6,10 +6,9 @@ import java.util.Calendar
 import fi.vm.sade.groupemailer.{EmailData, EmailMessage, EmailRecipient, GroupEmailComponent}
 import fi.vm.sade.hakemuseditori._
 import fi.vm.sade.hakemuseditori.auditlog.SaveVastaanotto
-import fi.vm.sade.hakemuseditori.domain.Language
 import fi.vm.sade.hakemuseditori.domain.Language.Language
 import fi.vm.sade.hakemuseditori.hakemus.domain.HakemusMuutos
-import fi.vm.sade.hakemuseditori.hakemus.{HakemusInfo, HakemusRepositoryComponent, ImmutableLegacyApplicationWrapper}
+import fi.vm.sade.hakemuseditori.hakemus.{FetchIfNoHetuOrToinenAste, HakemusInfo, HakemusRepositoryComponent}
 import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.hakemuseditori.lomake.domain.AnswerId
 import fi.vm.sade.hakemuseditori.tarjonta.TarjontaComponent
@@ -153,13 +152,7 @@ trait NonSensitiveApplicationServletContainer {
     }
 
     private def fetchHakemus(oid: String): Try[HakemusInfo] = {
-      def fetchTulosForHakemus(hakemus: ImmutableLegacyApplicationWrapper) = {
-        val nonHetuhakemus = hakemus.henkilotunnus.isEmpty
-        val toisenasteenhaku = tarjontaService.haku(hakemus.hakuOid, Language.fi).exists(_.toisenasteenhaku)
-        nonHetuhakemus || toisenasteenhaku
-      }
-
-      hakemusRepository.getHakemus(oid, fetchTulosForHakemus = fetchTulosForHakemus)
+      hakemusRepository.getHakemus(oid, FetchIfNoHetuOrToinenAste)
         .fold[Try[HakemusInfo]](Failure(new NoSuchElementException(s"Hakemus $oid not found")))(h => Success(h.withoutKelaUrl))
     }
 
