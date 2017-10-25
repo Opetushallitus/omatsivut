@@ -1,11 +1,11 @@
 package fi.vm.sade.omatsivut.servlet
 
 import fi.vm.sade.hakemuseditori._
-import fi.vm.sade.hakemuseditori.hakemus.{HakemusRepositoryComponent}
+import fi.vm.sade.hakemuseditori.hakemus.{DontFetch, HakemusRepositoryComponent}
 import fi.vm.sade.hakemuseditori.viestintapalvelu.TuloskirjeComponent
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.oppijantunnistus.{ExpiredTokenException, InvalidTokenException, OppijanTunnistusComponent}
-import fi.vm.sade.omatsivut.security.{JsonWebToken}
+import fi.vm.sade.omatsivut.security.JsonWebToken
 import org.scalatra._
 
 import scala.util.Try
@@ -42,7 +42,7 @@ trait TuloskirjeetServletContainer {
     get("/:token/tuloskirje.pdf") {
       (for {
         hakemusOid <- oppijanTunnistusService.validateToken(params("token"))
-        hakemusInfo <- Try(hakemusRepository.getHakemus(hakemusOid, _ =>false).getOrElse(throw new NoSuchElementException))
+        hakemusInfo <- Try(hakemusRepository.getHakemus(hakemusOid, DontFetch).getOrElse(throw new NoSuchElementException))
         tuloskirje <- Try(tuloskirjeService.fetchTuloskirje(hakemusInfo.hakemus.haku.oid, hakemusOid, ""))
       } yield {
         tuloskirje match {
