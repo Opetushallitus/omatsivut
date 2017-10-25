@@ -2,7 +2,7 @@ package fi.vm.sade.hakemuseditori.hakemus.domain
 
 import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus._
 import fi.vm.sade.hakemuseditori.tarjonta.domain.{Haku, KohteenHakuaika}
-import org.json4s.{DefaultFormats, JValue}
+import org.json4s.{DefaultFormats, JArray, JValue, JField, JString}
 
 object Hakemus {
   type Valintatulos = JValue
@@ -14,6 +14,18 @@ object Hakemus {
     implicit val formats = DefaultFormats
     val hakutoiveet: List[JValue] = valintatulos.map(_ \ "hakutoiveet").map(_.children).getOrElse(List.empty)
     hakutoiveet.exists(hakutoive => (hakutoive \ "valintatila").extract[String] != "KESKEN")
+  }
+
+  def valintatulosWithoutKelaUrl(v: Valintatulos): Valintatulos = {
+    v.transformField {
+      case ("hakutoiveet", a:JArray) => ("hakutoiveet", JArray(a.arr.map(ht => {
+        // removes kela URL
+        ht.removeField {
+          case JField("kelaURL", i: JString) => true
+          case _ => false
+        }
+      })))
+    }
   }
 }
 
@@ -37,6 +49,8 @@ case class Hakemus(oid: String,
   def preferences = hakutoiveet.map(_.hakemusData.getOrElse(Map.empty))
 
   def toHakemusMuutos = HakemusMuutos(oid, haku.oid, hakutoiveet.map(_.hakemusData.getOrElse(Map.empty)), answers)
+
+  def withoutKelaUrl: Hakemus = copy(state = state.withoutKelaUrl)
 }
 
 case class Tuloskirje(hakuOid: String, created: Long)
@@ -63,25 +77,40 @@ case class EducationBackground(baseEducation: String, vocational: Boolean)
 
 sealed trait HakemuksenTila {
   val id: String
+  def withoutKelaUrl: HakemuksenTila
 }
 
 // Alkutila, ei editoitatissa
-case class Submitted(id: String = "SUBMITTED") extends HakemuksenTila
+case class Submitted(id: String = "SUBMITTED") extends HakemuksenTila {
+  override def withoutKelaUrl: HakemuksenTila = this
+}
 
 // Taustaprosessointi kesken, ei editoitavissa
-case class PostProcessing(id: String = "POSTPROCESSING") extends HakemuksenTila
+case class PostProcessing(id: String = "POSTPROCESSING") extends HakemuksenTila {
+  override def withoutKelaUrl: HakemuksenTila = this
+}
 
 // Aktiivinen, editoitavissa
-case class Active(id: String = "ACTIVE", valintatulos: Option[Valintatulos] = None) extends HakemuksenTila
+case class Active(id: String = "ACTIVE", valintatulos: Option[Valintatulos] = None) extends HakemuksenTila {
+  override def withoutKelaUrl: HakemuksenTila = Active(id, valintatulos.map(Hakemus.valintatulosWithoutKelaUrl))
+}
 
 // Hakukausi päättynyt
-case class HakukausiPaattynyt(id: String = "HAKUKAUSIPAATTYNYT", valintatulos: Option[Valintatulos] = None) extends HakemuksenTila
+case class HakukausiPaattynyt(id: String = "HAKUKAUSIPAATTYNYT", valintatulos: Option[Valintatulos] = None) extends HakemuksenTila {
+  override def withoutKelaUrl: HakemuksenTila = HakukausiPaattynyt(id, valintatulos.map(Hakemus.valintatulosWithoutKelaUrl))
+}
 
 // Hakukierros päättynyt
-case class HakukierrosPaattynyt(id: String = "HAKUKIERROSPAATTYNYT", valintatulos: Option[Valintatulos] = None) extends HakemuksenTila
+case class HakukierrosPaattynyt(id: String = "HAKUKIERROSPAATTYNYT", valintatulos: Option[Valintatulos] = None) extends HakemuksenTila {
+  override def withoutKelaUrl: HakemuksenTila = HakukierrosPaattynyt(id, valintatulos.map(Hakemus.valintatulosWithoutKelaUrl))
+}
 
 // Passiivinen/poistettu
-case class Passive(id: String = "PASSIVE") extends HakemuksenTila
+case class Passive(id: String = "PASSIVE") extends HakemuksenTila {
+  override def withoutKelaUrl: HakemuksenTila = this
+}
 
 // Tietoja puuttuu
-case class Incomplete(id: String = "INCOMPLETE") extends HakemuksenTila
+case class Incomplete(id: String = "INCOMPLETE") extends HakemuksenTila {
+  override def withoutKelaUrl: HakemuksenTila = this
+}

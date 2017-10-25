@@ -8,21 +8,18 @@ import fi.vm.sade.hakemuseditori._
 import fi.vm.sade.hakemuseditori.auditlog.SaveVastaanotto
 import fi.vm.sade.hakemuseditori.domain.Language
 import fi.vm.sade.hakemuseditori.domain.Language.Language
-import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus.Valintatulos
 import fi.vm.sade.hakemuseditori.hakemus.domain.HakemusMuutos
 import fi.vm.sade.hakemuseditori.hakemus.{HakemusInfo, HakemusRepositoryComponent, ImmutableLegacyApplicationWrapper}
 import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.hakemuseditori.lomake.domain.AnswerId
 import fi.vm.sade.hakemuseditori.tarjonta.TarjontaComponent
-import fi.vm.sade.hakemuseditori.tarjonta.domain.Haku
 import fi.vm.sade.hakemuseditori.user.Oppija
-import fi.vm.sade.hakemuseditori.valintatulokset.domain.{VastaanotaSitovasti, VastaanottoAction}
+import fi.vm.sade.hakemuseditori.valintatulokset.domain.VastaanotaSitovasti
 import fi.vm.sade.omatsivut.NonSensitiveHakemusInfo.answerIds
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.oppijantunnistus.{ExpiredTokenException, InvalidTokenException, OppijanTunnistusComponent}
 import fi.vm.sade.omatsivut.security.{HakemusJWT, JsonWebToken}
 import fi.vm.sade.omatsivut.{NonSensitiveHakemus, NonSensitiveHakemusInfo, NonSensitiveHakemusInfoSerializer, NonSensitiveHakemusSerializer}
-import org.json4s.JsonAST.JField
 import org.json4s._
 import org.json4s.jackson.Serialization
 import org.scalatra._
@@ -161,22 +158,9 @@ trait NonSensitiveApplicationServletContainer {
         val toisenasteenhaku = tarjontaService.haku(hakemus.hakuOid, Language.fi).exists(_.toisenasteenhaku)
         nonHetuhakemus || toisenasteenhaku
       }
-      def removeKelaUrlFromValintatulos(v: Valintatulos) = {
-        v.transformField {
-          case ("hakutoiveet", a:JArray) => ("hakutoiveet", JArray(a.arr.map(ht => {
-            // removes kela URL
-            ht.removeField {
-              case JField("kelaURL", i: JString) => true
-              case _ => false
-            }
-          })))
-        }
-      }
 
-      hakemusRepository.getHakemus(oid,
-        fetchTulosForHakemus = fetchTulosForHakemus,
-        transformValintatulos = removeKelaUrlFromValintatulos)
-        .fold[Try[HakemusInfo]](Failure(new NoSuchElementException(s"Hakemus $oid not found")))(Success(_))
+      hakemusRepository.getHakemus(oid, fetchTulosForHakemus = fetchTulosForHakemus)
+        .fold[Try[HakemusInfo]](Failure(new NoSuchElementException(s"Hakemus $oid not found")))(h => Success(h.withoutKelaUrl))
     }
 
     before() {
