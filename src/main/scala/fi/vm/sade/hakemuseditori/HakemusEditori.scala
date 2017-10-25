@@ -68,7 +68,7 @@ trait HakemusEditoriComponent extends ApplicationValidatorComponent
     def fetchByHakemusOid(personOid: String,
                           hakemusOid: String,
                           valintatulosFetchStrategy: ValintatulosFetchStrategy): Option[HakemusInfo] =
-      hakemusRepository.getHakemus(hakemusOid, valintatulosFetchStrategy)
+      hakemusRepository.getHakemus(hakemusOid, valintatulosFetchStrategy).filter(_.hakemus.personOid == personOid)
         .orElse(ataruService.findApplications(personOid, valintatulosFetchStrategy).find(_.hakemus.oid == hakemusOid))
 
     def opetuspisteet(asId: String, query: String, lang: Option[String]): Option[List[Opetuspiste]] = koulutusInformaatioService.opetuspisteet(asId, query, parseLang(lang))
