@@ -185,8 +185,10 @@ trait HakemusRepositoryComponent {
   class HakemusFinder {
     private val applicationValidator: ApplicationValidator = newApplicationValidator
 
-    def fetchHakemukset(personOid: String)(implicit lang: Language.Language): List[HakemusInfo] = {
-      fetchHakemukset(new Application().setPersonOid(personOid), Fetch)
+    def fetchHakemukset(personOid: String,
+                        valintatulosFetchStrategy: ValintatulosFetchStrategy)
+                       (implicit lang: Language.Language): List[HakemusInfo] = {
+      fetchHakemukset(new Application().setPersonOid(personOid), valintatulosFetchStrategy)
     }
 
     def getHakemus(hakemusOid: String,

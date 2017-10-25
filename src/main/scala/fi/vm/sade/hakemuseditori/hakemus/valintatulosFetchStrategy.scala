@@ -23,5 +23,5 @@ object FetchIfNoHetu extends ValintatulosFetchStrategy {
   override def legacy(h: ImmutableLegacyApplicationWrapper): Boolean =
     h.henkilotunnus.isEmpty
 
-  override def ataru(h: AtaruApplication): Boolean = false
+  override def ataru(h: AtaruApplication): Boolean = false // FIXME
 }
