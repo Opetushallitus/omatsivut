@@ -2,7 +2,8 @@ package fi.vm.sade.hakemuseditori.hakemus.domain
 
 import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus._
 import fi.vm.sade.hakemuseditori.tarjonta.domain.{Haku, KohteenHakuaika}
-import org.json4s.{DefaultFormats, JArray, JValue, JField, JString}
+import fi.vm.sade.omatsivut.OphUrlProperties
+import org.json4s.{DefaultFormats, JArray, JField, JString, JValue}
 
 object Hakemus {
   type Valintatulos = JValue
@@ -44,13 +45,18 @@ case class Hakemus(oid: String,
                    requiresAdditionalInfo: Boolean,
                    hasForm: Boolean,
                    requiredPaymentState: Option[String],
-                   notifications: Map[String, Map[String, Boolean]],
-                   secret: Option[String] = None) extends HakemusLike {
+                   notifications: Map[String, Map[String, Boolean]]) extends HakemusLike {
   def preferences = hakutoiveet.map(_.hakemusData.getOrElse(Map.empty))
 
   def toHakemusMuutos = HakemusMuutos(oid, haku.oid, hakutoiveet.map(_.hakemusData.getOrElse(Map.empty)), answers)
 
   def withoutKelaUrl: Hakemus = copy(state = state.withoutKelaUrl)
+
+  def omatsivutPreviewUrl: Option[String] = if (hasForm) {
+    Some(OphUrlProperties.url("omatsivut.applications.preview", oid))
+  } else {
+    None
+  }
 }
 
 case class Tuloskirje(hakuOid: String, created: Long)

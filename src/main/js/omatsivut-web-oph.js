@@ -9,7 +9,5 @@ window.urls.addProperties({
   "omatsivut.opetuspisteet": "/omatsivut/koulutusinformaatio/opetuspisteet/:query",
   "omatsivut.translations": "/omatsivut/translations",
   "omatsivut.login": "/omatsivut/login",
-  "omatsivut.applications.preview": "/omatsivut/secure/applications/preview/$1",
   "omatsivut.applications.tuloskirje": "/omatsivut/secure/applications/tuloskirje/$1",
-  "ataru.applications.modify": "/hakemus?modify=$1"
 });
