@@ -5,10 +5,9 @@
         <application-periods haku="application.haku"></application-periods>
 
         <div class="timestamp-row" ng-show="application.haku.jarjestelmanHakulomake || application.hakemusSource === 'Ataru'">
-            <i ng-show="application.hasForm" aria-hidden="true" class="icon-doc-text"></i>
-            <a class="preview"
-               ng-href="{{ application.secret ? application.ataruHakijaUrl + url('ataru.applications.modify', application.secret) : url('omatsivut.applications.preview',application.oid)}}"
-               ng-show="application.hasForm"
+            <i ng-if="application.previewUrl" aria-hidden="true" class="icon-doc-text"></i>
+            <a ng-if="application.previewUrl"
+               ng-href="{{ application.previewUrl }}"
                ng-class="{disabled: applicationForm.$dirty|| statusMessageType=='pending' || isValidating}"
                target="_blank">{{ localization('button.showApplication') }}</a>
             <span ng-if="application.tuloskirje && application.tuloskirje.createdDate">
@@ -19,12 +18,15 @@
                     }) }}
                 </a>
             </span>
-
             <span class="timestamp" ng-if="false" ng-class="{disabled: form.$dirty || statusMessageType=='pending' || isValidating}">
                 {{ timestampLabel() }} <time formatted-time="application.updated" format="LLL" />
             </span>
-            <div callout="attachments">
-                <localized-link key="message.rememberSendAttachments" href="{{url('omatsivut.applications.preview', application.oid) + '#liitteet'}}" target="_blank"></localized-link>
+            <div callout="attachments"
+                 ng-if="application.previewUrl">
+                <localized-link key="message.rememberSendAttachments"
+                                href="{{ application.previewUlr + '#liitteet' }}"
+                                target="_blank">
+                </localized-link>
             </div>
         </div>
     </section>

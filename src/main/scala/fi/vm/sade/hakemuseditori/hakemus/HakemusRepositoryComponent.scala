@@ -7,7 +7,7 @@ import fi.vm.sade.hakemuseditori.auditlog._
 import fi.vm.sade.hakemuseditori.domain.Language
 import fi.vm.sade.hakemuseditori.domain.Language.Language
 import fi.vm.sade.hakemuseditori.hakemus.ImmutableLegacyApplicationWrapper.{LegacyApplicationAnswers, wrap}
-import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus.{Valintatulos, Answers}
+import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus.{Answers, Valintatulos}
 import fi.vm.sade.hakemuseditori.hakemus.domain._
 import fi.vm.sade.hakemuseditori.hakumaksu.HakumaksuComponent
 import fi.vm.sade.hakemuseditori.lomake.LomakeRepositoryComponent
@@ -22,6 +22,7 @@ import fi.vm.sade.haku.oppija.hakemus.aspect.ApplicationDiffUtil
 import fi.vm.sade.haku.oppija.hakemus.domain.{Application, ApplicationNote}
 import fi.vm.sade.haku.oppija.lomake.domain.ApplicationPeriod
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
+import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.utils.Timer._
 import fi.vm.sade.utils.slf4j.Logging
 import org.joda.time.LocalDateTime
@@ -227,11 +228,29 @@ trait HakemusRepositoryComponent {
             lomakeOption match {
               case Some(lomake) if haku.applicationPeriods.exists(_.active) =>
                 timed("fetchHakemukset -> applicationValidator.validateAndFindQuestions", 100) { applicationValidator.validateAndFindQuestions(haku, lomake, withNoPreferenceSpesificAnswers(hakemus), application) match {
-                    case (app, errors, questions) => HakemusInfo(hakemusConverter.convertToHakemus(letterForHaku, Some(lomake), haku, app, valintatulos), errors, questions, tulosOk, None, "HakuApp", "")
+                    case (app, errors, questions) =>
+                      val hakemus = hakemusConverter.convertToHakemus(letterForHaku, Some(lomake), haku, app, valintatulos)
+                      HakemusInfo(
+                        hakemus = hakemus,
+                        errors = errors,
+                        questions = questions,
+                        tulosOk = tulosOk,
+                        paymentInfo = None,
+                        hakemusSource = "HakuApp",
+                        previewUrl = hakemus.omatsivutPreviewUrl
+                      )
                   }
                 }
               case _ =>
-                HakemusInfo(hakemus, List(), List(), tulosOk, None, "HakuApp", "")
+                HakemusInfo(
+                  hakemus = hakemus,
+                  errors = List(),
+                  questions = List(),
+                  tulosOk = tulosOk,
+                  paymentInfo = None,
+                  hakemusSource = "HakuApp",
+                  previewUrl = hakemus.omatsivutPreviewUrl
+                )
             }
           }
         })

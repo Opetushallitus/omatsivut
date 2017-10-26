@@ -139,8 +139,7 @@ trait AtaruServiceComponent  {
               requiresAdditionalInfo = false,
               hasForm = true,
               requiredPaymentState = None,
-              notifications = Map(),
-              secret = Option(a.secret)
+              notifications = Map()
             )
             HakemusInfo(
               hakemus = hakemus,
@@ -149,7 +148,7 @@ trait AtaruServiceComponent  {
               tulosOk = valintatulos.isSuccess,
               paymentInfo = None,
               hakemusSource = "Ataru",
-              ataruHakijaUrl = OphUrlProperties.url("ataru.hakija.url")
+              previewUrl = Some(OphUrlProperties.url("ataru.applications.modify", a.secret))
             )
         }
     }
