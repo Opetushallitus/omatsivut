@@ -27,6 +27,7 @@ import scalaz.concurrent.Task
 
 case class AtaruApplication(oid: String,
                             secret: String,
+                            email: String,
                             haku: String,
                             hakukohteet: List[String])
 
@@ -136,7 +137,7 @@ trait AtaruServiceComponent  {
               educationBackground = EducationBackground("base_education", false),
               answers = Map(),
               postOffice = None,
-              email = None, // FIXME
+              email = Some(a.email),
               requiresAdditionalInfo = false,
               hasForm = true,
               requiredPaymentState = None,
