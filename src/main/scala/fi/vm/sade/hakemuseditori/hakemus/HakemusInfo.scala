@@ -17,13 +17,4 @@ case class HakemusInfo(hakemus: Hakemus,
 object HakemusInfo {
   type ApplicationOptionOid = String
   type ShouldPay = Boolean
-
-  def apply(hakemus: Hakemus,
-            errors: List[ValidationError],
-            questions: List[QuestionNode],
-            paymentInfo: Option[Map[ApplicationOptionOid, ShouldPay]],
-            hakemusSource: String = "HakuApp",
-            ataruHakijaUrl: String = ""): HakemusInfo = {
-    HakemusInfo(hakemus, errors, questions, tulosOk = true, paymentInfo, hakemusSource, ataruHakijaUrl)
-  }
 }
