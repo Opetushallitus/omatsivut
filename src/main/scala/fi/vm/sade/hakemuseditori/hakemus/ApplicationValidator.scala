@@ -6,7 +6,7 @@ import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus._
 import fi.vm.sade.hakemuseditori.hakemus.domain._
 import fi.vm.sade.hakemuseditori.hakumaksu.HakumaksuComponent
 import fi.vm.sade.hakemuseditori.localization.TranslationsComponent
-import fi.vm.sade.hakemuseditori.lomake.{LomakeRepositoryComponent, AddedQuestionFinder}
+import fi.vm.sade.hakemuseditori.lomake.{AddedQuestionFinder, LomakeRepositoryComponent}
 import fi.vm.sade.hakemuseditori.lomake.domain.{AnswerId, Lomake}
 import fi.vm.sade.hakemuseditori.tarjonta.TarjontaComponent
 import fi.vm.sade.hakemuseditori.tarjonta.domain.Haku
@@ -15,7 +15,9 @@ import fi.vm.sade.haku.oppija.hakemus.it.dao.ApplicationDAO
 import fi.vm.sade.haku.oppija.lomake.validation.ValidationInput.ValidationContext
 import fi.vm.sade.haku.oppija.lomake.validation.{ElementTreeValidator, ValidationInput, ValidationResult}
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants._
+import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.utils.slf4j.Logging
+
 import scala.collection.JavaConversions._
 
 trait ApplicationValidatorComponent {
@@ -51,14 +53,15 @@ trait ApplicationValidatorComponent {
         validateAndFindQuestions(haku, lomake, hakemusMuutos, storedApplication) match {
           case (app, errors, questions) =>
             val resultErrors = duplicateSelectionsInApplications ++ errors
+            val hakemus = hakemusConverter.convertToHakemus(None, Some(lomake), haku, app)
             HakemusInfo(
-              hakemus = hakemusConverter.convertToHakemus(None, Some(lomake), haku, app),
+              hakemus = hakemus,
               errors = resultErrors.distinct,
               questions = questions,
               tulosOk = true,
               paymentInfo = Some(paymentInfo),
               hakemusSource = "HakuApp",
-              ataruHakijaUrl = ""
+              previewUrl = hakemus.omatsivutPreviewUrl
             )
         }
       } ("Error validating application: " + hakemusMuutos.oid)
