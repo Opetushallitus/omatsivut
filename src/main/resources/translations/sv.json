@@ -147,7 +147,8 @@
 
   "info": {
     "expiredToken": "<strong>Obs! Du loggade in för att ändra dina ansökningsönskemål via en e-post länk.</strong><p>Ansökningstiden är slut och du kan därför inte längre ändra dina ansökningsönskemål. Om du vill se hela din ansökan eller ändra dina kontaktuppgifter kan du göra det i Min Studieinfo -tjänsten. <a href='https://studieinfo.fi/wp/min-studieinfo-tjansten/'>Läs mera om Min Studieinfo -tjänsten.</a></p>",
-    "baseEducationConflict": "Du observerar väl att din grundutbildning inte ger dig ansökningsbehörighet till detta ansökningsmål. Se mer information i ansökningsmålets antagningsgrunder."
+    "baseEducationConflict": "Du observerar väl att din grundutbildning inte ger dig ansökningsbehörighet till detta ansökningsmål. Se mer information i ansökningsmålets antagningsgrunder.",
+    "ataruApplicationsNotFetched": "Alla ansökningar kunde inte laddas eftersom tjänsten startar. Försök på nytt om en stund."
   },
 
   "errorPage": {

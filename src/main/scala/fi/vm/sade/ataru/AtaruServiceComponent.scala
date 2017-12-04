@@ -21,52 +21,52 @@ trait AtaruServiceComponent  {
   val ataruService: AtaruService
 
   class StubbedAtaruService extends AtaruService {
-    override def findApplications(personOid: String): List[HakemusInfo] = List()
+    override def findApplications(personOid: String): Either[Throwable, List[HakemusInfo]] = Right(List())
   }
 
   class RemoteAtaruService(httpClient: HttpClient) extends AtaruService {
 
     implicit val formats = DefaultFormats
 
-    private def getApplications(personOid: String): List[AtaruApplication] = {
+    private def getApplications(personOid: String): Either[Throwable, List[AtaruApplication]] = {
       httpClient
         .httpGet(OphUrlProperties.url("ataru.applications.modify", personOid))
         .responseWithHeaders() match {
         case (200, _, body) =>
-          JsonMethods.parse(body).extract[List[AtaruApplication]]
+          Right(JsonMethods.parse(body).extract[List[AtaruApplication]])
         case (status, _, body) =>
           throw new RuntimeException(s"Failed to get applications by person OID from Ataru service, HTTP status code: $status, response body: $body")
       }
     }
 
-    def findApplications(personOid: String): List[HakemusInfo] = {
+    def findApplications(personOid: String): Either[Throwable, List[HakemusInfo]] = {
       getApplications(personOid)
-        .filterNot(_.passive)
-        .map(a => (a, tarjontaService.haku(a.haku, Language.fi)))
-        .collect {
-          case (a, Some(haku)) =>
-            val hakemus = Hakemus(
-              a.key,
-              Option(System.currentTimeMillis()),
-              None,
-              Active(),
-              None,
-              List(),
-              haku,
-              EducationBackground("base_education", false),
-              Map(),
-              Option("Helsinki"),
-              false,
-              true,
-              None,
-              Map(),
-              Option(a.secret))
-            HakemusInfo(hakemus, List(), List(), true, None, "Ataru", OphUrlProperties.url("ataru.hakija.url"))
-        }
+        .right.map(_.filterNot(_.passive)
+          .map(a => (a, tarjontaService.haku(a.haku, Language.fi)))
+          .collect {
+            case (a, Some(haku)) =>
+              val hakemus = Hakemus(
+                a.key,
+                Option(System.currentTimeMillis()),
+                None,
+                Active(),
+                None,
+                List(),
+                haku,
+                EducationBackground("base_education", false),
+                Map(),
+                Option("Helsinki"),
+                false,
+                true,
+                None,
+                Map(),
+                Option(a.secret))
+              HakemusInfo(hakemus, List(), List(), true, None, "Ataru", OphUrlProperties.url("ataru.hakija.url"))
+          })
     }
   }
 }
 
 trait AtaruService {
-  def findApplications(personOid: String): List[HakemusInfo]
+  def findApplications(personOid: String): Either[Throwable,List[HakemusInfo]]
 }

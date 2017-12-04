@@ -2155,7 +2155,7 @@
           describe("Tietokanta", function() {
             it("sisältää tallennetut tiedot", function() {
               return db.getApplications().then(function(data) {
-                var answers = findApplicationById(data, hakemusNivelKesa2013WithPeruskouluBaseEducationId).hakemus.answers
+                var answers = findApplicationById(data.applications, hakemusNivelKesa2013WithPeruskouluBaseEducationId).hakemus.answers
                 var questions = hakemusNivelKesa2013WithPeruskouluBaseEducation.questionsForApplication().data()
 
                 answers.hakutoiveet[questions[0].id].should.equal("tekstivastaus 1")
@@ -2799,15 +2799,15 @@
       var applicationsBefore, applicationsAfter;
       before(
         function() {
-          return db.getApplications().then(function(apps) {
-            applicationsBefore = apps
+          return db.getApplications().then(function(data) {
+            applicationsBefore = data.applications
           })
         },
         manipulationFunction,
         application.saveWaitSuccess,
         function(done) {
-          db.getApplications().then(function(apps) {
-            applicationsAfter = apps
+          db.getApplications().then(function(data) {
+            applicationsAfter = data.applications
             done()
           })
         }

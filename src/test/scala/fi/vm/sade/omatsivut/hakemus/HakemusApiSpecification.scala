@@ -2,7 +2,7 @@ package fi.vm.sade.omatsivut.hakemus
 
 import java.util.Date
 
-import fi.vm.sade.hakemuseditori.hakemus.HakemusInfo
+import fi.vm.sade.hakemuseditori.hakemus.{ApplicationsResponse, HakemusInfo}
 import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus.Answers
 import fi.vm.sade.hakemuseditori.hakemus.domain.{Active, HakemuksenTila, Hakemus, Hakutoive}
 import fi.vm.sade.hakemuseditori.json.JsonFormats
@@ -32,23 +32,23 @@ trait HakemusApiSpecification extends ScalatraTestSupport with Logging {
   val lahiosoite: String = "lahiosoite"
 
   def withHakemusWithEmptyAnswers[T](oid: String)(f: (HakemusInfo => T))(implicit personOid: PersonOid): T = {
-    withApplications { applications =>
-      val originalHakemusInfo = applications.find(_.hakemus.oid == oid).get
+    withApplicationsResponse { resp =>
+      val originalHakemusInfo = resp.applications.find(_.hakemus.oid == oid).get
       f(originalHakemusInfo.copy(hakemus = originalHakemusInfo.hakemus.copy(answers = Hakemus.emptyAnswers)))
     }
   }
 
   def withHakemus[T](oid: String)(f: (HakemusInfo => T))(implicit personOid: PersonOid): T = {
-    withApplications { applications =>
-      f(applications.find(_.hakemus.oid == oid).get)
+    withApplicationsResponse { resp =>
+      f(resp.applications.find(_.hakemus.oid == oid).get)
     }
   }
 
-  def withApplications[T](f: (List[HakemusInfo] => T))(implicit personOid: PersonOid): T = {
+  def withApplicationsResponse[T](f: (ApplicationsResponse => T))(implicit personOid: PersonOid): T = {
     authGet("secure/applications") {
       val b = body
-      val applications: List[HakemusInfo] = Serialization.read[List[HakemusInfo]](b)
-      f(applications)
+      val resp: ApplicationsResponse = Serialization.read[ApplicationsResponse](b)
+      f(resp)
     }
   }
 
@@ -63,8 +63,8 @@ trait HakemusApiSpecification extends ScalatraTestSupport with Logging {
   }
 
   def setApplicationStart(applicationId: String, daysFromNow: Long)(implicit personOid: PersonOid) = {
-    withApplications { applications =>
-      val hakuOid = applications.find(_.hakemus.oid == applicationId).map(_.hakemus.haku.oid).get
+    withApplicationsResponse { resp =>
+      val hakuOid = resp.applications.find(_.hakemus.oid == applicationId).map(_.hakemus.haku.oid).get
       put("util/fixtures/haku/" + hakuOid + "/overrideStart/" + (new Date().getTime + daysFromNow*24*60*60*1000), Iterable.empty) { }
     }
   }
@@ -74,8 +74,8 @@ trait HakemusApiSpecification extends ScalatraTestSupport with Logging {
   }
 
   def resetHakukierrosPaattyy(applicationId: String)(implicit personOid: PersonOid) = {
-    withApplications { applications =>
-      val hakuOid = applications.find(_.hakemus.oid == applicationId).map(_.hakemus.haku.oid).get
+    withApplicationsResponse { resp =>
+      val hakuOid = resp.applications.find(_.hakemus.oid == applicationId).map(_.hakemus.haku.oid).get
       put("util/fixtures/haku/" + hakuOid + "/resetHakuPaattyy") {}
     }
   }

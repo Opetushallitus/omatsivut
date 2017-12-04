@@ -58,7 +58,16 @@ trait ApplicationsServletContainer {
     }
 
     get("/") {
-      { ataruService.findApplications(personOid()) ::: hakemusEditori.fetchByPersonOid(personOid()) }.sortBy[Option[Long]](_.hakemus.received).reverse
+      val (ataruApplications, ataruApplicationsLoaded) = ataruService.findApplications(personOid()) match {
+        case Left(_) => (List.empty, false)
+        case Right(applications) => (applications, true)
+      }
+      val response = Map(
+        "ataruApplicationsFetched" -> ataruApplicationsLoaded,
+        "applications" -> {
+          ataruApplications ::: hakemusEditori.fetchByPersonOid(personOid())
+        }.sortBy[Option[Long]](_.hakemus.received).reverse)
+      response
     }
 
     put("/:oid") {
