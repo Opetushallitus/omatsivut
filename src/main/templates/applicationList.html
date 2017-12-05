@@ -15,7 +15,7 @@
 
 
     <p class="application-list_ataru-applications-not-loaded"
-       ng-if="!ataruApplicationsFetched && applicationStatusMessage == ''">{{ localization('label.info.ataruApplicationsNotFetched') }}.</p>
+       ng-if="!ataruApplicationsFetched && applicationStatusMessage == ''">{{ localization('info.ataruApplicationsNotFetched') }}</p>
 
   <ul id="hakemus-list" aria-label="{{ localization('title.omatHakemukset') }}" ng-cloak>
       <li ng-repeat="application in applications" class="application" data-oid="{{application.oid}}">

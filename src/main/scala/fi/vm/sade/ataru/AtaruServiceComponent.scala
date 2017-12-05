@@ -7,6 +7,7 @@ import fi.vm.sade.hakemuseditori.lomake.LomakeRepositoryComponent
 import fi.vm.sade.hakemuseditori.tarjonta.TarjontaComponent
 import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.utils.http.HttpClient
+import fi.vm.sade.utils.slf4j.Logging
 import org.json4s.DefaultFormats
 import org.json4s.native.JsonMethods
 
@@ -24,7 +25,7 @@ trait AtaruServiceComponent  {
     override def findApplications(personOid: String): Either[Throwable, List[HakemusInfo]] = Right(List())
   }
 
-  class RemoteAtaruService(httpClient: HttpClient) extends AtaruService {
+  class RemoteAtaruService(httpClient: HttpClient) extends AtaruService with Logging {
 
     implicit val formats = DefaultFormats
 
@@ -35,7 +36,8 @@ trait AtaruServiceComponent  {
         case (200, _, body) =>
           Right(JsonMethods.parse(body).extract[List[AtaruApplication]])
         case (status, _, body) =>
-          throw new RuntimeException(s"Failed to get applications by person OID from Ataru service, HTTP status code: $status, response body: $body")
+          logger.info(s"Failed to get applications by person OID from Ataru service, HTTP status code: $status, response body: $body")
+          Left(new RuntimeException(s"Failed to get applications by person OID from Ataru service"))
       }
     }
 
