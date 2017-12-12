@@ -16,9 +16,10 @@ class GetApplicationsSpec extends HakemusApiSpecification with FixturePerson wit
 
   "GET /applications" should {
     "return person's applications" in {
-      withApplications { applications =>
-        applications.map(_.hakemus.oid) must contain(hakemusNivelKesa2013WithPeruskouluBaseEducationId)
-        applications.map(_.hakemus.oid) must contain(hakemusYhteishakuKevat2014WithForeignBaseEducationId)
+      withApplicationsResponse { resp =>
+        resp.allApplicationsFetched must_== true
+        resp.applications.map(_.hakemus.oid) must contain(hakemusNivelKesa2013WithPeruskouluBaseEducationId)
+        resp.applications.map(_.hakemus.oid) must contain(hakemusYhteishakuKevat2014WithForeignBaseEducationId)
       }
     }
 
@@ -33,23 +34,6 @@ class GetApplicationsSpec extends HakemusApiSpecification with FixturePerson wit
         hakemusInfo.hakemus.requiresAdditionalInfo must_== true
       }
     }
-
-    /* TODO Failing test
-    "do not return questions and errors for inactive applications" in {
-      withHakemusWithEmptyAnswers(hakemusWithAtheleteQuestions) { hakemusInfo =>
-        hakemusInfo.errors must_== List()
-        QuestionNode.flatten(hakemusInfo.questions).map(_.title).length must_== 21
-        withFixedDateTime(DateTime.now().plusYears(100).getMillis) {
-          setHakukierrosPaattyy("1.2.246.562.5.2014020613412490531399",365*200)
-          withHakemusWithEmptyAnswers(hakemusWithAtheleteQuestions) { hakemusInfo =>
-            hakemusInfo.errors must_== List()
-            hakemusInfo.questions must_== List()
-          }
-        }
-      }
-    }*/
-
-
 
     "tell for discretionary application that additional info is required" in {
       withHakemusWithEmptyAnswers(hakemusYhteishakuKevat2014WithForeignBaseEducationId) { hakemusInfo =>

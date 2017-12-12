@@ -2,6 +2,10 @@ module.exports = function(listApp) {
   listApp.factory("restResources", ["$resource", "$http", function($resource, $http) {
     return {
       applications: $resource(window.url("omatsivut.applications"), null, {
+        get: {
+          method: "GET",
+          isArray: false
+        },
         "update": {
           method: "PUT",
           url: window.url("omatsivut.applications.update")

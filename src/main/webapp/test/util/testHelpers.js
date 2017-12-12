@@ -147,7 +147,7 @@ db = {
 
   getPreferences: function() {
     return db.getApplications().then(function(data) {
-      return _.chain(data[0].hakemus.hakutoiveet)
+      return _.chain(data.applications[0].hakemus.hakutoiveet)
         .filter(function(item) { return !_.isEmpty(item["Koulutus-id"]) })
         .map(function(item) {
           return {
@@ -207,8 +207,8 @@ fixtures = {
   },
 
   setHakuData: function(applicationId, f) {
-    return db.getApplications().then(function(applications) {
-      var hakuOid = _(applications).find(function(application) { return application.hakemus.oid === applicationId }).hakemus.haku.oid
+    return db.getApplications().then(function(data) {
+      var hakuOid = _(data.applications).find(function(application) { return application.hakemus.oid === applicationId }).hakemus.haku.oid
       return f(hakuOid)
     })
   },

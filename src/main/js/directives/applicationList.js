@@ -17,11 +17,12 @@ module.exports = function(listApp) {
         function loadApplications() {
           $scope.applicationStatusMessage = "message.loadingApplications"
           $scope.applicationStatusMessageType = "ajax-spinner"
-          restResources.applications.query(success, error)
+          restResources.applications.get(success, error)
         }
 
         function success(data) {
-          $scope.applications = _.map(data, function(json) { return new Hakemus(json) })
+          $scope.allApplicationsFetched = data.allApplicationsFetched;
+          $scope.applications = _.map(data.applications, function(json) { return new Hakemus(json) })
           if($scope.applications.length > 0) {
             $scope.applicationStatusMessage = ""
             $scope.applicationStatusMessageType = ""

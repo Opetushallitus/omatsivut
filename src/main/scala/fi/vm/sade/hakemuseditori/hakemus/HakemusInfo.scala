@@ -14,3 +14,5 @@ object HakemusInfo {
     HakemusInfo(hakemus, errors, questions, tulosOk = true, paymentInfo, hakemusSource, ataruHakijaUrl)
   }
 }
+
+case class ApplicationsResponse(allApplicationsFetched: Boolean, applications: List[HakemusInfo])
