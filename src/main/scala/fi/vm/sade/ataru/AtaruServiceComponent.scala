@@ -36,8 +36,7 @@ trait AtaruServiceComponent  {
         case (200, _, body) =>
           Right(JsonMethods.parse(body).extract[List[AtaruApplication]])
         case (status, _, body) =>
-          logger.info(s"Failed to get applications by person OID from Ataru service, HTTP status code: $status, response body: $body")
-          Left(new RuntimeException(s"Failed to get applications by person OID from Ataru service"))
+          Left(new RuntimeException(s"Failed to get applications by person OID from Ataru service, HTTP status code: $status, response body: $body"))
       }
     }
 
