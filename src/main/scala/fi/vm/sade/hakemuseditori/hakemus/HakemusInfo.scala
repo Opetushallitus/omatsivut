@@ -15,4 +15,4 @@ object HakemusInfo {
   }
 }
 
-case class ApplicationsResponse(ataruApplicationsFetched: Boolean, applications: List[HakemusInfo])
+case class ApplicationsResponse(allApplicationsFetched: Boolean, applications: List[HakemusInfo])

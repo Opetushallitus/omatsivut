@@ -21,7 +21,7 @@ module.exports = function(listApp) {
         }
 
         function success(data) {
-          $scope.ataruApplicationsFetched = data.ataruApplicationsFetched;
+          $scope.allApplicationsFetched = data.allApplicationsFetched;
           $scope.applications = _.map(data.applications, function(json) { return new Hakemus(json) })
           if($scope.applications.length > 0) {
             $scope.applicationStatusMessage = ""

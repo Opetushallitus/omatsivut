@@ -66,7 +66,7 @@ trait ApplicationsServletContainer {
           (applications, true)
       }
       Map(
-        "ataruApplicationsFetched" -> ataruApplicationsLoaded,
+        "allApplicationsFetched" -> ataruApplicationsLoaded,
         "applications" -> {
           ataruApplications ::: hakemusEditori.fetchByPersonOid(personOid())
         }.sortBy[Option[Long]](_.hakemus.received).reverse)

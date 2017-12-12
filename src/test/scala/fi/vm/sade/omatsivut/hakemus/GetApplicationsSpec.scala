@@ -17,7 +17,7 @@ class GetApplicationsSpec extends HakemusApiSpecification with FixturePerson wit
   "GET /applications" should {
     "return person's applications" in {
       withApplicationsResponse { resp =>
-        resp.ataruApplicationsFetched must_== true
+        resp.allApplicationsFetched must_== true
         resp.applications.map(_.hakemus.oid) must contain(hakemusNivelKesa2013WithPeruskouluBaseEducationId)
         resp.applications.map(_.hakemus.oid) must contain(hakemusYhteishakuKevat2014WithForeignBaseEducationId)
       }
