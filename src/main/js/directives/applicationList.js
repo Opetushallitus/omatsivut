@@ -26,8 +26,10 @@ module.exports = function(listApp) {
           if($scope.applications.length > 0) {
             $scope.applicationStatusMessage = ""
             $scope.applicationStatusMessageType = ""
-          }
-          else {
+          } else if (!$scope.allApplicationsFetched) {
+            $scope.applicationStatusMessage = "error.loadingFailed"
+            $scope.applicationStatusMessageType = "error"
+          } else {
             $scope.applicationStatusMessage = "message.noApplications"
             $scope.applicationStatusMessageType = "info"
           }
