@@ -20,7 +20,8 @@
       </div>
 
       <ul class="hakutoive-options">
-          <li><label><input type="radio" name="vastaanotettavaHakutoive" value="VastaanotaSitovasti" ng-model="vastaanottoAction" ng-disabled="inputIsDisabled()" ng-click="flashSiirtohakuNotification()"/>{{ localization('message.acceptEducation.accept') }}</label></li>
+          <li ng-if="!haku().toisenasteenhaku"><label><input type="radio" name="vastaanotettavaHakutoive" value="VastaanotaSitovasti" ng-model="vastaanottoAction" ng-disabled="inputIsDisabled()" ng-click="flashSiirtohakuNotification()"/>{{ localization('message.acceptEducation.accept') }}</label></li>
+          <li ng-if="haku().toisenasteenhaku"><label><input type="radio" name="vastaanotettavaHakutoive" value="VastaanotaSitovasti" ng-model="vastaanottoAction" ng-disabled="inputIsDisabled()" ng-click="flashSiirtohakuNotification()"/>{{ localization('message.acceptEducation.acceptToinenAste') }}</label></li>
           <li ng-show="hakutoive.vastaanotettavuustila == 'VASTAANOTETTAVISSA_EHDOLLISESTI'">
               <label>
               <input type="radio" name="vastaanotettavaHakutoive" value="VastaanotaEhdollisesti"
@@ -42,7 +43,7 @@
                   aria-label="{{ localization('button.vastaanota_ariaLabel') }}"
                   ng-bind="localization('button.vastaanota')">
           </button>
-          <span ng-if="!vastaanottoSentSuccessfully" class="status-message note">
+          <span ng-if="!vastaanottoSentSuccessfully && !haku().toisenasteenhaku" class="status-message note">
               {{ localization('message.acceptEducation.cannotChangeAnswer') }}
           </span>
           <span ng-if="vastaanottoSentSuccessfully" class="status-message success">
