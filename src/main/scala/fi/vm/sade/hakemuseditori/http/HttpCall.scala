@@ -14,7 +14,7 @@ trait HttpCall extends JsonFormats {
         DefaultHttpClient.httpGet(url).responseWithHeaders()
       responseCode match {
         case 200 =>
-          val parsed = parse(resultString).extractOpt[JValue]
+          val parsed = parse(resultString, useBigDecimalForDouble = false).extractOpt[JValue]
           block(parsed)
         case _ => None
       }

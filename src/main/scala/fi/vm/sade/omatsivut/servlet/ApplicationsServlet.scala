@@ -6,7 +6,7 @@ import fi.vm.sade.hakemuseditori._
 import fi.vm.sade.hakemuseditori.auditlog.AuditLoggerComponent
 import fi.vm.sade.hakemuseditori.domain.Language
 import fi.vm.sade.hakemuseditori.hakemus.domain.HakemusMuutos
-import fi.vm.sade.hakemuseditori.hakemus.{ApplicationValidatorComponent, HakemusRepositoryComponent, SpringContextComponent}
+import fi.vm.sade.hakemuseditori.hakemus.{ApplicationValidatorComponent, DontFetch, Fetch, HakemusRepositoryComponent, SpringContextComponent}
 import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.hakemuseditori.localization.TranslationsComponent
 import fi.vm.sade.hakemuseditori.lomake.LomakeRepositoryComponent
@@ -25,7 +25,6 @@ import scala.util.{Failure, Success}
 trait ApplicationsServletContainer {
   this: HakemusEditoriComponent with
         LomakeRepositoryComponent with
-        AtaruServiceComponent with
         HakemusRepositoryComponent with
         ValintatulosServiceComponent with
         ApplicationValidatorComponent with
@@ -58,18 +57,16 @@ trait ApplicationsServletContainer {
     }
 
     get("/") {
-      val (ataruApplications, ataruApplicationsLoaded) = ataruService.findApplications(personOid()) match {
-        case Left(e) =>
-          logger.warn("Failed to fetch ataru applications", e)
-          (List.empty, false)
-        case Right(applications) =>
-          (applications, true)
+      hakemusEditori.fetchByPersonOid(personOid(), Fetch) match {
+        case FullSuccess(hs) =>
+          Map("allApplicationsFetched" -> true, "applications" -> hs)
+        case FullFailure(ts) =>
+          ts.foreach(logger.error("Failed to fetch applications", _))
+          throw ts.head
+        case PartialSuccess(hs, ts) =>
+          ts.foreach(logger.warn("Failed to fetch all applications", _))
+          Map("allApplicationsFetched" -> false, "applications" -> hs)
       }
-      Map(
-        "allApplicationsFetched" -> ataruApplicationsLoaded,
-        "applications" -> {
-          ataruApplications ::: hakemusEditori.fetchByPersonOid(personOid())
-        }.sortBy[Option[Long]](_.hakemus.received).reverse)
     }
 
     put("/:oid") {
@@ -108,20 +105,19 @@ trait ApplicationsServletContainer {
       val hakukohdeOid = params("hakukohdeOid")
       val henkiloOid = personOid()
 
-      applicationRepository.findStoredApplicationByPersonAndOid(henkiloOid, hakemusOid) match {
-
-        case Some(hakemus) if tarjontaService.haku(hakemus.hakuOid, Language.fi).exists(_.published) =>
-          vastaanota(hakemusOid, hakukohdeOid, hakemus.hakuOid, henkiloOid, request.body, hakemus.sähköposti, () => hakemusRepository.getHakemus(hakemusOid))
-
-        case _ => NotFound("error" -> "Not found")
-
+      hakemusEditori.fetchByHakemusOid(henkiloOid, hakemusOid, Fetch) match {
+        case Some(hakemus) => vastaanota(
+          hakemusOid,
+          hakukohdeOid,
+          hakemus.hakemus.haku.oid,
+          henkiloOid,
+          request.body,
+          hakemus.hakemus.email,
+          () => Some(hakemus)
+        )
+        case None => NotFound("error" -> "Not found")
       }
     }
-
-
-
-
-
   }
 }
 

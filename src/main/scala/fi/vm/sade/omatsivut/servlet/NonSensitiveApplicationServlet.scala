@@ -9,8 +9,8 @@ import fi.vm.sade.hakemuseditori.auditlog.SaveVastaanotto
 import fi.vm.sade.hakemuseditori.domain.Language
 import fi.vm.sade.hakemuseditori.domain.Language.Language
 import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus.Valintatulos
-import fi.vm.sade.hakemuseditori.hakemus.domain.HakemusMuutos
-import fi.vm.sade.hakemuseditori.hakemus.{HakemusInfo, HakemusRepositoryComponent, ImmutableLegacyApplicationWrapper}
+import fi.vm.sade.hakemuseditori.hakemus.domain.{Hakemus, HakemusMuutos}
+import fi.vm.sade.hakemuseditori.hakemus.{FetchIfNoHetuOrToinenAste, HakemusInfo, HakemusRepositoryComponent, ImmutableLegacyApplicationWrapper}
 import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.hakemuseditori.lomake.domain.AnswerId
 import fi.vm.sade.hakemuseditori.tarjonta.TarjontaComponent
@@ -146,28 +146,10 @@ trait NonSensitiveApplicationServletContainer {
       hakemusJWT.answersFromThisSession ++ nonPersistedAnswers
     }
 
-    private def fetchHakemus(oid: String): Try[HakemusInfo] = {
-      def fetchTulosForHakemus(hakemus: ImmutableLegacyApplicationWrapper) = {
-        val nonHetuhakemus = hakemus.henkilotunnus.isEmpty
-        val toisenasteenhaku = tarjontaService.haku(hakemus.hakuOid, Language.fi).exists(_.toisenasteenhaku)
-        nonHetuhakemus || toisenasteenhaku
-      }
-      def removeKelaUrlFromValintatulos(v: Valintatulos) = {
-        v.transformField {
-          case ("hakutoiveet", a:JArray) => ("hakutoiveet", JArray(a.arr.map(ht => {
-            // removes kela URL
-            ht.removeField {
-              case JField("kelaURL", i: JString) => true
-              case _ => false
-            }
-          })))
-        }
-      }
-
-      hakemusRepository.getHakemus(oid,
-        fetchTulosForHakemus = fetchTulosForHakemus,
-        transformValintatulos = removeKelaUrlFromValintatulos)
-        .fold[Try[HakemusInfo]](Failure(new NoSuchElementException(s"Hakemus $oid not found")))(Success(_))
+    private def fetchHakemus(hakemusOid: String, personOid: Option[String]): Try[HakemusInfo] = {
+      personOid.map(hakemusEditori.fetchByHakemusOid(_, hakemusOid, FetchIfNoHetuOrToinenAste))
+        .getOrElse(hakemusRepository.getHakemus(hakemusOid, FetchIfNoHetuOrToinenAste))
+        .fold[Try[HakemusInfo]](Failure(new NoSuchElementException(s"Hakemus $hakemusOid not found")))(h => Success(h.withoutKelaUrl))
     }
 
     before() {
@@ -204,9 +186,13 @@ trait NonSensitiveApplicationServletContainer {
     get("/application/session") {
       (for {
         token <- jwtAuthorize
-        hakemus <- fetchHakemus(token.oid)
+        hakemus <- fetchHakemus(token.oid, Some(token.personOid))
       } yield {
-        Ok(InsecureHakemusInfo(jwt.encode(token), new NonSensitiveHakemusInfo(hakemus, token.answersFromThisSession), oiliJwt = jwt.createOiliJwt(token.personOid)))
+        Ok(InsecureHakemusInfo(
+          jwt.encode(token),
+          new NonSensitiveHakemusInfo(hakemus, token.answersFromThisSession),
+          oiliJwt = jwt.createOiliJwt(token.personOid)
+        ))
       }).get
     }
 
@@ -215,25 +201,30 @@ trait NonSensitiveApplicationServletContainer {
       val hakukohdeOid = params("hakukohdeOid")
       val henkiloOid = getPersonOidFromSession
 
-      applicationRepository.findStoredApplicationByPersonAndOid(henkiloOid, hakemusOid) match {
-
-        case Some(hakemus) if tarjontaService.haku(hakemus.hakuOid, Language.fi).exists(_.published) =>
-          vastaanota(hakemusOid, hakukohdeOid, hakemus.hakuOid, henkiloOid, request.body, hakemus.sähköposti, () => fetchHakemus(hakemusOid).toOption)
-
-        case _ => NotFound("error" -> "Not found")
-
+      hakemusEditori.fetchByHakemusOid(henkiloOid, hakemusOid, FetchIfNoHetuOrToinenAste) match {
+        case Some(hakemus) => vastaanota(
+          hakemusOid,
+          hakukohdeOid,
+          hakemus.hakemus.haku.oid,
+          henkiloOid,
+          request.body,
+          hakemus.hakemus.email,
+          () => Some(hakemus)
+        )
+        case None => NotFound("error" -> "Not found")
       }
     }
 
     get("/application/token/:token") {
       (for {
-        hakemusOid <- oppijanTunnistusService.validateToken(params("token"))
-        personOid <- applicationRepository.findStoredApplicationByOid(hakemusOid)
-          .fold[Try[String]](Failure(new NoSuchElementException(s"Hakemus $hakemusOid not found")))(h => Success(h.personOid))
-        hakemus <- fetchHakemus(hakemusOid)
+        metadata <- oppijanTunnistusService.validateToken(params("token"))
+        hakemus <- fetchHakemus(metadata.hakemusOid, metadata.personOid)
       } yield {
-        Ok(InsecureHakemusInfo(jwt.encode(HakemusJWT(hakemusOid, Set(), personOid)),
-          new NonSensitiveHakemusInfo(hakemus, Set()), oiliJwt = jwt.createOiliJwt(personOid)))
+        Ok(InsecureHakemusInfo(
+          jwt.encode(HakemusJWT(metadata.hakemusOid, Set(), hakemus.hakemus.personOid)),
+          new NonSensitiveHakemusInfo(hakemus, Set()),
+          oiliJwt = jwt.createOiliJwt(hakemus.hakemus.personOid)
+        ))
       }).get
     }
 

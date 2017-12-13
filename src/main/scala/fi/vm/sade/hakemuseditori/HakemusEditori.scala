@@ -1,9 +1,10 @@
 package fi.vm.sade.hakemuseditori
 
+import fi.vm.sade.ataru.AtaruServiceComponent
 import fi.vm.sade.hakemuseditori.auditlog.{AuditContext, AuditLogger, AuditLoggerComponent}
 import fi.vm.sade.hakemuseditori.domain.Language
 import fi.vm.sade.hakemuseditori.hakemus._
-import fi.vm.sade.hakemuseditori.hakemus.domain.{ValidationError, Hakemus, HakemusMuutos}
+import fi.vm.sade.hakemuseditori.hakemus.domain.{Hakemus, HakemusMuutos, ValidationError}
 import fi.vm.sade.hakemuseditori.hakumaksu.{HakumaksuComponent, StubbedHakumaksuServiceWrapper}
 import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.hakemuseditori.koodisto.{KoodistoComponent, PostOffice, StubbedKoodistoService}
@@ -12,6 +13,7 @@ import fi.vm.sade.hakemuseditori.koulutusinformaatio.KoulutusInformaatioComponen
 import fi.vm.sade.hakemuseditori.localization.{Translations, TranslationsComponent}
 import fi.vm.sade.hakemuseditori.lomake.LomakeRepositoryComponent
 import fi.vm.sade.hakemuseditori.ohjausparametrit.OhjausparametritComponent
+import fi.vm.sade.hakemuseditori.oppijanumerorekisteri.OppijanumerorekisteriComponent
 import fi.vm.sade.hakemuseditori.tarjonta.TarjontaComponent
 import fi.vm.sade.hakemuseditori.user.User
 import fi.vm.sade.hakemuseditori.valintatulokset.{NoOpValintatulosService, ValintatulosService, ValintatulosServiceComponent}
@@ -20,13 +22,31 @@ import fi.vm.sade.utils.slf4j.Logging
 import org.json4s.jackson.Serialization
 import org.springframework.context.ApplicationContext
 
-import scala.util.{Try, Failure, Success}
+import scala.util.{Failure, Success, Try}
 
-trait HakemusEditoriComponent extends ApplicationValidatorComponent with TarjontaComponent with OhjausparametritComponent
-    with LomakeRepositoryComponent with HakemusRepositoryComponent with ValintatulosServiceComponent with KoulutusInformaatioComponent with Logging
-    with TuloskirjeComponent
-    with TranslationsComponent with SpringContextComponent with AuditLoggerComponent with HakemusConverterComponent with KoodistoComponent
-    with HakumaksuComponent with SendMailComponent {
+sealed trait HakemusResult
+case class FullSuccess(hakemukset: List[HakemusInfo]) extends HakemusResult
+case class PartialSuccess(hakemukset: List[HakemusInfo], exceptions: List[Throwable]) extends HakemusResult
+case class FullFailure(exceptions: List[Throwable]) extends HakemusResult
+
+trait HakemusEditoriComponent extends ApplicationValidatorComponent
+  with AtaruServiceComponent
+  with OppijanumerorekisteriComponent
+  with TarjontaComponent
+  with OhjausparametritComponent
+  with LomakeRepositoryComponent
+  with HakemusRepositoryComponent
+  with ValintatulosServiceComponent
+  with KoulutusInformaatioComponent
+  with Logging
+  with TuloskirjeComponent
+  with TranslationsComponent
+  with SpringContextComponent
+  with AuditLoggerComponent
+  with HakemusConverterComponent
+  with KoodistoComponent
+  with HakumaksuComponent
+  with SendMailComponent {
 
   def newEditor(userContext: HakemusEditoriUserContext): HakemusEditori = {
     new HakemusEditori {
@@ -41,13 +61,34 @@ trait HakemusEditoriComponent extends ApplicationValidatorComponent with Tarjont
     def user(): User
 
     def fetchTuloskirje(personOid: String, hakuOid: String): Option[Array[Byte]] = {
-      val hakemukset = hakemusRepository.fetchHakemukset(personOid)
-      hakemukset.find(_.hakemus.haku.oid.equals(hakuOid)).map(hakemus => tuloskirjeService.fetchTuloskirje(hakuOid, hakemus.hakemus.oid, personOid)).flatten
+      val hakemukset = fetchByPersonOid(personOid, DontFetch) match {
+        case FullSuccess(hs) => hs.find(_.hakemus.haku.oid == hakuOid)
+        case PartialSuccess(_, ts) => throw ts.head
+        case FullFailure(ts) => throw ts.head
+      }
+      hakemukset.flatMap(hakemus => tuloskirjeService.fetchTuloskirje(hakuOid, hakemus.hakemus.oid, personOid))
     }
 
-    def fetchByPersonOid(personOid: String): List[HakemusInfo] = hakemusRepository.fetchHakemukset(personOid)
+    def fetchByPersonOid(personOid: String,
+                         valintatulosFetchStrategy: ValintatulosFetchStrategy): HakemusResult = {
+      (
+        Try(ataruService.findApplications(personOid, valintatulosFetchStrategy)),
+        Try(hakemusRepository.fetchHakemukset(personOid, valintatulosFetchStrategy))
+      ) match {
+        case (Success(ahs), Success(hhs)) => FullSuccess((ahs ::: hhs).sortBy[Option[Long]](_.hakemus.received).reverse)
+        case (Failure(at), Failure(ht)) => FullFailure(List(at, ht))
+        case (ahs, hhs) => PartialSuccess(
+          (ahs.getOrElse(List.empty) ::: hhs.getOrElse(List.empty)).sortBy[Option[Long]](_.hakemus.received).reverse,
+          ahs.failed.toOption.toList ::: hhs.failed.toOption.toList
+        )
+      }
+    }
 
-    def fetchByHakemusOid(hakemusOid: String): Option[HakemusInfo] = hakemusRepository.getHakemus(hakemusOid)
+    def fetchByHakemusOid(personOid: String,
+                          hakemusOid: String,
+                          valintatulosFetchStrategy: ValintatulosFetchStrategy): Option[HakemusInfo] =
+      hakemusRepository.getHakemus(hakemusOid, valintatulosFetchStrategy).filter(_.hakemus.personOid == personOid)
+        .orElse(ataruService.findApplications(personOid, valintatulosFetchStrategy).find(_.hakemus.oid == hakemusOid))
 
     def opetuspisteet(asId: String, query: String, lang: Option[String]): Option[List[Opetuspiste]] = koulutusInformaatioService.opetuspisteet(asId, query, parseLang(lang))
 
@@ -118,6 +159,8 @@ abstract class StandaloneHakemusEditoriComponent(
 
 class StubbedHakemusEditoriContext(auditContext: AuditContext, appContext: ApplicationContext, translations: Translations) extends StandaloneHakemusEditoriComponent(auditContext, translations) {
   override lazy val springContext = new HakemusSpringContext(appContext)
+  override lazy val ataruService = new StubbedAtaruService
+  override lazy val oppijanumerorekisteriService = new StubbedOppijanumerorekisteriService
   override lazy val tarjontaService = new StubbedTarjontaService
   override lazy val tuloskirjeService = new StubbedTuloskirjeService
   override lazy val koodistoService = new StubbedKoodistoService
