@@ -105,6 +105,7 @@
         "3": "study place leading to a higher education degree in Finland during one academic term."
       },
       "accept": "I confirm the granted study place",
+      "acceptToinenAste": "I confirm the granted study place",
       "conditionalAccept": "I confirm the study place, but remain on a waiting list for a study place with higher preference.",
       "conditionalAcceptInfo1": "If you are not accepted to a study place you are waiting for, this confirmation remains valid.",
       "conditionalAcceptInfo2": "If you are accepted to a study place you are waiting for, you do not need to confirm that study place. It will be automatically confirmed.",
@@ -119,6 +120,7 @@
         "body": "Hello,\n\nWe have received %s your answer:\n%s\n\nDo not reply to this message – the message has been sent automatically.",
         "tila": {
           "VastaanotaSitovasti": "I confirm the granted study place",
+          "VastaanotaSitovastiToinenAste": "I confirm the granted study place",
           "Peru": "I do not confirm the study place",
           "VastaanotaEhdollisesti": "I confirm the study place, but remain on a waiting list for a study place with higher preference"
         }

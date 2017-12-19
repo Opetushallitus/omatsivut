@@ -13,7 +13,10 @@ import fi.vm.sade.hakemuseditori.hakemus.domain.HakemusMuutos
 import fi.vm.sade.hakemuseditori.hakemus.{HakemusInfo, HakemusRepositoryComponent, ImmutableLegacyApplicationWrapper}
 import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.hakemuseditori.lomake.domain.AnswerId
+import fi.vm.sade.hakemuseditori.tarjonta.TarjontaComponent
+import fi.vm.sade.hakemuseditori.tarjonta.domain.Haku
 import fi.vm.sade.hakemuseditori.user.Oppija
+import fi.vm.sade.hakemuseditori.valintatulokset.domain.{VastaanotaSitovasti, VastaanottoAction}
 import fi.vm.sade.omatsivut.NonSensitiveHakemusInfo.answerIds
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.oppijantunnistus.{ExpiredTokenException, InvalidTokenException, OppijanTunnistusComponent}
@@ -37,6 +40,7 @@ case class InsecureHakemusInfo(jsonWebToken: String, response: NonSensitiveHakem
 trait VastaanottoEmailContainer {
   this: HakemusRepositoryComponent with
     HakemusEditoriComponent with
+    TarjontaComponent with
     GroupEmailComponent =>
 
   def vastaanota(hakemusOid: String, hakukohdeOid: String, hakuOid: String, henkiloOid: String, requestBody: String, emailOpt: Option[String],
@@ -44,11 +48,18 @@ trait VastaanottoEmailContainer {
     def sendEmail(clientVastaanotto: ClientSideVastaanotto) = {
       emailOpt match {
         case Some(email: String) =>
+          val haku = tarjontaService.haku(hakuOid, language).get
           val subject = translations.getTranslation("message", "acceptEducation", "email", "subject")
 
           val dateFormat = new SimpleDateFormat(translations.getTranslation("message", "acceptEducation", "email", "dateFormat"))
           val dateAndTime = dateFormat.format(Calendar.getInstance().getTime)
-          val answer = translations.getTranslation("message", "acceptEducation", "email", "tila", clientVastaanotto.vastaanottoAction.toString)
+          val vastaanottoActionString =
+            if (haku.toisenasteenhaku && VastaanotaSitovasti.equals(clientVastaanotto.vastaanottoAction)) {
+              clientVastaanotto.vastaanottoAction.toString + "ToinenAste"
+            } else {
+              clientVastaanotto.vastaanottoAction.toString
+            }
+          val answer = translations.getTranslation("message", "acceptEducation", "email", "tila", vastaanottoActionString)
           val aoInfoRow = List(answer, clientVastaanotto.tarjoajaNimi, clientVastaanotto.hakukohdeNimi).mkString(" - ")
           val body = translations.getTranslation("message", "acceptEducation", "email", "body")
             .format(dateAndTime, aoInfoRow)
@@ -95,7 +106,8 @@ trait NonSensitiveApplicationServletContainer {
     HakemusEditoriComponent with
     GroupEmailComponent with
     VastaanottoEmailContainer with
-    OppijanTunnistusComponent =>
+    OppijanTunnistusComponent with
+    TarjontaComponent =>
 
   class NonSensitiveApplicationServlet(val appConfig: AppConfig) extends OmatSivutServletBase with JsonFormats with JacksonJsonSupport with HakemusEditori with HakemusEditoriUserContext {
     override implicit val jsonFormats = JsonFormats.jsonFormats ++ List(new NonSensitiveHakemusSerializer, new NonSensitiveHakemusInfoSerializer)
@@ -144,8 +156,10 @@ trait NonSensitiveApplicationServletContainer {
     }
 
     private def fetchHakemus(oid: String): Try[HakemusInfo] = {
-      def fetchTulosForNonHetuHakemus(hakemus: ImmutableLegacyApplicationWrapper) = {
-        hakemus.henkilotunnus.isEmpty
+      def fetchTulosForHakemus(hakemus: ImmutableLegacyApplicationWrapper) = {
+        val nonHetuhakemus = hakemus.henkilotunnus.isEmpty
+        val toisenasteenhaku = tarjontaService.haku(hakemus.hakuOid, Language.fi).exists(_.toisenasteenhaku)
+        nonHetuhakemus || toisenasteenhaku
       }
       def removeKelaUrlFromValintatulos(v: Valintatulos) = {
         v.transformField {
@@ -160,7 +174,7 @@ trait NonSensitiveApplicationServletContainer {
       }
 
       hakemusRepository.getHakemus(oid,
-        fetchTulosForHakemus = fetchTulosForNonHetuHakemus,
+        fetchTulosForHakemus = fetchTulosForHakemus,
         transformValintatulos = removeKelaUrlFromValintatulos)
         .fold[Try[HakemusInfo]](Failure(new NoSuchElementException(s"Hakemus $oid not found")))(Success(_))
     }

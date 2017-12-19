@@ -105,6 +105,7 @@
         "3": "korkeakoulututkintoon johtavan opiskelupaikan."
       },
       "accept": "Otan opiskelupaikan vastaan sitovasti",
+      "acceptToinenAste": "Otan opiskelupaikan vastaan",
       "conditionalAccept": "Otan opiskelupaikan vastaan mutta jään odottamaan ylemmällä sijalla olevaa opiskelupaikkaa",
       "conditionalAcceptInfo1": "Jos sinua ei valita varasijalta ylempään hakukohteeseen, tämä opiskelupaikan vastaanotto jää voimaan.",
       "conditionalAcceptInfo2": "Jos sinut valitaan varasijalta ylempään hakukohteeseen, sinun ei tarvitse erikseen ottaa sitä vastaan, vaan opiskelupaikka vahvistuu sinulle automaattisesti.",
@@ -119,6 +120,7 @@
         "body": "Hei,\n\nOlemme vastaanottaneet %s vastauksesi:\n%s\n\nÄlä vastaa tähän viestiin - viesti on lähetetty automaattisesti.",
         "tila": {
           "VastaanotaSitovasti": "Otan opiskelupaikan vastaan sitovasti",
+          "VastaanotaSitovastiToinenAste": "Otan opiskelupaikan vastaan",
           "Peru": "En ota opiskelupaikkaa vastaan",
           "VastaanotaEhdollisesti": "Otan opiskelupaikan vastaan mutta jään odottamaan ylemmällä sijalla olevaa opiskelupaikkaa."
         }
