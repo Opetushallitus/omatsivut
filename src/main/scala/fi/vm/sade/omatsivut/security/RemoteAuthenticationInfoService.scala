@@ -1,8 +1,10 @@
 package fi.vm.sade.omatsivut.security
 
+import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.omatsivut.config.{RemoteApplicationConfig, SecuritySettings}
 import fi.vm.sade.utils.cas.{CasAuthenticatingClient, CasClient, CasParams}
 import fi.vm.sade.utils.slf4j.Logging
+import fi.vm.sade.utils.cas.{CasAuthenticatingClient, CasClient, CasParams}
 import org.http4s._
 import org.http4s.client.blaze
 import org.json4s._
@@ -10,15 +12,17 @@ import org.json4s.jackson.JsonMethods._
 
 import scalaz.concurrent.Task
 
-class RemoteAuthenticationInfoService(val config: RemoteApplicationConfig, val securitySettings: SecuritySettings) extends Logging {
+class RemoteAuthenticationInfoService(val remoteAppConfig: RemoteApplicationConfig, val securitySettings: SecuritySettings) extends Logging {
   private val blazeHttpClient = blaze.defaultClient
+
+  private val blazeHttpClient: BlazeClient = blaze.defaultClient
   private val casClient = new CasClient(securitySettings.casUrl, blazeHttpClient)
-  private val serviceUrl = config.url + "/"
+  private val serviceUrl = remoteAppConfig.url + "/"
   private val casParams = CasParams(serviceUrl, securitySettings.casUsername, securitySettings.casPassword)
   private val httpClient = CasAuthenticatingClient(casClient, casParams, blazeHttpClient, Some("omatsivut.omatsivut.backend"), "JSESSIONID")
   private val callerIdHeader = Header("Caller-Id", "omatsivut.omatsivut.backend")
 
-  def uriFromString(url: String): Uri = {
+  private def uriFromString(url: String): Uri = {
     Uri.fromString(url).toOption.get
   }
 
@@ -29,7 +33,7 @@ class RemoteAuthenticationInfoService(val config: RemoteApplicationConfig, val s
   }
 
   def getHenkiloOID(hetu: String) : Option[String] = {
-    val path: String = serviceUrl + config.config.getString("get_oid.path") + "/" + hetu
+    val path = OphUrlProperties.url("onr.henkilo.hetu", hetu)
     val request: Request = Request(uri = uriFromString(path), headers = Headers(callerIdHeader))
 
     def tryGet(retryCount: Int = 0): Option[String] =
