@@ -122,6 +122,11 @@ object OmatSivutSpringContext extends Logging {
       throw new scala.UnsupportedOperationException("This integration is unsupported and should not be called in omatsivut")
     }
   }
+
+  class Cloud extends Default {
+    override val profile = "cloud"
+  }
+
 }
 
 trait OmatSivutConfiguration {

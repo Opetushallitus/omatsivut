@@ -8,14 +8,14 @@ import fi.vm.sade.utils.captcha.CaptchaServiceSettings
 case class ApplicationSettings(config: Config) extends GroupEmailerSettings(config) {
 
   val captchaSettings = new CaptchaServiceSettings(config)
-
   val securitySettings = new SecuritySettings(config)
-  val authenticationServiceConfig = getRemoteApplicationConfig(config.getConfig("omatsivut.authentication-service"))
+  val s3Settings = new S3Settings(config)
 
-  val tuloskirjeetFileSystemUrl = config.getString("omatsivut.tuloskirjeet.filesystem.url")
+  val authenticationServiceConfig : RemoteApplicationConfig = getRemoteApplicationConfig(config.getConfig("omatsivut.authentication-service"))
+  val tuloskirjeetFileSystemUrl : String = config.getString("omatsivut.tuloskirjeet.filesystem.url")
 
-  val aesKey = config.getString("omatsivut.crypto.aes.key")
-  val hmacKey = config.getString("omatsivut.crypto.hmac.key")
+  val aesKey : String = config.getString("omatsivut.crypto.aes.key")
+  val hmacKey : String = config.getString("omatsivut.crypto.hmac.key")
 
   private def getRemoteApplicationConfig(config: Config) = {
     RemoteApplicationConfig(
@@ -33,7 +33,13 @@ object ApplicationSettingsParser extends fi.vm.sade.utils.config.ApplicationSett
 }
 
 class SecuritySettings(c: Config) {
-  val casUrl = OphUrlProperties.url("cas.url")
-  val casUsername = c.getString("cas.username")
-  val casPassword = c.getString("cas.password")
+  val casUrl : String = OphUrlProperties.url("cas.url")
+  val casUsername : String = c.getString("cas.username")
+  val casPassword : String = c.getString("cas.password")
+}
+
+class S3Settings(c: Config) {
+  val enabled : Boolean = c.getBoolean("omatsivut.s3_enabled")
+  val region : String = c.getString("omatsivut.s3_region")
+  val bucket : String = c.getString("omatsivut.s3_bucket")
 }

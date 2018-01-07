@@ -87,6 +87,7 @@ class ComponentRegistry(val config: AppConfig)
 
   private def configureTuloskirjeService: TuloskirjeService = config match {
     case _: StubbedExternalDeps => new StubbedTuloskirjeService()
+    case _: Cloud => new S3TulosKirjeService(config)
     case _ => new SharedDirTuloskirjeService(config)
   }
 
