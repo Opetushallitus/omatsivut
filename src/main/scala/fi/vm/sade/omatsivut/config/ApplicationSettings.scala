@@ -39,7 +39,6 @@ class SecuritySettings(c: Config) {
 }
 
 class S3Settings(c: Config) {
-  val enabled : Boolean = c.getBoolean("omatsivut.s3_enabled")
   val region : String = c.getString("omatsivut.s3_region")
   val bucket : String = c.getString("omatsivut.s3_bucket")
 }

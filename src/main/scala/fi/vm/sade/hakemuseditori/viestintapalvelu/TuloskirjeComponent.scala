@@ -117,7 +117,7 @@ trait TuloskirjeComponent {
         case e: AmazonServiceException => logger.error(s"""Got error from Amazon s3. HTTP status code ${e.getStatusCode}, AWS Error Code ${e.getErrorCode},
            error message ${e.getErrorMessage}, error type ${e.getErrorType}, request ID ${e.getRequestId}""", e)
         case e: AmazonClientException => logger.error(s"""Unable to retrieve an object from Amazon s3. Got error message ${e.getMessage}""", e)
-        case e: IOException => logger.error("Could not read content from file {}.", filename, e)
+        case e: IOException => logger.error("Could not read content from file {}.", filename, "", e)
         case e => logger.error("Got unexpected exception when getting an object from Amazon s3", e)
       }
     }

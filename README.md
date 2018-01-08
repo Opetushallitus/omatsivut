@@ -183,6 +183,11 @@ Oletusasetuksilla käytetään ulkoista konfiguraatiotiedostoa `omatsivut.proper
  `omatsivut.properties.template` ja ulkoisesta muuttujatiedostosta. Tätä profiilia käytetään testi- ja
 tuotantoympäristöissä.
 
+### cloud-profiili
+
+Tällä profiililla sovellus käyttää pilviympäristöön sopivia asetuksia ja komponentteja.
+Muuten suunnilleen sama kuin default-profiili, mutta esim. tiedostot käyttävät suoran levyjärjestelmän sijaan S3 palvelua.
+
 ## API-dokumentaatio
 
 REST-rajapinnat dokumentoitu Swaggerilla.
