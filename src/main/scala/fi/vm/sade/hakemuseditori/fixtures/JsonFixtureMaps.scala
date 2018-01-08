@@ -24,7 +24,7 @@ object JsonFixtureMaps extends JsonFormats {
 
   private def find[T](dataFile: String, matcher: JObject => JValue)(implicit mf: Manifest[T]): Option[T] = {
     val text = io.Source.fromInputStream(getClass.getResourceAsStream(dataFile)).mkString
-    val parsed: JObject = parse(text).asInstanceOf[JObject]
+    val parsed: JObject = parse(text, useBigDecimalForDouble = false).asInstanceOf[JObject]
     val found = matcher(parsed)
     found.extractOpt[T]
   }

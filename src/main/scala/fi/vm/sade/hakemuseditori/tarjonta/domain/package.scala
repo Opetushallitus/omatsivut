@@ -52,6 +52,10 @@ object Hakuaika {
   def apply(tarjontaHakuaika: TarjontaHakuaika): Hakuaika = {
     Hakuaika(tarjontaHakuaika.hakuaikaId, tarjontaHakuaika.alkuPvm, tarjontaHakuaika.loppuPvm)
   }
+
+  def anyApplicationPeriodEnded(haku: Haku, hakukohdekohtaisetHakuajat: List[Option[KohteenHakuaika]], now: Long): Boolean = {
+    haku.applicationPeriods.exists(_.end < now) || hakukohdekohtaisetHakuajat.exists(_.exists(_.end < now))
+  }
 }
 
 case class Hakukohde(oid: String, hakuaikaId: Option[String], kohteenHakuaika: Option[KohteenHakuaika])

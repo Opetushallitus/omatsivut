@@ -149,7 +149,7 @@ class ValidateApplicationSpec extends HakemusApiSpecification with FixturePerson
 
   def validate[T](hakemus:Hakemus)(f: (List[ValidationError], List[QuestionNode]) => T)(implicit personOid: PersonOid) = {
     authPost("secure/applications/validate/" + hakemus.oid, Serialization.write(hakemus.toHakemusMuutos)) {
-      val result: JValue = JsonMethods.parse(body)
+      val result: JValue = JsonMethods.parse(body, useBigDecimalForDouble = false)
       val errors: List[ValidationError] = (result \ "errors").extract[List[ValidationError]]
       val structuredQuestions: List[QuestionNode] = (result \ "questions").extract[List[QuestionNode]]
       f(errors, structuredQuestions)
@@ -158,7 +158,7 @@ class ValidateApplicationSpec extends HakemusApiSpecification with FixturePerson
 
   def validatePut[T, A](hakemus:Hakemus, path: String)(parser: JValue => A)(f: A => T)(implicit personOid: PersonOid) = {
     authPut(s"$path" + hakemus.oid, Serialization.write(hakemus.toHakemusMuutos)) {
-      val result: JValue = JsonMethods.parse(body)
+      val result: JValue = JsonMethods.parse(body, useBigDecimalForDouble = false)
       val parsedResult: A = parser(result)
       f(parsedResult)
     }

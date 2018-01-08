@@ -3,7 +3,7 @@ package fi.vm.sade.omatsivut.security
 import fi.vm.sade.hakemuseditori.lomake.domain.AnswerId
 import fi.vm.sade.omatsivut.NonSensitiveHakemusInfo.Oid
 import org.json4s._
-import org.json4s.native.Serialization._
+import org.json4s.jackson.Serialization._
 import pdi.jwt.{JwtAlgorithm, JwtJson4s}
 
 import scala.util.{Failure, Success, Try}

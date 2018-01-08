@@ -3,14 +3,14 @@ package fi.vm.sade.omatsivut.oppijantunnistus
 import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.utils.http.{HttpClient, HttpRequest}
 import org.json4s.JsonDSL._
-import org.json4s.native.JsonMethods._
+import org.json4s.jackson.JsonMethods._
 import org.junit.runner.RunWith
 import org.mockito.Matchers
 import org.scalatra.test.specs2.MutableScalatraSpec
 import org.specs2.mock.Mockito
 import org.specs2.runner.JUnitRunner
 
-import scala.util.Success
+import scala.util.{Success, Try}
 
 @RunWith(classOf[JUnitRunner])
 class RemoteOppijanTunnistusServiceSpec extends MutableScalatraSpec with Mockito {
@@ -32,7 +32,7 @@ class RemoteOppijanTunnistusServiceSpec extends MutableScalatraSpec with Mockito
       println(url)
       client.httpGet(url).returns(request)
 
-      validateToken(testToken, client) should_== Success(expectedHakemusOid)
+      validateToken(testToken, client) should_== Success(OppijantunnistusMetadata(expectedHakemusOid, None))
     }
 
     "return invalid token exception when token is not valid" in {
@@ -74,6 +74,7 @@ class RemoteOppijanTunnistusServiceSpec extends MutableScalatraSpec with Mockito
 
   }
 
-  def validateToken(token: String, httpClientMock: HttpClient) = new RemoteOppijanTunnistusService(httpClientMock).validateToken(token)
+  def validateToken(token: String, httpClientMock: HttpClient): Try[OppijantunnistusMetadata] =
+    new RemoteOppijanTunnistusService(httpClientMock).validateToken(token)
 
 }

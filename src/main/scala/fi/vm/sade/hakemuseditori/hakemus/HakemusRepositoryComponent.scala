@@ -7,7 +7,7 @@ import fi.vm.sade.hakemuseditori.auditlog._
 import fi.vm.sade.hakemuseditori.domain.Language
 import fi.vm.sade.hakemuseditori.domain.Language.Language
 import fi.vm.sade.hakemuseditori.hakemus.ImmutableLegacyApplicationWrapper.{LegacyApplicationAnswers, wrap}
-import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus.{Valintatulos, Answers}
+import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus.{Answers, Valintatulos}
 import fi.vm.sade.hakemuseditori.hakemus.domain._
 import fi.vm.sade.hakemuseditori.hakumaksu.HakumaksuComponent
 import fi.vm.sade.hakemuseditori.lomake.LomakeRepositoryComponent
@@ -22,6 +22,7 @@ import fi.vm.sade.haku.oppija.hakemus.aspect.ApplicationDiffUtil
 import fi.vm.sade.haku.oppija.hakemus.domain.{Application, ApplicationNote}
 import fi.vm.sade.haku.oppija.lomake.domain.ApplicationPeriod
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
+import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.utils.Timer._
 import fi.vm.sade.utils.slf4j.Logging
 import org.joda.time.LocalDateTime
@@ -185,17 +186,20 @@ trait HakemusRepositoryComponent {
   class HakemusFinder {
     private val applicationValidator: ApplicationValidator = newApplicationValidator
 
-    def fetchHakemukset(personOid: String)(implicit lang: Language.Language): List[HakemusInfo] = {
-      fetchHakemukset(new Application().setPersonOid(personOid), _ => true, v => v)
+    def fetchHakemukset(personOid: String,
+                        valintatulosFetchStrategy: ValintatulosFetchStrategy)
+                       (implicit lang: Language.Language): List[HakemusInfo] = {
+      fetchHakemukset(new Application().setPersonOid(personOid), valintatulosFetchStrategy)
     }
 
-    def getHakemus(hakemusOid: String, fetchTulosForHakemus: ImmutableLegacyApplicationWrapper => Boolean = _ => true,
-                   transformValintatulos: Valintatulos => Valintatulos = vt => vt)(implicit lang: Language): Option[HakemusInfo] = {
-      fetchHakemukset(new Application().setOid(hakemusOid), fetchTulosForHakemus, transformValintatulos).headOption
+    def getHakemus(hakemusOid: String,
+                   valintatulosFetchStrategy: ValintatulosFetchStrategy)
+                  (implicit lang: Language): Option[HakemusInfo] = {
+      fetchHakemukset(new Application().setOid(hakemusOid), valintatulosFetchStrategy).headOption
     }
     private def fetchHakemukset(query: Application,
-                                fetchTulosForHakemus: ImmutableLegacyApplicationWrapper => Boolean,
-                                transformValintatulos: Valintatulos => Valintatulos)(implicit lang: Language): List[HakemusInfo] = {
+                                valintatulosFetchStrategy: ValintatulosFetchStrategy)
+                               (implicit lang: Language): List[HakemusInfo] = {
       timed("Application fetch", 1000){
         val legacyApplications: List[ImmutableLegacyApplicationWrapper] = timed("Application fetch DAO", 1000){
           dao.find(query).toList
@@ -211,12 +215,9 @@ trait HakemusRepositoryComponent {
           for {
             haku <- hakuOption
           } yield {
-            val fetchTulos = fetchTulosForHakemus(application)
+            val fetchTulos = valintatulosFetchStrategy.legacy(haku, application)
             val (valintatulos, tulosOk) = if (fetchTulos) {
-              timed("fetchHakemukset -> fetchValintatulos", 100) { fetchValintatulos(application, haku, lomakeOption) match {
-                case (Some(vt), tulosOk) => (Some(transformValintatulos(vt)), tulosOk)
-                case fetched => fetched
-              } }
+              timed("fetchHakemukset -> fetchValintatulos", 100) { fetchValintatulos(application, haku, lomakeOption) }
             } else {
               (None, true)
             }
@@ -227,11 +228,29 @@ trait HakemusRepositoryComponent {
             lomakeOption match {
               case Some(lomake) if haku.applicationPeriods.exists(_.active) =>
                 timed("fetchHakemukset -> applicationValidator.validateAndFindQuestions", 100) { applicationValidator.validateAndFindQuestions(haku, lomake, withNoPreferenceSpesificAnswers(hakemus), application) match {
-                    case (app, errors, questions) => HakemusInfo(hakemusConverter.convertToHakemus(letterForHaku, Some(lomake), haku, app, valintatulos), errors, questions, tulosOk, None, "HakuApp", "")
+                    case (app, errors, questions) =>
+                      val hakemus = hakemusConverter.convertToHakemus(letterForHaku, Some(lomake), haku, app, valintatulos)
+                      HakemusInfo(
+                        hakemus = hakemus,
+                        errors = errors,
+                        questions = questions,
+                        tulosOk = tulosOk,
+                        paymentInfo = None,
+                        hakemusSource = "HakuApp",
+                        previewUrl = hakemus.omatsivutPreviewUrl
+                      )
                   }
                 }
               case _ =>
-                HakemusInfo(hakemus, List(), List(), tulosOk, None, "HakuApp", "")
+                HakemusInfo(
+                  hakemus = hakemus,
+                  errors = List(),
+                  questions = List(),
+                  tulosOk = tulosOk,
+                  paymentInfo = None,
+                  hakemusSource = "HakuApp",
+                  previewUrl = hakemus.omatsivutPreviewUrl
+                )
             }
           }
         })

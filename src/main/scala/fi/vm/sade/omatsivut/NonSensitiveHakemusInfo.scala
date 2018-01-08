@@ -9,17 +9,22 @@ import org.json4s.JsonAST.JObject
 import org.json4s.{CustomSerializer, Extraction}
 
 class NonSensitiveHakemus(sensitiveHakemus: Hakemus, nonSensitiveAnswers: Set[AnswerId]) {
-  val hakemus = sensitiveHakemus.copy(
+  val hakemus: Hakemus = sensitiveHakemus.copy(
     answers = NonSensitiveHakemusInfo.filterAnswers(sensitiveHakemus.answers, nonSensitiveAnswers ++ NonSensitiveHakemusInfo.nonSensitiveAnswers),
     state = sensitiveHakemus.state)
 }
 
 class NonSensitiveHakemusInfo(sensitiveHakemusInfo: HakemusInfo, nonSensitiveAnswers: Set[AnswerId]) {
   private val sensitiveAnswers = NonSensitiveHakemusInfo.answerIds(sensitiveHakemusInfo.hakemus.answers) &~ (nonSensitiveAnswers ++ NonSensitiveHakemusInfo.nonSensitiveAnswers)
-  val hakemusInfo = sensitiveHakemusInfo.copy(
+  val hakemusInfo: HakemusInfo = sensitiveHakemusInfo.copy(
     hakemus = new NonSensitiveHakemus(sensitiveHakemusInfo.hakemus, nonSensitiveAnswers).hakemus,
     questions = removeQuestionsWithAnswers(sensitiveHakemusInfo.questions, sensitiveAnswers),
-    tulosOk = true // valintatulos is never shown, so always signal fetching it succeeded
+    tulosOk = true, // valintatulos is never shown, so always signal fetching it succeeded
+    previewUrl = if (sensitiveHakemusInfo.hakemusSource == "Ataru") {
+      sensitiveHakemusInfo.previewUrl
+    } else {
+      None
+    }
   )
 
   def removeQuestionsWithAnswers(questions: List[QuestionNode], sensitiveAnswers: Set[AnswerId]): List[QuestionNode] = {
