@@ -19,7 +19,7 @@ case class ApplicationSettings(config: Config) extends GroupEmailerSettings(conf
 
   private def getRemoteApplicationConfig(config: Config) = {
     RemoteApplicationConfig(
-      OphUrlProperties.url("onr.base"),
+      OphUrlProperties.url("url-oppijanumerorekisteri-service"),
       config.getString("username"),
       config.getString("password"),
       config.getString("ticket_consumer_path"),

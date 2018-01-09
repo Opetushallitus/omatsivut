@@ -103,3 +103,5 @@ example-application/bundle.js
 dev
 target
 !/gradle/wrapper/gradle-wrapper.jar
+
+.gitconfig

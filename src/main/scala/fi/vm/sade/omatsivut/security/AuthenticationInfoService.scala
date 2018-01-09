@@ -4,7 +4,6 @@ import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.omatsivut.config.{RemoteApplicationConfig, SecuritySettings}
 import fi.vm.sade.utils.cas.{CasAuthenticatingClient, CasClient, CasParams}
 import fi.vm.sade.utils.slf4j.Logging
-import fi.vm.sade.utils.cas.{CasAuthenticatingClient, CasClient, CasParams}
 import org.http4s._
 import org.http4s.client.blaze
 import org.json4s._
@@ -14,8 +13,6 @@ import scalaz.concurrent.Task
 
 class RemoteAuthenticationInfoService(val remoteAppConfig: RemoteApplicationConfig, val securitySettings: SecuritySettings) extends Logging {
   private val blazeHttpClient = blaze.defaultClient
-
-  private val blazeHttpClient: BlazeClient = blaze.defaultClient
   private val casClient = new CasClient(securitySettings.casUrl, blazeHttpClient)
   private val serviceUrl = remoteAppConfig.url + "/"
   private val casParams = CasParams(serviceUrl, securitySettings.casUsername, securitySettings.casPassword)
@@ -33,7 +30,7 @@ class RemoteAuthenticationInfoService(val remoteAppConfig: RemoteApplicationConf
   }
 
   def getHenkiloOID(hetu: String) : Option[String] = {
-    val path = OphUrlProperties.url("onr.henkilo.hetu", hetu)
+    val path = OphUrlProperties.url("oppijanumerorekisteri-service.henkiloByHetu", hetu)
     val request: Request = Request(uri = uriFromString(path), headers = Headers(callerIdHeader))
 
     def tryGet(retryCount: Int = 0): Option[String] =
