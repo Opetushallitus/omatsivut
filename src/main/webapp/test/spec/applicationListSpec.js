@@ -675,7 +675,7 @@
 
             it("oikeat vaihtoehdot tulevat näkyviin", function () {
               expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).vaihtoehdot()).to.deep.equal([
-                'Otan opiskelupaikan vastaan sitovasti',
+                'Otan opiskelupaikan vastaan',
                 'En ota opiskelupaikkaa vastaan'
               ])
             })
@@ -743,7 +743,7 @@
 
           it("voi ottaa paikan vastaan", function() {
             expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).vaihtoehdot()).to.deep.equal([
-                  'Otan opiskelupaikan vastaan sitovasti',
+                  'Otan opiskelupaikan vastaan',
                   'En ota opiskelupaikkaa vastaan'
             ])
           })
@@ -853,11 +853,11 @@
           it("oikeat vaihtoehdot tulevat näkyviin", function() {
             expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotettavia()).to.equal(2)
             expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).vaihtoehdot()).to.deep.equal([
-              'Otan opiskelupaikan vastaan sitovasti',
+              'Otan opiskelupaikan vastaan',
               'En ota opiskelupaikkaa vastaan'
             ])
             expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(1).vaihtoehdot()).to.deep.equal([
-              'Otan opiskelupaikan vastaan sitovasti',
+              'Otan opiskelupaikan vastaan',
               'En ota opiskelupaikkaa vastaan'
             ])
           })
@@ -896,11 +896,11 @@
           it("oikeat vaihtoehdot tulevat näkyviin", function() {
             expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotettavia()).to.equal(2)
             expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).vaihtoehdot()).to.deep.equal([
-              'Otan opiskelupaikan vastaan sitovasti',
+              'Otan opiskelupaikan vastaan',
               'En ota opiskelupaikkaa vastaan'
             ])
             expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(1).vaihtoehdot()).to.deep.equal([
-              'Otan opiskelupaikan vastaan sitovasti',
+              'Otan opiskelupaikan vastaan',
               'En ota opiskelupaikkaa vastaan'
             ])
           })
@@ -913,7 +913,7 @@
           describe("jälkeen", function() {
             it("toinen paikka on myös vastaanotettavissa", function() {
               expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).vaihtoehdot()).to.deep.equal([
-               'Otan opiskelupaikan vastaan sitovasti',
+               'Otan opiskelupaikan vastaan',
                'En ota opiskelupaikkaa vastaan'
               ])
             })
@@ -1050,7 +1050,7 @@
         it("paikka on otettavissa vastaan", function() {
           expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotettavia()).to.equal(1)
           expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).vaihtoehdot()).to.deep.equal([
-            'Otan opiskelupaikan vastaan sitovasti',
+            'Otan opiskelupaikan vastaan',
             'En ota opiskelupaikkaa vastaan'
           ])
         })
