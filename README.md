@@ -19,7 +19,7 @@ Oppijan henkilökohtainen palvelu
     http://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html
 - Java-versio vähintään 1.8 update 40 (aiemmilla tarvitaan flägi `-XX:-EliminateAutoBox`)
 
-Lisää JAVA_HOME ympäristömuuttujat polkuun:		
+Lisää JAVA_HOME ympäristömuuttujat polkuun:
 	
     export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
 

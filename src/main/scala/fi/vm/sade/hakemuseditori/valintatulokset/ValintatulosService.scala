@@ -97,5 +97,4 @@ class RemoteValintatulosService extends ValintatulosService with JsonFormats wit
   }
 }
 
-
 case class RemoteServiceException(message: String) extends Exception(message)

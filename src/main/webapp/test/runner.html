@@ -13,11 +13,11 @@
 <script src="lib/q.js"></script>
 <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 <script>
-    var testTimeoutPageLoad = 120000
-    var testTimeoutDefault = 120000
-    mocha.ui('bdd')
-    mocha.reporter('html')
-    mocha.timeout(testTimeoutDefault)
+    var testTimeoutPageLoad = 120000;
+    var testTimeoutDefault = 120000;
+    mocha.ui('bdd');
+    mocha.reporter('html');
+    mocha.timeout(testTimeoutDefault);
 </script>
 <script src="util/testHelpers.js"></script>
 <script src="page/applicationApi.js"></script>
@@ -27,10 +27,10 @@
 <!--<script src="page/hakutoiveidenMuokkausPage.js"></script>-->
 <!--<script src="spec/hakutoiveidenMuokkausSpec.js"></script>-->
 <script>
-    var runner = mocha.run()
+    var runner = mocha.run();
     $(document).keyup(function(e) { 
-      if(e.keyCode==27) {
-          runner._abort = true
+      if(e.keyCode === 27) {
+          runner._abort = true;
       }
     })
 </script>
