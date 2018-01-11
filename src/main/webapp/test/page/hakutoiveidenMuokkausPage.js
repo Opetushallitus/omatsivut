@@ -164,7 +164,7 @@ function HakutoiveidenMuokkausPage() {
       },
 
       previewLink: function() {
-        return getApplicationElement().find(".preview")
+        return getApplicationElement().find(".timestamp-row a:nth-child(2)")
       },
 
       resultTableTitle: function() {
