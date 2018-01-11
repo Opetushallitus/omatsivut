@@ -114,11 +114,11 @@ trait TuloskirjeComponent {
 
     private def logExceptions(t: Throwable, filename: String) : Unit = {
       t match {
-        case e: AmazonServiceException => logger.error(s"""Got error from Amazon s3. HTTP status code ${e.getStatusCode}, AWS Error Code ${e.getErrorCode},
+        case e: AmazonServiceException => logger.error(s"""Got error from Amazon s3 when trying to get $filename. HTTP status code ${e.getStatusCode}, AWS Error Code ${e.getErrorCode},
            error message ${e.getErrorMessage}, error type ${e.getErrorType}, request ID ${e.getRequestId}""", e)
-        case e: AmazonClientException => logger.error(s"""Unable to retrieve an object from Amazon s3. Got error message ${e.getMessage}""", e)
+        case e: AmazonClientException => logger.error(s"""Unable to retrieve file content or metadata from Amazon s3 for $filename. Got error message ${e.getMessage}""", e)
         case e: IOException => logger.error("Could not read content from file {}.", filename, "", e)
-        case e => logger.error("Got unexpected exception when getting an object from Amazon s3", e)
+        case e => logger.error("Got unexpected exception when retrieving file content or metadata from Amazon s3 for file {}.", filename, "", e)
       }
     }
   }
