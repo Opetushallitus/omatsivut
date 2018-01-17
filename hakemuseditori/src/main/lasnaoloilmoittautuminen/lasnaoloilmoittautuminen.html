@@ -1,0 +1,34 @@
+<form name="lasnaoloilmoittautuminenForm">
+    <fieldset class="oph-fieldset">
+        <legend class="oph-label">
+            <span>{{ localization('lasnaoloilmoittautuminen.title') }}</span>
+            <span>Jan Arponen - Espoon kaupunki Kymppiluokka</span>
+        </legend>
+
+        <label class="oph-checkable" for="semester">
+            <input id="semester" class="oph-checkable-input" type="radio" name="radios" value="1">
+
+            <span class="oph-checkable-text">Läsnä koko lukuvuoden</span>
+        </label>
+
+        <label class="oph-checkable" for="spring">
+            <input id="spring" class="oph-checkable-input" type="radio" name="radios" value="2">
+
+            <span class="oph-checkable-text">Läsnä vain kevätlukukauden</span>
+        </label>
+
+        <label class="oph-checkable oph-checkable-input" for="autumn">
+            <input id="autumn" class="oph-checkable-input" type="radio" name="radios" value="3">
+
+            <span class="oph-checkable-text">Läsnä vain syyslukukauden</span>
+        </label>
+
+        <hr class="vertical"/>
+
+        <label class="oph-checkable oph-checkable-input" for="away">
+            <input id="away" class="oph-checkable-input" type="radio" name="radios" value="3">
+
+            <span class="oph-checkable-text">Poissa koko lukukauden</span>
+        </label>
+    </fieldset>
+</form>
