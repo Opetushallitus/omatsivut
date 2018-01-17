@@ -82,14 +82,9 @@ oph_vars
 
 # generated js and css files
 src/main/webapp/bundle.js
-hakemuseditori/example-application/bundle.js
 src/main/webapp/hakemuseditori*
 src/main/webapp/css/
 src/main/templates/templates.js
-src/main/less/hakemuseditori
-src/main/webapp/img/hakemuseditori
-
-hakemuseditori/dist/*
 
 #gatling
 gatling/
@@ -97,7 +92,6 @@ gradle/
 
 valintarekisteri-it-db
 
-example-application/bundle.js
 .idea*
 *.iml
 dev

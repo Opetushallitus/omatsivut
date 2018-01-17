@@ -111,10 +111,6 @@ Tuotantoa vastaava buildi
 Tyylit tehty lessillä. Css-fileet src-puussa generoidaan siitä ja ovat
 ignoroitu gitissä.
 
-Kun yllä oleva on tehty, jatkuva fronttikäännös ilman minimointia, joka huomaa muutokset myös paikallisessa hakemuseditori-repossa (../hakemuseditori) käynnistyy näin:
-
-    ./webbuild.sh dev-local-editor
-
 ## Impersonointi / autentikoinnin ohitus
 
 Jos applikaatiota ajetaan "testimoodissa" eli esim. `-Domatsivut.profile=dev`, niin autentikointi on mahdollista ohittaa - vetuman sijaan näytetään "Vetuma Simulator"-näkymä, jossa voi syöttää haluamansa henkilötunnuksen.
