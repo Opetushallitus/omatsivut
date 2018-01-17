@@ -53,12 +53,14 @@ module.exports = function(app) {
           }
           return false;
         }
+
         $scope.valintatulosText = function(valintatulos, valintatulokset) {
-          var isHyvaksyttyKesken = $scope.isHyvaksyttyKesken(valintatulos, valintatulokset)
-          var key = isHyvaksyttyKesken ? "HyvaksyttyKesken" : util.underscoreToCamelCase(valintatulos.valintatila)
+          var isHyvaksyttyKesken = $scope.isHyvaksyttyKesken(valintatulos, valintatulokset);
+          var key = isHyvaksyttyKesken ? "HyvaksyttyKesken" : util.underscoreToCamelCase(valintatulos.valintatila);
+          var ehdollisenHyvaksymisenKenttaEhto = localization("label.resultState.EhdollisenHyvaksymisenEhdonKentanNimi");
 
           if ([VASTAANOTTOTILA.VASTAANOTTANUT_SITOVASTI, VASTAANOTTOTILA.EI_VASTAANOTETTU_MAARA_AIKANA, VASTAANOTTOTILA.EHDOLLISESTI_VASTAANOTTANUT].indexOf(valintatulos.vastaanottotila) >= 0) {
-            key = util.underscoreToCamelCase(valintatulos.vastaanottotila)
+            key = util.underscoreToCamelCase(valintatulos.vastaanottotila);
             return localization("label.resultState." + key)
           } else if (!_.isEmpty(tilanKuvaus(valintatulos))) {
             if(valintatulos.valintatila === "PERUNUT"){
@@ -66,8 +68,7 @@ module.exports = function(app) {
             } else if(valintatulos.valintatila === "HYLATTY"){
               return localization("label.resultState." + key) + " " + tilanKuvaus(valintatulos)
             } else if(hyvaksytty(valintatulos) && valintatulos.ehdollisestiHyvaksyttavissa) {
-              var ehdollisenHyvaksymisenKenttaEhto = localization("label.resultState.EhdollisenHyvaksymisenEhdonKentanNimi")
-              if (valintatulos.ehdollisenHyvaksymisenEhtoKoodi != undefined && valintatulos.ehdollisenHyvaksymisenEhtoKoodi != null) {
+              if (valintatulos.ehdollisenHyvaksymisenEhtoKoodi !== undefined && valintatulos.ehdollisenHyvaksymisenEhtoKoodi != null) {
                   return localization("label.resultState." + key) + ' (' + valintatulos[ehdollisenHyvaksymisenKenttaEhto] + ')';
               }
               return localization("label.resultState." + key) + localization("label.resultState.EhdollinenPostfix")
@@ -80,8 +81,7 @@ module.exports = function(app) {
               varasijaPvm: $scope.formatDate(valintatulos.varasijojaTaytetaanAsti)
             })
           } else if(hyvaksytty(valintatulos) && valintatulos.ehdollisestiHyvaksyttavissa) {
-            var ehdollisenHyvaksymisenKenttaEhto = localization("label.resultState.EhdollisenHyvaksymisenEhdonKentanNimi")
-            if (valintatulos.ehdollisenHyvaksymisenEhtoKoodi != undefined && valintatulos.ehdollisenHyvaksymisenEhtoKoodi != null) {
+            if (valintatulos.ehdollisenHyvaksymisenEhtoKoodi !== undefined && valintatulos.ehdollisenHyvaksymisenEhtoKoodi != null) {
               return localization("label.resultState." + key) + ' (' + valintatulos[ehdollisenHyvaksymisenKenttaEhto] + ')';
             }
             return localization("label.resultState." + key) + localization("label.resultState.EhdollinenPostfix")
@@ -90,7 +90,7 @@ module.exports = function(app) {
               varasija: valintatulos.varasijanumero ? valintatulos.varasijanumero + "." : ""
             })
           }
-        }
+        };
 
         $scope.vastaanotaSitovasti = function(hakemus, hakukohde) {
           var email = ''

@@ -207,5 +207,14 @@
     "titleWithVastaanotto": "Opiskelupaikan vastaanotto",
     "infoNotification": "<strong>Huom! Kirjauduit sähköpostilinkin kautta muuttamaan hakutoiveitasi.</strong> Voit lisätä ja poistaa hakutoiveita ja muuttaa niiden järjestystä. Jos haluat katsella koko hakemusta ja tehdä muita muutoksia hakemukseesi, niin kirjaudu verkkopankkitunnuksilla, mobiilivarmenteella tai sähköisellä henkilökortilla Oma Opintopolku -palveluun. <a href='https://opintopolku.fi/wp/oma-opintopolku-palvelu/'>Lue lisää Oma Opintopolku -palvelusta.</a>",
     "logoutPage": "<h2>Olet kirjautunut ulos järjestelmästä.</h2><p>Kiitos käynnistä!</p><p><a href='https://opintopolku.fi'>Opintopolku.fi</a></p>"
+  },
+
+  "lasnaoloilmoittautuminen": {
+    "title": "Läsnäoloilmoittautuminen",
+    "semester": "Läsnä koko lukuvuoden",
+    "spring": "Läsnä vain kevätlukukauden",
+    "autumn": "Läsnä vain syyslukukauden",
+    "away": "Poissa koko lukukauden",
+    "message": "Olet ilmoittautunut __aika__ vastauksella: "
   }
 }
