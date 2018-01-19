@@ -34,6 +34,7 @@ object AppConfig extends Logging {
       case "templated" => new LocalTestingWithTemplatedVars
       case "dev" => new Dev
       case "it" => new IT
+      case "cloud" => new Cloud
       case name => throw new IllegalArgumentException("Unknown value for omatsivut.profile: " + name);
     }
   }
@@ -41,6 +42,10 @@ object AppConfig extends Logging {
   class Default extends AppConfig with ExternalProps {
     def springConfiguration = new OmatSivutSpringContext.Default()
     override def usesFakeAuthentication = settings.environment.isDev || settings.environment.isLuokka || settings.environment.isKoulutus || settings.environment.isVagrant
+  }
+
+  class Cloud extends AppConfig with ExternalProps {
+    def springConfiguration = new OmatSivutSpringContext.Default()
   }
 
   class LocalTestingWithTemplatedVars(val templateAttributesFile: String = System.getProperty("omatsivut.vars")) extends AppConfig with TemplatedProps with MockAuthentication {

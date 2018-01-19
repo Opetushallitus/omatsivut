@@ -167,3 +167,7 @@ shibboleth.login={{shibboleth_login}}
 cas.service.oppijanumerorekisteri-service=https://${host.virkailija}/oppijanumerorekisteri-service
 cas.service.kayttooikeus-service=https://${host.virkailija}/kayttooikeus-service
 haku.langCookie={{ haku_lang_cookie }}
+
+# AWS S3 asetuksia
+omatsivut.s3_region = {{viestintapalvelu_downloadfiles_s3_region}}
+omatsivut.s3_bucket = {{viestintapalvelu_downloadfiles_s3_bucket}}
