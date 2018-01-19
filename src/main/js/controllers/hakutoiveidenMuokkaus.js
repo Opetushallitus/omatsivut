@@ -1,4 +1,4 @@
-var Hakemus = require('./hakemuseditori').Hakemus
+var Hakemus = require('../hakemuseditori/hakemuseditori').Hakemus
 var util = require('../util')
 
 module.exports = function(app, staticResources) {

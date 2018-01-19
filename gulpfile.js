@@ -65,7 +65,6 @@ gulp.task('browserify-min', ["templates"], function() {
 function compileJs(compress) {
   gulp.src(['src/main/js/app.js'])
     .pipe(browserify({
-      external: ["./hakemuseditori"],
       insertGlobals: true,
       debug: true
     }).on('error', handleError))
