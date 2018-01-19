@@ -31,10 +31,10 @@ gulp.task('lint', function() {
         .pipe(jshint.reporter('default'));
 });
 
-gulp.task("templates", function() {
-  return gulp.src("src/main/templates/**/*.html")
-    .pipe(templates("templates.js", { root:"templates/"}))
-    .pipe(gulp.dest("src/main/templates"))
+gulp.task('templates', function() {
+  return gulp.src(['src/main/templates/**/*.html', 'src/main/components/**/*.html'])
+    .pipe(templates('templates.js', { root:'templates/'}))
+    .pipe(gulp.dest('src/main/templates'))
 });
 
 gulp.task('less', function () {
@@ -52,13 +52,17 @@ gulp.task('less', function () {
       .pipe(less().on('error', handleError))
       .pipe(concat('preview.css'))
       .pipe(gulp.dest('src/main/webapp/css'));
+
+    gulp.src('src/main/components/**/*.less')
+        .pipe(less().on('error', handleError))
+        .pipe(gulp.dest('src/main/webapp/css'));
 });
 
-gulp.task('browserify', ["templates"], function() {
+gulp.task('browserify', ['templates'], function() {
   compileJs(false)
 });
 
-gulp.task('browserify-min', ["templates"], function() {
+gulp.task('browserify-min', ['templates'], function() {
   compileJs(true)
 });
 
@@ -79,7 +83,7 @@ gulp.task('watch', function() {
     isWatch = true;
     livereload.listen();
     gulp.watch(['src/main/webapp/**/*.js', 'src/main/webapp/**/*.css', 'src/main/webapp/**/*.html'], livereload.changed);
-    gulp.watch(['src/main/less/**/*.less'],['less']);
+    gulp.watch(['src/main/less/**/*.less', 'src/main/components/**/*.less'],['less']);
 });
 
 gulp.task('compile', ['templates', 'browserify-min', 'less']);
