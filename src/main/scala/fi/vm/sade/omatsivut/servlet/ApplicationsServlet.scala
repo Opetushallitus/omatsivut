@@ -10,9 +10,11 @@ import fi.vm.sade.hakemuseditori.lomake.LomakeRepositoryComponent
 import fi.vm.sade.hakemuseditori.user.Oppija
 import fi.vm.sade.hakemuseditori.valintatulokset.ValintatulosServiceComponent
 import fi.vm.sade.hakemuseditori.valintatulokset.domain._
+import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.hakemuspreview.HakemusPreviewGeneratorComponent
 import fi.vm.sade.omatsivut.security.AuthenticationRequiringServlet
+import fi.vm.sade.utils.http.DefaultHttpClient
 import org.json4s.jackson.Serialization
 import org.scalatra._
 import org.scalatra.json._
@@ -35,7 +37,7 @@ trait ApplicationsServletContainer {
 
     def user = Oppija(personOid())
     private val hakemusEditori = newEditor(this)
-
+    private val httpClient = DefaultHttpClient
     protected val applicationDescription = "Oppijan henkilökohtaisen palvelun REST API, jolla voi hakea ja muokata hakemuksia ja omia tietoja"
 
     before() {
@@ -53,16 +55,42 @@ trait ApplicationsServletContainer {
     }
 
     get("/") {
-      hakemusEditori.fetchByPersonOid(personOid(), Fetch) match {
-        case FullSuccess(hs) =>
-          Map("allApplicationsFetched" -> true, "applications" -> hs)
-        case FullFailure(ts) =>
-          ts.foreach(logger.error("Failed to fetch applications", _))
-          throw ts.head
-        case PartialSuccess(hs, ts) =>
-          ts.foreach(logger.warn("Failed to fetch all applications", _))
-          Map("allApplicationsFetched" -> false, "applications" -> hs)
+      val pOid: String = personOid()
+      val masterRequest = httpClient.httpGet(OphUrlProperties.url("oppijanumerorekisteri-service.henkilo-master", pOid))
+        .header("Caller-Id", "omatsivut.omatsivut.backend")
+
+      val allOids: List[String] = masterRequest.responseWithHeaders() match {
+        case (200, _, resultString) =>
+          val slaveRequest = httpClient.httpGet(OphUrlProperties.url("oppijanumerorekisteri-service.henkilo-slaves", pOid))
+            .header("Caller-Id", "omatsivut.omatsivut.backend")
+          slaveRequest.responseWithHeaders() match {
+            case (200, _, slaveOidResult) =>
+              parse(slaveOidResult).extract[List[String]]
+            case (code,_, slaveOidFailure) =>
+              logger.error("Failed to fetch slave OIDs for user oid {}, response was {}, {}", pOid, Integer.toString(code), slaveOidFailure)
+              List(pOid)
+          }
+        case (code,_, resultString) =>
+          logger.error("Failed to fetch master OID for user oid {}, response was {}, {}", pOid, Integer.toString(code), resultString)
+          List(pOid)
       }
+
+      var allSuccess = true
+      val allHakemukset = allOids.flatMap(oid => {
+        hakemusEditori.fetchByPersonOid(oid, Fetch) match {
+          case FullSuccess(hakemukset) => hakemukset
+          case PartialSuccess(partialHakemukset, exceptions) =>
+            exceptions.foreach(logger.warn("Failed to fetch all applications", _))
+            allSuccess = false
+            partialHakemukset
+          case FullFailure(exceptions) =>
+            exceptions.foreach(logger.error("Failed to fetch applications", _))
+            allSuccess = false
+            List.empty
+        }
+      })
+
+      Map("allApplicationsFetched" -> allSuccess, "applications" -> allHakemukset)
     }
 
     put("/:oid") {
