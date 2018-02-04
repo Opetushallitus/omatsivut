@@ -171,3 +171,8 @@ haku.langCookie={{ haku_lang_cookie }}
 # AWS S3 asetuksia
 omatsivut.s3_region = {{viestintapalvelu_downloadfiles_s3_region}}
 omatsivut.s3_bucket = {{viestintapalvelu_downloadfiles_s3_bucket}}
+
+oppija.base.url.en={{oppija_base_url_en}}
+oppija.base.url.fi={{oppija_base_url_fi}}
+oppija.base.url.sv={{oppija_base_url_sv}}
+

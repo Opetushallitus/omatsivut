@@ -17,6 +17,10 @@ case class ApplicationSettings(config: Config) extends GroupEmailerSettings(conf
   val aesKey : String = config.getString("omatsivut.crypto.aes.key")
   val hmacKey : String = config.getString("omatsivut.crypto.hmac.key")
 
+  val oppijaBaseUrlEn = config.getString("oppija.base.url.en")
+  val oppijaBaseUrlFi = config.getString("oppija.base.url.fi")
+  val oppijaBaseUrlSv = config.getString("oppija.base.url.sv")
+
   private def getRemoteApplicationConfig(config: Config) = {
     RemoteApplicationConfig(
       OphUrlProperties.url("url-oppijanumerorekisteri-service"),
