@@ -2,6 +2,7 @@ package fi.vm.sade.omatsivut.servlet
 
 import java.net.URLEncoder
 
+import fi.vm.sade.hakemuseditori.domain.Language
 import fi.vm.sade.hakemuseditori.http.UrlValueCompressor
 import fi.vm.sade.utils.captcha.CaptchaServiceComponent
 import fi.vm.sade.omatsivut.config.AppConfig
@@ -42,7 +43,23 @@ trait MuistilistaServletContainer {
           response.setStatus(400)
           "400 Bad Request"
         } else {
-          muistilistaService(muistiLista.kieli).sendMail(muistiLista, request.getRequestURL)
+
+          logger.info("Muistilista: " + request.body)
+          logger.info("Kieli: " + muistiLista.kieli)
+
+          logger.info("appConfig.settings.oppijaBaseUrlFi: " + appConfig.settings.oppijaBaseUrlFi)
+          logger.info("appConfig.settings.oppijaBaseUrlSv: " + appConfig.settings.oppijaBaseUrlSv)
+          logger.info("appConfig.settings.oppijaBaseUrlEn: " + appConfig.settings.oppijaBaseUrlEn)
+
+          var baseUrl = appConfig.settings.oppijaBaseUrlFi
+          if(Language.en.toString == muistiLista.kieli.toString) {
+            baseUrl = appConfig.settings.oppijaBaseUrlEn
+          } else if(Language.sv.toString == muistiLista.kieli.toString) {
+            baseUrl = appConfig.settings.oppijaBaseUrlSv
+          }
+
+          var muistilistaUrl = baseUrl + request.getRequestURI
+          muistilistaService(muistiLista.kieli).sendMail(muistiLista, muistilistaUrl)
         }
       } catch {
         case e: MappingException =>
