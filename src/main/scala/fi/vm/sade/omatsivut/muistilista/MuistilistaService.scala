@@ -18,7 +18,7 @@ trait MuistilistaServiceComponent {
     private implicit val lang = language
     private val erikseenHaettavatHakukohteetId = "erikseenHaettavatHakukohteet"
 
-    def sendMail(muistiLista: Muistilista, url: StringBuffer) = {
+    def sendMail(muistiLista: Muistilista, url: String) = {
       val email = buildMessage(muistiLista, url + "/" + buildUlrEncodedOidString(muistiLista.koids))
       val recipients = muistiLista.vastaanottaja.map(v => EmailRecipient(XssUtility.purifyFromHtml(v)))
       groupEmailService.sendMailWithoutTemplate(EmailData(email, recipients))

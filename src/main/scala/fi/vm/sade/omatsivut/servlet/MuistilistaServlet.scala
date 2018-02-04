@@ -42,7 +42,16 @@ trait MuistilistaServletContainer {
           response.setStatus(400)
           "400 Bad Request"
         } else {
-          muistilistaService(muistiLista.kieli).sendMail(muistiLista, request.getRequestURL)
+
+          var baseUrl = appConfig.settings.oppijaBaseUrlFi
+          if("en".equals(muistiLista.kieli)) {
+            baseUrl = appConfig.settings.oppijaBaseUrlEn
+          } else if("sv".equals(muistiLista.kieli)) {
+            baseUrl = appConfig.settings.oppijaBaseUrlSv
+          }
+
+          var muistilistaUrl = baseUrl + request.getRequestURI
+          muistilistaService(muistiLista.kieli).sendMail(muistiLista, muistilistaUrl)
         }
       } catch {
         case e: MappingException =>
