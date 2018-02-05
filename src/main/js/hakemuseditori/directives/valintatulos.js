@@ -19,7 +19,7 @@ module.exports = function(app) {
         isFinal: '&final',
         callback: '=callback'
       },
-      templateUrl: 'templates/valintatulos.html',
+      templateUrl: 'valintatulos.html',
       link: function ($scope, element, attrs) {
         $scope.localization = localization
         $scope.VASTAANOTTOTILA = VASTAANOTTOTILA

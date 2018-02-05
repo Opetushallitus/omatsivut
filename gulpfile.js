@@ -7,6 +7,7 @@ var gulp = require('gulp'),
     templates = require('gulp-angular-templatecache'),
     uglify = require('gulp-uglify'),
     gulpif = require('gulp-if'),
+    flatten = require('gulp-flatten'),
     ngAnnotate = require('gulp-ng-annotate');
 
 var jsFiles = 'src/main/js/**/*.js';
@@ -33,7 +34,8 @@ gulp.task('lint', function() {
 
 gulp.task('templates', function() {
   return gulp.src(['src/main/templates/**/*.html', 'src/main/components/**/*.html'])
-    .pipe(templates('templates.js', { root:'templates/'}))
+    .pipe(flatten())
+    .pipe(templates('templates.js'))
     .pipe(gulp.dest('src/main/templates'))
 });
 
@@ -52,10 +54,6 @@ gulp.task('less', function () {
       .pipe(less().on('error', handleError))
       .pipe(concat('preview.css'))
       .pipe(gulp.dest('src/main/webapp/css'));
-
-    gulp.src('src/main/components/**/*.less')
-        .pipe(less().on('error', handleError))
-        .pipe(gulp.dest('src/main/webapp/css'));
 });
 
 gulp.task('browserify', ['templates'], function() {
@@ -82,10 +80,13 @@ gulp.task('watch', function() {
     isWatch = true;
     livereload.listen();
     gulp.watch(['src/main/webapp/**/*.js', 'src/main/webapp/**/*.css', 'src/main/webapp/**/*.html'], livereload.changed);
-    gulp.watch(['src/main/less/**/*.less', 'src/main/components/**/*.less'],['less']);
+
+    gulp.watch(['src/main/js/**/*.js', 'src/main/components/**/*.js'], ['browserify']);
+    gulp.watch(['src/main/templates/**/*.html', 'src/main/components/**/*.html'], ['templates', 'browserify']);
+    gulp.watch(['src/main/less/**/*.less', 'src/main/components/**/*.less'], ['less']);
 });
 
-gulp.task('compile', ['templates', 'browserify-min', 'less']);
-gulp.task('compile-dev', ['templates', 'browserify', 'less']);
+gulp.task('compile', ['browserify-min', 'less']);
+gulp.task('compile-dev', ['browserify', 'less']);
 gulp.task('dev', ['lint', 'compile-dev', 'watch']);
 gulp.task('default', ['compile']);

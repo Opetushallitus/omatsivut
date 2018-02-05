@@ -7,7 +7,7 @@ module.exports = function(app) {
         application: '=application',
         level: '=level'
       },
-      templateUrl: 'templates/question.html',
+      templateUrl: 'question.html',
       compile: function (element) {
         return RecursionHelper.compile(element, function ($scope, iElement, iAttrs, controller, transcludeFn) {
           $scope.isGroup = function () {

@@ -7,7 +7,7 @@ module.exports = function(app) {
       scope: {
         haku: '&haku'
       },
-      templateUrl: 'templates/applicationPeriods.html',
+      templateUrl: 'applicationPeriods.html',
       link: function ($scope, element, attrs) {
         $scope.localization = localization
         $scope.periods = function() { return $scope.haku().applicationPeriods }

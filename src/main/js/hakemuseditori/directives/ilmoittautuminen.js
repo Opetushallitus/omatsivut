@@ -6,7 +6,7 @@ module.exports = function(app) {
         hakukohteet: '&hakukohteet',
         oili: '&oili'
       },
-      templateUrl: 'templates/ilmoittautuminen.html',
+      templateUrl: 'ilmoittautuminen.html',
       link: function (scope, element, attrs) {
         scope.localization = localization;
       }

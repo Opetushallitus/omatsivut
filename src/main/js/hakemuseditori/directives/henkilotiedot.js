@@ -5,7 +5,7 @@ module.exports = function(app) {
       scope: {
         application: '=application'
       },
-      templateUrl: 'templates/henkilotiedot.html',
+      templateUrl: 'henkilotiedot.html',
       link: function ($scope, element, attrs) {
         $scope.localization = localization
         $scope.yhteystiedot = $scope.application.henkilotiedot
