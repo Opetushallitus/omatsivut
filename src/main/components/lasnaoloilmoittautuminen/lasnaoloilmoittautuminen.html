@@ -1,34 +1,42 @@
-<form name="lasnaoloilmoittautuminenForm">
-    <fieldset class="oph-fieldset">
-        <legend class="oph-label">
-            <span>{{ localization('lasnaoloilmoittautuminen.title') }}</span>
-            <span>Jan Arponen - Espoon kaupunki Kymppiluokka</span>
+<form class="lasnaoloilmoittautuminenForm" name="lasnaoloilmoittautuminenForm">
+    <fieldset>
+        <legend>
+            <span class="label-highlight">{{ localization('lasnaoloilmoittautuminen.title') }}</span>
+            <span>{{ application.henkiloNimi }} - {{ tulos.tarjoajaNimi }} {{ tulos.hakukohdeNimi }}</span>
         </legend>
+        <div ng-hide="done">
+            <div class="instruction">{{ localization('lasnaoloilmoittautuminen.info') }}</div>
 
-        <label class="oph-checkable" for="semester">
-            <input id="semester" class="oph-checkable-input" type="radio" name="radios" value="1">
+            <!-- Syksyllä alkavat koulutukset -->
+            <div class="check-options" ng-hide="false">
+                <label>
+                    <input class="oph-checkable-input" type="radio" name="radios" value="semester" ng-model="ilmoittautuminen">
+                    <span class="oph-checkable-text">{{ localization('lasnaoloilmoittautuminen.semester') }}</span>
+                </label>
 
-            <span class="oph-checkable-text">Läsnä koko lukuvuoden</span>
-        </label>
+                <label>
+                    <input class="oph-checkable-input" type="radio" name="radios" value="autumn" ng-model="ilmoittautuminen">
+                    <span class="oph-checkable-text">{{ localization('lasnaoloilmoittautuminen.autumn') }}</span>
+                </label>
+            </div>
 
-        <label class="oph-checkable" for="spring">
-            <input id="spring" class="oph-checkable-input" type="radio" name="radios" value="2">
+            <!-- Keväällä alkavat koulutukset -->
+            <div class="check-options" ng-hide="true">
+                <label>
+                    <input class="oph-checkable-input" type="radio" name="radios" value="spring" ng-model="ilmoittautuminen">
+                    <span class="oph-checkable-text">{{ localization('lasnaoloilmoittautuminen.spring') }}</span>
+                </label>
+            </div>
 
-            <span class="oph-checkable-text">Läsnä vain kevätlukukauden</span>
-        </label>
-
-        <label class="oph-checkable oph-checkable-input" for="autumn">
-            <input id="autumn" class="oph-checkable-input" type="radio" name="radios" value="3">
-
-            <span class="oph-checkable-text">Läsnä vain syyslukukauden</span>
-        </label>
-
-        <hr class="vertical"/>
-
-        <label class="oph-checkable oph-checkable-input" for="away">
-            <input id="away" class="oph-checkable-input" type="radio" name="radios" value="3">
-
-            <span class="oph-checkable-text">Poissa koko lukukauden</span>
-        </label>
+            <div class="save-btn-wrapper">
+                <button class="save-btn" ng-click="postLasnaoloilmoittautuminen()">{{ localization('lasnaoloilmoittautuminen.send') }}</button>
+            </div>
+            <div class="lasnaolo-error" ng-if="error">
+                {{ getErrorTranslation() }}
+            </div>
+        </div>
+        <div class="lasnaolo-confirmation" ng-if="done">
+            {{ localization('lasnaoloilmoittautuminen.confirmation', getEnrolmentMessageKeys()) }} {{ getStateTranslation() }}
+        </div>
     </fieldset>
 </form>
