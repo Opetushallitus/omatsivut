@@ -5,7 +5,7 @@ import fi.vm.sade.utils.http.DefaultHttpClient
 import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.utils.slf4j.Logging
 import fi.vm.sade.utils.Timer.timed
-import fi.vm.sade.hakemuseditori.valintatulokset.domain.{VastaanottoAction}
+import fi.vm.sade.hakemuseditori.valintatulokset.domain.{Ilmoittautuminen, VastaanottoAction}
 import fi.vm.sade.omatsivut.OphUrlProperties
 import org.json4s.JsonAST.JValue
 
@@ -14,6 +14,7 @@ class ValintatulosException extends Exception
 trait ValintatulosService {
   def getValintatulos(hakemusOid: String, hakuOid: String): Option[Valintatulos]
   def vastaanota(henkiloOid: String, hakemusOid: String, hakukohdeOid: String, vastaanotto: VastaanottoAction): Boolean
+  def ilmoittaudu(hakuOid: String, hakemusOid: String, ilmoittautuminen: Ilmoittautuminen): Boolean
 }
 
 
@@ -25,6 +26,9 @@ class NoOpValintatulosService extends ValintatulosService {
   override def getValintatulos(hakemusOid: String, hakuOid: String) = None
 
   override def vastaanota(henkiloOid: String, hakemusOid: String, hakukohdeOid: String, vastaanotto: VastaanottoAction) = true
+
+  override def ilmoittaudu(hakuOid: String, hakemusOid: String, ilmoittautuminen: Ilmoittautuminen) = true
+
 }
 
 class FailingRemoteValintatulosService() extends RemoteValintatulosService {
@@ -83,6 +87,25 @@ class RemoteValintatulosService extends ValintatulosService with JsonFormats wit
     val url = OphUrlProperties.url("valinta-tulos-service.vastaanota", henkiloOid, hakemusOid, hakukohdeOid)
     val request = DefaultHttpClient.httpPost(url, Some(Serialization.write(vastaanotto))).header("Content-type", "application/json")
     request.responseWithHeaders match {
+      case (200, _, resultString) => {
+        logger.debug("POST " + url + ": " + resultString)
+        true
+      }
+      case (403, headers, result) =>
+        logger.debug(s"acceptance blocked by prior: $result")
+        false
+      case (errorCode, _, resultString) =>
+        logger.error("Response code " + errorCode + " from valinta-tulos-service at " + url)
+        throw RemoteServiceException(resultString)
+    }
+  }
+
+  override def ilmoittaudu(hakuOid: String, hakemusOid: String, ilmoittautuminen: Ilmoittautuminen) : Boolean = {
+    import org.json4s.jackson.Serialization
+    val url = OphUrlProperties.url("valinta-tulos-service.ilmoittaudu", hakuOid, hakemusOid)
+    val request = DefaultHttpClient.httpPost(url, Some(Serialization.write(ilmoittautuminen))).header("Content-type", "application/json")
+
+    request.responseWithHeaders match { //FIXME: duplicate code
       case (200, _, resultString) => {
         logger.debug("POST " + url + ": " + resultString)
         true

@@ -56,6 +56,7 @@ class ComponentRegistry(val config: AppConfig)
           KoodistoComponent with
           OppijanTunnistusComponent with
           TuloskirjeetServletContainer with
+          ValintatulosServletContainer with
           NonSensitiveApplicationServletContainer {
 
   private def configureOhjausparametritService: OhjausparametritService = config match {
@@ -142,6 +143,7 @@ class ComponentRegistry(val config: AppConfig)
   def newHakemusPreviewGenerator(language: Language): HakemusPreviewGenerator = new HakemusPreviewGenerator(language)
   def newApplicationsServlet = new ApplicationsServlet(config)
   def newKoulutusServlet = new KoulutusServlet
+  def newValintatulosServlet = new ValintatulosServlet(config)
   def newSecuredSessionServlet = new SecuredSessionServlet(config.authContext)
   def newLogoutServlet = new LogoutServlet(config.authContext)
   def newFixtureServlet = new FixtureServlet(config)

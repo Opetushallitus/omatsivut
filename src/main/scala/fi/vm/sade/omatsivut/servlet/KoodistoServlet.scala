@@ -2,8 +2,7 @@ package fi.vm.sade.omatsivut.servlet
 
 import fi.vm.sade.hakemuseditori.HakemusEditoriComponent
 import fi.vm.sade.hakemuseditori.json.JsonFormats
-import fi.vm.sade.hakemuseditori.koodisto.{PostOffice, KoodistoService, KoodistoComponent}
-import org.scalatra.NotFound
+import fi.vm.sade.hakemuseditori.koodisto.KoodistoService
 import org.scalatra.json.JacksonJsonSupport
 
 trait KoodistoServletContainer {
