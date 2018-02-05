@@ -1,6 +1,4 @@
-var Hakemus = require("../hakemus")
 var Hakutoive = require("../hakutoive")
-var util = require("../util")
 var Question = require("../question").Question
 
 module.exports = function(app) {
@@ -10,7 +8,7 @@ module.exports = function(app) {
       scope: {
         application: "=application"
       },
-      templateUrl: 'templates/application.html',
+      templateUrl: 'application.html',
 
       link: function ($scope, $element, attrs) {
         $scope.localization = localization
@@ -19,17 +17,21 @@ module.exports = function(app) {
         $scope.isValidating = false
 
         $scope.timestampLabel = function() {
-          if ($scope.application.received == $scope.application.updated)
+          if ($scope.application.received === $scope.application.updated)
             return localization("label.applicationReceived")
           else
             return localization("label.applicationUpdated")
         }
         $scope.shouldSaveButtonBeDisabled = function() {
-          return $scope.applicationForm.$pristine || $scope.statusMessageType=='pending' || !$scope.isSaveable || $scope.isValidating
+          return $scope.applicationForm.$pristine || $scope.statusMessageType === 'pending' || !$scope.isSaveable || $scope.isValidating
         }
 
         $scope.statusMessageStyleModifier = function() {
-          return {'ajax-spinner': $scope.statusMessageType=='pending', error: $scope.statusMessageType=='error', success: $scope.statusMessageType == 'success'}
+          return {
+            'ajax-spinner': $scope.statusMessageType === 'pending',
+            error: $scope.statusMessageType === 'error',
+            success: $scope.statusMessageType === 'success'
+          }
         }
 
         function getHakutoiveet() {
@@ -78,7 +80,7 @@ module.exports = function(app) {
 
         function applicationChanged() {
           $scope.applicationForm.$setDirty()
-          if ($scope.statusMessageType == "success")
+          if ($scope.statusMessageType === "success")
             setStatusMessage("")
         }
 

@@ -9,7 +9,7 @@ module.exports = function(app) {
         preferenceMoved: "=preferenceMoved",
         validating: "=validating"
       },
-      templateUrl: 'templates/hakutoiveet.html',
+      templateUrl: 'hakutoiveet.html',
 
       link: function ($scope, element, attrs) {
         $scope.localization = localization

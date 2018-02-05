@@ -35,6 +35,7 @@ require('./restResources')(listApp);
 
 require('./settings')(listApp, testMode());
 
+require('./hakemuseditori/hakemuseditori')(listApp);
 require('./directives/applicationList')(listApp);
 require('./directives/notification')(listApp);
 require('./controllers/hakutoiveidenMuokkaus')(listApp, staticResources);

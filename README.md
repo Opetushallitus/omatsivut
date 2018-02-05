@@ -108,8 +108,7 @@ Tuotantoa vastaava buildi
 
     ./webbuild.sh
 
-Tyylit tehty lessillä. Css-fileet src-puussa generoidaan siitä ja ovat
-ignoroitu gitissä.
+Tyyleissä on käytetty lessiä. Niiden perusteella generoidaan css-tiedostot kansioon /src/main/webapp/css.
 
 ## Impersonointi / autentikoinnin ohitus
 
