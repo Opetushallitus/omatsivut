@@ -5,7 +5,7 @@ module.exports = function(app) {
       scope: {
         kela: '&kela'
       },
-      templateUrl: 'templates/kela.html',
+      templateUrl: 'kela.html',
       link: function (scope, element, attrs) {
         scope.localization = localization
       }
