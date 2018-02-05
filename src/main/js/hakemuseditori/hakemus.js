@@ -1,28 +1,29 @@
-var Hakutoive = require('./hakutoive')
-var Question = require('./question').Question
-var util = require('./util')
+var Hakutoive = require('./hakutoive');
+var Question = require('./question').Question;
+var util = require('./util');
 
 function Hakemus(json) {
   try {
-    this.oid = json.hakemus.oid
-    this.updated = json.hakemus.updated
-    this.haku = copy(json.hakemus.haku)
-    this.state = copy(json.hakemus.state)
-    this.hasForm = json.hakemus.hasForm
-    this.educationBackground = copy(json.hakemus.educationBackground)
-    this.notifications = json.hakemus.notifications
-    this.hakutoiveet = convertHakutoiveet(json.hakemus.hakutoiveet)
-    this.henkilotiedot = convertHenkilotiedot(json.hakemus.answers.henkilotiedot)
-    this.persistedAnswers = json.hakemus.answers
-    this.additionalQuestions = Question.getQuestions(json.questions, this)
-    this.tuloskirje = copy(formatTuloskirje(json.hakemus.tuloskirje))
-    this.tulosOk = json.tulosOk
-    this.requiredPaymentState = json.hakemus.requiredPaymentState
+    this.oid = json.hakemus.oid;
+    this.updated = json.hakemus.updated;
+    this.haku = copy(json.hakemus.haku);
+    this.state = copy(json.hakemus.state);
+    this.hasForm = json.hakemus.hasForm;
+    this.educationBackground = copy(json.hakemus.educationBackground);
+    this.notifications = json.hakemus.notifications;
+    this.hakutoiveet = convertHakutoiveet(json.hakemus.hakutoiveet);
+    this.henkilotiedot = convertHenkilotiedot(json.hakemus.answers.henkilotiedot);
+    this.henkiloNimi = parseName(json.hakemus.answers.henkilotiedot);
+    this.persistedAnswers = json.hakemus.answers;
+    this.additionalQuestions = Question.getQuestions(json.questions, this);
+    this.tuloskirje = copy(formatTuloskirje(json.hakemus.tuloskirje));
+    this.tulosOk = json.tulosOk;
+    this.requiredPaymentState = json.hakemus.requiredPaymentState;
     this.calculatedValues = {
       postOffice: json.hakemus.postOffice
-    }
-    this.oiliJwt = null
-    this.hakemusSource = json.hakemusSource
+    };
+    this.oiliJwt = null;
+    this.hakemusSource = json.hakemusSource;
     this.previewUrl = json.previewUrl
   } catch (e) {
     throw e;
@@ -33,10 +34,10 @@ function copy(json) { return $.extend(true, {}, json) }
 
 function formatTuloskirje(tuloskirje) {
   if(tuloskirje) {
-    var date = new Date(tuloskirje.created)
-    var yyyy = date.getFullYear()
-    var mm = date.getMonth() + 1
-    var dd  = date.getDate()
+    var date = new Date(tuloskirje.created);
+    var yyyy = date.getFullYear();
+    var mm = date.getMonth() + 1;
+    var dd  = date.getDate();
     tuloskirje.createdDate = dd + "." + mm + "." + yyyy
   }
   return tuloskirje;
@@ -44,11 +45,17 @@ function formatTuloskirje(tuloskirje) {
 
 function convertHenkilotiedot(json) {
   if (!_.isUndefined(json)) {
-    var fields = ["Sähköposti", "matkapuhelinnumero1", "asuinmaa", "lahiosoite", "Postinumero"]
+    var fields = ["Sähköposti", "matkapuhelinnumero1", "asuinmaa", "lahiosoite", "Postinumero"];
     return _(fields).reduce(function (memo, key) {
-      memo[key] = new Question({id: key}, json[key])
+      memo[key] = new Question({id: key}, json[key]);
       return memo
     }, {})
+  }
+}
+
+function parseName(json) {
+  if (!_.isUndefined(json)) {
+    return json["Etunimet"] + " " + json["Sukunimi"];
   }
 }
 

@@ -211,10 +211,16 @@
 
   "lasnaoloilmoittautuminen": {
     "title": "Läsnäoloilmoittautuminen",
+    "send": "Lähetä ilmoittautuminen",
     "semester": "Läsnä koko lukuvuoden",
-    "spring": "Läsnä vain kevätlukukauden",
+    "spring": "Läsnä kevätlukukauden",
     "autumn": "Läsnä vain syyslukukauden",
     "away": "Poissa koko lukukauden",
-    "message": "Olet ilmoittautunut __aika__ vastauksella: "
+    "confirmation": "Olet ilmoittautunut __date__ klo __time__ vastauksella: ",
+    "info": "Poissaolon myöntää aina oppilaitos. Jos haluat ilmoittautua poissaolevaksi, ota yhteys oppilaitokseen.",
+    "error": {
+      "notFound": "Opiskelupaikkaa ei löytynyt. Yritä hetken päästä uudelleen.",
+      "other": "Jokin meni pieleen ilmoittautumisessa. Yritä hetken päästä uudelleen."
+    }
   }
 }

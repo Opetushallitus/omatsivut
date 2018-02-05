@@ -6,7 +6,7 @@
   line-height: 125%;
   font-size: 14px;
 
-  th {
+  .result-list-header {
     .section-heading-font(@font-color);
     font-weight: normal;
     font-size: 15px;
@@ -18,20 +18,20 @@
       color: @font-color-light;
     }
   }
-  tbody {
-    td {
+  .result-list-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    width: 100%;
+    border-top: 3px solid white;
+    background: #F7F7F7;
+
+    .result-list-cell {
       padding: 10px;
       vertical-align: top;
+      margin-bottom: 1px;
+      width: 40%;
 
-      &:first-child {
-        padding-right: 10px;
-        width: 30%;
-      }
-
-      &:last-child {
-        vertical-align: top;
-        padding-right: 10px;
-      }
       .hyvaksytty-kesken {
         margin-top: 15px;
         display: block;
@@ -72,25 +72,36 @@
           background: #CCCCCC;
         }
       }
-      margin-bottom: 1px;
-    }
-    .vastaanottotieto {
-      width: 40%;
-    }
-    tr + tr {
-      border-top: 3px solid white;
-    }
-    tr {
-      background: #F7F7F7;
 
     }
-    .accepted {
+
+    &:extend(.accepted);
+  }
+
+  .accepted {
+    background: inherit;
+    .valintatulos-otsake {
+      font-weight: bold;
+    }
+    .flex-40, .flex-60 {
       background: #EBF8FB;
-      .valintatulos-otsake {
-        font-weight: bold;
-      }
     }
   }
+}
+
+.flex-40 {
+  flex-basis: 40%;
+}
+
+.flex-60 {
+  flex-basis: 60%;
+}
+
+.flex-100 {
+  border: 1px solid #f8f5f5;
+  margin-top: 1px;
+  flex-basis: 100%;
+  background: #fffdfd;
 }
 
 .result-status {
