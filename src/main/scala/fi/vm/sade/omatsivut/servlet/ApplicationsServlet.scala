@@ -60,15 +60,15 @@ trait ApplicationsServletContainer {
         .header("Caller-Id", "omatsivut.omatsivut.backend")
 
       val allOids: List[String] = masterRequest.responseWithHeaders() match {
-        case (200, _, resultString) =>
-          val slaveRequest = httpClient.httpGet(OphUrlProperties.url("oppijanumerorekisteri-service.henkilo-slaves", pOid))
+        case (200, _, masterOid) =>
+          val slaveRequest = httpClient.httpGet(OphUrlProperties.url("oppijanumerorekisteri-service.henkilo-slaves", masterOid))
             .header("Caller-Id", "omatsivut.omatsivut.backend")
           slaveRequest.responseWithHeaders() match {
             case (200, _, slaveOidResult) =>
-              parse(slaveOidResult).extract[List[String]]
+              List(masterOid) ++ parse(slaveOidResult).extract[List[String]]
             case (code,_, slaveOidFailure) =>
               logger.error("Failed to fetch slave OIDs for user oid {}, response was {}, {}", pOid, Integer.toString(code), slaveOidFailure)
-              List(pOid)
+              List(masterOid)
           }
         case (code,_, resultString) =>
           logger.error("Failed to fetch master OID for user oid {}, response was {}, {}", pOid, Integer.toString(code), resultString)
