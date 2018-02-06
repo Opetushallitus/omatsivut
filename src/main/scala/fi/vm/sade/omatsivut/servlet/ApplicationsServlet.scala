@@ -67,7 +67,7 @@ trait ApplicationsServletContainer {
             case (200, _, slaveOidResult) =>
               List(masterOid) ++ parse(slaveOidResult).extract[List[String]]
             case (code,_, slaveOidFailure) =>
-              logger.error("Failed to fetch slave OIDs for user oid {}, response was {}, {}", pOid, Integer.toString(code), slaveOidFailure)
+              logger.error("Failed to fetch slave OIDs for user oid {}, response was {}, {}", masterOid, Integer.toString(code), slaveOidFailure)
               List(masterOid)
           }
         case (code,_, resultString) =>
