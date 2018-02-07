@@ -105,9 +105,9 @@ class RemoteValintatulosService extends ValintatulosService with JsonFormats wit
     val url = OphUrlProperties.url("valinta-tulos-service.ilmoittaudu", hakuOid, hakemusOid)
     val request = DefaultHttpClient.httpPost(url, Some(Serialization.write(ilmoittautuminen))).header("Content-type", "application/json")
 
-    request.responseWithHeaders match { //FIXME: duplicate code
+    request.responseWithHeaders match {
       case (200, _, resultString) => {
-        logger.debug("POST " + url + ": " + resultString)
+        logger.debug("POST " + url + ": " + "OK")
         true
       }
       case (403, headers, result) =>
