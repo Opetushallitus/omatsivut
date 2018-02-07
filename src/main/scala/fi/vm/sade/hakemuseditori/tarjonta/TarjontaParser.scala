@@ -1,7 +1,7 @@
 package fi.vm.sade.hakemuseditori.tarjonta
 
 import fi.vm.sade.hakemuseditori.json.JsonFormats
-import fi.vm.sade.hakemuseditori.tarjonta.domain.{TarjontaHaku, KohteenHakuaika, Hakukohde}
+import fi.vm.sade.hakemuseditori.tarjonta.domain.{Hakukohde, KohteenHakuaika, KoulutuksenAlkaminen, TarjontaHaku}
 import fi.vm.sade.utils.slf4j.Logging
 import org.json4s.JValue
 
@@ -23,12 +23,20 @@ private object TarjontaParser extends JsonFormats with Logging {
       hakuaikaId = (obj \ "hakuaikaId").extractOpt[String]
       name = (obj \ "name").extractOpt[String].getOrElse("")
       hakuaika = createHakuaika((obj \ "hakuaikaAlkuPvm").extractOpt[Long], (obj \ "hakuaikaLoppuPvm").extractOpt[Long])
-    } yield Hakukohde(oid, hakuaikaId, hakuaika)
+      koulutuksenAlkaminen = createKoulutuksenAlkaminen((obj \ "koulutuksenAlkamisvuosi").extractOpt[Long], (obj \ "koulutuksenAlkamiskausiUri").extractOpt[String])
+    } yield Hakukohde(oid, hakuaikaId, koulutuksenAlkaminen, hakuaika)
   }
 
   private def createHakuaika(hakuaikaAlkuPvm: Option[Long], hakuaikaLoppuPvm: Option[Long]) : Option[KohteenHakuaika] = {
     (hakuaikaAlkuPvm, hakuaikaLoppuPvm) match {
       case (Some(a), Some(l)) => Some(KohteenHakuaika(a, l))
+      case _ => None
+    }
+  }
+
+  private def createKoulutuksenAlkaminen(koulutuksenAlkamisvuosi: Option[Long], koulutuksenAlkamiskausiUri: Option[String]) : Option[KoulutuksenAlkaminen] = {
+    (koulutuksenAlkamisvuosi, koulutuksenAlkamiskausiUri) match {
+      case (Some(v), Some(k)) => Some(KoulutuksenAlkaminen(v, k))
       case _ => None
     }
   }
