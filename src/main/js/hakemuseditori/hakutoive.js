@@ -14,9 +14,10 @@ Hakutoive.prototype = {
   },
 
   importJson: function(json) {
-      this.data = json.hakemusData || {}
-      this.hakuaikaId = json.hakuaikaId
-      this.kohdekohtainenHakuaika = json.kohdekohtainenHakuaika
+      this.data = json.hakemusData || {};
+      this.hakuaikaId = json.hakuaikaId;
+      this.kohdekohtainenHakuaika = json.kohdekohtainenHakuaika;
+      this.koulutuksenAlkaminen = json.koulutuksenAlkaminen;
   },
 
   clear: function() {
