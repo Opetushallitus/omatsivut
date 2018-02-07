@@ -12,13 +12,21 @@ module.exports = function(app) {
                 $scope.done = false;
                 $scope.localization = localization;
 
+                $scope.init = function() {
+                    var hakutoive = $scope.application.hakutoiveet.find(function(element) {
+                        return element.data['Koulutus-id'] === $scope.tulos.hakukohdeOid;
+                    });
+
+                    $scope.tulos.koulutuksenAlkaminen = hakutoive.koulutuksenAlkaminen;
+                }();
+
                 $scope.states = {
                     // Spring hakus
-                    semester: 'LasnaKokoLukuvuosi',
-                    autumn: 'LasnaSyksy',
+                    semester: 'LASNA_KOKO_LUKUVUOSI',
+                    autumn: 'LASNA_SYKSY',
 
                     // Autumn hakus
-                    spring: 'Lasna'
+                    spring: 'LASNA'
                 };
 
                 $scope.postLasnaoloilmoittautuminen = function() {
@@ -38,6 +46,14 @@ module.exports = function(app) {
 
                 $scope.getErrorTranslation = function() {
                     return localization('lasnaoloilmoittautuminen.error.' + $scope.error);
+                };
+
+                $scope.schoolStartsInSpring = function () {
+                    return $scope.tulos.koulutuksenAlkaminen.kausiUri === 'kausi_k#1'
+                };
+
+                $scope.schoolStartsInAutumn = function () {
+                    return $scope.tulos.koulutuksenAlkaminen.kausiUri === 'kausi_s#1'
                 };
 
                 function onSuccess(data) {

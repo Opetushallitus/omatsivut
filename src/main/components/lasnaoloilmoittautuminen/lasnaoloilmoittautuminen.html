@@ -8,7 +8,7 @@
             <div class="instruction">{{ localization('lasnaoloilmoittautuminen.info') }}</div>
 
             <!-- Syksyllä alkavat koulutukset -->
-            <div class="check-options" ng-hide="false">
+            <div class="check-options" ng-show="schoolStartsInAutumn()">
                 <label>
                     <input class="oph-checkable-input" type="radio" name="radios" value="semester" ng-model="ilmoittautuminen">
                     <span class="oph-checkable-text">{{ localization('lasnaoloilmoittautuminen.semester') }}</span>
@@ -21,7 +21,7 @@
             </div>
 
             <!-- Keväällä alkavat koulutukset -->
-            <div class="check-options" ng-hide="true">
+            <div class="check-options" ng-show="schoolStartsInSpring()">
                 <label>
                     <input class="oph-checkable-input" type="radio" name="radios" value="spring" ng-model="ilmoittautuminen">
                     <span class="oph-checkable-text">{{ localization('lasnaoloilmoittautuminen.spring') }}</span>
