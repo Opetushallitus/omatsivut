@@ -103,14 +103,6 @@ trait TarjontaComponent {
       }
     }
 
-/*    private def changeAikataulu(haku: Haku, aikataulu: Option[HaunAikataulu]) = {
-      aikataulu.map { at =>
-        val julkistus = at.julkistus.map(j => j.copy(start = changeTimestamp(haku, j.start), end = changeTimestamp(haku, j.end)))
-        HaunAikataulu(julkistus, at.hakukierrosPaattyy.map {changeTimestamp(haku, _)})
-      }
-    }
-*/
-
     private def changeAikataulu(haku: Haku, aikataulu: Option[HaunAikataulu]) = {
       if(hakukierrospaattyyOverrides.contains(haku.oid)) {
         Some(HaunAikataulu(aikataulu.get.julkistus, hakukierrospaattyyOverrides.get(haku.oid)))
@@ -161,7 +153,7 @@ trait TarjontaService {
 
   def filterHakutoiveOidsByActivity(activity: Boolean, hakutoiveet: List[Hakemus.HakutoiveData], haku: Haku): List[String] = {
     val hakukohteet = hakutoiveet.flatMap(entry => entry.get("Koulutus-id").map(oid => {
-      hakukohde(oid).getOrElse(Hakukohde(oid, None, Some(KohteenHakuaika(0L, 0L))))
+      hakukohde(oid).getOrElse(Hakukohde(oid, None, None, Some(KohteenHakuaika(0L, 0L))))
     }))
     hakukohteet.filter(hakukohde => hakukohde.kohteenHakuaika match {
       case Some(aika) => aika.active == activity
