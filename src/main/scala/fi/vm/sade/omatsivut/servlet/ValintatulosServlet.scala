@@ -24,7 +24,7 @@ trait ValintatulosServletContainer {
     post("/") {
       val body = parsedBody.extract[Ilmoittautuminen]
       body.muokkaaja = user().oid
-      val success = valintatulosService.ilmoittaudu(params("hakuOid"), params("hakemusOid"), body)
+      valintatulosService.ilmoittaudu(params("hakuOid"), params("hakemusOid"), body)
     }
   }
 }
