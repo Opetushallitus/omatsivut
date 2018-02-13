@@ -103,11 +103,11 @@ trait ApplicationsServletContainer {
         hakemusEditori.fetchByPersonOid(oid, Fetch) match {
           case FullSuccess(hakemukset) => hakemukset
           case PartialSuccess(partialHakemukset, exceptions) =>
-            exceptions.foreach(logger.warn("Failed to fetch all applications", _))
+            exceptions.foreach(logger.warn(s"Failed to fetch all applications for oid $oid",_))
             allSuccess = false
             partialHakemukset
           case FullFailure(exceptions) =>
-            exceptions.foreach(logger.error("Failed to fetch applications", _))
+            exceptions.foreach(logger.error(s"Failed to fetch applications for oid $oid", _))
             allSuccess = false
             List.empty
         }
