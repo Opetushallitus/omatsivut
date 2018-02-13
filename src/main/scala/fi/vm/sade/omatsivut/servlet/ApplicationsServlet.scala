@@ -14,12 +14,15 @@ import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.hakemuspreview.HakemusPreviewGeneratorComponent
 import fi.vm.sade.omatsivut.security.AuthenticationRequiringServlet
-import fi.vm.sade.utils.http.DefaultHttpClient
+import fi.vm.sade.utils.cas.{CasAuthenticatingClient, CasClient, CasParams}
+import org.http4s.{Header, Headers, Request, Uri}
+import org.http4s.client.blaze
 import org.json4s.jackson.Serialization
 import org.scalatra._
 import org.scalatra.json._
 
 import scala.util.{Failure, Success}
+import scalaz.concurrent.Task
 
 trait ApplicationsServletContainer {
   this: HakemusEditoriComponent with
@@ -37,7 +40,14 @@ trait ApplicationsServletContainer {
 
     def user = Oppija(personOid())
     private val hakemusEditori = newEditor(this)
-    private val httpClient = DefaultHttpClient
+    private val securitySettings = appConfig.settings.securitySettings
+    private val blazeHttpClient = blaze.defaultClient
+    private val casClient = new CasClient(securitySettings.casUrl, blazeHttpClient)
+    //private val httpClient = DefaultHttpClient
+    private val serviceUrl = appConfig.settings.authenticationServiceConfig.url + "/"
+    private val casParams = CasParams(serviceUrl, securitySettings.casUsername, securitySettings.casPassword)
+    private val httpClient = CasAuthenticatingClient(casClient, casParams, blazeHttpClient, Some("omatsivut.omatsivut.backend"), "JSESSIONID")
+    private val callerIdHeader = Header("Caller-Id", "omatsivut.omatsivut.backend")
     protected val applicationDescription = "Oppijan henkilökohtaisen palvelun REST API, jolla voi hakea ja muokata hakemuksia ja omia tietoja"
 
     before() {
@@ -54,26 +64,39 @@ trait ApplicationsServletContainer {
       }
     }
 
-    get("/") {
-      val pOid: String = personOid()
-      val masterRequest = httpClient.httpGet(OphUrlProperties.url("oppijanumerorekisteri-service.henkilo-master", pOid))
-        .header("Caller-Id", "omatsivut.omatsivut.backend")
+    private def uriFromString(url: String): Uri = {
+      Uri.fromString(url).toOption.get
+    }
+    private def runHttp[ResultType](request: Request)(decoder: (Int, String, Request) => ResultType): Task[ResultType] = {
+      httpClient.fetch(request)(r => r.as[String].map(body => decoder(r.status.code, body, request)))
+    }
 
-      val allOids: List[String] = masterRequest.responseWithHeaders() match {
-        case (200, _, masterOid) =>
-          val slaveRequest = httpClient.httpGet(OphUrlProperties.url("oppijanumerorekisteri-service.henkilo-slaves", masterOid))
-            .header("Caller-Id", "omatsivut.omatsivut.backend")
-          slaveRequest.responseWithHeaders() match {
-            case (200, _, slaveOidResult) =>
-              List(masterOid) ++ parse(slaveOidResult).extract[List[String]]
-            case (code,_, slaveOidFailure) =>
-              logger.error("Failed to fetch slave OIDs for user oid {}, response was {}, {}", masterOid, Integer.toString(code), slaveOidFailure)
-              List(masterOid)
-          }
-        case (code,_, resultString) =>
-          logger.error("Failed to fetch master OID for user oid {}, response was {}, {}", pOid, Integer.toString(code), resultString)
-          List(pOid)
-      }
+    get("/") {
+      val timeout = 1000*30L
+      val pOid: String = personOid()
+
+      val masterRequest: Request = Request(
+        uri = uriFromString(OphUrlProperties.url("oppijanumerorekisteri-service.henkilo-master", pOid)),
+        headers = Headers(callerIdHeader))
+
+      val masterOid: String = runHttp[Option[String]](masterRequest) {
+        case (200, resultString, _) => Some(resultString)
+        case (code, responseString, _) =>
+          logger.error("Failed to fetch master oid for user oid {}, response was {}, {}", pOid, Integer.toString(code), responseString)
+          None
+      }.runFor(timeoutInMillis = timeout).getOrElse(pOid)
+
+      val slaveRequest: Request = Request(
+        uri = uriFromString(OphUrlProperties.url("oppijanumerorekisteri-service.henkilo-slaves", masterOid)),
+        headers = Headers(callerIdHeader))
+
+      val allOids: List[String] = runHttp(slaveRequest) {
+        case (200, resultString, _) =>
+          List(masterOid) ++ parse(resultString).extract[List[String]]
+        case (code, responseString, _) =>
+          logger.error("Failed to fetch slave OIDs for user oid {}, response was {}, {}", masterOid, Integer.toString(code), responseString)
+          List(masterOid)
+      }.runFor(timeoutInMillis = timeout)
 
       var allSuccess = true
       val allHakemukset = allOids.flatMap(oid => {
