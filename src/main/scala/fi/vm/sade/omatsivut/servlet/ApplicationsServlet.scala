@@ -17,6 +17,9 @@ import fi.vm.sade.omatsivut.security.AuthenticationRequiringServlet
 import fi.vm.sade.utils.cas.{CasAuthenticatingClient, CasClient, CasParams}
 import org.http4s.{Header, Headers, Request, Uri}
 import org.http4s.client.blaze
+import org.json4s
+import org.json4s.JValue
+import org.json4s.JsonAST.JObject
 import org.json4s.jackson.Serialization
 import org.scalatra._
 import org.scalatra.json._
@@ -80,7 +83,10 @@ trait ApplicationsServletContainer {
         headers = Headers(callerIdHeader))
 
       val masterOid: String = runHttp[Option[String]](masterRequest) {
-        case (200, resultString, _) => Some(resultString)
+        case (200, resultString, _) =>
+          val f: json4s.JValue = parse(resultString).asInstanceOf[JObject]
+          val oid = f \ "oidHenkilo"
+          Some(oid.toString)
         case (code, responseString, _) =>
           logger.error("Failed to fetch master oid for user oid {}, response was {}, {}", pOid, Integer.toString(code), responseString)
           None
