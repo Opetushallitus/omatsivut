@@ -1,7 +1,6 @@
 package fi.vm.sade.hakemuseditori
 
 import fi.vm.sade.ataru.AtaruServiceComponent
-import fi.vm.sade.hakemuseditori.auditlog.{AuditContext, AuditLogger, AuditLoggerComponent}
 import fi.vm.sade.hakemuseditori.domain.Language
 import fi.vm.sade.hakemuseditori.hakemus._
 import fi.vm.sade.hakemuseditori.hakemus.domain.{Hakemus, HakemusMuutos, ValidationError}
@@ -42,7 +41,6 @@ trait HakemusEditoriComponent extends ApplicationValidatorComponent
   with TuloskirjeComponent
   with TranslationsComponent
   with SpringContextComponent
-  with AuditLoggerComponent
   with HakemusConverterComponent
   with KoodistoComponent
   with HakumaksuComponent
@@ -145,11 +143,8 @@ class ValidationException(errors: List[ValidationError]) extends RuntimeExceptio
 }
 
 abstract class StandaloneHakemusEditoriComponent(
-                                         val auditContext: AuditContext,
                                          val translations: Translations
                                          ) extends HakemusEditoriComponent {
-
-  val auditLogger: AuditLogger = new AuditLoggerFacade()
   lazy val lomakeRepository = new RemoteLomakeRepository
   override lazy val hakemusConverter: HakemusConverter = new HakemusConverter
   override val valintatulosService: ValintatulosService = new NoOpValintatulosService
@@ -157,7 +152,7 @@ abstract class StandaloneHakemusEditoriComponent(
   override def newApplicationValidator = new ApplicationValidator
 }
 
-class StubbedHakemusEditoriContext(auditContext: AuditContext, appContext: ApplicationContext, translations: Translations) extends StandaloneHakemusEditoriComponent(auditContext, translations) {
+class StubbedHakemusEditoriContext(appContext: ApplicationContext, translations: Translations) extends StandaloneHakemusEditoriComponent(translations) {
   override lazy val springContext = new HakemusSpringContext(appContext)
   override lazy val ataruService = new StubbedAtaruService
   override lazy val oppijanumerorekisteriService = new StubbedOppijanumerorekisteriService

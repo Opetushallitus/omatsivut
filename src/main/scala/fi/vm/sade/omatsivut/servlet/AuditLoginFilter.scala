@@ -1,12 +1,12 @@
 package fi.vm.sade.omatsivut.servlet
 
-import fi.vm.sade.hakemuseditori.auditlog.{AuditLogger}
+import fi.vm.sade.hakemuseditori.auditlog.Audit
 import fi.vm.sade.omatsivut.auditlog.Login
 import fi.vm.sade.omatsivut.security.AuthenticationInfoParser._
 import org.apache.http.HttpHeaders
 import org.scalatra.ScalatraFilter
 
-class AuditLoginFilter(audit: AuditLogger, vetumaUrl: String) extends ScalatraFilter {
+class AuditLoginFilter(vetumaUrl: String) extends ScalatraFilter {
 
   before() {
     for {
@@ -14,7 +14,7 @@ class AuditLoginFilter(audit: AuditLogger, vetumaUrl: String) extends ScalatraFi
       vetuma <- Some(referer).filter(_.startsWith(vetumaUrl))
       info <- Option(getAuthenticationInfo(request))
       personOid <- info.personOid
-    } audit.log(Login(info))
+    } Audit.oppija.log(Login(request))
   }
 
 }

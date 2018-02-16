@@ -2,7 +2,6 @@ package fi.vm.sade.omatsivut.config
 
 import fi.vm.sade.ataru.{AtaruService, AtaruServiceComponent}
 import fi.vm.sade.groupemailer.{GroupEmailComponent, GroupEmailService}
-import fi.vm.sade.hakemuseditori.auditlog.{AuditContext, AuditLogger, AuditLoggerComponent}
 import fi.vm.sade.hakemuseditori.domain.Language.Language
 import fi.vm.sade.hakemuseditori.hakemus._
 import fi.vm.sade.hakemuseditori.hakumaksu.{HakumaksuServiceWrapper, RemoteHakumaksuServiceWrapper, StubbedHakumaksuServiceWrapper}
@@ -37,7 +36,6 @@ class ComponentRegistry(val config: AppConfig)
           LomakeRepositoryComponent with
           HakemusRepositoryComponent with
           ValintatulosServiceComponent with
-          AuditLoggerComponent with
           ApplicationValidatorComponent with
           HakemusPreviewGeneratorComponent with
           HakemusConverterComponent with
@@ -127,7 +125,6 @@ class ComponentRegistry(val config: AppConfig)
   val koulutusInformaatioService: KoulutusInformaatioService = configureKoulutusInformaatioService
   val ohjausparametritService: OhjausparametritService = configureOhjausparametritService
   val valintatulosService: ValintatulosService = configureValintatulosService
-  val auditLogger: AuditLogger = new AuditLoggerFacade()
   val lomakeRepository: LomakeRepository = new RemoteLomakeRepository
   val hakemusConverter: HakemusConverter = new HakemusConverter
   val tarjontaService: TarjontaService = configureTarjontaService
@@ -139,7 +136,7 @@ class ComponentRegistry(val config: AppConfig)
   val ataruService: AtaruService = configureAtaruService
   val oppijanumerorekisteriService: OppijanumerorekisteriService = configureOppijanumerorekisteriService
 
-  def newAuditLoginFilter = new AuditLoginFilter(auditLogger, OphUrlProperties.url("vetuma.url"))
+  def newAuditLoginFilter = new AuditLoginFilter(OphUrlProperties.url("vetuma.url"))
   def muistilistaService(language: Language): MuistilistaService = new MuistilistaService(language)
   def newApplicationValidator: ApplicationValidator = new ApplicationValidator
   def newHakemusPreviewGenerator(language: Language): HakemusPreviewGenerator = new HakemusPreviewGenerator(language)
@@ -171,8 +168,4 @@ class ComponentRegistry(val config: AppConfig)
   }
 
   override val translations = OmatSivutTranslations
-
-  override val auditContext: AuditContext = new AuditContext {
-    override def systemName = "omatsivut"
-  }
 }

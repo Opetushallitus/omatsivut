@@ -1,50 +1,42 @@
 package fi.vm.sade.hakemuseditori.auditlog
 
-import fi.vm.sade.auditlog.omatsivut.LogMessage._
-import fi.vm.sade.auditlog.{ApplicationType, Audit}
-import fi.vm.sade.hakemuseditori.hakemus.SpringContextComponent
+import fi.vm.sade.auditlog.{ApplicationType, Logger, Audit => AuditClass}
 import fi.vm.sade.utils.slf4j.Logging
 
+object Audit {
+  def oppija = new OppijaAuditLogger
+  def virkailija = new VirkailijaAuditLogger
+  def api = new ApiAuditLogger
+}
 
-trait AuditLoggerComponent {
-  this: SpringContextComponent =>
+class OppijaAuditLogger(applicationType: ApplicationType) extends AuditLogger(applicationType) {
+  def this() = this(ApplicationType.OPPIJA)
+}
 
-  val auditLogger: AuditLogger
-  val auditContext: AuditContext
+class VirkailijaAuditLogger(applicationType: ApplicationType) extends AuditLogger(applicationType) {
+  def this() = this(ApplicationType.VIRKAILIJA)
+}
 
-  class AuditLoggerFacade extends AuditLogger {
+class ApiAuditLogger(applicationType: ApplicationType) extends AuditLogger(applicationType) {
+  def this() = this(ApplicationType.BACKEND)
+}
 
-    private val audit = new Audit("omatsivut", ApplicationType.OPISKELIJA)
+class AuditLogger(val omatSivutLogger: OmatSivutLogger, val serviceName: String, val applicationType: ApplicationType) extends Logging {
+  def this(applicationType: ApplicationType) = this(new OmatSivutLogger, "omatsivut", applicationType)
+  private def audit = new AuditClass(omatSivutLogger, serviceName, applicationType)
 
-    def log(event: AuditEvent) {
-      var logs: Map[String, String] = event.toLogMessage
-      logs = logs + ("operation" -> event.operation.toString)
-      val msg = new LogMessageBuilder().addAll(scala.collection.JavaConversions.mapAsJavaMap(logs)).build()
-      audit.log(msg)
-    }
-
-    override def logDiff(event: AuditEvent, diff: Iterable[DiffTriplet]): Unit = {
-      var logs = event.toLogMessage
-      logs = logs + ("operation" -> event.operation.toString)
-      var msg = new LogMessageBuilder().addAll(scala.collection.JavaConversions.mapAsJavaMap(logs))
-      diff.foreach(triplet => {
-        msg = msg.add(triplet.key, triplet.newValue, triplet.oldValue)
-      })
-      val message = msg.build()
-      audit.log(message)
-    }
+  def log(auditEvent: AuditEvent) {
+    audit.log(auditEvent.user, auditEvent.operation, auditEvent.target, auditEvent.changes)
   }
 }
 
-trait AuditLogger extends Logging {
-  def log(event: AuditEvent)
-  def logDiff(event: AuditEvent, diff: Iterable[DiffTriplet])
+class OmatSivutLogger extends Logger with Logging {
+  override def log(string : String): Unit = {
+    logger.info(string)
+  }
 }
 
-/**
-  * Used as parameter for logDiff function
-  * @param key
-  * @param oldValue
-  * @param newValue
-  */
-private[hakemuseditori] case class DiffTriplet(key: String, oldValue: String, newValue: String)
+
+
+
+

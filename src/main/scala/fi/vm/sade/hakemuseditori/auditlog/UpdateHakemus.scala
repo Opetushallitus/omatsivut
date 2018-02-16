@@ -1,22 +1,28 @@
 package fi.vm.sade.hakemuseditori.auditlog
 
-import fi.vm.sade.hakemuseditori.auditlog.Operation.Operation
+import java.net.InetAddress
+
+import fi.vm.sade.auditlog.{Changes, Target, User}
 import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus.Answers
-import fi.vm.sade.hakemuseditori.user.{Oppija, User}
 
-//TODO improve the diff handling, possibly by improving the AuditEvent (which this extends) to allow for more generic log text fomation
-case class UpdateHakemus(user: User, hakemusOid: String, hakuOid: String, originalAnswers: Answers, updatedAnswers: Answers, target: String = "Hakemus") extends AuditEvent {
-  override def isUserOppija = user match {
-    case u: Oppija => true
-    case _ => false
+case class UpdateHakemus(userOid: String, hakemusOid: String, hakuOid: String, originalAnswers: Answers, updatedAnswers: Answers) extends AuditLogUtils with AuditEvent {
+  override val operation: OmatSivutOperation = OmatSivutOperation.UPDATE_HAKEMUS
+  override val target: Target = new Target.Builder()
+    .setField(OmatSivutMessageField.MESSAGE, "Tallennettu päivitetty hakemus haussa")
+    .setField(OmatSivutMessageField.HAKU_OID, hakuOid)
+    .setField(OmatSivutMessageField.HAKEMUS_OID, hakemusOid)
+    .build()
+  override val changes: Changes = {
+    val builder = new Changes.Builder()
+    getAnswerDiff.foreach(triplet => {
+      builder.updated(triplet.key, triplet.newValue, triplet.oldValue)
+    })
+    builder.build()
   }
-  override def toLogMessage = Map(
-    "message" -> "Tallennettu päivitetty hakemus haussa",
-    "hakuOid" -> hakuOid,
-    "hakemusOid" -> hakemusOid,
-    "id" -> user.oid)
 
-  override def operation: Operation = Operation.UPDATE
+  override def user: User = {
+    new User(getOid(userOid).orNull, InetAddress.getLocalHost, "", "")
+  }
 
   /**
     * Gets a list of triplets that contain (key, original value, new value)
@@ -42,4 +48,6 @@ case class UpdateHakemus(user: User, hakemusOid: String, hakuOid: String, origin
     }).filter(triple => (!triple.oldValue.isEmpty || !triple.newValue.isEmpty) && !triple.newValue.equals(triple.oldValue))
     diff
   }
+
+  private[hakemuseditori] case class DiffTriplet(key: String, oldValue: String, newValue: String)
 }

@@ -3,7 +3,7 @@ package fi.vm.sade.omatsivut.hakemuspreview
 import java.text.SimpleDateFormat
 import java.util.Date
 
-import fi.vm.sade.hakemuseditori.auditlog.{AuditLoggerComponent, ShowHakemus}
+import fi.vm.sade.hakemuseditori.auditlog.{Audit, ShowHakemus}
 import fi.vm.sade.hakemuseditori.domain.Language.Language
 import fi.vm.sade.hakemuseditori.domain.{Address, Attachment, Language}
 import fi.vm.sade.hakemuseditori.hakemus.FlatAnswers.FlatAnswers
@@ -23,7 +23,7 @@ import scalatags.Text.TypedTag
 import scalatags.Text.all._
 
 trait HakemusPreviewGeneratorComponent {
-  this: SpringContextComponent with HakemusRepositoryComponent with HakemusConverterComponent with TranslationsComponent with AuditLoggerComponent =>
+  this: SpringContextComponent with HakemusRepositoryComponent with HakemusConverterComponent with TranslationsComponent =>
 
   def newHakemusPreviewGenerator(language: Language.Language): HakemusPreviewGenerator
 
@@ -34,7 +34,8 @@ trait HakemusPreviewGeneratorComponent {
       implicit val (t, lang) = (translations, language)
       applicationRepository.findStoredApplicationByPersonAndOid(personOid, applicationOid).map { application =>
         val applicationSystem = applicationSystemService.getApplicationSystem(application.hakuOid)
-        auditLogger.log(ShowHakemus(application.personOid, application.oid, application.hakuOid))
+
+        Audit.oppija.log(ShowHakemus(application.personOid, application.oid, application.hakuOid))
         HakemusPreview().generate(application, applicationSystem)
       }
     }
@@ -294,7 +295,7 @@ case class QuestionsPreview(implicit translations: Translations, language: Langu
 case class AdditionalInformationPreview(implicit translations: Translations, language: Language) extends Logging {
   def generate(addInfos: List[FilteredElementWrapper], answers: FlatAnswers): List[TypedTag[String]] = {
     (for(addInfo <- addInfos) yield additionalInformationElementPreview(addInfo, answers)
-      ).flatten.toList
+      ).flatten
   }
 
   def additionalInformationElementPreview(element: ElementWrapper, answers: FlatAnswers): List[TypedTag[String]] = {
