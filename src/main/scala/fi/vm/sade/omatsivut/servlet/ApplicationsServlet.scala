@@ -24,6 +24,7 @@ import org.json4s.jackson.Serialization
 import org.scalatra._
 import org.scalatra.json._
 
+import scala.collection.immutable
 import scala.util.{Failure, Success}
 import scalaz.concurrent.Task
 
@@ -103,7 +104,12 @@ trait ApplicationsServletContainer {
 
       val allOids: List[String] = runHttp(slaveRequest) {
         case (200, resultString, _) =>
-          List(masterOid) ++ parse(resultString).extract[List[String]]
+          val slaveOids: Seq[String] = parse(resultString).extract[List[JObject]]
+            .map(obj => {
+              val oidObj = obj \ "oidHenkilo"
+              oidObj.extract[String]
+            })
+          List(masterOid) ++ slaveOids
         case (code, responseString, _) =>
           logger.error("Failed to fetch slave OIDs for user oid {}, response was {}, {}", masterOid, Integer.toString(code), responseString)
           List(masterOid)
