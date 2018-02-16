@@ -17,6 +17,6 @@ case class Logout(request: HttpServletRequest) extends AuditLogUtils with AuditE
   override def user: User = {
     val authInfo = getAuthenticationInfo(request)
     val shib = authInfo.shibbolethCookie
-    new User(getOid(authInfo.personOid.get).orNull, getAddress(request).get, shib.map(_.toString).getOrElse("(no shibboleth cookie)"), getUserAgent(request))
+    new User(getOid(authInfo.personOid.get).orNull, getAddress(request), shib.map(_.toString).getOrElse("(no shibboleth cookie)"), getUserAgent(request))
   }
 }

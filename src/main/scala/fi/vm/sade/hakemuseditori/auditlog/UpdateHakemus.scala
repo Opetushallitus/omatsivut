@@ -1,5 +1,7 @@
 package fi.vm.sade.hakemuseditori.auditlog
 
+import java.net.InetAddress
+
 import fi.vm.sade.auditlog.{Changes, Target, User}
 import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus.Answers
 
@@ -19,7 +21,7 @@ case class UpdateHakemus(userOid: String, hakemusOid: String, hakuOid: String, o
   }
 
   override def user: User = {
-    new User(getOid(userOid).orNull, null, null, null)
+    new User(getOid(userOid).orNull, InetAddress.getLocalHost, "", "")
   }
 
   /**

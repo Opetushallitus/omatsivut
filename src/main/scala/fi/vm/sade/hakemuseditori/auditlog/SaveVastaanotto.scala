@@ -1,8 +1,9 @@
 package fi.vm.sade.hakemuseditori.auditlog
 
+import java.net.InetAddress
+
 import fi.vm.sade.auditlog.{Changes, Target, User}
 import fi.vm.sade.hakemuseditori.valintatulokset.domain.VastaanottoAction
-import fi.vm.sade.omatsivut.security.AuthenticationInfoParser.getAuthenticationInfo
 
 case class SaveVastaanotto(userOid: String, hakemusOid: String, hakukohdeOid: String, hakuOid: String, vastaanotto: VastaanottoAction) extends AuditLogUtils with AuditEvent {
   override val operation: OmatSivutOperation = OmatSivutOperation.SAVE_VASTAANOTTO
@@ -16,6 +17,6 @@ case class SaveVastaanotto(userOid: String, hakemusOid: String, hakukohdeOid: St
     .build()
 
   override def user: User = {
-    new User(getOid(userOid).orNull, null, null, null)
+    new User(getOid(userOid).orNull, InetAddress.getLocalHost, "", "")
   }
 }

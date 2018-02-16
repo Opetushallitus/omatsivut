@@ -1,5 +1,7 @@
 package fi.vm.sade.hakemuseditori.auditlog
 
+import java.net.InetAddress
+
 import fi.vm.sade.auditlog.{Changes, Target, User}
 
 case class FetchTuloskirje(personOid: String, hakuOid: String, hakemusOid: String) extends AuditLogUtils with AuditEvent {
@@ -12,6 +14,6 @@ case class FetchTuloskirje(personOid: String, hakuOid: String, hakemusOid: Strin
     .build()
 
   override def user: User = {
-    new User(getOid(personOid).get, null, null, null)
+    new User(getOid(personOid).get, InetAddress.getLocalHost, "", "")
   }
 }

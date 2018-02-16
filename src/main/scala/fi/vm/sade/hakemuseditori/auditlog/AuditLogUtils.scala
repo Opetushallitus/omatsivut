@@ -22,12 +22,12 @@ class AuditLogUtils extends Logging {
     }
   }
 
-  protected def getAddress(request: HttpServletRequest): Option[InetAddress] = {
+  protected def getAddress(request: HttpServletRequest): InetAddress = {
     Try(InetAddress.getByName(getRemoteAddress(request))) match {
-      case Success(v) => Some(v)
+      case Success(v) => v
       case Failure(e) => {
         logger.error("Error creating InetAddress: ", e)
-        None
+        InetAddress.getLocalHost
       }
     }
   }

@@ -1,5 +1,7 @@
 package fi.vm.sade.hakemuseditori.auditlog
 
+import java.net.InetAddress
+
 import fi.vm.sade.auditlog.{Changes, Target, User}
 
 case class ShowHakemus(userOid: String, hakemusOid: String, hakuOid: String) extends AuditLogUtils with AuditEvent {
@@ -14,6 +16,6 @@ case class ShowHakemus(userOid: String, hakemusOid: String, hakuOid: String) ext
   }
 
   override def user: User = {
-    new User(getOid(userOid).orNull, null, null, null)
+    new User(getOid(userOid).orNull, InetAddress.getLocalHost, "", "")
   }
 }
