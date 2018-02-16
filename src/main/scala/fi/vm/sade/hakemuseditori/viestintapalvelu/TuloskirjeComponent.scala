@@ -6,7 +6,7 @@ import com.amazonaws.{AmazonClientException, AmazonServiceException}
 import com.amazonaws.auth.InstanceProfileCredentialsProvider
 import com.amazonaws.services.s3.AmazonS3ClientBuilder
 import com.amazonaws.services.s3.model.{ObjectMetadata, S3Object}
-import fi.vm.sade.hakemuseditori.auditlog.{AuditLoggerComponent, FetchTuloskirje}
+import fi.vm.sade.hakemuseditori.auditlog.{Audit, FetchTuloskirje}
 import fi.vm.sade.hakemuseditori.hakemus.domain.Tuloskirje
 import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
@@ -16,8 +16,6 @@ import org.apache.commons.io.IOUtils
 import scala.util.{Failure, Success, Try}
 
 trait TuloskirjeComponent {
-  this: AuditLoggerComponent  =>
-
   val tuloskirjeService: TuloskirjeService
 
   class StubbedTuloskirjeService extends TuloskirjeService with JsonFormats with Logging {
@@ -42,7 +40,7 @@ trait TuloskirjeComponent {
         val fileStream = new FileInputStream(file)
         val byteArray: Array[Byte] = IOUtils.toByteArray(fileStream)
         IOUtils.closeQuietly(fileStream)
-        auditLogger.log(FetchTuloskirje(personOid, hakuOid, hakemusOid))
+        Audit.oppija.log(FetchTuloskirje(personOid, hakuOid, hakemusOid))
         Some(byteArray)
       } else {
         logger.warn("Ei löytynyt tuloskirjettä: " + file)
@@ -79,7 +77,7 @@ trait TuloskirjeComponent {
       Try(s3client.getObject(s3Settings.bucket, filename)) match {
         case Success(s3Object) =>
           val content = getContent(s3Object)
-          auditLogger.log(FetchTuloskirje(personOid, hakuOid, hakemusOid))
+          Audit.oppija.log(FetchTuloskirje(personOid, hakuOid, hakemusOid))
           content
         case Failure(e) =>
           logExceptions(e, filename)

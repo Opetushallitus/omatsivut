@@ -2,7 +2,6 @@ package fi.vm.sade.omatsivut.servlet
 
 import fi.vm.sade.groupemailer.GroupEmailComponent
 import fi.vm.sade.hakemuseditori._
-import fi.vm.sade.hakemuseditori.auditlog.AuditLoggerComponent
 import fi.vm.sade.hakemuseditori.hakemus.domain.HakemusMuutos
 import fi.vm.sade.hakemuseditori.hakemus.{ApplicationValidatorComponent, Fetch, HakemusRepositoryComponent, SpringContextComponent}
 import fi.vm.sade.hakemuseditori.json.JsonFormats
@@ -28,7 +27,6 @@ trait ApplicationsServletContainer {
         ApplicationValidatorComponent with
         HakemusPreviewGeneratorComponent with
         SpringContextComponent with
-        AuditLoggerComponent with
         GroupEmailComponent with
         VastaanottoEmailContainer with
         TranslationsComponent =>

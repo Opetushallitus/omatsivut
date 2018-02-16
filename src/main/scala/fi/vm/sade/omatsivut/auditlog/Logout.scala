@@ -1,19 +1,22 @@
 package fi.vm.sade.omatsivut.auditlog
 
-import fi.vm.sade.hakemuseditori.auditlog.{AuditEvent, Operation}
-import fi.vm.sade.hakemuseditori.auditlog.Operation.Operation
-import fi.vm.sade.omatsivut.security.AuthenticationInfo
+import javax.servlet.http.HttpServletRequest
 
-case class Logout(authInfo: AuthenticationInfo, target: String = "Session") extends AuditEvent {
-  def isUserOppija = true
+import fi.vm.sade.auditlog.{Changes, Target, User}
+import fi.vm.sade.hakemuseditori.auditlog.{AuditEvent, AuditLogUtils, OmatSivutMessageField, OmatSivutOperation}
+import fi.vm.sade.omatsivut.security.AuthenticationInfoParser._
 
-  override def operation: Operation = Operation.LOGOUT
-
-  def toLogMessage = {
+case class Logout(request: HttpServletRequest) extends AuditLogUtils with AuditEvent {
+  override val operation: OmatSivutOperation = OmatSivutOperation.LOGOUT
+  override val changes: Changes = new Changes.Builder().build()
+  override val target: Target = {
+    new Target.Builder()
+      .setField(OmatSivutMessageField.MESSAGE, "Käyttäjä kirjautui ulos")
+      .build()
+  }
+  override def user: User = {
+    val authInfo = getAuthenticationInfo(request)
     val shib = authInfo.shibbolethCookie
-    Map(
-      "message" -> "Käyttäjä kirjautui ulos",
-      "userId" -> authInfo.personOid.getOrElse(""),
-      "userSession" -> shib.map(_.toString).getOrElse("(no shibboleth cookie)"))
+    new User(getOid(authInfo.personOid.get).orNull, getAddress(request).get, shib.map(_.toString).getOrElse("(no shibboleth cookie)"), getUserAgent(request))
   }
 }

@@ -7,7 +7,7 @@ import fi.vm.sade.hakemuseditori.auditlog._
 import fi.vm.sade.hakemuseditori.domain.Language
 import fi.vm.sade.hakemuseditori.domain.Language.Language
 import fi.vm.sade.hakemuseditori.hakemus.ImmutableLegacyApplicationWrapper.{LegacyApplicationAnswers, wrap}
-import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus.{Answers, Valintatulos}
+import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus.Answers
 import fi.vm.sade.hakemuseditori.hakemus.domain._
 import fi.vm.sade.hakemuseditori.hakumaksu.HakumaksuComponent
 import fi.vm.sade.hakemuseditori.lomake.LomakeRepositoryComponent
@@ -15,25 +15,22 @@ import fi.vm.sade.hakemuseditori.lomake.domain.Lomake
 import fi.vm.sade.hakemuseditori.ohjausparametrit.OhjausparametritComponent
 import fi.vm.sade.hakemuseditori.tarjonta.TarjontaComponent
 import fi.vm.sade.hakemuseditori.tarjonta.domain.Haku
-import fi.vm.sade.hakemuseditori.user.User
+import fi.vm.sade.hakemuseditori.user.{Oppija, User}
 import fi.vm.sade.hakemuseditori.valintatulokset.ValintatulosServiceComponent
 import fi.vm.sade.hakemuseditori.viestintapalvelu.TuloskirjeComponent
 import fi.vm.sade.haku.oppija.hakemus.aspect.ApplicationDiffUtil
 import fi.vm.sade.haku.oppija.hakemus.domain.{Application, ApplicationNote}
 import fi.vm.sade.haku.oppija.lomake.domain.ApplicationPeriod
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
-import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.utils.Timer._
 import fi.vm.sade.utils.slf4j.Logging
 import org.joda.time.LocalDateTime
-import org.json4s.DefaultFormats
 
 import scala.util.{Failure, Success, Try}
 
 trait HakemusRepositoryComponent {
   this: LomakeRepositoryComponent with ApplicationValidatorComponent with HakemusConverterComponent
-    with SpringContextComponent with AuditLoggerComponent with TarjontaComponent with OhjausparametritComponent
-    with TuloskirjeComponent
+    with SpringContextComponent with TarjontaComponent with OhjausparametritComponent with TuloskirjeComponent
     with ValintatulosServiceComponent with HakumaksuComponent with SendMailComponent =>
 
   import scala.collection.JavaConversions._
@@ -63,9 +60,7 @@ trait HakemusRepositoryComponent {
           dao.update(applicationQuery, applicationJavaObject)
         }
         sendMailService.sendModifiedEmail(applicationJavaObject)
-
-        val auditEvent = UpdateHakemus(user, hakemus.oid, haku.oid, originalApplication.answers, checkedAnswers)
-        auditLogger.logDiff(auditEvent, auditEvent.getAnswerDiff)
+        getAuditLogger(user).log(UpdateHakemus(user.oid, hakemus.oid, haku.oid, originalApplication.answers, checkedAnswers))
         hakemusConverter.convertToHakemus(None, Some(lomake), haku, wrap(applicationJavaObject))
       }
     }
@@ -92,6 +87,13 @@ trait HakemusRepositoryComponent {
       user.checkAccessToUserData(originalApplication.personOid)
 
       newAnswers
+    }
+
+    private def getAuditLogger(user: User): AuditLogger = {
+      user match {
+        case u: Oppija => Audit.oppija
+        case _ => Audit.virkailija
+      }
     }
 
     private def isActiveHakuPeriod(lomake: Lomake)(implicit lang: Language.Language) = {
@@ -148,7 +150,7 @@ trait HakemusRepositoryComponent {
     }
 
     private def updateChangeHistory(application: Application, originalApplication: Application, user: User) {
-      val changes = ApplicationDiffUtil.addHistoryBasedOnChangedAnswers(application, originalApplication, user.toString, "Muokkaus " + auditContext.systemName + " -palvelussa")
+      val changes = ApplicationDiffUtil.addHistoryBasedOnChangedAnswers(application, originalApplication, user.toString, "Muokkaus " + Audit.oppija.serviceName + " -palvelussa")
 
       val changedKeys: Set[String] = changes.toList.flatMap(_.toMap.get("field")).toSet
       val changedPhases: List[String] = application.getAnswers.toMap.toList.filter { case (vaihe, vastaukset) =>
@@ -223,7 +225,7 @@ trait HakemusRepositoryComponent {
             }
             val letterForHaku = tuloskirjeService.getTuloskirjeInfo(haku.oid, application.oid)
             val hakemus = timed("fetchHakemukset -> hakemusConverter.convertToHakemus", 100) { hakemusConverter.convertToHakemus(letterForHaku, lomakeOption, haku, application, valintatulos) }
-            timed("fetchHakemukset -> auditLogger.log", 100) { auditLogger.log(ShowHakemus(application.personOid, hakemus.oid, haku.oid)) }
+            timed("fetchHakemukset -> auditLogger.log", 100) { Audit.oppija.log(ShowHakemus(application.personOid, hakemus.oid, haku.oid)) }
 
             lomakeOption match {
               case Some(lomake) if haku.applicationPeriods.exists(_.active) =>
