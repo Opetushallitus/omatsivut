@@ -15,7 +15,7 @@ case class UpdateHakemus(userOid: String, hakemusOid: String, hakuOid: String, o
   override val changes: Changes = {
     val builder = new Changes.Builder()
     getAnswerDiff.foreach(triplet => {
-      builder.updated(triplet.key, triplet.newValue, triplet.oldValue)
+      builder.updated(triplet.key, triplet.oldValue, triplet.newValue)
     })
     builder.build()
   }
