@@ -207,5 +207,20 @@
     "titleWithVastaanotto": "Confirm your study place",
     "infoNotification": "<strong>Note! You logged in via an e-mail link to modify your study programme choices.</strong> You can add and remove study programme choices and change their order. If you want to see your whole application and do other modifications to it, please log in to My Studyinfo -service. <a href='https://studyinfo.fi/wp2/en/my-studyinfo-service/'>Read more about My Studyinfo -service.</a>",
     "logoutPage": "<h2>You have logged out.</h2><p>Thank you for your visit!</p><p><a href='https://studyinfo.fi'>Studyinfo.fi</a></p>"
+  },
+
+  "lasnaoloilmoittautuminen": {
+    "title": "Notification of attendance",
+    "send": "Send notification of attendance",
+    "semester": "Present throughout the academic year",
+    "spring": "Present spring term",
+    "autumn": "Present only autumn term",
+    "away": "Absent throughout the academic year",
+    "confirmation": "You have signed up __date__ at __time__:",
+    "info": "Absence is always granted by the educational institution. If you want to register as absent, please contact the educational institution.",
+    "error": {
+      "notFound": "Student information was not found. Please try again in a while.",
+      "other": "Something went wrong in sending the notification of attendance. Please try again in a while."
+    }
   }
 }
