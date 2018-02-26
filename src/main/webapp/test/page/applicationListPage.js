@@ -79,6 +79,19 @@ function ApplicationListPage() {
       return S("#hakemus-list").is(":visible")
     },
 
+    loadInFrame: function(src) {
+        return function() {
+            $('#testframe')
+                .attr('src', src)
+                .attr('width', 1024)
+                .attr('height', 800)
+                .on('error', function (err) {
+                    console.error(err);
+                    window.uiError = err;
+                });
+        }
+  },
+
     hetu: function () {
       return testHetu
     },

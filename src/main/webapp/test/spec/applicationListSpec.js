@@ -30,6 +30,7 @@
   var hakemusLisakysymyksenJatkokysymyksella = page.getApplication("1.2.246.562.11.00001305319")
   var hakemusOnkoKeskiarvoaKysymyksella = page.getApplication("1.2.246.562.11.00004102043")
   var yhteishakuAmmatillinenLukioKevat2016 = page.getApplication("1.2.246.562.11.00004886042")
+  var hakemusKKHakuWithMultipleSamePohjakoulutusId = "1.2.246.562.11.00000877700";
 
   afterEach(function() {
     expect(window.uiError || null).to.be.null
@@ -2490,7 +2491,6 @@
       })
     })
 
-
     describe("Henkilötietojen muokkaus", function() {
       var newData = {
         "Sähköposti": "joku@jossain.fi",
@@ -2776,7 +2776,22 @@
         })
       })
     })
-  })
+
+    describe("Kun hakijalla on kaksi samantasoista pohjakoulutusta (esim. AMK) ja hakemuslistaus avataan", function() {
+      before(
+          page.applyFixtureAndOpen({ applicationOid: hakemusKKHakuWithMultipleSamePohjakoulutusId }),
+          page.loadInFrame("/omatsivut/secure/applications/preview/1.2.246.562.11.00000877700"),
+          wait.forMilliseconds(3000)
+      )
+
+      it("Molemmat pohjakoulutukset näytetään listassa", function() {
+        var elements = $("iframe#testframe").contents().find("div.question:contains('Tutkintonimike')").children("span.answer");
+        var actual = elements.toArray().map(function(i){ return i.innerText })
+        var expected = ['Insinööri', 'Maisteri'];
+        expect(actual).to.deep.equal(expected);
+      })
+    });
+  });
 
   function replacePreference(hakemus, index, searchString, koulutusIndex) {
     koulutusIndex = koulutusIndex || 0

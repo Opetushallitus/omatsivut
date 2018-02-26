@@ -34,7 +34,6 @@ trait HakemusPreviewGeneratorComponent {
       implicit val (t, lang) = (translations, language)
       applicationRepository.findStoredApplicationByPersonAndOid(personOid, applicationOid).map { application =>
         val applicationSystem = applicationSystemService.getApplicationSystem(application.hakuOid)
-
         Audit.oppija.log(ShowHakemus(application.personOid, application.oid, application.hakuOid))
         HakemusPreview().generate(application, applicationSystem)
       }
@@ -139,7 +138,7 @@ case class QuestionsPreview(implicit translations: Translations, language: Langu
   }
 
   def textQuestionPreview(element: ElementWrapper, answers: FlatAnswers, showEmptyValues: Boolean = true) = {
-    questionPreview(element.title, answers.get(element.id).getOrElse("").asInstanceOf[String], showEmptyValues)
+    questionPreview(element.title, answers.get(element.id).getOrElse(""), showEmptyValues) ::: childrenPreview(element, answers)
   }
 
   def postalCodePreview(element: ElementWrapper, answers: FlatAnswers) = {

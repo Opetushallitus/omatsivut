@@ -15,6 +15,7 @@ function S(selector) {
   }
 }
 
+
 wait = {
   waitIntervalMs: 10,
   until: function(condition, maxWaitMs) {
@@ -223,7 +224,7 @@ function getJson(url) {
 }
 
 function testFrame() {
-  return $("#testframe").get(0).contentWindow
+  return $("iframe#testframe").get(0).contentWindow
 }
 
 function openPage(path, predicate) {
