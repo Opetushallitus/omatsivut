@@ -4,7 +4,8 @@ module.exports = function(app) {
       restrict: 'E',
       scope: {
         hakukohteet: '&hakukohteet',
-        oili: '&oili'
+        oili: '&oili',
+        application: '=application'
       },
       templateUrl: 'ilmoittautuminen.html',
       link: function (scope, element, attrs) {

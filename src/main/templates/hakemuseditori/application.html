@@ -70,9 +70,9 @@
     </section>
 
     <section class="ilmoittautuminen">
-        <ilmoittautuminen ng-show="application.ilmoittautumisLinkit().length > 0"
-                          hakukohteet="application.ilmoittautumisLinkit()"
-                          oili="application.oiliUrl()">
+        <ilmoittautuminen hakukohteet="application.ilmoittautumisLinkit()"
+                          oili="application.oiliUrl()"
+                          application="application">
         </ilmoittautuminen>
         <kela ng-show="application.kelaURL()" kela="application.kelaURL()">
         </kela>
