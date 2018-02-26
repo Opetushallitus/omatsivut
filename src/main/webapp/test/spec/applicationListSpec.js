@@ -31,7 +31,6 @@
   var hakemusOnkoKeskiarvoaKysymyksella = page.getApplication("1.2.246.562.11.00004102043")
   var yhteishakuAmmatillinenLukioKevat2016 = page.getApplication("1.2.246.562.11.00004886042")
   var hakemusKKHakuWithMultipleSamePohjakoulutusId = "1.2.246.562.11.00000877700";
-  var hakemusKKHakuWithMultipleSamePohjakoulutus = page.getApplication(hakemusKKHakuWithMultipleSamePohjakoulutusId);
 
   afterEach(function() {
     expect(window.uiError || null).to.be.null
