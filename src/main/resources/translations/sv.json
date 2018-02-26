@@ -207,5 +207,20 @@
     "titleWithVastaanotto": "Mottagande av studieplats",
     "infoNotification": "<strong>Obs! Du loggade in för att ändra dina ansökningsönskemål via en e-post länk.</strong> Du kan lägga till och ta bort ansökningsönskemål, samt ändra deras ordning. Om du vill se hela din ansökan eller göra övriga ändringar till den kan du göra det i Min Studieinfo -tjänsten. <a href='https://studieinfo.fi/wp/min-studieinfo-tjansten/'>Läs mera om Min Studieinfo -tjänsten.</a>",
     "logoutPage": "<h2>Du är utloggad.</h2><p>Tack för besöket!</p><p><a href='https://studieinfo.fi'>Studieinfo.fi</a></p>"
+  },
+
+  "lasnaoloilmoittautuminen": {
+    "title": "Anmälan om närvaro",
+    "send": "Skicka anmälan om närvaro",
+    "semester": "Närvarande hela läsåret",
+    "spring": "Närvarande vårterminen",
+    "autumn": "Närvarande bara under höstterminen",
+    "away": "Frånvarande hela terminen",
+    "confirmation": "Du har anmält dig __date__ av __time__:",
+    "info": "Frånvaron beviljas alltid av läroanstalten. Om du vill anmäla dig som frånvarande, ska du ta kontakt till läroanstalten.",
+    "error": {
+      "notFound": "Studieplatsen hittades inte. Försök på nytt om en stund.",
+      "other": "Någonting gick fel i anmälan. Försök på nytt om en stund."
+    }
   }
 }
