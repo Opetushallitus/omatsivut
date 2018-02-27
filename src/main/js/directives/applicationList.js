@@ -1,4 +1,4 @@
-var Hakemus = require('./hakemuseditori').Hakemus
+var Hakemus = require('../hakemuseditori/hakemuseditori').Hakemus
 
 module.exports = function(listApp) {
   listApp.directive("applicationList", ["localization", "restResources", function (localization, restResources) {
