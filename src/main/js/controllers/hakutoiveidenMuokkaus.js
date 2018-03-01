@@ -11,7 +11,7 @@ module.exports = function(app, staticResources) {
 
     $scope.logout = function() {
       util.removeBearerToken()
-      $scope.hakemus = null;
+      $scope.application = null;
       $scope.loggedOut = true;
     }
 
@@ -22,8 +22,8 @@ module.exports = function(app, staticResources) {
       $http.get(baseUrl + suffix).then(
           function (response) {
             $scope.loading = false
-            $scope.hakemus = new Hakemus(response.data)
-            $scope.hakemus.oiliJwt = response.oiliJwt
+            $scope.application = new Hakemus(response.data)
+            $scope.application.oiliJwt = response.oiliJwt
             var henkilotiedot = response.data.hakemus.answers.henkilotiedot
             if(henkilotiedot.Henkilotunnus) {
               $scope.allowVastaanotto = false

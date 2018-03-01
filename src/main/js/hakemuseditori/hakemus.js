@@ -180,10 +180,16 @@ Hakemus.prototype = {
 
   ilmoittautumisLinkit: function() {
     return _(this.valintatulosHakutoiveet()).filter(function(tulos) {
-      return tulos.ilmoittautumistila != null &&
+      return (tulos.ilmoittautumistila != null &&
         tulos.ilmoittautumistila.ilmoittauduttavissa &&
-        tulos.ilmoittautumistila.ilmoittautumistapa != null && tulos.ilmoittautumistila.ilmoittautumistapa.url
-    })
+        tulos.ilmoittautumistila.ilmoittautumistapa != null &&
+        tulos.ilmoittautumistila.ilmoittautumistapa.url) ||
+        ilmoittautunut(tulos.ilmoittautumistila.ilmoittautumistila)
+    });
+
+    function ilmoittautunut(ilmoittautumistila) {
+        return ['LASNA_KOKO_LUKUVUOSI', 'LASNA_SYKSY', 'LASNA'].includes(ilmoittautumistila);
+    }
   },
 
   kelaURL: function() {

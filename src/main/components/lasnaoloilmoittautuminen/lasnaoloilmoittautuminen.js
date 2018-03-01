@@ -9,17 +9,7 @@ module.exports = function(app) {
             templateUrl: 'lasnaoloilmoittautuminen.html',
 
             link: function ($scope, element, attrs) {
-                $scope.done = false;
                 $scope.localization = localization;
-
-                $scope.init = function() {
-                    var hakutoive = $scope.application.hakutoiveet.find(function(element) {
-                        return element.data['Koulutus-id'] === $scope.tulos.hakukohdeOid;
-                    });
-
-                    $scope.tulos.koulutuksenAlkaminen = hakutoive.koulutuksenAlkaminen;
-                }();
-
                 $scope.states = {
                     // Spring hakus
                     semester: 'LASNA_KOKO_LUKUVUOSI',
@@ -28,6 +18,22 @@ module.exports = function(app) {
                     // Autumn hakus
                     spring: 'LASNA'
                 };
+                $scope.reserveStates = {
+                    LASNA_KOKO_LUKUVUOSI: 'semester',
+                    LASNA_SYKSY: 'autumn',
+                    LASNA: 'spring'
+                };
+
+                $scope.init = function() {
+                    var hakutoive = $scope.application.hakutoiveet.find(function(element) {
+                        return element.data['Koulutus-id'] === $scope.tulos.hakukohdeOid;
+                    });
+
+                    $scope.tulos.koulutuksenAlkaminen = hakutoive.koulutuksenAlkaminen;
+
+                    $scope.ilmoittautuminen = $scope.reserveStates[$scope.tulos.ilmoittautumistila.ilmoittautumistila];
+                    $scope.ilmoittautunut = !!$scope.ilmoittautuminen;
+                }();
 
                 $scope.postLasnaoloilmoittautuminen = function() {
                     $scope.error = false;
@@ -56,9 +62,9 @@ module.exports = function(app) {
                     return $scope.tulos.koulutuksenAlkaminen.kausiUri === 'kausi_s#1'
                 };
 
-                function onSuccess(data) {
+                function onSuccess() {
                     $scope.tulos.ilmoittautumistila.ilmoittautumisaika.tehty = new Date();
-                    $scope.done = true;
+                    $scope.ilmoittautunut = true;
                 }
 
                 function onError(err) {
@@ -77,6 +83,8 @@ module.exports = function(app) {
 
                 $scope.getEnrolmentMessageKeys = function() {
                     var date = $scope.tulos.ilmoittautumistila.ilmoittautumisaika.tehty;
+                    // Workaround till I get this from valinta-tulos-service
+                    date = date ? date : new Date();
                     return {date: getEnrolmentDate(date), time: getEnrolmentTime(date)};
                 };
 
