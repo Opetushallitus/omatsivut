@@ -10,6 +10,11 @@ module.exports = function(app) {
       templateUrl: 'ilmoittautuminen.html',
       link: function (scope, element, attrs) {
         scope.localization = localization;
+
+        scope.linkkiOK = function(tulos) {
+          return tulos.ilmoittautumistila.ilmoittautumistapa != null &&
+              tulos.ilmoittautumistila.ilmoittautumistapa.url
+        }
       }
     }
   }])
