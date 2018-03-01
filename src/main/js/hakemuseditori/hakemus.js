@@ -180,11 +180,8 @@ Hakemus.prototype = {
 
   ilmoittautumisLinkit: function() {
     return _(this.valintatulosHakutoiveet()).filter(function(tulos) {
-      return (tulos.ilmoittautumistila != null &&
-        tulos.ilmoittautumistila.ilmoittauduttavissa &&
-        tulos.ilmoittautumistila.ilmoittautumistapa != null &&
-        tulos.ilmoittautumistila.ilmoittautumistapa.url) ||
-        ilmoittautunut(tulos.ilmoittautumistila.ilmoittautumistila)
+      return tulos.ilmoittautumistila != null &&
+        (tulos.ilmoittautumistila.ilmoittauduttavissa || ilmoittautunut(tulos.ilmoittautumistila.ilmoittautumistila))
     });
 
     function ilmoittautunut(ilmoittautumistila) {
