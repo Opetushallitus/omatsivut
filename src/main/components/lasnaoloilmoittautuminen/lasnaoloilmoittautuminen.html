@@ -4,7 +4,7 @@
             <span class="label-highlight">{{ localization('lasnaoloilmoittautuminen.title') }}</span>
             <span>{{ application.henkiloNimi }} - {{ tulos.tarjoajaNimi }} {{ tulos.hakukohdeNimi }}</span>
         </legend>
-        <div ng-hide="done">
+        <div ng-hide="ilmoittautunut">
             <div class="instruction">{{ localization('lasnaoloilmoittautuminen.info') }}</div>
 
             <!-- Syksyllä alkavat koulutukset -->
@@ -35,7 +35,7 @@
                 {{ getErrorTranslation() }}
             </div>
         </div>
-        <div class="lasnaolo-confirmation" ng-if="done">
+        <div class="lasnaolo-confirmation" ng-if="ilmoittautunut">
             {{ localization('lasnaoloilmoittautuminen.confirmation', getEnrolmentMessageKeys()) }} {{ getStateTranslation() }}
         </div>
     </fieldset>
