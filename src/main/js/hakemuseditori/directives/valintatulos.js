@@ -15,7 +15,7 @@ module.exports = function(app) {
       restrict: 'E',
       scope: {
         valintatulos: '&data',
-        hakemus: '=application',
+        application: '=application',
         isFinal: '&final',
         callback: '=callback'
       },
@@ -92,10 +92,10 @@ module.exports = function(app) {
           }
         };
 
-        $scope.vastaanotaSitovasti = function(hakemus, hakukohde) {
+        $scope.vastaanotaSitovasti = function(application, hakukohde) {
           var email = ''
           try {
-            email = hakemus.henkilotiedot['Sähköposti'].answer
+            email = application.henkilotiedot['Sähköposti'].answer
           }
           catch (e) {
             email = ''
