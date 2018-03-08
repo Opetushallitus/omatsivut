@@ -24,6 +24,7 @@
   "dependencies": {
     "baconjs": "^0.7.24",
     "coffee-script": "1.7.1",
+    "es6-shim": "0.35.3",
     "http-proxy": "1.0.2",
     "node-static": "0.7.3"
   },

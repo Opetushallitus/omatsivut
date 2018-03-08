@@ -1,11 +1,12 @@
 var util = require('../util')
 
 function shouldRerouteRequest(config) {
-  return window.location.href.indexOf('hakutoiveidenMuokkaus.html') !== -1 && config.url.indexOf('/secure/') !== -1
+  return window.location.href.includes('hakutoiveidenMuokkaus.html') &&
+      config.url.includes('/secure/') && !config.url.includes('/secure/ilmoittaudu')
 }
 
 function shouldAuthenticate(config) {
-  return config.url.indexOf('insecure/') !== -1
+  return config.url.includes('/insecure/')
 }
 
 var nonSensitiveHakemusInterceptor = {
