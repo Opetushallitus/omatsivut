@@ -104,9 +104,7 @@ trait TuloskirjeComponent {
       Try(s3client.getObjectMetadata(s3Settings.bucket, filename))
       match {
         case Success(metadata) => Some(metadata)
-        case Failure(e) =>
-          logExceptions(e, filename)
-          None
+        case Failure(e) => None
       }
     }
 
