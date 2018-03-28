@@ -161,7 +161,7 @@ trait NonSensitiveApplicationServletContainer {
       contentType = formats("json")
     }
 
-    get("/tuloskirje/:hakuOid") {
+    get("/applications/tuloskirje/:hakuOid") {
       val hakuOid = params("hakuOid")
       (for {
         token <- jwtAuthorize
@@ -182,7 +182,7 @@ trait NonSensitiveApplicationServletContainer {
       valintatulosService.ilmoittaudu(params("hakuOid"), params("hakemusOid"), body)
     }
 
-    put("/:oid") {
+    put("/applications/:oid") {
       (for {
         token <- jwtAuthorize
         update <- Try(Serialization.read[HakemusMuutos](request.body))
@@ -194,7 +194,7 @@ trait NonSensitiveApplicationServletContainer {
       }).get
     }
 
-    get("/application/session") {
+    get("/applications/application/session") {
       (for {
         token <- jwtAuthorize
         hakemus <- fetchHakemus(token.oid, Some(token.personOid))
@@ -207,7 +207,7 @@ trait NonSensitiveApplicationServletContainer {
       }).get
     }
 
-    post("/vastaanota/:hakemusOid/hakukohde/:hakukohdeOid") {
+    post("/applications/vastaanota/:hakemusOid/hakukohde/:hakukohdeOid") {
       val hakemusOid = params("hakemusOid")
       val hakukohdeOid = params("hakukohdeOid")
       val henkiloOid = getPersonOidFromSession
@@ -226,7 +226,7 @@ trait NonSensitiveApplicationServletContainer {
       }
     }
 
-    get("/application/token/:token") {
+    get("/applications/application/token/:token") {
       (for {
         metadata <- oppijanTunnistusService.validateToken(params("token"))
         hakemus <- fetchHakemus(metadata.hakemusOid, metadata.personOid)
@@ -239,7 +239,7 @@ trait NonSensitiveApplicationServletContainer {
       }).get
     }
 
-    post("/validate/:oid") {
+    post("/applications/validate/:oid") {
       (for {
         token <- jwtAuthorize
         update <- Try(Serialization.read[HakemusMuutos](request.body))
