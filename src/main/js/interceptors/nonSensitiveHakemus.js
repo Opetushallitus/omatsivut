@@ -1,8 +1,7 @@
 var util = require('../util')
 
 function shouldRerouteRequest(config) {
-  return window.location.href.includes('hakutoiveidenMuokkaus.html') &&
-      config.url.includes('/secure/') && !config.url.includes('/secure/ilmoittaudu')
+  return window.location.href.includes('hakutoiveidenMuokkaus.html') || config.url.includes('/secure/')
 }
 
 function shouldAuthenticate(config) {
@@ -22,14 +21,14 @@ var nonSensitiveHakemusInterceptor = {
 
   response: function(response) {
     if (shouldAuthenticate(response.config) && response.data && response.data.jsonWebToken) {
-      util.setBearerToken(response.data.jsonWebToken)
-      response.oiliJwt = response.data.oiliJwt
+      util.setBearerToken(response.data.jsonWebToken);
+      response.oiliJwt = response.data.oiliJwt;
       response.data = response.data.response
     }
     return response
   }
-}
+};
 
 module.exports = function() {
   return nonSensitiveHakemusInterceptor
-}
+};
