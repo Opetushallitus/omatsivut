@@ -13,7 +13,7 @@ import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.hakemuseditori.lomake.domain.AnswerId
 import fi.vm.sade.hakemuseditori.tarjonta.TarjontaComponent
 import fi.vm.sade.hakemuseditori.user.Oppija
-import fi.vm.sade.hakemuseditori.valintatulokset.domain.VastaanotaSitovasti
+import fi.vm.sade.hakemuseditori.valintatulokset.domain.{Ilmoittautuminen, VastaanotaSitovasti}
 import fi.vm.sade.omatsivut.NonSensitiveHakemusInfo.answerIds
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.oppijantunnistus.{ExpiredTokenException, InvalidTokenException, OppijanTunnistusComponent}
@@ -174,6 +174,12 @@ trait NonSensitiveApplicationServletContainer {
           case None => InternalServerError("error" -> "Internal Server Error")
         }
       }).get
+    }
+
+    post("/ilmoittaudu") {
+      val body = parsedBody.extract[Ilmoittautuminen]
+      body.muokkaaja = user().oid
+      valintatulosService.ilmoittaudu(params("hakuOid"), params("hakemusOid"), body)
     }
 
     put("/:oid") {
