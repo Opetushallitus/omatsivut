@@ -1,7 +1,7 @@
 var util = require('../util')
 
 function shouldRerouteRequest(config) {
-  return window.location.href.includes('hakutoiveidenMuokkaus.html') || config.url.includes('/secure/')
+  return window.location.href.includes('hakutoiveidenMuokkaus.html') && config.url.includes('/secure/')
 }
 
 function shouldAuthenticate(config) {
