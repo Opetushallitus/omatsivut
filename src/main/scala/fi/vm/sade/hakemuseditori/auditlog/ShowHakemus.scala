@@ -1,14 +1,11 @@
 package fi.vm.sade.hakemuseditori.auditlog
 
-import java.net.InetAddress
-
 import fi.vm.sade.auditlog.{Changes, Target, User}
 import fi.vm.sade.omatsivut.security.AuthenticationInfoParser.getAuthenticationInfo
 import javax.servlet.http.HttpServletRequest
 
 
-case class ShowHakemus(request: HttpServletRequest,
-                       userOid: String, hakemusOid: String, hakuOid: String) extends AuditLogUtils with AuditEvent {
+case class ShowHakemus(request: HttpServletRequest, userOid: String, hakemusOid: String, hakuOid: String) extends AuditLogUtils with AuditEvent {
   override val operation: OmatSivutOperation = OmatSivutOperation.VIEW_HAKEMUS
   override val changes: Changes = new Changes.Builder().build()
   override val target: Target = {

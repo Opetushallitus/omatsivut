@@ -1,7 +1,5 @@
 package fi.vm.sade.hakemuseditori.auditlog
 
-import java.net.InetAddress
-
 import fi.vm.sade.auditlog.{Changes, Target, User}
 import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus.Answers
 import fi.vm.sade.omatsivut.security.AuthenticationInfoParser.getAuthenticationInfo

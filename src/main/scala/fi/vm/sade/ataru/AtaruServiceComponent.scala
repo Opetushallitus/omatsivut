@@ -106,7 +106,8 @@ trait AtaruServiceComponent  {
       go(oids, Nil)
     }
 
-    def findApplications(request: HttpServletRequest, personOid: String,
+    def findApplications(request: HttpServletRequest,
+                         personOid: String,
                          valintatulosFetchStrategy: ValintatulosFetchStrategy): List[HakemusInfo] = {
       val now = new LocalDateTime().toDate.getTime
       val henkilo = oppijanumerorekisteriService.henkilo(personOid)
