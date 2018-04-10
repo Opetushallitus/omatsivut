@@ -24,7 +24,6 @@ import org.json4s.jackson.Serialization
 import org.scalatra._
 import org.scalatra.json._
 
-import scala.collection.immutable
 import scala.util.{Failure, Success}
 import scalaz.concurrent.Task
 
@@ -64,7 +63,7 @@ trait ApplicationsServletContainer {
 
     get("/tuloskirje/:hakuOid") {
       val hakuOid = params("hakuOid")
-      hakemusEditori.fetchTuloskirje(personOid(), hakuOid) match {
+      hakemusEditori.fetchTuloskirje(request, personOid(), hakuOid) match {
         case Some(tuloskirje) => Ok(tuloskirje, Map(
           "Content-Type" -> "application/octet-stream",
           "Content-Disposition" -> "attachment; filename=tuloskirje.pdf"))
@@ -117,7 +116,7 @@ trait ApplicationsServletContainer {
 
       var allSuccess = true
       val allHakemukset = allOids.flatMap(oid => {
-        hakemusEditori.fetchByPersonOid(oid, Fetch) match {
+        hakemusEditori.fetchByPersonOid(request, oid, Fetch) match {
           case FullSuccess(hakemukset) => hakemukset
           case PartialSuccess(partialHakemukset, exceptions) =>
             exceptions.foreach(logger.warn(s"Failed to fetch all applications for oid $oid",_))
@@ -136,7 +135,7 @@ trait ApplicationsServletContainer {
     put("/:oid") {
       val content: String = request.body
       val updated = Serialization.read[HakemusMuutos](content)
-      hakemusEditori.updateHakemus(updated) match {
+      hakemusEditori.updateHakemus(request, updated) match {
         case Success(body) => ActionResult(ResponseStatus(200), body, Map.empty)
         case Failure(e: ForbiddenException) => ActionResult(ResponseStatus(403), "error" -> "Forbidden", Map.empty)
         case Failure(e: ValidationException) => ActionResult(ResponseStatus(400), e.validationErrors, Map.empty)
@@ -155,7 +154,7 @@ trait ApplicationsServletContainer {
     }
 
     get("/preview/:oid") {
-      newHakemusPreviewGenerator(language).generatePreview(personOid(), params("oid")) match {
+      newHakemusPreviewGenerator(language).generatePreview(request, personOid(), params("oid")) match {
         case Some(previewHtml) =>
           contentType = formats("html")
           Ok(previewHtml)
@@ -163,14 +162,14 @@ trait ApplicationsServletContainer {
           NotFound("error" -> "Not found")
       }
     }
-
     post("/vastaanota/:hakemusOid/hakukohde/:hakukohdeOid") {
       val hakemusOid = params("hakemusOid")
       val hakukohdeOid = params("hakukohdeOid")
       val henkiloOid = personOid()
 
-      hakemusEditori.fetchByHakemusOid(henkiloOid, hakemusOid, Fetch) match {
+      hakemusEditori.fetchByHakemusOid(request, henkiloOid, hakemusOid, Fetch) match {
         case Some(hakemus) => vastaanota(
+          request,
           hakemusOid,
           hakukohdeOid,
           hakemus.hakemus.haku.oid,
