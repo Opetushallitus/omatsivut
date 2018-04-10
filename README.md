@@ -23,12 +23,6 @@ Lisää JAVA_HOME ympäristömuuttujat polkuun:
 	
     export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
 
-## Webbuild
-
-Buildaa fronttiapplikaatio (npm install + gulp)
-
-    ./webbuild.sh
-
 ### IDE
 
 Importoi IDEA:ssa projektin maven projektina.
@@ -81,20 +75,7 @@ Komento ajaa kaikki testit, mukaan lukien yksikkötestit, REST-palvelujen testit
 
 ## Fronttidevaus
 
-*HUOM!*: Suuri osa fronttikoodista sijaitsee [hakemuseditori](https://github.com/Opetushallitus/hakemuseditori/tree/master/dist)
--repositoriossa, mistä käytetään tiedostoja `hakemuseditori.js` ja `hakemuseditori-templates.js`.
-Nämä tiedostot haetaan paketoinnin yhteydessä npm:llä ja kopioidaan
-gulp-buildissa hakemistoon `src/main/webapp`.
-
-Jos muokkaat hakemuseditorin koodia ja haluat nopean kopioinnin omatsivut-applikaatioon
-jokaisen muokkauksen yhteydessä, tee näin:
-
-    cd ../hakemuseditori
-    ./gulp omatsivut dev
-
-### Omien sivujen front-buid työkalut
-
-Frontti paketoidaan gulpilla ja browserifyllä. Skripti `webbuild.sh` tekee tämän helpoksi.
+Skripti `webbuild.sh` tekee fronttibuildien ajamisen helpoksi.
 
 Paketoi frontti devausmoodissa (ei minifiointia):
 
@@ -108,7 +89,10 @@ Tuotantoa vastaava buildi
 
     ./webbuild.sh
 
-Tyyleissä on käytetty lessiä. Niiden perusteella generoidaan css-tiedostot kansioon /src/main/webapp/css.
+Fronttikoodit sijaitsevat `src/main` kansion alla hieman sekalaisessa järjestyksessä.
+Tyyleissä on käytetty lessiä. Niiden perusteella generoidaan css-tiedostot kansioon `src/main/webapp/css`.
+Html tiedostoissa on käytetty angular templateja. Gulp buildissä ne minimoidaan ja yhdistetään yhdeksi templates.js tiedostoksi.
+Javascript tiedostot yhdistetään gulpilla bundle.js tiedostoksi.
 
 ## Impersonointi / autentikoinnin ohitus
 
