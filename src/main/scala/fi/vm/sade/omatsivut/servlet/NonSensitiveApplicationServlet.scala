@@ -19,6 +19,7 @@ import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.oppijantunnistus.{ExpiredTokenException, InvalidTokenException, OppijanTunnistusComponent}
 import fi.vm.sade.omatsivut.security.{HakemusJWT, JsonWebToken}
 import fi.vm.sade.omatsivut.{NonSensitiveHakemus, NonSensitiveHakemusInfo, NonSensitiveHakemusInfoSerializer, NonSensitiveHakemusSerializer}
+import javax.servlet.http.HttpServletRequest
 import org.json4s._
 import org.json4s.jackson.Serialization
 import org.scalatra._
@@ -39,7 +40,7 @@ trait VastaanottoEmailContainer {
     TarjontaComponent with
     GroupEmailComponent =>
 
-  def vastaanota(hakemusOid: String, hakukohdeOid: String, hakuOid: String, henkiloOid: String, requestBody: String, emailOpt: Option[String],
+  def vastaanota(request: HttpServletRequest, hakemusOid: String, hakukohdeOid: String, hakuOid: String, henkiloOid: String, requestBody: String, emailOpt: Option[String],
                  fetchHakemus: () => Option[HakemusInfo])(implicit jsonFormats: Formats, language: Language): ActionResult = {
     def sendEmail(clientVastaanotto: ClientSideVastaanotto) = {
       emailOpt match {
@@ -78,7 +79,7 @@ trait VastaanottoEmailContainer {
             s"""Vastaanottosähköpostin lähetys epäonnistui: haku / hakukohde / hakemus / hakija / email / clientVastaanotto :
             $hakuOid / $hakukohdeOid / $hakemusOid / $henkiloOid / ${emailOpt} / $clientVastaanotto""".stripMargin)
         }
-        Audit.oppija.log(SaveVastaanotto(henkiloOid, hakemusOid, hakukohdeOid, hakuOid, clientVastaanotto.vastaanottoAction))
+        Audit.oppija.log(SaveVastaanotto(request, henkiloOid, hakemusOid, hakukohdeOid, hakuOid, clientVastaanotto.vastaanottoAction))
         fetchHakemus() match {
           case Some(hakemus) => Ok(hakemus)
           case _ => NotFound("error" -> "Not found")
@@ -152,8 +153,8 @@ trait NonSensitiveApplicationServletContainer {
     }
 
     private def fetchHakemus(hakemusOid: String, personOid: Option[String]): Try[HakemusInfo] = {
-      personOid.map(hakemusEditori.fetchByHakemusOid(_, hakemusOid, FetchIfNoHetuOrToinenAste))
-        .getOrElse(hakemusRepository.getHakemus(hakemusOid, FetchIfNoHetuOrToinenAste))
+      personOid.map(hakemusEditori.fetchByHakemusOid(request, _, hakemusOid, FetchIfNoHetuOrToinenAste))
+        .getOrElse(hakemusRepository.getHakemus(request, hakemusOid, FetchIfNoHetuOrToinenAste))
         .fold[Try[HakemusInfo]](Failure(new NoSuchElementException(s"Hakemus $hakemusOid not found")))(h => Success(h.withoutKelaUrl))
     }
 
@@ -165,7 +166,7 @@ trait NonSensitiveApplicationServletContainer {
       val hakuOid = params("hakuOid")
       (for {
         token <- jwtAuthorize
-        tuloskirje <- Try(fetchTuloskirje(token.personOid, hakuOid))
+        tuloskirje <- Try(fetchTuloskirje(request, token.personOid, hakuOid))
       } yield {
         tuloskirje match {
           case Some(data) => Ok(tuloskirje, Map(
@@ -181,7 +182,7 @@ trait NonSensitiveApplicationServletContainer {
         token <- jwtAuthorize
         update <- Try(Serialization.read[HakemusMuutos](request.body))
         newAnswers <- Success(newAnswersFromTheSession(update, token))
-        updatedHakemus <- hakemusEditori.updateHakemus(NonSensitiveHakemusInfo.sanitizeHakemusMuutos(update, newAnswers))
+        updatedHakemus <- hakemusEditori.updateHakemus(request, NonSensitiveHakemusInfo.sanitizeHakemusMuutos(update, newAnswers))
       } yield {
         Ok(InsecureHakemus(jwt.encode(HakemusJWT(token.oid, newAnswers, token.personOid)),
           new NonSensitiveHakemus(updatedHakemus, newAnswers)))
@@ -206,8 +207,9 @@ trait NonSensitiveApplicationServletContainer {
       val hakukohdeOid = params("hakukohdeOid")
       val henkiloOid = getPersonOidFromSession
 
-      hakemusEditori.fetchByHakemusOid(henkiloOid, hakemusOid, FetchIfNoHetuOrToinenAste) match {
+      hakemusEditori.fetchByHakemusOid(request, henkiloOid, hakemusOid, FetchIfNoHetuOrToinenAste) match {
         case Some(hakemus) => vastaanota(
+          request,
           hakemusOid,
           hakukohdeOid,
           hakemus.hakemus.haku.oid,

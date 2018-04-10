@@ -18,6 +18,7 @@ import fi.vm.sade.hakemuseditori.user.User
 import fi.vm.sade.hakemuseditori.valintatulokset.{NoOpValintatulosService, ValintatulosService, ValintatulosServiceComponent}
 import fi.vm.sade.hakemuseditori.viestintapalvelu.TuloskirjeComponent
 import fi.vm.sade.utils.slf4j.Logging
+import javax.servlet.http.HttpServletRequest
 import org.json4s.jackson.Serialization
 import org.springframework.context.ApplicationContext
 
@@ -58,20 +59,21 @@ trait HakemusEditoriComponent extends ApplicationValidatorComponent
     implicit def language: Language.Language
     def user(): User
 
-    def fetchTuloskirje(personOid: String, hakuOid: String): Option[Array[Byte]] = {
-      val hakemukset = fetchByPersonOid(personOid, DontFetch) match {
+    def fetchTuloskirje(request: HttpServletRequest, personOid: String, hakuOid: String): Option[Array[Byte]] = {
+      val hakemukset = fetchByPersonOid(request, personOid, DontFetch) match {
         case FullSuccess(hs) => hs.find(_.hakemus.haku.oid == hakuOid)
         case PartialSuccess(_, ts) => throw ts.head
         case FullFailure(ts) => throw ts.head
       }
-      hakemukset.flatMap(hakemus => tuloskirjeService.fetchTuloskirje(hakuOid, hakemus.hakemus.oid, personOid))
+      hakemukset.flatMap(hakemus => tuloskirjeService.fetchTuloskirje(request, hakuOid, hakemus.hakemus.oid, personOid))
     }
 
-    def fetchByPersonOid(personOid: String,
+    def fetchByPersonOid(request: HttpServletRequest,
+                         personOid: String,
                          valintatulosFetchStrategy: ValintatulosFetchStrategy): HakemusResult = {
       (
-        Try(ataruService.findApplications(personOid, valintatulosFetchStrategy)),
-        Try(hakemusRepository.fetchHakemukset(personOid, valintatulosFetchStrategy))
+        Try(ataruService.findApplications(request, personOid, valintatulosFetchStrategy)),
+        Try(hakemusRepository.fetchHakemukset(request, personOid, valintatulosFetchStrategy))
       ) match {
         case (Success(ahs), Success(hhs)) => FullSuccess((ahs ::: hhs).sortBy[Option[Long]](_.hakemus.received).reverse)
         case (Failure(at), Failure(ht)) => FullFailure(List(at, ht))
@@ -82,11 +84,12 @@ trait HakemusEditoriComponent extends ApplicationValidatorComponent
       }
     }
 
-    def fetchByHakemusOid(personOid: String,
+    def fetchByHakemusOid(request: HttpServletRequest,
+                          personOid: String,
                           hakemusOid: String,
                           valintatulosFetchStrategy: ValintatulosFetchStrategy): Option[HakemusInfo] =
-      hakemusRepository.getHakemus(hakemusOid, valintatulosFetchStrategy).filter(_.hakemus.personOid == personOid)
-        .orElse(ataruService.findApplications(personOid, valintatulosFetchStrategy).find(_.hakemus.oid == hakemusOid))
+      hakemusRepository.getHakemus(request, hakemusOid, valintatulosFetchStrategy).filter(_.hakemus.personOid == personOid)
+        .orElse(ataruService.findApplications(request, personOid, valintatulosFetchStrategy).find(_.hakemus.oid == hakemusOid))
 
     def opetuspisteet(asId: String, query: String, lang: Option[String]): Option[List[Opetuspiste]] = koulutusInformaatioService.opetuspisteet(asId, query, parseLang(lang))
 
@@ -113,12 +116,12 @@ trait HakemusEditoriComponent extends ApplicationValidatorComponent
       }
     }
 
-    def updateHakemus(updated: HakemusMuutos): Try[Hakemus] = {
+    def updateHakemus(request: HttpServletRequest, updated: HakemusMuutos): Try[Hakemus] = {
       (for {lomake <- lomakeRepository.lomakeByOid(updated.hakuOid)
             haku <- tarjontaService.haku(lomake.oid, language)} yield {
         val errors = applicationValidator.validate(lomake, updated, haku)
         if (errors.isEmpty) {
-          hakemusUpdater.updateHakemus(lomake, haku, updated, user()) match {
+          hakemusUpdater.updateHakemus(request, lomake, haku, updated, user()) match {
             case Success(saved) => Success(saved)
             case Failure(e) =>
               logger.warn("Application update rejected for application " + lomake.oid, e)

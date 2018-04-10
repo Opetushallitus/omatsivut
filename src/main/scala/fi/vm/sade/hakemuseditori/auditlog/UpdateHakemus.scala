@@ -4,8 +4,10 @@ import java.net.InetAddress
 
 import fi.vm.sade.auditlog.{Changes, Target, User}
 import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus.Answers
+import fi.vm.sade.omatsivut.security.AuthenticationInfoParser.getAuthenticationInfo
+import javax.servlet.http.HttpServletRequest
 
-case class UpdateHakemus(userOid: String, hakemusOid: String, hakuOid: String, originalAnswers: Answers, updatedAnswers: Answers) extends AuditLogUtils with AuditEvent {
+case class UpdateHakemus(request: HttpServletRequest, userOid: String, hakemusOid: String, hakuOid: String, originalAnswers: Answers, updatedAnswers: Answers) extends AuditLogUtils with AuditEvent {
   override val operation: OmatSivutOperation = OmatSivutOperation.UPDATE_HAKEMUS
   override val target: Target = new Target.Builder()
     .setField(OmatSivutMessageField.MESSAGE, "Tallennettu päivitetty hakemus haussa")
@@ -21,7 +23,9 @@ case class UpdateHakemus(userOid: String, hakemusOid: String, hakuOid: String, o
   }
 
   override def user: User = {
-    new User(getOid(userOid).orNull, InetAddress.getLocalHost, "", "")
+    val authInfo = getAuthenticationInfo(request)
+    val shib = authInfo.shibbolethCookie
+    new User(getOid(authInfo.personOid.get).orNull, getAddress(request), shib.map(_.toString).getOrElse("(no shibboleth cookie)"), getUserAgent(request))
   }
 
   /**

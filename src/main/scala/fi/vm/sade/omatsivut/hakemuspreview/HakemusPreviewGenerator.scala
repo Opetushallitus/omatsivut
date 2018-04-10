@@ -18,7 +18,7 @@ import fi.vm.sade.haku.oppija.lomake.domain.elements.custom.{GradeAverage, Posta
 import fi.vm.sade.haku.oppija.lomake.domain.elements.questions.{CheckBox, DateQuestion, OptionQuestion, TextArea, TextQuestion}
 import fi.vm.sade.haku.oppija.lomake.domain.rules.{AddElementRule, RelatedQuestionRule}
 import fi.vm.sade.utils.slf4j.Logging
-
+import javax.servlet.http.HttpServletRequest
 import scalatags.Text.TypedTag
 import scalatags.Text.all._
 
@@ -30,11 +30,11 @@ trait HakemusPreviewGeneratorComponent {
   class HakemusPreviewGenerator(language: Language.Language) extends Logging {
     private val applicationSystemService = springContext.applicationSystemService
 
-    def generatePreview(personOid: String, applicationOid: String): Option[String] = {
+    def generatePreview(request: HttpServletRequest, personOid: String, applicationOid: String): Option[String] = {
       implicit val (t, lang) = (translations, language)
       applicationRepository.findStoredApplicationByPersonAndOid(personOid, applicationOid).map { application =>
         val applicationSystem = applicationSystemService.getApplicationSystem(application.hakuOid)
-        Audit.oppija.log(ShowHakemus(application.personOid, application.oid, application.hakuOid))
+        Audit.oppija.log(ShowHakemus(request, application.personOid, application.oid, application.hakuOid))
         HakemusPreview().generate(application, applicationSystem)
       }
     }

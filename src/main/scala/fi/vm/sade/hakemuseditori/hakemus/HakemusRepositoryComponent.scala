@@ -24,6 +24,7 @@ import fi.vm.sade.haku.oppija.lomake.domain.ApplicationPeriod
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 import fi.vm.sade.utils.Timer._
 import fi.vm.sade.utils.slf4j.Logging
+import javax.servlet.http.HttpServletRequest
 import org.joda.time.LocalDateTime
 
 import scala.util.{Failure, Success, Try}
@@ -44,7 +45,7 @@ trait HakemusRepositoryComponent {
   class HakemusUpdater extends Logging {
     private val applicationService = springContext.applicationService
 
-    def updateHakemus(lomake: Lomake, haku: Haku, hakemus: HakemusMuutos, user: User)(implicit lang: Language.Language): Try[Hakemus] = {
+    def updateHakemus(request: HttpServletRequest, lomake: Lomake, haku: Haku, hakemus: HakemusMuutos, user: User)(implicit lang: Language.Language): Try[Hakemus] = {
       val applicationQuery: Application = new Application().setOid(hakemus.oid)
       for {
         applicationJavaObject <- timed("Application fetch DAO", 1000) {dao.find(applicationQuery).toList.headOption} match {
@@ -60,7 +61,7 @@ trait HakemusRepositoryComponent {
           dao.update(applicationQuery, applicationJavaObject)
         }
         sendMailService.sendModifiedEmail(applicationJavaObject)
-        getAuditLogger(user).log(UpdateHakemus(user.oid, hakemus.oid, haku.oid, originalApplication.answers, checkedAnswers))
+        getAuditLogger(user).log(UpdateHakemus(request, user.oid, hakemus.oid, haku.oid, originalApplication.answers, checkedAnswers))
         hakemusConverter.convertToHakemus(None, Some(lomake), haku, wrap(applicationJavaObject))
       }
     }
@@ -188,18 +189,18 @@ trait HakemusRepositoryComponent {
   class HakemusFinder {
     private val applicationValidator: ApplicationValidator = newApplicationValidator
 
-    def fetchHakemukset(personOid: String,
+    def fetchHakemukset(request: HttpServletRequest, personOid: String,
                         valintatulosFetchStrategy: ValintatulosFetchStrategy)
                        (implicit lang: Language.Language): List[HakemusInfo] = {
-      fetchHakemukset(new Application().setPersonOid(personOid), valintatulosFetchStrategy)
+      fetchHakemukset(request, new Application().setPersonOid(personOid), valintatulosFetchStrategy)
     }
 
-    def getHakemus(hakemusOid: String,
+    def getHakemus(request: HttpServletRequest, hakemusOid: String,
                    valintatulosFetchStrategy: ValintatulosFetchStrategy)
                   (implicit lang: Language): Option[HakemusInfo] = {
-      fetchHakemukset(new Application().setOid(hakemusOid), valintatulosFetchStrategy).headOption
+      fetchHakemukset(request, new Application().setOid(hakemusOid), valintatulosFetchStrategy).headOption
     }
-    private def fetchHakemukset(query: Application,
+    private def fetchHakemukset(request: HttpServletRequest, query: Application,
                                 valintatulosFetchStrategy: ValintatulosFetchStrategy)
                                (implicit lang: Language): List[HakemusInfo] = {
       timed("Application fetch", 1000){
@@ -223,9 +224,9 @@ trait HakemusRepositoryComponent {
             } else {
               (None, true)
             }
-            val letterForHaku = tuloskirjeService.getTuloskirjeInfo(haku.oid, application.oid)
+            val letterForHaku = tuloskirjeService.getTuloskirjeInfo(request, haku.oid, application.oid)
             val hakemus = timed("fetchHakemukset -> hakemusConverter.convertToHakemus", 100) { hakemusConverter.convertToHakemus(letterForHaku, lomakeOption, haku, application, valintatulos) }
-            timed("fetchHakemukset -> auditLogger.log", 100) { Audit.oppija.log(ShowHakemus(application.personOid, hakemus.oid, haku.oid)) }
+            timed("fetchHakemukset -> auditLogger.log", 100) { Audit.oppija.log(ShowHakemus(request, application.personOid, hakemus.oid, haku.oid)) }
 
             lomakeOption match {
               case Some(lomake) if haku.applicationPeriods.exists(_.active) =>
