@@ -4,9 +4,9 @@ import fi.vm.sade.auditlog.{ApplicationType, Logger, Audit => AuditClass}
 import fi.vm.sade.utils.slf4j.Logging
 
 object Audit {
-  def oppija = new OppijaAuditLogger
-  def virkailija = new VirkailijaAuditLogger
-  def api = new ApiAuditLogger
+  val oppija: OppijaAuditLogger = new OppijaAuditLogger
+  val virkailija: VirkailijaAuditLogger = new VirkailijaAuditLogger
+  val api: ApiAuditLogger = new ApiAuditLogger
 }
 
 class OppijaAuditLogger(applicationType: ApplicationType) extends AuditLogger(applicationType) {
@@ -23,7 +23,7 @@ class ApiAuditLogger(applicationType: ApplicationType) extends AuditLogger(appli
 
 class AuditLogger(val omatSivutLogger: OmatSivutLogger, val serviceName: String, val applicationType: ApplicationType) extends Logging {
   def this(applicationType: ApplicationType) = this(new OmatSivutLogger, "omatsivut", applicationType)
-  private def audit = new AuditClass(omatSivutLogger, serviceName, applicationType)
+  private val audit = new AuditClass(omatSivutLogger, serviceName, applicationType)
 
   def log(auditEvent: AuditEvent) {
     audit.log(auditEvent.user, auditEvent.operation, auditEvent.target, auditEvent.changes)
@@ -35,8 +35,3 @@ class OmatSivutLogger extends Logger with Logging {
     logger.info(string)
   }
 }
-
-
-
-
-
