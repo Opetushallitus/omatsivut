@@ -10,24 +10,17 @@ import fi.vm.sade.hakemuseditori.lomake.LomakeRepositoryComponent
 import fi.vm.sade.hakemuseditori.user.Oppija
 import fi.vm.sade.hakemuseditori.valintatulokset.ValintatulosServiceComponent
 import fi.vm.sade.hakemuseditori.valintatulokset.domain._
-import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.hakemuspreview.HakemusPreviewGeneratorComponent
 import fi.vm.sade.omatsivut.security.AuthenticationRequiringServlet
 import fi.vm.sade.utils.cas.{CasAuthenticatingClient, CasClient, CasParams}
-import org.http4s.{Header, Headers, Request, Uri}
 import org.http4s.client.blaze
-import org.json4s
-import org.json4s.{DefaultFormats, JValue}
-import org.json4s.JsonAST.JObject
+import org.json4s.DefaultFormats
 import org.json4s.jackson.Serialization
 import org.scalatra._
 import org.scalatra.json._
 
-import scala.collection.immutable
 import scala.util.{Failure, Success}
-import scalaz.concurrent.Task
-
 
 
 trait ApplicationsServletContainer {
@@ -49,11 +42,9 @@ trait ApplicationsServletContainer {
     private val securitySettings = appConfig.settings.securitySettings
     private val blazeHttpClient = blaze.defaultClient
     private val casClient = new CasClient(securitySettings.casUrl, blazeHttpClient)
-    //private val httpClient = DefaultHttpClient
     private val serviceUrl = appConfig.settings.authenticationServiceConfig.url + "/"
     private val casParams = CasParams(serviceUrl, securitySettings.casUsername, securitySettings.casPassword)
     private val httpClient = CasAuthenticatingClient(casClient, casParams, blazeHttpClient, Some("omatsivut.omatsivut.backend"), "JSESSIONID")
-    private val callerIdHeader = Header("Caller-Id", "omatsivut.omatsivut.backend")
     protected val applicationDescription = "Oppijan henkilökohtaisen palvelun REST API, jolla voi hakea ja muokata hakemuksia ja omia tietoja"
 
 
@@ -72,48 +63,12 @@ trait ApplicationsServletContainer {
       }
     }
 
-    private def uriFromString(url: String): Uri = {
-      Uri.fromString(url).toOption.get
-    }
-    private def runHttp[ResultType](request: Request)(decoder: (Int, String, Request) => ResultType): Task[ResultType] = {
-      httpClient.fetch(request)(r => r.as[String].map(body => decoder(r.status.code, body, request)))
-    }
-
     get("/") {
       implicit val formats = DefaultFormats
       val timeout = 1000*30L
       val pOid: String = personOid()
 
-      val masterRequest: Request = Request(
-        uri = uriFromString(OphUrlProperties.url("oppijanumerorekisteri-service.henkilo-master", pOid)),
-        headers = Headers(callerIdHeader))
-
-      val masterOid: String = runHttp[Option[String]](masterRequest) {
-        case (200, resultString, _) =>
-          val f: json4s.JValue = parse(resultString).asInstanceOf[JObject]
-          val oid = f \ "oidHenkilo"
-          Some(oid.extract[String])
-        case (code, responseString, _) =>
-          logger.error("Failed to fetch master oid for user oid {}, response was {}, {}", pOid, Integer.toString(code), responseString)
-          None
-      }.runFor(timeoutInMillis = timeout).getOrElse(pOid)
-
-      val slaveRequest: Request = Request(
-        uri = uriFromString(OphUrlProperties.url("oppijanumerorekisteri-service.henkilo-slaves", masterOid)),
-        headers = Headers(callerIdHeader))
-
-      val allOids: List[String] = runHttp(slaveRequest) {
-        case (200, resultString, _) =>
-          val slaveOids: Seq[String] = parse(resultString).extract[List[JObject]]
-            .map(obj => {
-              val oidObj = obj \ "oidHenkilo"
-              oidObj.extract[String]
-            })
-          List(masterOid) ++ slaveOids
-        case (code, responseString, _) =>
-          logger.error("Failed to fetch slave OIDs for user oid {}, response was {}, {}", masterOid, Integer.toString(code), responseString)
-          List(masterOid)
-      }.runFor(timeoutInMillis = timeout)
+      val allOids: List[String] = oppijanumerorekisteriService.fetchAllOids(pOid)
 
       var allSuccess = true
       val allHakemukset = allOids.flatMap(oid => {
