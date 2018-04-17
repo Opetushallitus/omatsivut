@@ -51,7 +51,7 @@ trait OppijanumerorekisteriComponent {
 
   class StubbedOppijanumerorekisteriService extends OppijanumerorekisteriService {
     override def henkilo(personOid: String): Henkilo = ???
-    override def fetchAllOids(pOid: String): List[String] = List("1.2.246.562.24.14229104472")
+    override def fetchAllOids(pOid: String): List[String] = List(pOid)
   }
 
   class RemoteOppijanumerorekisteriService(config: AppConfig) extends OppijanumerorekisteriService with JsonFormats with Logging {
