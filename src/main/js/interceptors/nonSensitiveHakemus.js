@@ -1,4 +1,5 @@
-var util = require('../util')
+require('es6-shim'); // for .includes polyfill
+var util = require('../util');
 
 function shouldRerouteRequest(config) {
   return window.location.href.includes('hakutoiveidenMuokkaus.html') && config.url.includes('/secure/')
