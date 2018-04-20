@@ -1,10 +1,11 @@
 package fi.vm.sade.hakemuseditori.auditlog
 
-import java.net.InetAddress
-
 import fi.vm.sade.auditlog.{Changes, Target, User}
+import fi.vm.sade.omatsivut.security.AuthenticationInfoParser.getAuthenticationInfo
+import javax.servlet.http.HttpServletRequest
 
-case class ShowHakemus(userOid: String, hakemusOid: String, hakuOid: String) extends AuditLogUtils with AuditEvent {
+
+case class ShowHakemus(request: HttpServletRequest, userOid: String, hakemusOid: String, hakuOid: String) extends AuditLogUtils with AuditEvent {
   override val operation: OmatSivutOperation = OmatSivutOperation.VIEW_HAKEMUS
   override val changes: Changes = new Changes.Builder().build()
   override val target: Target = {
@@ -16,6 +17,8 @@ case class ShowHakemus(userOid: String, hakemusOid: String, hakuOid: String) ext
   }
 
   override def user: User = {
-    new User(getOid(userOid).orNull, InetAddress.getLocalHost, "", "")
+    val authInfo = getAuthenticationInfo(request)
+    val shib = authInfo.shibbolethCookie
+    new User(getOid(userOid).orNull, getAddress(request), shib.map(_.toString).getOrElse("(no shibboleth cookie)"), getUserAgent(request))
   }
 }

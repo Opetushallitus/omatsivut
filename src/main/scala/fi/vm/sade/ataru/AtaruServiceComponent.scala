@@ -14,6 +14,7 @@ import fi.vm.sade.hakemuseditori.viestintapalvelu.TuloskirjeComponent
 import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.utils.cas.{CasAuthenticatingClient, CasClient, CasParams}
+import javax.servlet.http.HttpServletRequest
 import org.http4s.Method.GET
 import org.http4s.client.blaze
 import org.http4s.{Request, Uri}
@@ -41,7 +42,7 @@ trait AtaruServiceComponent  {
   val ataruService: AtaruService
 
   class StubbedAtaruService extends AtaruService {
-    override def findApplications(personOid: String, valintatulosFetchStrategy: ValintatulosFetchStrategy): List[HakemusInfo] = List()
+    override def findApplications(request: HttpServletRequest, personOid: String, valintatulosFetchStrategy: ValintatulosFetchStrategy): List[HakemusInfo] = List()
   }
 
   class RemoteAtaruService(config: AppConfig) extends AtaruService {
@@ -105,7 +106,8 @@ trait AtaruServiceComponent  {
       go(oids, Nil)
     }
 
-    def findApplications(personOid: String,
+    def findApplications(request: HttpServletRequest,
+                         personOid: String,
                          valintatulosFetchStrategy: ValintatulosFetchStrategy): List[HakemusInfo] = {
       val now = new LocalDateTime().toDate.getTime
       val henkilo = oppijanumerorekisteriService.henkilo(personOid)
@@ -114,7 +116,7 @@ trait AtaruServiceComponent  {
           a,
           tarjontaService.haku(a.haku, Language.fi),
           getHakukohteet(a.hakukohteet),
-          tuloskirjeService.getTuloskirjeInfo(a.haku, a.oid)
+          tuloskirjeService.getTuloskirjeInfo(request, a.haku, a.oid)
         ))
         .collect {
           case (a, Some(haku), Some(hakukohteet), tuloskirje) =>
@@ -156,5 +158,5 @@ trait AtaruServiceComponent  {
 }
 
 trait AtaruService {
-  def findApplications(personOid: String, valintatulosFetchStrategy: ValintatulosFetchStrategy): List[HakemusInfo]
+  def findApplications(request: HttpServletRequest, personOid: String, valintatulosFetchStrategy: ValintatulosFetchStrategy): List[HakemusInfo]
 }

@@ -34,6 +34,7 @@ class AuditLogUtils extends Logging {
 
   protected def getSession(request: HttpServletRequest): String = {
     request.getSession.getId
+
   }
 
   protected def getUserAgent(request: HttpServletRequest): String = {
