@@ -56,7 +56,11 @@ function convertHenkilotiedot(json) {
 
 function parseName(json) {
   if (!_.isUndefined(json)) {
-    return json["Etunimet"] + " " + json["Sukunimi"];
+    var etunimi = json["Etunimet"];
+    if (!etunimi) {
+      etunimi = json["Kutsumanimi"];
+    }
+    return etunimi + " " + json["Sukunimi"];
   }
 }
 
