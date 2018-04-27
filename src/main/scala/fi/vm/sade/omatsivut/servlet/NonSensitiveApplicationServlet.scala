@@ -182,9 +182,13 @@ trait NonSensitiveApplicationServletContainer {
     }
 
     post("/ilmoittaudu") {
-      val body = parsedBody.extract[Ilmoittautuminen]
-      body.muokkaaja = user().oid
-      valintatulosService.ilmoittaudu(params("hakuOid"), params("hakemusOid"), body)
+      val ilmoittautuminen = parsedBody.extract[Ilmoittautuminen]
+      val hakuOid = params("hakuOid")
+      val hakemusOid = params("hakemusOid")
+
+      ilmoittautuminen.muokkaaja = user().oid
+      val bool = valintatulosService.ilmoittaudu(hakuOid, hakemusOid, ilmoittautuminen)
+      Audit.oppija.log(SaveIlmoittautuminen(hakuOid, hakemusOid, ilmoittautuminen, bool))
     }
 
     put("/applications/:oid") {
