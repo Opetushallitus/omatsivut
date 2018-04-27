@@ -1,25 +1,20 @@
 package fi.vm.sade.omatsivut.servlet
 
-import java.text.SimpleDateFormat
-import java.util.Calendar
-
-import fi.vm.sade.groupemailer.{EmailData, EmailMessage, EmailRecipient, GroupEmailComponent}
 import fi.vm.sade.hakemuseditori._
-import fi.vm.sade.hakemuseditori.auditlog.{Audit, SaveVastaanotto}
-import fi.vm.sade.hakemuseditori.domain.Language.Language
+import fi.vm.sade.hakemuseditori.auditlog.{Audit, SaveIlmoittautuminen}
 import fi.vm.sade.hakemuseditori.hakemus.domain.HakemusMuutos
 import fi.vm.sade.hakemuseditori.hakemus.{FetchIfNoHetuOrToinenAste, HakemusInfo, HakemusRepositoryComponent}
 import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.hakemuseditori.lomake.domain.AnswerId
 import fi.vm.sade.hakemuseditori.tarjonta.TarjontaComponent
 import fi.vm.sade.hakemuseditori.user.Oppija
-import fi.vm.sade.hakemuseditori.valintatulokset.domain.{Ilmoittautuminen, VastaanotaSitovasti}
+import fi.vm.sade.hakemuseditori.valintatulokset.domain.Ilmoittautuminen
 import fi.vm.sade.omatsivut.NonSensitiveHakemusInfo.answerIds
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.oppijantunnistus.{ExpiredTokenException, InvalidTokenException, OppijanTunnistusComponent}
 import fi.vm.sade.omatsivut.security.{HakemusJWT, JsonWebToken}
+import fi.vm.sade.omatsivut.vastaanotto.{Vastaanotto, VastaanottoComponent}
 import fi.vm.sade.omatsivut.{NonSensitiveHakemus, NonSensitiveHakemusInfo, NonSensitiveHakemusInfoSerializer, NonSensitiveHakemusSerializer}
-import javax.servlet.http.HttpServletRequest
 import org.json4s._
 import org.json4s.jackson.Serialization
 import org.scalatra._
@@ -34,75 +29,10 @@ sealed trait InsecureResponse {
 case class InsecureHakemus(jsonWebToken: String, response: NonSensitiveHakemus) extends InsecureResponse
 case class InsecureHakemusInfo(jsonWebToken: String, response: NonSensitiveHakemusInfo, oiliJwt: String = null) extends InsecureResponse
 
-trait VastaanottoEmailContainer {
-  this: HakemusRepositoryComponent with
-    HakemusEditoriComponent with
-    TarjontaComponent with
-    GroupEmailComponent =>
-
-  def vastaanota(request: HttpServletRequest, hakemusOid: String, hakukohdeOid: String, hakuOid: String, henkiloOid: String, requestBody: String, emailOpt: Option[String],
-                 fetchHakemus: () => Option[HakemusInfo])(implicit jsonFormats: Formats, language: Language): ActionResult = {
-    def sendEmail(clientVastaanotto: ClientSideVastaanotto) = {
-      emailOpt match {
-        case Some(email: String) =>
-          val haku = tarjontaService.haku(hakuOid, language).get
-          val subject = translations.getTranslation("message", "acceptEducation", "email", "subject")
-
-          val dateFormat = new SimpleDateFormat(translations.getTranslation("message", "acceptEducation", "email", "dateFormat"))
-          val dateAndTime = dateFormat.format(Calendar.getInstance().getTime)
-          val vastaanottoActionString =
-            if (haku.toisenasteenhaku && VastaanotaSitovasti.equals(clientVastaanotto.vastaanottoAction)) {
-              clientVastaanotto.vastaanottoAction.toString + "ToinenAste"
-            } else {
-              clientVastaanotto.vastaanottoAction.toString
-            }
-          val answer = translations.getTranslation("message", "acceptEducation", "email", "tila", vastaanottoActionString)
-          val aoInfoRow = List(answer, clientVastaanotto.tarjoajaNimi, clientVastaanotto.hakukohdeNimi).mkString(" - ")
-          val body = translations.getTranslation("message", "acceptEducation", "email", "body")
-            .format(dateAndTime, aoInfoRow)
-            .replace("\n", "\n<br>")
-
-          val emailMessage = EmailMessage("omatsivut", subject, body, html = true)
-          val recipients = List(EmailRecipient(email))
-          groupEmailService.sendMailWithoutTemplate(EmailData(emailMessage, recipients))
-        case _ =>
-
-      }
-    }
-    val clientVastaanotto = Serialization.read[ClientSideVastaanotto](requestBody)
-    try {
-      if (valintatulosService.vastaanota(henkiloOid, hakemusOid, hakukohdeOid, clientVastaanotto.vastaanottoAction)) {
-        try {
-          sendEmail(clientVastaanotto)
-        } catch {
-          case e: Exception => logger.error(
-            s"""Vastaanottosähköpostin lähetys epäonnistui: haku / hakukohde / hakemus / hakija / email / clientVastaanotto :
-            $hakuOid / $hakukohdeOid / $hakemusOid / $henkiloOid / ${emailOpt} / $clientVastaanotto""".stripMargin)
-        }
-        Audit.oppija.log(SaveVastaanotto(request, henkiloOid, hakemusOid, hakukohdeOid, hakuOid, clientVastaanotto.vastaanottoAction))
-        fetchHakemus() match {
-          case Some(hakemus) => Ok(hakemus)
-          case _ => NotFound("error" -> "Not found")
-        }
-      }
-      else {
-        Forbidden("error" -> "Not receivable")
-      }
-
-    } catch {
-      case e: Throwable =>
-        logger.error("failure in background service call", e)
-        InternalServerError("error" -> "Background service failed")
-    }
-  }
-
-}
-
 trait NonSensitiveApplicationServletContainer {
   this: HakemusRepositoryComponent with
     HakemusEditoriComponent with
-    GroupEmailComponent with
-    VastaanottoEmailContainer with
+    VastaanottoComponent with
     OppijanTunnistusComponent with
     TarjontaComponent =>
 
@@ -216,19 +146,19 @@ trait NonSensitiveApplicationServletContainer {
       val hakemusOid = params("hakemusOid")
       val hakukohdeOid = params("hakukohdeOid")
       val henkiloOid = getPersonOidFromSession
+      val vastaanotto = Serialization.read[Vastaanotto](request.body)
 
       hakemusEditori.fetchByHakemusOid(request, henkiloOid, hakemusOid, FetchIfNoHetuOrToinenAste) match {
-        case Some(hakemus) => vastaanota(
-          request,
-          hakemusOid,
-          hakukohdeOid,
-          hakemus.hakemus.haku.oid,
-          henkiloOid,
-          request.body,
-          hakemus.hakemus.email,
-          () => Some(hakemus)
-        )
         case None => NotFound("error" -> "Not found")
+        case Some(hakemus) => {
+          vastaanottoService.vastaanota(
+            hakemusOid,
+            hakukohdeOid,
+            henkiloOid,
+            vastaanotto,
+            hakemus
+          )
+        }
       }
     }
 
