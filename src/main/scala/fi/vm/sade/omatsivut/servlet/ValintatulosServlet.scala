@@ -1,6 +1,7 @@
 package fi.vm.sade.omatsivut.servlet
 
 import fi.vm.sade.hakemuseditori.HakemusEditoriUserContext
+import fi.vm.sade.hakemuseditori.auditlog.{Audit, SaveIlmoittautuminen}
 import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.hakemuseditori.user.Oppija
 import fi.vm.sade.hakemuseditori.valintatulokset.ValintatulosService
@@ -22,9 +23,13 @@ trait ValintatulosServletContainer {
     }
 
     post("/") {
-      val body = parsedBody.extract[Ilmoittautuminen]
-      body.muokkaaja = user().oid
-      valintatulosService.ilmoittaudu(params("hakuOid"), params("hakemusOid"), body)
+      val ilmoittautuminen = parsedBody.extract[Ilmoittautuminen]
+      val hakuOid = params("hakuOid")
+      val hakemusOid = params("hakemusOid")
+
+      ilmoittautuminen.muokkaaja = user().oid
+      val bool = valintatulosService.ilmoittaudu(params("hakuOid"), params("hakemusOid"), ilmoittautuminen)
+      Audit.oppija.log(SaveIlmoittautuminen(hakuOid, hakemusOid, ilmoittautuminen, bool))
     }
   }
 }
