@@ -15,4 +15,7 @@ object OmatSivutMessageField {
   final val HAKUKOHDE_OID: String = "hakukohdeOid"
   final val HAKU_OID: String = "hakuOid"
   final val VASTAANOTTO: String = "vastaanotto"
+  final val ILMOITTAUTUMINEN: String = "ilmoittautuminen"
+  final val ILMOITTAUTUMINEN_SELITE: String = "ilmoittautumisen selite"
+  final val ILMOITTAUTUMINEN_SUCCESS: String = "ilmoittautuminen onnistui"
 }
