@@ -7,6 +7,11 @@ module.exports = function(app, staticResources) {
     var token = matches && matches[1];
     var baseUrl = 'insecure/applications/application/';
 
+    // Ladataan sivu sen jälkeen kun vastaanottotieto on lähetetty
+    $scope.$on("hakutoive-vastaanotettu", function() {
+      location.reload();
+    });
+
     $scope.lang = staticResources.translations.languageId;
 
     $scope.logout = function() {
