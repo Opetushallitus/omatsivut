@@ -24,6 +24,7 @@ import fi.vm.sade.omatsivut.muistilista.MuistilistaServiceComponent
 import fi.vm.sade.omatsivut.oppijantunnistus.{OppijanTunnistusComponent, OppijanTunnistusService, RemoteOppijanTunnistusService, StubbedOppijanTunnistusService}
 import fi.vm.sade.omatsivut.servlet._
 import fi.vm.sade.omatsivut.servlet.session.{LogoutServletContainer, SecuredSessionServletContainer}
+import fi.vm.sade.omatsivut.vastaanotto.VastaanottoComponent
 import fi.vm.sade.utils.captcha.CaptchaServiceComponent
 
 class ComponentRegistry(val config: AppConfig)
@@ -42,7 +43,7 @@ class ComponentRegistry(val config: AppConfig)
           HakemusEditoriComponent with
           AtaruServiceComponent with
           OppijanumerorekisteriComponent with
-          VastaanottoEmailContainer with
+          VastaanottoComponent with
           ApplicationsServletContainer with
           MuistilistaServletContainer with
           CaptchaServiceComponent with
@@ -139,6 +140,7 @@ class ComponentRegistry(val config: AppConfig)
 
   def newAuditLoginFilter = new AuditLoginFilter(OphUrlProperties.url("vetuma.url"))
   def muistilistaService(language: Language): MuistilistaService = new MuistilistaService(language)
+  def vastaanottoService(implicit language: Language): VastaanottoService = new VastaanottoService()
   def newApplicationValidator: ApplicationValidator = new ApplicationValidator
   def newHakemusPreviewGenerator(language: Language): HakemusPreviewGenerator = new HakemusPreviewGenerator(language)
   def newApplicationsServlet = new ApplicationsServlet(config)
