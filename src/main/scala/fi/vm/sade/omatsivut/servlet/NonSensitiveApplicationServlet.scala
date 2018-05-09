@@ -69,6 +69,7 @@ trait VastaanottoEmailContainer {
 
       }
     }
+    logger.info("vastaanota(): henkiloOid {}, hakemusOid {}", henkiloOid, hakemusOid)
     val clientVastaanotto = Serialization.read[ClientSideVastaanotto](requestBody)
     try {
       if (valintatulosService.vastaanota(henkiloOid, hakemusOid, hakukohdeOid, clientVastaanotto.vastaanottoAction)) {
@@ -81,11 +82,14 @@ trait VastaanottoEmailContainer {
         }
         Audit.oppija.log(SaveVastaanotto(request, henkiloOid, hakemusOid, hakukohdeOid, hakuOid, clientVastaanotto.vastaanottoAction))
         fetchHakemus() match {
-          case Some(hakemus) => Ok(hakemus)
-          case _ => NotFound("error" -> "Not found")
+          case Some(hakemus) =>
+            Ok(hakemus)
+          case _ =>
+            logger.error("function type argument fetchHakemus() did not return a Some")
+            NotFound("error" -> "Not found")
         }
-      }
-      else {
+      } else {
+        logger.error("Not receivable: henkiloOid {}, hakemusOid {}, hakukohdeOid {}", henkiloOid, hakemusOid, hakukohdeOid)
         Forbidden("error" -> "Not receivable")
       }
 

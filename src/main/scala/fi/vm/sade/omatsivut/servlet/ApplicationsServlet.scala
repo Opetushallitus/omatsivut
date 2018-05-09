@@ -134,7 +134,9 @@ trait ApplicationsServletContainer {
           hakemus.hakemus.email,
           () => Some(hakemus)
         )
-        case None => NotFound("error" -> "Not found")
+        case None =>
+          logger.error("Vastaanotto failed because no application found for: henkiloOid {}, hakemusOid {}", henkiloOid, hakemusOid)
+          NotFound("error" -> "Not found")
       }
     }
   }
