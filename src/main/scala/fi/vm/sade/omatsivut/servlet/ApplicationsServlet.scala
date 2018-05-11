@@ -135,7 +135,7 @@ trait ApplicationsServletContainer {
           () => Some(hakemus)
         )
         case None =>
-          logger.error("Vastaanotto failed because no application found for: henkiloOid {}, hakemusOid {}", henkiloOid, hakemusOid)
+          logger.error(s"Vastaanotto failed because no application found for: henkiloOid $henkiloOid, hakemusOid $hakemusOid")
           NotFound("error" -> "Not found")
       }
     }

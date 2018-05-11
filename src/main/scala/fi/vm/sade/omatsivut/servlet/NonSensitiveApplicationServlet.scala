@@ -69,7 +69,7 @@ trait VastaanottoEmailContainer {
 
       }
     }
-    logger.info("vastaanota(): henkiloOid {}, hakemusOid {}", henkiloOid, hakemusOid)
+    logger.info(s"vastaanota(): henkiloOid $henkiloOid, hakemusOid $hakemusOid")
     val clientVastaanotto = Serialization.read[ClientSideVastaanotto](requestBody)
     try {
       if (valintatulosService.vastaanota(henkiloOid, hakemusOid, hakukohdeOid, clientVastaanotto.vastaanottoAction)) {

@@ -109,13 +109,14 @@ trait HakemusEditoriComponent extends ApplicationValidatorComponent
         if (ataruApplications.isEmpty) {
           logger.warn("fetchByHakemusOid(): Ataru returned no applications for given personOid {}", personOid)
         } else if (matchingAtaruApplication.isEmpty) {
-          logger.warn("fetchByHakemusOid(): Ataru returned applications for personOid {} but their hakemusOids {}" +
-            "did not match the given hakemusOid {}", ataruApplications.map(_.hakemus.oid), personOid, hakemusOid)
+          logger.warn(s"fetchByHakemusOid(): Ataru returned applications for personOid $personOid but " +
+            s"their hakemusOids ${ataruApplications.map(_.hakemus.oid).mkString(",")} did not match the given hakemusOid $hakemusOid")
         }
         matchingAtaruApplication
       }
       if (result.isEmpty){
-          logger.warn("fetchByHakemusOid(): neither hakemus repository nor ataru returned a matching application for personOid {}, hakemusOid {}", personOid, hakemusOid)
+          logger.warn(s"fetchByHakemusOid(): neither hakemus repository nor ataru returned a " +
+            s"matching application for personOid $personOid, hakemusOid $hakemusOid")
       }
       result
     }
