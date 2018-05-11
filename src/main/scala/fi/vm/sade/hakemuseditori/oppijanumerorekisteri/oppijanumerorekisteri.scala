@@ -43,7 +43,7 @@ object Henkilo {
 
 trait OppijanumerorekisteriService {
   def henkilo(personOid: String): Henkilo
-  def fetchAllOids(pOid: String): List[String]
+  def fetchAllDuplicateOids(pOid: String): List[String]
 }
 
 trait OppijanumerorekisteriComponent {
@@ -51,7 +51,7 @@ trait OppijanumerorekisteriComponent {
 
   class StubbedOppijanumerorekisteriService extends OppijanumerorekisteriService {
     override def henkilo(personOid: String): Henkilo = ???
-    override def fetchAllOids(pOid: String): List[String] = List(pOid)
+    override def fetchAllDuplicateOids(pOid: String): List[String] = List(pOid)
   }
 
   class RemoteOppijanumerorekisteriService(config: AppConfig) extends OppijanumerorekisteriService with JsonFormats with Logging {
@@ -91,7 +91,7 @@ trait OppijanumerorekisteriComponent {
       httpClient.fetch(request)(r => r.as[String].map(body => decoder(r.status.code, body, request)))
     }
 
-    override def fetchAllOids(pOid: String): List[String] = {
+    override def fetchAllDuplicateOids(pOid: String): List[String] = {
         implicit val formats = DefaultFormats
         val timeout = 1000*30L
 
