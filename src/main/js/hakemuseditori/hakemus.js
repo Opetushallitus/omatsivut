@@ -261,18 +261,19 @@ Hakemus.prototype = {
   },
 
   mergeSavedApplication: function(savedApplication) {
-    this.updated = savedApplication.updated
-    this.requiredPaymentState = savedApplication.requiredPaymentState
-    this.notifications = savedApplication.notifications
+    this.updated = savedApplication.updated;
+    this.requiredPaymentState = savedApplication.requiredPaymentState;
+    this.notifications = savedApplication.notifications;
 
     if (!_.isEqual(util.withoutAngularFields(this.state), savedApplication.state))
-      this.state = $.extend(true, {}, savedApplication.state)
+      this.state = window.$.extend(true, {}, savedApplication.state);
 
-    for (var i=0; i<this.hakutoiveet.length && i<savedApplication.hakutoiveet.length; i++) {
-      hakutoive = this.hakutoiveet[i]
-      hakutoive.importJson(savedApplication.hakutoiveet[i])
-      if (hakutoive.hasData())
+    for (let i=0; i<this.hakutoiveet.length && i<savedApplication.hakutoiveet.length; i++) {
+      let hakutoive = this.hakutoiveet[i];
+      hakutoive.importJson(savedApplication.hakutoiveet[i]);
+      if (hakutoive.hasData()) {
         hakutoive.setAsSaved()
+      }
     }
   },
 
