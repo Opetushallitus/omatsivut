@@ -1,5 +1,7 @@
 // Gulp
 let gulp = require('gulp'),
+  flatten = require('gulp-flatten'),
+  templates = require('gulp-angular-templatecache'),
   concat = require('gulp-concat'),
   less = require('gulp-less'),
   uglify = require('gulp-uglify'),
@@ -11,12 +13,12 @@ let gulp = require('gulp'),
   browserify = require('browserify'),
   watchify = require('watchify'),
   ngAnnotate = require('browserify-ngannotate'),
-  ngify = require('ngify'),
   babelify = require('babelify');
 
 function handleError(err) {
-  console.log(err.toString());
+  console.error(err);
   this.emit('end');
+  //if (!watch) throw err;
 }
 
 function compile(watch) {
@@ -33,8 +35,7 @@ function compile(watch) {
       presets: ["env"],
       sourceMaps: true
     })
-    .transform(ngAnnotate)
-    .transform(ngify);
+    .transform(ngAnnotate);
 
   function rebundle() {
     bundler.bundle()
@@ -61,14 +62,6 @@ function watch() {
   return compile(true);
 }
 
-gulp.task('build', ['less'], function () {
-  return compile();
-});
-
-gulp.task('watch', ['less'], function () {
-  return watch();
-});
-
 gulp.task('less', function () {
   gulp.src('src/main/less/main.less')
     .pipe(less().on('error', handleError))
@@ -86,4 +79,19 @@ gulp.task('less', function () {
     .pipe(gulp.dest('src/main/webapp/css'));
 });
 
-gulp.task('default', ['watch']);
+gulp.task('templates', function() {
+  return gulp.src(['src/main/templates/**/*.html', 'src/main/components/**/*.html'])
+    .pipe(flatten())
+    .pipe(templates('templates.js'))
+    .pipe(gulp.dest('src/main/templates'))
+});
+
+gulp.task('build', ['less', 'templates'], function () {
+  return compile();
+});
+
+gulp.task('watch', ['less', 'templates'], function () {
+  return watch();
+});
+
+gulp.task('default', ['build']);
