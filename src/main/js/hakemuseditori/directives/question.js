@@ -1,3 +1,5 @@
+const _ = require('underscore');
+
 module.exports = function(app) {
   app.directive("question", function (RecursionHelper) {
     return {

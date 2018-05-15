@@ -1,5 +1,6 @@
-var Hakutoive = require("../hakutoive")
-var Question = require("../question").Question
+const _ = require('underscore');
+const Hakutoive = require("../hakutoive");
+const Question = require("../question").Question;
 
 module.exports = function(app) {
   app.directive("application", ["$sce", "restResources", "applicationValidator", "settings", "debounce", "localization", "$timeout", function ($sce, restResources, applicationValidator, settings, debounce, localization, $timeout) {

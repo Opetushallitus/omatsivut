@@ -1,4 +1,5 @@
-var Hakutoive = require('../hakutoive')
+const _ = require('underscore');
+const Hakutoive = require('../hakutoive');
 
 module.exports = function(app) {
   app.directive("hakutoiveet", ["localization", function (localization) {
