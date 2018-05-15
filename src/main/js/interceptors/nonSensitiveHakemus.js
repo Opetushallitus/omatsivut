@@ -1,4 +1,3 @@
-require('es6-shim'); // for .includes polyfill
 var util = require('../util');
 
 function shouldRerouteRequest(config) {

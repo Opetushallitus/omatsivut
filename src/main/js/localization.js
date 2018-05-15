@@ -1,3 +1,5 @@
+const _ = require('underscore');
+
 module.exports = function(listApp, resources) {
   listApp.factory("localization", [function() {
     function getValue(obj, path) {
@@ -21,7 +23,7 @@ module.exports = function(listApp, resources) {
       else
         return replaceVars(val, vars || {})
     }
-    
+
     var language = function () {
       return resources.language
     }

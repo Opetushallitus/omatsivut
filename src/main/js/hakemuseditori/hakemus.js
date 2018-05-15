@@ -1,4 +1,3 @@
-require('es6-shim'); // for .includes polyfill
 var Hakutoive = require('./hakutoive');
 var Question = require('./question').Question;
 var util = require('./util');
