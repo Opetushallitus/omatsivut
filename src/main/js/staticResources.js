@@ -1,3 +1,5 @@
+const _ = require('underscore');
+
 var resources = {
   init: function(callback) {
     var language = readLanguageCookie()

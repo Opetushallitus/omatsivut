@@ -1,3 +1,5 @@
+const _ = require('underscore');
+
 var prevLang = "fi"
 
 function ApplicationListPage() {

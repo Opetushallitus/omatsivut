@@ -3,7 +3,6 @@ require('ng-resource')(window, angular);
 require('angular-module-sanitize');
 require('angular-animate');
 require('angular-cookies');
-_ = require("underscore");
 require("../lib/ui-bootstrap-custom-tpls-0.10.0.min.js");
 require('./recursionHelper');
 require('../lib/angular-debounce');

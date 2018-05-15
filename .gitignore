@@ -82,6 +82,7 @@ oph_vars
 
 # generated js and css files
 src/main/webapp/bundle.js
+src/main/webapp/bundle.js.map
 src/main/webapp/hakemuseditori*
 src/main/webapp/css/
 src/main/templates/templates.js
