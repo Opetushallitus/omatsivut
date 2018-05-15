@@ -1,4 +1,5 @@
-var util = require('./util')
+const _ = require('underscore');
+const util = require('./util');
 
 var questionDefaults = {
   help: "",

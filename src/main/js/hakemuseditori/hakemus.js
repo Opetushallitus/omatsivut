@@ -1,6 +1,7 @@
-var Hakutoive = require('./hakutoive');
-var Question = require('./question').Question;
-var util = require('./util');
+const _ = require('underscore');
+const Hakutoive = require('./hakutoive');
+const Question = require('./question').Question;
+const util = require('./util');
 
 function Hakemus(json) {
   try {

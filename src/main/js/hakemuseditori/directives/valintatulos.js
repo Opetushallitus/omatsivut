@@ -1,4 +1,5 @@
-var util = require("../util")
+const _ = require('underscore');
+const util = require("../util");
 
 module.exports = function(app) {
   app.directive('ignoreDirty', [function() {
