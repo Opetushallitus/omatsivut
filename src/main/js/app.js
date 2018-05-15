@@ -1,3 +1,4 @@
+require('babel-polyfill')
 require("angular");
 require('ng-resource')(window, angular);
 require('angular-module-sanitize');
