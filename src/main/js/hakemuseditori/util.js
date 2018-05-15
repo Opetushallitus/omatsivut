@@ -1,4 +1,6 @@
-var utils = {
+const _ = require('underscore');
+
+const utils = {
   mapArray: function (array, keyField, valueField) {
     return _.reduce(array, function (memo, item) {
       var key = item[keyField]
@@ -48,6 +50,6 @@ var utils = {
     } else
       return obj
   }
-}
+};
 
-module.exports = utils
+module.exports = utils;
