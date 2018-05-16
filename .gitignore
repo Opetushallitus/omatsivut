@@ -76,6 +76,7 @@ jrebel.lic
 # Commenting this out is preferred by some people, see
 # https://npmjs.org/doc/faq.html#Should-I-check-my-node_modules-folder-into-git
 node_modules
+node
 
 # OPH configuration vars for devel (for use with templated profile on server)
 oph_vars
