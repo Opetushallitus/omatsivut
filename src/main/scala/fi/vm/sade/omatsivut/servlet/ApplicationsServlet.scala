@@ -125,6 +125,7 @@ trait ApplicationsServletContainer {
         case None => NotFound("error" -> "Not found")
         case Some(hakemus) => {
           vastaanottoService.vastaanota(
+            request,
             hakemusOid,
             hakukohdeOid,
             henkiloOid,

@@ -114,7 +114,7 @@ trait NonSensitiveApplicationServletContainer {
 
       ilmoittautuminen.muokkaaja = user().oid
       val bool = valintatulosService.ilmoittaudu(hakuOid, hakemusOid, ilmoittautuminen)
-      Audit.oppija.log(SaveIlmoittautuminen(hakuOid, hakemusOid, ilmoittautuminen, bool))
+      Audit.oppija.log(SaveIlmoittautuminen(request, hakuOid, hakemusOid, ilmoittautuminen, bool))
     }
 
     put("/applications/:oid") {
@@ -152,6 +152,7 @@ trait NonSensitiveApplicationServletContainer {
         case None => NotFound("error" -> "Not found")
         case Some(hakemus) => {
           vastaanottoService.vastaanota(
+            request,
             hakemusOid,
             hakukohdeOid,
             henkiloOid,

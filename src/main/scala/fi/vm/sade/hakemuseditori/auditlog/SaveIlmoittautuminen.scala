@@ -1,11 +1,12 @@
 package fi.vm.sade.hakemuseditori.auditlog
 
-import java.net.InetAddress
+import javax.servlet.http.HttpServletRequest
 
 import fi.vm.sade.auditlog.{Changes, Target, User}
-import fi.vm.sade.hakemuseditori.valintatulokset.domain.{Ilmoittautuminen}
+import fi.vm.sade.hakemuseditori.valintatulokset.domain.Ilmoittautuminen
+import fi.vm.sade.omatsivut.security.AuthenticationInfoParser.getAuthenticationInfo
 
-case class SaveIlmoittautuminen(hakuOid: String, hakemusOid: String, ilmoittautuminen: Ilmoittautuminen, success: Boolean) extends AuditLogUtils with AuditEvent {
+case class SaveIlmoittautuminen(request: HttpServletRequest, hakuOid: String, hakemusOid: String, ilmoittautuminen: Ilmoittautuminen, success: Boolean) extends AuditLogUtils with AuditEvent {
   override val operation: OmatSivutOperation = OmatSivutOperation.SAVE_ILMOITTAUTUMINEN
   override val changes: Changes = new Changes.Builder().build()
   override val target: Target = new Target.Builder()
@@ -19,6 +20,8 @@ case class SaveIlmoittautuminen(hakuOid: String, hakemusOid: String, ilmoittautu
     .build()
 
   override def user: User = {
-    new User(getOid(ilmoittautuminen.muokkaaja).orNull, InetAddress.getLocalHost, "", "")
+    val authInfo = getAuthenticationInfo(request)
+    val shib = authInfo.shibbolethCookie
+    new User(getOid(ilmoittautuminen.muokkaaja).orNull, getAddress(request), shib.map(_.toString).getOrElse("(no shibboleth cookie)"), getUserAgent(request))
   }
 }
