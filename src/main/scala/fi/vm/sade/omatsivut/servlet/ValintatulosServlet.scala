@@ -29,7 +29,7 @@ trait ValintatulosServletContainer {
 
       ilmoittautuminen.muokkaaja = user().oid
       val bool = valintatulosService.ilmoittaudu(params("hakuOid"), params("hakemusOid"), ilmoittautuminen)
-      Audit.oppija.log(SaveIlmoittautuminen(hakuOid, hakemusOid, ilmoittautuminen, bool))
+      Audit.oppija.log(SaveIlmoittautuminen(request, hakuOid, hakemusOid, ilmoittautuminen, bool))
     }
   }
 }

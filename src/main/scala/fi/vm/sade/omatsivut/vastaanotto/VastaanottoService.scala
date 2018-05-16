@@ -2,6 +2,7 @@ package fi.vm.sade.omatsivut.vastaanotto
 
 import java.text.SimpleDateFormat
 import java.util.Calendar
+import javax.servlet.http.HttpServletRequest
 
 import fi.vm.sade.groupemailer.{EmailData, EmailMessage, EmailRecipient, GroupEmailComponent}
 import fi.vm.sade.hakemuseditori.HakemusEditoriComponent
@@ -23,13 +24,13 @@ trait VastaanottoComponent {
 
   class VastaanottoService()(implicit language: Language) extends JsonFormats {
 
-    def vastaanota(hakemusOid: String, hakukohdeOid: String, henkiloOid: String, vastaanotto: Vastaanotto, hakemus: HakemusInfo): ActionResult = {
+    def vastaanota(request: HttpServletRequest, hakemusOid: String, hakukohdeOid: String, henkiloOid: String, vastaanotto: Vastaanotto, hakemus: HakemusInfo): ActionResult = {
       val hakuOid: String = hakemus.hakemus.haku.oid
       val email: Option[String] = hakemus.hakemus.email
 
       Try(valintatulosService.vastaanota(henkiloOid, hakemusOid, hakukohdeOid, vastaanotto.vastaanottoAction)) match {
         case Success(result) => {
-          Audit.oppija.log(SaveVastaanotto(henkiloOid, hakemusOid, hakukohdeOid, hakuOid, vastaanotto.vastaanottoAction))
+          Audit.oppija.log(SaveVastaanotto(request, henkiloOid, hakemusOid, hakukohdeOid, hakuOid, vastaanotto.vastaanottoAction))
           if (result) {
             email match {
               case None => logger.error(s"""Vastaanottosähköpostia ei voitu lähettää, koska sähköpostiosoitetta ei löytynyt. HakemusOid: $hakemusOid""")

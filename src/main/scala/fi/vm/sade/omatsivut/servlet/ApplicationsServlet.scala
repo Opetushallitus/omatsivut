@@ -124,6 +124,7 @@ trait ApplicationsServletContainer {
       hakemusEditori.fetchByHakemusOid(request, henkiloOid, hakemusOid, Fetch) match {
         case Some(hakemus) => {
           vastaanottoService.vastaanota(
+            request,
             hakemusOid,
             hakukohdeOid,
             henkiloOid,
