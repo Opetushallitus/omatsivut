@@ -87,9 +87,39 @@ trait HakemusEditoriComponent extends ApplicationValidatorComponent
     def fetchByHakemusOid(request: HttpServletRequest,
                           personOid: String,
                           hakemusOid: String,
-                          valintatulosFetchStrategy: ValintatulosFetchStrategy): Option[HakemusInfo] =
-      hakemusRepository.getHakemus(request, hakemusOid, valintatulosFetchStrategy).filter(_.hakemus.personOid == personOid)
-        .orElse(ataruService.findApplications(request, personOid, valintatulosFetchStrategy).find(_.hakemus.oid == hakemusOid))
+                          valintatulosFetchStrategy: ValintatulosFetchStrategy): Option[HakemusInfo] = {
+      val optFromHakemusRepository = hakemusRepository.getHakemus(request, hakemusOid, valintatulosFetchStrategy)
+      if (optFromHakemusRepository.isEmpty) {
+        logger.info("fetchByHakemusOid(): Hakemus repository returned no application for given hakemusOid {}. Searching from ataru.", hakemusOid)
+      }
+
+      val matchingFromHakemusRepository = optFromHakemusRepository.filter { hakemus =>
+        val personOidFromHakemus = hakemus.hakemus.personOid
+        val oidsMatch = personOidFromHakemus == personOid
+        if (!oidsMatch) {
+          logger.warn("fetchByHakemusOid(): Hakemus repository returned an application for hakemusOid {} but its personOid {}" +
+            "did not match the given personOid parameter {}. Searching from ataru.", hakemusOid, personOidFromHakemus, personOid)
+        }
+        oidsMatch
+      }
+
+      val result: Option[HakemusInfo] = matchingFromHakemusRepository.orElse {
+        val ataruApplications = ataruService.findApplications(request, personOid, valintatulosFetchStrategy)
+        val matchingAtaruApplication = ataruApplications.find(_.hakemus.oid == hakemusOid)
+        if (ataruApplications.isEmpty) {
+          logger.warn("fetchByHakemusOid(): Ataru returned no applications for given personOid {}", personOid)
+        } else if (matchingAtaruApplication.isEmpty) {
+          logger.warn(s"fetchByHakemusOid(): Ataru returned applications for personOid $personOid but " +
+            s"their hakemusOids ${ataruApplications.map(_.hakemus.oid).mkString(",")} did not match the given hakemusOid $hakemusOid")
+        }
+        matchingAtaruApplication
+      }
+      if (result.isEmpty){
+          logger.warn(s"fetchByHakemusOid(): neither hakemus repository nor ataru returned a " +
+            s"matching application for personOid $personOid, hakemusOid $hakemusOid")
+      }
+      result
+    }
 
     def opetuspisteet(asId: String, query: String, lang: Option[String]): Option[List[Opetuspiste]] = koulutusInformaatioService.opetuspisteet(asId, query, parseLang(lang))
 
