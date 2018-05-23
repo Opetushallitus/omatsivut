@@ -82,9 +82,7 @@ module.exports = function(app) {
                 }
 
                 $scope.getEnrolmentMessageKeys = function() {
-                    var date = $scope.tulos.ilmoittautumistila.ilmoittautumisaika.tehty;
-                    // Workaround till I get this from valinta-tulos-service
-                    date = date ? date : new Date();
+                  var date = $scope.tulos.ilmoittautumisenAikaleima;
                     return {date: getEnrolmentDate(date), time: getEnrolmentTime(date)};
                 };
 
