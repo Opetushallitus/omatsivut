@@ -82,24 +82,12 @@ module.exports = function(app) {
                 }
 
                 $scope.getEnrolmentMessageKeys = function() {
-                  var date = $scope.tulos.ilmoittautumisenAikaleima;
-                    return {date: getEnrolmentDate(date), time: getEnrolmentTime(date)};
+
+                    var date = $scope.tulos.ilmoittautumisenAikaleima ? new Date($scope.tulos.ilmoittautumisenAikaleima) : new Date();
+
+                  return {date: date.toLocaleDateString('fi-FI'), time: date.toLocaleTimeString('fi-FI')}
                 };
 
-                function getEnrolmentDate(date) {
-                    var day = date.getDate();
-                    var month = date.getMonth() + 1;
-                    var year = date.getFullYear();
-
-                    return day + '.' + month + '.' + year;
-                }
-
-                function getEnrolmentTime(date) {
-                    var hours = date.getHours();
-                    var minutes = date.getMinutes();
-
-                    return hours + ':' + ("0" + minutes).slice(-2);
-                }
             }
 
         }
