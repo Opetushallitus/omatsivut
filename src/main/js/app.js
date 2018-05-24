@@ -18,6 +18,18 @@ require("../templates/templates.js");
 require("../lib/oph_urls.js/index.js");
 require("./omatsivut-web-oph.js");
 
+window.Service = {
+  login: function() {
+    
+  },
+  logout: function() {
+
+  },
+  getUser: function() {
+
+  }
+};
+
 var listApp = angular.module('listApp', ["ngResource", "ngSanitize", "ngAnimate", "ngCookies", "RecursionHelper", "ui.bootstrap.typeahead", "template/typeahead/typeahead-popup.html", "template/typeahead/typeahead-match.html", "debounce", "exceptionOverride", "templates"], function($locationProvider) {
   $locationProvider.html5Mode(false)
 });
