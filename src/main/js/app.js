@@ -20,13 +20,29 @@ require("./omatsivut-web-oph.js");
 
 window.Service = {
   login: function() {
-    
+    document.location.href = "/omatsivut/login";
   },
   logout: function() {
-
+    document.location.href = "/omatsivut/logout";
   },
   getUser: function() {
-
+    return new Promise((resolve, reject) => {
+      fetch('/omatsivut/session', {
+        credentials: 'same-origin'
+      })
+      .then((response) => {
+          if (response.status === 200) {
+            response.json().then((user) => {
+              resolve(user);
+            })
+          } else {
+            reject(new Error('No session found!'));
+          }
+      }).catch(err => {
+        console.error(err);
+        reject(new Error('Failed to fetch session!'));
+      });
+    });
   }
 };
 
