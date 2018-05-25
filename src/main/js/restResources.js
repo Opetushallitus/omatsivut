@@ -25,7 +25,8 @@ module.exports = function(listApp) {
 
       postOffice: $resource(window.url("omatsivut.postitoimipaikka")),
       koulutukset: $resource(window.url("omatsivut.koulutukset")),
-      opetuspisteet: $resource(window.url("omatsivut.opetuspisteet"))
+      opetuspisteet: $resource(window.url("omatsivut.opetuspisteet")),
+      lasnaoloilmoittautuminen: $resource(window.url("omatsivut.lasnaoloilmoittautuminen"))
     }
   }])
 }

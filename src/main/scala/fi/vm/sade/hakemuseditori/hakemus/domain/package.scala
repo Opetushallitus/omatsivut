@@ -1,7 +1,7 @@
 package fi.vm.sade.hakemuseditori.hakemus.domain
 
 import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus._
-import fi.vm.sade.hakemuseditori.tarjonta.domain.{Haku, KohteenHakuaika}
+import fi.vm.sade.hakemuseditori.tarjonta.domain.{Haku, KohteenHakuaika, KoulutuksenAlkaminen}
 import fi.vm.sade.omatsivut.OphUrlProperties
 import org.json4s.{DefaultFormats, JArray, JField, JString, JValue}
 
@@ -61,7 +61,7 @@ case class Hakemus(oid: String,
 
 case class Tuloskirje(hakuOid: String, created: Long)
 
-case class Hakutoive(hakemusData: Option[HakutoiveData], hakuaikaId: Option[String] = None, kohdekohtainenHakuaika: Option[KohteenHakuaika] = None)
+case class Hakutoive(hakemusData: Option[HakutoiveData], koulutuksenAlkaminen: Option[KoulutuksenAlkaminen] = None, hakuaikaId: Option[String] = None, kohdekohtainenHakuaika: Option[KohteenHakuaika] = None)
 
 object Hakutoive {
   def empty = Hakutoive(None)

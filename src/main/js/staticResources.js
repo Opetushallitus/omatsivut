@@ -1,3 +1,5 @@
+const _ = require('underscore');
+
 var resources = {
   init: function(callback) {
     var language = readLanguageCookie()
@@ -14,7 +16,7 @@ var resources = {
 module.exports = resources
 
 function setTimeformat(language) {
-  if (language == "en")
+  if (language === "en")
     moment.locale("en-gb")
   else
     moment.locale(language)

@@ -1,0 +1,42 @@
+<form class="lasnaoloilmoittautuminenForm" name="lasnaoloilmoittautuminenForm">
+    <fieldset>
+        <legend>
+            <span class="label-highlight">{{ localization('lasnaoloilmoittautuminen.title') }}</span>
+            <span>{{ application.henkiloNimi }} - {{ tulos.tarjoajaNimi }} {{ tulos.hakukohdeNimi }}</span>
+        </legend>
+        <div ng-hide="ilmoittautunut">
+            <div class="instruction">{{ localization('lasnaoloilmoittautuminen.info') }}</div>
+
+            <!-- Syksyllä alkavat koulutukset -->
+            <div class="check-options" ng-show="schoolStartsInAutumn()">
+                <label>
+                    <input class="oph-checkable-input" type="radio" name="radios" value="semester" ng-model="ilmoittautuminen">
+                    <span class="oph-checkable-text">{{ localization('lasnaoloilmoittautuminen.semester') }}</span>
+                </label>
+
+                <!--label>
+                    <input class="oph-checkable-input" type="radio" name="radios" value="autumn" ng-model="ilmoittautuminen">
+                    <span class="oph-checkable-text">{{ localization('lasnaoloilmoittautuminen.autumn') }}</span>
+                </label-->
+            </div>
+
+            <!-- Keväällä alkavat koulutukset -->
+            <div class="check-options" ng-show="schoolStartsInSpring()">
+                <label>
+                    <input class="oph-checkable-input" type="radio" name="radios" value="spring" ng-model="ilmoittautuminen">
+                    <span class="oph-checkable-text">{{ localization('lasnaoloilmoittautuminen.spring') }}</span>
+                </label>
+            </div>
+
+            <div class="save-btn-wrapper">
+                <button class="save-btn" ng-click="postLasnaoloilmoittautuminen()">{{ localization('lasnaoloilmoittautuminen.send') }}</button>
+            </div>
+            <div class="lasnaolo-error" ng-if="error">
+                {{ getErrorTranslation() }}
+            </div>
+        </div>
+        <div class="lasnaolo-confirmation" ng-if="ilmoittautunut">
+            {{ localization('lasnaoloilmoittautuminen.confirmation', getEnrolmentMessageKeys()) }} {{ getStateTranslation() }}
+        </div>
+    </fieldset>
+</form>

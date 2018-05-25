@@ -63,4 +63,6 @@ case class ImmutableLegacyApplicationWrapper(
 
   def henkilotunnus: Option[String] = answers.get("henkilotiedot").flatMap(_.get("Henkilotunnus"))
   def sähköposti: Option[String] = answers.get("henkilotiedot").flatMap(_.get("Sähköposti"))
+  def etunimet: Option[String] = answers.get("henkilotiedot").flatMap(_.get("Etunimet"))
+  def sukunimi: Option[String] = answers.get("henkilotiedot").flatMap(_.get("Sukunimi"))
 }

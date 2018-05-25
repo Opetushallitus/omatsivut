@@ -9,10 +9,10 @@ import fi.vm.sade.hakemuseditori.localization.TranslationsComponent
 import fi.vm.sade.hakemuseditori.lomake.LomakeRepositoryComponent
 import fi.vm.sade.hakemuseditori.user.Oppija
 import fi.vm.sade.hakemuseditori.valintatulokset.ValintatulosServiceComponent
-import fi.vm.sade.hakemuseditori.valintatulokset.domain._
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.hakemuspreview.HakemusPreviewGeneratorComponent
 import fi.vm.sade.omatsivut.security.AuthenticationRequiringServlet
+import fi.vm.sade.omatsivut.vastaanotto.{Vastaanotto, VastaanottoComponent}
 import fi.vm.sade.utils.cas.{CasAuthenticatingClient, CasClient, CasParams}
 import org.http4s.client.blaze
 import org.json4s.DefaultFormats
@@ -21,7 +21,6 @@ import org.scalatra._
 import org.scalatra.json._
 
 import scala.util.{Failure, Success}
-
 
 trait ApplicationsServletContainer {
   this: HakemusEditoriComponent with
@@ -32,7 +31,7 @@ trait ApplicationsServletContainer {
         HakemusPreviewGeneratorComponent with
         SpringContextComponent with
         GroupEmailComponent with
-        VastaanottoEmailContainer with
+        VastaanottoComponent with
         TranslationsComponent =>
 
   class ApplicationsServlet(val appConfig: AppConfig) extends OmatSivutServletBase with JsonFormats with JacksonJsonSupport with AuthenticationRequiringServlet with HakemusEditoriUserContext {
@@ -46,8 +45,6 @@ trait ApplicationsServletContainer {
     private val casParams = CasParams(serviceUrl, securitySettings.casUsername, securitySettings.casPassword)
     private val httpClient = CasAuthenticatingClient(casClient, casParams, blazeHttpClient, Some("omatsivut.omatsivut.backend"), "JSESSIONID")
     protected val applicationDescription = "Oppijan henkilökohtaisen palvelun REST API, jolla voi hakea ja muokata hakemuksia ja omia tietoja"
-
-
 
     before() {
       contentType = formats("json")
@@ -122,18 +119,19 @@ trait ApplicationsServletContainer {
       val hakemusOid = params("hakemusOid")
       val hakukohdeOid = params("hakukohdeOid")
       val henkiloOid = personOid()
+      val vastaanotto = Serialization.read[Vastaanotto](request.body)
 
       hakemusEditori.fetchByHakemusOid(request, henkiloOid, hakemusOid, Fetch) match {
-        case Some(hakemus) => vastaanota(
-          request,
-          hakemusOid,
-          hakukohdeOid,
-          hakemus.hakemus.haku.oid,
-          henkiloOid,
-          request.body,
-          hakemus.hakemus.email,
-          () => Some(hakemus)
-        )
+        case Some(hakemus) => {
+          vastaanottoService.vastaanota(
+            request,
+            hakemusOid,
+            hakukohdeOid,
+            henkiloOid,
+            vastaanotto,
+            hakemus
+          )
+        }
         case None =>
           logger.error(s"Vastaanotto failed because no application found for: henkiloOid $henkiloOid, hakemusOid $hakemusOid")
           NotFound("error" -> "Not found")
@@ -141,6 +139,4 @@ trait ApplicationsServletContainer {
     }
   }
 }
-
-case class ClientSideVastaanotto(vastaanottoAction: VastaanottoAction, hakukohdeNimi: String = "", tarjoajaNimi: String = "")
 

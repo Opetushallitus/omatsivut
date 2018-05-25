@@ -89,7 +89,9 @@
       ],
       "valintaPerusteKuvausKielet": [],
       "soraKuvausKielet": [],
-      "organisaatioRyhmaOids": []
+      "organisaatioRyhmaOids": [],
+      "koulutuksenAlkamiskausiUri": "kausi_s#1",
+      "koulutuksenAlkamisvuosi": 2014
     }
   },
   "1.2.246.562.5.16303028779": {

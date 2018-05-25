@@ -1,117 +1,97 @@
-var gulp = require('gulp'),
-    browserify = require('gulp-browserify'),
-    concat = require('gulp-concat'),
-    less = require('gulp-less'),
-    jshint = require('gulp-jshint'),
-    livereload = require('gulp-livereload'),
-    templates = require('gulp-angular-templatecache'),
-    uglify = require('gulp-uglify'),
-    gulpif = require('gulp-if'),
-    ngAnnotate = require('gulp-ng-annotate')
+// Gulp
+let gulp = require('gulp'),
+  flatten = require('gulp-flatten'),
+  templates = require('gulp-angular-templatecache'),
+  concat = require('gulp-concat'),
+  less = require('gulp-less'),
+  uglify = require('gulp-uglify'),
+  sourcemaps = require('gulp-sourcemaps'),
+  source = require('vinyl-source-stream'),
+  buffer = require('vinyl-buffer'),
 
-var jsFiles = 'src/main/js/**/*.js';
-var isWatch
-var localEditor = false
-var editorLocation = "hakemuseditori"
+  // Browserify
+  browserify = require('browserify'),
+  watchify = require('watchify'),
+  ngAnnotate = require('browserify-ngannotate'),
+  babelify = require('babelify');
 
 function handleError(err) {
-    console.log(err.toString());
-    this.emit('end');
-    if (!isWatch) {
-      throw err
-    }
+  console.error(err);
+  this.emit('end');
+  //if (!watch) throw err;
 }
 
-gulp.task('lint', function() {
-    gulp.src(jsFiles)
-        .pipe(jshint({
-            globals: {
-                require: false,
-                angular: false
-            }
-        }))
-        .pipe(jshint.reporter('default'));
-});
-
-gulp.task("templates", function() {
-  return gulp.src("src/main/templates/**/*.html")
-    .pipe(templates("templates.js", { root:"templates/"}))
-    .pipe(gulp.dest("src/main/templates"))
-})
-
-gulp.task('copy-editor', function() {
-    gulp.src(editorLocation + "/src/main/img/**")
-      .pipe(gulp.dest('src/main/webapp/img/hakemuseditori'))
-
-    if(!localEditor) {
-      gulp.src(editorLocation + "/dist/*.js")
-        .pipe(gulp.dest('src/main/webapp'))
-    }
-
-    return gulp.src(editorLocation + "/src/main/less/**")
-      .pipe(gulp.dest('src/main/less/hakemuseditori'))
-})
-
-gulp.task('less', ['copy-editor'], function () {
-    gulp.src('src/main/less/main.less')
-        .pipe(less().on('error', handleError))
-        .pipe(concat('main.css'))
-        .pipe(gulp.dest('src/main/webapp/css'));
-
-    gulp.src('src/main/less/hakutoiveidenMuokkaus.less')
-        .pipe(less().on('error', handleError))
-        .pipe(concat('hakutoiveidenMuokkaus.css'))
-        .pipe(gulp.dest('src/main/webapp/css'));
-
-    gulp.src('src/main/less/preview.less')
-      .pipe(less().on('error', handleError))
-      .pipe(concat('preview.css'))
-      .pipe(gulp.dest('src/main/webapp/css'));
-
-    gulp.src('src/main/less/hakutoiveidenMuokkaus.less')
-      .pipe(less().on('error', handleError))
-      .pipe(concat('hakutoiveidenMuokkaus.css'))
-      .pipe(gulp.dest('src/main/webapp/css'));
-});
-
-gulp.task('browserify', ["templates"], function() {
-  compileJs(false)
-})
-
-gulp.task('browserify-min', ["templates"], function() {
-  compileJs(true)
-})
-
-function compileJs(compress) {
-  gulp.src(['src/main/js/app.js'])
-    .pipe(browserify({
-      external: ["./hakemuseditori"],
+function compile(watch) {
+  let bundler = browserify('./src/main/js/app.js',
+    {
       insertGlobals: true,
-      debug: true
-    }).on('error', handleError))
-    .pipe(concat('bundle.js'))
-    .pipe(gulpif(compress, ngAnnotate()))
-    .pipe(gulpif(compress, uglify({ mangle: true })))
-    .pipe(gulp.dest('src/main/webapp'))
+      debug: true,
+      cache: {},
+      packageCache: {},
+      plugin: [watchify]
+    })
+    .transform(babelify,
+    {
+      presets: ["env"],
+      sourceMaps: true
+    })
+    .transform(ngAnnotate);
+
+  function rebundle() {
+    bundler.bundle()
+      .on('error', handleError)
+      .pipe(source('bundle.js'))
+      .pipe(buffer())
+      .pipe(sourcemaps.init({loadMaps: true}))
+      .pipe(uglify({compress: true}))
+      .pipe(sourcemaps.write('./'))
+      .pipe(gulp.dest('src/main/webapp'))
+  }
+
+  if (watch) {
+    bundler.on('update', function () {
+      console.log('-> bundling...');
+      rebundle();
+    });
+  }
+
+  rebundle();
 }
 
-gulp.task('watch', function() {
-    isWatch = true
-    livereload.listen();
-    gulp.watch(['src/main/webapp/**/*.js', 'src/main/webapp/**/*.css', 'src/main/webapp/**/*.html'], livereload.changed);
-    gulp.watch([editorLocation + "/src/main/less/**", 'src/main/templates/**/*.html'], ['compile-dev'])
-    gulp.watch([jsFiles, 'src/main/webapp/hakemuseditori.js', 'src/main/webapp/hakemuseditori-templates.js'],['lint', 'browserify']);
-    gulp.watch(['src/main/less/**/*.less'],['less']);
+function watch() {
+  return compile(true);
+}
+
+gulp.task('less', function () {
+  gulp.src('src/main/less/main.less')
+    .pipe(less().on('error', handleError))
+    .pipe(concat('main.css'))
+    .pipe(gulp.dest('src/main/webapp/css'));
+
+  gulp.src('src/main/less/hakutoiveidenMuokkaus.less')
+    .pipe(less().on('error', handleError))
+    .pipe(concat('hakutoiveidenMuokkaus.css'))
+    .pipe(gulp.dest('src/main/webapp/css'));
+
+  gulp.src('src/main/less/preview.less')
+    .pipe(less().on('error', handleError))
+    .pipe(concat('preview.css'))
+    .pipe(gulp.dest('src/main/webapp/css'));
 });
 
-gulp.task('local-editor', function() {
-    localEditor = true
-    editorLocation = "hakemuseditori"
+gulp.task('templates', function() {
+  return gulp.src(['src/main/templates/**/*.html', 'src/main/components/**/*.html'])
+    .pipe(flatten())
+    .pipe(templates('templates.js'))
+    .pipe(gulp.dest('src/main/templates'))
 });
 
-gulp.task('dev-local-editor', ['local-editor', 'dev']);
+gulp.task('build', ['less', 'templates'], function () {
+  return compile();
+});
 
-gulp.task('compile', ['copy-editor', 'templates', 'browserify-min', 'less']);
-gulp.task('compile-dev', ['copy-editor', 'templates', 'browserify', 'less']);
-gulp.task('dev', ['lint', 'compile-dev', 'watch']);
-gulp.task('default', ['compile']);
+gulp.task('watch', ['less', 'templates'], function () {
+  return watch();
+});
+
+gulp.task('default', ['build']);

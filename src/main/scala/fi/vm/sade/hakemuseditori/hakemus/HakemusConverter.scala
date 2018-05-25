@@ -152,7 +152,7 @@ trait HakemusConverterComponent {
             val tarjonnanHakukohde = tarjontaService.hakukohde(data("Koulutus-id"))
             val amendedData = amendWithKoulutusInformaatio(lang, data)
 
-            Hakutoive(Some(amendedData), tarjonnanHakukohde.flatMap(_.hakuaikaId), tarjonnanHakukohde.flatMap(_.kohteenHakuaika))
+            Hakutoive(Some(amendedData), tarjonnanHakukohde.flatMap(_.koulutuksenAlkaminen),  tarjonnanHakukohde.flatMap(_.hakuaikaId), tarjonnanHakukohde.flatMap(_.kohteenHakuaika))
         }
       }
       val maxHakutoiveet = if (lomake.nonEmpty) {

@@ -14,14 +14,14 @@
             <img ng-src="img/opintopolku_large-{{lang}}.png">
         </a>
         <div class="center">
-            <h1 ng-if="hakemus.vastaanotettavatHakutoiveet().length == 0">{{ localization("hakutoiveidenMuokkaus.title") }}</h1>
-            <h1 ng-if="hakemus.vastaanotettavatHakutoiveet().length > 0">{{ localization("hakutoiveidenMuokkaus.titleWithVastaanotto") }}</h1>
-            <span ng-if="hakemus">
+            <h1 ng-if="application.vastaanotettavatHakutoiveet().length == 0">{{ localization("hakutoiveidenMuokkaus.title") }}</h1>
+            <h1 ng-if="application.vastaanotettavatHakutoiveet().length > 0">{{ localization("hakutoiveidenMuokkaus.titleWithVastaanotto") }}</h1>
+            <span ng-if="application">
                 {{ localization("applicationPreview.applicationId") }}
-                {{ hakemus.oid }}
+                {{ application.oid }}
             </span>
         </div>
-        <div class="right" ng-class="{invisible: !hakemus}">
+        <div class="right" ng-class="{invisible: !application}">
             <span class="user">{{user.name}}</span>
             <a class="logout" ng-click="logout()">{{ localization("button.logout") }}</a>
         </div>
@@ -35,9 +35,9 @@
         <div class="alert alert-info" ng-bind-html="localization(infoMessage)"></div>
     </section>
 
-    <section id="appRoot" class="content hakemus" ng-if="hakemus">
+    <section id="appRoot" class="content hakemus" ng-if="application">
         <notification ng-hide="allowVastaanotto" message="{{localization('hakutoiveidenMuokkaus.infoNotification')}}"></notification>
-        <application application="hakemus"></application>
+        <application application="application"></application>
     </section>
 
     <section class="content hakemus" ng-if="loggedOut">
@@ -52,7 +52,6 @@
     </section>
 
     <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
-    <script src="hakemuseditori.js"></script>
     <script src="bundle.js"></script>
 </body>
 </html>

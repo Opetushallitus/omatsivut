@@ -1,0 +1,47 @@
+<div class="result-list">
+    <div class="result-list-header">
+        <span>{{ localization('label.resultsCaption') }}</span>
+        <span class="result-list-status"> {{ status }}</span>
+    </div>
+    <div class="result-list-wrap" ng-repeat="tulos in valintatulos().hakutoiveet" ng-class="valintatulosStyle(tulos)">
+        <div class="result-list-cell flex-40">
+            <span class="row-number">{{$index+1}}.</span>
+            <span ng-bind="tulos.tarjoajaNimi"></span>
+            <span ng-bind="tulos.hakukohdeNimi"></span>
+            <span class="hyvaksytty-kesken" ng-show="isHyvaksyttyKesken(tulos, valintatulos().hakutoiveet)">
+                <span>{{ localization('label.acceptedUnfinished.text') }}</span>
+                <ol>
+                    <li>{{ localization('label.acceptedUnfinished.rules.1') }}</li>
+                    <li>{{ localization('label.acceptedUnfinished.rules.2') }}</li>
+                </ol>
+                <a href="{{ localization('label.acceptedUnfinished.href') }}">{{ localization('label.acceptedUnfinished.link') }}</a>
+            </span>
+        </div>
+        <div class="result-list-cell flex-60">
+            <div>
+                <div>
+                    <span ng-bind="valintatulosText(tulos, valintatulos().hakutoiveet)" class="valintatulos-otsake"></span>
+                </div>
+                <div class="update-vastaanottotieto" ng-show="tulos.vastaanottotila == 'EHDOLLISESTI_VASTAANOTTANUT'">
+                    <span class="ajax-spinner" ng-show="ajaxPending"></span>
+                    <div ng-hide="ajaxPending">
+                        <div>
+                            <label>
+                                <input type="checkbox" ng-model="enableConfirmation" ignore-dirty/>
+                                {{ localization('label.acceptConditionallyAccepted') }}
+                            </label>
+                        </div>
+                        <div class="confirm-update-vastaanottotieto">
+                            <button id="confirmChangeButton"
+                                    ng-disabled="!enableConfirmation"
+                                    ng-click="vastaanotaSitovasti(hakemus, tulos)"
+                                    ng-init="enableConfirmation=false">{{ localization('button.confirmChange') }}</button>
+                            <i>{{ localization('label.cannotUndoChanges') }}</i>
+                        </div>
+                        <span class="status-message error" ng-show="error">{{ getError() }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

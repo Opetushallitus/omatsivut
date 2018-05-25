@@ -1,0 +1,23 @@
+<!-- kk -->
+<div class="ilmoittautuminen-item fade-transitions" ng-repeat="tulos in hakukohteet()">
+    <div ng-if="!application.haku.toisenasteenhaku && linkkiOK(tulos)">
+        <header>
+            <strong ng-if="tulos.ehdollisestiHyvaksyttavissa">{{ localization('registration.conditionalAcceptanceTitle') }}</strong>
+            <strong ng-if="!tulos.ehdollisestiHyvaksyttavissa">{{ localization('registration.pleaseRegister') }}</strong>
+            {{ tulos.tarjoajaNimi }} - {{ tulos.hakukohdeNimi }}
+        </header>
+        <span ng-if="tulos.ehdollisestiHyvaksyttavissa">{{ localization('registration.conditionalAcceptanceInfo') }}</span>
+        <a ng-if="!tulos.ehdollisestiHyvaksyttavissa" href="{{oili()}}">{{ localization('registration.goToRegistration') }}</a>
+    </div>
+</div>
+
+<!-- 2. aste -->
+<div class="ilmoittautuminen-item fade-transitions" ng-repeat="tulos in hakukohteet()">
+    <div class="result-list" ng-if="application.haku.toisenasteenhaku && tulos.vastaanottotila === 'VASTAANOTTANUT_SITOVASTI'">
+        <div class="result-list-wrap">
+            <div class="result-list-cell flex-100">
+                <lasnaoloilmoittautuminen application="application" tulos="tulos"/>
+            </div>
+        </div>
+    </div>
+</div>

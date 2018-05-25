@@ -1,0 +1,109 @@
+@import "../common.less";
+
+.result-list {
+  border-collapse: collapse;
+  width: 100%;
+  line-height: 125%;
+  font-size: 14px;
+
+  .result-list-header {
+    .section-heading-font(@font-color);
+    font-weight: normal;
+    font-size: 15px;
+    padding-bottom: 8px;
+    line-height: 20px;
+
+    .result-list-status {
+      text-transform: none;
+      color: @font-color-light;
+    }
+  }
+  .result-list-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    width: 100%;
+    border-top: 3px solid white;
+    background: #F7F7F7;
+
+    .result-list-cell {
+      padding: 10px;
+      vertical-align: top;
+      margin-bottom: 1px;
+      width: 40%;
+
+      .hyvaksytty-kesken {
+        margin-top: 15px;
+        display: block;
+        ol {
+          list-style-position: outside;
+          li {
+            margin-left: 15px;
+          }
+        }
+      }
+
+      .update-vastaanottotieto {
+        text-transform: none;
+        font-weight: 100;
+        div {
+          padding-top: 4px;
+          padding-bottom: 4px;
+          .confirm-update-vastaanottotieto {
+            padding: 0.5em 0 0.1em 1.2em;
+            i {
+              font-size: 0.9em;
+              padding-left: 1em;
+            }
+          }
+        }
+        button {
+          background: #159ECB;
+          border-radius: 2px;
+          height: 35px;
+          font-family: 'Helvetica Neue', helvetica, arial, sans-serif;;
+          font-size: 15px;
+          color: #FFFFFF;
+        }
+        button:hover {
+          background: #00B5EF;
+        }
+        button:disabled {
+          background: #CCCCCC;
+        }
+      }
+
+    }
+
+    &:extend(.accepted);
+  }
+
+  .accepted {
+    background: inherit;
+    .valintatulos-otsake {
+      font-weight: bold;
+    }
+    .flex-40, .flex-60 {
+      background: #EBF8FB;
+    }
+  }
+}
+
+.flex-40 {
+  flex-basis: 40%;
+}
+
+.flex-60 {
+  flex-basis: 60%;
+}
+
+.flex-100 {
+  border: 1px solid #f8f5f5;
+  margin-top: 1px;
+  flex-basis: 100%;
+  background: #fffdfd;
+}
+
+.result-status {
+  font-style: italic;
+}

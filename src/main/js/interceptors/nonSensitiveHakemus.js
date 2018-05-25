@@ -1,11 +1,11 @@
-var util = require('../util')
+var util = require('../util');
 
 function shouldRerouteRequest(config) {
-  return window.location.href.indexOf('hakutoiveidenMuokkaus.html') !== -1 && config.url.indexOf('/secure/') !== -1
+  return window.location.href.includes('hakutoiveidenMuokkaus.html') && config.url.includes('/secure/')
 }
 
 function shouldAuthenticate(config) {
-  return config.url.indexOf('insecure/') !== -1
+  return config.url.includes('insecure/')
 }
 
 var nonSensitiveHakemusInterceptor = {
@@ -21,14 +21,14 @@ var nonSensitiveHakemusInterceptor = {
 
   response: function(response) {
     if (shouldAuthenticate(response.config) && response.data && response.data.jsonWebToken) {
-      util.setBearerToken(response.data.jsonWebToken)
-      response.oiliJwt = response.data.oiliJwt
+      util.setBearerToken(response.data.jsonWebToken);
+      response.oiliJwt = response.data.oiliJwt;
       response.data = response.data.response
     }
     return response
   }
-}
+};
 
 module.exports = function() {
   return nonSensitiveHakemusInterceptor
-}
+};
