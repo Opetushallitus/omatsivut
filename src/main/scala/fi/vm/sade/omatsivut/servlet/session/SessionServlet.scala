@@ -25,7 +25,7 @@ class SessionServlet(val appConfig: AppConfig) extends OmatSivutServletBase with
     val hetu: Option[String] = Option(request.getHeader("nationalidentificationnumber"))
     val firstName: Option[String] = Option(request.getHeader("firstname"))
     val lastName: Option[String] = Option(request.getHeader("sn"))
-    
+
     User(
       parseDisplayName(firstName, lastName),
       parseDateFromHetu(hetu)
