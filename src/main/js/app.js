@@ -76,20 +76,10 @@ listApp.run(function ($rootScope, localization) {
   $rootScope.localization = localization
 });
 
-var raamitLoaded = $.Deferred();
-if (document.location.hash.indexOf("skipRaamit") > 0 || $("#siteheader").length > 0) {
-  raamitLoaded.resolve()
-}
-$("html").on("oppija-raamit-loaded", function() {
-  raamitLoaded.resolve()
-});
-
 angular.element(document).ready(function() {
-  raamitLoaded.done(function() {
-    staticResources.init(function() {
-      angular.bootstrap(document, ['listApp']);
-      $("body").attr("aria-busy","false")
-    })
+  staticResources.init(function() {
+    angular.bootstrap(document, ['listApp']);
+    $("body").attr("aria-busy","false")
   })
 });
 
