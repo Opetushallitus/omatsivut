@@ -11,7 +11,7 @@ class RaamitServletSpec extends ScalatraTestSupport  {
     "point to oppija-raamit" in {
       get("raamit/load") {
         status must_== 200
-        response.body.indexOf("/oppija-raamit/apply-raamit.js") >= 0 must beTrue
+        response.body.indexOf("/oppija-raamit/js/apply-raamit.js") >= 0 must beTrue
       }
     }
   }
