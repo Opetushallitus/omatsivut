@@ -22,7 +22,7 @@ trait LogoutServletContainer {
     }
 
     def redirectToShibbolethLogout(request: HttpServletRequest, response: RichResponse): Unit = {
-      val returnUrl = request.getContextPath + "/session/reset"
+      val returnUrl = request.getContextPath + "/"
       response.redirect(authenticationContext.ssoContextPath + OphUrlProperties.url("shibboleth.logout", returnUrl))
     }
   }

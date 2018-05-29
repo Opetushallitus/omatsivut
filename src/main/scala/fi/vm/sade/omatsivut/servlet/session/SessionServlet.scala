@@ -2,20 +2,14 @@ package fi.vm.sade.omatsivut.servlet.session
 
 import java.nio.charset.Charset
 
-import fi.vm.sade.omatsivut.config.AppConfig
-import AppConfig.AppConfig
 import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
 import org.joda.time.LocalDate
 import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
 import org.scalatra.json.JacksonJsonSupport
 import fi.vm.sade.hakemuseditori.json.JsonFormats
 
-class SessionServlet(val appConfig: AppConfig) extends OmatSivutServletBase with JsonFormats with JacksonJsonSupport {
+class SessionServlet extends OmatSivutServletBase with JsonFormats with JacksonJsonSupport {
   private val formatter: DateTimeFormatter = DateTimeFormat.forPattern("ddMMYY")
-
-  get("/reset") {
-    redirectToIndex
-  }
 
   get("/") {
     contentType = formats("json")
@@ -27,11 +21,6 @@ class SessionServlet(val appConfig: AppConfig) extends OmatSivutServletBase with
       parseDisplayName(firstName, lastName),
       parseDateFromHetu(hetu)
     )
-  }
-
-  def redirectToIndex {
-    val redirectUrl = if (appConfig.usesFakeAuthentication) request.getContextPath + "/index.html" else "/"
-    response.redirect(redirectUrl)
   }
 
   def parseDateFromHetu(hetu: Option[String]): Option[LocalDate] = {
