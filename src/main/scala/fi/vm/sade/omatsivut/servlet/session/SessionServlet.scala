@@ -13,15 +13,12 @@ import fi.vm.sade.hakemuseditori.json.JsonFormats
 class SessionServlet(val appConfig: AppConfig) extends OmatSivutServletBase with JsonFormats with JacksonJsonSupport {
   private val formatter: DateTimeFormatter = DateTimeFormat.forPattern("ddMMYY")
 
-  before() {
-    contentType = formats("json")
-  }
-
   get("/reset") {
     redirectToIndex
   }
 
   get("/") {
+    contentType = formats("json")
     val hetu: Option[String] = Option(request.getHeader("nationalidentificationnumber"))
     val firstName: Option[String] = Option(request.getHeader("firstname"))
     val lastName: Option[String] = Option(request.getHeader("sn"))
