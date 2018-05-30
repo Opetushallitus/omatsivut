@@ -27,7 +27,7 @@ class LanguageFilter extends ScalatraFilter with Logging{
   }
 
   def chooseLanguage(param: Option[String], cookies: Option[Array[Cookie]], url: String): (Language.Language, Boolean) = {
-    (chooseLanguageFromParam(param).orElse(chooseLanguageFromHost(url)).orElse(chooseLanguageFromCookie(cookies)).getOrElse(Language.fi), true)
+    (chooseLanguageFromParam(param).orElse(chooseLanguageFromCookie(cookies)).orElse(chooseLanguageFromHost(url)).getOrElse(Language.fi), true)
   }
 
   private def chooseLanguageFromCookie(cookies: Option[Array[Cookie]]) = {

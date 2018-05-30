@@ -44,7 +44,7 @@ class ScalatraBootstrap extends LifeCycle with Logging {
     context.mount(componentRegistry.newKoodistoServlet, "/koodisto")
     context.mount(componentRegistry.newKoulutusServlet, "/koulutusinformaatio")
     context.mount(componentRegistry.newSecuredSessionServlet, "/secure")
-    context.mount(new SessionServlet(config), "/session")
+    context.mount(new SessionServlet, "/session")
     context.mount(new RaamitServlet(config), "/raamit")
     context.mount(new PiwikServlet(config), "/piwik")
     context.mount(new LoginServlet(config.authContext), "/login")

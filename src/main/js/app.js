@@ -1,4 +1,4 @@
-require('babel-polyfill')
+require('babel-polyfill');
 require("angular");
 require('ng-resource')(window, angular);
 require('angular-module-sanitize');
@@ -17,6 +17,34 @@ angular.module("templates", []);
 require("../templates/templates.js");
 require("../lib/oph_urls.js/index.js");
 require("./omatsivut-web-oph.js");
+
+window.Service = {
+  login: function() {
+    document.location.href = "/omatsivut/login";
+  },
+  logout: function() {
+    document.location.href = "/omatsivut/logout";
+  },
+  getUser: function() {
+    return new Promise((resolve, reject) => {
+      fetch('/omatsivut/session', {
+        credentials: 'same-origin'
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          response.json().then((user) => {
+            resolve(user);
+          })
+        } else {
+          reject(new Error('No session found!'));
+        }
+      }).catch(err => {
+        console.error(err);
+        reject(new Error('Failed to fetch session!'));
+      });
+    });
+  }
+};
 
 var listApp = angular.module('listApp', ["ngResource", "ngSanitize", "ngAnimate", "ngCookies", "RecursionHelper", "ui.bootstrap.typeahead", "template/typeahead/typeahead-popup.html", "template/typeahead/typeahead-match.html", "debounce", "exceptionOverride", "templates"], function($locationProvider) {
   $locationProvider.html5Mode(false)
@@ -48,20 +76,10 @@ listApp.run(function ($rootScope, localization) {
   $rootScope.localization = localization
 });
 
-var raamitLoaded = $.Deferred();
-if (document.location.hash.indexOf("skipRaamit") > 0 || $("#siteheader").length > 0) {
-  raamitLoaded.resolve()
-}
-$("html").on("oppija-raamit-loaded", function() {
-  raamitLoaded.resolve()
-});
-
 angular.element(document).ready(function() {
-  raamitLoaded.done(function() {
-    staticResources.init(function() {
-      angular.bootstrap(document, ['listApp']);
-      $("body").attr("aria-busy","false")
-    })
+  staticResources.init(function() {
+    angular.bootstrap(document, ['listApp']);
+    $("body").attr("aria-busy","false")
   })
 });
 
