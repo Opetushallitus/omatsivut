@@ -1,9 +1,9 @@
 <form class="lasnaoloilmoittautuminenForm" name="lasnaoloilmoittautuminenForm">
     <fieldset>
-        <legend>
+        <div class="lasnaolo-ilmoittautuminen">
             <span class="label-highlight">{{ localization('lasnaoloilmoittautuminen.title') }}</span>
             <span>{{ application.henkiloNimi }} - {{ tulos.tarjoajaNimi }} {{ tulos.hakukohdeNimi }}</span>
-        </legend>
+        </div>
         <div ng-hide="ilmoittautunut">
             <div class="instruction">{{ localization('lasnaoloilmoittautuminen.info') }}</div>
 
