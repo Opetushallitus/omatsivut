@@ -11,6 +11,7 @@
     "baconjs": "^0.7.24",
     "coffee-script": "1.7.1",
     "http-proxy": "1.0.2",
+    "js-cookie": "^2.2.0",
     "node-static": "0.7.3"
   },
   "devDependencies": {

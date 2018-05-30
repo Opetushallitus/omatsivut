@@ -57,8 +57,7 @@ listApp.run(function($http, $cookies) {
   }
 });
 
-var staticResources = require('./staticResources');
-require('./localization')(listApp, staticResources);
+require('./localization')(listApp);
 require('./restResources')(listApp);
 
 require('./settings')(listApp, testMode());
@@ -66,7 +65,7 @@ require('./settings')(listApp, testMode());
 require('./hakemuseditori/hakemuseditori')(listApp);
 require('./directives/applicationList')(listApp);
 require('./directives/notification')(listApp);
-require('./controllers/hakutoiveidenMuokkaus')(listApp, staticResources);
+require('./controllers/hakutoiveidenMuokkaus')(listApp);
 
 listApp.config(function ($httpProvider) {
   $httpProvider.interceptors.push(require('./interceptors/nonSensitiveHakemus'))
@@ -77,7 +76,8 @@ listApp.run(function ($rootScope, localization) {
 });
 
 angular.element(document).ready(function() {
-  staticResources.init(function() {
+  import {init} from './staticResources';
+  init(function() {
     angular.bootstrap(document, ['listApp']);
     $("body").attr("aria-busy","false")
   })

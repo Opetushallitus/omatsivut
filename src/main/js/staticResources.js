@@ -1,46 +1,60 @@
 const _ = require('underscore');
+import Cookies from 'js-cookie';
 
-var resources = {
-  init: function(callback) {
-    var language = readLanguageCookie()
-    resources.language = language
-    setTimeformat(language)
-    loadTranslations(language, function(translations) {
-      resources.translations = translations
-      resources.translations.languageId = language
-      callback()
-    })
-  }
+window.translations;
+
+export function init(callback) {
+  const language = getLanguage();
+  setTimeformat(language);
+  loadTranslations(language, function(translations) {
+    window.translations = translations;
+  });
+  callback();
 }
 
-module.exports = resources
+export function getLanguage() {
+  let lang = Cookies.get('lang');
+  if (lang) {
+    return lang;
+  }
+
+  return getLanguageFromHost();
+}
+
+export function getTranslations() {
+  return window.translations;
+}
 
 function setTimeformat(language) {
   if (language === "en")
-    moment.locale("en-gb")
+    window.moment.locale("en-gb");
   else
-    moment.locale(language)
+    window.moment.locale(language)
 }
 
 function loadTranslations(language, callback) {
-  $('html').attr('lang', language)
-  var self = this
-  $.ajax({ url: window.url("omatsivut.translations"), dataType: "json" }).done(function(data) {
-    callback(data)
-  })
+  $('html').attr('lang', language);
+  fetch(window.url("omatsivut.translations"))
+    .then(response => response.json())
+    .then(translations => callback(translations))
+    .catch(err => console.error(err));
 }
 
-function readLanguageCookie() {
-    var cname = encodeURIComponent("i18next")
-    if(document.cookie.length > 0) {
-        var cookies = document.cookie.split(/; */);
-        var cookie = _.chain(cookies)
-            .map(function (c) { return c.split('=') })
-            .find(function (val) { return val[0] == cname })
-            .value()
-        if (cookie) {
-            return decodeURIComponent(cookie[1].split("-")[0])
-        }
-    }
-    return "fi"
+function getLanguageFromHost(host) {
+  if (!host) { host = document.location.host; }
+
+  let parts = host.split('.');
+  if (parts.length < 2) {
+    return 'fi';
+  }
+
+  let domain = parts[parts.length - 2];
+  if (domain.indexOf('opintopolku') > -1) {
+    return 'fi';
+  } else if (domain.indexOf('studieinfo') > -1) {
+    return 'sv';
+  } else if (domain.indexOf('studyinfo') > -1) {
+    return 'en'
+  }
+  return 'fi'
 }

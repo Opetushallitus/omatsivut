@@ -1,6 +1,7 @@
 const _ = require('underscore');
+import {getTranslations}  from './staticResources';
 
-module.exports = function(listApp, resources) {
+module.exports = function(listApp) {
   listApp.factory("localization", [function() {
     function getValue(obj, path) {
       var parts = path.split(".")
@@ -17,15 +18,11 @@ module.exports = function(listApp, resources) {
     }
 
     return function(key, vars) {
-      var val = getValue(resources.translations, key)
+      var val = getValue(getTranslations(), key)
       if (!val)
         throw new Error("no translation for " + key)
       else
         return replaceVars(val, vars || {})
-    }
-
-    var language = function () {
-      return resources.language
     }
   }])
 }
