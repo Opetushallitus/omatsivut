@@ -34,7 +34,8 @@ function setTimeformat(language) {
 
 function loadTranslations(language, callback) {
   $('html').attr('lang', language);
-  fetch(window.url("omatsivut.translations"))
+  const url = window.url("omatsivut.translations") + '?lang=' + language;
+  fetch(url)
     .then(response => response.json())
     .then(translations => callback(translations))
     .catch(err => console.error(err));
