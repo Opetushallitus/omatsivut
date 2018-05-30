@@ -18,6 +18,8 @@ require("../templates/templates.js");
 require("../lib/oph_urls.js/index.js");
 require("./omatsivut-web-oph.js");
 
+import {init} from './staticResources';
+
 window.Service = {
   login: function() {
     document.location.href = "/omatsivut/login";
@@ -76,7 +78,6 @@ listApp.run(function ($rootScope, localization) {
 });
 
 angular.element(document).ready(function() {
-  import {init} from './staticResources';
   init(function() {
     angular.bootstrap(document, ['listApp']);
     $("body").attr("aria-busy","false")
