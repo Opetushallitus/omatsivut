@@ -5,8 +5,9 @@ import fi.vm.sade.hakemuseditori.hakemus.{FetchIfNoHetuOrToinenAste, HakemusInfo
 import fi.vm.sade.hakemuseditori.user.Oppija
 import fi.vm.sade.hakemuseditori.viestintapalvelu.TuloskirjeComponent
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
-import fi.vm.sade.omatsivut.oppijantunnistus.{ExpiredTokenException, InvalidTokenException, OppijanTunnistusComponent}
+import fi.vm.sade.omatsivut.oppijantunnistus.{ExpiredTokenException, InvalidTokenException, OppijanTunnistusComponent, OppijantunnistusMetadata}
 import javax.servlet.http.HttpServletRequest
+import org.apache.commons.lang3.StringUtils
 import org.scalatra._
 
 import scala.util.{Failure, Success, Try}
@@ -57,8 +58,7 @@ trait TuloskirjeetServletContainer {
           request,
           hakemusInfo.hakemus.haku.oid,
           metadata.hakemusOid,
-          metadata.personOid.getOrElse(throw new IllegalArgumentException("Cannot find person oid when fetching tuloskirje " +
-            s"for token $token with metadata $metadata"))))
+          resolvePersonOid(token, metadata, hakemusInfo)))
       } yield {
         tuloskirje match {
           case Some(data: Array[Byte]) => Ok(data, Map(
@@ -70,4 +70,14 @@ trait TuloskirjeetServletContainer {
     }
   }
 
+  private def resolvePersonOid(token: String, metadata: OppijantunnistusMetadata, hakemusInfo: HakemusInfo): String = {
+    metadata.personOid.getOrElse {
+      if (StringUtils.isNotBlank(hakemusInfo.hakemus.personOid)) {
+        hakemusInfo.hakemus.personOid
+      } else {
+        throw new IllegalArgumentException("Cannot find person oid when fetching tuloskirje " +
+          s"for token $token of hakemus ${hakemusInfo.hakemus.oid} with metadata $metadata")
+      }
+    }
+  }
 }
