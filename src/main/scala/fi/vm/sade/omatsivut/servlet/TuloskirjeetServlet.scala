@@ -49,10 +49,16 @@ trait TuloskirjeetServletContainer {
     }
 
     get("/:token/tuloskirje.pdf") {
+      val token = params("token")
       (for {
-        metadata <- oppijanTunnistusService.validateToken(params("token"))
+        metadata <- oppijanTunnistusService.validateToken(token)
         hakemusInfo <- fetchHakemus(request, metadata.hakemusOid, metadata.personOid)
-        tuloskirje <- Try(tuloskirjeService.fetchTuloskirje(request,hakemusInfo.hakemus.haku.oid, metadata.hakemusOid, ""))
+        tuloskirje <- Try(tuloskirjeService.fetchTuloskirje(
+          request,
+          hakemusInfo.hakemus.haku.oid,
+          metadata.hakemusOid,
+          metadata.personOid.getOrElse(throw new IllegalArgumentException("Cannot find person oid when fetching tuloskirje " +
+            s"for token $token with metadata $metadata"))))
       } yield {
         tuloskirje match {
           case Some(data: Array[Byte]) => Ok(data, Map(
