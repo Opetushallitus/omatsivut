@@ -16,6 +16,6 @@ case class FetchTuloskirje(request: HttpServletRequest, personOid: String, hakuO
   override def user: User = {
     val authInfo = getAuthenticationInfo(request)
     val shib = authInfo.shibbolethCookie
-    new User(getOid(personOid).orNull, getAddress(request), shib.map(_.toString).getOrElse("(no shibboleth cookie)"), getUserAgent(request))
+    new User(getOid(personOid), getAddress(request), shib.map(_.toString).getOrElse("(no shibboleth cookie)"), getUserAgent(request))
   }
 }

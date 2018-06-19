@@ -23,7 +23,7 @@ case class UpdateHakemus(request: HttpServletRequest, userOid: String, hakemusOi
   override def user: User = {
     val authInfo = getAuthenticationInfo(request)
     val shib = authInfo.shibbolethCookie
-    new User(getOid(userOid).orNull, getAddress(request), shib.map(_.toString).getOrElse("(no shibboleth cookie)"), getUserAgent(request))
+    new User(getOid(userOid), getAddress(request), shib.map(_.toString).getOrElse("(no shibboleth cookie)"), getUserAgent(request))
   }
 
   /**
