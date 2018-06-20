@@ -93,7 +93,7 @@ trait OppijanumerorekisteriComponent {
 
     override def fetchAllDuplicateOids(oppijanumero: String): List[String] = {
         implicit val formats = DefaultFormats
-        val timeout = 1000*30L
+        val timeout = Duration(30, TimeUnit.SECONDS)
 
         val masterRequest: Request = Request(
           uri = uriFromString(OphUrlProperties.url("oppijanumerorekisteri-service.henkilo-master", oppijanumero)),
@@ -107,7 +107,7 @@ trait OppijanumerorekisteriComponent {
           case (code, responseString, _) =>
             logger.error("Failed to fetch master oid for user oid {}, response was {}, {}", oppijanumero, Integer.toString(code), responseString)
             None
-        }.runFor(timeoutInMillis = timeout).getOrElse(oppijanumero)
+        }.runFor(timeoutInMillis = timeout.toMillis).getOrElse(oppijanumero)
 
         val slaveRequest: Request = Request(
           uri = uriFromString(OphUrlProperties.url("oppijanumerorekisteri-service.henkilo-slaves", masterOid)),
@@ -124,7 +124,7 @@ trait OppijanumerorekisteriComponent {
           case (code, responseString, _) =>
             logger.error("Failed to fetch slave OIDs for user oid {}, response was {}, {}", masterOid, Integer.toString(code), responseString)
             List(masterOid)
-        }.runFor(timeoutInMillis = timeout)
+        }.runFor(timeoutInMillis = timeout.toMillis)
 
       return allOids
     }
