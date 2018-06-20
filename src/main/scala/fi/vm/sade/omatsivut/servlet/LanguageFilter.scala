@@ -65,9 +65,10 @@ class LanguageFilter extends ScalatraFilter with Logging {
   }
 
   def getRealUrl(request: HttpServletRequest): String = {
-    logger.info(s"Headers: ${request.headers.iterator.toSeq.mkString(",")}")
-    request.header("Host").getOrElse{
-      logger.warn("Host header was not set, reading language from request url.")
+    request.header("X-Forwarded-Host")
+      .orElse(request.header("Referer"))
+      .getOrElse{
+      logger.warn(s"Headers X-Forwarded-Host and Referer were not set, reading language from request url.")
       request.getRequestURL.toString
     }
   }
