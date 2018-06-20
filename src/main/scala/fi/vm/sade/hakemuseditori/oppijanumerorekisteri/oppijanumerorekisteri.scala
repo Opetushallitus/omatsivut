@@ -92,39 +92,39 @@ trait OppijanumerorekisteriComponent {
     }
 
     override def fetchAllDuplicateOids(oppijanumero: String): List[String] = {
-        implicit val formats = DefaultFormats
-        val timeout = Duration(30, TimeUnit.SECONDS)
+      implicit val formats = DefaultFormats
+      val timeout = Duration(30, TimeUnit.SECONDS)
 
-        val masterRequest: Request = Request(
-          uri = uriFromString(OphUrlProperties.url("oppijanumerorekisteri-service.henkilo-master", oppijanumero)),
-          headers = Headers(callerIdHeader))
+      val masterRequest: Request = Request(
+        uri = uriFromString(OphUrlProperties.url("oppijanumerorekisteri-service.henkilo-master", oppijanumero)),
+        headers = Headers(callerIdHeader))
 
-        val masterOid: String = runHttp[Option[String]](masterRequest) {
-          case (200, resultString, _) =>
-            val f: json4s.JValue = parse(resultString).asInstanceOf[JObject]
-            val oid = f \ "oidHenkilo"
-            Some(oid.extract[String])
-          case (code, responseString, _) =>
-            logger.error("Failed to fetch master oid for user oid {}, response was {}, {}", oppijanumero, Integer.toString(code), responseString)
-            None
-        }.runFor(timeoutInMillis = timeout.toMillis).getOrElse(oppijanumero)
+      val masterOid: String = runHttp[Option[String]](masterRequest) {
+        case (200, resultString, _) =>
+          val f: json4s.JValue = parse(resultString).asInstanceOf[JObject]
+          val oid = f \ "oidHenkilo"
+          Some(oid.extract[String])
+        case (code, responseString, _) =>
+          logger.error("Failed to fetch master oid for user oid {}, response was {}, {}", oppijanumero, Integer.toString(code), responseString)
+          None
+      }.runFor(timeoutInMillis = timeout.toMillis).getOrElse(oppijanumero)
 
-        val slaveRequest: Request = Request(
-          uri = uriFromString(OphUrlProperties.url("oppijanumerorekisteri-service.henkilo-slaves", masterOid)),
-          headers = Headers(callerIdHeader))
+      val slaveRequest: Request = Request(
+        uri = uriFromString(OphUrlProperties.url("oppijanumerorekisteri-service.henkilo-slaves", masterOid)),
+        headers = Headers(callerIdHeader))
 
-        val allOids: List[String] = runHttp(slaveRequest) {
-          case (200, resultString, _) =>
-            val slaveOids: Seq[String] = parse(resultString).extract[List[JObject]]
-              .map(obj => {
-                val oidObj = obj \ "oidHenkilo"
-                oidObj.extract[String]
-              })
-            List(masterOid) ++ slaveOids
-          case (code, responseString, _) =>
-            logger.error("Failed to fetch slave OIDs for user oid {}, response was {}, {}", masterOid, Integer.toString(code), responseString)
-            List(masterOid)
-        }.runFor(timeoutInMillis = timeout.toMillis)
+      val allOids: List[String] = runHttp(slaveRequest) {
+        case (200, resultString, _) =>
+          val slaveOids: Seq[String] = parse(resultString).extract[List[JObject]]
+            .map(obj => {
+              val oidObj = obj \ "oidHenkilo"
+              oidObj.extract[String]
+            })
+          List(masterOid) ++ slaveOids
+        case (code, responseString, _) =>
+          logger.error("Failed to fetch slave OIDs for user oid {}, response was {}, {}", masterOid, Integer.toString(code), responseString)
+          List(masterOid)
+      }.runFor(timeoutInMillis = timeout.toMillis)
 
       return allOids
     }
