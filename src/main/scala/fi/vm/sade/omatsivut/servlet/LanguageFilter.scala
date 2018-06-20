@@ -20,7 +20,7 @@ class LanguageFilter extends ScalatraFilter with Logging {
   }
 
   private def checkLanguage(request: HttpServletRequest, response: HttpServletResponse) {
-    val (lang: Language.Language, setCookie: Boolean) = chooseLanguage(Option(request.getParameter("lang")), Option(request.getCookies()), request.getRequestURL.toString)
+    val (lang: Language.Language, setCookie: Boolean) = chooseLanguage(Option(request.getParameter("lang")), Option(request.getCookies()), getRealUrl(request))
     if (setCookie) {
       addCookie(response, lang)
     }
@@ -62,6 +62,14 @@ class LanguageFilter extends ScalatraFilter with Logging {
         logger.info(s"Got language $lang from parameter ${param.get}")
         lang
       }
+  }
+
+  def getRealUrl(request: HttpServletRequest): String = {
+    logger.info(s"Headers: ${request.headers.iterator.toSeq.mkString(",")}")
+    request.header("Host").getOrElse{
+      logger.warn("Host header was not set, reading language from request url.")
+      request.getRequestURL.toString
+    }
   }
 
   private def chooseLanguageFromHost(url: String): Option[Language.Language] = {
