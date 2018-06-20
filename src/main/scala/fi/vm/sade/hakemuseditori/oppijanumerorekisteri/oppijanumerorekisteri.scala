@@ -43,7 +43,7 @@ object Henkilo {
 
 trait OppijanumerorekisteriService {
   def henkilo(personOid: String): Henkilo
-  def fetchAllDuplicateOids(pOid: String): List[String]
+  def fetchAllDuplicateOids(oppijanumero: String): List[String]
 }
 
 trait OppijanumerorekisteriComponent {
@@ -51,7 +51,7 @@ trait OppijanumerorekisteriComponent {
 
   class StubbedOppijanumerorekisteriService extends OppijanumerorekisteriService {
     override def henkilo(personOid: String): Henkilo = ???
-    override def fetchAllDuplicateOids(pOid: String): List[String] = List(pOid)
+    override def fetchAllDuplicateOids(oppijanumero: String): List[String] = List(oppijanumero)
   }
 
   class RemoteOppijanumerorekisteriService(config: AppConfig) extends OppijanumerorekisteriService with JsonFormats with Logging {
@@ -91,12 +91,12 @@ trait OppijanumerorekisteriComponent {
       httpClient.fetch(request)(r => r.as[String].map(body => decoder(r.status.code, body, request)))
     }
 
-    override def fetchAllDuplicateOids(pOid: String): List[String] = {
+    override def fetchAllDuplicateOids(oppijanumero: String): List[String] = {
         implicit val formats = DefaultFormats
         val timeout = 1000*30L
 
         val masterRequest: Request = Request(
-          uri = uriFromString(OphUrlProperties.url("oppijanumerorekisteri-service.henkilo-master", pOid)),
+          uri = uriFromString(OphUrlProperties.url("oppijanumerorekisteri-service.henkilo-master", oppijanumero)),
           headers = Headers(callerIdHeader))
 
         val masterOid: String = runHttp[Option[String]](masterRequest) {
@@ -105,9 +105,9 @@ trait OppijanumerorekisteriComponent {
             val oid = f \ "oidHenkilo"
             Some(oid.extract[String])
           case (code, responseString, _) =>
-            logger.error("Failed to fetch master oid for user oid {}, response was {}, {}", pOid, Integer.toString(code), responseString)
+            logger.error("Failed to fetch master oid for user oid {}, response was {}, {}", oppijanumero, Integer.toString(code), responseString)
             None
-        }.runFor(timeoutInMillis = timeout).getOrElse(pOid)
+        }.runFor(timeoutInMillis = timeout).getOrElse(oppijanumero)
 
         val slaveRequest: Request = Request(
           uri = uriFromString(OphUrlProperties.url("oppijanumerorekisteri-service.henkilo-slaves", masterOid)),
