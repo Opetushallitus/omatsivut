@@ -7,17 +7,18 @@ import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.utils.cas.{CasAuthenticatingClient, CasClient, CasParams}
 import fi.vm.sade.utils.slf4j.Logging
+import org.http4s.MediaType.`application/json`
 import org.http4s.Method.GET
+import org.http4s._
 import org.http4s.client.blaze
-import org.http4s.{Header, Headers, Request, Uri}
-import org.json4s
-import org.json4s._
+import org.http4s.headers.{Accept, `Content-Type`}
 import org.json4s.JsonAST.{JNull, JObject, JString, JValue}
 import org.json4s.jackson.JsonMethods
-import org.json4s.{DefaultFormats, Reader, Writer}
+import org.json4s.jackson.Serialization.write
+import org.json4s.{DefaultFormats, Reader, Writer, _}
+import scalaz.concurrent.Task
 
 import scala.concurrent.duration.Duration
-import scalaz.concurrent.Task
 
 case class Henkilo(oid: String, hetu: Option[String])
 
@@ -43,7 +44,7 @@ object Henkilo {
 
 trait OppijanumerorekisteriService {
   def henkilo(personOid: String): Henkilo
-  def fetchAllDuplicateOids(oppijanumero: String): List[String]
+  def fetchAllDuplicateOids(oppijanumero: String): Set[String]
 }
 
 trait OppijanumerorekisteriComponent {
@@ -51,11 +52,11 @@ trait OppijanumerorekisteriComponent {
 
   class StubbedOppijanumerorekisteriService extends OppijanumerorekisteriService {
     override def henkilo(personOid: String): Henkilo = ???
-    override def fetchAllDuplicateOids(oppijanumero: String): List[String] = List(oppijanumero)
+
+    override def fetchAllDuplicateOids(oppijanumero: String): Set[String] = Set(oppijanumero)
   }
 
   class RemoteOppijanumerorekisteriService(config: AppConfig) extends OppijanumerorekisteriService with JsonFormats with Logging {
-    import org.json4s.jackson.JsonMethods._
     private val blazeHttpClient = blaze.defaultClient
     private val casClient = new CasClient(config.settings.securitySettings.casUrl, blazeHttpClient)
     private val casParams = CasParams(
@@ -91,42 +92,39 @@ trait OppijanumerorekisteriComponent {
       httpClient.fetch(request)(r => r.as[String].map(body => decoder(r.status.code, body, request)))
     }
 
-    override def fetchAllDuplicateOids(oppijanumero: String): List[String] = {
-      implicit val formats = DefaultFormats
+    override def fetchAllDuplicateOids(oppijanumero: String): Set[String] = {
       val timeout = Duration(30, TimeUnit.SECONDS)
 
-      val masterRequest: Request = Request(
-        uri = uriFromString(OphUrlProperties.url("oppijanumerorekisteri-service.henkilo-master", oppijanumero)),
-        headers = Headers(callerIdHeader))
+      val duplicateHenkilosRequest = Request(
+        method = Method.POST,
+        uri = uriFromString(OphUrlProperties.url("oppijanumerorekisteri-service.duplicatesByPersonOids")),
+        headers = Headers(callerIdHeader, `Content-Type`(`application/json`), `Accept`(`application/json`))
+      ).withBody(write(Map("henkiloOids" -> List(oppijanumero))))
 
-      val masterOid: String = runHttp[Option[String]](masterRequest) {
-        case (200, resultString, _) =>
-          val f: json4s.JValue = parse(resultString).asInstanceOf[JObject]
-          val oid = f \ "oidHenkilo"
-          Some(oid.extract[String])
-        case (code, responseString, _) =>
-          logger.error("Failed to fetch master oid for user oid {}, response was {}, {}", oppijanumero, Integer.toString(code), responseString)
-          None
-      }.runFor(timeoutInMillis = timeout.toMillis).getOrElse(oppijanumero)
+      val henkiloviitteet: Seq[Henkiloviite] = httpClient.fetch(duplicateHenkilosRequest)((r: Response) =>
+        if (r.status == Status.Ok) {
+          r.as[String].map(parseHenkiloviiteResponse(_, oppijanumero))
+        } else {
+          logger.error("Failed to fetch henkiloviite data for user oid {}, response was {}, {}", oppijanumero, r.status, r.body)
+          Task.now(Nil)
+        }).runFor(timeout)
+      val allHenkiloOids: Set[String] = henkiloviitteet.flatMap(viite => Set(viite.henkiloOid, viite.masterOid)).++(Seq(oppijanumero)).toSet
+      if (allHenkiloOids.size > 1) {
+        logger.info(s"Got ${allHenkiloOids.size} in total for oppijanumero $oppijanumero : $allHenkiloOids")
+      }
+      allHenkiloOids
+    }
 
-      val slaveRequest: Request = Request(
-        uri = uriFromString(OphUrlProperties.url("oppijanumerorekisteri-service.henkilo-slaves", masterOid)),
-        headers = Headers(callerIdHeader))
-
-      val allOids: List[String] = runHttp(slaveRequest) {
-        case (200, resultString, _) =>
-          val slaveOids: Seq[String] = parse(resultString).extract[List[JObject]]
-            .map(obj => {
-              val oidObj = obj \ "oidHenkilo"
-              oidObj.extract[String]
-            })
-          List(masterOid) ++ slaveOids
-        case (code, responseString, _) =>
-          logger.error("Failed to fetch slave OIDs for user oid {}, response was {}, {}", masterOid, Integer.toString(code), responseString)
-          List(masterOid)
-      }.runFor(timeoutInMillis = timeout.toMillis)
-
-      return allOids
+    private def parseHenkiloviiteResponse(responseBody: String, oppijanumero: String): Seq[Henkiloviite] = {
+      try {
+        JsonMethods.parse(responseBody).extract[Seq[Henkiloviite]]
+      } catch {
+        case e: Exception =>
+          logger.error(s"Problem when parsing Henkiloviite list for $oppijanumero from response '$responseBody'", e)
+          throw e
+      }
     }
   }
 }
+
+case class Henkiloviite(henkiloOid: String, masterOid: String)

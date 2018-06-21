@@ -65,7 +65,7 @@ trait ApplicationsServletContainer {
       val timeout = 1000*30L
       val oppijanumero: String = personOid()
 
-      val allOids: List[String] = oppijanumerorekisteriService.fetchAllDuplicateOids(oppijanumero)
+      val allOids: Iterable[String] = oppijanumerorekisteriService.fetchAllDuplicateOids(oppijanumero)
 
       var allSuccess = true
       val allHakemukset = allOids.flatMap(oid => {
