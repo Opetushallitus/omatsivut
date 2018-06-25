@@ -1,5 +1,3 @@
-const _ = require('underscore');
-
 var prevLang = "fi"
 
 function ApplicationListPage() {
@@ -209,14 +207,14 @@ function ApplicationListPage() {
       },
 
       valintatulokset: function () {
-        var application = getApplicationElement(applicationIndex)
-        var nbsp = /\u00A0/g
-        return application.find(application.find(".result-list tr[ng-repeat]"))
+        var application = getApplicationElement(applicationIndex);
+        var nbsp = /\u00A0/g;
+        return application.find(".result-list-wrap.ng-scope")
           .map(function () {
             var el = $(this)
             return {
               hakukohde: el.find("[ng-bind='tulos.tarjoajaNimi']").text() + " " + el.find("[ng-bind='tulos.hakukohdeNimi']").text(),
-              tila: el.find("[ng-bind='valintatulosText(tulos, valintatulos().hakutoiveet)']").text().trim().replace(nbsp, " ")
+              tila: el.find("span.valintatulos-otsake").text().trim().replace(nbsp, " ")
             }
           }).toArray()
       },
@@ -371,7 +369,7 @@ function ApplicationListPage() {
       },
 
       resultTableTitle: function() {
-        return getApplicationElement().find(".result-list th.ng-binding").text().trim()
+        return getApplicationElement().find(".result-list-header span.ng-binding").text().trim()
       },
 
       labels: function() {
