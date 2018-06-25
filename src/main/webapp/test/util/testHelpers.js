@@ -75,9 +75,6 @@ session = {
       }
       return Q($.get("/omatsivut/Shibboleth.sso/fakesession?hetu=" + hetu + langParam));
     }
-  },
-  logout: function() {
-    return Q($.get("/omatsivut/logout"));
   }
 }
 
