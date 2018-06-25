@@ -19,7 +19,7 @@ class LanguageFilter extends ScalatraFilter with Logging {
     checkLanguage(request, response)
   }
 
-  private def checkLanguage(request: HttpServletRequest, response: HttpServletResponse) {
+  private def checkLanguage(request: HttpServletRequest, response: HttpServletResponse): Unit = {
     val (lang: Language.Language, setCookie: Boolean) = chooseLanguage(Option(request.getParameter("lang")), Option(request.getCookies()), getRealUrl(request))
     if (setCookie) {
       addCookie(response, lang)
@@ -39,15 +39,15 @@ class LanguageFilter extends ScalatraFilter with Logging {
   }
 
   private def chooseLanguageFromCookie(optCookies: Option[Array[Cookie]]): Option[Language] = {
-    (for {
+    for {
       cookies <- optCookies
       cookie <- cookies.find(_.getName.equals(cookieName))
       lang <- Language.parse(cookie.getValue)
-    } yield lang)
+    } yield lang
   }
 
-  private def addCookie(response: HttpServletResponse, lang: Language.Language) {
-    val cookie = new Cookie(cookieName, lang.toString())
+  private def addCookie(response: HttpServletResponse, lang: Language.Language): Unit = {
+    val cookie = new Cookie(cookieName, lang.toString)
     cookie.setMaxAge(cookieMaxAge)
     cookie.setPath("/")
     response.addCookie(cookie)
@@ -67,11 +67,11 @@ class LanguageFilter extends ScalatraFilter with Logging {
   }
 
   private def chooseLanguageFromHost(url: String): Option[Language.Language] = {
-    (url match {
+    url match {
       case x if x.contains(domainFi) => Some(Language.fi)
       case x if x.contains(domainSv) => Some(Language.sv)
       case x if x.contains(domainEn) => Some(Language.en)
       case default => None
-    })
+    }
   }
 }
