@@ -43,10 +43,7 @@ class LanguageFilter extends ScalatraFilter with Logging {
       cookies <- optCookies
       cookie <- cookies.find(_.getName.equals(cookieName))
       lang <- Language.parse(cookie.getValue)
-    } yield lang).map { lang =>
-      logger.info(s"Got language $lang from cookies.")
-      lang
-    }
+    } yield lang)
   }
 
   private def addCookie(response: HttpServletResponse, lang: Language.Language) {
@@ -58,10 +55,6 @@ class LanguageFilter extends ScalatraFilter with Logging {
 
   private def chooseLanguageFromParam(param: Option[String]): Option[Language.Language] = {
     param.flatMap(Language.parse(_))
-      .map { lang =>
-        logger.info(s"Got language $lang from parameter ${param.get}")
-        lang
-      }
   }
 
   private def getRealUrl(request: HttpServletRequest): String = {
@@ -79,9 +72,6 @@ class LanguageFilter extends ScalatraFilter with Logging {
       case x if x.contains(domainSv) => Some(Language.sv)
       case x if x.contains(domainEn) => Some(Language.en)
       case default => None
-    }).map { lang =>
-      logger.info(s"Got language $lang from url $url")
-      lang
-    }
+    })
   }
 }
