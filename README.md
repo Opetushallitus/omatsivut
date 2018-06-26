@@ -75,9 +75,13 @@ Komento ajaa kaikki testit, mukaan lukien yksikkötestit, REST-palvelujen testit
 
 ## Fronttidevaus
 
+Kehitystä varten oleva buildi (ei minimointia):
+
+    npm run dev
+
 Jatkuva fronttikäännös käyntiin näin (ei minimointia):
 
-    npm start
+    npm run watch
 
 Tuotantoa vastaava buildi
 

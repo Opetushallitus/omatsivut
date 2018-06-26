@@ -1,12 +1,28 @@
 const path = require('path');
+const webpack = require('webpack');
 
 module.exports = {
   mode: 'development',
-  entry: './src/main/js/app.js',
+  entry: {
+    index: './src/main/js/app.js'
+  },
   output: {
     path: path.resolve(__dirname, '../src/main/webapp/'),
-    filename: 'bundle.js',
+    filename: '[name].bundle.js',
+    chunkFilename: '[name].bundle.js',
     publicPath: '/omatsivut/',
+  },
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        vendor: {
+          test: /node_modules/,
+          chunks: 'initial',
+          name: 'vendor',
+          enforce: true
+        },
+      }
+    }
   },
   module: {
     rules: [
@@ -30,7 +46,13 @@ module.exports = {
         ]
       },
     ]
-  }
+  },
+  plugins: [
+    new webpack.ContextReplacementPlugin(
+      /moment[\/\\]locale$/,
+      /fi|sv|en-gb/
+    ),
+  ]
   /*
   module: {
     rules: [
@@ -79,4 +101,4 @@ module.exports = {
     ]
   }
   */
-}
+};
