@@ -9,7 +9,7 @@ module.exports = function(app) {
       scope: {
         application: "=application"
       },
-      templateUrl: 'application.html',
+      template: require('./application.html'),
 
       link: function ($scope, $element, attrs) {
         $scope.localization = localization

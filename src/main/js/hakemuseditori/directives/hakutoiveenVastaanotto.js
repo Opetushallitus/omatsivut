@@ -9,7 +9,7 @@ module.exports = function(app) {
         hakutoiveet: '&hakutoiveet',
         callback: '=callback'
       },
-      templateUrl: 'hakutoiveenVastaanotto.html',
+      template: require('./hakutoiveenVastaanotto.html'),
       link: function (scope, element, attrs) {
         scope.vastaanottoAction = ""
         scope.localization = localization

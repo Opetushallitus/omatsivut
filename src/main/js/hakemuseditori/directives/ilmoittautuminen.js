@@ -7,9 +7,9 @@ module.exports = function(app) {
         oili: '&oili',
         application: '=application'
       },
-      templateUrl: 'ilmoittautuminen.html',
-      link: function ($scope, element, attrs) {
-        $scope.localization = localization;
+      templateUrl: require('./ilmoittautuminen.html'),
+      link: function (scope, element, attrs) {
+        scope.localization = localization;
 
         $scope.statesToReport = {
           LASNA_KOKO_LUKUVUOSI: 'semester',
