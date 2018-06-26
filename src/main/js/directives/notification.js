@@ -5,7 +5,7 @@ module.exports = function (app) {
             scope: {
                 message: '@'
             },
-            templateUrl: 'notification.html',
+            template: require('./notification.html'),
             link: function (scope) {
                 scope.visible = true
                 scope.close = function () {

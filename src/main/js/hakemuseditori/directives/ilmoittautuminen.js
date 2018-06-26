@@ -7,7 +7,7 @@ module.exports = function(app) {
         oili: '&oili',
         application: '=application'
       },
-      templateUrl: 'ilmoittautuminen.html',
+      templateUrl: require('./ilmoittautuminen.html'),
       link: function ($scope, element, attrs) {
         $scope.localization = localization;
 
