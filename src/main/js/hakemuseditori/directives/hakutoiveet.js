@@ -10,7 +10,7 @@ module.exports = function(app) {
         preferenceMoved: "=preferenceMoved",
         validating: "=validating"
       },
-      templateUrl: 'hakutoiveet.html',
+      template: require('./hakutoiveet.html'),
 
       link: function ($scope, element, attrs) {
         $scope.localization = localization

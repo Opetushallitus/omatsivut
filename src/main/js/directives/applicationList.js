@@ -6,7 +6,7 @@ module.exports = function(listApp) {
     return {
       restrict: 'E',
       scope: true,
-      templateUrl: 'applicationList.html',
+      template: require('./applicationList.html'),
 
       link: function ($scope, element, attrs) {
         $scope.$on("hakutoive-vastaanotettu", function() {
