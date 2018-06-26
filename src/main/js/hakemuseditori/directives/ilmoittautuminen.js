@@ -1,5 +1,5 @@
-module.exports = function(app) {
-  app.directive("ilmoittautuminen", ["localization", function (localization) {
+export default function(app) {
+  app.directive("ilmoittautuminen", [function () {
     return {
       restrict: 'E',
       scope: {

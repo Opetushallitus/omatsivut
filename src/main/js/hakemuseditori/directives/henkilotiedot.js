@@ -1,5 +1,7 @@
-module.exports = function(app) {
-  app.directive("henkilotiedot", ["localization", "restResources", "debounce", "settings", "angularBacon", function (localization, restResources, debounce, settings, angularBacon) {
+import localize from '../../localization';
+
+export default function(app) {
+  app.directive("henkilotiedot", ["restResources", "debounce", "settings", "angularBacon", function (restResources, debounce, settings, angularBacon) {
     return {
       restrict: 'E',
       scope: {
@@ -7,7 +9,7 @@ module.exports = function(app) {
       },
       template: require('./henkilotiedot.html'),
       link: function ($scope, element, attrs) {
-        $scope.localization = localization
+        $scope.localization = localize;
         $scope.yhteystiedot = $scope.application.henkilotiedot
 
         var postalCode = angularBacon.watch($scope, "yhteystiedot['Postinumero'].answer").debounce(settings.modelDebounce).skipDuplicates().map(".trim")

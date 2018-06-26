@@ -1,5 +1,7 @@
-module.exports = function(app) {
-  app.directive("kela", ["localization", function (localization) {
+import localize from '../../localization';
+
+export default function(app) {
+  app.directive("kela", [function () {
     return {
       restrict: 'E',
       scope: {
@@ -7,7 +9,7 @@ module.exports = function(app) {
       },
       template: require('./kela.html'),
       link: function (scope, element, attrs) {
-        scope.localization = localization
+        scope.localization = localize;
       }
     }
   }])

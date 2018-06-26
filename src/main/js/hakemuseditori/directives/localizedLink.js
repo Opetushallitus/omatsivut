@@ -1,10 +1,12 @@
-module.exports = function(app) {
-  app.directive("localizedLink", ["$sce", "localization", function ($sce, localization) {
+import localize from '../../localization';
+
+export default function(app) {
+  app.directive("localizedLink", [function () {
     return {
       restrict: "E",
       template: "",
       link: function (scope, element, attrs) {
-        var linkString = localization(attrs["key"])
+        var linkString = localize(attrs["key"])
         var link = $("<span>" + linkString + "</span>")
           .find("a")
           .attr("href", attrs["href"])

@@ -1,6 +1,9 @@
-module.exports = function(app) {
-  app.directive("hakutoiveenVastaanotto", ["localization", "restResources", "$timeout", "VASTAANOTTO_ACTION",
-    function (localization, restResources, $timeout, VASTAANOTTO_ACTION) {
+import {VASTAANOTTO_ACTION} from '../../constants';
+import localize from '../../localization';
+
+export default function(app) {
+  app.directive("hakutoiveenVastaanotto", ["restResources", "$timeout",
+    function (restResources, $timeout,) {
     return {
       restrict: 'E',
       scope: {
@@ -12,7 +15,7 @@ module.exports = function(app) {
       template: require('./hakutoiveenVastaanotto.html'),
       link: function (scope, element, attrs) {
         scope.vastaanottoAction = ""
-        scope.localization = localization
+        scope.localization = localize;
         scope.ajaxPending = false
         scope.error = ""
         scope.VASTAANOTTO_ACTION = VASTAANOTTO_ACTION
@@ -70,7 +73,7 @@ module.exports = function(app) {
               else
                 return "error.saveFailed"
             })()
-            scope.error = localization(saveError)
+            scope.error = localize(saveError)
             scope.ajaxPending = false
           }
         }
