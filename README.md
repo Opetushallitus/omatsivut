@@ -5,7 +5,7 @@ Oppijan henkilökohtainen palvelu
 ## Teknologiat
 
 - Scala 2.11 (servereillä JRE8)
-- Frontissa Angular.js, gulp.js, npm
+- Frontissa AngularJS, webpack, npm
 - Testeissä Specs2, mocha, phantomjs. Kaikille toiminnoille automaattiset testit.
 
 ### JDK
@@ -75,24 +75,18 @@ Komento ajaa kaikki testit, mukaan lukien yksikkötestit, REST-palvelujen testit
 
 ## Fronttidevaus
 
-Skripti `webbuild.sh` tekee fronttibuildien ajamisen helpoksi.
-
-Paketoi frontti devausmoodissa (ei minifiointia):
-
-    ./webbuild.sh compile-dev
-
 Jatkuva fronttikäännös käyntiin näin (ei minimointia):
 
-    ./webbuild.sh dev
+    npm start
 
 Tuotantoa vastaava buildi
 
-    ./webbuild.sh
+    npm run build
 
 Fronttikoodit sijaitsevat `src/main` kansion alla hieman sekalaisessa järjestyksessä.
 Tyyleissä on käytetty lessiä. Niiden perusteella generoidaan css-tiedostot kansioon `src/main/webapp/css`.
-Html tiedostoissa on käytetty angular templateja. Gulp buildissä ne minimoidaan ja yhdistetään yhdeksi templates.js tiedostoksi.
-Javascript tiedostot yhdistetään gulpilla bundle.js tiedostoksi.
+HTML templatet on ladattu mukaan direktiiveihin merkkijonoina.
+Fronttikoodit paketoidaan webpackilla bundle.js tiedostoksi.
 
 ## Impersonointi / autentikoinnin ohitus
 
