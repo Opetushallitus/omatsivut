@@ -1,4 +1,4 @@
-module.exports = function(app) {
+export default function(app) {
   app.directive("disableClickFocus", function() {
     return {
       link: function (scope, element) {

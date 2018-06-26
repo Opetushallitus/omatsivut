@@ -1,18 +1,19 @@
+import localize from '../../localization';
 const _ = require('underscore');
 const Hakutoive = require("../hakutoive");
 const Question = require("../question").Question;
 
-module.exports = function(app) {
-  app.directive("application", ["$sce", "restResources", "applicationValidator", "settings", "debounce", "localization", "$timeout", function ($sce, restResources, applicationValidator, settings, debounce, localization, $timeout) {
+export default function(app) {
+  app.directive("application", ["$sce", "restResources", "applicationValidator", "settings", "debounce", "$timeout", function ($sce, restResources, applicationValidator, settings, debounce, $timeout) {
     return {
       restrict: 'E',
       scope: {
-        application: "=application"
+        application: "="
       },
       template: require('./application.html'),
 
       link: function ($scope, $element, attrs) {
-        $scope.localization = localization
+        $scope.localization = localize;
         var applicationValidatorBounced = debounce(applicationValidator(), settings.modelDebounce)
         $scope.isSaveable = true
         $scope.isValidating = false
@@ -93,7 +94,7 @@ module.exports = function(app) {
           }
 
           function success(data) {
-            setStatusMessage(localization("message.validationOk"), "info")
+            setStatusMessage(localize("message.validationOk"), "info")
             $scope.isSaveable = true
             setValidatingIndicator(false)
             $scope.application.importQuestions(data.questions)
@@ -108,19 +109,19 @@ module.exports = function(app) {
             setValidatingIndicator(false)
             if (!data.statusCode) { // validointi epäonnistui frontendissä
               $scope.isSaveable = false
-              setStatusMessage(localization("error.validationFailed"), "error")
+              setStatusMessage(localize("error.validationFailed"), "error")
             } else if (data.statusCode === 200) {
               $scope.isSaveable = _.isEmpty(data.errors)
-              setStatusMessage(localization("error.validationFailed"), "error")
+              setStatusMessage(localize("error.validationFailed"), "error")
             } else if (data.statusCode == 401) {
               $scope.isSaveable = true
-              setStatusMessage(localization("error.sessionExpired"), "error")
+              setStatusMessage(localize("error.sessionExpired"), "error")
             } else if (data.statusCode == 500) {
               $scope.isSaveable = true
-              setStatusMessage(localization("error.serverError"), "error")
+              setStatusMessage(localize("error.serverError"), "error")
             } else {
               $scope.isSaveable = false
-              setStatusMessage(localization("error.validationFailed_httpError"), "error")
+              setStatusMessage(localize("error.validationFailed_httpError"), "error")
             }
 
             var updateQuestions = data.questions != null && !Hakutoive.hasHakutoiveErrors(data.errors)
@@ -163,7 +164,7 @@ module.exports = function(app) {
             $scope.$broadcast("show-callout", "attachments", savedApplication.requiresAdditionalInfo === true && $scope.application.getChangedPreferences().length > 0)
             $scope.application.mergeSavedApplication(savedApplication)
             $scope.applicationForm.$setPristine()
-            setStatusMessage(localization("message.changesSaved"), "success")
+            setStatusMessage(localize("message.changesSaved"), "success")
             updateValidationMessages([])
             if($scope.application.editHakutoiveetEnabled()) scrollToTop()
           }
@@ -182,7 +183,7 @@ module.exports = function(app) {
                 return "error.saveFailed"
             })()
 
-            setStatusMessage(localization(saveError), "error")
+            setStatusMessage(localize(saveError), "error")
             if (err.status == 400) // Validointivirhe
               updateValidationMessages(err.data)
           }
@@ -218,7 +219,7 @@ module.exports = function(app) {
               console.log("Validaatiovirhettä ei käsitelty:", item.questionId, item.errors)
             })
 
-            setStatusMessage(localization("error.serverError"), "error")
+            setStatusMessage(localize("error.serverError"), "error")
           }
 
           function hideErrorIfAlreadyShowsKoulutusError(messages) {

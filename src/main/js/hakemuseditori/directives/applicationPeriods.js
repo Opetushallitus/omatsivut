@@ -1,7 +1,8 @@
+import localize from '../../localization';
 var util = require("../util")
 
-module.exports = function(app) {
-  app.directive("applicationPeriods", ["localization", function (localization) {
+export default function(app) {
+  app.directive("applicationPeriods", [function () {
     return {
       restrict: 'E',
       scope: {
@@ -9,23 +10,23 @@ module.exports = function(app) {
       },
       template: require('./applicationPeriods.html'),
       link: function ($scope, element, attrs) {
-        $scope.localization = localization
+        $scope.localization = localize;
         $scope.periods = function() { return $scope.haku().applicationPeriods }
 
         $scope.applicationPeriodString = function(index) {
           if ($scope.periods().length === 1)
-            return localization("label.applicationPeriod")
+            return localize("label.applicationPeriod")
           else
-            return (index+1) + ". " + localization("label.applicationPeriod").toLowerCase()
+            return (index+1) + ". " + localize("label.applicationPeriod").toLowerCase()
         }
 
         $scope.statusString = function(period) {
           if (period.active)
-            return localization("label.applicationPeriodActive")
+            return localize("label.applicationPeriodActive")
           else if (period.end < new Date().getTime())
-            return localization("label.applicationPeriodPassed")
+            return localize("label.applicationPeriodPassed")
           else
-            return localization("label.applicationPeriodNotStarted")
+            return localize("label.applicationPeriodNotStarted")
         }
       }
     }

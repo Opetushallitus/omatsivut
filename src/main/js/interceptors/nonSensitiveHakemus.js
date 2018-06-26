@@ -29,6 +29,6 @@ var nonSensitiveHakemusInterceptor = {
   }
 };
 
-module.exports = function() {
+export default function() {
   return nonSensitiveHakemusInterceptor
 };

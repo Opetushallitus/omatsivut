@@ -1,4 +1,4 @@
-module.exports = function(app) {
+export default function(app) {
   app.directive("callout", function () {
     return {
       link: function (scope, element, attrs) {

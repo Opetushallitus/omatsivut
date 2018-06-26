@@ -1,7 +1,9 @@
+import { getLanguage } from '../staticResources';
+
 var Hakemus = require('../hakemuseditori/hakemuseditori').Hakemus;
 var util = require('../util');
 
-module.exports = function(app, staticResources) {
+export default function(app) {
   app.controller('HakutoiveidenMuokkausController', function($scope, $location, $http) {
     var matches = $location.path().match(/token\/(.+)/);
     var token = matches && matches[1];
@@ -12,7 +14,7 @@ module.exports = function(app, staticResources) {
       location.reload();
     });
 
-    $scope.lang = staticResources.translations.languageId;
+    $scope.lang = getLanguage();
 
     $scope.logout = function() {
       util.removeBearerToken();

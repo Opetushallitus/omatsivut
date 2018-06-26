@@ -1,6 +1,6 @@
-var Bacon = require("baconjs")
+import Bacon from 'baconjs';
 
-module.exports = function(app, isTestMode) {
+export default function(app, isTestMode) {
   app.factory("angularBacon", function () {
     return {
       watch: function(scope, expression) {

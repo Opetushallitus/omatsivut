@@ -1,5 +1,5 @@
-module.exports = function(app) {
-  app.directive("ilmoittautuminen", ["localization", function (localization) {
+export default function(app) {
+  app.directive("ilmoittautuminen", [function () {
     return {
       restrict: 'E',
       scope: {
@@ -9,7 +9,7 @@ module.exports = function(app) {
       },
       templateUrl: require('./ilmoittautuminen.html'),
       link: function (scope, element, attrs) {
-        scope.localization = localization;
+        scope.localization = localize;
 
         $scope.statesToReport = {
           LASNA_KOKO_LUKUVUOSI: 'semester',

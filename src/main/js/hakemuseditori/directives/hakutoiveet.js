@@ -1,8 +1,10 @@
+import localize from '../../localization';
+import { getLanguage } from '../../staticResources';
 const _ = require('underscore');
 const Hakutoive = require('../hakutoive');
 
-module.exports = function(app) {
-  app.directive("hakutoiveet", ["localization", function (localization) {
+export default function(app) {
+  app.directive("hakutoiveet", [function () {
     return {
       restrict: 'E',
       scope: {
@@ -13,7 +15,7 @@ module.exports = function(app) {
       template: require('./hakutoiveet.html'),
 
       link: function ($scope, element, attrs) {
-        $scope.localization = localization
+        $scope.localization = localize;
 
         $scope.movePreference = function(from, to) {
           if (to >= 0 && to < this.application.hakutoiveet.length) {
@@ -25,8 +27,8 @@ module.exports = function(app) {
     }
   }])
 
-  app.controller("additionalQuestionController", ["$scope", "localization", function($scope, localization) {
-    $scope.localization = localization
+  app.controller("additionalQuestionController", ["$scope", function($scope) {
+    $scope.localization = localize;
     $scope.questionAnswered = function() {
       $scope.$emit("questionAnswered")
     }
@@ -56,7 +58,7 @@ module.exports = function(app) {
         opetuspisteId: $item.id,
         baseEducation: this.application.educationBackground.baseEducation,
         vocational: this.application.educationBackground.vocational,
-        uiLang: $scope.localization("languageId")
+        uiLang: getLanguage()
       }, function(koulutukset) {
         $scope.koulutusList = koulutukset
         if (koulutukset.length === 1) {
@@ -90,7 +92,7 @@ module.exports = function(app) {
       return restResources.opetuspisteet.query({
         query: val,
         asId: $scope.application.haku.oid,
-        lang: $scope.localization("languageId")
+        lang: getLanguage()
       }).$promise
     };
   }])
