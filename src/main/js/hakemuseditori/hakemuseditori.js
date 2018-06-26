@@ -1,7 +1,6 @@
-module.exports = function(app) {
+export default function(app) {
   require('./applicationValidator')(app);
   require('./angularBacon')(app);
-  require('./constants')(app);
   require('./directives/confirm')(app);
   require('./directives/question')(app);
   require('./directives/localizedLink')(app);
@@ -21,4 +20,4 @@ module.exports = function(app) {
   require('../../components/lasnaoloilmoittautuminen/lasnaoloilmoittautuminen')(app);
 };
 
-module.exports.Hakemus = require("./hakemus");
+export const Hakemus = require("./hakemus");

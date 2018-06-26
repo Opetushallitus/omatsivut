@@ -1,6 +1,6 @@
 const _ = require('underscore');
 
-module.exports = function(app) {
+export default function(app) {
   app.directive("question", function (RecursionHelper) {
     return {
       restrict: 'E',

@@ -1,5 +1,5 @@
-module.exports = function(app) {
-  app.directive("formattedTime", ["$sce", "localization", function ($sce, localization) {
+export default function(app) {
+  app.directive("formattedTime", [function () {
     return {
       restrict: "A",
       template: "",

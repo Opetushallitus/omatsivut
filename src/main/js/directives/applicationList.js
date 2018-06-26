@@ -1,8 +1,8 @@
 const _ = require('underscore');
 const Hakemus = require('../hakemuseditori/hakemuseditori').Hakemus;
 
-module.exports = function(listApp) {
-  listApp.directive("applicationList", ["localization", "restResources", function (localization, restResources) {
+export default function(listApp) {
+  listApp.directive("applicationList", ["restResources", function (restResources) {
     return {
       restrict: 'E',
       scope: true,

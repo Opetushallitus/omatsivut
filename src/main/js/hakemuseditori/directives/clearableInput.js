@@ -1,4 +1,4 @@
-module.exports = function(app) {
+export default function(app) {
   app.directive("clearableInput", function ($parse) {
     return {
       link: function (scope, element, attrs) {

@@ -1,7 +1,11 @@
+import { VASTAANOTTOTILA, VASTAANOTTO_ACTION } from '../../constants';
+import { getLanguage } from '../../staticResources';
+import localize from '../../localization';
+
 const _ = require('underscore');
 const util = require("../util");
 
-module.exports = function(app) {
+export default function(app) {
   app.directive('ignoreDirty', [function() {
     return {
       restrict: 'A',
@@ -11,7 +15,7 @@ module.exports = function(app) {
       }
     }
   }]);
-  app.directive("valintatulos", ["localization", "restResources", "settings", "VASTAANOTTOTILA", "VASTAANOTTO_ACTION", function (localization, restResources, settings, VASTAANOTTOTILA, VASTAANOTTO_ACTION) {
+  app.directive("valintatulos", ["restResources", "settings", function (restResources, settings) {
     return {
       restrict: 'E',
       scope: {
@@ -22,10 +26,10 @@ module.exports = function(app) {
       },
       template: require('./valintatulos.html'),
       link: function ($scope, element, attrs) {
-        $scope.localization = localization
-        $scope.VASTAANOTTOTILA = VASTAANOTTOTILA
+        $scope.localization = localize;
+        $scope.VASTAANOTTOTILA = VASTAANOTTOTILA;
         $scope.error = false
-        $scope.language = localization.language
+        $scope.language = getLanguage();
 
         $scope.formatDate = function(dt) {
           if (dt == null)
@@ -35,12 +39,12 @@ module.exports = function(app) {
         }
 
         $scope.$watch("isFinal()", function(value) {
-          $scope.status = value ? localization("label.resultsFinal") : localization("label.resultsPending")
+          $scope.status = value ? localize("label.resultsFinal") : localize("label.resultsPending")
         })
 
         $scope.getError = function() {
           if ($scope.error) {
-            return localization($scope.error)
+            return localize($scope.error)
           }
         }
         $scope.isHyvaksyttyKesken = function(valintatulos, valintatulokset) {
@@ -58,36 +62,36 @@ module.exports = function(app) {
         $scope.valintatulosText = function(valintatulos, valintatulokset) {
           var isHyvaksyttyKesken = $scope.isHyvaksyttyKesken(valintatulos, valintatulokset);
           var key = isHyvaksyttyKesken ? "HyvaksyttyKesken" : util.underscoreToCamelCase(valintatulos.valintatila);
-          var ehdollisenHyvaksymisenKenttaEhto = localization("label.resultState.EhdollisenHyvaksymisenEhdonKentanNimi");
+          var ehdollisenHyvaksymisenKenttaEhto = localize("label.resultState.EhdollisenHyvaksymisenEhdonKentanNimi");
 
           if ([VASTAANOTTOTILA.VASTAANOTTANUT_SITOVASTI, VASTAANOTTOTILA.EI_VASTAANOTETTU_MAARA_AIKANA, VASTAANOTTOTILA.EHDOLLISESTI_VASTAANOTTANUT].indexOf(valintatulos.vastaanottotila) >= 0) {
             key = util.underscoreToCamelCase(valintatulos.vastaanottotila);
-            return localization("label.resultState." + key)
+            return localize("label.resultState." + key)
           } else if (!_.isEmpty(tilanKuvaus(valintatulos))) {
             if(valintatulos.valintatila === "PERUNUT"){
-              return localization("label.resultState." + key)
+              return localize("label.resultState." + key)
             } else if(valintatulos.valintatila === "HYLATTY"){
-              return localization("label.resultState." + key) + " " + tilanKuvaus(valintatulos)
+              return localize("label.resultState." + key) + " " + tilanKuvaus(valintatulos)
             } else if(hyvaksytty(valintatulos) && valintatulos.ehdollisestiHyvaksyttavissa) {
               if (valintatulos.ehdollisenHyvaksymisenEhtoKoodi !== undefined && valintatulos.ehdollisenHyvaksymisenEhtoKoodi != null) {
-                  return localization("label.resultState." + key) + ' (' + valintatulos[ehdollisenHyvaksymisenKenttaEhto] + ')';
+                  return localize("label.resultState." + key) + ' (' + valintatulos[ehdollisenHyvaksymisenKenttaEhto] + ')';
               }
-              return localization("label.resultState." + key) + localization("label.resultState.EhdollinenPostfix")
+              return localize("label.resultState." + key) + localize("label.resultState.EhdollinenPostfix")
             } else {
               return tilanKuvaus(valintatulos)
             }
           } else if (valintatulos.valintatila === "VARALLA" && valintatulos.varasijojaTaytetaanAsti != null) {
-            return localization("label.resultState.VarallaPvm", {
+            return localize("label.resultState.VarallaPvm", {
               varasija: valintatulos.varasijanumero ? valintatulos.varasijanumero + "." : "",
               varasijaPvm: $scope.formatDate(valintatulos.varasijojaTaytetaanAsti)
             })
           } else if(hyvaksytty(valintatulos) && valintatulos.ehdollisestiHyvaksyttavissa) {
             if (valintatulos.ehdollisenHyvaksymisenEhtoKoodi !== undefined && valintatulos.ehdollisenHyvaksymisenEhtoKoodi != null) {
-              return localization("label.resultState." + key) + ' (' + valintatulos[ehdollisenHyvaksymisenKenttaEhto] + ')';
+              return localize("label.resultState." + key) + ' (' + valintatulos[ehdollisenHyvaksymisenKenttaEhto] + ')';
             }
-            return localization("label.resultState." + key) + localization("label.resultState.EhdollinenPostfix")
+            return localize("label.resultState." + key) + localize("label.resultState.EhdollinenPostfix")
           } else {
-            return localization("label.resultState." + key, {
+            return localize("label.resultState." + key, {
               varasija: valintatulos.varasijanumero ? valintatulos.varasijanumero + "." : ""
             })
           }
@@ -142,7 +146,7 @@ module.exports = function(app) {
         }
 
         function tilanKuvaus(valintatulos) {
-          return valintatulos.tilanKuvaukset[$scope.localization("languageId").toUpperCase()]
+          return valintatulos.tilanKuvaukset[localize("languageId").toUpperCase()]
         }
       }
     }

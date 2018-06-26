@@ -1,5 +1,5 @@
-module.exports = function(app) {
-  app.directive("ilmoittautuminen", ["localization", function (localization) {
+export default function(app) {
+  app.directive("ilmoittautuminen", [function () {
     return {
       restrict: 'E',
       scope: {
@@ -9,7 +9,7 @@ module.exports = function(app) {
       },
       template: require('./ilmoittautuminen.html'),
       link: function (scope, element, attrs) {
-        scope.localization = localization;
+        scope.localization = localize;
 
         scope.linkkiOK = function(tulos) {
           return tulos.ilmoittautumistila.ilmoittautumistapa != null &&
