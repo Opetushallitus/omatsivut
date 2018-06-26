@@ -1,4 +1,4 @@
-require('babel-polyfill');
+import 'babel-polyfill';
 require("angular");
 require('ng-resource')(window, angular);
 require('angular-module-sanitize');
@@ -7,11 +7,14 @@ require('angular-cookies');
 require("../lib/ui-bootstrap-custom-tpls-0.10.0.min.js");
 require('./recursionHelper');
 require('../lib/angular-debounce');
+import { init } from './staticResources';
+import { isTestMode } from './util';
+import localize from './localization';
+import RestResources from './restResources';
+import Settings from './settings';
+import moment from './moment';
+window.moment = moment;
 
-window.moment = require("moment");
-require("../lib/moment-locale-fi.js");
-require("moment/locale/sv.js");
-require("moment/locale/en-gb.js");
 require("../lib/oph_urls.js/index.js");
 require("./omatsivut-web-oph.js");
 
@@ -42,9 +45,29 @@ window.Service = {
     });
   }
 };
-
-var listApp = angular.module('listApp', ["ngResource", "ngSanitize", "ngAnimate", "ngCookies", "RecursionHelper", "ui.bootstrap.typeahead", "template/typeahead/typeahead-popup.html", "template/typeahead/typeahead-match.html", "debounce", "exceptionOverride", "templates"], function($locationProvider) {
+// "exceptionOverride"
+const listApp = angular.module('listApp', ["ngResource", "ngSanitize", "ngAnimate", "ngCookies", "RecursionHelper", "ui.bootstrap.typeahead", "template/typeahead/typeahead-popup.html", "template/typeahead/typeahead-match.html", "debounce"], function($locationProvider) {
   $locationProvider.html5Mode(false)
+});
+
+listApp
+  .config()
+  .service('restResources', RestResources)
+  .service('settings', Settings);
+
+/*
+require('./hakemuseditori/hakemuseditori')(listApp);
+require('./directives/applicationList')(listApp);
+require('./directives/notification')(listApp);
+require('./controllers/hakutoiveidenMuokkaus')(listApp);
+*/
+
+listApp.config(function ($httpProvider) {
+  $httpProvider.interceptors.push(require('./interceptors/nonSensitiveHakemus'))
+});
+
+listApp.run(function ($rootScope) {
+  $rootScope.localization = localize;
 });
 
 listApp.run(function($http, $cookies) {
@@ -54,36 +77,13 @@ listApp.run(function($http, $cookies) {
   }
 });
 
-var staticResources = require('./staticResources');
-require('./localization')(listApp, staticResources);
-require('./restResources')(listApp);
-
-require('./settings')(listApp, testMode());
-
-require('./hakemuseditori/hakemuseditori')(listApp);
-require('./directives/applicationList')(listApp);
-require('./directives/notification')(listApp);
-require('./controllers/hakutoiveidenMuokkaus')(listApp, staticResources);
-
-listApp.config(function ($httpProvider) {
-  $httpProvider.interceptors.push(require('./interceptors/nonSensitiveHakemus'))
-});
-
-listApp.run(function ($rootScope, localization) {
-  $rootScope.localization = localization
-});
-
-angular.element(document).ready(function() {
-  staticResources.init(function() {
+angular.element(document).ready(() => {
+  init(() => {
     angular.bootstrap(document, ['listApp']);
-    $("body").attr("aria-busy","false")
-  })
+    document.getElementsByTagName('body')[0].setAttribute('aria-busy', 'false');
+  });
 });
-
-function testMode() {
-  return window.parent.location.href.indexOf("runner.html") > 0
-}
-
+/*
 function logExceptionToPiwik(msg, data) {
   if (typeof _paq === 'undefined' || _paq == null) {
     console.warn("Piwik not present, cannot log: " + msg + "\n" + data)
@@ -94,7 +94,7 @@ function logExceptionToPiwik(msg, data) {
 }
 
 window.onerror = function(errorMsg, url, lineNumber, columnNumber, exception) {
-  var data = url + ":" + lineNumber;
+  let data = url + ":" + lineNumber;
   if (typeof columnNumber !== "undefined") data += ":" + columnNumber;
   if (typeof exception !==  "undefined") data += "\n" + exception.stack;
   logExceptionToPiwik(errorMsg, data)
@@ -102,10 +102,11 @@ window.onerror = function(errorMsg, url, lineNumber, columnNumber, exception) {
 
 angular.module("exceptionOverride", []).factory("$exceptionHandler", function() {
   return function (exception) {
-    if (testMode()) {
+    if (isTestMode()) {
       throw exception
     } else {
       logExceptionToPiwik(exception.message, exception.stack)
     }
   };
 });
+*/
