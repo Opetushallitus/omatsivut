@@ -1,5 +1,7 @@
-module.exports = function(app) {
-    app.directive("lasnaoloilmoittautuminen", ["localization", "restResources", function (localization, restResources) {
+import localize from '../../js/localization';
+
+export default function(app) {
+    app.directive("lasnaoloilmoittautuminen", ["restResources", function (restResources) {
         return {
             restrict: 'E',
             scope: {
@@ -9,7 +11,7 @@ module.exports = function(app) {
             templateUrl: 'lasnaoloilmoittautuminen.html',
 
             link: function ($scope, element, attrs) {
-                $scope.localization = localization;
+                $scope.localization = localize;
                 $scope.states = {
                     // Spring hakus
                     semester: 'LASNA_KOKO_LUKUVUOSI',
@@ -47,7 +49,7 @@ module.exports = function(app) {
                 };
 
                 $scope.getErrorTranslation = function() {
-                    return localization('lasnaoloilmoittautuminen.error.' + $scope.error);
+                    return localize('lasnaoloilmoittautuminen.error.' + $scope.error);
                 };
 
                 $scope.schoolStartsInSpring = function () {
@@ -78,7 +80,6 @@ module.exports = function(app) {
                 }
 
             }
-
         }
     }])
 };

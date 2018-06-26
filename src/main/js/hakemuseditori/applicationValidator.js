@@ -1,6 +1,6 @@
 var Question = require('./question').Question
 
-module.exports = function(app) {
+export default function(app) {
   app.factory("applicationValidator", ["restResources", function(restResources) {
 
     return function applicationValidator() {

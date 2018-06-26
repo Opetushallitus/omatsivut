@@ -1,4 +1,4 @@
-module.exports = function(app) {
+export default function(app) {
   app.directive('sortable', ["settings", function(settings) {
     return function($scope, $element, attrs) {
       var slide = function(el, offset) {
