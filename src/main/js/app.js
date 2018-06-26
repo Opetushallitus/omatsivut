@@ -12,9 +12,6 @@ window.moment = require("moment");
 require("../lib/moment-locale-fi.js");
 require("moment/locale/sv.js");
 require("moment/locale/en-gb.js");
-
-angular.module("templates", []);
-require("../templates/templates.js");
 require("../lib/oph_urls.js/index.js");
 require("./omatsivut-web-oph.js");
 
