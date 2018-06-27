@@ -22,7 +22,7 @@ export default function(app) {
 
         $scope.linkkiOK = function(tulos) {
           return tulos.ilmoittautumistila.ilmoittautumistapa != null &&
-              tulos.ilmoittautumistila.ilmoittautumistapa.url
+            tulos.ilmoittautumistila.ilmoittautumistapa.url
         };
 
         $scope.ilmoittautumistietoNaytetaan = function(tulos) {
@@ -44,3 +44,5 @@ export default function(app) {
     }
   }])
 };
+
+

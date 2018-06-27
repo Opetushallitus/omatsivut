@@ -1,17 +1,14 @@
-export default function(app) {
-    app.directive("notification", function () {
-        return {
-            restrict: 'E',
-            scope: {
-                message: '@'
-            },
-            template: require('./notification.html'),
-            link: function (scope) {
-                scope.visible = true
-                scope.close = function () {
-                    scope.visible = false
-                }
-            }
-        }
-    })
+export default class Notification {
+  constructor() {
+    this.restrict = 'E';
+    this.scope = {
+      message: '@'
+    };
+    this.template = require('./notification.html');
+  }
+
+  link(scope) {
+    scope.visible = true;
+    scope.close = () => scope.visible = false;
+  }
 }
