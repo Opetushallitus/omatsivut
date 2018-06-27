@@ -1,4 +1,4 @@
-export default function ($parse) {
+export default ['$parse', function ($parse) {
   return {
     link: function (scope, element, attrs) {
       var wrapper = $("<div/>", { class: "clearable-input" })
@@ -18,4 +18,4 @@ export default function ($parse) {
       })
     }
   }
-}
+}]
