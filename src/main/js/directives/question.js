@@ -1,6 +1,6 @@
 const _ = require('underscore');
 
-export default function (RecursionHelper) {
+export default ['RecursionHelper', function(RecursionHelper) {
   return {
     restrict: 'E',
     scope: {
@@ -17,4 +17,4 @@ export default function (RecursionHelper) {
       })
     }
   }
-}
+}]
