@@ -1,44 +1,46 @@
+import { mapArray, indexBy } from '../util';
+
 const _ = require('underscore');
-const util = require('./util');
+const hakutoiveErrorRegexp = /^(preference\d)$|^(preference\d)-Koulutus$/;
 
-function Hakutoive(json) {
-  this.importJson(json)
-  this.isModified = false
-  this.isNew = _.isEmpty(json)
-  this.addedDuringCurrentSession = _.isEmpty(json)
-  this.errors = []
-}
+export default class Hakutoive {
+  constructor(json) {
+    this.importJson(json)
+    this.isModified = false
+    this.isNew = _.isEmpty(json)
+    this.addedDuringCurrentSession = _.isEmpty(json)
+    this.errors = []
+  }
 
-Hakutoive.prototype = {
-  toJson: function() {
+  toJson() {
     return this.data
-  },
+  }
 
-  importJson: function(json) {
-      this.data = json.hakemusData || {};
-      this.hakuaikaId = json.hakuaikaId;
-      this.kohdekohtainenHakuaika = json.kohdekohtainenHakuaika;
-      this.koulutuksenAlkaminen = json.koulutuksenAlkaminen;
-  },
+  importJson(json) {
+    this.data = json.hakemusData || {};
+    this.hakuaikaId = json.hakuaikaId;
+    this.kohdekohtainenHakuaika = json.kohdekohtainenHakuaika;
+    this.koulutuksenAlkaminen = json.koulutuksenAlkaminen;
+  }
 
-  clear: function() {
+  clear() {
     this.data = {}
     this.isNew = true
     this.isModified = false
-  },
+  }
 
-  hasData: function() {
+  hasData() {
     return !_.isEmpty(this.data)
-  },
+  }
 
-  setOpetuspiste: function(id, name) {
+  setOpetuspiste(id, name) {
     this.data["Opetuspiste"] = name
     this.data["Opetuspiste-id"] = id
     this.isModified = true
     this.setErrors([])
-  },
+  }
 
-  setKoulutus: function(koulutus) {
+  setKoulutus(koulutus) {
     this.data["Koulutus"] = toString(koulutus.name)
     this.data["Koulutus-id"] = toString(koulutus.id)
     this.data["Koulutus-educationDegree"] = toString(koulutus.educationDegree)
@@ -58,9 +60,9 @@ Hakutoive.prototype = {
     function toString(x) {
       return (x==null) ? "" : x.toString()
     }
-  },
+  }
 
-  addGroupInfo: function(koulutus) {
+  addGroupInfo(koulutus) {
     var attachmentGroups = [];
     var aoGroups = [];
     if (koulutus.organizationGroups instanceof Array) {
@@ -80,68 +82,68 @@ Hakutoive.prototype = {
     if(attachmentGroups.length > 0) {
       this.data["Koulutus-id-attachmentgroups"] = attachmentGroups.join(",")
     }
-  },
+  }
 
-  hasOpetuspiste: function() {
+  hasOpetuspiste() {
     return !_.isEmpty(this.data["Opetuspiste-id"])
-  },
+  }
 
-  removeOpetuspisteData: function() {
+  removeOpetuspisteData() {
     var self = this
     _.each(this.data, function(value, key) {
       if (key.indexOf("$")!==0 && key != "Opetuspiste")
         delete self.data[key]
     })
     delete this.kohdekohtainenHakuaika
-  },
+  }
 
-  isValid: function() {
+  isValid() {
     return (_.isEmpty(this.data["Opetuspiste"]) || !_.isEmpty(this.data["Koulutus-id"]))
-  },
+  }
 
-  setErrors: function(errors) {
+  setErrors(errors) {
     this.errors = errors || []
-  },
+  }
 
-  appendErrors: function(errors) {
+  appendErrors(errors) {
     this.errors = this.errors.concat(errors)
-  },
+  }
 
-  setAsSaved: function() {
+  setAsSaved() {
     this.isNew = false
     this.isModified = false
-  },
+  }
 
-  setAsModified: function() {
+  setAsModified() {
     this.isModified = true
   }
-}
 
-var hakutoiveErrorRegexp = /^(preference\d)$|^(preference\d)-Koulutus$/
-Hakutoive.isHakutoiveError = function(questionId) {
-  return hakutoiveErrorRegexp.test(questionId)
-}
+  static isHakutoiveError(questionId) {
+    return hakutoiveErrorRegexp.test(questionId)
+  }
 
-Hakutoive.parseHakutoiveIndex = function(questionId) {
-  var result = /^preference(\d+)/.exec(questionId)
-  if (result)
-    return Number(result[1])
-  else
-    return null
-}
+  static parseHakutoiveIndex(questionId) {
+    var result = /^preference(\d+)/.exec(questionId)
+    if (result)
+      return Number(result[1])
+    else
+      return null
+  }
 
-Hakutoive.hasHakutoiveErrors = function(errorsJson) {
-  var errorMap = util.mapArray(errorsJson, "key", "message");
-  var self = this
-  return _(errorMap).any(function(val, key) {
-    return self.isHakutoiveError(key) && val.length > 0
-  })
-}
+  static hasHakutoiveErrors(errorsJson) {
+    var errorMap = mapArray(errorsJson, "key", "message");
+    var self = this
+    return _(errorMap).any(function(val, key) {
+      return self.isHakutoiveError(key) && val.length > 0
+    })
+  }
 
-Hakutoive.hakutoiveMap = function(hakutoiveet) {
-  return util.indexBy(hakutoiveet, function(hakutoive, index) { return "preference" + (index+1) })
+  static hakutoiveMap(hakutoiveet) {
+    return indexBy(hakutoiveet, function(hakutoive, index) { return "preference" + (index+1) })
+  }
+
+  static questionIdToHakutoiveId(questionId) {
+    return _.chain(hakutoiveErrorRegexp.exec(questionId)).rest().without(undefined).first().value()
+  }
+
 }
-Hakutoive.questionIdToHakutoiveId = function(questionId) {
-  return _.chain(hakutoiveErrorRegexp.exec(questionId)).rest().without(undefined).first().value()
-}
-module.exports = Hakutoive

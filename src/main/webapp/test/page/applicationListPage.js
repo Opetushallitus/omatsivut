@@ -136,10 +136,10 @@ function ApplicationListPage() {
     return S("#hakemus-list").attr("ng-cloak") == null && api.applications().length > 0
   }
 
-  function getTemplateTexts() {
+  function getTemplateTexts() { //FIXME: we don't use template cache
     return Q.all([
       Q($.get("/omatsivut/index.html")),
-      Q($.ajax({type: "get", url:"/omatsivut/bundle.js", dataType:"text"})) // explicitly set datatype to prevent script execution
+      Q($.ajax({type: "get", url:"/omatsivut/index.bundle.js", dataType:"text"})) // explicitly set datatype to prevent script execution
     ]).then(function(arr) {
       var indexHtml = arr[0]
       var templateIds = _.uniq(arr[1].match(/templates\/.*?html/g))
