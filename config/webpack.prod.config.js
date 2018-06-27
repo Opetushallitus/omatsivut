@@ -1,8 +1,10 @@
 const path = require('path');
 const webpack = require('webpack');
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = {
   mode: 'production',
+  devtool: 'source-map',
   entry: {
     index: './src/main/js/app.js'
   },
@@ -52,6 +54,9 @@ module.exports = {
       /moment[\/\\]locale$/,
       /fi|sv|en-gb/
     ),
+    new UglifyJSPlugin({
+      sourceMap: true
+    })
   ]
   /*
   module: {

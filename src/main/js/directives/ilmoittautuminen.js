@@ -1,6 +1,6 @@
 import localize from '../localization';
 
-export default [function () {
+export default function () {
   return {
     restrict: 'E',
     scope: {
@@ -18,4 +18,4 @@ export default [function () {
       }
     }
   }
-}]
+}

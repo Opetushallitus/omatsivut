@@ -3,7 +3,7 @@ import Hakutoive from '../models/hakutoive';
 import Question from '../models/question';
 const _ = require('underscore');
 
-export default ["$sce", "restResources", "applicationValidator", "settings", "debounce", "$timeout", function ($sce, restResources, applicationValidator, settings, debounce, $timeout) {
+export default ["restResources", "applicationValidator", "settings", "debounce", "$timeout", function (restResources, applicationValidator, settings, debounce, $timeout) {
   return {
     restrict: 'E',
     scope: {

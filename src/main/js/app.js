@@ -109,23 +109,24 @@ listApp
   .controller('additionalQuestionController', AdditionalQuestionController)
   .controller('hakutoiveController', HakutoiveController);
 
-listApp.run(function ($rootScope) {
+listApp.run(['$rootScope', function ($rootScope) {
   $rootScope.localization = localize;
-});
+}]);
 
-listApp.run(function($http, $cookies) {
+listApp.run(['$http', '$cookies', function($http, $cookies) {
   $http.defaults.headers.common['clientSubSystemCode'] = "omatsivut.frontend";
   if($cookies['CSRF']) {
     $http.defaults.headers.common['CSRF'] = $cookies['CSRF'];
   }
-});
+}]);
 
-angular.element(document).ready(() => {
-  init(() => {
-    angular.bootstrap(document, ['listApp']);
-    document.getElementsByTagName('body')[0].setAttribute('aria-busy', 'false');
-  });
-});
+angular.element(document).ready(
+  init()
+    .then(() => {
+      angular.bootstrap(document, ['listApp']);
+      document.getElementsByTagName('body')[0].setAttribute('aria-busy', 'false');
+    })
+);
 
 function logExceptionToPiwik(msg, data) {
   if (typeof _paq === 'undefined' || _paq == null) {
