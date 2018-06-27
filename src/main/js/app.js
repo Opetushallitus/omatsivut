@@ -9,9 +9,40 @@ require('./recursionHelper');
 require('../lib/angular-debounce');
 import { init } from './staticResources';
 import { isTestMode } from './util';
+// Services
+import ApplicationValidator from './services/applicationValidator';
+import AngularBacon from './services/angularBacon';
 import localize from './localization';
 import RestResources from './restResources';
 import Settings from './settings';
+import router from './config/router';
+// Directives
+import ApplicationList from './directives/applicationList';
+import Notification from './directives/notification';
+import Confirm from './directives/confirm';
+import Question from './directives/question';
+import LocalizedLink from './directives/localizedLink';
+import FormattedTime from './directives/formattedTime';
+import Sortable from './directives/sortable';
+import DisableClickFocus from './directives/disableClickFocus';
+import IgnoreDirty from './directives/ignoreDirty';
+import Application from './directives/application';
+import HakutoiveenVastaanotto from './directives/hakutoiveenVastaanotto';
+import Ilmoittautuminen from './directives/ilmoittautuminen';
+import Kela from './directives/kela';
+import Hakutoiveet from './directives/hakutoiveet';
+import Valintatulos from './directives/valintatulos';
+import Henkilotiedot from './directives/henkilotiedot';
+import ApplicationPeriods from './directives/applicationPeriods';
+import ClearableInput from './directives/clearableInput';
+import Callout from './directives/callout';
+import Lasnaoloilmoittautuminen from '../components/lasnaoloilmoittautuminen/lasnaoloilmoittautuminen';
+
+// Controllers
+import HakutoiveidenMuokkausController from './controllers/hakutoiveidenMuokkaus';
+import AdditionalQuestionController from './controllers/additionalQuestionController';
+import HakutoiveController from './controllers/hakutoiveController';
+
 import moment from './moment';
 window.moment = moment;
 
@@ -45,26 +76,38 @@ window.Service = {
     });
   }
 };
-// "exceptionOverride"
-const listApp = angular.module('listApp', ["ngResource", "ngSanitize", "ngAnimate", "ngCookies", "RecursionHelper", "ui.bootstrap.typeahead", "template/typeahead/typeahead-popup.html", "template/typeahead/typeahead-match.html", "debounce"], function($locationProvider) {
-  $locationProvider.html5Mode(false)
-});
+//  "exceptionOverride"
+const listApp = angular.module('listApp', ["ngResource", "ngSanitize", "ngAnimate", "ngCookies", "RecursionHelper", "ui.bootstrap.typeahead", "template/typeahead/typeahead-popup.html", "template/typeahead/typeahead-match.html", "debounce"]);
 
 listApp
-  .config()
-  .service('restResources', RestResources)
-  .service('settings', Settings);
-
-/*
-require('./hakemuseditori/hakemuseditori')(listApp);
-require('./directives/applicationList')(listApp);
-require('./directives/notification')(listApp);
-require('./controllers/hakutoiveidenMuokkaus')(listApp);
-*/
-
-listApp.config(function ($httpProvider) {
-  $httpProvider.interceptors.push(require('./interceptors/nonSensitiveHakemus'))
-});
+  .config(router)
+  .factory('restResources', RestResources)
+  .factory('angularBacon', AngularBacon)
+  .factory('applicationValidator', ApplicationValidator)
+  .factory('settings', Settings)
+  .directive('applicationList', ApplicationList)
+  .directive('notification', Notification)
+  .directive('confirm', Confirm)
+  .directive('question', Question)
+  .directive('localizedLink', LocalizedLink)
+  .directive('formattedTime', FormattedTime)
+  .directive('sortable', Sortable)
+  .directive('disableClickFocus', DisableClickFocus)
+  .directive('application', Application)
+  .directive('hakutoiveenVastaanotto', HakutoiveenVastaanotto)
+  .directive('ilmoittautuminen', Ilmoittautuminen)
+  .directive('kela', Kela)
+  .directive('hakutoiveet', Hakutoiveet)
+  .directive('valintatulos', Valintatulos)
+  .directive('henkilotiedot', Henkilotiedot)
+  .directive('applicationPeriods', ApplicationPeriods)
+  .directive('ignoreDirty', IgnoreDirty)
+  .directive('clearableInput', ClearableInput)
+  .directive('callout', Callout)
+  .directive('lasnaoloilmoittautuminen', Lasnaoloilmoittautuminen)
+  .controller('hakutoiveidenMuokkausController', HakutoiveidenMuokkausController)
+  .controller('additionalQuestionController', AdditionalQuestionController)
+  .controller('hakutoiveController', HakutoiveController);
 
 listApp.run(function ($rootScope) {
   $rootScope.localization = localize;
@@ -83,7 +126,7 @@ angular.element(document).ready(() => {
     document.getElementsByTagName('body')[0].setAttribute('aria-busy', 'false');
   });
 });
-/*
+
 function logExceptionToPiwik(msg, data) {
   if (typeof _paq === 'undefined' || _paq == null) {
     console.warn("Piwik not present, cannot log: " + msg + "\n" + data)
@@ -109,4 +152,3 @@ angular.module("exceptionOverride", []).factory("$exceptionHandler", function() 
     }
   };
 });
-*/

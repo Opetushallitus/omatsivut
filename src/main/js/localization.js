@@ -1,4 +1,5 @@
 import { getTranslations }  from './staticResources';
+const _ = require('underscore');
 
 function getValue(obj, path) {
   const parts = path.split(".");
@@ -9,7 +10,7 @@ function getValue(obj, path) {
 
 function replaceVars(value, vars) {
   const NON_BREAKING_SPACE = "\u00A0";
-  return vars.reduce((memo, val, key) => {
+  return _.reduce(vars, (memo, val, key) => {
     return memo.replace("__" + key + "__", val)
   }, value).replace(/_/g, NON_BREAKING_SPACE)
 }

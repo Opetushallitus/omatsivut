@@ -1,7 +1,7 @@
+import { flattenTree, indexBy } from '../util';
 const _ = require('underscore');
-const util = require('./util');
 
-var questionDefaults = {
+const questionDefaults = {
   help: "",
   verboseHelp: "",
   required: false,
@@ -24,44 +24,45 @@ function params(obj) {
   return questionParameters
 }
 
-function Question(question, answer, validationErrors) {
-  _.extend(this, params(question))
-  this.answer = answer
-  this.errors = validationErrors || []
-}
-
-Question.fromJson = function(json, application) {
-  return new Question(json, initialValue(json, application), json.required ? ["*"] : [])
-}
-
-Question.getQuestions = function(jsonQuestions, application) {
-  return convertToItems(jsonQuestions, new QuestionGroup())
-
-  function convertToItems(questions, results) {
-    _(questions).each(function (questionNode) {
-      if (questionNode.questions != null) {
-        results.questionNodes.push(convertToItems(questionNode.questions, new QuestionGroup(questionNode.title)))
-      } else {
-        results.questionNodes.push(Question.fromJson(questionNode, application))
-      }
-    })
-    return results
+export default class Question {
+  constructor(question, answer, validationErrors) {
+    _.extend(this, params(question))
+    this.answer = answer
+    this.errors = validationErrors || []
   }
-}
 
-Question.prototype = {
-  setErrors: function(errors) {
+  setErrors(errors) {
     this.errors = errors || []
-  },
+  }
 
-  appendErrors: function(errors) {
+  appendErrors(errors) {
     this.errors = this.errors.concat(errors)
   }
-}
 
-Question.questionMap = function(questions) {
-  questions = util.flattenTree(questions, "questionNodes")
-  return util.indexBy(questions, function(node) { return node.id.questionId })
+  static fromJson(json, application) {
+    return new Question(json, initialValue(json, application), json.required ? ["*"] : [])
+  }
+
+  static getQuestions(jsonQuestions, application) {
+    return convertToItems(jsonQuestions, new QuestionGroup())
+
+    function convertToItems(questions, results) {
+      _(questions).each(function (questionNode) {
+        if (questionNode.questions != null) {
+          results.questionNodes.push(convertToItems(questionNode.questions, new QuestionGroup(questionNode.title)))
+        } else {
+          results.questionNodes.push(Question.fromJson(questionNode, application))
+        }
+      })
+      return results
+    }
+  }
+
+  static questionMap(questions) {
+    questions = flattenTree(questions, "questionNodes")
+    return indexBy(questions, function(node) { return node.id.questionId })
+  }
+
 }
 
 function initialValue(question, application) {
@@ -98,12 +99,9 @@ function initialValue(question, application) {
   }
 }
 
-function QuestionGroup(title) {
-  this.title = title
-  this.questionNodes = []
-}
-
-module.exports = {
-  Question: Question,
-  QuestionGroup: QuestionGroup
+class QuestionGroup {
+  constructor(title) {
+    this.title = title
+    this.questionNodes = []
+  }
 }
