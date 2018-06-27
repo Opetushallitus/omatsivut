@@ -5,7 +5,7 @@ import localize from '../localization';
 
 const _ = require('underscore');
 
-export default ["restResources", function (restResources) {
+export default ["restResources", function(restResources) {
   return {
     restrict: 'E',
     scope: {

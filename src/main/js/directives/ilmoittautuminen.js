@@ -1,15 +1,16 @@
-export default function(app) {
-  app.directive("ilmoittautuminen", [function () {
-    return {
+import localize from '../localization';
+
+export default function () {
+  return {
       restrict: 'E',
       scope: {
-        hakukohteet: '&hakukohteet',
-        oili: '&oili',
-        application: '=application'
+        hakukohteet: '&',
+        oili: '&',
+        application: '='
       },
       templateUrl: require('./ilmoittautuminen.html'),
       link: function ($scope, element, attrs) {
-        $scope.localization = localization;
+        $scope.localization = localize;
 
         $scope.statesToReport = {
           LASNA_KOKO_LUKUVUOSI: 'semester',
@@ -39,10 +40,8 @@ export default function(app) {
         $scope.getStateTranslation = function(tulos) {
           return localization('lasnaoloilmoittautuminen.' + $scope.statesToReport[tulos.ilmoittautumistila.ilmoittautumistila] );
         };
-
-      }
     }
-  }])
-};
+  }
+}
 
 

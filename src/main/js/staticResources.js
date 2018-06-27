@@ -1,12 +1,10 @@
 import Cookies from 'js-cookie';
 import { urls } from './constants';
 
-export function init(callback) {
+export async function init() {
   const language = getLanguage();
-  loadTranslations(language, translations => {
-    window.translations = translations;
-    callback();
-  });
+  document.documentElement.lang = language;
+  window.translations = await loadTranslations(language);
 }
 
 export function getLanguage() {
@@ -22,12 +20,11 @@ export function getTranslations() {
   return window.translations;
 }
 
-function loadTranslations(language, callback) {
-  document.documentElement.lang = language;
+function loadTranslations(language) {
   const url = urls["omatsivut.translations"] + '?lang=' + language;
-  fetch(url)
+  return fetch(url)
     .then(response => response.json())
-    .then(translations => callback(translations))
+    .then(translations => translations)
     .catch(err => console.error(err));
 }
 
