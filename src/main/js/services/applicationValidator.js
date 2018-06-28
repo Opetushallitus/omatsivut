@@ -29,30 +29,29 @@ export default ["restResources", function(restResources) {
   }
 
   function validateBackend(application, success, error) {
-    var responsePromise = restResources.validate(application)
-    responsePromise.success(function(data, status, headers, config) {
-      if (data.errors.length === 0) {
-        success({
-          questions: Question.getQuestions(data.questions, application),
-          response: data
-        })
-      } else {
+    restResources.validate(application)
+      .then(response => {
+        const data = response.data;
+        if (data.errors.length === 0) {
+          success({
+            questions: Question.getQuestions(data.questions, application),
+            response: data
+          })
+        } else {
+          error({
+            statusCode: 200,
+            errors: data.errors,
+            questions: Question.getQuestions(data.questions, application),
+            response: data
+          })
+        }
+      }, response => {
         error({
-          statusCode: 200,
-          errors: data.errors,
-          questions: Question.getQuestions(data.questions, application),
-          response: data
+          errors: [],
+          statusCode: response.status,
+          isSaveable: true,
+          response: response.data
         })
-      }
-    })
-
-    responsePromise.error(function(data, status) {
-      error({
-        errors: [],
-        statusCode: status,
-        isSaveable: true,
-        response: data
       })
-    })
   }
 }]

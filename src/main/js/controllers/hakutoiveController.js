@@ -18,8 +18,8 @@ export default ["$scope", "$timeout", "settings", "restResources", function($sco
   $scope.isNonPrioritizedAndEditable = function () { return this.application.haku.usePriority || $scope.application.isEditable($scope.$index) }
 
   $scope.opetuspisteValittu = function($item, $model, $label) {
-    this.hakutoive.setOpetuspiste($item.id, $item.name)
-    $scope.koulutusList = []
+    this.hakutoive.setOpetuspiste($item.id, $item.name);
+    $scope.koulutusList = [];
 
     restResources.koulutukset.query({
       asId: this.application.haku.oid,
@@ -27,11 +27,11 @@ export default ["$scope", "$timeout", "settings", "restResources", function($sco
       baseEducation: this.application.educationBackground.baseEducation,
       vocational: this.application.educationBackground.vocational,
       uiLang: getLanguage()
-    }, function(koulutukset) {
-      $scope.koulutusList = koulutukset
+    }).$promise.then(koulutukset => {
+      $scope.koulutusList = koulutukset;
       if (koulutukset.length === 1) {
-        $scope.valittuKoulutus = koulutukset[0]
-        $scope.hakutoive.setKoulutus(koulutukset[0])
+        $scope.valittuKoulutus = koulutukset[0];
+        $scope.hakutoive.setKoulutus(koulutukset[0]);
       }
     })
   }
@@ -52,8 +52,10 @@ export default ["$scope", "$timeout", "settings", "restResources", function($sco
     return $scope.application.hasPreference(index) && !$scope.application.preferenceLocked(index)
   }
 
-  $scope.koulutusValittu = function(index) {
-    this.hakutoive.setKoulutus(this["valittuKoulutus"])
+  $scope.koulutusValittu = function(valittuKoulutus) {
+    if (valittuKoulutus) {
+      this.hakutoive.setKoulutus(valittuKoulutus);
+    }
   }
 
   $scope.findOpetuspiste = function(val) {
