@@ -9,18 +9,16 @@
     "tests": "webpack --config config/webpack.tests.config.js"
   },
   "dependencies": {
-    "angular": "~1.2",
-    "angular-animate": "~1.2",
-    "angular-cookies": "~1.2",
-    "angular-module-sanitize": "~1.2",
-    "ng-resource": "~1.2",
+    "angular": "^1.7.2",
+    "angular-animate": "^1.7.2",
+    "angular-cookies": "^1.7.2",
+    "angular-resource": "^1.7.2",
+    "angular-sanitize": "^1.7.2",
+    "angular-ui-bootstrap": "^2.5.6",
     "underscore": "^1.9.0",
     "babel-polyfill": "^6.26.0",
     "baconjs": "^0.7.24",
-    "coffee-script": "1.7.1",
-    "http-proxy": "1.0.2",
     "js-cookie": "^2.2.0",
-    "node-static": "0.7.3",
     "moment": "^2.22.1"
   },
   "devDependencies": {

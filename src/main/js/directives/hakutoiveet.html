@@ -20,7 +20,7 @@
                     <input type="text" ng-change="opetuspisteModified()"
                            placeholder="{{localization('label.chooseLocation')}}"
                            ng-model="hakutoive.data.Opetuspiste"
-                           typeahead="opetuspiste.name for opetuspiste in findOpetuspiste($viewValue)"
+                           uib-typeahead="opetuspiste.name for opetuspiste in findOpetuspiste($viewValue)"
                            typeahead-loading="loadingLocations"
                            typeahead-on-select="opetuspisteValittu($item, $model, $label)"
                            ng-show="!isEditingDisabled()"/>
@@ -31,7 +31,7 @@
 
                     <select ng-model="valittuKoulutus"
                             ng-options="koulutus.name for koulutus in koulutusList"
-                            ng-change="koulutusValittu($index)" ng-show="isKoulutusSelectable()">
+                            ng-change="koulutusValittu(valittuKoulutus)" ng-show="isKoulutusSelectable()">
                     </select>
                     <span class="instruction ajax-spinner-small" ng-show="isLoadingKoulutusList()">{{ localization("message.loadingData") }}</span>
                     <div class="validation-message error" ng-if="hakutoive.errors.length">{{hakutoive.errors.join(', ')}}</div>
