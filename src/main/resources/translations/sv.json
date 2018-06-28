@@ -110,6 +110,7 @@
       "conditionalAcceptInfo1": "Om du inte blir antagen från reservplats till ett högre ansökningsmål, förblir mottagandet av denna studieplats i kraft.",
       "conditionalAcceptInfo2": "Om du blir antagen från reservplats till ett högre ansökningsmål behöver du inte ta emot den skilt, utan studieplatsen bekräftas automatiskt.",
       "reject": "Jag tar inte emot studieplatsen",
+      "confirmReject": "Jag förstår att jag ger upp den beviljade studieplatsen och kan inte ändra mig senare.",
       "responseReceived": "Ditt svar har mottagits.",
       "invalidEmail": "Felaktig e-postadress",
       "emailLabel": "E-postadress (bekräftelse skickas till din e-post)",
