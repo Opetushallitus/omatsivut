@@ -1,10 +1,11 @@
 import 'babel-polyfill';
-require("angular");
-require('ng-resource')(window, angular);
-require('angular-module-sanitize');
-require('angular-animate');
-require('angular-cookies');
-require("../lib/ui-bootstrap-custom-tpls-0.10.0.min.js");
+import angular from 'angular';
+import ngResource from 'angular-resource';
+import ngSanitize from 'angular-sanitize';
+import ngAnimate from 'angular-animate';
+import ngCookies from 'angular-cookies';
+import typeahead from 'angular-ui-bootstrap/src/typeahead/index.js';
+
 require('./recursionHelper');
 require('../lib/angular-debounce');
 import { init } from './staticResources';
@@ -77,7 +78,7 @@ window.Service = {
   }
 };
 //  "exceptionOverride"
-const listApp = angular.module('listApp', ["ngResource", "ngSanitize", "ngAnimate", "ngCookies", "RecursionHelper", "ui.bootstrap.typeahead", "template/typeahead/typeahead-popup.html", "template/typeahead/typeahead-match.html", "debounce"]);
+const listApp = angular.module('listApp', [ngResource, ngSanitize, ngAnimate, ngCookies, typeahead, "RecursionHelper", "debounce"]);
 
 listApp
   .config(router)
