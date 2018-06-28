@@ -110,6 +110,7 @@
       "conditionalAcceptInfo1": "Jos sinua ei valita varasijalta ylempään hakukohteeseen, tämä opiskelupaikan vastaanotto jää voimaan.",
       "conditionalAcceptInfo2": "Jos sinut valitaan varasijalta ylempään hakukohteeseen, sinun ei tarvitse erikseen ottaa sitä vastaan, vaan opiskelupaikka vahvistuu sinulle automaattisesti.",
       "reject": "En ota opiskelupaikkaa vastaan",
+      "confirmReject": "Ymmärrän hylkääväni tarjotun opiskelupaikan ja etten voi muuttaa tätä enää myöhemmin.",
       "responseReceived": "Vastauksesi on vastaanotettu.",
       "invalidEmail": "Virheellinen sähköpostiosoite",
       "emailLabel": "Sähköpostiosoite (saat vahvistuksen sähköpostilla)",

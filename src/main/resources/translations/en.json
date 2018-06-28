@@ -110,6 +110,7 @@
       "conditionalAcceptInfo1": "If you are not accepted to a study place you are waiting for, this confirmation remains valid.",
       "conditionalAcceptInfo2": "If you are accepted to a study place you are waiting for, you do not need to confirm that study place. It will be automatically confirmed.",
       "reject": "I do not confirm the study place",
+      "confirmReject": "I understand that I am giving up the granted study place and cannot change my mind later.",
       "responseReceived": "Your answer has been sent.",
       "invalidEmail": "Invalid e-mail",
       "emailLabel": "E-mail (a confirmation will be sent to your e-mail)",
