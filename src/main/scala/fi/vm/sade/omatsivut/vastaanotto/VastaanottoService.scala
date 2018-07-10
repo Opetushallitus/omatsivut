@@ -28,7 +28,7 @@ trait VastaanottoComponent {
       val hakuOid: String = hakemus.hakemus.haku.oid
       val email: Option[String] = hakemus.hakemus.email
 
-      Try(valintatulosService.vastaanota(henkiloOid, hakemusOid, hakukohdeOid, vastaanotto.vastaanottoAction)) match {
+      Try(valintatulosService.vastaanota(hakemusOid, hakukohdeOid, vastaanotto.vastaanottoAction)) match {
         case Success(result) => {
           Audit.oppija.log(SaveVastaanotto(request, henkiloOid, hakemusOid, hakukohdeOid, hakuOid, vastaanotto.vastaanottoAction))
           if (result) {

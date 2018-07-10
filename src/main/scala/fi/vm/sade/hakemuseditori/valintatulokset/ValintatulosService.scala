@@ -13,7 +13,7 @@ class ValintatulosException extends Exception
 
 trait ValintatulosService {
   def getValintatulos(hakemusOid: String, hakuOid: String): Option[Valintatulos]
-  def vastaanota(henkiloOid: String, hakemusOid: String, hakukohdeOid: String, vastaanotto: VastaanottoAction): Boolean
+  def vastaanota(hakemusOid: String, hakukohdeOid: String, vastaanotto: VastaanottoAction): Boolean
   def ilmoittaudu(hakuOid: String, hakemusOid: String, ilmoittautuminen: Ilmoittautuminen): Boolean
 }
 
@@ -25,7 +25,7 @@ trait ValintatulosServiceComponent {
 class NoOpValintatulosService extends ValintatulosService {
   override def getValintatulos(hakemusOid: String, hakuOid: String) = None
 
-  override def vastaanota(henkiloOid: String, hakemusOid: String, hakukohdeOid: String, vastaanotto: VastaanottoAction) = true
+  override def vastaanota(hakemusOid: String, hakukohdeOid: String, vastaanotto: VastaanottoAction) = true
 
   override def ilmoittaudu(hakuOid: String, hakemusOid: String, ilmoittautuminen: Ilmoittautuminen) = true
 
@@ -81,10 +81,10 @@ class RemoteValintatulosService extends ValintatulosService with JsonFormats wit
     }
   }
 
-  override def vastaanota(henkiloOid: String, hakemusOid: String, hakukohdeOid: String, vastaanotto: VastaanottoAction): Boolean = {
+  override def vastaanota(hakemusOid: String, hakukohdeOid: String, vastaanotto: VastaanottoAction): Boolean = {
     import org.json4s.jackson.Serialization
 
-    val url = OphUrlProperties.url("valinta-tulos-service.vastaanota", henkiloOid, hakemusOid, hakukohdeOid)
+    val url = OphUrlProperties.url("valinta-tulos-service.vastaanota", hakemusOid, hakukohdeOid)
     val request = DefaultHttpClient.httpPost(url, Some(Serialization.write(vastaanotto))).header("Content-type", "application/json")
     request.responseWithHeaders match {
       case (200, _, resultString) => {
