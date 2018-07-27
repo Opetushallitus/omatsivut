@@ -2,6 +2,7 @@ package fi.vm.sade.hakemuseditori.oppijanumerorekisteri
 
 import java.util.concurrent.TimeUnit
 
+import fi.vm.sade.groupemailer.Json4sHttp4s
 import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
@@ -11,10 +12,10 @@ import org.http4s.MediaType.`application/json`
 import org.http4s.Method.GET
 import org.http4s._
 import org.http4s.client.blaze
-import org.http4s.headers.{Accept, `Content-Type`}
+import org.http4s.headers.Accept
+import org.json4s
 import org.json4s.JsonAST.{JNull, JObject, JString, JValue}
 import org.json4s.jackson.JsonMethods
-import org.json4s.jackson.Serialization.write
 import org.json4s.{DefaultFormats, Reader, Writer, _}
 import scalaz.concurrent.Task
 
@@ -95,11 +96,12 @@ trait OppijanumerorekisteriComponent {
     override def fetchAllDuplicateOids(oppijanumero: String): Set[String] = {
       val timeout = Duration(30, TimeUnit.SECONDS)
 
+      val body: json4s.JValue = Extraction.decompose(Map("henkiloOids" -> List(oppijanumero)))
       val duplicateHenkilosRequest = Request(
         method = Method.POST,
         uri = uriFromString(OphUrlProperties.url("oppijanumerorekisteri-service.duplicatesByPersonOids")),
-        headers = Headers(callerIdHeader, `Content-Type`(`application/json`), `Accept`(`application/json`))
-      ).withBody(write(Map("henkiloOids" -> List(oppijanumero))))
+        headers = Headers(callerIdHeader, `Accept`(`application/json`))
+      ).withBody(body)(Json4sHttp4s.json4sEncoderOf)
 
       val henkiloviitteet: Seq[Henkiloviite] = httpClient.fetch(duplicateHenkilosRequest)((r: Response) =>
         if (r.status == Status.Ok) {
