@@ -1049,8 +1049,8 @@
         before(page.applyValintatulosFixtureAndOpen("hyvaksytty-vastaanottanut"))
         describe("Oili-ilmoittautumislinkki", function () {
           it("Näytetään", function() { // FIXME: Testeissä käytetään 2.asteen hakua
-            //expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].tila).to.equal('Opiskelupaikka vastaanotettu')
-            //expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.ilmoittautuminen(0).visible).to.equal(true)
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].tila).to.equal('Opiskelupaikka vastaanotettu')
+            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.ilmoittautuminen(0).visible).to.equal(true)
           })
         })
       })
