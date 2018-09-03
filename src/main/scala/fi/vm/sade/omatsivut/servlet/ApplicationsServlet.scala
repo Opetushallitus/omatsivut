@@ -63,9 +63,9 @@ trait ApplicationsServletContainer {
     get("/") {
       implicit val formats = DefaultFormats
       val timeout = 1000*30L
-      val pOid: String = personOid()
+      val oppijanumero: String = personOid()
 
-      val allOids: List[String] = oppijanumerorekisteriService.fetchAllDuplicateOids(pOid)
+      val allOids: Iterable[String] = oppijanumerorekisteriService.fetchAllDuplicateOids(oppijanumero)
 
       var allSuccess = true
       val allHakemukset = allOids.flatMap(oid => {
