@@ -266,7 +266,7 @@ Hakemus.prototype = {
     this.notifications = savedApplication.notifications;
 
     if (!_.isEqual(util.withoutAngularFields(this.state), savedApplication.state))
-      this.state = window.$.extend(true, {}, savedApplication.state);
+      this.state = window.$.extend(true, this.state, savedApplication.state);
 
     for (let i=0; i<this.hakutoiveet.length && i<savedApplication.hakutoiveet.length; i++) {
       let hakutoive = this.hakutoiveet[i];
