@@ -73,7 +73,10 @@ session = {
       if (lang) {
         langParam = "&lang=" + lang
       }
-      return Q($.get("/omatsivut/Shibboleth.sso/fakesession?hetu=" + hetu + langParam));
+      var url = "/omatsivut/Shibboleth.sso/fakesession?hetu=" + hetu + langParam;
+      var httpRequest = new XMLHttpRequest();
+      httpRequest.open('GET', url);
+      return Q(httpRequest.send());
     }
   }
 }
@@ -221,7 +224,8 @@ function getJson(url) {
 }
 
 function testFrame() {
-  return $("iframe#testframe").get(0).contentWindow
+  var testFrameSelector = $("iframe#testframe");
+  return testFrameSelector.get(0).contentWindow
 }
 
 function openPage(path, predicate) {
@@ -235,7 +239,7 @@ function openPage(path, predicate) {
         function() {
           return predicate()
         },
-        testTimeoutPageLoad
+        60000
     )().then(function() {
         window.uiError = null
         testFrame().onerror = function(err) { window.uiError = err; } // Hack: force mocha to fail on unhandled exceptions

@@ -15,8 +15,11 @@ class OmatSivutMochaTest extends Specification {
   }
 
   "Mocha tests" in {
-    val pb = Seq("node_modules/mocha-phantomjs/bin/mocha-phantomjs", "-R", "spec", "http://localhost:"+AppConfig.embeddedJettyPortChooser.chosenPort+"/omatsivut/test/runner.html")
-    val res = pb.!
+    val pb: Seq[String] = Seq("node_modules/karma/bin/karma",
+      "start",
+      "-R",
+      "spec http://localhost:"+AppConfig.embeddedJettyPortChooser.chosenPort+"/omatsivut/test/runner.html")
+    val res: Int = pb.!
     if (res != 0) {
       failure("Mocha tests failed")
     } else {
