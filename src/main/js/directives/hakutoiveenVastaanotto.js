@@ -80,7 +80,7 @@ class HakutoiveenVastaanottoController {
       this.ajaxPending = false;
       this.error = "";
       this.vastaanottoSentSuccessfully = true;
-      this.$timeout(() = > this.callback(hakutoive, updatedApplication), 3500);
+      this.$timeout(() => this.callback(hakutoive, updatedApplication), 3500);
     }
   }
 
