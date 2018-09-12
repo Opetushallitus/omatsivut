@@ -1,5 +1,6 @@
 <div class="preference-list" ng-class="{validating: validating}" sortable sortable-item=".preference-list-item" sortable-moved="movePreference">
-    <div class="overlay"></div>
+    <div class="overlay" style="background: url(../img/hakemuseditori/ajax-loader.gif) rgba(255,255,255, 0.5) no-repeat center center;">
+    </div>
     <div class="preference-list-item" aria-label="{{ ($index+1) + '. ' + hakutoive.data.Opetuspiste + ' - ' + hakutoive.data.Koulutus }}" ng-repeat="hakutoive in application.hakutoiveet" ng-controller="hakutoiveController" ng-class="{'inactive': isEditingDisabled() && hakutoive.isNew}">
         <div class="preference-list-item-layout" ng-show="isNonPrioritizedAndEditable()">
 
