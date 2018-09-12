@@ -71,15 +71,17 @@ class HakutoiveenVastaanottoController {
       tarjoajaNimi: hakutoive.tarjoajaNimi
     };
 
-    this.restResources.vastaanota.post(pathParams, data).$promise
-      .then(this.onSuccess(updatedApplication, hakutoive), this.onError(err));
+    var promise = this.restResources.vastaanota.post(pathParams, data).$promise;
+    promise.then(this.onSuccess(hakutoive), this.onError);
   }
 
-  onSuccess(updatedApplication, hakutoive) {
-    this.ajaxPending = false;
-    this.error = "";
-    this.vastaanottoSentSuccessfully = true;
-    this.$timeout(() => this.callback(hakutoive, updatedApplication), 3500);
+  onSuccess(hakutoive) {
+    return function(updatedApplication) {
+      this.ajaxPending = false;
+      this.error = "";
+      this.vastaanottoSentSuccessfully = true;
+      this.$timeout(() = > this.callback(hakutoive, updatedApplication), 3500);
+    }
   }
 
   onError(err) {
