@@ -97,7 +97,7 @@ export default ["restResources", function(restResources) {
         }
         $scope.ajaxPending = true
 
-        restResources.vastaanota.post({hakemusOid: hakemus.oid, hakukohdeOid: hakukohde.hakukohdeOid}, {
+        restResources.vastaanota.post({hakemusOid: application.oid, hakukohdeOid: hakukohde.hakukohdeOid}, {
           vastaanottoAction: { action: VASTAANOTTO_ACTION.VASTAANOTA_SITOVASTI },
           email: email,
           hakukohdeNimi: hakukohde.hakukohdeNimi,
