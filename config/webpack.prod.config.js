@@ -1,7 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
@@ -44,11 +43,21 @@ module.exports = {
       },
       {
         test: /\.less$/,
-        use: ExtractTextPlugin.extract({
-          use: ['css-loader', 'less-loader'],
-          fallback: "style-loader"
-        })
-      },
+        use: [
+          {
+            loader: "style-loader"
+          },
+          {
+            loader: "css-loader",
+            options: {
+              sourceMap: true,
+              modules: false
+            }
+          },
+          {
+            loader: "less-loader"
+          }
+]      },
       {
         test: /\.css$/,
         use: [
