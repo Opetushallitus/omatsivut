@@ -2,6 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
   mode: 'production',
@@ -24,6 +25,12 @@ module.exports = {
           name: 'vendor',
           enforce: true
         },
+        styles: {
+          name: 'styles',
+          test: /\.css$/,
+          chunks: 'all',
+          enforce: true
+        }
       }
     }
   },
@@ -45,14 +52,15 @@ module.exports = {
       {
         test: /\.css$/,
         use: [
-          { loader: 'style-loader'},
           {
-            loader: 'css-loader',
+            loader: MiniCssExtractPlugin.loader,
             options: {
-              localIdentName: '[name]__[local]___[hash:base64:5]',
-              sourceMap: true
+              // you can specify a publicPath here
+              // by default it use publicPath in webpackOptions.output
+              publicPath: '../'
             }
-          }
+          },
+          "css-loader"
         ]
       },
       {
@@ -71,7 +79,9 @@ module.exports = {
     new UglifyJSPlugin({
       sourceMap: true
     }),
-    new ExtractTextPlugin('[name].css')
+    new MiniCssExtractPlugin({
+      filename: "[name].css"
+    })
   ]
   /*
   module: {
