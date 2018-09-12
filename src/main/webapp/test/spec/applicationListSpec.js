@@ -336,23 +336,24 @@
                     'Soitto/laulunäytteen instrumentti ja ohjelma',
                     'Millä kielellä osallistut valintakokeisiin?',
                     'Jos olet lyömäsoittaja, millaista rumpusettiä käytät?',
-                    'Sibelius-Akatemian 2,5-vuotinen maisterikoulutus',
-                    'Oletko suorittanut vaaditun soveltuvan korkeakoulututkinnon?',
-                    'Korkeakoulututkinnon nimi, oppilaitos ja valmistumispäivämäärä',
-                    'Soitto/laulunäytteen instrumentti ja ohjelma',
-                    'Millä kielellä osallistut valintakokeisiin?',
-                    'Jos olet lyömäsoittaja, millaista rumpusettiä käytät?',
                     'Haluatko saada valintakoekysymykset suomeksi vai ruotsiksi?',
+                    'Pääinstrumentti',
+                    'Ohjelma valintakokeessa',
+                    'Jos olet lyömäsoittaja, millaista rumpusettiä käytät?',
+                    'Millä kielellä osallistut valintakokeisiin?',
                     'Sibelius-Akatemian koulutukset (muut kuin Arts Management)',
                     'Jos olet muun kuin EU/EFTA-maan kansalainen, miten todistat kielitaitosi?',
                     'Luettele lyhyesti aiemmat musiikkiopintosi (opettajat, oppilaitokset) ja muu musiikillinen toiminta.',
                     'Onko jokin oppilaitos aiemmin peruuttanut opiskeluoikeutesi SORA-lainsäädännön perusteella (ks. lisää alla)?',
+                    'Sibelius-Akatemian 2,5-vuotinen maisterikoulutus',
+                    'Oletko suorittanut vaaditun soveltuvan korkeakoulututkinnon?',
+                    'Korkeakoulututkinnon nimi, oppilaitos ja valmistumispäivämäärä',
                     'Taideyliopiston hakukohteet',
                     'Opiskeletko tällä hetkellä jossakin Taideyliopiston akatemioista?'
                   ])
                 })
-                it("tietojen lähetyksestä muistutetaan", function () {
-                  expect(hakemusKorkeakouluKevatWithJazz.statusMessage()).to.equal("Muista lähettää muutokset")
+                it("validaatio herjaa puuttuvista tiedoista", function () {
+                  expect(hakemusKorkeakouluKevatWithJazz.statusMessage()).to.equal("Täytä kaikki tiedot")
                 })
               })
 
@@ -1397,7 +1398,7 @@
       describe("kun lisätään hakukohde", function() {
         before(
           hakemusNivelKesa2013WithPeruskouluBaseEducation.getPreference(1).selectOpetusPiste("Ahl"),
-          hakemusNivelKesa2013WithPeruskouluBaseEducation.getPreference(1).selectKoulutus(1)
+          hakemusNivelKesa2013WithPeruskouluBaseEducation.getPreference(1).selectKoulutus(0)
         )
 
         it("seuraava hakukohde tulee muokattavaksi", function() {
@@ -1537,7 +1538,7 @@
         page.applyFixtureAndOpen({fixtureName:"peruskoulu", applicationOid: hakemusYhteishakuKevat2014WithForeignBaseEducationId}),
         hakemusYhteishakuKevat2014WithForeignBaseEducation.getPreference(0).remove,
         hakemusYhteishakuKevat2014WithForeignBaseEducation.saveWaitSuccess,
-        replacePreference(hakemusYhteishakuKevat2014WithForeignBaseEducation, 0, "Ahlman", 1)
+        replacePreference(hakemusYhteishakuKevat2014WithForeignBaseEducation, 1, "Ahlman", 0)
       )
 
       it("kysymykset näytetään", function() {
@@ -1588,7 +1589,7 @@
       })
 
       describe("kysymysten ryhmittely", function() {
-        before(replacePreference(hakemusYhteishakuKevat2014WithForeignBaseEducation, 1, "Ahlman", 3))
+        before(replacePreference(hakemusYhteishakuKevat2014WithForeignBaseEducation, 1, "Ahlman", 1))
         it("kysymykset ryhmitellään oikein", function() {
           var groupTitles = hakemusYhteishakuKevat2014WithForeignBaseEducation.questionsForApplication().groupTitles()
           expect(groupTitles).to.deep.equal([
@@ -2778,13 +2779,13 @@
   });
 
   function replacePreference(hakemus, index, searchString, koulutusIndex) {
-    koulutusIndex = koulutusIndex || 1;
+    koulutusIndex = koulutusIndex || 0
     return function() {
-      const pref = hakemus.getPreference(index);
+      var pref = hakemus.getPreference(index)
       return pref.remove()
         .then(pref.selectOpetusPiste(searchString))
         .then(pref.selectKoulutus(koulutusIndex))
-        .then(wait.forAngular);
+        .then(wait.forAngular)
     }
   }
 

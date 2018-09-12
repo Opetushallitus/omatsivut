@@ -223,7 +223,8 @@ function ApplicationApi() {
 
         selectKoulutus: function (index) {
           return function() {
-            el().find('.koulutus select :nth-child(' + index + ')').prop('selected', true).change();
+            var selectElement = el().find(".koulutus select")
+            selectElement.val(index).change()
             return wait.forAngular()
           }
         }
