@@ -76,11 +76,12 @@ class HakutoiveenVastaanottoController {
   }
 
   onSuccess(hakutoive) {
+    var self = this;
     return function(updatedApplication) {
-      this.ajaxPending = false;
-      this.error = "";
-      this.vastaanottoSentSuccessfully = true;
-      this.$timeout(() => this.callback(hakutoive, updatedApplication), 3500);
+      self.ajaxPending = false;
+      self.error = "";
+      self.vastaanottoSentSuccessfully = true;
+      self.$timeout(() => self.callback(hakutoive, updatedApplication), 3500);
     }
   }
 
