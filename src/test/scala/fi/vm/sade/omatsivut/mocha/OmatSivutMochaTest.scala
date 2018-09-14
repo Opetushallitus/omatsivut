@@ -1,13 +1,18 @@
 package fi.vm.sade.omatsivut.mocha
 
+import java.util.concurrent.TimeUnit.MINUTES
+
 import fi.vm.sade.omatsivut.SharedJetty
 import fi.vm.sade.omatsivut.config.AppConfig
 import org.junit.runner.RunWith
 import org.specs2.mutable.Specification
 import org.specs2.runner.JUnitRunner
 
+import scala.concurrent.duration.Duration
+
 @RunWith(classOf[JUnitRunner])
 class OmatSivutMochaTest extends Specification {
+  private val totalMochaTestsMaxDuration: Duration = Duration(10, MINUTES)
   import scala.sys.process._
 
   step {
@@ -16,6 +21,8 @@ class OmatSivutMochaTest extends Specification {
 
   "Mocha tests" in {
     val pb: Seq[String] = Seq("node_modules/mocha-headless-chrome/bin/start",
+      "-t",
+      totalMochaTestsMaxDuration.toMillis.toString,
       "-f",
       "http://localhost:"+AppConfig.embeddedJettyPortChooser.chosenPort+"/omatsivut/test/runner.html")
     val res: Int = pb.!
