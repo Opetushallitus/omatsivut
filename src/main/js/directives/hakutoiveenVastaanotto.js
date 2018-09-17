@@ -72,7 +72,7 @@ class HakutoiveenVastaanottoController {
     };
 
     var promise = this.restResources.vastaanota.post(pathParams, data).$promise;
-    promise.then(this.onSuccess(hakutoive), this.onError);
+    promise.then(this.onSuccess(hakutoive), this.onError());
   }
 
   onSuccess(hakutoive) {
@@ -85,21 +85,22 @@ class HakutoiveenVastaanottoController {
     }
   }
 
-  onError(err) {
-    const errorKey = this.constructor.getErrorKey(err);
-    this.error = localize(errorKey);
-    this.ajaxPending = false;
-  }
-
-  static getErrorKey(err) {
-    if (err.status === 401)
-      return "error.saveFailed_sessionExpired";
-    else if (err.status === 500)
-      return "error.serverError";
-    else if (err.status === 403)
-      return "error.priorAcceptance";
-    else
-      return "error.saveFailed"
+  onError() {
+    var self = this;
+    return function(err) {
+      var errorKey = (function () {
+        if (err.status == 401)
+          return "error.saveFailed_sessionExpired";
+        else if (err.status == 500)
+          return "error.serverError";
+        else if (err.status == 403)
+          return "error.priorAcceptance";
+        else
+          return "error.saveFailed";
+      })();
+      self.error = localize(errorKey);
+      self.ajaxPending = false;
+    }
   }
 }
 
