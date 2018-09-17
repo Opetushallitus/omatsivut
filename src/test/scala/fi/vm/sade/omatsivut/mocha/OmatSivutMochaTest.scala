@@ -22,7 +22,7 @@ class OmatSivutMochaTest extends Specification {
   "Mocha tests" in {
     val pb: Seq[String] = Seq("node_modules/mocha-headless-chrome/bin/start",
       "-a",
-      "proxy-server='direct://",
+      "proxy-server='direct://'",
       "-a",
       "proxy-bypass-list=*",
       "-t",
