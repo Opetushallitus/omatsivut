@@ -16,6 +16,8 @@ before_script:
   - travis lint
   - DB_NAME=valintarekisteri
   - psql -c "create database $DB_NAME;" -U postgres
+  # Temporary workaround until valinta-tulos-service works regardless of timezone
+  - export TZ=Europe/Helsinki
 
 env:
   global:
