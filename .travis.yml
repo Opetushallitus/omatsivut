@@ -13,6 +13,7 @@ cache:
   - $HOME/.m2
 
 before_script:
+  - travis lint
   - DB_NAME=valintarekisteri
   - psql -c "create database $DB_NAME;" -U postgres
 
