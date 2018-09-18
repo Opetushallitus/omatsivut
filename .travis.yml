@@ -23,7 +23,7 @@ env:
     # AWS_SECRET_ACCESS_KEY
     - secure: "DTOMfINzle/zYzTDNtAtRMaLuU5IxkGQI6gLuRLgd68DdR3DoalpT8rQksY42YtQ6TaOOKpTPhhuNhgdKbOXRBywqgg83Pb7O/XR/DgECRkTPxJ4FqWU4/34WBHXhWVPRPeo0XrKc7smguqrr6qv5Wn5ksSElPYS9ds02O1rzbo="
     # PostgreSQL port
-  - PGPORT=15432
+    - PGPORT=15432
 
 install:
   - git clone https://github.com/Opetushallitus/ci-tools.git
