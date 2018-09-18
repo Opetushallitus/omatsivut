@@ -9,6 +9,7 @@ addons:
   postgresql: "9.5"
 
 cache:
+  timeout: 1000
   directories:
   - $HOME/.m2
 
