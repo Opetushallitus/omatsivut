@@ -12,7 +12,7 @@ module.exports = function(app) {
             return ""
           } else {
             var m = moment(dt)
-            element.attr("datetime", m.format())
+            element.attr("datetime", m.tz("Europe/Helsinki").format())
             element.text(m.format(attrs.format || 'LLLL').replace(/,/g, ""))
           }
         })

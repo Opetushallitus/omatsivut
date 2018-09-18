@@ -24,7 +24,7 @@ module.exports = function(app) {
         }
 
         scope.formatTimestamp = function(dt) {
-            return moment(dt).format('LLL').replace(/,/g, "")
+            return moment(dt).tz("Europe/Helsinki").format('LLL').replace(/,/g, "")
         }
 
         scope.inputIsDisabled = function() {
