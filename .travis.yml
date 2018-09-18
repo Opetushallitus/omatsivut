@@ -1,0 +1,34 @@
+language: scala
+jdk:
+  - oraclejdk8
+services:
+  - docker
+  - postgresql
+
+addons:
+  postgresql: "9.5"
+
+cache:
+  directories:
+  - $HOME/.m2
+
+before_script:
+  - DB_NAME=valintarekisteri
+  - psql -c "create database $DB_NAME;" -U postgres
+
+env:
+  global:
+    # AWS_ACCESS_KEY_ID
+    - secure: "UeGmyMJkprPEvNt5bjc2dINUgqw5pgZOKSaDtCeYVhngFbVmaGMRtyNNxhypE2BEILHpbaTWYIYPS0inIXkPtfVaac/GlAwXB6bOAjfrt1j45HJwrgPIGTo8Ambf1TFos7YvPW5zMbzQiwRPkbip9w5cCp9qvEb7Jplp95Db0RA="
+    # AWS_SECRET_ACCESS_KEY
+    - secure: "DTOMfINzle/zYzTDNtAtRMaLuU5IxkGQI6gLuRLgd68DdR3DoalpT8rQksY42YtQ6TaOOKpTPhhuNhgdKbOXRBywqgg83Pb7O/XR/DgECRkTPxJ4FqWU4/34WBHXhWVPRPeo0XrKc7smguqrr6qv5Wn5ksSElPYS9ds02O1rzbo="
+    # PostgreSQL port
+  - PGPORT=15432
+
+install:
+  - git clone https://github.com/Opetushallitus/ci-tools.git
+  - source ci-tools/common/setup-tools.sh
+  - nvm use node 6
+
+script:
+  - ./cibuild.bash
