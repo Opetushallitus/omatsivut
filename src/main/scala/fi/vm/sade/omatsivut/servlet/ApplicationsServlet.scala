@@ -3,7 +3,7 @@ package fi.vm.sade.omatsivut.servlet
 import fi.vm.sade.groupemailer.GroupEmailComponent
 import fi.vm.sade.hakemuseditori._
 import fi.vm.sade.hakemuseditori.hakemus.domain.HakemusMuutos
-import fi.vm.sade.hakemuseditori.hakemus.{ApplicationValidatorComponent, Fetch, HakemusRepositoryComponent, SpringContextComponent}
+import fi.vm.sade.hakemuseditori.hakemus.{ApplicationValidatorComponent, Fetch, HakemusInfo, HakemusRepositoryComponent, SpringContextComponent}
 import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.hakemuseditori.localization.TranslationsComponent
 import fi.vm.sade.hakemuseditori.lomake.LomakeRepositoryComponent
@@ -68,7 +68,7 @@ trait ApplicationsServletContainer {
       val allOids: Iterable[String] = oppijanumerorekisteriService.fetchAllDuplicateOids(oppijanumero)
 
       var allSuccess = true
-      val allHakemukset = allOids.flatMap(oid => {
+      val allHakemukset: List[HakemusInfo] = allOids.toList.flatMap(oid => {
         hakemusEditori.fetchByPersonOid(request, oid, Fetch) match {
           case FullSuccess(hakemukset) => hakemukset
           case PartialSuccess(partialHakemukset, exceptions) =>
@@ -80,7 +80,7 @@ trait ApplicationsServletContainer {
             allSuccess = false
             List.empty
         }
-      })
+      }).sortBy(_.hakemus.received).reverse
 
       Map("allApplicationsFetched" -> allSuccess, "applications" -> allHakemukset)
     }
