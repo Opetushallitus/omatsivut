@@ -1,7 +1,7 @@
 package fi.vm.sade.omatsivut.hakemuspreview
 
 import java.text.SimpleDateFormat
-import java.util.Date
+import java.util.{Date, TimeZone}
 
 import fi.vm.sade.hakemuseditori.auditlog.{Audit, ShowHakemus}
 import fi.vm.sade.hakemuseditori.domain.Language.Language
@@ -382,7 +382,10 @@ case class AttachmentsPreview(implicit translations: Translations, language: Lan
 
 object DateFormat {
   def formatDate(date: Option[Date]) = date match {
-    case Some(date) => new SimpleDateFormat("dd.MM.yyyy HH:mm").format(date)
+    case Some(d) =>
+      val simpleDateFormat: SimpleDateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm")
+      simpleDateFormat.setTimeZone(TimeZone.getTimeZone("Europe/Helsinki"))
+      simpleDateFormat.format(d)
     case None => ""
   }
 }
