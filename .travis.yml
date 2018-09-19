@@ -35,4 +35,15 @@ install:
   - nvm use node 6
 
 script:
+  - export ARTIFACT_NAME=omatsivut
   - ./cibuild.bash
+  - export BASE_IMAGE="base-legacy:0.1"
+  - ./ci-tools/common/pull-image.sh
+  - ./ci-tools/build/build-war.sh $ARTIFACT_NAME
+
+deploy:
+  - provider: script
+    script:
+      ./ci-tools/build/upload-image.sh $ARTIFACT_NAME
+    on:
+      all_branches: true
