@@ -8,9 +8,9 @@ services:
 addons:
   postgresql: "9.5"
 
-cache:
-  directories:
-  - $HOME/.m2
+#cache:
+#  directories:
+#  - $HOME/.m2
 
 before_script:
   - DB_NAME=valintarekisteri
