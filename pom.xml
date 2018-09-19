@@ -11,6 +11,9 @@
     <organization>
         <name>fi.vm.sade</name>
     </organization>
+    <properties>
+        <valinta-tulos-service.version>4.7-SNAPSHOT</valinta-tulos-service.version>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>fi.vm.sade</groupId>
@@ -203,6 +206,13 @@
             <artifactId>aws-java-sdk-s3</artifactId>
             <version>1.11.257</version>
         </dependency>
+        <dependency>
+            <groupId>fi.vm.sade</groupId>
+            <artifactId>valinta-tulos-service</artifactId>
+            <version>${valinta-tulos-service.version}</version>
+            <scope>test</scope>
+            <type>war</type>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -269,7 +279,7 @@
                 <executions>
                     <execution>
                         <id>get-vts-var</id>
-                        <phase>process-resources</phase>
+                        <phase>process-test-resources</phase>
                         <goals>
                             <goal>copy</goal>
                         </goals>
@@ -280,7 +290,7 @@
                         <artifactItem>
                             <groupId>fi.vm.sade</groupId>
                             <artifactId>valinta-tulos-service</artifactId>
-                            <version>4.7-SNAPSHOT</version>
+                            <version>${valinta-tulos-service.version}</version>
                             <type>war</type>
                             <outputDirectory>./target</outputDirectory>
                             <destFileName>valinta-tulos-service.war</destFileName>
