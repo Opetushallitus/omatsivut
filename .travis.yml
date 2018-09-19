@@ -1,3 +1,4 @@
+sudo: required
 language: scala
 jdk:
   - oraclejdk8
@@ -7,10 +8,6 @@ services:
 
 addons:
   postgresql: "9.5"
-
-before_cache:
-  # This is needed for the maven-dependency-plugin to work to get valinta-tulos-service.war
-  - sudo chown -R travis:travis $HOME/.m2
 
 cache:
   directories:
@@ -39,6 +36,8 @@ install:
 
 script:
   - export ARTIFACT_NAME=omatsivut
+  # This is needed for the maven-dependency-plugin to work to get valinta-tulos-service.war
+  - sudo chown -R travis:travis $HOME/.m2
   - ./cibuild.bash
   - export BASE_IMAGE="base-legacy:0.1"
   - ./ci-tools/common/pull-image.sh
