@@ -8,9 +8,13 @@ services:
 addons:
   postgresql: "9.5"
 
-#cache:
-#  directories:
-#  - $HOME/.m2
+before_cache:
+  # This is needed for the maven-dependency-plugin to work to get valinta-tulos-service.war
+  - sudo chown -R travis:travis $HOME/.m2
+
+cache:
+  directories:
+  - $HOME/.m2
 
 before_script:
   - DB_NAME=valintarekisteri
