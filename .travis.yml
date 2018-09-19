@@ -12,6 +12,7 @@ addons:
 cache:
   directories:
   - $HOME/.m2
+  - $HOME/.embedmongo
 
 before_script:
   - DB_NAME=valintarekisteri
