@@ -1060,7 +1060,7 @@
           it("Piilotetaan", function() {
             expect(hakemusKorkeakouluJatkoHaku.ilmoittautuminen(0).visible).to.equal(false)
           })
-        }) // FIXME
+        })
       })
       describe("Jos on saanut paikan, muttei vielä ottanut sitä vastaan", function() {
         before(page.applyValintatulosFixtureAndOpen("hyvaksytty-kesken-julkaistavissa-korkeakoulu", {"haku": "korkeakoulu-yhteishaku"}))
