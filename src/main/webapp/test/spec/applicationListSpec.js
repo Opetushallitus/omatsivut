@@ -924,8 +924,8 @@
             expect(hakemusYhteishakuKevat2013WithApplicationRoundEnded.preferencesForApplication().length).to.equal(0)
           })
 
-          xit("kerrotaan että haku on päättynyt", function () { //FIXME: update for current implementation
-            hakemusYhteishakuKevat2013WithApplicationRoundEnded.applicationStatus().should.equal("Haku on päättynyt.")
+          it("hakemusta ei nykyisin suorituskykysyistä näytetä, jos hakukierros on päättynyt", function () {
+            hakemusYhteishakuKevat2013WithApplicationRoundEnded.applicationStatus().should.equal("")
           })
         })
 
