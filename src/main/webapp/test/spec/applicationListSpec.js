@@ -1123,24 +1123,24 @@
             })
         })
 
-            describe("Jos on saanut kaksi paikkaa kk haussa, jossa yhden paikan sääntö ei ole voimassa", function() {
+      describe("Jos on saanut kaksi paikkaa kk haussa, jossa yhden paikan sääntö ei ole voimassa", function () {
         before(page.applyValintatulosFixtureAndOpen("hyvaksytty-kaikkiin", {"haku": "korkeakoulu-erillishaku-ei-yhden-paikan-saantoa-ei-sijoittelua"}))
 
-        describe("Kun ensimmäinen paikka otetaan vastaan", function() {
+        describe("Kun ensimmäinen paikka otetaan vastaan", function () {
           before(hakemusKorkeakouluJatkoHaku.vastaanotto(0).selectOption("VastaanotaSitovasti"))
           before(hakemusKorkeakouluJatkoHaku.vastaanotto(0).send)
 
-          it("Oili-linkki tulee näkyviin ja toinen paikka on yhä mahdollista vastaanottaa", function() { // FIXME: Oili-linkin ei kuulu näkyä 2. asteen ilmoittautumisissa
+          it("Oili-linkki tulee näkyviin ja toinen paikka on yhä mahdollista vastaanottaa", function () { // FIXME: Oili-linkin ei kuulu näkyä 2. asteen ilmoittautumisissa
             //expect(hakemusKorkeakouluJatkoHaku.vastaanotto(0).title()).to.equal('Opiskelupaikka myönnetty Salon lukio - Lukio')
             //expect(hakemusKorkeakouluJatkoHaku.ilmoittautuminen(0).title()).to.equal('Ilmoittaudu lukukaudelle Kallion lukio - Lukion ilmaisutaitolinja')
           })
 
 
-          describe("Kun toinen paikka otetaan vastaan", function() {
+          describe("Kun toinen paikka otetaan vastaan", function () {
             before(hakemusKorkeakouluJatkoHaku.vastaanotto(0).selectOption("VastaanotaSitovasti"))
             before(hakemusKorkeakouluJatkoHaku.vastaanotto(0).send)
 
-            it("Näkyy oili linkki molemmille paikoille", function() { // FIXME: Oili linkin ei kuulu näkyä 2. asteen ilmoittautumisissa
+            it("Näkyy oili linkki molemmille paikoille", function () { // FIXME: Oili linkin ei kuulu näkyä 2. asteen ilmoittautumisissa
               //expect(hakemusKorkeakouluJatkoHaku.ilmoittautuminen(0).title()).to.equal('Ilmoittaudu lukukaudelle Kallion lukio - Lukion ilmaisutaitolinja')
               //expect(hakemusKorkeakouluJatkoHaku.ilmoittautuminen(1).title()).to.equal('Ilmoittaudu lukukaudelle Salon lukio - Lukio')
             })
