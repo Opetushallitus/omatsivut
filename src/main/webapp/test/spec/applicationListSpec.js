@@ -69,7 +69,7 @@
   })
 
   describe("Sivupohjan lokalisointi", function() {
-    this.timeout(60000)
+    this.timeout(testTimeoutPageLoad)
     before(
         page.applyFixtureAndOpen({})
     )
