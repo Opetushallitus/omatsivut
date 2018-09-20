@@ -1124,25 +1124,30 @@
         })
 
       describe("Jos on saanut kaksi paikkaa kk haussa, jossa yhden paikan sääntö ei ole voimassa", function () {
-        before(page.applyValintatulosFixtureAndOpen("hyvaksytty-kaikkiin", {"haku": "korkeakoulu-erillishaku-ei-yhden-paikan-saantoa-ei-sijoittelua"}))
+        before(page.applyFixtureAndOpen({applicationOid: hakemusKorkeakouluYhteishakuSyksy2014Id}))
+        before(page.applyValintatulosFixtureAndOpen("hyvaksytty-kaikkiin-korkeakoulu", {"haku": "korkeakoulu-erillishaku-ei-yhden-paikan-saantoa-ei-sijoittelua"}))
 
         describe("Kun ensimmäinen paikka otetaan vastaan", function () {
-          before(hakemusKorkeakouluJatkoHaku.vastaanotto(0).selectOption("VastaanotaSitovasti"))
-          before(hakemusKorkeakouluJatkoHaku.vastaanotto(0).send)
+          before(hakemusKorkeakouluYhteishakuSyksy2014.vastaanotto(0).selectOption("VastaanotaSitovasti"))
+          before(hakemusKorkeakouluYhteishakuSyksy2014.vastaanotto(0).send)
 
-          it("Oili-linkki tulee näkyviin ja toinen paikka on yhä mahdollista vastaanottaa", function () { // FIXME: Oili-linkin ei kuulu näkyä 2. asteen ilmoittautumisissa
-            //expect(hakemusKorkeakouluJatkoHaku.vastaanotto(0).title()).to.equal('Opiskelupaikka myönnetty Salon lukio - Lukio')
-            //expect(hakemusKorkeakouluJatkoHaku.ilmoittautuminen(0).title()).to.equal('Ilmoittaudu lukukaudelle Kallion lukio - Lukion ilmaisutaitolinja')
+          it("Oili-linkki tulee näkyviin ja toinen paikka on yhä mahdollista vastaanottaa", function () {
+            expect(hakemusKorkeakouluYhteishakuSyksy2014.vastaanotto(0).title()).to.equal('Opiskelupaikka myönnetty ' +
+              'Helsingin yliopisto, Matemaattis-luonnontieteellinen tiedekunta - Fysiikka (aineenopettaja), luonnontieteiden kandidaatti ja filosofian maisteri')
+            expect(hakemusKorkeakouluYhteishakuSyksy2014.ilmoittautuminen(0).title()).to.equal(
+              'Ilmoittaudu lukukaudelle Diakonia-ammattikorkeakoulu, Järvenpään toimipiste - Sosionomi (AMK), monimuotototeutus')
           })
 
 
           describe("Kun toinen paikka otetaan vastaan", function () {
-            before(hakemusKorkeakouluJatkoHaku.vastaanotto(0).selectOption("VastaanotaSitovasti"))
-            before(hakemusKorkeakouluJatkoHaku.vastaanotto(0).send)
+            before(hakemusKorkeakouluYhteishakuSyksy2014.vastaanotto(0).selectOption("VastaanotaSitovasti"))
+            before(hakemusKorkeakouluYhteishakuSyksy2014.vastaanotto(0).send)
 
-            it("Näkyy oili linkki molemmille paikoille", function () { // FIXME: Oili linkin ei kuulu näkyä 2. asteen ilmoittautumisissa
-              //expect(hakemusKorkeakouluJatkoHaku.ilmoittautuminen(0).title()).to.equal('Ilmoittaudu lukukaudelle Kallion lukio - Lukion ilmaisutaitolinja')
-              //expect(hakemusKorkeakouluJatkoHaku.ilmoittautuminen(1).title()).to.equal('Ilmoittaudu lukukaudelle Salon lukio - Lukio')
+            it("Näkyy oili linkki molemmille paikoille", function () {
+              expect(hakemusKorkeakouluYhteishakuSyksy2014.ilmoittautuminen(0).title()).to.equal(
+                'Ilmoittaudu lukukaudelle Diakonia-ammattikorkeakoulu, Järvenpään toimipiste - Sosionomi (AMK), monimuotototeutus')
+              expect(hakemusKorkeakouluYhteishakuSyksy2014.ilmoittautuminen(1).title()).to.equal(
+                'Ilmoittaudu lukukaudelle Helsingin yliopisto, Matemaattis-luonnontieteellinen tiedekunta - Fysiikka (aineenopettaja), luonnontieteiden kandidaatti ja filosofian maisteri')
             })
           })
         })
