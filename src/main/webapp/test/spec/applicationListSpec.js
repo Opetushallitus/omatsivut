@@ -1063,7 +1063,7 @@
         }) // FIXME
       })
       describe("Jos on saanut paikan, muttei vielä ottanut sitä vastaan", function() {
-        before(page.applyValintatulosFixtureAndOpen("hyvaksytty-kesken-julkaistavissa", {"haku": "korkeakoulu-yhteishaku"}))
+        before(page.applyValintatulosFixtureAndOpen("hyvaksytty-kesken-julkaistavissa-korkeakoulu", {"haku": "korkeakoulu-yhteishaku"}))
 
         describe("Oili-ilmoittautumislinkki", function () {
           it("Piilotetaan", function() {
@@ -1075,8 +1075,8 @@
           before(hakemusKorkeakouluJatkoHaku.vastaanotto(0).selectOption("VastaanotaSitovasti"))
           before(hakemusKorkeakouluJatkoHaku.vastaanotto(0).send)
 
-          it("Oili-linkki tulee näkyviin", function() { // FIXME: Testeissä käytetään 2.asteen hakua
-            //expect(hakemusKorkeakouluJatkoHaku.ilmoittautuminen(0).visible).to.equal(true)
+          it("Oili-linkki tulee näkyviin", function() {
+            expect(hakemusKorkeakouluJatkoHaku.ilmoittautuminen(0).visible).to.equal(true)
           })
         })
       })
