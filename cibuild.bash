@@ -5,7 +5,7 @@ set -eo pipefail
 time ./webbuild.sh
 #EXTRA_MAVEN_ARGS="-DskipTests"
 #EXTRA_MAVEN_ARGS="-Dtest=HakemusPreviewSpec"
-time mvn -U clean install $EXTRA_MAVEN_ARGS -B -Dbranch=${TRAVIS_BRANCH} -Drevision=${TRAVIS_COMMIT} -DbuildNumber=${TRAVIS_BUILD_NUMBER} -Dvalintatulos.it.postgres.port=5432
+time mvn clean install $EXTRA_MAVEN_ARGS -B -Dbranch=${TRAVIS_BRANCH} -Drevision=${TRAVIS_COMMIT} -DbuildNumber=${TRAVIS_BUILD_NUMBER} -Dvalintatulos.it.postgres.port=5432
 echo "Checking what the local valinta-tulos-service war looks like"
 ls -l ./target/valinta-tulos-service.war
 #unzip -v ./target/valinta-tulos-service.war
