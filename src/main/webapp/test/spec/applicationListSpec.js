@@ -1081,44 +1081,44 @@
         })
       })
       describe("Jos on saanut ehdollisesti paikan, muttei vielä ottanut sitä vastaan", function() {
-        before(page.applyFixtureAndOpen({applicationOid: hakemusYhteishakuKevat2013WithForeignBaseEducationId}))
-        before(page.applyValintatulosFixtureAndOpen("hyvaksytty-ehdollisesti-kesken-julkaistavissa"))
+        before(page.applyFixtureAndOpen({applicationOid: hakemusKorkeakouluJatkoHakuId}))
+        before(page.applyValintatulosFixtureAndOpen("hyvaksytty-ehdollisesti-kesken-julkaistavissa-korkeakoulu"))
 
         describe("Ennen vastaanottoa", function () {
           it("Näkyy ehdollisesti hyväksyttynä", function() {
-            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].tila).to.equal('Hyväksytty (ehdollinen)')
+            expect(hakemusKorkeakouluJatkoHaku.valintatulokset()[0].tila).to.equal('Hyväksytty (ehdollinen)')
           })
-          it("Oili-ilmoittautumislinkki piilotetaan", function() { // FIXME : 2. asteen haku => ei oikeasti testaa mitään
-            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.ilmoittautuminen(0).visible).to.equal(false)
+          it("Oili-ilmoittautumislinkki piilotetaan", function() {
+            expect(hakemusKorkeakouluJatkoHaku.ilmoittautuminen(0).visible).to.equal(false)
           })
         })
 
         describe("Kun paikka otetaan vastaan", function() {
-          before(page.applyFixtureAndOpen({applicationOid: hakemusYhteishakuKevat2013WithForeignBaseEducationId}))
-          before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VastaanotaSitovasti"))
-          before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send)
+          before(hakemusKorkeakouluJatkoHaku.vastaanotto(0).selectOption("VastaanotaSitovasti"))
+          before(hakemusKorkeakouluJatkoHaku.vastaanotto(0).send)
 
           it("vastaanottotieto näkyy", function() {
-            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].tila).to.equal('Opiskelupaikka vastaanotettu')
-            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[1].tila).to.equal('Peruuntunut')
+            expect(hakemusKorkeakouluJatkoHaku.valintatulokset()[0].tila).to.equal('Opiskelupaikka vastaanotettu')
+            expect(hakemusKorkeakouluJatkoHaku.valintatulokset()[1].tila).to.equal('Peruuntunut')
           })
 
-          it("näytetään tieto valinnan ehdollisuudesta", function() { // FIXME: ehdollisuutta ei ilmaista uudessa UI:ssa
-            //expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.ilmoittautuminen(0).title()).to.equal('Opiskelijavalintasi on vielä ehdollinen. Kallion lukio - Lukion ilmaisutaitolinja')
+          it("näytetään tieto valinnan ehdollisuudesta", function() {
+            expect(hakemusKorkeakouluJatkoHaku.ilmoittautuminen(0).title()).to.equal(
+              'Opiskelijavalintasi on vielä ehdollinen. Jyväskylän ammattikorkeakoulu, Ammatillinen opettajakorkeakoulu - Ammatillinen erityisopettajankoulutus')
           })
 
-          it("Oili-linkki ei tule näkyviin", function() { // FIXME : 2. asteen haku => ei oikeasti testaa mitään
-            expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.ilmoittautuminen(0).visible).to.equal(false)
+          it("Oili-linkki ei tule näkyviin", function() {
+            expect(hakemusKorkeakouluJatkoHaku.ilmoittautuminen(0).visible).to.equal(false)
           })
         })
       })
 
         describe("Jos on saanut ehdollisesti paikan, muttei vielä ottanut sitä vastaan näyttää ehdollisen hyvaksymisen syyn", function() {
-            before(page.applyValintatulosFixtureAndOpen("hyvaksytty-ehdollisesti-syy-kesken-julkaistavissa"))
+            before(page.applyValintatulosFixtureAndOpen("hyvaksytty-ehdollisesti-syy-kesken-julkaistavissa-korkeakoulu"))
 
             describe("Ennen vastaanottoa suomi", function () {
               it("Näkyy ehdollisesti hyväksyttynä", function () {
-                expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.valintatulokset()[0].tila).to.equal('Hyväksytty (ehto suomi)')
+                expect(hakemusKorkeakouluJatkoHaku.valintatulokset()[0].tila).to.equal('Hyväksytty (ehto suomi)')
               })
             })
         })
@@ -1149,6 +1149,7 @@
       })
 
       describe("Jos on ottanut paikan vastaan 2. asteen haussa", function() {
+        before(page.applyFixtureAndOpen({applicationOid: hakemusYhteishakuKevat2013WithForeignBaseEducationId}))
         before(page.applyValintatulosFixtureAndOpen("hyvaksytty-vastaanottanut", {"haku": "toinen-aste-yhteishaku"}))
         describe("Oili-ilmoittautumislinkki", function () {
           it("Piilotetaan", function() {
@@ -1158,6 +1159,7 @@
       })
 
       describe("Hakija näkee julkaistun tuloskirjeen", function() {
+        before(page.applyFixtureAndOpen({applicationOid: hakemusYhteishakuKevat2013WithForeignBaseEducationId}))
         before(page.applyValintatulosFixtureAndOpen("hyvaksytty-vastaanottanut", {"haku": "toinen-aste-yhteishaku"}))
         describe("Tuloskirjeen-latauslinkki", function () {
           it("Näkyy", function() {
