@@ -2442,13 +2442,13 @@
       )
 
       describe("Tietojen näyttäminen", function() {
-        xit("Hakemus näytetään", function() { //FIXME: update for current implementation
+        it("Hakemus näytetään", function() {
           expect(ApplicationListPage().applications()).to.contain(
             { applicationSystemName: 'Korkeakoulujen erillishaku 2001' }
           )
         })
 
-        xit("Näytä hakemus -linkki disabloidaan", function() { //FIXME: update for current implementation
+        it("Näytä hakemus -linkki disabloidaan", function() {
           erillishaku.previewLink().hasClass("ng-hide").should.equal(true)
         })
 
@@ -2456,12 +2456,12 @@
           erillishaku.yhteystiedot().isVisible().should.be.false
         })
 
-        xit("Valintatulokset näytetään", function() { //FIXME: update for current implementation
+        it("Valintatulokset näytetään", function() {
           expect(erillishaku.valintatulokset()[0].hakukohde).to.equal('Kallion lukio Lukion ilmaisutaitolinja') // <- valinta-tulos-servicellä ei ole kannassaan tätä, mutta se haetaan koulutusInformaatio-APIsta
           expect(erillishaku.valintatulokset()[0].tila).to.equal('Hyväksytty')
         })
 
-        xit("Paikka on vastaanotettavissa", function() { //FIXME: update for current implementation
+        it("Paikka on vastaanotettavissa", function() {
           expect(erillishaku.vastaanotto(0).visible()).to.equal(true)
         })
       })
@@ -2478,7 +2478,7 @@
       describe("Hylätty valintatulos", function() {
         before(page.applyErillishakuFixtureAndOpen(false))
 
-        xit("Valintatulos näytetään", function() { //FIXME: update for current implementation
+        it("Valintatulos näytetään", function() {
           expect(erillishaku.valintatulokset()[0].hakukohde).to.equal('Kallion lukio Lukion ilmaisutaitolinja') // <- valinta-tulos-servicellä ei ole kannassaan tätä, mutta se haetaan koulutusInformaatio-APIsta
           expect(erillishaku.valintatulokset()[0].tila).to.equal('Et saanut opiskelupaikkaa.')
         })

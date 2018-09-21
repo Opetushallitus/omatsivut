@@ -45,6 +45,7 @@ class ErillishakuFixtureImporter(appConfig: AppConfig, springContext: HakemusSpr
     new RemoteValintatulosService().applyFixtureWithQuery(Map(
       "fixturename" -> fixtureName,
       "haku" -> "korkeakoulu-erillishaku",
-      "useHakuAsHakuOid" -> "true"))
+      "useHakuAsHakuOid" -> "true",
+      "ohjausparametrit" -> "varasijasaannot-ei-viela-voimassa"))
   }
 }
