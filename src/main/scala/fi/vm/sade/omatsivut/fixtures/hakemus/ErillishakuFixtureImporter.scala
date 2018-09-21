@@ -42,6 +42,9 @@ class ErillishakuFixtureImporter(appConfig: AppConfig, springContext: HakemusSpr
     springContext.syntheticApplicationService.createApplications(syntheticApplication)
 
     val fixtureName: String = if(hyvaksytty) "hyvaksytty-korkeakoulu-erillishaku" else "hylatty-korkeakoulu-erillishaku"
-    new RemoteValintatulosService().applyFixtureWithQuery(Map("fixturename" -> fixtureName, "haku" -> "korkeakoulu-erillishaku", "useHakuAsHakuOid" -> "true"))
+    new RemoteValintatulosService().applyFixtureWithQuery(Map(
+      "fixturename" -> fixtureName,
+      "haku" -> "korkeakoulu-erillishaku",
+      "useHakuAsHakuOid" -> "true"))
   }
 }
