@@ -74,9 +74,20 @@ session = {
         langParam = "&lang=" + lang
       }
       var url = "/omatsivut/Shibboleth.sso/fakesession?hetu=" + hetu + langParam;
-      var httpRequest = new XMLHttpRequest();
-      httpRequest.open('GET', url);
-      return Q(httpRequest.send());
+      var response = Q.defer();
+      var request = new XMLHttpRequest();
+      request.open('GET', url);
+      request.onreadystatechange = function () {
+        if (request.readyState === 4) {
+          if (request.status === 200) {
+            response.resolve(request.responseText);
+          } else {
+            response.reject("HTTP " + request.status + " for " + path);
+          }
+        }
+      };
+      request.send();
+      return response.promise;
     }
   }
 }
