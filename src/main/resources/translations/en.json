@@ -217,6 +217,7 @@
     "autumn": "Present only autumn term",
     "away": "Absent throughout the academic year",
     "confirmation": "You have signed up __date__ at __time__:",
+    "confirmation_kk": "You have signed up:",
     "info": "Absence is always granted by the educational institution. If you want to register as absent, please contact the educational institution.",
     "error": {
       "notFound": "Student information was not found. Please try again in a while.",

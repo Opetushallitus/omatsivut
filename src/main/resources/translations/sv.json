@@ -217,6 +217,7 @@
     "autumn": "Närvarande bara under höstterminen",
     "away": "Frånvarande hela terminen",
     "confirmation": "Du har anmält dig __date__ av __time__:",
+    "confirmation_kk": "Du har anmält dig:",
     "info": "Frånvaron beviljas alltid av läroanstalten. Om du vill anmäla dig som frånvarande, ska du ta kontakt till läroanstalten.",
     "error": {
       "notFound": "Studieplatsen hittades inte. Försök på nytt om en stund.",
