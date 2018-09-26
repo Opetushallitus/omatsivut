@@ -9,7 +9,6 @@ require('./recursionHelper');
 require('../lib/angular-debounce');
 
 window.moment = require("moment");
-require("moment-timezone");
 require("../lib/moment-locale-fi.js");
 require("moment/locale/sv.js");
 require("moment/locale/en-gb.js");

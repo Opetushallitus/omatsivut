@@ -31,7 +31,7 @@ module.exports = function(app) {
           if (dt == null)
             return ""
           else
-            return moment(dt).tz("Europe/Helsinki").format('LL').replace(/,/g, "")
+            return moment(dt).format('LL').replace(/,/g, "")
         }
 
         $scope.$watch("isFinal()", function(value) {
