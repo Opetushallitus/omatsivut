@@ -13,7 +13,7 @@
 
 <!-- 2. aste -->
 <div class="ilmoittautuminen-item fade-transitions" ng-repeat="tulos in hakukohteet()">
-    <div class="result-list" ng-if="application.haku.toisenasteenhaku && tulos.vastaanottotila === 'VASTAANOTTANUT_SITOVASTI'">
+    <div class="result-list" ng-if="tulos.vastaanottotila === 'VASTAANOTTANUT_SITOVASTI'">
         <div class="result-list-wrap">
             <div class="result-list-cell flex-100">
                 <lasnaoloilmoittautuminen application="application" tulos="tulos"/>
