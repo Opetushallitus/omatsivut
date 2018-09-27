@@ -17,9 +17,9 @@ object SharedAppConfig {
 
 object SharedJetty {
   private lazy val jettyLauncher = new JettyLauncher(Some("it"))
+  Runtime.getRuntime.addShutdownHook(new TempDirCleanUpThread)
 
   def start {
-    Runtime.getRuntime.addShutdownHook(new TempDirCleanUpThread)
     jettyLauncher.start
   }
 
