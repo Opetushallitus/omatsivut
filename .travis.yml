@@ -1,0 +1,54 @@
+sudo: required
+language: scala
+scala:
+  - 2.11.8
+jdk:
+  - oraclejdk8
+services:
+  - docker
+  - postgresql
+
+addons:
+  postgresql: "9.5"
+
+cache:
+  directories:
+  - $HOME/.m2
+  - $HOME/.embedmongo
+
+before_script:
+  - DB_NAME=valintarekisteri
+  - psql -c "create database $DB_NAME;" -U postgres
+  # Temporary workaround until valinta-tulos-service works regardless of timezone
+  - export TZ=Europe/Helsinki
+
+env:
+  global:
+    # AWS_ACCESS_KEY_ID
+    - secure: "VL3kkS5vy26U5aPFjA/8dJ8Y56Cpk7qRWIAGy2HP2nBcNhxpA1ZlpVFk7ubz4rgcbMGE6dFk98fsutfzYsH5hc1yQA9Zud8l8qY4HtqwFAvJWOyjePi4Q1NPv9VKl21y/s3qaJy3MDA566VM6PuKimEqRcb4QRv5iKvdL/13Amk="
+    # AWS_SECRET_ACCESS_KEY
+    - secure: "BVnN5lz/jskRL1BpCepCV36NTChT66o2/CMOxu8Um08HFepICfu+KWCNGx5Gs4wLWXkBgwq1SlXV4VE2XemQ4N0ONK5R0ibUhZ0Z4oBB4jn26AiTj0at2XrujhTNT8179RsoddrznOImplXlfPDexpr6QzLzsd5YGk8aPNN054w="
+    # PostgreSQL port
+    - PGPORT=5432
+
+install:
+  - git clone https://github.com/Opetushallitus/ci-tools.git
+  - source ci-tools/common/setup-tools.sh
+  - sudo sh -c "printf '\n%s penaali.hard.ware.fi\n' $(dig +short artifactory.opintopolku.fi|head -n1) >> /etc/hosts"
+  - nvm use node 6
+
+script:
+  - export ARTIFACT_NAME=omatsivut
+  # This is needed for the maven-dependency-plugin to work to get valinta-tulos-service.war
+  - sudo chown -R travis:travis $HOME/.m2
+  - ./cibuild.bash
+  - export BASE_IMAGE="base-legacy:0.1"
+  - ./ci-tools/common/pull-image.sh
+  - ./ci-tools/build/build-war.sh $ARTIFACT_NAME
+
+deploy:
+  - provider: script
+    script:
+      ./ci-tools/build/upload-image.sh $ARTIFACT_NAME
+    on:
+      all_branches: true

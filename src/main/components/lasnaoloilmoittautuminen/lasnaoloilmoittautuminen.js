@@ -29,7 +29,7 @@ module.exports = function(app) {
                         return element.data['Koulutus-id'] === $scope.tulos.hakukohdeOid;
                     });
 
-                    $scope.tulos.koulutuksenAlkaminen = hakutoive.koulutuksenAlkaminen;
+                    $scope.tulos.koulutuksenAlkaminen = hakutoive.koulutuksenAlkaminen ? hakutoive.koulutuksenAlkaminen : { kausiUri: 'kausi_s#1' };
 
                     $scope.ilmoittautuminen = $scope.reserveStates[$scope.tulos.ilmoittautumistila.ilmoittautumistila];
                     $scope.ilmoittautunut = !!$scope.ilmoittautuminen;

@@ -11,11 +11,19 @@
     <organization>
         <name>fi.vm.sade</name>
     </organization>
+    <properties>
+        <valinta-tulos-service.version>4.8-SNAPSHOT</valinta-tulos-service.version>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>fi.vm.sade</groupId>
             <artifactId>auditlogger</artifactId>
             <version>8.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>fi.vm.sade.java-utils</groupId>
+            <artifactId>java-http</artifactId>
+            <version>0.1.3-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.scala-lang</groupId>
@@ -198,6 +206,13 @@
             <artifactId>aws-java-sdk-s3</artifactId>
             <version>1.11.257</version>
         </dependency>
+        <dependency>
+            <groupId>fi.vm.sade</groupId>
+            <artifactId>valinta-tulos-service</artifactId>
+            <version>${valinta-tulos-service.version}</version>
+            <scope>test</scope>
+            <type>war</type>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -264,7 +279,7 @@
                 <executions>
                     <execution>
                         <id>get-vts-var</id>
-                        <phase>process-resources</phase>
+                        <phase>process-test-resources</phase>
                         <goals>
                             <goal>copy</goal>
                         </goals>
@@ -275,7 +290,7 @@
                         <artifactItem>
                             <groupId>fi.vm.sade</groupId>
                             <artifactId>valinta-tulos-service</artifactId>
-                            <version>4.7-SNAPSHOT</version>
+                            <version>${valinta-tulos-service.version}</version>
                             <type>war</type>
                             <outputDirectory>./target</outputDirectory>
                             <destFileName>valinta-tulos-service.war</destFileName>
@@ -354,7 +369,7 @@
         </repository>
         <repository>
             <id>oph-sade-artifactory-snapshots</id>
-            <url>https://artifactory.oph.ware.fi/artifactory/oph-sade-snapshot-local</url>
+            <url>https://artifactory.opintopolku.fi/artifactory/oph-sade-snapshot-local</url>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
@@ -364,7 +379,7 @@
         </repository>
         <repository>
             <id>oph-sade-artifactory-releases</id>
-            <url>https://artifactory.oph.ware.fi/artifactory/oph-sade-release-local</url>
+            <url>https://artifactory.opintopolku.fi/artifactory/oph-sade-release-local</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -374,12 +389,12 @@
         <repository>
             <id>oph-sade-artifactory</id>
             <name>oph-sade-artifactory-releases</name>
-            <url>https://artifactory.oph.ware.fi/artifactory/oph-sade-release-local</url>
+            <url>https://artifactory.opintopolku.fi/artifactory/oph-sade-release-local</url>
         </repository>
         <snapshotRepository>
             <id>oph-sade-artifactory</id>
             <name>oph-sade-artifactory-snapshots</name>
-            <url>https://artifactory.oph.ware.fi/artifactory/oph-sade-snapshot-local</url>
+            <url>https://artifactory.opintopolku.fi/artifactory/oph-sade-snapshot-local</url>
         </snapshotRepository>
     </distributionManagement>
 </project>

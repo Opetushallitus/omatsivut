@@ -197,5 +197,41 @@
     "target": "1.2.246.562.29.14662042044",
     "__modified__": 1402462344918,
     "__modifiedBy__": "1.2.246.562.24.00000000001"
+  },
+  "korkeakoulu-erillishaku": {
+    "PH_TJT": {"date": null},
+    "PH_HKLPT": {"date": null},
+    "PH_HKMT": {"date": null},
+    "PH_KKM": {
+      "dateStart": null,
+      "dateEnd": null
+    },
+    "PH_HVVPTP": {"date": null},
+    "PH_KTT": {
+      "dateStart": null,
+      "dateEnd": null
+    },
+    "PH_OLVVPKE": {
+      "dateStart": null,
+      "dateEnd": null
+    },
+    "PH_VLS": {
+      "dateStart": null,
+      "dateEnd": null
+    },
+    "PH_SS": {
+      "dateStart": null,
+      "dateEnd": null
+    },
+    "PH_VTJH": {
+      "dateStart": 1402462344918,
+      "dateEnd": 1402462344918
+    },
+    "PH_OPVP": {"date": 1402462344918},
+    "PH_JKLIP": {"date": null},
+    "PH_HKP": {"date": 4103258400000},
+    "target": "1.2.246.562.5.2013080813081926341929",
+    "__modified__": 1402462344918,
+    "__modifiedBy__": "1.2.246.562.24.00000000001"
   }
 }

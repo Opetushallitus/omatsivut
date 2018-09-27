@@ -30,6 +30,7 @@ class JettyLauncher(profile: Option[String] = None) {
                           |------------------------------""".stripMargin)
     System.exit(1)
   }
+  System.setProperty("fi.vm.sade.javautils.http.HttpServletRequestUtils.SKIP_MISSING_HEADER_LOGGING", "true")
   val server = new Server(AppConfig.embeddedJettyPortChooser.chosenPort)
   val handlers = new HandlerCollection()
 

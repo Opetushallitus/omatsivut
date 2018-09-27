@@ -73,11 +73,22 @@ session = {
       if (lang) {
         langParam = "&lang=" + lang
       }
-      return Q($.get("/omatsivut/Shibboleth.sso/fakesession?hetu=" + hetu + langParam));
+      var url = "/omatsivut/Shibboleth.sso/fakesession?hetu=" + hetu + langParam;
+      var response = Q.defer();
+      var request = new XMLHttpRequest();
+      request.open('GET', url);
+      request.onreadystatechange = function () {
+        if (request.readyState === 4) {
+          if (request.status === 200) {
+            response.resolve(request.responseText);
+          } else {
+            response.reject("HTTP " + request.status + " for " + path);
+          }
+        }
+      };
+      request.send();
+      return response.promise;
     }
-  },
-  logout: function() {
-    return Q($.get("/omatsivut/logout"));
   }
 }
 
@@ -224,7 +235,8 @@ function getJson(url) {
 }
 
 function testFrame() {
-  return $("iframe#testframe").get(0).contentWindow
+  var testFrameSelector = $("iframe#testframe");
+  return testFrameSelector.get(0).contentWindow
 }
 
 function openPage(path, predicate) {
@@ -238,7 +250,7 @@ function openPage(path, predicate) {
         function() {
           return predicate()
         },
-        testTimeoutPageLoad
+        60000
     )().then(function() {
         window.uiError = null
         testFrame().onerror = function(err) { window.uiError = err; } // Hack: force mocha to fail on unhandled exceptions

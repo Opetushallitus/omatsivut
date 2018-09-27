@@ -11,9 +11,14 @@ import org.json4s._
 import org.json4s.jackson.{JsonMethods, Serialization}
 import org.junit.runner.RunWith
 import org.specs2.runner.JUnitRunner
+import org.specs2.specification.BeforeEach
 
 @RunWith(classOf[JUnitRunner])
-class ValidateApplicationSpec extends HakemusApiSpecification with FixturePerson {
+class ValidateApplicationSpec extends HakemusApiSpecification with FixturePerson with BeforeEach {
+  override def before: Unit = {
+    fixtureImporter.applyFixtures()
+  }
+
   private val hakemusNivelKesa2013WithPeruskouluBaseEducationExtraQuestions = List(
     "Miksi haet kymppiluokalle?",
     "Haen ensisijaisesti kielitukikympille?",
