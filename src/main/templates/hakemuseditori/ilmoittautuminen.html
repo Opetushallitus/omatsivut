@@ -23,15 +23,17 @@ näytetään mahdolliset ilmoittautumiset -->
 
     <!-- tiedot opintopolkuun rekisteröidyistä läsnäoloilmoittautumisista -->
     <div class="lasnaolo-ilmoittautuminen-container" ng-if="ilmoittautunut(tulos)">
-      <div class="lasnaolo-ilmoittautuminen">
-        <span class="label-highlight">{{ localization('lasnaoloilmoittautuminen.title') }}</span>
-        <span>{{ application.henkiloNimi }} - {{ tulos.tarjoajaNimi }} {{ tulos.hakukohdeNimi }}</span>
-      </div>
-      <div class="lasnaolo-confirmation" ng-if="application.haku.toisenasteenhaku">
-        {{ localization('lasnaoloilmoittautuminen.confirmation', getEnrolmentMessageKeys(tulos)) }} {{ getStateTranslation(tulos) }}
-      </div>
-      <div class="lasnaolo-confirmation" ng-if="!application.haku.toisenasteenhaku">
-        {{ localization('lasnaoloilmoittautuminen.confirmation_kk') }} {{ getStateTranslation(tulos) }}
-      </div>
+      <fieldset>
+        <div class="lasnaolo-ilmoittautuminen">
+          <span class="label-highlight">{{ localization('lasnaoloilmoittautuminen.title') }}</span>
+          <span>{{ application.henkiloNimi }} - {{ tulos.tarjoajaNimi }} {{ tulos.hakukohdeNimi }}</span>
+        </div>
+        <div class="lasnaolo-confirmation" ng-if="application.haku.toisenasteenhaku">
+          {{ localization('lasnaoloilmoittautuminen.confirmation', getEnrolmentMessageKeys(tulos)) }} {{ getStateTranslation(tulos) }}
+        </div>
+        <div class="lasnaolo-confirmation" ng-if="!application.haku.toisenasteenhaku">
+          {{ localization('lasnaoloilmoittautuminen.confirmation_kk') }} {{ getStateTranslation(tulos) }}
+        </div>
+      </fieldset>
     </div>
 </div>
