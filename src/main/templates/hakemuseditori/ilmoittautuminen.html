@@ -1,5 +1,5 @@
-<!-- ulkoinen ilmoittautumislinkki, vain kk -->
 <div class="ilmoittautuminen-item fade-transitions" ng-repeat="tulos in hakukohteet()">
+    <!-- ulkoinen ilmoittautumislinkki, vain kk -->
     <div ng-if="!application.haku.toisenasteenhaku && tulos.ilmoittautumistila.ilmoittauduttavissa && linkkiOK(tulos)">
         <header>
             <strong ng-if="tulos.ehdollisestiHyvaksyttavissa">{{ localization('registration.conditionalAcceptanceTitle') }}</strong>
@@ -9,15 +9,12 @@
         <span ng-if="tulos.ehdollisestiHyvaksyttavissa">{{ localization('registration.conditionalAcceptanceInfo') }}</span>
         <a ng-if="!tulos.ehdollisestiHyvaksyttavissa" href="{{oili()}}">{{ localization('registration.goToRegistration') }}</a>
     </div>
-</div>
-
-<!-- ilmoittautumistiedon näyttäminen, 2. aste ja kk -->
-<div class="ilmoittautuminen-item fade-transitions" ng-repeat="tulos in hakukohteet()">
+    
     <div class="result-list" ng-if="tulos.vastaanottotila === 'VASTAANOTTANUT_SITOVASTI'">
-        <div class="result-list-wrap">
-            <div class="result-list-cell flex-100">
-                <lasnaoloilmoittautuminen application="application" tulos="tulos"/>
-            </div>
+      <div class="result-list-wrap">
+        <div class="result-list-cell flex-100">
+          <lasnaoloilmoittautuminen application="application" tulos="tulos"/>
         </div>
+      </div>
     </div>
 </div>
