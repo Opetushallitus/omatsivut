@@ -28,10 +28,10 @@ näytetään mahdolliset ilmoittautumiset -->
         <span>{{ application.henkiloNimi }} - {{ tulos.tarjoajaNimi }} {{ tulos.hakukohdeNimi }}</span>
       </div>
       <div class="lasnaolo-confirmation" ng-if="application.haku.toisenasteenhaku">
-        {{ localization('lasnaoloilmoittautuminen.confirmation', getEnrolmentMessageKeys()) }} {{ getStateTranslation() }}
+        {{ localization('lasnaoloilmoittautuminen.confirmation', getEnrolmentMessageKeys(tulos)) }} {{ getStateTranslation(tulos) }}
       </div>
       <div class="lasnaolo-confirmation" ng-if="!application.haku.toisenasteenhaku">
-        {{ localization('lasnaoloilmoittautuminen.confirmation_kk') }} {{ getStateTranslation() }}
+        {{ localization('lasnaoloilmoittautuminen.confirmation_kk') }} {{ getStateTranslation(tulos) }}
       </div>
     </div>
 </div>

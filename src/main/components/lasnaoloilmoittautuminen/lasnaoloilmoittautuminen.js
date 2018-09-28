@@ -46,10 +46,6 @@ module.exports = function(app) {
                     restResources.lasnaoloilmoittautuminen.save({ hakuOid: $scope.application.haku.oid , hakemusOid: $scope.application.oid }, JSON.stringify(body), onSuccess, onError);
                 };
 
-                $scope.getStateTranslation = function() {
-                    return localization('lasnaoloilmoittautuminen.' + $scope.ilmoittautuminen);
-                };
-
                 $scope.getErrorTranslation = function() {
                     return localization('lasnaoloilmoittautuminen.error.' + $scope.error);
                 };
@@ -80,13 +76,6 @@ module.exports = function(app) {
                             $scope.error = 'other';
                     }
                 }
-
-                $scope.getEnrolmentMessageKeys = function() {
-
-                    var date = $scope.tulos.ilmoittautumisenAikaleima ? new Date($scope.tulos.ilmoittautumisenAikaleima) : new Date();
-
-                  return {date: date.toLocaleDateString('fi-FI'), time: date.toLocaleTimeString('fi-FI')}
-                };
 
             }
 
