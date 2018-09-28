@@ -13,7 +13,7 @@ näytetään mahdolliset ilmoittautumiset -->
     </div>
 
     <!-- ilmoittautumiskäli, 2. aste -->
-    <div class="result-list" ng-if="tulos.vastaanottotila === 'VASTAANOTTANUT_SITOVASTI'">
+    <div class="result-list" ng-if="application.haku.toisenasteenhaku && tulos.vastaanottotila === 'VASTAANOTTANUT_SITOVASTI'">
         <div class="result-list-wrap">
         <div class="result-list-cell flex-100">
           <lasnaoloilmoittautuminen application="application" tulos="tulos"/>
@@ -21,7 +21,7 @@ näytetään mahdolliset ilmoittautumiset -->
       </div>
     </div>
 
-    <!-- tiedot aiemmin tehdyistä läsnäoloilmoittautumisista, kk ilman aikaleimaa. -->
+    <!-- tiedot opintopolkuun rekisteröidyistä läsnäoloilmoittautumisista -->
     <div class="lasnaolo-ilmoittautuminen-container" ng-if="ilmoittautunut(tulos)">
       <div class="lasnaolo-ilmoittautuminen">
         <span class="label-highlight">{{ localization('lasnaoloilmoittautuminen.title') }}</span>
