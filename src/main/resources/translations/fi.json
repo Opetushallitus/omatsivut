@@ -177,6 +177,8 @@
 
   "registration": {
     "pleaseRegister": "Ilmoittaudu lukukaudelle",
+    "reminder": "Muista ilmoittautua läsnä- tai poissaolevaksi",
+    "reminderInfo": "Saadaksesi opiskeluoikeuden vastaanottamassasi paikassa sinun tulee ilmoittautua oppilaitokseen opiskelijaksi",
     "goToRegistration": "Siirry ilmoittautumaan",
     "conditionalAcceptanceTitle": "Opiskelijavalintasi on vielä ehdollinen.",
     "conditionalAcceptanceInfo": "Pääset ilmoittautumaan vasta valinnan vahvistamisen jälkeen.",

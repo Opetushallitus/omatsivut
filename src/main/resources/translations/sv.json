@@ -177,6 +177,8 @@
 
   "registration": {
     "pleaseRegister": "Anmäl dig till terminen",
+    "reminder": "(SWEDISH TRANSLATION NEEDED) Muista ilmoittautua läsnä- tai poissaolevaksi",
+    "reminderInfo": "(SWEDISH TRANSLATION NEEDED) Saadaksesi opiskeluoikeuden vastaanottamassasi paikassa sinun tulee ilmoittautua oppilaitokseen opiskelijaksi",
     "goToRegistration": "Anmäl dig",
     "conditionalAcceptanceTitle": "Studerandeantagningen är ännu villkorlig.",
     "conditionalAcceptanceInfo": "Du kan anmäla dig först efter att antagningen har bekräftats.",

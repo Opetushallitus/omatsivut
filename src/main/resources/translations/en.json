@@ -177,6 +177,8 @@
 
   "registration": {
     "pleaseRegister": "Register for the semester",
+    "reminder": "(ENGLISH TRANSLATION NEEDED) Muista ilmoittautua läsnä- tai poissaolevaksi",
+    "reminderInfo": "(ENGLISH TRANSLATION NEEDED) Saadaksesi opiskeluoikeuden vastaanottamassasi paikassa sinun tulee ilmoittautua oppilaitokseen opiskelijaksi",
     "goToRegistration": "Go to registration",
     "conditionalAcceptanceTitle": "The student admission is still conditional.",
     "conditionalAcceptanceInfo": "You can register after the admission has been confirmed.",

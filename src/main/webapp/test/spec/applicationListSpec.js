@@ -1135,7 +1135,7 @@
             expect(hakemusKorkeakouluYhteishakuSyksy2014.vastaanotto(0).title()).to.equal('Opiskelupaikka myönnetty ' +
               'Helsingin yliopisto, Matemaattis-luonnontieteellinen tiedekunta - Fysiikka (aineenopettaja), luonnontieteiden kandidaatti ja filosofian maisteri')
             expect(hakemusKorkeakouluYhteishakuSyksy2014.ilmoittautuminen(0).title()).to.equal(
-              'Ilmoittaudu lukukaudelle Diakonia-ammattikorkeakoulu, Järvenpään toimipiste - Sosionomi (AMK), monimuotototeutus')
+              'Muista ilmoittautua läsnä- tai poissaolevaksi Diakonia-ammattikorkeakoulu, Järvenpään toimipiste - Sosionomi (AMK), monimuotototeutus')
           })
 
 
@@ -1145,9 +1145,9 @@
 
             it("Näkyy oili linkki molemmille paikoille", function () {
               expect(hakemusKorkeakouluYhteishakuSyksy2014.ilmoittautuminen(0).title()).to.equal(
-                'Ilmoittaudu lukukaudelle Diakonia-ammattikorkeakoulu, Järvenpään toimipiste - Sosionomi (AMK), monimuotototeutus')
+                'Muista ilmoittautua läsnä- tai poissaolevaksi Diakonia-ammattikorkeakoulu, Järvenpään toimipiste - Sosionomi (AMK), monimuotototeutus')
               expect(hakemusKorkeakouluYhteishakuSyksy2014.ilmoittautuminen(1).title()).to.equal(
-                'Ilmoittaudu lukukaudelle Helsingin yliopisto, Matemaattis-luonnontieteellinen tiedekunta - Fysiikka (aineenopettaja), luonnontieteiden kandidaatti ja filosofian maisteri')
+                'Muista ilmoittautua läsnä- tai poissaolevaksi Helsingin yliopisto, Matemaattis-luonnontieteellinen tiedekunta - Fysiikka (aineenopettaja), luonnontieteiden kandidaatti ja filosofian maisteri')
             })
           })
         })
