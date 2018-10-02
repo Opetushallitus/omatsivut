@@ -285,7 +285,7 @@ function ApplicationListPage() {
           },
 
           singleStudyPlaceEnforcement: function() {
-            return vastaanottoElement().find("[ng-if='haku().showSingleStudyPlaceEnforcement']").map(function() {
+            return vastaanottoElement().find(".hakutoive-vain-yksi-valittavissa").map(function() {
               return $(this).text().trim()
             }).toArray()
           },
