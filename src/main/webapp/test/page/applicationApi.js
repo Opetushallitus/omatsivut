@@ -122,7 +122,6 @@ function ApplicationApi() {
         },
         moveDown: function () {
           return waitForChange(function() {
-            console.log('XXX clicking down')
             if (!api.arrowDown().isEnabled()) {
               console.error('trying to click arrow down, but it is disabled!', api.arrowDown().element())
             }
@@ -131,7 +130,6 @@ function ApplicationApi() {
         },
         moveUp: function () {
           return waitForChange(function() {
-            console.log('XXX clicking up', api.arrowUp())
             if (!api.arrowUp().isEnabled()) {
               console.error('trying to click arrow up, but it is disabled!', api.arrowUp().element())
             }
