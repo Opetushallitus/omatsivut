@@ -1546,7 +1546,7 @@
         page.applyFixtureAndOpen({fixtureName:"peruskoulu", applicationOid: hakemusYhteishakuKevat2014WithForeignBaseEducationId}),
         hakemusYhteishakuKevat2014WithForeignBaseEducation.getPreference(0).remove,
         hakemusYhteishakuKevat2014WithForeignBaseEducation.saveWaitSuccess,
-        replacePreference(hakemusYhteishakuKevat2014WithForeignBaseEducation, 0, "Ahlman", 1)
+        replacePreference(hakemusYhteishakuKevat2014WithForeignBaseEducation, 1, "Ahlman", 0)
       )
 
       it("kysymykset näytetään", function() {
