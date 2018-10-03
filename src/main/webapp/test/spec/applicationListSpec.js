@@ -1680,7 +1680,7 @@
     describe("Kun hakijalla on koulutus, joka edellyttää sora kysymyksiin vastausta", function() {
       before(
         page.applyFixtureAndOpen({applicationOid: hakemusKorkeakouluId}),
-        replacePreference(hakemusKorkeakoulu, 1, "Etelä-Savon ammattiopisto,  Otavankatu 4", 1)
+        replacePreference(hakemusKorkeakoulu, 1, "Etelä-Savon ammattiopisto,  Otavankatu 4", 3)
       )
 
       function answerSoraQuestions() {
