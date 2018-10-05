@@ -43,13 +43,16 @@ class HakutoiveenVastaanottoController {
   isNotVastaanotettavissa() {
     return !(this.vastaanottoAction && this.vastaanottoAction.length !== 0)
       || this.isVastaanottoKesken()
-      || (this.isRejectSelected() && !this.confirmCancelAction);
+      || (this.isRejectSelected() && !this.confirmCancelAction && this.isKkHaku());
   }
 
   isRejectSelected() {
     return this.vastaanottoAction === 'Peru';
   }
 
+  isKkHaku() {
+    return !this.haku().toisenasteenhaku;
+  }
 
   flashSiirtohakuNotification() {
     this.siirtohakuClass = 'siirtohaku-fade-out';
