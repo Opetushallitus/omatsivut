@@ -2,15 +2,17 @@
 näytetään mahdolliset ilmoittautumiset -->
 <div class="ilmoittautuminen-item fade-transitions" ng-repeat="tulos in hakukohteet()">
     <!-- ulkoinen ilmoittautumislinkki, vain kk -->
-    <div ng-if="!application.haku.toisenasteenhaku && tulos.ilmoittautumistila.ilmoittauduttavissa && linkkiOK(tulos)">
+    <div class="kk-lasnaolo" ng-if="!application.haku.toisenasteenhaku && tulos.ilmoittautumistila.ilmoittauduttavissa && linkkiOK(tulos)">
         <header>
           <strong ng-if="tulos.ehdollisestiHyvaksyttavissa">{{ localization('registration.conditionalAcceptanceTitle') }}</strong>
           <strong ng-if="!tulos.ehdollisestiHyvaksyttavissa">{{ localization('registration.reminder') }}</strong>
           <span class="tarjoaja-hakukohde">{{ tulos.tarjoajaNimi }} - {{ tulos.hakukohdeNimi }}</span>
         </header>
         <span ng-if="tulos.ehdollisestiHyvaksyttavissa">{{ localization('registration.conditionalAcceptanceInfo') }}</span>
-        <p ng-if="!tulos.ehdollisestiHyvaksyttavissa">{{ localization('registration.reminderInfo') }}</p>
-        <a ng-if="!tulos.ehdollisestiHyvaksyttavissa" href="{{oili()}}">{{ localization('registration.goToRegistration') }}</a>
+        <span ng-if="!tulos.ehdollisestiHyvaksyttavissa">
+          <p>{{ localization('registration.reminderInfo') }}</p>
+          <a href="{{oili()}}">{{ localization('registration.goToRegistration') }}</a>
+        </span>
     </div>
 
     <!-- ilmoittautumiskäli, 2. aste -->
@@ -22,11 +24,12 @@ näytetään mahdolliset ilmoittautumiset -->
       </div>
     </div>
 
-    <!-- tiedot opintopolkuun rekisteröidyistä läsnäoloilmoittautumisista -->
+    <!-- tieto opintopolkuun rekisteröidystä läsnäoloilmoittautumisesta jos sellainen on-->
     <div class="lasnaolo-ilmoittautuminen-container" ng-if="ilmoittautunut(tulos)">
       <fieldset>
         <div class="lasnaolo-ilmoittautuminen">
-          <span class="label-highlight">{{ localization('lasnaoloilmoittautuminen.title') }}</span>
+          <span class="label-highlight"> {{ application.haku.toisenasteenhaku ?
+            localization('lasnaoloilmoittautuminen.title') : localization('lasnaoloilmoittautuminen.title_kk') }}</span>
           <span> {{ application.henkiloNimi }} </span>
           <span class="tarjoaja-hakukohde"> {{ tulos.tarjoajaNimi }} {{ tulos.hakukohdeNimi }}</span>
         </div>

@@ -177,8 +177,8 @@
 
   "registration": {
     "pleaseRegister": "Ilmoittaudu lukukaudelle",
-    "reminder": "Muista ilmoittautua läsnä- tai poissaolevaksi",
-    "reminderInfo": "Saadaksesi opiskeluoikeuden vastaanottamassasi paikassa sinun tulee ilmoittautua oppilaitokseen opiskelijaksi",
+    "reminder": "Muista tehdä lukuvuosi-ilmoittautuminen korkeakouluun",
+    "reminderInfo": "Saadaksesi opiskeluoikeuden vastaanottamassasi opiskelupaikassa sinun tulee tehdä lukuvuosi-ilmoittautuminen",
     "goToRegistration": "Siirry ilmoittautumaan",
     "conditionalAcceptanceTitle": "Opiskelijavalintasi on vielä ehdollinen.",
     "conditionalAcceptanceInfo": "Pääset ilmoittautumaan vasta valinnan vahvistamisen jälkeen.",
@@ -213,6 +213,7 @@
 
   "lasnaoloilmoittautuminen": {
     "title": "Läsnäoloilmoittautuminen",
+    "title_kk": "Lukuvuosi-ilmoittautuminen",
     "send": "Lähetä ilmoittautuminen",
     "semester": "Läsnä koko lukuvuoden",
     "spring": "Läsnä kevätlukukauden",

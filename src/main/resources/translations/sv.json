@@ -177,8 +177,8 @@
 
   "registration": {
     "pleaseRegister": "Anmäl dig till terminen",
-    "reminder": "(SWEDISH TRANSLATION NEEDED) Muista ilmoittautua läsnä- tai poissaolevaksi",
-    "reminderInfo": "(SWEDISH TRANSLATION NEEDED) Saadaksesi opiskeluoikeuden vastaanottamassasi paikassa sinun tulee ilmoittautua oppilaitokseen opiskelijaksi",
+    "reminder": "Kom ihåg att göra läsårsanmälan till högskolan",
+    "reminderInfo": "För att få en giltig studierätt för din studieplats, måste du anmäla dig till läsåret.",
     "goToRegistration": "Anmäl dig",
     "conditionalAcceptanceTitle": "Studerandeantagningen är ännu villkorlig.",
     "conditionalAcceptanceInfo": "Du kan anmäla dig först efter att antagningen har bekräftats.",
@@ -213,6 +213,7 @@
 
   "lasnaoloilmoittautuminen": {
     "title": "Anmälan om närvaro",
+    "title_kk": "Läsårsanmälan",
     "send": "Skicka anmälan om närvaro",
     "semester": "Närvarande hela läsåret",
     "spring": "Närvarande vårterminen",
@@ -220,7 +221,7 @@
     "away": "Frånvarande hela terminen",
     "confirmation": "Du har anmält dig __date__ av __time__:",
     "confirmation_kk": "Du har anmält dig:",
-    "info": "Frånvaron beviljas alltid av läroanstalten. Om du vill anmäla dig som frånvarande, ska du ta kontakt till läroanstalten.",
+    "info": "Frånvaron beviljas alltid av läroanstalten. Ta kontakt till läroanstalten om du vill anmäla dig som frånvarande.",
     "error": {
       "notFound": "Studieplatsen hittades inte. Försök på nytt om en stund.",
       "other": "Någonting gick fel i anmälan. Försök på nytt om en stund."

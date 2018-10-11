@@ -177,8 +177,8 @@
 
   "registration": {
     "pleaseRegister": "Register for the semester",
-    "reminder": "(ENGLISH TRANSLATION NEEDED) Muista ilmoittautua läsnä- tai poissaolevaksi",
-    "reminderInfo": "(ENGLISH TRANSLATION NEEDED) Saadaksesi opiskeluoikeuden vastaanottamassasi paikassa sinun tulee ilmoittautua oppilaitokseen opiskelijaksi",
+    "reminder": "Please remember to enrol and register for the academic year",
+    "reminderInfo": "In order to receive a valid study right in a study place you accepted you must enrol to the higher education institution and register for the academic year",
     "goToRegistration": "Go to registration",
     "conditionalAcceptanceTitle": "The student admission is still conditional.",
     "conditionalAcceptanceInfo": "You can register after the admission has been confirmed.",
@@ -213,6 +213,7 @@
 
   "lasnaoloilmoittautuminen": {
     "title": "Notification of attendance",
+    "title_kk": "Registration for the academic year",
     "send": "Send notification of attendance",
     "semester": "Present throughout the academic year",
     "spring": "Present spring term",
