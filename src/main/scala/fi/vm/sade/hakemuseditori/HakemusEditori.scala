@@ -71,16 +71,16 @@ trait HakemusEditoriComponent extends ApplicationValidatorComponent
     def fetchByPersonOid(request: HttpServletRequest,
                          personOid: String,
                          valintatulosFetchStrategy: ValintatulosFetchStrategy): HakemusResult = {
-      (
-        Try(ataruService.findApplications(request, personOid, valintatulosFetchStrategy)),
-        Try(hakemusRepository.fetchHakemukset(request, personOid, valintatulosFetchStrategy))
-      ) match {
-        case (Success(ahs), Success(hhs)) => FullSuccess((ahs ::: hhs).sortBy[Option[Long]](_.hakemus.received).reverse)
-        case (Failure(at), Failure(ht)) => FullFailure(List(at, ht))
-        case (ahs, hhs) => PartialSuccess(
-          (ahs.getOrElse(List.empty) ::: hhs.getOrElse(List.empty)).sortBy[Option[Long]](_.hakemus.received).reverse,
-          ahs.failed.toOption.toList ::: hhs.failed.toOption.toList
-        )
+      val ataruHakemukset = Try(ataruService.findApplications(request, personOid, valintatulosFetchStrategy))
+      val hakuAppHakemukset = oppijanumerorekisteriService.fetchAllDuplicateOids(personOid).toList
+        .map(oid => Try(hakemusRepository.fetchHakemukset(request, oid, valintatulosFetchStrategy)))
+      (ataruHakemukset :: hakuAppHakemukset).foldLeft((List.empty[HakemusInfo], List.empty[Throwable])) {
+        case ((hs, ts), Success(hhs)) => (hs ::: hhs, ts)
+        case ((hs, ts), Failure(t)) => (hs, t :: ts)
+      } match {
+        case (hs, Nil) => FullSuccess(hs.sortBy(_.hakemus.received).reverse)
+        case (Nil, ts) => FullFailure(ts)
+        case (hs, ts) => PartialSuccess(hs.sortBy(_.hakemus.received).reverse, ts)
       }
     }
 

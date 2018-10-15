@@ -61,28 +61,17 @@ trait ApplicationsServletContainer {
     }
 
     get("/") {
-      implicit val formats = DefaultFormats
-      val timeout = 1000*30L
-      val oppijanumero: String = personOid()
-
-      val allOids: Iterable[String] = oppijanumerorekisteriService.fetchAllDuplicateOids(oppijanumero)
-
-      var allSuccess = true
-      val allHakemukset: List[HakemusInfo] = allOids.toList.flatMap(oid => {
-        hakemusEditori.fetchByPersonOid(request, oid, Fetch) match {
-          case FullSuccess(hakemukset) => hakemukset
-          case PartialSuccess(partialHakemukset, exceptions) =>
-            exceptions.foreach(logger.warn(s"Failed to fetch all applications for oid $oid",_))
-            allSuccess = false
-            partialHakemukset
-          case FullFailure(exceptions) =>
-            exceptions.foreach(logger.error(s"Failed to fetch applications for oid $oid", _))
-            allSuccess = false
-            List.empty
-        }
-      }).sortBy(_.hakemus.received).reverse
-
-      Map("allApplicationsFetched" -> allSuccess, "applications" -> allHakemukset)
+      val oid = personOid()
+      hakemusEditori.fetchByPersonOid(request, oid, Fetch) match {
+        case FullSuccess(hakemukset) =>
+          Map("allApplicationsFetched" -> true, "applications" -> hakemukset)
+        case PartialSuccess(hakemukset, exceptions) =>
+          exceptions.foreach(logger.warn(s"Failed to fetch all applications for oid $oid",_))
+          Map("allApplicationsFetched" -> false, "applications" -> hakemukset)
+        case FullFailure(exceptions) =>
+          exceptions.foreach(logger.error(s"Failed to fetch applications for oid $oid", _))
+          throw exceptions.head
+      }
     }
 
     put("/:oid") {
