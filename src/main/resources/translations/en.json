@@ -219,6 +219,8 @@
     "spring": "Present spring term",
     "autumn": "Present only autumn term",
     "away": "Absent throughout the academic year",
+    "no_signup": "Not enrolled",
+    "away_spring": "Non-attending student for the spring term",
     "confirmation": "You have signed up __date__ at __time__:",
     "confirmation_kk": "You have signed up:",
     "info": "Absence is always granted by the educational institution. If you want to register as absent, please contact the educational institution.",

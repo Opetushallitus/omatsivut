@@ -17,6 +17,16 @@ module.exports = function(app) {
           LASNA: 'spring'
         };
 
+        $scope.statesToReport = {
+          LASNA_KOKO_LUKUVUOSI: 'semester',
+          POISSA_KOKO_LUKUVUOSI: 'away', //*uusi, käännös oli
+          EI_ILMOITTAUTUNUT: 'no_signup', //*uusi, käännös lisätty
+          LASNA_SYKSY: 'autumn',
+          POISSA_SYKSY: 'spring', //*uusi, huom. sama käännös
+          LASNA: 'spring',
+          POISSA: 'away_spring' //*uusi, käännös lisätty
+        };
+
         $scope.linkkiOK = function(tulos) {
           return tulos.ilmoittautumistila.ilmoittautumistapa != null &&
               tulos.ilmoittautumistila.ilmoittautumistapa.url
@@ -25,6 +35,12 @@ module.exports = function(app) {
         $scope.ilmoittautunut = function(tulos) {
           if (tulos && tulos.ilmoittautumistila && tulos.ilmoittautumistila.ilmoittautumistila) {
             return $scope.reserveStates[tulos.ilmoittautumistila.ilmoittautumistila];
+          } else return false;
+        };
+
+        $scope.ilmoittautumistietoNaytetaan = function(tulos) {
+          if (tulos && tulos.ilmoittautumistila && tulos.ilmoittautumistila.ilmoittautumistila) {
+            return $scope.statesToReport[tulos.ilmoittautumistila.ilmoittautumistila];
           } else return false;
         };
 

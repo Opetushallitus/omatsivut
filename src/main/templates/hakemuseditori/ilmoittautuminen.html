@@ -25,7 +25,7 @@ näytetään mahdolliset ilmoittautumiset -->
     </div>
 
     <!-- tieto opintopolkuun rekisteröidystä läsnäoloilmoittautumisesta jos sellainen on-->
-    <div class="lasnaolo-ilmoittautuminen-container" ng-if="ilmoittautunut(tulos)">
+    <div class="lasnaolo-ilmoittautuminen-container" ng-if="ilmoittautumistietoNaytetaan(tulos)">
       <fieldset>
         <div class="lasnaolo-ilmoittautuminen">
           <span class="label-highlight"> {{ application.haku.toisenasteenhaku ?

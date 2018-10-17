@@ -219,6 +219,8 @@
     "spring": "Läsnä kevätlukukauden",
     "autumn": "Läsnä vain syyslukukauden",
     "away": "Poissa koko lukukauden",
+    "no_signup": "Et ilmoittautunut",
+    "away_spring": "Poissa kevätlukukauden",
     "confirmation": "Olet ilmoittautunut __date__ klo __time__ vastauksella: ",
     "confirmation_kk": "Olet ilmoittautunut vastauksella: ",
     "info": "Poissaolon myöntää aina oppilaitos. Jos haluat ilmoittautua poissaolevaksi, ota yhteys oppilaitokseen.",
