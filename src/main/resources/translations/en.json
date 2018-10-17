@@ -179,7 +179,7 @@
     "pleaseRegister": "Register for the semester",
     "reminder": "Please remember to enrol and register for the academic year",
     "reminderInfo": "In order to receive a valid study right in a study place you accepted you must enrol to the higher education institution and register for the academic year",
-    "goToRegistration": "Go to registration",
+    "goToRegistration": "Proceed to registration",
     "conditionalAcceptanceTitle": "The student admission is still conditional.",
     "conditionalAcceptanceInfo": "You can register after the admission has been confirmed.",
     "opintoetuudet": {
@@ -221,8 +221,8 @@
     "away": "Non-attending student throughout the academic year",
     "no_signup": "Not enrolled",
     "away_spring": "Non-attending student for the spring term",
-    "confirmation": "You have signed up __date__ at __time__:",
-    "confirmation_kk": "You have signed up:",
+    "confirmation": "You have enrolled as __date__ at __time__: ",
+    "confirmation_kk": "You have enrolled as: ",
     "info": "Absence is always granted by the educational institution. If you want to register as absent, please contact the educational institution.",
     "error": {
       "notFound": "Student information was not found. Please try again in a while.",
