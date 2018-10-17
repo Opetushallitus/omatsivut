@@ -11,20 +11,14 @@ module.exports = function(app) {
       link: function ($scope, element, attrs) {
         $scope.localization = localization;
 
-        $scope.reserveStates = {
-          LASNA_KOKO_LUKUVUOSI: 'semester',
-          LASNA_SYKSY: 'autumn',
-          LASNA: 'spring'
-        };
-
         $scope.statesToReport = {
           LASNA_KOKO_LUKUVUOSI: 'semester',
-          POISSA_KOKO_LUKUVUOSI: 'away', //*uusi, käännös oli
-          EI_ILMOITTAUTUNUT: 'no_signup', //*uusi, käännös lisätty
+          POISSA_KOKO_LUKUVUOSI: 'away',
+          EI_ILMOITTAUTUNUT: 'no_signup',
           LASNA_SYKSY: 'autumn',
-          POISSA_SYKSY: 'spring', //*uusi, huom. sama käännös
+          POISSA_SYKSY: 'spring',
           LASNA: 'spring',
-          POISSA: 'away_spring' //*uusi, käännös lisätty
+          POISSA: 'away_spring'
         };
 
         $scope.linkkiOK = function(tulos) {
@@ -32,14 +26,9 @@ module.exports = function(app) {
               tulos.ilmoittautumistila.ilmoittautumistapa.url
         };
 
-        $scope.ilmoittautunut = function(tulos) {
-          if (tulos && tulos.ilmoittautumistila && tulos.ilmoittautumistila.ilmoittautumistila) {
-            return $scope.reserveStates[tulos.ilmoittautumistila.ilmoittautumistila];
-          } else return false;
-        };
-
         $scope.ilmoittautumistietoNaytetaan = function(tulos) {
           if (tulos && tulos.ilmoittautumistila && tulos.ilmoittautumistila.ilmoittautumistila) {
+            console.log("tila: " + tulos.ilmoittautumistila.ilmoittautumistila + ", bool: " + $scope.statesToReport[tulos.ilmoittautumistila.ilmoittautumistila]);
             return $scope.statesToReport[tulos.ilmoittautumistila.ilmoittautumistila];
           } else return false;
         };
@@ -50,7 +39,7 @@ module.exports = function(app) {
         };
 
         $scope.getStateTranslation = function(tulos) {
-          return localization('lasnaoloilmoittautuminen.' + $scope.reserveStates[tulos.ilmoittautumistila.ilmoittautumistila] );
+          return localization('lasnaoloilmoittautuminen.' + $scope.statesToReport[tulos.ilmoittautumistila.ilmoittautumistila] );
         };
 
       }
