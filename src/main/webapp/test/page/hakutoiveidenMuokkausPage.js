@@ -4,7 +4,9 @@ function HakutoiveidenMuokkausPage() {
   var api = {
 
     isVisible: function() {
-        return $("h1").text().trim() === "Hakutoiveiden muokkaus väärällä tokenilla" && (api.alertMsg().length > 0 || api.getApplication().name().length > 0)
+      var iframeIsVisible = $("iframe#testframe").contents().find("body").children().length > 0 ;
+      var isNotLoading = $("iframe#testframe").contents().find("[class~=loading]").text() === '';
+      return iframeIsVisible && isNotLoading;
     },
 
     openPage: function(token, pageLoadedCheck) {
