@@ -14,7 +14,6 @@ module.exports = function(app) {
         $scope.statesToReport = {
           LASNA_KOKO_LUKUVUOSI: 'semester',
           POISSA_KOKO_LUKUVUOSI: 'away',
-          EI_ILMOITTAUTUNUT: 'no_signup',
           LASNA_SYKSY: 'autumn',
           POISSA_SYKSY: 'spring',
           LASNA: 'spring',

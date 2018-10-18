@@ -190,7 +190,7 @@ Hakemus.prototype = {
     });
 
     function ilmoittautunut(ilmoittautumistila) {
-        return ['LASNA_KOKO_LUKUVUOSI', 'POISSA_KOKO_LUKUVUOSI', 'EI_ILMOITTAUTUNUT', 'LASNA_SYKSY', 'POISSA_SYKSY', 'LASNA', 'POISSA'].includes(ilmoittautumistila);
+        return ['LASNA_KOKO_LUKUVUOSI', 'POISSA_KOKO_LUKUVUOSI', 'LASNA_SYKSY', 'POISSA_SYKSY', 'LASNA', 'POISSA'].includes(ilmoittautumistila);
     }
   },
   kelaURL: function() {
