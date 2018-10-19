@@ -3,7 +3,7 @@ import { getBearerToken, removeBearerToken } from '../util';
 import Hakemus from '../models/hakemus';
 
 export default ['$scope', '$location', '$http', function($scope, $location, $http) {
-  const matches = $location.path().match(/token\/(.+)/);
+  const matches = $location.url().match(/token\/(.+)/);
   const token = matches && matches[1];
   const baseUrl = 'insecure/applications/application/';
 
