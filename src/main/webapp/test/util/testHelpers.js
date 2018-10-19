@@ -82,7 +82,7 @@ session = {
           if (request.status === 200) {
             response.resolve(request.responseText);
           } else {
-            response.reject("HTTP " + request.status + " for " + path);
+            response.reject("HTTP " + request.status + " for " + url);
           }
         }
       };
