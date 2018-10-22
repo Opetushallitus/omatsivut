@@ -67,7 +67,7 @@
     describe("kun lisätään hakukohde", function() {
       before(
           page.getApplication().getPreference(3).selectOpetusPiste("Lap"),
-          page.getApplication().getPreference(3).selectKoulutus(1)
+          page.getApplication().getPreference(3).selectKoulutus(3)
       )
 
       describe("lisäämisen jälkeen", function() {
@@ -161,7 +161,7 @@
     describe("kun lisätään ammatillinen hakukohde", function() {
       before(
           page.getApplication().getPreference(1).selectOpetusPiste("Helsingin Diakoniaopisto"),
-          page.getApplication().getPreference(1).selectKoulutus(1)
+          page.getApplication().getPreference(1).selectKoulutus(3)
       )
 
       it("seuraava hakukohde tulee muokattavaksi", function() {
@@ -185,7 +185,7 @@
     describe("kun lisätään lukion urheilulinja hakukohde", function() {
       before(
           page.getApplication().getPreference(1).selectOpetusPiste("Mäkelänrinteen lukio"),
-          page.getApplication().getPreference(1).selectKoulutus(0)
+          page.getApplication().getPreference(1).selectKoulutus(2)
       )
 
       it("seuraava hakukohde tulee muokattavaksi", function() {
