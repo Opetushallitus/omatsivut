@@ -6,6 +6,8 @@ import ngAnimate from 'angular-animate';
 import ngCookies from 'angular-cookies';
 import typeahead from 'angular-ui-bootstrap/src/typeahead/index.js';
 import '../less/main.less';
+import '../less/hakutoiveidenMuokkaus.less';
+import '../less/preview.less';
 
 require('./recursionHelper');
 require('../lib/angular-debounce');
