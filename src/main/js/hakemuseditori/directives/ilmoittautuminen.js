@@ -19,7 +19,7 @@ module.exports = function(app) {
           LASNA: 'spring',
           POISSA: 'away_spring'
         };
-
+        
         $scope.linkkiOK = function(tulos) {
           return tulos.ilmoittautumistila.ilmoittautumistapa != null &&
               tulos.ilmoittautumistila.ilmoittautumistapa.url

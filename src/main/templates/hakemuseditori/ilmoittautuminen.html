@@ -16,7 +16,7 @@ näytetään mahdolliset ilmoittautumiset -->
     </div>
 
     <!-- ilmoittautumiskäli, 2. aste -->
-    <div class="result-list" ng-if="application.haku.toisenasteenhaku && tulos.vastaanottotila === 'VASTAANOTTANUT_SITOVASTI' && !ilmoittautunut(tulos)">
+    <div class="result-list" ng-if="application.haku.toisenasteenhaku && tulos.vastaanottotila === 'VASTAANOTTANUT_SITOVASTI' && !ilmoittautumistietoNaytetaan(tulos)">
         <div class="result-list-wrap">
         <div class="result-list-cell flex-100">
           <lasnaoloilmoittautuminen application="application" tulos="tulos"/>
