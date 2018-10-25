@@ -19,7 +19,7 @@ module.exports = function(app) {
           LASNA: 'spring',
           POISSA: 'away_spring'
         };
-        
+
         $scope.linkkiOK = function(tulos) {
           return tulos.ilmoittautumistila.ilmoittautumistapa != null &&
               tulos.ilmoittautumistila.ilmoittautumistapa.url
@@ -27,7 +27,6 @@ module.exports = function(app) {
 
         $scope.ilmoittautumistietoNaytetaan = function(tulos) {
           if (tulos && tulos.ilmoittautumistila && tulos.ilmoittautumistila.ilmoittautumistila) {
-            console.log("tila: " + tulos.ilmoittautumistila.ilmoittautumistila + ", bool: " + $scope.statesToReport[tulos.ilmoittautumistila.ilmoittautumistila]);
             return $scope.statesToReport[tulos.ilmoittautumistila.ilmoittautumistila];
           } else return false;
         };
