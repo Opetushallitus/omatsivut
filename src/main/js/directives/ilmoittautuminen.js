@@ -40,7 +40,11 @@ export default function () {
         $scope.getStateTranslation = function(tulos) {
           return localize('lasnaoloilmoittautuminen.' + $scope.statesToReport[tulos.ilmoittautumistila.ilmoittautumistila] );
         };
-    }
+
+        $scope.ohjeetUudelleOpiskelijalle = function(hakukohdeOid) {
+          return $scope.application.ohjeetUudelleOpiskelijalle[hakukohdeOid];
+        }
+      }
   }
 }
 

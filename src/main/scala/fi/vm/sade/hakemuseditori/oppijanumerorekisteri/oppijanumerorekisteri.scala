@@ -52,7 +52,9 @@ trait OppijanumerorekisteriComponent {
   val oppijanumerorekisteriService: OppijanumerorekisteriService
 
   class StubbedOppijanumerorekisteriService extends OppijanumerorekisteriService {
-    override def henkilo(personOid: String): Henkilo = ???
+    override def henkilo(personOid: String): Henkilo = {
+      Henkilo("bla bla", Some("kva kva"))
+    }
 
     override def fetchAllDuplicateOids(oppijanumero: String): Set[String] = Set(oppijanumero)
   }

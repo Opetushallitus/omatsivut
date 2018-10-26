@@ -63,6 +63,16 @@ trait HakemusConverterComponent {
         )
       }).toMap
 
+      val ohjeetUudelleOpiskelijalleMap: Map[String, String] = hakutoiveet
+        .filter(hakutoive => {
+          val hakukohdeOid: Option[String] = hakutoive.hakemusData.map(_("Koulutus-id"))
+          tarjontaService.getOhjeetUudelleOpiskelijalle(hakukohdeOid).nonEmpty
+        })
+        .map(hakutoive => {
+          val hakukohdeOid: Option[String] = hakutoive.hakemusData.map(_("Koulutus-id"))
+          hakukohdeOid.getOrElse("") -> tarjontaService.getOhjeetUudelleOpiskelijalle(hakukohdeOid).getOrElse("")
+        }).toMap
+
       Hakemus(
         application.oid,
         application.personOid,
@@ -70,6 +80,7 @@ trait HakemusConverterComponent {
         application.updated.map(_.getTime).orElse(receivedTime),
         tila(haku, application, hakutoiveet, valintatulos),
         tuloskirje,
+        ohjeetUudelleOpiskelijalleMap,
         hakutoiveet,
         haku,
         EducationBackground(koulutusTaustaAnswers.get(baseEducationKey), !Try {koulutusTaustaAnswers.get("ammatillinenTutkintoSuoritettu").toBoolean}.getOrElse(false)),
@@ -152,7 +163,8 @@ trait HakemusConverterComponent {
             val tarjonnanHakukohde = tarjontaService.hakukohde(data("Koulutus-id"))
             val amendedData = amendWithKoulutusInformaatio(lang, data)
 
-            Hakutoive(Some(amendedData), tarjonnanHakukohde.flatMap(_.koulutuksenAlkaminen),  tarjonnanHakukohde.flatMap(_.hakuaikaId), tarjonnanHakukohde.flatMap(_.kohteenHakuaika))
+            Hakutoive(Some(amendedData), tarjonnanHakukohde.flatMap(_.koulutuksenAlkaminen),
+                      tarjonnanHakukohde.flatMap(_.hakuaikaId), tarjonnanHakukohde.flatMap(_.kohteenHakuaika))
         }
       }
       val maxHakutoiveet = if (lomake.nonEmpty) {

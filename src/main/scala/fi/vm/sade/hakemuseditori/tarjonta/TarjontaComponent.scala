@@ -142,7 +142,11 @@ trait TarjontaComponent {
     }
 
     override def hakukohde(oid: String): Option[Hakukohde] = {
-      withHttpGet( "Tarjonta fetch hakukohde", OphUrlProperties.url("tarjonta-service.hakukohde", oid), {_.flatMap(TarjontaParser.parseHakukohde)})
+      if (oid != "") {
+        withHttpGet( "Tarjonta fetch hakukohde", OphUrlProperties.url("tarjonta-service.hakukohde", oid), {_.flatMap(TarjontaParser.parseHakukohde)})
+      } else {
+        None
+      }
     }
   }
 }
@@ -153,11 +157,21 @@ trait TarjontaService {
 
   def filterHakutoiveOidsByActivity(activity: Boolean, hakutoiveet: List[Hakemus.HakutoiveData], haku: Haku): List[String] = {
     val hakukohteet = hakutoiveet.flatMap(entry => entry.get("Koulutus-id").map(oid => {
-      hakukohde(oid).getOrElse(Hakukohde(oid, None, None, Some(KohteenHakuaika(0L, 0L))))
+      hakukohde(oid).getOrElse(Hakukohde(oid, None, None, Some(KohteenHakuaika(0L, 0L)), None))
     }))
     hakukohteet.filter(hakukohde => hakukohde.kohteenHakuaika match {
       case Some(aika) => aika.active == activity
       case _ => hakukohde.hakuaikaId.map((hakuaikaId: String) => haku.applicationPeriods.find(_.id == hakuaikaId).exists(_.active == activity)).getOrElse(haku.active == activity)
     }).map(_.oid)
+  }
+
+  def getOhjeetUudelleOpiskelijalle(hakukohdeOid: Option[String]): Option[String] = {
+    for {
+      oid <- hakukohdeOid
+      tarjonnanHakukohde <- hakukohde(oid)
+      linkki <- tarjonnanHakukohde.ohjeetUudelleOpiskelijalle
+    } yield {
+      linkki
+    }
   }
 }

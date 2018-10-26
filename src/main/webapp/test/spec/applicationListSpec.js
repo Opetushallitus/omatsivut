@@ -847,7 +847,8 @@
             ])
           })
         })
-        describe("ensimmäisen paikan sitovan vastaanottamisen valinta", function() {
+
+        describe("ensimmäisen paikan sitova vastaanottaminen", function() {
           before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VastaanotaSitovasti"))
           it("oikea nappi on valittuna", function () {
             var selectedIndex = hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectedIndex();
@@ -896,7 +897,8 @@
             ])
           })
         })
-        describe("ensimmäisen paikan vastaanottamisen valinta", function() {
+
+        describe("ensimmäisen paikan vastaanottaminen", function() {
           before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VastaanotaSitovasti"))
           it("oikea nappi on valittuna", function () {
             var selectedIndex = hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectedIndex();
@@ -1062,6 +1064,14 @@
           it("Näytetään", function() {
             expect(hakemusKorkeakouluJatkoHaku.valintatulokset()[0].tila).to.equal('Opiskelupaikka vastaanotettu')
             expect(hakemusKorkeakouluJatkoHaku.ilmoittautuminen(0).visible).to.equal(true)
+            expect(hakemusKorkeakouluJatkoHaku.ilmoittautuminen(0).linkTarget).to.equal("_blank")
+          })
+        })
+        describe("OhjeetUudelleOpiskelijalle-linkki on hakukohteella", function() {
+          it("Näytetään", function() {
+            expect(hakemusKorkeakouluJatkoHaku.ilmoittautuminen(0).ohjeetUudelleOpiskelijalleText).to.equal("Tietoa uudelle opiskelijalle")
+            expect(hakemusKorkeakouluJatkoHaku.ilmoittautuminen(0).ohjeetUudelleOpiskelijalleUrl).to.equal("https://www.helsinki.fi/fi/opiskelu/ohjeita-hakemuksen-jattaneille-yhteishaku")
+            expect(hakemusKorkeakouluJatkoHaku.ilmoittautuminen(0).ohjeetUudelleOpiskelijalleTarget).to.equal("_blank")
           })
         })
       })
@@ -1115,7 +1125,7 @@
 
           it("näytetään tieto valinnan ehdollisuudesta", function() {
             expect(hakemusKorkeakouluJatkoHaku.ilmoittautuminen(0).title()).to.equal(
-              'Opiskelijavalintasi on vielä ehdollinen. Jyväskylän ammattikorkeakoulu, Ammatillinen opettajakorkeakoulu - Ammatillinen erityisopettajankoulutus')
+              'Opiskelijavalintasi on vielä ehdollinen. Jyväskylän ammattikorkeakoulu, Ammatillinen opettajakorkeakoulu - Ammatillinen erityisopettajankoulutus Tietoa uudelle opiskelijalle')
           })
 
           it("Oili-linkki ei tule näkyviin", function() {
@@ -1146,7 +1156,7 @@
             expect(hakemusKorkeakouluYhteishakuSyksy2014.vastaanotto(0).title()).to.equal('Opiskelupaikka myönnetty ' +
               'Helsingin yliopisto, Matemaattis-luonnontieteellinen tiedekunta - Fysiikka (aineenopettaja), luonnontieteiden kandidaatti ja filosofian maisteri')
             expect(hakemusKorkeakouluYhteishakuSyksy2014.ilmoittautuminen(0).title()).to.equal(
-              'Muista tehdä lukuvuosi-ilmoittautuminen korkeakouluun Diakonia-ammattikorkeakoulu, Järvenpään toimipiste - Sosionomi (AMK), monimuotototeutus')
+              'Muista tehdä lukuvuosi-ilmoittautuminen korkeakouluun Diakonia-ammattikorkeakoulu, Järvenpään toimipiste - Sosionomi (AMK), monimuotototeutus Tietoa uudelle opiskelijalle')
           })
 
 
@@ -1156,7 +1166,7 @@
 
             it("Näkyy oili linkki molemmille paikoille", function () {
               expect(hakemusKorkeakouluYhteishakuSyksy2014.ilmoittautuminen(0).title()).to.equal(
-                'Muista tehdä lukuvuosi-ilmoittautuminen korkeakouluun Diakonia-ammattikorkeakoulu, Järvenpään toimipiste - Sosionomi (AMK), monimuotototeutus')
+                'Muista tehdä lukuvuosi-ilmoittautuminen korkeakouluun Diakonia-ammattikorkeakoulu, Järvenpään toimipiste - Sosionomi (AMK), monimuotototeutus Tietoa uudelle opiskelijalle')
               expect(hakemusKorkeakouluYhteishakuSyksy2014.ilmoittautuminen(1).title()).to.equal(
                 'Muista tehdä lukuvuosi-ilmoittautuminen korkeakouluun Helsingin yliopisto, Matemaattis-luonnontieteellinen tiedekunta - Fysiikka (aineenopettaja), luonnontieteiden kandidaatti ja filosofian maisteri')
             })
