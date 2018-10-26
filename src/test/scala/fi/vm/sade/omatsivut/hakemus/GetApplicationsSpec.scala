@@ -23,6 +23,14 @@ class GetApplicationsSpec extends HakemusApiSpecification with FixturePerson wit
       }
     }
 
+    "contain the link to 'information for new students'" in {
+      withApplicationsResponse { resp =>
+        val a = resp.applications.map(_.hakemus.state)
+        println(a) // Look, state objects are incorrectly deserialized from JSON :(
+        resp.allApplicationsFetched must_== true // TODO:
+      }
+    }
+
     "tell for basic application that no additional info is required" in {
       withHakemusWithEmptyAnswers(hakemusNivelKesa2013WithPeruskouluBaseEducationId) { hakemusInfo =>
         hakemusInfo.hakemus.requiresAdditionalInfo must_== false

@@ -183,6 +183,7 @@
     "goToRegistration": "Proceed to registration",
     "conditionalAcceptanceTitle": "The student admission is still conditional.",
     "conditionalAcceptanceInfo": "You can register after the admission has been confirmed.",
+    "instructionsForNewStudents": "Instructions for new students",
     "opintoetuudet": {
       "studentFinancialAid": "Proceed to e-Services of KELA",
       "opintotukihakemus": "Apply for student financial aid"
