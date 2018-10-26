@@ -1052,6 +1052,14 @@
             expect(hakemusKorkeakouluJatkoHaku.ilmoittautuminen(0).visible).to.equal(true)
           })
         })
+        describe("OhjeetUudelleOpiskelijalle-linkki", function() {
+          it("Näytetään", function() {
+            console.log("PETAR")
+            console.log(hakemusKorkeakouluJatkoHaku.valintatulokset())
+            expect(page.ohjeetUudelleOpiskelijalleText()).to.equal("zirafaasdf")
+            expect(hakemusKorkeakouluJatkoHaku.valintatulokset().hakukohdeNimi).to.equal("majmun")
+          })
+        })
       })
       describe("jos on ottanut paikan vastaan yliopistohaussa, mutta ilmoittautuminen on loppunut", function () {
         before(page.applyValintatulosFixtureAndOpen("hyvaksytty-vastaanottanut-korkeakoulu", {"haku": "korkeakoulu-yhteishaku", "ohjausparametrit": "ilmoittautuminen-loppunut"}))

@@ -86,7 +86,7 @@ sealed trait HakemuksenTila {
   def withoutKelaUrl: HakemuksenTila
 }
 
-// Alkutila, ei editoitatissa
+// Alkutila, ei editoitavissa
 case class Submitted(id: String = "SUBMITTED") extends HakemuksenTila {
   override def withoutKelaUrl: HakemuksenTila = this
 }

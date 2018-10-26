@@ -114,6 +114,14 @@ function ApplicationListPage() {
       return S(".tuloskirje").text().trim()
     },
 
+    ohjeetUudelleOpiskelijalleText: function () {
+      return S("#ohjeet-uudelle-opiskelijalle").text().trim()
+    },
+
+    ohjeetUudelleOpiskelijalleUrl: function () {
+      return S("#ohjeet-uudelle-opiskelijalle").attr("href")
+    },
+
     getApplication: function(applicationIndex) {
       return Application(applicationIndex)
     },

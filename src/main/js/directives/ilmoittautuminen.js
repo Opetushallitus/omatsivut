@@ -27,6 +27,10 @@ export default function () {
         };
 
         $scope.ilmoittautumistietoNaytetaan = function(tulos) {
+
+          console.log("PETAR tulos = ")
+          console.log(tulos)
+
           if (tulos && tulos.ilmoittautumistila && tulos.ilmoittautumistila.ilmoittautumistila) {
             return $scope.statesToReport[tulos.ilmoittautumistila.ilmoittautumistila];
           } else return false;
