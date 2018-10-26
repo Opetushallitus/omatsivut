@@ -177,6 +177,8 @@
 
   "registration": {
     "pleaseRegister": "Ilmoittaudu lukukaudelle",
+    "reminder": "Muista tehdä lukuvuosi-ilmoittautuminen korkeakouluun",
+    "reminderInfo": "Saadaksesi opiskeluoikeuden vastaanottamassasi opiskelupaikassa sinun tulee tehdä lukuvuosi-ilmoittautuminen",
     "goToRegistration": "Siirry ilmoittautumaan",
     "conditionalAcceptanceTitle": "Opiskelijavalintasi on vielä ehdollinen.",
     "conditionalAcceptanceInfo": "Pääset ilmoittautumaan vasta valinnan vahvistamisen jälkeen.",
@@ -211,12 +213,16 @@
 
   "lasnaoloilmoittautuminen": {
     "title": "Läsnäoloilmoittautuminen",
+    "title_kk": "Lukuvuosi-ilmoittautuminen",
     "send": "Lähetä ilmoittautuminen",
     "semester": "Läsnä koko lukuvuoden",
     "spring": "Läsnä kevätlukukauden",
     "autumn": "Läsnä vain syyslukukauden",
     "away": "Poissa koko lukukauden",
+    "no_signup": "Et ilmoittautunut",
+    "away_spring": "Poissa kevätlukukauden",
     "confirmation": "Olet ilmoittautunut __date__ klo __time__ vastauksella: ",
+    "confirmation_kk": "Olet ilmoittautunut vastauksella: ",
     "info": "Poissaolon myöntää aina oppilaitos. Jos haluat ilmoittautua poissaolevaksi, ota yhteys oppilaitokseen.",
     "error": {
       "notFound": "Opiskelupaikkaa ei löytynyt. Yritä hetken päästä uudelleen.",

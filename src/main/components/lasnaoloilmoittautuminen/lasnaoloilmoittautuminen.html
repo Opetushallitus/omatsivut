@@ -1,10 +1,12 @@
+<!-- Toisen asteen ilmoittautumislomake -->
 <form class="lasnaoloilmoittautuminenForm" name="lasnaoloilmoittautuminenForm">
     <fieldset>
         <div class="lasnaolo-ilmoittautuminen">
-            <span class="label-highlight">{{ localization('lasnaoloilmoittautuminen.title') }}</span>
-            <span>{{ application.henkiloNimi }} - {{ tulos.tarjoajaNimi }} {{ tulos.hakukohdeNimi }}</span>
+            <span class="label-highlight">{{ localization('lasnaoloilmoittautuminen.title') }} </span>
+            <span> {{ application.henkiloNimi }} </span>
+            <span class="tarjoaja-hakukohde"> - {{ tulos.tarjoajaNimi }} {{ tulos.hakukohdeNimi }} </span>
         </div>
-        <div ng-hide="ilmoittautunut">
+        <div ng-hide="ilmoittautunut || !application.haku.toisenasteenhaku">
             <div class="instruction">{{ localization('lasnaoloilmoittautuminen.info') }}</div>
 
             <!-- Syksyllä alkavat koulutukset -->
@@ -29,9 +31,6 @@
             <div class="lasnaolo-error" ng-if="error">
                 {{ getErrorTranslation() }}
             </div>
-        </div>
-        <div class="lasnaolo-confirmation" ng-if="ilmoittautunut">
-            {{ localization('lasnaoloilmoittautuminen.confirmation', getEnrolmentMessageKeys()) }} {{ getStateTranslation() }}
         </div>
     </fieldset>
 </form>

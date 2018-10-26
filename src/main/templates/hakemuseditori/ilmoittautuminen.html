@@ -1,23 +1,44 @@
-<!-- kk -->
+<!-- Käydään läpi kaikki hakutoiveet ja luodaan tarvittaessa ulkoiset ilmoittautumislinkit (kk), ilmoittautumiskäli (2.aste) ja
+näytetään mahdolliset ilmoittautumiset -->
 <div class="ilmoittautuminen-item fade-transitions" ng-repeat="tulos in hakukohteet()">
-    <div ng-if="!application.haku.toisenasteenhaku && linkkiOK(tulos)">
+    <!-- ulkoinen ilmoittautumislinkki, vain kk -->
+    <div class="kk-lasnaolo" ng-if="!application.haku.toisenasteenhaku && tulos.ilmoittautumistila.ilmoittauduttavissa && linkkiOK(tulos)">
         <header>
-            <strong ng-if="tulos.ehdollisestiHyvaksyttavissa">{{ localization('registration.conditionalAcceptanceTitle') }}</strong>
-            <strong ng-if="!tulos.ehdollisestiHyvaksyttavissa">{{ localization('registration.pleaseRegister') }}</strong>
-            {{ tulos.tarjoajaNimi }} - {{ tulos.hakukohdeNimi }}
+          <strong ng-if="tulos.ehdollisestiHyvaksyttavissa">{{ localization('registration.conditionalAcceptanceTitle') }}</strong>
+          <strong ng-if="!tulos.ehdollisestiHyvaksyttavissa">{{ localization('registration.reminder') }}</strong>
+          <span class="tarjoaja-hakukohde">{{ tulos.tarjoajaNimi }} - {{ tulos.hakukohdeNimi }}</span>
         </header>
         <span ng-if="tulos.ehdollisestiHyvaksyttavissa">{{ localization('registration.conditionalAcceptanceInfo') }}</span>
-        <a ng-if="!tulos.ehdollisestiHyvaksyttavissa" href="{{oili()}}">{{ localization('registration.goToRegistration') }}</a>
+        <span ng-if="!tulos.ehdollisestiHyvaksyttavissa">
+          <p>{{ localization('registration.reminderInfo') }}</p>
+          <a href="{{oili()}}">{{ localization('registration.goToRegistration') }}</a>
+        </span>
     </div>
-</div>
 
-<!-- 2. aste -->
-<div class="ilmoittautuminen-item fade-transitions" ng-repeat="tulos in hakukohteet()">
-    <div class="result-list" ng-if="application.haku.toisenasteenhaku && tulos.vastaanottotila === 'VASTAANOTTANUT_SITOVASTI'">
+    <!-- ilmoittautumiskäli, 2. aste -->
+    <div class="result-list" ng-if="application.haku.toisenasteenhaku && tulos.vastaanottotila === 'VASTAANOTTANUT_SITOVASTI' && !ilmoittautumistietoNaytetaan(tulos)">
         <div class="result-list-wrap">
-            <div class="result-list-cell flex-100">
-                <lasnaoloilmoittautuminen application="application" tulos="tulos"/>
-            </div>
+        <div class="result-list-cell flex-100">
+          <lasnaoloilmoittautuminen application="application" tulos="tulos"/>
         </div>
+      </div>
+    </div>
+
+    <!-- tieto opintopolkuun rekisteröidystä läsnäoloilmoittautumisesta jos sellainen on-->
+    <div class="lasnaolo-ilmoittautuminen-container" ng-if="ilmoittautumistietoNaytetaan(tulos)">
+      <fieldset>
+        <div class="lasnaolo-ilmoittautuminen">
+          <span class="label-highlight"> {{ application.haku.toisenasteenhaku ?
+            localization('lasnaoloilmoittautuminen.title') : localization('lasnaoloilmoittautuminen.title_kk') }}</span>
+          <span> {{ application.henkiloNimi }} </span>
+          <span class="tarjoaja-hakukohde"> {{ tulos.tarjoajaNimi }} {{ tulos.hakukohdeNimi }}</span>
+        </div>
+        <div class="lasnaolo-confirmation" ng-if="application.haku.toisenasteenhaku">
+          {{ localization('lasnaoloilmoittautuminen.confirmation', getEnrolmentMessageKeys(tulos)) }} {{ getStateTranslation(tulos) }}
+        </div>
+        <div class="lasnaolo-confirmation" ng-if="!application.haku.toisenasteenhaku">
+          {{ localization('lasnaoloilmoittautuminen.confirmation_kk') }} {{ getStateTranslation(tulos) }}
+        </div>
+      </fieldset>
     </div>
 </div>
