@@ -1,6 +1,7 @@
 import { getLanguage } from '../staticResources';
 import { getBearerToken, removeBearerToken } from '../util';
 import Hakemus from '../models/hakemus';
+import '../../less/hakutoiveidenMuokkaus.less';
 
 export default ['$scope', '$location', '$http', function($scope, $location, $http) {
   const decodedUrl = decodeURIComponent($location.url());
@@ -8,7 +9,7 @@ export default ['$scope', '$location', '$http', function($scope, $location, $htt
   const token = matches && matches[1];
   const baseUrl = 'insecure/applications/application/';
 
-  // Ladataan sivu sen jälkeen kun vastaanottotieto on lähetetty
+  // Ladataan sivu sen <jälkeen kun vastaanottotieto on lähetetty
   $scope.$on("hakutoive-vastaanotettu", function() {
     location.reload();
   });
