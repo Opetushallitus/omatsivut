@@ -2,6 +2,7 @@ package fi.vm.sade.ataru
 
 import java.util.concurrent.TimeUnit
 
+import fi.vm.sade.hakemuseditori.auditlog.{Audit, ShowHakemus}
 import fi.vm.sade.hakemuseditori.domain.Language
 import fi.vm.sade.hakemuseditori.hakemus.domain.{Active, EducationBackground, HakemuksenTila, Hakemus, HakukausiPaattynyt, HakukierrosPaattynyt}
 import fi.vm.sade.hakemuseditori.hakemus.{HakemusInfo, ValintatulosFetchStrategy}
@@ -14,6 +15,7 @@ import fi.vm.sade.hakemuseditori.viestintapalvelu.TuloskirjeComponent
 import fi.vm.sade.haku.oppija.hakemus.domain.dto.SyntheticApplication
 import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
+import fi.vm.sade.utils.Timer.timed
 import fi.vm.sade.utils.cas.{CasAuthenticatingClient, CasClient, CasParams}
 import javax.servlet.http.HttpServletRequest
 import org.http4s.Method.GET
@@ -51,6 +53,7 @@ trait AtaruServiceComponent  {
                          valintatulosFetchStrategy: ValintatulosFetchStrategy): List[HakemusInfo] = {
       val now = new LocalDateTime().toDate.getTime
       val henkilo = oppijanumerorekisteriService.henkilo(personOid)
+
       getApplications(personOid)
         .map(a => (
           a,
@@ -88,6 +91,7 @@ trait AtaruServiceComponent  {
               requiredPaymentState = None,
               notifications = Map()
             )
+            Audit.oppija.log(ShowHakemus(request, hakemus.personOid, hakemus.oid, haku.oid))
             HakemusInfo(
               hakemus = hakemus,
               errors = List(),
