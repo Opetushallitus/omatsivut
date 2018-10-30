@@ -180,7 +180,7 @@ trait NonSensitiveApplicationServletContainer {
       (for {
         token <- jwtAuthorize
         update <- Try(Serialization.read[HakemusMuutos](request.body))
-        validatedHakemus <- hakemusEditori.validateHakemus(update)
+        validatedHakemus <- hakemusEditori.validateHakemus(request, update)
           .fold[Try[HakemusInfo]](Failure(new RuntimeException))(Success(_))
       } yield {
         Ok(InsecureHakemusInfo(jwt.encode(token),

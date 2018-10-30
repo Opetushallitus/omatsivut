@@ -2,6 +2,7 @@ package fi.vm.sade.omatsivut.servlet
 
 import fi.vm.sade.groupemailer.GroupEmailComponent
 import fi.vm.sade.hakemuseditori._
+import fi.vm.sade.hakemuseditori.auditlog.Audit
 import fi.vm.sade.hakemuseditori.hakemus.domain.HakemusMuutos
 import fi.vm.sade.hakemuseditori.hakemus.{ApplicationValidatorComponent, Fetch, HakemusInfo, HakemusRepositoryComponent, SpringContextComponent}
 import fi.vm.sade.hakemuseditori.json.JsonFormats
@@ -88,8 +89,7 @@ trait ApplicationsServletContainer {
 
     post("/validate/:oid") {
       val muutos = Serialization.read[HakemusMuutos](request.body)
-
-      hakemusEditori.validateHakemus(muutos) match {
+      hakemusEditori.validateHakemus(request, muutos) match {
         case Some(hakemusInfo) => hakemusInfo
         case _ => InternalServerError("error" -> "Internal service unavailable")
       }
