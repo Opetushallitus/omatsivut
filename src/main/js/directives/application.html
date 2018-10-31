@@ -111,7 +111,7 @@
             </question>
         </section>
 
-        <section ng-show="application.hasForm" class="application-section henkilotiedot" ng-if="application.editHenkilotiedotEnabled()">
+        <section ng-show="application.hasForm && !application.isHakutoiveidenMuokkaus" class="application-section henkilotiedot" ng-if="application.editHenkilotiedotEnabled()">
             <header class="application-section-heading">
                 {{ localization('label.contactDetails') }}
             </header>

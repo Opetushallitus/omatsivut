@@ -30,6 +30,7 @@ export default ['$scope', '$location', '$http', function($scope, $location, $htt
         $scope.loading = false;
         $scope.application = new Hakemus(response.data);
         $scope.application.oiliJwt = response.oiliJwt;
+        $scope.application.isHakutoiveidenMuokkaus = true;
         const henkilotiedot = response.data.hakemus.answers.henkilotiedot;
         $scope.allowVastaanotto = !henkilotiedot.Henkilotunnus;
         $scope.user = {
