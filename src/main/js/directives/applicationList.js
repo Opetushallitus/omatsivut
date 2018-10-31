@@ -22,7 +22,11 @@ export default ["restResources", function (restResources) {
 
       function success(data) {
         $scope.allApplicationsFetched = data.allApplicationsFetched;
-        $scope.applications = _.map(data.applications, function(json) { return new Hakemus(json) });
+        $scope.applications = _.map(data.applications, function(json) {
+          var application = new Hakemus(json);
+          application.isHakutoiveidenMuokkaus = false;
+          return application;
+        });
         if($scope.applications.length > 0) {
           $scope.applicationStatusMessage = "";
           $scope.applicationStatusMessageType = ""
