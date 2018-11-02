@@ -26,7 +26,7 @@ export default ["restResources", function (restResources) {
 
       $scope.init = function() {
         var hakutoive = $scope.application.hakutoiveet.find(function(element) {
-            return element.data['Koulutus-id'] === $scope.tulos.hakukohdeOid;
+          return element.data['Koulutus-id'] === $scope.tulos.hakukohdeOid;
         });
 
         $scope.tulos.koulutuksenAlkaminen = hakutoive.koulutuksenAlkaminen ? hakutoive.koulutuksenAlkaminen : { kausiUri: 'kausi_s#1' };
@@ -38,17 +38,17 @@ export default ["restResources", function (restResources) {
       $scope.postLasnaoloilmoittautuminen = function() {
         $scope.error = false;
         var body = {
-            hakukohdeOid: $scope.tulos.hakukohdeOid,
-            muokkaaja: '',
-            tila: $scope.states[$scope.ilmoittautuminen],
-            selite: 'Omien sivujen läsnäoloilmoittautuminen'
+          hakukohdeOid: $scope.tulos.hakukohdeOid,
+          muokkaaja: '',
+          tila: $scope.states[$scope.ilmoittautuminen],
+          selite: 'Omien sivujen läsnäoloilmoittautuminen'
         };
         restResources.lasnaoloilmoittautuminen.save({ hakuOid: $scope.application.haku.oid , hakemusOid: $scope.application.oid }, JSON.stringify(body), onSuccess, onError);
       };
 
-                $scope.getErrorTranslation = function() {
-                    return localize('lasnaoloilmoittautuminen.error.' + $scope.error);
-                };
+      $scope.getErrorTranslation = function() {
+        return localize('lasnaoloilmoittautuminen.error.' + $scope.error);
+      };
 
       $scope.schoolStartsInSpring = function () {
         return $scope.tulos.koulutuksenAlkaminen.kausiUri === 'kausi_k#1'
@@ -77,7 +77,6 @@ export default ["restResources", function (restResources) {
         }
       }
 
-            }
-        }
-    }])
-};
+    }
+  }
+}]
