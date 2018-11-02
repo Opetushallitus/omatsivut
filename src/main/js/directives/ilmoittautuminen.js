@@ -38,7 +38,7 @@ export default function () {
         };
 
         $scope.getStateTranslation = function(tulos) {
-          return localization('lasnaoloilmoittautuminen.' + $scope.statesToReport[tulos.ilmoittautumistila.ilmoittautumistila] );
+          return localize('lasnaoloilmoittautuminen.' + $scope.statesToReport[tulos.ilmoittautumistila.ilmoittautumistila] );
         };
     }
   }
