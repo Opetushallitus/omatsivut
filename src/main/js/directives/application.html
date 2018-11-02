@@ -1,0 +1,133 @@
+<div role="presentation" class="hakemuseditori">
+    <section class="application-header">
+        <h2>{{application.haku.name }}</h2>
+
+        <application-periods haku="application.haku"></application-periods>
+
+        <div class="timestamp-row" ng-show="application.haku.jarjestelmanHakulomake || application.hakemusSource === 'Ataru'">
+            <i ng-if="application.previewUrl" aria-hidden="true" class="icon-doc-text"></i>
+            <a ng-if="application.previewUrl"
+               ng-href="{{ application.previewUrl }}"
+               ng-class="{disabled: applicationForm.$dirty|| statusMessageType=='pending' || isValidating}"
+               target="_blank">{{ localization('button.showApplication') }}</a>
+            <span ng-if="application.tuloskirje && application.tuloskirje.createdDate">
+                <span class="delimiter"> | </span>
+                <a class="tuloskirje" ng-href="{{url('omatsivut.applications.tuloskirje',application.haku.oid)}}" ng-show="application.hasForm" ng-class="{disabled: applicationForm.$dirty|| statusMessageType=='pending' || isValidating}" target="_blank">
+                    {{ localization('button.downloadLetter', {
+                    luotu: application.tuloskirje.createdDate
+                    }) }}
+                </a>
+            </span>
+            <span class="timestamp" ng-if="false" ng-class="{disabled: form.$dirty || statusMessageType=='pending' || isValidating}">
+                {{ timestampLabel() }} <time formatted-time="application.updated" format="LLL" />
+            </span>
+            <div callout="attachments"
+                 ng-if="application.previewUrl">
+                <localized-link key="message.rememberSendAttachments"
+                                href="{{ application.previewUrl + '#liitteet' }}"
+                                target="_blank">
+                </localized-link>
+            </div>
+        </div>
+    </section>
+
+    <section class="application-status" role="presentation">
+        <div class="application-status-item" ng-if="!application.haku.active && application.state.id != 'HAKUKIERROSPAATTYNYT' && !application.allResultsAvailable() && application.vastaanotettavatHakutoiveet().length == 0">
+            {{ localization('label.applicationPeriodEnded') }}
+            <span ng-if="application.haku.aikataulu.julkistus">
+                {{ localization('label.resultsPublishedDate') }} <time formatted-time="application.haku.aikataulu.julkistus.end" format="LL" />.
+            </span>
+        </div>
+
+        <div class="application-status-item" ng-if="application.state.id == 'HAKUKIERROSPAATTYNYT'">
+            {{ localization('label.applicationRoundEnded') }}
+        </div>
+
+        <div class="application-status-item" ng-if="application.haku.active && (application.state.id == 'POSTPROCESSING' || application.state.id == 'SUBMITTED')">
+            {{ localization("message.applicationIsInPostProcessing") }}
+        </div>
+
+        <div class="paymentStatus">
+            <div ng-if="application.requiredPaymentState == 'OK'" class="alert alert-success">
+                {{ localization("payment.status.ok") }}
+            </div>
+            <div ng-if="application.requiredPaymentState == 'NOTIFIED'" class="alert alert-info">
+                {{ localization("payment.status.notified") }}
+            </div>
+            <div ng-if="application.requiredPaymentState == 'NOT_OK'" class="alert alert-danger">
+                {{ localization("payment.status.notOk") }}
+            </div>
+        </div>
+    </section>
+
+    <section class="hakutoiveen-vastaanotto" ng-if="application.vastaanotettavatHakutoiveet().length > 0">
+        <hakutoiveen-vastaanotto
+                application-oid="application.oid"
+                haku="application.haku"
+                hakutoiveet="application.vastaanotettavatHakutoiveet()"
+                callback="hakutoiveVastaanotettu"
+        ></hakutoiveen-vastaanotto>
+    </section>
+
+    <section class="ilmoittautuminen">
+        <ilmoittautuminen hakukohteet="application.ilmoittautumisLinkit()"
+                          oili="application.oiliUrl()"
+                          application="application">
+        </ilmoittautuminen>
+        <kela ng-show="application.kelaURL()" kela="application.kelaURL()">
+        </kela>
+    </section>
+
+    <form name="applicationForm" novalidate>
+
+        <section class="application-section application-valintatulos-error" ng-if="!application.resultFetchedSuccessfully()">
+            <span role="status" class="status-message error">{{ localization("error.valintatulosFailed") }}</span>
+        </section>
+
+        <section class="application-section application-valintatulos" ng-if="application.resultFetchedSuccessfully() &&
+                                                                             application.hasSomeResults() &&
+                                                                             (application.hasSomeNonKeskenResults() || !application.editHakutoiveetEnabled())">
+            <valintatulos
+                    application="application"
+                    data="application.state.valintatulos"
+                    final="application.allResultsAvailable()"
+                    callback="hakutoiveVastaanotettu"
+            ></valintatulos>
+        </section>
+
+        <section ng-show="application.hasForm" class="application-section hakutoiveet" ng-if="application.editHakutoiveetEnabled()">
+            <header class="application-section-heading">
+                <span>{{ localization('label.preferences') }}</span>
+                <button class="save-btn" ng-hide="application.applicationPeriodsInactive()" ng-disabled="shouldSaveButtonBeDisabled()" ng-click="saveApplication()">{{ localization('button.save') }}</button>
+                <span role="status" class="status-message" ng-class="statusMessageStyleModifier()" ng-bind="statusMessage"></span>
+            </header>
+
+              <hakutoiveet application="application" preference-moved="preferenceMoved" validating="isValidating">
+              </hakutoiveet>
+          </section>
+
+        <section ng-show="application.hasForm" class="application-section additional-questions" ng-if="application.editHakutoiveetEnabled() && application.additionalQuestions.questionNodes.length > 0">
+            <question question-node="application.additionalQuestions" application="application" class="questions" level="-1">
+            </question>
+        </section>
+
+        <section ng-show="application.hasForm && !application.isHakutoiveidenMuokkaus" class="application-section henkilotiedot" ng-if="application.editHenkilotiedotEnabled()">
+            <header class="application-section-heading">
+                {{ localization('label.contactDetails') }}
+            </header>
+
+            <henkilotiedot application="application">
+            </henkilotiedot>
+            <header class="application-section-heading" ng-if="!application.editHakutoiveetEnabled()">
+                <button class="save-btn" ng-disabled="shouldSaveButtonBeDisabled()" ng-click="saveApplication()">{{ localization('button.save') }}</button>
+                <span role="status" class="status-message" ng-class="statusMessageStyleModifier()" ng-bind="statusMessage"></span>
+            </header>
+        </section>
+        <section ng-show="application.hasForm" class="application-section application-footer" ng-if="application.editHakutoiveetEnabled()">
+            <header class="application-section-heading">
+                <button class="save-btn" ng-disabled="shouldSaveButtonBeDisabled()" ng-click="saveApplication()">{{ localization('button.save') }}</button>
+                <span role="status" class="status-message" ng-class="statusMessageStyleModifier()" ng-bind="statusMessage"></span>
+            </header>
+        </section>
+    </form>
+</div>

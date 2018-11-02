@@ -122,11 +122,17 @@ function ApplicationApi() {
         },
         moveDown: function () {
           return waitForChange(function() {
+            if (!api.arrowDown().isEnabled()) {
+              console.error('trying to click arrow down, but it is disabled!', api.arrowDown().element())
+            }
             api.arrowDown().click()
           })
         },
         moveUp: function () {
           return waitForChange(function() {
+            if (!api.arrowUp().isEnabled()) {
+              console.error('trying to click arrow up, but it is disabled!', api.arrowUp().element())
+            }
             api.arrowUp().click()
           })
         },
@@ -223,8 +229,7 @@ function ApplicationApi() {
 
         selectKoulutus: function (index) {
           return function() {
-            var selectElement = el().find(".koulutus select")
-            selectElement.val(index).change()
+            el().find('.koulutus select :nth-child(' + index + ')').prop('selected', true).change();
             return wait.forAngular()
           }
         }

@@ -67,7 +67,7 @@
     describe("kun lisätään hakukohde", function() {
       before(
           page.getApplication().getPreference(3).selectOpetusPiste("Lap"),
-          page.getApplication().getPreference(3).selectKoulutus(1)
+          page.getApplication().getPreference(3).selectKoulutus(3)
       )
 
       describe("lisäämisen jälkeen", function() {
@@ -81,12 +81,36 @@
 
         it("näytetään uudet kysymykset", function() {
           var questionTitles = page.getApplication().questionsForApplication().titles()
-          expect(questionTitles).to.deep.equal([
+          expect(questionTitles).to.deep.equal([ 'Haetko koulutukseen harkintaan perustuvassa valinnassa?',
+            'Haetko urheilijan ammatilliseen koulutukseen?',
+            'Aiemmat opinnot',
+            'Liikunnanopettajan nimi',
+            'Lukuaineiden keskiarvo tai arvio siitä',
+            'Pakollisen liikunnan arvosana tai arvio siitä',
+            'Urheilu',
+            'Urheilulaji nro 1, jolla haet urheiluoppilaitokseen',
+            'Lajiliitto',
+            'Urheilulaji nro 2, jolla haet urheiluoppilaitokseen',
+            'Lajiliitto',
+            'Urheilusaavutukset',
+            'Urheilusaavutukset',
+            'Valmentajan yhteystiedot',
+            'Nimi',
+            'Puhelinnumero',
+            'Sähköpostiosoite',
+            'Valmennusryhmä',
+            'Maajoukkue/Lajiliitto',
+            'Alue/Piiri',
+            'Urheiluseura ja sen valmennusryhmä tai joukkue',
+            'Haetko koulutukseen harkintaan perustuvassa valinnassa?',
+            'Tällä alalla on terveydentilavaatimuksia, jotka voivat olla opiskelijaksi ottamisen esteenä. Onko sinulla terveydellisiä tekijöitä, jotka voivat olla opiskelijaksi ottamisen esteenä?',
+            'Tässä koulutuksessa opiskelijaksi ottamisen esteenä voi olla aiempi päätös opiskeluoikeuden peruuttamisessa. Onko opiskeluoikeutesi aiemmin peruutettu terveydentilasi tai muiden henkilöiden turvallisuuden vaarantamisen takia?',
+            'Haluaisitko suorittaa ammatillisen perustutkinnon ohella lukio-opintoja/ylioppilastutkinnon?',
             'Tällä alalla on terveydentilavaatimuksia, jotka voivat olla opiskelijaksi ottamisen esteenä. Onko sinulla terveydellisiä tekijöitä, jotka voivat olla opiskelijaksi ottamisen esteenä?',
             'Tässä koulutuksessa opiskelijaksi ottamisen esteenä voi olla aiempi päätös opiskeluoikeuden peruuttamisessa. Onko opiskeluoikeutesi aiemmin peruutettu terveydentilasi tai muiden henkilöiden turvallisuuden vaarantamisen takia?',
             'Haetko urheilijan ammatilliseen koulutukseen?',
-            'Oppisopimuskoulutus'
-          ])
+            'Oppisopimuskoulutus',
+            'Työkokemus kuukausina' ])
         })
 
         it("lomake ei ole vielä tallennettavissa", function() {
@@ -102,7 +126,13 @@
         before(
             function() { page.getApplication().questionsForApplication().enterAnswer(0, "Ei"); },
             function() { page.getApplication().questionsForApplication().enterAnswer(1, "Ei"); },
-            function() { page.getApplication().questionsForApplication().enterAnswer(2, "Ei"); },
+            function() { page.getApplication().questionsForApplication().enterAnswer(21, "Ei"); },
+            function() { page.getApplication().questionsForApplication().enterAnswer(22, "Ei"); },
+            function() { page.getApplication().questionsForApplication().enterAnswer(23, "Ei"); },
+            function() { page.getApplication().questionsForApplication().enterAnswer(24, "Ei"); },
+            function() { page.getApplication().questionsForApplication().enterAnswer(25, "Ei"); }, // Tällä alalla on terveydentilavaatimuksia...
+            function() { page.getApplication().questionsForApplication().enterAnswer(26, "Ei"); }, // Tässä koulutuksessa opiskelijaksi ottamisen esteenä...
+            function() { page.getApplication().questionsForApplication().enterAnswer(27, "Ei"); }, // Haetko urheilijan ammatilliseen koulutukseen?
             wait.forAngular
         )
 
@@ -122,14 +152,19 @@
               page.getApplication().isValidationErrorVisible().should.be.false
             })
 
-            it("näytetään yhä uudet kysymykset", function() {
+            it("näytetään yhä uudet kysymykset (paitsi urheilijan lisäkysymykset)", function() {
               var questionTitles = page.getApplication().questionsForApplication().titles()
-              expect(questionTitles).to.deep.equal([
+              expect(questionTitles).to.deep.equal([ 'Haetko koulutukseen harkintaan perustuvassa valinnassa?',
+                'Haetko urheilijan ammatilliseen koulutukseen?',
+                'Haetko koulutukseen harkintaan perustuvassa valinnassa?',
+                'Tällä alalla on terveydentilavaatimuksia, jotka voivat olla opiskelijaksi ottamisen esteenä. Onko sinulla terveydellisiä tekijöitä, jotka voivat olla opiskelijaksi ottamisen esteenä?',
+                'Tässä koulutuksessa opiskelijaksi ottamisen esteenä voi olla aiempi päätös opiskeluoikeuden peruuttamisessa. Onko opiskeluoikeutesi aiemmin peruutettu terveydentilasi tai muiden henkilöiden turvallisuuden vaarantamisen takia?',
+                'Haluaisitko suorittaa ammatillisen perustutkinnon ohella lukio-opintoja/ylioppilastutkinnon?',
                 'Tällä alalla on terveydentilavaatimuksia, jotka voivat olla opiskelijaksi ottamisen esteenä. Onko sinulla terveydellisiä tekijöitä, jotka voivat olla opiskelijaksi ottamisen esteenä?',
                 'Tässä koulutuksessa opiskelijaksi ottamisen esteenä voi olla aiempi päätös opiskeluoikeuden peruuttamisessa. Onko opiskeluoikeutesi aiemmin peruutettu terveydentilasi tai muiden henkilöiden turvallisuuden vaarantamisen takia?',
                 'Haetko urheilijan ammatilliseen koulutukseen?',
-                'Oppisopimuskoulutus'
-              ])
+                'Oppisopimuskoulutus',
+                'Työkokemus kuukausina' ])
             })
           })
 
@@ -161,7 +196,7 @@
     describe("kun lisätään ammatillinen hakukohde", function() {
       before(
           page.getApplication().getPreference(1).selectOpetusPiste("Helsingin Diakoniaopisto"),
-          page.getApplication().getPreference(1).selectKoulutus(1)
+          page.getApplication().getPreference(1).selectKoulutus(3)
       )
 
       it("seuraava hakukohde tulee muokattavaksi", function() {
@@ -185,7 +220,7 @@
     describe("kun lisätään lukion urheilulinja hakukohde", function() {
       before(
           page.getApplication().getPreference(1).selectOpetusPiste("Mäkelänrinteen lukio"),
-          page.getApplication().getPreference(1).selectKoulutus(0)
+          page.getApplication().getPreference(1).selectKoulutus(2)
       )
 
       it("seuraava hakukohde tulee muokattavaksi", function() {

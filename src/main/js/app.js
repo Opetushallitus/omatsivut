@@ -1,20 +1,55 @@
-require('babel-polyfill');
-require("angular");
-require('ng-resource')(window, angular);
-require('angular-module-sanitize');
-require('angular-animate');
-require('angular-cookies');
-require("../lib/ui-bootstrap-custom-tpls-0.10.0.min.js");
+import 'babel-polyfill';
+import angular from 'angular';
+import ngResource from 'angular-resource';
+import ngSanitize from 'angular-sanitize';
+import ngAnimate from 'angular-animate';
+import ngCookies from 'angular-cookies';
+import typeahead from 'angular-ui-bootstrap/src/typeahead/index.js';
+import '../less/main.less';
+import '../less/hakutoiveidenMuokkaus.less';
+import '../less/preview.less';
+
 require('./recursionHelper');
 require('../lib/angular-debounce');
+import { init } from './staticResources';
+import { isTestMode } from './util';
+// Services
+import ApplicationValidator from './services/applicationValidator';
+import AngularBacon from './services/angularBacon';
+import localize from './localization';
+import RestResources from './restResources';
+import Settings from './settings';
+import router from './config/router';
+// Directives
+import ApplicationList from './directives/applicationList';
+import Notification from './directives/notification';
+import Confirm from './directives/confirm';
+import Question from './directives/question';
+import LocalizedLink from './directives/localizedLink';
+import FormattedTime from './directives/formattedTime';
+import Sortable from './directives/sortable';
+import DisableClickFocus from './directives/disableClickFocus';
+import IgnoreDirty from './directives/ignoreDirty';
+import Application from './directives/application';
+import HakutoiveenVastaanotto from './directives/hakutoiveenVastaanotto';
+import Ilmoittautuminen from './directives/ilmoittautuminen';
+import Kela from './directives/kela';
+import Hakutoiveet from './directives/hakutoiveet';
+import Valintatulos from './directives/valintatulos';
+import Henkilotiedot from './directives/henkilotiedot';
+import ApplicationPeriods from './directives/applicationPeriods';
+import ClearableInput from './directives/clearableInput';
+import Callout from './directives/callout';
+import Lasnaoloilmoittautuminen from '../components/lasnaoloilmoittautuminen/lasnaoloilmoittautuminen';
 
-window.moment = require("moment");
-require("../lib/moment-locale-fi.js");
-require("moment/locale/sv.js");
-require("moment/locale/en-gb.js");
+// Controllers
+import HakutoiveidenMuokkausController from './controllers/hakutoiveidenMuokkaus';
+import AdditionalQuestionController from './controllers/additionalQuestionController';
+import HakutoiveController from './controllers/hakutoiveController';
 
-angular.module("templates", []);
-require("../templates/templates.js");
+import moment from './moment';
+window.moment = moment;
+
 require("../lib/oph_urls.js/index.js");
 require("./omatsivut-web-oph.js");
 
@@ -45,47 +80,57 @@ window.Service = {
     });
   }
 };
+//  "exceptionOverride"
+const listApp = angular.module('listApp', [ngResource, ngSanitize, ngAnimate, ngCookies, typeahead, "RecursionHelper", "debounce"]);
 
-var listApp = angular.module('listApp', ["ngResource", "ngSanitize", "ngAnimate", "ngCookies", "RecursionHelper", "ui.bootstrap.typeahead", "template/typeahead/typeahead-popup.html", "template/typeahead/typeahead-match.html", "debounce", "exceptionOverride", "templates"], function($locationProvider) {
-  $locationProvider.html5Mode(false)
-});
+listApp
+  .config(router)
+  .factory('restResources', RestResources)
+  .factory('angularBacon', AngularBacon)
+  .factory('applicationValidator', ApplicationValidator)
+  .factory('settings', Settings)
+  .directive('applicationList', ApplicationList)
+  .directive('notification', Notification)
+  .directive('confirm', Confirm)
+  .directive('question', Question)
+  .directive('localizedLink', LocalizedLink)
+  .directive('formattedTime', FormattedTime)
+  .directive('sortable', Sortable)
+  .directive('disableClickFocus', DisableClickFocus)
+  .directive('application', Application)
+  .directive('hakutoiveenVastaanotto', HakutoiveenVastaanotto)
+  .directive('ilmoittautuminen', Ilmoittautuminen)
+  .directive('kela', Kela)
+  .directive('hakutoiveet', Hakutoiveet)
+  .directive('valintatulos', Valintatulos)
+  .directive('henkilotiedot', Henkilotiedot)
+  .directive('applicationPeriods', ApplicationPeriods)
+  .directive('ignoreDirty', IgnoreDirty)
+  .directive('clearableInput', ClearableInput)
+  .directive('callout', Callout)
+  .directive('lasnaoloilmoittautuminen', Lasnaoloilmoittautuminen)
+  .controller('hakutoiveidenMuokkausController', HakutoiveidenMuokkausController)
+  .controller('additionalQuestionController', AdditionalQuestionController)
+  .controller('hakutoiveController', HakutoiveController);
 
-listApp.run(function($http, $cookies) {
+listApp.run(['$rootScope', function ($rootScope) {
+  $rootScope.localization = localize;
+}]);
+
+listApp.run(['$http', '$cookies', function($http, $cookies) {
   $http.defaults.headers.common['clientSubSystemCode'] = "omatsivut.frontend";
   if($cookies['CSRF']) {
     $http.defaults.headers.common['CSRF'] = $cookies['CSRF'];
   }
-});
+}]);
 
-var staticResources = require('./staticResources');
-require('./localization')(listApp, staticResources);
-require('./restResources')(listApp);
-
-require('./settings')(listApp, testMode());
-
-require('./hakemuseditori/hakemuseditori')(listApp);
-require('./directives/applicationList')(listApp);
-require('./directives/notification')(listApp);
-require('./controllers/hakutoiveidenMuokkaus')(listApp, staticResources);
-
-listApp.config(function ($httpProvider) {
-  $httpProvider.interceptors.push(require('./interceptors/nonSensitiveHakemus'))
-});
-
-listApp.run(function ($rootScope, localization) {
-  $rootScope.localization = localization
-});
-
-angular.element(document).ready(function() {
-  staticResources.init(function() {
-    angular.bootstrap(document, ['listApp']);
-    $("body").attr("aria-busy","false")
-  })
-});
-
-function testMode() {
-  return window.parent.location.href.indexOf("runner.html") > 0
-}
+angular.element(document).ready(
+  init()
+    .then(() => {
+      angular.bootstrap(document, ['listApp']);
+      document.getElementsByTagName('body')[0].setAttribute('aria-busy', 'false');
+    })
+);
 
 function logExceptionToPiwik(msg, data) {
   if (typeof _paq === 'undefined' || _paq == null) {
@@ -97,7 +142,7 @@ function logExceptionToPiwik(msg, data) {
 }
 
 window.onerror = function(errorMsg, url, lineNumber, columnNumber, exception) {
-  var data = url + ":" + lineNumber;
+  let data = url + ":" + lineNumber;
   if (typeof columnNumber !== "undefined") data += ":" + columnNumber;
   if (typeof exception !==  "undefined") data += "\n" + exception.stack;
   logExceptionToPiwik(errorMsg, data)
@@ -105,7 +150,7 @@ window.onerror = function(errorMsg, url, lineNumber, columnNumber, exception) {
 
 angular.module("exceptionOverride", []).factory("$exceptionHandler", function() {
   return function (exception) {
-    if (testMode()) {
+    if (isTestMode()) {
       throw exception
     } else {
       logExceptionToPiwik(exception.message, exception.stack)

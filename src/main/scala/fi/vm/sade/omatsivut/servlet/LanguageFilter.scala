@@ -8,7 +8,7 @@ import fi.vm.sade.utils.slf4j.Logging
 import org.scalatra.ScalatraFilter
 
 class LanguageFilter extends ScalatraFilter with Logging {
-  val cookieName = "i18next"
+  val cookieName = "lang"
   val cookieMaxAge = 60 * 60 * 24 * 1800
 
   val domainFi = "opintopolku.fi"
