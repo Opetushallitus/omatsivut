@@ -8,7 +8,7 @@ export default function () {
         oili: '&',
         application: '='
       },
-      templateUrl: require('./ilmoittautuminen.html'),
+      template: require('./ilmoittautuminen.html'),
       link: function ($scope, element, attrs) {
         $scope.localization = localize;
 
