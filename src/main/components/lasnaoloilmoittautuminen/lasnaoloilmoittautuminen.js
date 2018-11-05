@@ -46,8 +46,12 @@ export default ["restResources", function (restResources) {
         restResources.lasnaoloilmoittautuminen.save({ hakuOid: $scope.application.haku.oid , hakemusOid: $scope.application.oid }, JSON.stringify(body), onSuccess, onError);
       };
 
+      $scope.getStateTranslation = function() {
+        return localize('lasnaoloilmoittautuminen.' + $scope.ilmoittautuminen);
+      };
+
       $scope.getErrorTranslation = function() {
-        return localize('lasnaoloilmoittautuminen.error.' + $scope.error);
+          return localize('lasnaoloilmoittautuminen.error.' + $scope.error);
       };
 
       $scope.schoolStartsInSpring = function () {

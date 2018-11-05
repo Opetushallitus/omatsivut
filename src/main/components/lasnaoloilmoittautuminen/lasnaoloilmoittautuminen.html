@@ -32,5 +32,8 @@
                 {{ getErrorTranslation() }}
             </div>
         </div>
+        <div class="lasnaolo-confirmation" ng-if="ilmoittautunut">
+          {{ localization('lasnaoloilmoittautuminen.confirmation', getEnrolmentMessageKeys()) }} {{ getStateTranslation() }}
+        </div>
     </fieldset>
 </form>
