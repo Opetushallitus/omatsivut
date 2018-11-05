@@ -58,7 +58,8 @@ object Hakuaika {
   }
 }
 
-case class Hakukohde(oid: String, hakuaikaId: Option[String], koulutuksenAlkaminen: Option[KoulutuksenAlkaminen], kohteenHakuaika: Option[KohteenHakuaika])
+case class Hakukohde(oid: String, hakuaikaId: Option[String], koulutuksenAlkaminen: Option[KoulutuksenAlkaminen],
+                     kohteenHakuaika: Option[KohteenHakuaika], ohjeetUudelleOpiskelijalle: Option[String])
 
 case class KohteenHakuaika(start: Long, end: Long) {
   def active = new Interval(start, end).containsNow()
