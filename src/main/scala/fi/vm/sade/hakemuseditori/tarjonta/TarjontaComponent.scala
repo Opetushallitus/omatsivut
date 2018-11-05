@@ -153,7 +153,7 @@ trait TarjontaService {
 
   def filterHakutoiveOidsByActivity(activity: Boolean, hakutoiveet: List[Hakemus.HakutoiveData], haku: Haku): List[String] = {
     val hakukohteet = hakutoiveet.flatMap(entry => entry.get("Koulutus-id").map(oid => {
-      hakukohde(oid).getOrElse(Hakukohde(oid, None, None, Some(KohteenHakuaika(0L, 0L))))
+      hakukohde(oid).getOrElse(Hakukohde(oid, None, None, Some(KohteenHakuaika(0L, 0L)), None))
     }))
     hakukohteet.filter(hakukohde => hakukohde.kohteenHakuaika match {
       case Some(aika) => aika.active == activity

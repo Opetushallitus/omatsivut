@@ -61,7 +61,9 @@ case class Hakemus(oid: String,
 
 case class Tuloskirje(hakuOid: String, created: Long)
 
-case class Hakutoive(hakemusData: Option[HakutoiveData], koulutuksenAlkaminen: Option[KoulutuksenAlkaminen] = None, hakuaikaId: Option[String] = None, kohdekohtainenHakuaika: Option[KohteenHakuaika] = None)
+case class Hakutoive(hakemusData: Option[HakutoiveData], koulutuksenAlkaminen: Option[KoulutuksenAlkaminen] = None,
+                     hakuaikaId: Option[String] = None, kohdekohtainenHakuaika: Option[KohteenHakuaika] = None,
+                     ohjeetUudelleOpiskelijalle: Option[String] = None)
 
 object Hakutoive {
   def empty = Hakutoive(None)

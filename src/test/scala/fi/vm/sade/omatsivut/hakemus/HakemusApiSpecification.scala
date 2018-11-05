@@ -47,6 +47,7 @@ trait HakemusApiSpecification extends ScalatraTestSupport with Logging {
   def withApplicationsResponse[T](f: (ApplicationsResponse => T))(implicit personOid: PersonOid): T = {
     authGet("secure/applications") {
       val b = body
+      println("PETAR BODY " + b)
       val resp: ApplicationsResponse = Serialization.read[ApplicationsResponse](b)
       f(resp)
     }

@@ -153,6 +153,10 @@ export default class Hakemus {
     }).filter(function(k) {return k}).head().value()
   }
 
+  ohjeetUrl() {
+
+  }
+
   hasResultState(resultStates) {
     if (!_.isArray(resultStates))
       resultStates = [resultStates]
