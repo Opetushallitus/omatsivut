@@ -2,17 +2,14 @@
 näytetään mahdolliset ilmoittautumiset -->
 <div class="ilmoittautuminen-item fade-transitions" ng-repeat="tulos in hakukohteet()">
 
-  <div>PETAR hakukohteet {{hakukohteet()}}</div>
-
-
     <!-- ulkoinen ilmoittautumislinkki, vain kk -->
     <div class="kk-lasnaolo" ng-if="!application.haku.toisenasteenhaku && tulos.ilmoittautumistila.ilmoittauduttavissa && linkkiOK(tulos)">
         <header>
           <strong ng-if="tulos.ehdollisestiHyvaksyttavissa">{{ localization('registration.conditionalAcceptanceTitle') }}</strong>
           <strong ng-if="!tulos.ehdollisestiHyvaksyttavissa">{{ localization('registration.reminder') }}</strong>
           <span class="tarjoaja-hakukohde">{{ tulos.tarjoajaNimi }} - {{ tulos.hakukohdeNimi }}
-            <p ng-if="true">
-              <a id="ohjeet-uudelle-opiskelijalle" href="http://isokissa.org">{{ localization('registration.instructionsForNewStudents') }}</a> {{tulos}}
+            <p ng-if="ohjeetUudelleOpiskelijalle(tulos.hakukohdeOid)">
+              <a id="ohjeet-uudelle-opiskelijalle" ng-href="{{ohjeetUudelleOpiskelijalle(tulos.hakukohdeOid)}}">{{ localization('registration.instructionsForNewStudents') }}</a> {{tulos}}
             </p>
           </span>
         </header>

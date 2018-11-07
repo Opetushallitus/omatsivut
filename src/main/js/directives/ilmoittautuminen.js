@@ -1,6 +1,8 @@
 import localize from '../localization';
+const _ = require('underscore');
 
 export default function () {
+  // noinspection JSAnnotator
   return {
       restrict: 'E',
       scope: {
@@ -27,10 +29,6 @@ export default function () {
         };
 
         $scope.ilmoittautumistietoNaytetaan = function(tulos) {
-
-          console.log("PETAR tulos = ")
-          console.log(tulos)
-
           if (tulos && tulos.ilmoittautumistila && tulos.ilmoittautumistila.ilmoittautumistila) {
             return $scope.statesToReport[tulos.ilmoittautumistila.ilmoittautumistila];
           } else return false;
@@ -44,7 +42,16 @@ export default function () {
         $scope.getStateTranslation = function(tulos) {
           return localize('lasnaoloilmoittautuminen.' + $scope.statesToReport[tulos.ilmoittautumistila.ilmoittautumistila] );
         };
-    }
+
+        $scope.ohjeetUudelleOpiskelijalle = function(hakukohdeOid) {
+          var hakutoiveet = $scope.application.hakutoiveet ? $scope.application.hakutoiveet : [];
+          return hakutoiveet.filter(function(hakutoive) {
+              return hakutoive.ohjeetUudelleOpiskelijalle && hakutoive.data["Koulutus-id"] == hakukohdeOid;
+            }).map(function(hakutoive) {
+              return hakutoive.ohjeetUudelleOpiskelijalle;
+            }).pop();
+        }
+      }
   }
 }
 

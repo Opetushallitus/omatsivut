@@ -49,6 +49,7 @@ trait HakemusApiSpecification extends ScalatraTestSupport with Logging {
       val b = body
       println("PETAR BODY " + b)
       val resp: ApplicationsResponse = Serialization.read[ApplicationsResponse](b)
+      println("PETAR RESPONSE " + resp)
       f(resp)
     }
   }

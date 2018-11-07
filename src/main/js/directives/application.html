@@ -70,10 +70,9 @@
     </section>
 
     <section class="ilmoittautuminen">
-      <div>PETAR APPLICATION = {{application}}</div>
-
         <ilmoittautuminen hakukohteet="application.ilmoittautumisLinkit()"
                           oili="application.oiliUrl()"
+                          ohjeet="application.ohjeetUudelleOpiskelijalle"
                           application="application">
         </ilmoittautuminen>
         <kela ng-show="application.kelaURL()" kela="application.kelaURL()">

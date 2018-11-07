@@ -1052,12 +1052,10 @@
             expect(hakemusKorkeakouluJatkoHaku.ilmoittautuminen(0).visible).to.equal(true)
           })
         })
-        describe("OhjeetUudelleOpiskelijalle-linkki", function() {
+        describe("OhjeetUudelleOpiskelijalle-linkki on hakukohteella", function() {
           it("Näytetään", function() {
-            console.log("PETAR")
-            console.log(hakemusKorkeakouluJatkoHaku.valintatulokset())
-            expect(page.ohjeetUudelleOpiskelijalleText()).to.equal("zirafaasdf")
-            expect(hakemusKorkeakouluJatkoHaku.valintatulokset().hakukohdeNimi).to.equal("majmun")
+            expect(page.ohjeetUudelleOpiskelijalleText()).to.equal("Tietoa uudelle opiskelijalle")
+            expect(page.ohjeetUudelleOpiskelijalleUrl()).to.equal("https://www.helsinki.fi/fi/opiskelu/ohjeita-hakemuksen-jattaneille-yhteishaku")
           })
         })
       })
