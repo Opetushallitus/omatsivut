@@ -128,8 +128,6 @@ export default class Hakemus {
 
   ilmoittautumisLinkit() {
     return _(this.valintatulosHakutoiveet()).filter(function(tulos) {
-      console.log("PETAR tulos unutra")
-      console.log(tulos)
       return tulos.ilmoittautumistila != null &&
         (tulos.ilmoittautumistila.ilmoittauduttavissa || ilmoittautunut(tulos.ilmoittautumistila.ilmoittautumistila))
     });
@@ -151,10 +149,6 @@ export default class Hakemus {
       var baseUrl = tulos.ilmoittautumistila.ilmoittautumistapa.url;
       return baseUrl.endsWith('/oili/') ? baseUrl : baseUrl + '?token=' + oiliJwt;
     }).filter(function(k) {return k}).head().value()
-  }
-
-  ohjeetUrl() {
-
   }
 
   hasResultState(resultStates) {

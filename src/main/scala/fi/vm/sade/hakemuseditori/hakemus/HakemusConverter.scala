@@ -150,9 +150,6 @@ trait HakemusConverterComponent {
             Hakutoive.empty
           case _ =>
             val tarjonnanHakukohde = tarjontaService.hakukohde(data("Koulutus-id"))
-
-            println("PETAR HAKUKOHDE " + tarjonnanHakukohde)
-
             val amendedData = amendWithKoulutusInformaatio(lang, data)
 
             Hakutoive(Some(amendedData), tarjonnanHakukohde.flatMap(_.koulutuksenAlkaminen),

@@ -26,8 +26,9 @@ class GetApplicationsSpec extends HakemusApiSpecification with FixturePerson wit
     "contain the link to 'information for new students'" in {
       withApplicationsResponse { resp =>
         val a = resp.applications.map(_.hakemus.state)
+        println("PETAR STATES")
         println(a) // Look, state objects are incorrectly deserialized from JSON :(
-        resp.allApplicationsFetched must_== true // TODO:
+        resp.allApplicationsFetched must_== false // TODO:
       }
     }
 
