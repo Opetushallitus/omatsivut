@@ -1,7 +1,8 @@
 import { getBearerToken, setBearerToken } from '../util';
 
 function shouldRerouteRequest(config) {
-  return window.location.href.includes('hakutoiveidenMuokkaus.html') && config.url.includes('/secure/')
+  var pageReachedBySecureLink = (window.location.href.includes('hakutoiveidenMuokkaus.html') || window.location.href.includes('/token/'));
+  return pageReachedBySecureLink && config.url.includes('/secure/')
 }
 
 function shouldAuthenticate(config) {
