@@ -114,14 +114,6 @@ function ApplicationListPage() {
       return S(".tuloskirje").text().trim()
     },
 
-    ohjeetUudelleOpiskelijalleText: function () {
-      return S("#ohjeet-uudelle-opiskelijalle").text().trim()
-    },
-
-    ohjeetUudelleOpiskelijalleUrl: function () {
-      return S("#ohjeet-uudelle-opiskelijalle").attr("href")
-    },
-
     getApplication: function(applicationIndex) {
       return Application(applicationIndex)
     },
@@ -238,11 +230,13 @@ function ApplicationListPage() {
       ilmoittautuminen: function(index) {
         var el = getApplicationElement(applicationIndex).find(".ilmoittautuminen-item").eq(index)
         return {
-          visible: el.find("a").is(":visible"),
-          linkUrl: el.find("a").attr("href"),
+          visible: el.find(".ilmoitauttaminen-linkki").is(":visible"),
+          linkUrl: el.find(".ilmoitauttaminen-linkki").attr("href"),
           title: function() {
             return removeSpaces(el.find("header").text())
-          }
+          },
+          ohjeetUudelleOpiskelijalleText: el.find(".ohjeet-uudelle-opiskelijalle").text().trim(),
+          ohjeetUudelleOpiskelijalleUrl: el.find(".ohjeet-uudelle-opiskelijalle").attr("href")
         }
       },
 

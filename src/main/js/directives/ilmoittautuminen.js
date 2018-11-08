@@ -1,8 +1,6 @@
 import localize from '../localization';
-const _ = require('underscore');
 
 export default function () {
-  // noinspection JSAnnotator
   return {
       restrict: 'E',
       scope: {

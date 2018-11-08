@@ -9,14 +9,14 @@ näytetään mahdolliset ilmoittautumiset -->
           <strong ng-if="!tulos.ehdollisestiHyvaksyttavissa">{{ localization('registration.reminder') }}</strong>
           <span class="tarjoaja-hakukohde">{{ tulos.tarjoajaNimi }} - {{ tulos.hakukohdeNimi }}
             <p ng-if="ohjeetUudelleOpiskelijalle(tulos.hakukohdeOid)">
-              <a id="ohjeet-uudelle-opiskelijalle" ng-href="{{ohjeetUudelleOpiskelijalle(tulos.hakukohdeOid)}}">{{ localization('registration.instructionsForNewStudents') }}</a> {{tulos}}
+              <a class="ohjeet-uudelle-opiskelijalle" ng-href="{{ohjeetUudelleOpiskelijalle(tulos.hakukohdeOid)}}">{{ localization('registration.instructionsForNewStudents') }}</a>
             </p>
-          </span>
+        </span>
         </header>
         <span ng-if="tulos.ehdollisestiHyvaksyttavissa">{{ localization('registration.conditionalAcceptanceInfo') }}</span>
         <span ng-if="!tulos.ehdollisestiHyvaksyttavissa">
           <p>{{ localization('registration.reminderInfo') }}</p>
-          <a href="{{oili()}}">{{ localization('registration.goToRegistration') }}</a>
+          <a class="ilmoitauttaminen-linkki" href="{{oili()}}">{{ localization('registration.goToRegistration') }}</a>
         </span>
     </div>
 
