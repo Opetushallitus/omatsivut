@@ -9,7 +9,6 @@ object TestFixture {
   val hakemusNivelKesa2013WithPeruskouluBaseEducationId = "1.2.246.562.11.00000877107"
   val hakemusYhteishakuKevat2014WithForeignBaseEducationId = "1.2.246.562.11.00000441368"
   val hakemusPeruskouluWithMissingPreferences = "1.2.246.562.11.00000441373"
-  val hakemusWithValintatulosInState = "1.2.246.562.11.00000000178"
   val hakemusWithAtheleteQuestions = "1.2.246.562.11.00000441371"
   val hakemusLisahaku = hakemusWithAtheleteQuestions
   val hakemusWithGradeGridAndDancePreference = "1.2.246.562.11.00000855417"
