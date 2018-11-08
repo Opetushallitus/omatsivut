@@ -10,10 +10,11 @@ export default ['$scope', '$location', '$http', function($scope, $location, $htt
 
   // Ladataan sivu sen jälkeen kun vastaanottotieto on lähetetty
   $scope.$on("hakutoive-vastaanotettu", function() {
-    location.reload();
+    loadApplication();
   });
 
   $scope.lang = getLanguage();
+  loadApplication();
 
   $scope.logout = function() {
     removeBearerToken();
@@ -21,35 +22,37 @@ export default ['$scope', '$location', '$http', function($scope, $location, $htt
     $scope.loggedOut = true;
   };
 
-  if (token || getBearerToken()) {
-    $scope.loading = true;
-    $location.path('/').replace();
-    const suffix = token ? 'token/' + token : 'session';
-    $http.get(baseUrl + suffix).then(
-      function (response) {
-        $scope.loading = false;
-        $scope.application = new Hakemus(response.data);
-        $scope.application.oiliJwt = response.oiliJwt;
-        $scope.application.isHakutoiveidenMuokkaus = true;
-        const henkilotiedot = response.data.hakemus.answers.henkilotiedot;
-        $scope.allowVastaanotto = !henkilotiedot.Henkilotunnus;
-        $scope.user = {
-          name: henkilotiedot.Kutsumanimi + ' ' + henkilotiedot.Sukunimi
-        }
-      },
-      function (response) {
-        $scope.loading = false;
-        if (404 === response.status) {
-          $scope.errorMessage = 'error.noActiveApplication'
-        } else if (response.data && response.data.error === 'expiredToken') {
-          $scope.infoMessage = 'info.expiredToken'
-        } else if (401 === response.status || 403 === response.status) {
-          $scope.errorMessage = 'error.invalidToken'
-        } else {
-          $scope.errorMessage = 'error.serverError'
-        }
-      })
-  } else {
-    $scope.errorMessage = 'error.noTokenAvailable'
-  }
+   function loadApplication() {
+    if (token || getBearerToken()) {
+      $scope.loading = true;
+      $location.path('/').replace();
+      const suffix = token ? 'token/' + token : 'session';
+      $http.get(baseUrl + suffix).then(
+        function (response) {
+          $scope.loading = false;
+          $scope.application = new Hakemus(response.data);
+          $scope.application.oiliJwt = response.oiliJwt;
+          $scope.application.isHakutoiveidenMuokkaus = true;
+          const henkilotiedot = response.data.hakemus.answers.henkilotiedot;
+          $scope.allowVastaanotto = !henkilotiedot.Henkilotunnus;
+          $scope.user = {
+            name: henkilotiedot.Kutsumanimi + ' ' + henkilotiedot.Sukunimi
+          }
+        },
+        function (response) {
+          $scope.loading = false;
+          if (404 === response.status) {
+            $scope.errorMessage = 'error.noActiveApplication'
+          } else if (response.data && response.data.error === 'expiredToken') {
+            $scope.infoMessage = 'info.expiredToken'
+          } else if (401 === response.status || 403 === response.status) {
+            $scope.errorMessage = 'error.invalidToken'
+          } else {
+            $scope.errorMessage = 'error.serverError'
+          }
+        })
+    } else {
+      $scope.errorMessage = 'error.noTokenAvailable'
+    }
+  };
 }]
