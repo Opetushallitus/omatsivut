@@ -25,7 +25,7 @@ export default ['$scope', '$location', '$http', function($scope, $location, $htt
    function loadApplication() {
     if (token || getBearerToken()) {
       $scope.loading = true;
-      $location.path('/').replace();
+      $location.hash('/').replace();
       const suffix = token ? 'token/' + token : 'session';
       $http.get(baseUrl + suffix).then(
         function (response) {
