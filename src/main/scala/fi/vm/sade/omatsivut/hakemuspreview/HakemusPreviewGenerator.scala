@@ -53,7 +53,10 @@ case class HakemusPreview(implicit translations: Translations, language: Languag
 
     """<!DOCTYPE html>""" +
       html(
-        head(link(href := "/omatsivut/css/preview.css", rel:= "stylesheet", `type` := "text/css")),
+        head(
+          script(`type` := "text/javascript", src := "/omatsivut/index.bundle.js"),
+          link(href := "/omatsivut/css/preview.css", rel:= "stylesheet", `type` := "text/css")
+        ),
         body(
           header(
             h1(ElementWrapper.t(applicationSystem.getName)),
