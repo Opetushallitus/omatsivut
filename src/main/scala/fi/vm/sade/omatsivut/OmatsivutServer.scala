@@ -1,9 +1,8 @@
 package fi.vm.sade.omatsivut
 
-import fi.vm.sade.ScalatraBootstrap
 import fi.vm.sade.omatsivut.util.JettyUtil
 import org.eclipse.jetty.webapp.WebAppContext
-import org.eclipse.jetty.util.resource.ResourceCollection
+import org.eclipse.jetty.util.resource.{Resource, ResourceCollection}
 import org.eclipse.jetty.servlet.DefaultServlet
 import org.scalatra.servlet.ScalatraListener
 import org.slf4j.LoggerFactory
@@ -27,16 +26,7 @@ class OmatsivutServer {
 
   def createContext = {
     val context = new WebAppContext()
-    val resources = new ResourceCollection(Array(
-      getClass.getClassLoader.getResource("webapp").toExternalForm
-    ))
-    context.setContextPath("/hakuperusteet-changeme/")
-    context.setBaseResource(resources)
-    context.setInitParameter(ScalatraListener.LifeCycleKey, classOf[ScalatraBootstrap].getCanonicalName)
-    context.setInitParameter(org.scalatra.EnvironmentKey, "production")
-    context.setInitParameter(org.scalatra.CorsSupport.EnableKey, "false")
-    context.addEventListener(new ScalatraListener)
-    context.addServlet(classOf[DefaultServlet], "/")
+    context.setBaseResource(Resource.newClassPathResource("/webapps"))
     context
   }
 }
