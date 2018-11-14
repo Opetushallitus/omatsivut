@@ -1,0 +1,134 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+ul {
+  list-style-type: none;
+}
+.delimiter {
+  color: #cccccc;
+}
+body {
+  font-family: helvetica, arial, sans-serif;
+  font-size: 13px;
+  color: #000000;
+  line-height: 20px;
+  text-transform: none;
+  letter-spacing: normal;
+  line-height: 26px;
+  padding: 30px;
+}
+h1 {
+  margin-bottom: 20px;
+}
+header {
+  margin-bottom: 30px;
+}
+header h2 {
+  margin-bottom: 20px;
+}
+header .detail label {
+  display: inline-block;
+  width: 120px;
+}
+.theme {
+  margin-bottom: 20px;
+}
+.theme hr {
+  display: block;
+  margin-bottom: 1.538em;
+  height: 1px;
+  width: 100%;
+  border: none;
+  background-color: #feba00;
+  clear: both;
+}
+.theme h2 {
+  text-transform: uppercase;
+  font-size: 0.923em;
+  font-weight: normal;
+  letter-spacing: 0.12em;
+  padding-bottom: 5px;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #feba00;
+}
+.theme h3 {
+  font-size: 1em;
+  line-height: 3em;
+}
+.theme span.answer {
+  display: block;
+  word-break: break-all;
+  word-wrap: break-word;
+  font-weight: normal;
+  white-space: pre-wrap;
+}
+table {
+  width: 100%;
+  border: none;
+  border-spacing: 0;
+  line-height: 1.25em;
+  text-align: left;
+}
+table.striped thead tr {
+  background-color: #DFF2F8;
+}
+table.striped tbody tr:nth-child(even) {
+  background-color: #DFF2F8;
+}
+table.striped tbody tr:nth-child(odd) {
+  background-color: #FFFFFF;
+}
+th,
+td {
+  padding: 2px 10px;
+  vertical-align: top;
+}
+th {
+  font-weight: bold;
+}
+.question {
+  clear: both;
+  overflow: auto;
+}
+.question label {
+  margin-right: 1em;
+  display: inline-block;
+  width: 60%;
+  float: left;
+}
+.gradegrid td {
+  width: 20%;
+}
+.preference-table .preference-row {
+  overflow: auto;
+}
+.preference-table .preference-row span,
+.preference-table .preference-row label {
+  display: inline-block;
+  float: left;
+}
+.preference-table .preference-row .index {
+  width: 70px;
+}
+.preference-table .preference-row .education label,
+.preference-table .preference-row .learning-institution label {
+  width: 120px;
+}
+.preference-table .preference-row .education span,
+.preference-table .preference-row .learning-institution span {
+  font-weight: bold;
+}
+.preference-table .preference-row .education {
+  margin-left: 70px;
+  clear: both;
+}
+.preference-table .preference-row .questions {
+  margin-left: 70px;
+  padding-bottom: 1em;
+  clear: both;
+}
+.preference-table .preference-row .questions .question {
+  overflow: auto;
+}
