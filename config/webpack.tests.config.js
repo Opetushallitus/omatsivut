@@ -5,7 +5,7 @@ module.exports = {
   mode: 'development',
   entry: ['./src/test/mocha/all.js'],
   output: {
-    path: path.resolve(__dirname, '../src/main/webapp/test'),
+    path: path.resolve(__dirname, '../src/main/resources/webapp/test'),
     filename: 'test.bundle.js',
     publicPath: '/omatsivut/test/'
   },
