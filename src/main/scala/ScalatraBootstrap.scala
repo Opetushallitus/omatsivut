@@ -1,5 +1,3 @@
-package fi.vm.sade
-
 import java.util
 import javax.servlet.{DispatcherType, ServletContext}
 
