@@ -20,7 +20,7 @@ class HakemusPreviewSpec extends HakemusApiSpecification with FixturePerson {
       fixtureImporter.applyOverrides("peruskoulu")
       authGet("secure/applications/preview/" + hakemusYhteishakuKevat2014WithForeignBaseEducationId) {
         response.status must_== 200
-        response.getContentType() must_== "text/html; charset=UTF-8"
+        response.getContentType() must_== "text/html;charset=utf-8"
 
         body must contain("""<label>Vastaanotettu</label><span>25.06.2014 15:52</span>""")
         body must contain("""<label>Hakemusnumero</label><span>00000441368</span>""")
@@ -50,7 +50,7 @@ class HakemusPreviewSpec extends HakemusApiSpecification with FixturePerson {
       fixtureImporter.applyOverrides("peruskouluWithMissingPreferences")
       authGet("secure/applications/preview/" + hakemusPeruskouluWithMissingPreferences) {
         response.status must_== 200
-        response.getContentType() must_== "text/html; charset=UTF-8"
+        response.getContentType() must_== "text/html;charset=utf-8"
 
         body must contain("""<label>Vastaanotettu</label><span>25.06.2014 15:52</span>""")
         body must contain("""<label>Hakemusnumero</label><span>00000441373</span>""")

@@ -1,17 +1,23 @@
 package fi.vm.sade.omatsivut.config
 
-import fi.vm.sade.omatsivut.config.AppConfig.{EmbbeddedMongo, AppConfig}
+import fi.vm.sade.omatsivut.{ITSetup, OmatsivutDbTools, config}
+import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import org.junit.runner.RunWith
 import org.specs2.matcher.PathMatchers
 import org.specs2.mutable.Specification
 import org.specs2.runner.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class AppConfigSpec extends Specification {
+class AppConfigSpec extends Specification with ITSetup with OmatsivutDbTools {
+  sequential
+
+  step(appConfig.onStart)
+  step(deleteAllSessions())
+
   "Config with default profile" should {
     "Start up" in {
-      validateConfig(new EmbbeddedMongo {
-        def springConfiguration = new OmatSivutSpringContext.Default()
+      validateConfig(new AppConfig with AppConfig.ExampleTemplatedProps {
+        override def springConfiguration = new OmatSivutSpringContext.Default()
       })
     }
   }

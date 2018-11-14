@@ -1,5 +1,11 @@
 package fi.vm.sade.omatsivut.security
 
-case class AuthenticationInfo(personOid: Option[String], shibbolethCookie: Option[ShibbolethCookie]) {
-  override def toString = "oid=" + personOid.getOrElse("") + ", " + shibbolethCookie.map(_.toString).getOrElse("(no shibboleth cookie)")
+trait CookieNames {
+  def oppijaNumeroCookieName = "oppijaNumero"
+  def sessionCookieName = "session"
+}
+
+case class AuthenticationInfo(oppijaNumero: Option[String], sessionId: Option[String]) extends CookieNames {
+  override def toString = oppijaNumeroCookieName + "=" + oppijaNumero.getOrElse("<not found>") +
+              ", " + sessionCookieName + "=" + sessionId.getOrElse("<not found>")
 }

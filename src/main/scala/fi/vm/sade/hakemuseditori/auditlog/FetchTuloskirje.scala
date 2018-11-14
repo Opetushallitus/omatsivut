@@ -15,7 +15,7 @@ case class FetchTuloskirje(request: HttpServletRequest, hakuOid: String, hakemus
 
   override def user: User = {
     val authInfo = getAuthenticationInfo(request)
-    val shib = authInfo.shibbolethCookie
-    new User(null, getAddress(request), shib.map(_.toString).getOrElse("(no shibboleth cookie)"), getUserAgent(request))
+    // oid (oppijaNumero) is also available in authInfo, should it be put in the User's constructor?
+    new User(null, getAddress(request), authInfo.sessionId.getOrElse("(no session cookie)"), getUserAgent(request))
   }
 }

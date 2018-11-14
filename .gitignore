@@ -99,6 +99,7 @@ gatling/
 gradle/
 
 valintarekisteri-it-db
+omatsivut-it-db
 
 .idea*
 *.iml

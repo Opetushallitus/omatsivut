@@ -5,7 +5,7 @@ import javax.servlet.http.{HttpServletRequest, HttpServletResponse, Cookie => Ht
 import fi.vm.sade.omatsivut.config.AppConfig.{AppConfig, StubbedExternalDeps}
 import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.omatsivut.security.CookieHelper.reqCookie
-import fi.vm.sade.omatsivut.security.{AuthenticationCipher, RemoteAuthenticationInfoService, ShibbolethCookie}
+import fi.vm.sade.omatsivut.security.{AuthenticationCipher, RemoteAuthenticationInfoService}
 import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
 import org.scalatra.{Cookie, CookieOptions}
 
@@ -16,27 +16,15 @@ import org.scalatra.{Cookie, CookieOptions}
  *
  * @param appConfig
  */
-class FakeShibbolethServlet(val appConfig: AppConfig) extends OmatSivutServletBase {
+class FakeShibbolethServlet(val appConfig: AppConfig) extends OmatSivutServletBase with FakeSAMLMessages {
+
   get("/fakesession") {
-    val shibbolethCookie = ShibbolethCookie("_shibsession_fakeshibbolethsession", new AuthenticationCipher(appConfig.settings.aesKey, appConfig.settings.hmacKey).encrypt("FAKESESSION"))
-    response.addCookie(fakeShibbolethSessionCookie(shibbolethCookie))
     paramOption("hetu") match {
       case Some(hetu) =>
-        val personOid: Option[String] = getPersonOidByHetu(hetu)
-        response.addCookie(Cookie(FakeAuthentication.oidCookie, personOid.getOrElse(""))(appConfig.authContext.cookieOptions))
-        response.redirect(request.getContextPath + "/secure/initsession?hetu=" + hetu)
+        val bodyWithHetu = requestBody(hetu)
+        response.getOutputStream().write(bodyWithHetu)
+        response.redirect(request.getContextPath + "/initsession")
       case _ => halt(400, "Can't fake session without ssn")
-    }
-  }
-
-  def getPersonOidByHetu(hetu: String): Option[String] = {
-    appConfig match {
-      case c: StubbedExternalDeps => {
-        TestFixture.persons.get(hetu)
-      }
-      case _ =>
-        val service = new RemoteAuthenticationInfoService(appConfig.settings.authenticationServiceConfig, appConfig.settings.securitySettings)
-        service.getHenkiloOID(hetu)
     }
   }
 
@@ -68,7 +56,4 @@ class FakeShibbolethServlet(val appConfig: AppConfig) extends OmatSivutServletBa
     response.redirect(request.getContextPath + "/fakeVetumaLogin.html")
   }
 
-  private def fakeShibbolethSessionCookie(shibbolethSessionData: ShibbolethCookie): Cookie = {
-    Cookie(shibbolethSessionData.name, shibbolethSessionData.value)(CookieOptions(path = "/"))
-  }
 }

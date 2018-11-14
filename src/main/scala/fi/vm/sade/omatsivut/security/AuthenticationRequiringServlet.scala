@@ -1,5 +1,7 @@
 package fi.vm.sade.omatsivut.security
 
+import java.util.UUID
+
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.security.AuthenticationInfoParser._
 import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
@@ -11,17 +13,17 @@ import org.scalatra.{NotFound, Unauthorized}
 trait AuthenticationRequiringServlet extends OmatSivutServletBase with Logging {
   val appConfig: AppConfig
 
-  def personOid(): String = getAuthenticationInfo(request).personOid.getOrElse(sys.error("Unauthenticated account"))
+  implicit def sessionService: SessionService
+
+  def personOid(): String = getAuthenticationInfo(request).oppijaNumero.getOrElse(sys.error("Unauthenticated account"))
 
   before() {
-    val AuthenticationInfo(personOidOption, shibbolethCookieOption) = getAuthenticationInfo(request)
-    shibbolethCookieOption match {
-      case Some(cookie) => personOidOption match {
-        case Some(oid) if !oid.isEmpty =>
-          true
-        case _ =>
-          halt(NotFound(render("error" -> "no oid was present")))
-      }
+    val AuthenticationInfo(personOidOption, sessionIdOption) = getAuthenticationInfo(request)
+    sessionService.getSession(
+      sessionIdOption.map(UUID.fromString).map(SessionId)
+    ) match {
+      case Right(session) =>
+        logger.debug("Found session: " + session.oppijaNumero)
       case _ =>
         halt(Unauthorized(render("error" -> "unauthorized")))
     }

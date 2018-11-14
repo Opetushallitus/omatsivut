@@ -1,8 +1,8 @@
 package fi.vm.sade.omatsivut
 
 import javax.net.ssl._
-
 import fi.vm.sade.omatsivut.config.AppConfig
+import fi.vm.sade.utils.tcp.PortChecker
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.server.handler.HandlerCollection
 import org.eclipse.jetty.webapp.WebAppContext
@@ -18,6 +18,7 @@ object JettyLauncher {
   def main(args: Array[String]) {
     disableSSLHostNameVerification()
     System.setProperty("omatsivut.port", System.getProperty("omatsivut.port", "7337"))
+    System.setProperty("omatsivut.it.postgres.port", PortChecker.findFreeLocalPort.toString)
     new JettyLauncher().start.join()
   }
 }

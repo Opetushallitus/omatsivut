@@ -12,7 +12,7 @@ import fi.vm.sade.hakemuseditori.user.Oppija
 import fi.vm.sade.hakemuseditori.valintatulokset.ValintatulosServiceComponent
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.hakemuspreview.HakemusPreviewGeneratorComponent
-import fi.vm.sade.omatsivut.security.AuthenticationRequiringServlet
+import fi.vm.sade.omatsivut.security.{AuthenticationRequiringServlet, SessionService}
 import fi.vm.sade.omatsivut.vastaanotto.{Vastaanotto, VastaanottoComponent}
 import fi.vm.sade.utils.cas.{CasAuthenticatingClient, CasClient, CasParams}
 import org.http4s.client.blaze
@@ -35,7 +35,7 @@ trait ApplicationsServletContainer {
         VastaanottoComponent with
         TranslationsComponent =>
 
-  class ApplicationsServlet(val appConfig: AppConfig) extends OmatSivutServletBase with JsonFormats with JacksonJsonSupport with AuthenticationRequiringServlet with HakemusEditoriUserContext {
+  class ApplicationsServlet(val appConfig: AppConfig, val sessionService: SessionService) extends OmatSivutServletBase with JsonFormats with JacksonJsonSupport with AuthenticationRequiringServlet with HakemusEditoriUserContext {
 
     def user = Oppija(personOid())
     private val hakemusEditori = newEditor(this)

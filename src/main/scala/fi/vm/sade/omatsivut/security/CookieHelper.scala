@@ -9,4 +9,8 @@ object CookieHelper {
       cookie <- cookies.find(matcher)
     } yield cookie
   }
+
+  def getCookie(req: HttpServletRequest, cookieName: String)= {
+    reqCookie(req, (c) => c.getName == cookieName)
+  }
 }

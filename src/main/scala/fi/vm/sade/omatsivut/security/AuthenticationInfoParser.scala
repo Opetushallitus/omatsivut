@@ -4,11 +4,10 @@ import javax.servlet.http.HttpServletRequest
 
 import fi.vm.sade.utils.slf4j.Logging
 
-object AuthenticationInfoParser extends Logging {
+object AuthenticationInfoParser extends Logging with CookieNames {
   def getAuthenticationInfo(request: HttpServletRequest): AuthenticationInfo = {
-    val personOid = Option(request.getHeader("oid"))
-    val shibbolethCookie = CookieHelper.reqCookie(request, c => c.getName.startsWith("_shibsession_"))
-      .map { cookie => ShibbolethCookie(cookie.getName, cookie.getValue) }
-    AuthenticationInfo(personOid, shibbolethCookie)
+    val personOid = CookieHelper.getCookie(request, oppijaNumeroCookieName)
+    val oppijaNumero = CookieHelper.getCookie(request, sessionCookieName)
+    AuthenticationInfo(personOid.map(_.getValue), oppijaNumero.map(_.getValue))
   }
 }

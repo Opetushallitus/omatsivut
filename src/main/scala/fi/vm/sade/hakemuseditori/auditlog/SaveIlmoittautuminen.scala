@@ -21,7 +21,6 @@ case class SaveIlmoittautuminen(request: HttpServletRequest, hakuOid: String, ha
 
   override def user: User = {
     val authInfo = getAuthenticationInfo(request)
-    val shib = authInfo.shibbolethCookie
-    new User(getOid(ilmoittautuminen.muokkaaja), getAddress(request), shib.map(_.toString).getOrElse("(no shibboleth cookie)"), getUserAgent(request))
+    new User(getOid(ilmoittautuminen.muokkaaja), getAddress(request), authInfo.sessionId.getOrElse("(no session cookie)"), getUserAgent(request))
   }
 }

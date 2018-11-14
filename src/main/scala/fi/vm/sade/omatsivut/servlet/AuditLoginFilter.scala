@@ -13,7 +13,7 @@ class AuditLoginFilter(vetumaUrl: String) extends ScalatraFilter {
       referer <- Option(request.getHeader(HttpHeaders.REFERER))
       vetuma <- Some(referer).filter(_.startsWith(vetumaUrl))
       info <- Option(getAuthenticationInfo(request))
-      personOid <- info.personOid
+      personOid <- info.oppijaNumero
     } Audit.oppija.log(Login(request))
   }
 
