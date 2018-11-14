@@ -22,4 +22,6 @@ class AuthenticationSpec extends ScalatraTestSupport with FixturePerson {
       }
     }
   }
+
+  // PETAR  "GET /"
 }
