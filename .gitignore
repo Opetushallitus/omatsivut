@@ -82,17 +82,17 @@ node
 oph_vars
 
 # generated js and css files
-src/main/webapp/index.bundle.js
-src/main/webapp/vendor.bundle.js
-src/main/webapp/index.bundle.js.map
-src/main/webapp/vendor.bundle.js.map
-src/main/webapp/hakemuseditori*
-src/main/webapp/css/
+src/main/resources/webapp/index.bundle.js
+src/main/resources/webapp/vendor.bundle.js
+src/main/resources/webapp/index.bundle.js.map
+src/main/resources/webapp/vendor.bundle.js.map
+src/main/resources/webapp/hakemuseditori*
+src/main/resources/webapp/css/
 src/main/templates/templates.js
-src/main/webapp/vendor.css
-src/main/webapp/vendor.css.map
-src/main/webapp/bundle.js
-src/main/webapp/bundle.js.map
+src/main/resources/webapp/vendor.css
+src/main/resources/webapp/vendor.css.map
+src/main/resources/webapp/bundle.js
+src/main/resources/webapp/bundle.js.map
 
 #gatling
 gatling/
