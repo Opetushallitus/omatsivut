@@ -88,7 +88,7 @@ Tuotantoa vastaava buildi
     npm run build
 
 Fronttikoodit sijaitsevat `src/main` kansion alla hieman sekalaisessa järjestyksessä.
-Tyyleissä on käytetty lessiä. Niiden perusteella generoidaan css-tiedostot kansioon `src/main/webapp/css`.
+Tyyleissä on käytetty lessiä. Niiden perusteella generoidaan css-tiedostot kansioon `src/main/resources/webapp/css`.
 HTML templatet on ladattu mukaan direktiiveihin merkkijonoina.
 Fronttikoodit paketoidaan webpackilla bundle.js tiedostoksi.
 

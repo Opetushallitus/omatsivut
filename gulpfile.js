@@ -45,7 +45,7 @@ function compile(watch) {
       .pipe(sourcemaps.init({loadMaps: true}))
       .pipe(uglify({compress: true}))
       .pipe(sourcemaps.write('./'))
-      .pipe(gulp.dest('src/main/webapp'))
+      .pipe(gulp.dest('src/main/resources/webapp'))
   }
 
   if (watch) {
@@ -66,17 +66,17 @@ gulp.task('less', function () {
   gulp.src('src/main/less/main.less')
     .pipe(less().on('error', handleError))
     .pipe(concat('main.css'))
-    .pipe(gulp.dest('src/main/webapp/css'));
+    .pipe(gulp.dest('src/main/resources/webapp/css'));
 
   gulp.src('src/main/less/hakutoiveidenMuokkaus.less')
     .pipe(less().on('error', handleError))
     .pipe(concat('hakutoiveidenMuokkaus.css'))
-    .pipe(gulp.dest('src/main/webapp/css'));
+    .pipe(gulp.dest('src/main/resources/webapp/css'));
 
   gulp.src('src/main/less/preview.less')
     .pipe(less().on('error', handleError))
     .pipe(concat('preview.css'))
-    .pipe(gulp.dest('src/main/webapp/css'));
+    .pipe(gulp.dest('src/main/resources/webapp/css'));
 });
 
 gulp.task('templates', function() {

@@ -37,7 +37,7 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       cache: true,
-      filename: path.resolve(__dirname, 'src/main/webapp/test') + "runner.html",
+      filename: path.resolve(__dirname, 'src/main/resources/webapp/test') + "runner.html",
       showErrors: true,
       template: "./src/test/index.html",
       title: "Mocha Browser Tests",
