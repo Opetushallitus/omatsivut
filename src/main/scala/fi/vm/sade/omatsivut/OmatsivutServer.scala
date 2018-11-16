@@ -26,7 +26,7 @@ class OmatsivutServer {
 
   def createContext = {
     val context = new WebAppContext()
-    context.setBaseResource(Resource.newClassPathResource("/webapps"))
+    context.setBaseResource(Resource.newClassPathResource("webapps"))
     context
   }
 }
