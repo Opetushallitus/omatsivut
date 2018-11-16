@@ -1054,8 +1054,8 @@
         })
         describe("OhjeetUudelleOpiskelijalle-linkki on hakukohteella", function() {
           it("Näytetään", function() {
-            expect(page.ohjeetUudelleOpiskelijalleText()).to.equal("Tietoa uudelle opiskelijalle")
-            expect(page.ohjeetUudelleOpiskelijalleUrl()).to.equal("https://www.helsinki.fi/fi/opiskelu/ohjeita-hakemuksen-jattaneille-yhteishaku")
+            expect(hakemusKorkeakouluJatkoHaku.ilmoittautuminen(0).ohjeetUudelleOpiskelijalleText).to.equal("Tietoa uudelle opiskelijalle")
+            expect(hakemusKorkeakouluJatkoHaku.ilmoittautuminen(0).ohjeetUudelleOpiskelijalleUrl).to.equal("https://www.helsinki.fi/fi/opiskelu/ohjeita-hakemuksen-jattaneille-yhteishaku")
           })
         })
       })
