@@ -23,7 +23,7 @@
 
   describe("Hakutoiveiden muokkaus vanhentuneella tokenilla", function() {
     before(
-        page.openPage("expiredToken")
+      page.openPage("expiredToken")
     )
 
     it("näytetään infoviesti", function() {
@@ -55,7 +55,7 @@
 
   describe('Hakutoiveiden muokkaus "Yhteishaku ammatilliseen ja lukioon, kevät 2016", kun valittuna ammatillisia', function () {
     before(
-        page.applyFixtureAndOpen({token: hakemusYhteishakuKevat2016Ammatillisia, applicationOid: hakemusYhteishakuKevat2016Ammatillisia, overrideStart: daysFromNow(0)})
+      page.applyFixtureAndOpen({token: hakemusYhteishakuKevat2016Ammatillisia, applicationOid: hakemusYhteishakuKevat2016Ammatillisia, overrideStart: daysFromNow(0)})
     )
 
     describe("Linkin avaamisen jälkeen", function() {
@@ -66,8 +66,8 @@
 
     describe("kun lisätään hakukohde", function() {
       before(
-          page.getApplication().getPreference(3).selectOpetusPiste("Lap"),
-          page.getApplication().getPreference(3).selectKoulutus(3)
+        page.getApplication().getPreference(3).selectOpetusPiste("Lap"),
+        page.getApplication().getPreference(3).selectKoulutus(3)
       )
 
       describe("lisäämisen jälkeen", function() {
@@ -100,10 +100,10 @@
 
       describe("vastattaessa kysymyksiin", function() {
         before(
-            function() { page.getApplication().questionsForApplication().enterAnswer(0, "Ei"); },
-            function() { page.getApplication().questionsForApplication().enterAnswer(1, "Ei"); },
-            function() { page.getApplication().questionsForApplication().enterAnswer(2, "Ei"); },
-            wait.forAngular
+          function() { page.getApplication().questionsForApplication().enterAnswer(0, "Ei"); },
+          function() { page.getApplication().questionsForApplication().enterAnswer(1, "Ei"); },
+          function() { page.getApplication().questionsForApplication().enterAnswer(2, "Ei"); },
+          wait.forAngular
         )
 
         describe("vastaamisen jälkeen", function() {
@@ -114,7 +114,7 @@
 
         describe("siirrettäessä lisätty hakutoive ylemmäksi", function() {
           before(
-              page.getApplication().getPreference(3).moveUp
+            page.getApplication().getPreference(3).moveUp
           )
 
           describe("siirtämisen jälkeen", function() {
@@ -135,7 +135,7 @@
 
           describe("tallentaminen", function() {
             before(
-                page.getApplication().saveWaitSuccess
+              page.getApplication().saveWaitSuccess
             )
 
             it("onnistuu", function() {
@@ -149,7 +149,7 @@
 
   describe('Hakutoiveiden muokkaus "Yhteishaku ammatilliseen ja lukioon, kevät 2016", kun valittuna pelkkä lukio', function () {
     before(
-        page.applyFixtureAndOpen({token: hakemusYhteishakuKevat2016PelkkaLukio, applicationOid: hakemusYhteishakuKevat2016PelkkaLukio, overrideStart: daysFromNow(0)})
+      page.applyFixtureAndOpen({token: hakemusYhteishakuKevat2016PelkkaLukio, applicationOid: hakemusYhteishakuKevat2016PelkkaLukio, overrideStart: daysFromNow(0)})
     )
 
     describe("Linkin avaamisen jälkeen", function() {
@@ -160,8 +160,8 @@
 
     describe("kun lisätään ammatillinen hakukohde", function() {
       before(
-          page.getApplication().getPreference(1).selectOpetusPiste("Helsingin Diakoniaopisto"),
-          page.getApplication().getPreference(1).selectKoulutus(3)
+        page.getApplication().getPreference(1).selectOpetusPiste("Helsingin Diakoniaopisto"),
+        page.getApplication().getPreference(1).selectKoulutus(3)
       )
 
       it("seuraava hakukohde tulee muokattavaksi", function() {
@@ -184,8 +184,8 @@
 
     describe("kun lisätään lukion urheilulinja hakukohde", function() {
       before(
-          page.getApplication().getPreference(1).selectOpetusPiste("Mäkelänrinteen lukio"),
-          page.getApplication().getPreference(1).selectKoulutus(2)
+        page.getApplication().getPreference(1).selectOpetusPiste("Mäkelänrinteen lukio"),
+        page.getApplication().getPreference(1).selectKoulutus(2)
       )
 
       it("seuraava hakukohde tulee muokattavaksi", function() {
