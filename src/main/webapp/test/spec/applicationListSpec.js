@@ -1109,7 +1109,7 @@
 
           it("näytetään tieto valinnan ehdollisuudesta", function() {
             expect(hakemusKorkeakouluJatkoHaku.ilmoittautuminen(0).title()).to.equal(
-              'Opiskelijavalintasi on vielä ehdollinen. Jyväskylän ammattikorkeakoulu, Ammatillinen opettajakorkeakoulu - Ammatillinen erityisopettajankoulutus')
+              'Opiskelijavalintasi on vielä ehdollinen. Jyväskylän ammattikorkeakoulu, Ammatillinen opettajakorkeakoulu - Ammatillinen erityisopettajankoulutus Tietoa uudelle opiskelijalle')
           })
 
           it("Oili-linkki ei tule näkyviin", function() {
