@@ -2765,7 +2765,9 @@
             hakemusNivelKesa2013WithPeruskouluBaseEducation.getPreference(0).moveDown,
             hakemusNivelKesa2013WithPeruskouluBaseEducation.saveWaitSuccess)
         it("liitepyyntöjä ei näytetä", function() {
-          hakemusNivelKesa2013WithPeruskouluBaseEducation.calloutText().should.equal("")
+          return wait.until(function() {
+            return hakemusNivelKesa2013WithPeruskouluBaseEducation.calloutText()== ""
+          })()
         })
       })
     })

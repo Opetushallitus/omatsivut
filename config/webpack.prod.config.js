@@ -1,7 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
   mode: 'production',
@@ -45,7 +44,13 @@ module.exports = {
         test: /\.less$/,
         use: [
           {
-            loader: "style-loader"
+            loader: "file-loader",
+            options: {
+              name: "css/[name].css",
+            },
+          },
+          {
+            loader: "extract-loader",
           },
           {
             loader: "css-loader",
@@ -61,14 +66,6 @@ module.exports = {
       {
         test: /\.css$/,
         use: [
-          {
-            loader: MiniCssExtractPlugin.loader,
-            options: {
-              // you can specify a publicPath here
-              // by default it use publicPath in webpackOptions.output
-              publicPath: '../'
-            }
-          },
           "css-loader"
         ]
       },
@@ -87,9 +84,6 @@ module.exports = {
     ),
     new UglifyJSPlugin({
       sourceMap: true
-    }),
-    new MiniCssExtractPlugin({
-      filename: "[name].css"
     })
   ]
   /*
