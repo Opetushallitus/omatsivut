@@ -17,6 +17,7 @@ class OmatsivutServer {
     val dbUrl = "abc"
     val user = "asdf"
     val password = "sfdsf"
+    // OmatsivutDatabase(props)
     val context: WebAppContext = createContext
     val server = JettyUtil.createServerWithContext(portHttp, portHttps, context, dbUrl, user, password, secureSessionCookie)
     server.start()
@@ -27,6 +28,12 @@ class OmatsivutServer {
   def createContext = {
     val context = new WebAppContext()
     context.setBaseResource(Resource.newClassPathResource("webapps"))
+    context.setContextPath("/change-me/")
+    context.setInitParameter(ScalatraListener.LifeCycleKey, classOf[ScalatraBootstrap].getCanonicalName)
+    context.setInitParameter(org.scalatra.EnvironmentKey, "production")
+    context.setInitParameter(org.scalatra.CorsSupport.EnableKey, "false")
+    context.addEventListener(new ScalatraListener)
+    context.addServlet(classOf[DefaultServlet], "/")
     context
   }
 }

@@ -142,6 +142,22 @@ tarjonta.v1.haku.resource.url=https\://${host.virkailija}/tarjonta-service/rest/
 ohjausparametrit.resource.url=https\://${host.virkailija}/ohjausparametrit-service/api/v1/rest/parametri
 environment={{ymparisto}}
 
+# DB for session clustering
+omatsivut.db.host="omatsivutdb"
+omatsivut.db.port=5432
+omatsivut.db.name="omatsivut"
+omatsivut.db.user={{omatsivut_db_username}}
+omatsivut.db.password={{omatsivut_db_password}}
+omatsivut.db.url=jdbc:postgresql://{{omatsivut_db_host}}:{{omatsivut_db_port}}/{{omatsivut_db_name}}
+omatsivut.db.connectionPool=HikariCP
+omatsivut.db.numThreads=10
+omatsivut.db.maxConnections={{ omatsivut_db_max_active }}
+omatsivut.db.minConnections={{ omatsivut_db_max_active }}
+omatsivut.db.queueSize=10000
+omatsivut.db.registerMbeans=true
+omatsivut.db.initializationFailFast=true
+omatsivut.db.timeout=20 seconds
+
 # CAS
 cas.url={{ cas_url }}
 ryhmasahkoposti.cas.service=https://{{host_virkailija}}/ryhmasahkoposti-service/
