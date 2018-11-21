@@ -102,10 +102,12 @@ trait TuloskirjeComponent {
 
     private def getObjectMetadata(hakuOid: String, hakemusOid: String) : Option[ObjectMetadata] = {
       val filename = s"$hakuOid/$hakemusOid.pdf"
-      Try(s3client.getObjectMetadata(s3Settings.bucket, filename))
-      match {
-        case Success(metadata) => Some(metadata)
-        case Failure(e) => None
+      Try(s3client.getObjectMetadata(s3Settings.bucket, filename)) match {
+        case Success(metadata) =>
+          Some(metadata)
+        case Failure(e) =>
+          logExceptions(e, filename)
+          None
       }
     }
 
