@@ -9,14 +9,14 @@ import org.slf4j.LoggerFactory
 
 class OmatsivutServer {
 
-  def portHttp = 3 // props.getInt("hakuperusteet.port.http")
-  def portHttps = Option(4) // props.getInt("hakuperusteet.port.https")).find(_ != -1)
+  def portHttp = OphUrlProperties.require("omatsivut.port.http").toInt
+  def portHttps = Option(OphUrlProperties.require("omatsivut.port.https").toInt)
   def secureSessionCookie = true
 
   def runServer() {
-    val dbUrl = "abc"
-    val user = "asdf"
-    val password = "sfdsf"
+    val dbUrl = OphUrlProperties.getProperty("omatsivut.db.url")
+    val user = OphUrlProperties.getProperty("omatsivut.db.user")
+    val password = OphUrlProperties.getProperty("omatsivut.db.password")
     // OmatsivutDatabase(props)
     val context: WebAppContext = createContext
     val server = JettyUtil.createServerWithContext(portHttp, portHttps, context, dbUrl, user, password, secureSessionCookie)
@@ -27,9 +27,9 @@ class OmatsivutServer {
 
   def createContext = {
     val context = new WebAppContext()
-    context.setBaseResource(Resource.newClassPathResource("webapps"))
-    context.setContextPath("/change-me/")
-    context.setInitParameter(ScalatraListener.LifeCycleKey, classOf[ScalatraBootstrap].getCanonicalName)
+    context.setBaseResource(Resource.newClassPathResource("/webapp"))
+    context.setContextPath("/omatsivut")  // PETAR not sure is this correct
+    context.setInitParameter(ScalatraListener.LifeCycleKey, Class.forName("ScalatraBootstrap").getCanonicalName)
     context.setInitParameter(org.scalatra.EnvironmentKey, "production")
     context.setInitParameter(org.scalatra.CorsSupport.EnableKey, "false")
     context.addEventListener(new ScalatraListener)
@@ -44,6 +44,7 @@ object OmatsivutServer {
 
   def main(args: Array[String]): Unit = {
     val s = new OmatsivutServer
+    logger.info("About to start " + s)
     s.runServer()
     logger.info("Started OmatsivutServer")
   }
