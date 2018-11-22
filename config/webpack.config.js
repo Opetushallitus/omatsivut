@@ -7,7 +7,7 @@ module.exports = {
     index: './src/main/js/app.js'
   },
   output: {
-    path: path.resolve(__dirname, '../src/main/resources/webapp/'),
+    path: path.resolve(__dirname, '../src/main/webapp/'),
     filename: '[name].bundle.js',
     chunkFilename: '[name].bundle.js',
     publicPath: '/omatsivut/',

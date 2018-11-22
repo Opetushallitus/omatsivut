@@ -36,9 +36,9 @@ class JettyLauncher(profile: Option[String] = None) {
 
   val omatsivut: WebAppContext = {
     val context = new WebAppContext()
-    context.setResourceBase("src/main/resources/webapp")
+    context.setResourceBase("src/main/webapp")
     context.setContextPath("/omatsivut")
-    context.setDescriptor("src/main/resources/webapp/WEB-INF/web.xml")
+    context.setDescriptor("src/main/webapp/WEB-INF/web.xml")
     profile.foreach(context.setAttribute("omatsivut.profile", _))
     context
   }
