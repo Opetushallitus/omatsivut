@@ -5,7 +5,7 @@ import java.io.{File, FileInputStream, IOException}
 import com.amazonaws.{AmazonClientException, AmazonServiceException}
 import com.amazonaws.auth.InstanceProfileCredentialsProvider
 import com.amazonaws.services.s3.AmazonS3ClientBuilder
-import com.amazonaws.services.s3.model.{ObjectMetadata, S3Object}
+import com.amazonaws.services.s3.model.{AmazonS3Exception, ObjectMetadata, S3Object}
 import fi.vm.sade.hakemuseditori.auditlog.{Audit, FetchTuloskirje}
 import fi.vm.sade.hakemuseditori.hakemus.domain.Tuloskirje
 import fi.vm.sade.hakemuseditori.json.JsonFormats
@@ -105,6 +105,8 @@ trait TuloskirjeComponent {
       Try(s3client.getObjectMetadata(s3Settings.bucket, filename)) match {
         case Success(metadata) =>
           Some(metadata)
+        case Failure(e: AmazonS3Exception) if e.getStatusCode == 404 =>
+          None
         case Failure(e) =>
           logExceptions(e, filename)
           None
