@@ -5,6 +5,7 @@ import fi.vm.sade.utils.http.DefaultHttpClient
 import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.hakemuseditori.memoize.TTLOptionalMemoize
 import fi.vm.sade.hakemuseditori.ohjausparametrit.domain.{HaunAikataulu, TulostenJulkistus}
+import fi.vm.sade.utils.slf4j.Logging
 import org.json4s.JsonAST.JValue
 
 
@@ -28,17 +29,20 @@ trait OhjausparametritComponent {
     }
   }
 
-  class RemoteOhjausparametritService(ohjausparametritUrl: String) extends OhjausparametritService with JsonFormats {
+  class RemoteOhjausparametritService(ohjausparametritUrl: String) extends OhjausparametritService with JsonFormats with Logging {
     import org.json4s.jackson.JsonMethods._
 
     def haunAikataulu(asId: String) = {
-      val (responseCode, _, resultString) = DefaultHttpClient.httpGet(ohjausparametritUrl + "/" + asId)
+      val url = ohjausparametritUrl + "/" + asId
+      val (responseCode, _, resultString) = DefaultHttpClient.httpGet(url)
         .responseWithHeaders
 
       responseCode match {
         case 200 =>
           parse(resultString, useBigDecimalForDouble = false).extractOpt[JValue].flatMap(OhjausparametritParser.parseHaunAikataulu(_))
-        case _ => None
+        case errorCode =>
+          logger.error(s"Response code ${errorCode} from ohjausparametrit-service at ${url}, expected: 200. Content: ${resultString}")
+          None
       }
     }
   }
