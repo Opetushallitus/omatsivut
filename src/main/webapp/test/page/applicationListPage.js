@@ -298,7 +298,7 @@ function ApplicationListPage() {
 
           selectOption: function(id) {
             return function() {
-              vastaanottoElement().find("input[value='" + id + "']").click().click() // Angular hack
+              vastaanottoElement().find("input[value='" + id + "']").click()
               return wait.forAngular()
             }
           },
