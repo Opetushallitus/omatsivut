@@ -20,7 +20,7 @@ trait TuloskirjeComponent {
   val tuloskirjeService: TuloskirjeService
 
   class StubbedTuloskirjeService extends TuloskirjeService with JsonFormats with Logging {
-    override def fetchTuloskirje(request: HttpServletRequest,hakuOid: String, hakemusOid: String, henkiloOid: String) : Option[Array[Byte]] = {
+    override def fetchTuloskirje(request: HttpServletRequest,hakuOid: String, hakemusOid: String) : Option[Array[Byte]] = {
       logger.info(s"Get tuloskirje info for hakemus $hakemusOid")
       hakemusOid match {
         case "1.2.246.562.11.00000441369" => Some("1.2.246.562.11.00000441369_hyvaksymiskirje".getBytes)
@@ -28,20 +28,20 @@ trait TuloskirjeComponent {
       }
     }
     override def getTuloskirjeInfo(request: HttpServletRequest,hakuOid: String, hakemusOid: String) : Option[Tuloskirje] ={
-      fetchTuloskirje(request,hakuOid, hakemusOid, "").map(_ => Tuloskirje(hakuOid, 1479099404159L))
+      fetchTuloskirje(request,hakuOid, hakemusOid).map(_ => Tuloskirje(hakuOid, 1479099404159L))
     }
   }
 
   class SharedDirTuloskirjeService(appConfig: AppConfig) extends TuloskirjeService with Logging {
     private val fileSystemUrl = appConfig.settings.tuloskirjeetFileSystemUrl
 
-    override def fetchTuloskirje(request: HttpServletRequest,hakuOid: String, hakemusOid: String, personOid: String) : Option[Array[Byte]] = {
+    override def fetchTuloskirje(request: HttpServletRequest,hakuOid: String, hakemusOid: String) : Option[Array[Byte]] = {
       val file = getLocalFile(hakuOid, hakemusOid)
       if (file.exists()) {
         val fileStream = new FileInputStream(file)
         val byteArray: Array[Byte] = IOUtils.toByteArray(fileStream)
         IOUtils.closeQuietly(fileStream)
-        Audit.oppija.log(FetchTuloskirje(request, personOid, hakuOid, hakemusOid))
+        Audit.oppija.log(FetchTuloskirje(request, hakuOid, hakemusOid))
         Some(byteArray)
       } else {
         logger.warn("Ei löytynyt tuloskirjettä: " + file)
@@ -69,7 +69,7 @@ trait TuloskirjeComponent {
       .withRegion(s3Settings.region)
       .build()
 
-    override def fetchTuloskirje(request: HttpServletRequest, hakuOid: String, hakemusOid: String, personOid: String) : Option[Array[Byte]] = {
+    override def fetchTuloskirje(request: HttpServletRequest, hakuOid: String, hakemusOid: String) : Option[Array[Byte]] = {
       if (!s3client.doesBucketExistV2(s3Settings.bucket)) {
         logger.error("Defined bucket {} does not exist.", s3Settings.bucket)
         return None
@@ -78,7 +78,7 @@ trait TuloskirjeComponent {
       Try(s3client.getObject(s3Settings.bucket, filename)) match {
         case Success(s3Object) =>
           val content = getContent(s3Object)
-          Audit.oppija.log(FetchTuloskirje(request, personOid, hakuOid, hakemusOid))
+          Audit.oppija.log(FetchTuloskirje(request, hakuOid, hakemusOid))
           content
         case Failure(e) =>
           logExceptions(e, filename)
@@ -127,6 +127,6 @@ trait TuloskirjeComponent {
 }
 
 trait TuloskirjeService {
-  def fetchTuloskirje(request: HttpServletRequest, hakuOid: String, hakemusOid: String, personOid: String) : Option[Array[Byte]]
+  def fetchTuloskirje(request: HttpServletRequest, hakuOid: String, hakemusOid: String) : Option[Array[Byte]]
   def getTuloskirjeInfo(request: HttpServletRequest, hakuOid: String, hakemusOid: String) : Option[Tuloskirje]
 }
