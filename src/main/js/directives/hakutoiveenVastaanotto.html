@@ -20,14 +20,14 @@
       <ul class="hakutoive-options">
           <li>
             <label>
-              <input type="radio" name="vastaanotettavaHakutoive" value="VastaanotaSitovasti" ng-model="ctrl.vastaanottoAction[hakutoive.hakukohdeOid]" ng-disabled="ctrl.isVastaanottoKesken()" ng-click="ctrl.flashSiirtohakuNotification()"/>
+              <input type="radio" name="vastaanotettavaHakutoive" value="VastaanotaSitovasti" ng-model="ctrl.vastaanottoAction[hakutoive.hakukohdeOid]" ng-disabled="ctrl.isVastaanottoKesken()" ng-click="ctrl.flashSiirtohakuNotification(); ctrl.selectHakukohde(hakutoive.hakukohdeOid)" />
               {{ ctrl.haku().toisenasteenhaku ? localization('message.acceptEducation.acceptToinenAste') : localization('message.acceptEducation.accept') }}
             </label>
           </li>
           <li ng-show="hakutoive.vastaanotettavuustila == 'VASTAANOTETTAVISSA_EHDOLLISESTI'">
               <label>
               <input type="radio" name="vastaanotettavaHakutoive" value="VastaanotaEhdollisesti"
-                     ng-model="ctrl.vastaanottoAction[hakutoive.hakukohdeOid]" ng-disabled="ctrl.isVastaanottoKesken()"/>
+                     ng-model="ctrl.vastaanottoAction[hakutoive.hakukohdeOid]" ng-disabled="ctrl.isVastaanottoKesken()" ng-click="ctrl.selectHakukohde(hakutoive.hakukohdeOid)"/>
                 {{ localization('message.acceptEducation.conditionalAccept') }}
               </label>
               <ul class="info">
@@ -37,7 +37,7 @@
           </li>
           <li>
             <label>
-              <input type="radio" name="vastaanotettavaHakutoive" value="Peru" ng-model="ctrl.vastaanottoAction[hakutoive.hakukohdeOid]" ng-disabled="ctrl.isVastaanottoKesken()"/>
+              <input type="radio" name="vastaanotettavaHakutoive" value="Peru" ng-model="ctrl.vastaanottoAction[hakutoive.hakukohdeOid]" ng-disabled="ctrl.isVastaanottoKesken()" ng-click="ctrl.selectHakukohde(hakutoive.hakukohdeOid)"/>
               {{ localization('message.acceptEducation.reject') }}
             </label>
           </li>

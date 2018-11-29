@@ -24,6 +24,7 @@ class HakutoiveenVastaanottoController {
   constructor($timeout, restResources, $scope) {
     this.$timeout = $timeout;
     this.restResources = restResources;
+    this.selectedHakukohde = null;
 
     try {
       this.email = $scope.$parent.$parent.application.henkilotiedot['Sähköposti'].answer
@@ -42,6 +43,7 @@ class HakutoiveenVastaanottoController {
 
   isNotVastaanotettavissa(hakukohdeOid) {
     return !(this.vastaanottoAction && this.vastaanottoAction[hakukohdeOid] && this.vastaanottoAction[hakukohdeOid].length !== 0)
+      || (this.selectedHakukohde != hakukohdeOid)
       || this.isVastaanottoKesken()
       || (this.isRejectSelected(hakukohdeOid) && !this.confirmCancelAction && this.isKkHaku());
   }
@@ -62,6 +64,10 @@ class HakutoiveenVastaanottoController {
     this.siirtohakuClass = 'siirtohaku-fade-out';
     this.$timeout(() => this.siirtohakuClass = 'siirtohaku-fade-in', 50)
   };
+
+  selectHakukohde(hakukohdeOid) {
+    this.selectedHakukohde = hakukohdeOid;
+  }
 
   vastaanotaHakutoive(hakutoive) {
     this.ajaxPending = true;
