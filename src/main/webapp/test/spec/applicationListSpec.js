@@ -847,9 +847,15 @@
             ])
           })
         })
-
-        describe("ensimmäisen paikan sitova vastaanottaminen", function() {
+        describe("ensimmäisen paikan sitovan vastaanottamisen valinta", function() {
           before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VastaanotaSitovasti"))
+          it("oikea nappi on valittuna", function () {
+            var selectedIndex = hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectedIndex();
+            expect(selectedIndex).to.equal(0)
+          })
+        })
+
+        describe("ensimmäisen paikan sitova vastaanottamisen lähetys", function() {
           before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send)
 
           it("vastaanottotieto näkyy ja toinen paikka peruuntuu", function() {
@@ -890,9 +896,15 @@
             ])
           })
         })
-
-        describe("ensimmäisen paikan vastaanottaminen", function() {
+        describe("ensimmäisen paikan vastaanottamisen valinta", function() {
           before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectOption("VastaanotaSitovasti"))
+          it("oikea nappi on valittuna", function () {
+            var selectedIndex = hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).selectedIndex();
+            expect(selectedIndex).to.equal(0)
+          })
+        })
+
+        describe("ensimmäisen paikan vastaanottamisen lähetys", function() {
           before(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).send)
 
           describe("jälkeen", function() {

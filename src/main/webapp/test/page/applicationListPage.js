@@ -303,6 +303,11 @@ function ApplicationListPage() {
             }
           },
 
+          selectedIndex: function() {
+              var checked = vastaanottoElement().find("[type=radio]:checked");
+              return checked.index()
+          },
+
           confirmButtonEnabled: function() {
             return !vastaanottoElement().find(".vastaanota-btn").prop("disabled")
           },
