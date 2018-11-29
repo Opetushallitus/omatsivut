@@ -40,10 +40,14 @@ class HakutoiveenVastaanottoController {
     return this.ajaxPending || this.vastaanottoSentSuccessfully;
   };
 
-  isNotVastaanotettavissa() {
-    return !(this.vastaanottoAction && this.vastaanottoAction.length !== 0)
+  isNotVastaanotettavissa(hakukohdeOid) {
+    return !(this.vastaanottoAction && this.vastaanottoAction[hakukohdeOid] && this.vastaanottoAction[hakukohdeOid].length !== 0)
       || this.isVastaanottoKesken()
-      || (this.isRejectSelected() && !this.confirmCancelAction && this.isKkHaku());
+      || (this.isRejectSelected(hakukohdeOid) && !this.confirmCancelAction && this.isKkHaku());
+  }
+
+  isRejectSelected(hakukohdeOid) {
+    return this.vastaanottoAction[hakukohdeOid] === 'Peru';
   }
 
   isRejectSelected() {
@@ -68,7 +72,7 @@ class HakutoiveenVastaanottoController {
     };
 
     const data = {
-      vastaanottoAction: {action: this.vastaanottoAction},
+      vastaanottoAction: {action: this.vastaanottoAction[hakutoive.hakukohdeOid]},
       email: this.email,
       hakukohdeNimi: hakutoive.hakukohdeNimi,
       tarjoajaNimi: hakutoive.tarjoajaNimi
