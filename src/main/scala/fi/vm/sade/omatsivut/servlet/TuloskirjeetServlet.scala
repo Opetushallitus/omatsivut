@@ -43,12 +43,6 @@ trait TuloskirjeetServletContainer {
         InternalServerError("error" -> "Internal server error")
     }
 
-    private def fetchHakemus(request: HttpServletRequest, hakemusOid: String, personOid: Option[String]): Try[HakemusInfo] = {
-      personOid.map(hakemusEditori.fetchByHakemusOid(request, _, hakemusOid, FetchIfNoHetuOrToinenAste))
-        .getOrElse(hakemusRepository.getHakemus(request, hakemusOid, FetchIfNoHetuOrToinenAste))
-        .fold[Try[HakemusInfo]](Failure(new NoSuchElementException(s"Hakemus $hakemusOid not found")))(Success(_))
-    }
-
     get("/:token/tuloskirje.pdf") {
       val token = params("token")
       (for {
