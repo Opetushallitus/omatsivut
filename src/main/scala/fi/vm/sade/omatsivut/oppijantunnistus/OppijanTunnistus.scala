@@ -18,7 +18,7 @@ trait OppijanTunnistusService {
 
 case class OppijanTunnistusVerification(exists: Boolean, valid: Boolean, metadata: Option[OppijantunnistusMetadata])
 
-case class OppijantunnistusMetadata(hakemusOid: Oid, personOid: Option[Oid])
+case class OppijantunnistusMetadata(hakemusOid: Oid, personOid: Option[Oid], hakuOid: Option[Oid])
 
 class InvalidTokenException(msg: String) extends RuntimeException(msg)
 
@@ -50,7 +50,7 @@ class RemoteOppijanTunnistusService(client: HttpClient = DefaultHttpClient) exte
 
 class StubbedOppijanTunnistusService extends OppijanTunnistusService {
   override def validateToken(token: String): Try[OppijantunnistusMetadata] = token match {
-    case hakemusId if hakemusId.startsWith("1.2.246.562.11.") => Success(OppijantunnistusMetadata(hakemusId, None))
+    case hakemusId if hakemusId.startsWith("1.2.246.562.11.") => Success(OppijantunnistusMetadata(hakemusId, None, None))
     case "expiredToken" => Failure(new ExpiredTokenException("expired token"))
     case _ => Failure(new InvalidTokenException("invalid token"))
   }

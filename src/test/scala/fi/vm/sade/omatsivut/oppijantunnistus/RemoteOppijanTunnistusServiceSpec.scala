@@ -32,7 +32,7 @@ class RemoteOppijanTunnistusServiceSpec extends MutableScalatraSpec with Mockito
       println(url)
       client.httpGet(url).returns(request)
 
-      validateToken(testToken, client) should_== Success(OppijantunnistusMetadata(expectedHakemusOid, None))
+      validateToken(testToken, client) should_== Success(OppijantunnistusMetadata(expectedHakemusOid, None, None))
     }
 
     "return invalid token exception when token is not valid" in {

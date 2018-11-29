@@ -43,22 +43,14 @@ trait TuloskirjeetServletContainer {
         InternalServerError("error" -> "Internal server error")
     }
 
-    private def fetchHakemus(request: HttpServletRequest, hakemusOid: String, personOid: Option[String]): Try[HakemusInfo] = {
-      personOid.map(hakemusEditori.fetchByHakemusOid(request, _, hakemusOid, FetchIfNoHetuOrToinenAste))
-        .getOrElse(hakemusRepository.getHakemus(request, hakemusOid, FetchIfNoHetuOrToinenAste))
-        .fold[Try[HakemusInfo]](Failure(new NoSuchElementException(s"Hakemus $hakemusOid not found")))(Success(_))
-    }
-
     get("/:token/tuloskirje.pdf") {
       val token = params("token")
       (for {
         metadata <- oppijanTunnistusService.validateToken(token)
-        hakemusInfo <- fetchHakemus(request, metadata.hakemusOid, metadata.personOid)
         tuloskirje <- Try(tuloskirjeService.fetchTuloskirje(
           request,
-          hakemusInfo.hakemus.haku.oid,
-          metadata.hakemusOid,
-          resolvePersonOid(token, metadata, hakemusInfo)))
+          metadata.hakuOid.getOrElse(throw new RuntimeException(s"Haku OID not part of metadata for token ${token}")),
+          metadata.hakemusOid))
       } yield {
         tuloskirje match {
           case Some(data: Array[Byte]) => Ok(data, Map(
@@ -70,14 +62,4 @@ trait TuloskirjeetServletContainer {
     }
   }
 
-  private def resolvePersonOid(token: String, metadata: OppijantunnistusMetadata, hakemusInfo: HakemusInfo): String = {
-    metadata.personOid.getOrElse {
-      if (StringUtils.isNotBlank(hakemusInfo.hakemus.personOid)) {
-        hakemusInfo.hakemus.personOid
-      } else {
-        throw new IllegalArgumentException("Cannot find person oid when fetching tuloskirje " +
-          s"for token $token of hakemus ${hakemusInfo.hakemus.oid} with metadata $metadata")
-      }
-    }
-  }
 }

@@ -65,7 +65,7 @@ trait HakemusEditoriComponent extends ApplicationValidatorComponent
         case PartialSuccess(_, ts) => throw ts.head
         case FullFailure(ts) => throw ts.head
       }
-      hakemukset.flatMap(hakemus => tuloskirjeService.fetchTuloskirje(request, hakuOid, hakemus.hakemus.oid, personOid))
+      hakemukset.flatMap(hakemus => tuloskirjeService.fetchTuloskirje(request, hakuOid, hakemus.hakemus.oid))
     }
 
     def fetchByPersonOid(request: HttpServletRequest,
