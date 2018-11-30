@@ -52,10 +52,6 @@ class HakutoiveenVastaanottoController {
     return this.vastaanottoAction[hakukohdeOid] === 'Peru';
   }
 
-  isRejectSelected() {
-    return this.vastaanottoAction === 'Peru';
-  }
-
   isKkHaku() {
     return !this.haku().toisenasteenhaku;
   }
