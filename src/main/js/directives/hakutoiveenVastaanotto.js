@@ -49,7 +49,7 @@ class HakutoiveenVastaanottoController {
   }
 
   isRejectSelected(hakukohdeOid) {
-    return this.vastaanottoAction[hakukohdeOid] === 'Peru';
+    return this.vastaanottoAction && this.vastaanottoAction[hakukohdeOid] === 'Peru';
   }
 
   isKkHaku() {
