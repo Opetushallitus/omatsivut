@@ -298,9 +298,14 @@ function ApplicationListPage() {
 
           selectOption: function(id) {
             return function() {
-              vastaanottoElement().find("input[value='" + id + "']").click().click() // Angular hack
+              vastaanottoElement().find("input[value='" + id + "']").click()
               return wait.forAngular()
             }
+          },
+
+          selectedIndex: function() {
+              var checked = vastaanottoElement().find("[type=radio]:checked");
+              return checked.index()
           },
 
           confirmButtonEnabled: function() {

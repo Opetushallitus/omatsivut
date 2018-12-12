@@ -24,6 +24,7 @@ class HakutoiveenVastaanottoController {
   constructor($timeout, restResources, $scope) {
     this.$timeout = $timeout;
     this.restResources = restResources;
+    this.selectedHakukohde = null;
 
     try {
       this.email = $scope.$parent.$parent.application.henkilotiedot['Sähköposti'].answer
@@ -40,14 +41,15 @@ class HakutoiveenVastaanottoController {
     return this.ajaxPending || this.vastaanottoSentSuccessfully;
   };
 
-  isNotVastaanotettavissa() {
-    return !(this.vastaanottoAction && this.vastaanottoAction.length !== 0)
+  isNotVastaanotettavissa(hakukohdeOid) {
+    return !(this.vastaanottoAction && this.vastaanottoAction[hakukohdeOid] && this.vastaanottoAction[hakukohdeOid].length !== 0)
+      || (this.selectedHakukohde != hakukohdeOid)
       || this.isVastaanottoKesken()
-      || (this.isRejectSelected() && !this.confirmCancelAction && this.isKkHaku());
+      || (this.isRejectSelected(hakukohdeOid) && !this.confirmCancelAction && this.isKkHaku());
   }
 
-  isRejectSelected() {
-    return this.vastaanottoAction === 'Peru';
+  isRejectSelected(hakukohdeOid) {
+    return this.vastaanottoAction && this.vastaanottoAction[hakukohdeOid] === 'Peru';
   }
 
   isKkHaku() {
@@ -59,6 +61,10 @@ class HakutoiveenVastaanottoController {
     this.$timeout(() => this.siirtohakuClass = 'siirtohaku-fade-in', 50)
   };
 
+  selectHakukohde(hakukohdeOid) {
+    this.selectedHakukohde = hakukohdeOid;
+  }
+
   vastaanotaHakutoive(hakutoive) {
     this.ajaxPending = true;
 
@@ -68,7 +74,7 @@ class HakutoiveenVastaanottoController {
     };
 
     const data = {
-      vastaanottoAction: {action: this.vastaanottoAction},
+      vastaanottoAction: {action: this.vastaanottoAction[hakutoive.hakukohdeOid]},
       email: this.email,
       hakukohdeNimi: hakutoive.hakukohdeNimi,
       tarjoajaNimi: hakutoive.tarjoajaNimi
