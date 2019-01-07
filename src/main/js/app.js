@@ -81,7 +81,7 @@ window.Service = {
   }
 };
 //  "exceptionOverride"
-const listApp = angular.module('listApp', [ngResource, ngSanitize, ngAnimate, ngCookies, typeahead, "RecursionHelper", "debounce"]);
+const listApp = angular.module('listApp', [ngResource, ngSanitize, ngAnimate, ngCookies, typeahead, "RecursionHelper", "debounce", "exceptionOverride"]);
 
 listApp
   .config(router)
@@ -127,6 +127,7 @@ listApp.run(['$http', '$cookies', function($http, $cookies) {
 angular.element(document).ready(
   init()
     .then(() => {
+      console.log("Document ready!");
       angular.bootstrap(document, ['listApp']);
       document.getElementsByTagName('body')[0].setAttribute('aria-busy', 'false');
     })
@@ -155,11 +156,12 @@ function onError(error) {
 }
 
 window.onerror = function(errorMsg, url, lineNumber, columnNumber, exception) {
+  console.log("Window.onerror", errorMsg);
   let data = url + ":" + lineNumber;
   if (typeof columnNumber !== "undefined") data += ":" + columnNumber;
   if (typeof exception !==  "undefined") data += "\n" + exception.stack;
-  logExceptionToPiwik(errorMsg, data);
   logErrorToBackend(errorMsg);
+  logExceptionToPiwik(errorMsg, data);
 };
 
 angular.module("exceptionOverride", []).factory("$exceptionHandler", function() {

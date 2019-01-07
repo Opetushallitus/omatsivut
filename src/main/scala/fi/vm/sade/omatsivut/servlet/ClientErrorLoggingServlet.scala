@@ -11,7 +11,7 @@ class ClientErrorLoggingServlet(val appConfig: AppConfig) extends ScalatraServle
   //"/omatsivut/secure/errorlogtobackend"
 
   //TODO nämä viestit omalle logilleen, nyt menevät samaan logivirtaan kuin muutkin
-  post("/*") {
+  post("/") {
     //TODO lisää autentikaatio, ehkä myös sieltä tunnistetietoja virhelogille?
     before() {
       contentType = formats("json")
