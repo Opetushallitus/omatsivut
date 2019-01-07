@@ -141,11 +141,25 @@ function logExceptionToPiwik(msg, data) {
   }
 }
 
+function logErrorToBackend(error) {
+  console.log("Logitetaan backendiin", error);
+  restResources.clientErrorLoggingToBackend.save({}, JSON.stringify(error), onSuccess(), onError(error));
+}
+
+function onSuccess() {
+  console.log("Virhe onnistuneesti backendin");
+}
+
+function onError(error) {
+  console.log("Ei saatu virhettä backendiin, ", error)
+}
+
 window.onerror = function(errorMsg, url, lineNumber, columnNumber, exception) {
   let data = url + ":" + lineNumber;
   if (typeof columnNumber !== "undefined") data += ":" + columnNumber;
   if (typeof exception !==  "undefined") data += "\n" + exception.stack;
-  logExceptionToPiwik(errorMsg, data)
+  logExceptionToPiwik(errorMsg, data);
+  logErrorToBackend(errorMsg);
 };
 
 angular.module("exceptionOverride", []).factory("$exceptionHandler", function() {
@@ -153,6 +167,8 @@ angular.module("exceptionOverride", []).factory("$exceptionHandler", function() 
     if (isTestMode()) {
       throw exception
     } else {
+      console.log("Caught with exceptionOverride! ", exception);
+      logErrorToBackend(exception);
       logExceptionToPiwik(exception.message, exception.stack)
     }
   };

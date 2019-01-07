@@ -10,5 +10,6 @@ window.urls.addProperties({
   "omatsivut.translations": "/omatsivut/translations",
   "omatsivut.login": "/omatsivut/login",
   "omatsivut.applications.tuloskirje": "/omatsivut/secure/applications/tuloskirje/$1",
-  "omatsivut.lasnaoloilmoittautuminen": "/omatsivut/secure/ilmoittaudu"
+  "omatsivut.lasnaoloilmoittautuminen": "/omatsivut/secure/ilmoittaudu",
+  "omatsivut.errorlogtobackend": "/omatsivut/secure/errorlogtobackend"
 });
