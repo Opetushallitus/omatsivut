@@ -142,17 +142,12 @@ function logExceptionToPiwik(msg, data) {
   }
 }
 
-function logErrorToBackend(error) {
-  console.log("Logitetaan backendiin", error);
-  restResources.clientErrorLoggingToBackend.save({}, JSON.stringify(error), onSuccess(), onError(error));
-}
-
 function onSuccess() {
-  console.log("Virhe onnistuneesti backendin");
+  console.log("Virhe logitettu onnistuneesti backendin");
 }
 
 function onError(error) {
-  console.log("Ei saatu virhettä backendiin, ", error)
+  console.log("Ei saatu logitettua virhettä backendiin, ", error)
 }
 
 window.onerror = function(errorMsg, url, lineNumber, columnNumber, exception) {
@@ -160,18 +155,81 @@ window.onerror = function(errorMsg, url, lineNumber, columnNumber, exception) {
   let data = url + ":" + lineNumber;
   if (typeof columnNumber !== "undefined") data += ":" + columnNumber;
   if (typeof exception !==  "undefined") data += "\n" + exception.stack;
-  logErrorToBackend(errorMsg);
   logExceptionToPiwik(errorMsg, data);
 };
 
-angular.module("exceptionOverride", []).factory("$exceptionHandler", function() {
-  return function (exception) {
+angular.module("exceptionOverride", []).factory("$exceptionHandler", ["$injector", function($injector) {
+  return function (exception, cause) {
+    var $http = $injector.get("$http");
+    var $window = $injector.get("$window");
+    function get_browser() {
+      var N = navigator.appName;
+      var ua = navigator.userAgent;
+      var tem;
+      var M = ua.match(/(opera|chrome|safari|firefox|msie)\/?\s*(\.?\d+(\.\d+)*)/i);
+      if (M && (tem = ua.match(/version\/([\.\d]+)/i)) !== null) {
+        M[2] = tem[1];
+      }
+      M = M ? [
+        M[1],
+        M[2]
+      ] : [
+        N,
+        navigator.appVersion,
+        '-?'
+      ];
+      return M[0];
+    }
+    function get_browser_version() {
+      var N = navigator.appName;
+      var ua = navigator.userAgent;
+      var tem;
+      var M = ua.match(/(opera|chrome|safari|firefox|msie)\/?\s*(\.?\d+(\.\d+)*)/i);
+      if (M && (tem = ua.match(/version\/([\.\d]+)/i)) !== null) {
+        M[2] = tem[1];
+      }
+      M = M ? [
+        M[1],
+        M[2]
+      ] : [
+        N,
+        navigator.appVersion,
+        '-?'
+      ];
+      return M[1];
+    }
+    function logToBackend(data) {
+      $http.post(window.url("omatsivut.errorlogtobackend"), JSON.stringify(data))
+        .then(function(success){
+          console.log("Virhe logitettu onnistuneesti backendiin, statuscode " + success.status);
+        },
+        function(failure) {
+          console.log("(debug) Kutsu backendiin epäonnistui, ", failure);
+        });
+    }
+    var browser = get_browser();
+    var browserVersion = get_browser_version();
+    var errorMessage = '';
+    var stackTrace = '';
+    if (exception !== undefined) {
+      errorMessage = exception.toString();
+      if(exception.stack !== undefined) {
+        stackTrace = exception.stack.toString();
+      }
+    }
+    var errorInfo = {
+      errorUrl: $window.location.href,
+      errorMessage: errorMessage,
+      stackTrace: stackTrace,
+      cause: cause || '',
+      browser: browser,
+      browserVersion: browserVersion
+    };
     if (isTestMode()) {
-      throw exception
+      logToBackend(errorInfo);
     } else {
-      console.log("Caught with exceptionOverride! ", exception);
-      logErrorToBackend(exception);
-      logExceptionToPiwik(exception.message, exception.stack)
+      logExceptionToPiwik(exception.message, exception.stack);
+      logToBackend(errorInfo);
     }
   };
-});
+}]);

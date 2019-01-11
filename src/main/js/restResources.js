@@ -25,7 +25,6 @@ export default ["$resource", "$http", function($resource, $http) {
     postOffice: $resource(window.url("omatsivut.postitoimipaikka")),
     koulutukset: $resource(window.url("omatsivut.koulutukset")),
     opetuspisteet: $resource(window.url("omatsivut.opetuspisteet")),
-    lasnaoloilmoittautuminen: $resource(window.url("omatsivut.lasnaoloilmoittautuminen")),
-    clientErrorLoggingToBackend: $resource(window.url("omatsivut.errorlogtobackend"))
+    lasnaoloilmoittautuminen: $resource(window.url("omatsivut.lasnaoloilmoittautuminen"))
   }
 }];
