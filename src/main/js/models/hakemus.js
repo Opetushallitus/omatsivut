@@ -13,6 +13,7 @@ export default class Hakemus {
     this.hasForm = json.hakemus.hasForm;
     this.educationBackground = copy(json.hakemus.educationBackground);
     this.notifications = json.hakemus.notifications;
+    this.ohjeetUudelleOpiskelijalle = json.hakemus.ohjeetUudelleOpiskelijalle;
     this.hakutoiveet = convertHakutoiveet(json.hakemus.hakutoiveet);
     this.henkilotiedot = convertHenkilotiedot(json.hakemus.answers.henkilotiedot);
     this.henkiloNimi = parseName(json.hakemus.answers.henkilotiedot);

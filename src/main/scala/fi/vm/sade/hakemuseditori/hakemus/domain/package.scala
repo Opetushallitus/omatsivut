@@ -36,6 +36,7 @@ case class Hakemus(oid: String,
                    updated: Option[Long],
                    state: HakemuksenTila,
                    tuloskirje: Option[Tuloskirje] = None,
+                   ohjeetUudelleOpiskelijalle: Map[String, String], // hakukohdeOid -> linkki
                    hakutoiveet: List[Hakutoive] = Nil,
                    haku: Haku,
                    educationBackground: EducationBackground,
@@ -61,7 +62,8 @@ case class Hakemus(oid: String,
 
 case class Tuloskirje(hakuOid: String, created: Long)
 
-case class Hakutoive(hakemusData: Option[HakutoiveData], koulutuksenAlkaminen: Option[KoulutuksenAlkaminen] = None, hakuaikaId: Option[String] = None, kohdekohtainenHakuaika: Option[KohteenHakuaika] = None)
+case class Hakutoive(hakemusData: Option[HakutoiveData], koulutuksenAlkaminen: Option[KoulutuksenAlkaminen] = None,
+                     hakuaikaId: Option[String] = None, kohdekohtainenHakuaika: Option[KohteenHakuaika] = None)
 
 object Hakutoive {
   def empty = Hakutoive(None)
@@ -86,7 +88,7 @@ sealed trait HakemuksenTila {
   def withoutKelaUrl: HakemuksenTila
 }
 
-// Alkutila, ei editoitatissa
+// Alkutila, ei editoitavissa
 case class Submitted(id: String = "SUBMITTED") extends HakemuksenTila {
   override def withoutKelaUrl: HakemuksenTila = this
 }

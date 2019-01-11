@@ -183,6 +183,7 @@
     "goToRegistration": "Siirry ilmoittautumaan",
     "conditionalAcceptanceTitle": "Opiskelijavalintasi on vielä ehdollinen.",
     "conditionalAcceptanceInfo": "Pääset ilmoittautumaan vasta valinnan vahvistamisen jälkeen.",
+    "instructionsForNewStudents": "Tietoa uudelle opiskelijalle",
     "opintoetuudet": {
       "studentFinancialAid": "Siirry Kelan asiointipalveluun",
       "opintotukihakemus": "Tee opintotukihakemus"

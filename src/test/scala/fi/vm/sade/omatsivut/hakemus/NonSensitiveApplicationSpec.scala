@@ -54,6 +54,10 @@ class NonSensitiveApplicationSpec extends HakemusApiSpecification {
       "Koulutus-id-educationcode" -> "koulutus_723111"))
 
   def jwtAuthHeader(answers: Set[AnswerId]): Map[String, String] = {
+    jwtAuthHeader(hakemusOid, answers, personOid)
+  }
+
+  def jwtAuthHeader(hakemusOid: String, answers: Set[AnswerId], personOid: String): Map[String, String] = {
     Map("Authorization" -> s"Bearer ${jwt.encode(HakemusJWT(hakemusOid, answers, personOid))}")
   }
 
@@ -69,6 +73,25 @@ class NonSensitiveApplicationSpec extends HakemusApiSpecification {
         val hakemusInfo = Serialization.read[InsecureHakemusInfo](body).response.hakemusInfo
         NonSensitiveHakemusInfo.answerIds(hakemusInfo.hakemus.answers) must beEqualTo(NonSensitiveHakemusInfo.nonSensitiveAnswers)
         hakemusInfo.questions must beEmpty
+      }
+    }
+
+    "has only nonsensitive contact info that contains the link to instructions for new students" in {
+      get("insecure/applications/application/token/" + hakemusOid) {
+        val hakemusInfo = Serialization.read[InsecureHakemusInfo](body).response.hakemusInfo
+        hakemusInfo.hakemus.ohjeetUudelleOpiskelijalle("1.2.246.562.20.14660127086") must beEqualTo(
+          "https://www.helsinki.fi/fi/opiskelu/ohjeita-hakemuksen-jattaneille-yhteishaku")
+      }
+    }
+
+    "has only nonsensitive contact info from ataru, and it contains also the link to instructions for new students" in {
+      val hakemusOidFromAtaru = "1.2.246.562.11.WillNotBeFoundInTarjonta"
+      val personOidFromAtaru = "PERSON-WITH-ATARU"
+      get("insecure/applications/application/session", headers = jwtAuthHeader(hakemusOidFromAtaru, Set(), personOidFromAtaru)) {
+        status must beEqualTo(200)
+        val hakemusInfo = Serialization.read[InsecureHakemusInfo](body).response.hakemusInfo
+        hakemusInfo.hakemus.ohjeetUudelleOpiskelijalle("1.2.246.562.20.14660127086") must beEqualTo(
+          "https://www.helsinki.fi/fi/opiskelu/ohjeita-hakemuksen-jattaneille-yhteishaku")
       }
     }
 

@@ -1257,7 +1257,8 @@
         "1.2.246.562.28.84829874814",
         "1.2.246.562.28.13426998195",
         "1.2.246.562.28.85192816478"
-      ]
+      ],
+      "ohjeetUudelleOpiskelijalle": "https://www.helsinki.fi/fi/opiskelu/ohjeita-hakemuksen-jattaneille-yhteishaku"
     }
   },
   "1.2.246.562.20.656632485510": {
@@ -2143,7 +2144,17 @@
       "oid": "1.2.246.562.20.14660127086",
       "hakukohteenNimi": "Jazzmusiikki, sävellys 2,5-vuotinen koulutus",
       "hakuOid": "1.2.246.562.29.95390561488",
-      "hakuaikaId": "220207"
+      "hakuaikaId": "220207",
+      "ohjeetUudelleOpiskelijalle": "https://www.helsinki.fi/fi/opiskelu/ohjeita-hakemuksen-jattaneille-yhteishaku"
+    }
+  },
+  "1.2.246.562.20.93395603447": {
+    "result": {
+      "oid": "1.2.246.562.20.93395603447",
+      "hakukohteenNimi": "Ammatillinen erityisopettajankoulutus",
+      "hakuOid": "1.2.246.562.11.00004590341",
+      "hakuaikaId": "220207",
+      "ohjeetUudelleOpiskelijalle": "https://www.helsinki.fi/fi/opiskelu/ohjeita-hakemuksen-jattaneille-yhteishaku"
     }
   },
   "1.2.246.562.20.19202370003": {

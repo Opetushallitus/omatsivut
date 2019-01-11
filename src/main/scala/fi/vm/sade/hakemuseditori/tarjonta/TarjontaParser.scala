@@ -21,10 +21,11 @@ private object TarjontaParser extends JsonFormats with Logging {
       obj <- (json \ "result").toOption
       oid = (obj \ "oid").extract[String]
       hakuaikaId = (obj \ "hakuaikaId").extractOpt[String]
+      ohjeetUudelleOpiskelijalle = (obj \ "ohjeetUudelleOpiskelijalle").extractOpt[String]
       name = (obj \ "name").extractOpt[String].getOrElse("")
       hakuaika = createHakuaika((obj \ "hakuaikaAlkuPvm").extractOpt[Long], (obj \ "hakuaikaLoppuPvm").extractOpt[Long])
       koulutuksenAlkaminen = createKoulutuksenAlkaminen((obj \ "koulutuksenAlkamisvuosi").extractOpt[Long], (obj \ "koulutuksenAlkamiskausiUri").extractOpt[String])
-    } yield Hakukohde(oid, hakuaikaId, koulutuksenAlkaminen, hakuaika)
+    } yield Hakukohde(oid, hakuaikaId, koulutuksenAlkaminen, hakuaika, ohjeetUudelleOpiskelijalle)
   }
 
   private def createHakuaika(hakuaikaAlkuPvm: Option[Long], hakuaikaLoppuPvm: Option[Long]) : Option[KohteenHakuaika] = {

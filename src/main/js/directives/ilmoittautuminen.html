@@ -1,17 +1,22 @@
 <!-- Käydään läpi kaikki hakutoiveet ja luodaan tarvittaessa ulkoiset ilmoittautumislinkit (kk), ilmoittautumiskäli (2.aste) ja
 näytetään mahdolliset ilmoittautumiset -->
 <div class="ilmoittautuminen-item fade-transitions" ng-repeat="tulos in hakukohteet()">
+
     <!-- ulkoinen ilmoittautumislinkki, vain kk -->
     <div class="kk-lasnaolo" ng-if="!application.haku.toisenasteenhaku && tulos.ilmoittautumistila.ilmoittauduttavissa && linkkiOK(tulos)">
         <header>
           <strong ng-if="tulos.ehdollisestiHyvaksyttavissa">{{ localization('registration.conditionalAcceptanceTitle') }}</strong>
           <strong ng-if="!tulos.ehdollisestiHyvaksyttavissa">{{ localization('registration.reminder') }}</strong>
-          <span class="tarjoaja-hakukohde">{{ tulos.tarjoajaNimi }} - {{ tulos.hakukohdeNimi }}</span>
+          <span class="tarjoaja-hakukohde">{{ tulos.tarjoajaNimi }} - {{ tulos.hakukohdeNimi }}
+            <p ng-if="ohjeetUudelleOpiskelijalle(tulos.hakukohdeOid)">
+              <a class="ohjeet-uudelle-opiskelijalle" ng-href="{{ohjeetUudelleOpiskelijalle(tulos.hakukohdeOid)}}" target="_blank">{{ localization('registration.instructionsForNewStudents') }}</a>
+            </p>
+          </span>
         </header>
         <span ng-if="tulos.ehdollisestiHyvaksyttavissa">{{ localization('registration.conditionalAcceptanceInfo') }}</span>
         <span ng-if="!tulos.ehdollisestiHyvaksyttavissa">
           <p>{{ localization('registration.reminderInfo') }}</p>
-          <a href="{{oili()}}">{{ localization('registration.goToRegistration') }}</a>
+          <a class="ilmoittautuminen-linkki" href="{{oili()}}" target="_blank">{{ localization('registration.goToRegistration') }}</a>
         </span>
     </div>
 
@@ -31,7 +36,11 @@ näytetään mahdolliset ilmoittautumiset -->
           <span class="label-highlight"> {{ application.haku.toisenasteenhaku ?
             localization('lasnaoloilmoittautuminen.title') : localization('lasnaoloilmoittautuminen.title_kk') }}</span>
           <span> {{ application.henkiloNimi }} </span>
-          <span class="tarjoaja-hakukohde"> {{ tulos.tarjoajaNimi }} {{ tulos.hakukohdeNimi }}</span>
+          <span class="tarjoaja-hakukohde"> {{ tulos.tarjoajaNimi }} {{ tulos.hakukohdeNimi }}
+            <p ng-if="ohjeetUudelleOpiskelijalle(tulos.hakukohdeOid)">
+              <a class="ohjeet-uudelle-opiskelijalle" ng-href="{{ohjeetUudelleOpiskelijalle(tulos.hakukohdeOid)}}" target="_blank">{{ localization('registration.instructionsForNewStudents') }}</a>
+            </p>
+          </span>
         </div>
         <div class="lasnaolo-confirmation" ng-if="application.haku.toisenasteenhaku">
           {{ localization('lasnaoloilmoittautuminen.confirmation', getEnrolmentMessageKeys(tulos)) }} {{ getStateTranslation(tulos) }}

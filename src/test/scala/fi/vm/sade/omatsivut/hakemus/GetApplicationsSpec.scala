@@ -1,11 +1,8 @@
 package fi.vm.sade.omatsivut.hakemus
 
-import fi.vm.sade.omatsivut.TimeWarp
-import fi.vm.sade.omatsivut.config.AppConfig
+import fi.vm.sade.omatsivut.{PersonOid, TimeWarp}
 import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.omatsivut.fixtures.TestFixture._
-import fi.vm.sade.hakemuseditori.lomake.domain.QuestionNode
-import org.joda.time.DateTime
 import org.junit.runner.RunWith
 import org.specs2.runner.JUnitRunner
 
@@ -20,6 +17,22 @@ class GetApplicationsSpec extends HakemusApiSpecification with FixturePerson wit
         resp.allApplicationsFetched must_== true
         resp.applications.map(_.hakemus.oid) must contain(hakemusNivelKesa2013WithPeruskouluBaseEducationId)
         resp.applications.map(_.hakemus.oid) must contain(hakemusYhteishakuKevat2014WithForeignBaseEducationId)
+      }
+    }
+
+    "return person's applications from ataru" in {
+      withApplicationsResponse { resp =>
+        resp.applications(0).hakemus.oid must_== "1.2.246.562.11.WillNotBeFoundInTarjonta"
+        resp.applications(0).hakemusSource must_== "Ataru"
+        resp.applications(0).hakemus.ohjeetUudelleOpiskelijalle("1.2.246.562.20.14660127086") must_== "https://www.helsinki.fi/fi/opiskelu/ohjeita-hakemuksen-jattaneille-yhteishaku"
+      }(PersonOid("PERSON-WITH-ATARU"))
+    }
+
+    "contain the link to 'information for new students'" in {
+      withApplicationsResponse { resp =>
+        val hakukohdeOid = "1.2.246.562.20.14660127086"
+        resp.applications(6).hakemus.ohjeetUudelleOpiskelijalle(hakukohdeOid) must_== // we are going to have map hakukohdeOid -> link to instructions
+          "https://www.helsinki.fi/fi/opiskelu/ohjeita-hakemuksen-jattaneille-yhteishaku"
       }
     }
 
