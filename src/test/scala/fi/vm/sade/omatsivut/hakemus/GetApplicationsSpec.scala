@@ -9,6 +9,8 @@ import org.specs2.runner.JUnitRunner
 @RunWith(classOf[JUnitRunner])
 class GetApplicationsSpec extends HakemusApiSpecification with FixturePerson with TimeWarp {
 
+  val personOidWithAtaru = "1.2.246.562.24.14229104473"
+
   sequential
 
   "GET /applications" should {
@@ -25,7 +27,7 @@ class GetApplicationsSpec extends HakemusApiSpecification with FixturePerson wit
         resp.applications(0).hakemus.oid must_== "1.2.246.562.11.WillNotBeFoundInTarjonta"
         resp.applications(0).hakemusSource must_== "Ataru"
         resp.applications(0).hakemus.ohjeetUudelleOpiskelijalle("1.2.246.562.20.14660127086") must_== "https://www.helsinki.fi/fi/opiskelu/ohjeita-hakemuksen-jattaneille-yhteishaku"
-      }(PersonOid("PERSON-WITH-ATARU"))
+      }(PersonOid(personOidWithAtaru))
     }
 
     "contain the link to 'information for new students'" in {
