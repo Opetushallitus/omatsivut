@@ -47,8 +47,6 @@ export default ["restResources", function (restResources) {
           case 404:
             $scope.applicationStatusMessage = "errorPage.noApplicationsFound.text";
             $scope.applicationStatusMessageType = "info";
-            console.log("Artificial fail");
-            throw new Exception("bingo!");
             break;
           default:
             $scope.applicationStatusMessage = "error.loadingFailed";
