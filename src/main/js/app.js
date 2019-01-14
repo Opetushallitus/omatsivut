@@ -127,7 +127,6 @@ listApp.run(['$http', '$cookies', function($http, $cookies) {
 angular.element(document).ready(
   init()
     .then(() => {
-      console.log("Document ready!");
       angular.bootstrap(document, ['listApp']);
       document.getElementsByTagName('body')[0].setAttribute('aria-busy', 'false');
     })
@@ -140,14 +139,6 @@ function logExceptionToPiwik(msg, data) {
     console.warn(msg + "\n" + data);
     _paq.push(["trackEvent", document.location, msg, data])
   }
-}
-
-function onSuccess() {
-  console.log("Virhe logitettu onnistuneesti backendin");
-}
-
-function onError(error) {
-  console.log("Ei saatu logitettua virhettä backendiin, ", error)
 }
 
 window.onerror = function(errorMsg, url, lineNumber, columnNumber, exception) {
@@ -207,8 +198,14 @@ angular.module("exceptionOverride", []).factory("$exceptionHandler", ["$injector
           console.log("(debug) Kutsu backendiin epäonnistui, ", failure);
         });
     }
-    var browser = get_browser();
-    var browserVersion = get_browser_version();
+    var browser = '';
+    var browserVersion = '';
+    try {
+      browser = get_browser();
+      browserVersion = get_browser_version();
+    } catch (e) {
+      console.log("Something went wrong in deducing browser or browser version: ", e);
+    }
     var errorMessage = '';
     var stackTrace = '';
     if (exception !== undefined) {
