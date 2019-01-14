@@ -61,7 +61,7 @@ class LanguageFilter extends ScalatraFilter with Logging {
     request.header("X-Forwarded-Host")
       .orElse(request.header("Referer"))
       .getOrElse{
-      logger.warn(s"Headers X-Forwarded-Host and Referer were not set, reading language from request url.")
+      logger.debug(s"Headers X-Forwarded-Host and Referer were not set, reading language from request url.")
       request.getRequestURL.toString
     }
   }
