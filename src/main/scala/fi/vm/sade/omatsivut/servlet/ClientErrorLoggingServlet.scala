@@ -12,26 +12,21 @@ import org.slf4j.LoggerFactory
 class ClientErrorLoggingServlet(val appConfig: AppConfig) extends ScalatraServlet with OmatSivutServletBase with AuthenticationRequiringServlet
                                                                   with JacksonJsonSupport with JsonFormats with HakemusEditoriUserContext {
 
-  //override lazy val logger: Logger = LoggerFactory.getLogger("frontend")
   private val frontLogger = LoggerFactory.getLogger("frontend")
 
   override def user() = Oppija(personOid())
 
-  //TODO nämä viestit omalle logilleen, nyt menevät samaan logivirtaan kuin muutkin
   post("/") {
     before() {
       contentType = formats("json")
     }
-    //TODO lisää autentikaatio, ehkä myös sieltä tunnistetietoja virhelogille?
     try {
       val asMap = parsedBody.extract[Map[String, String]]
-      val stringToLog: String = asMap.mkString(", ")
-      logger.info("logging frontend error, user oid: {}", user.oid)
-      logger.error ("Error from frontend, mainfeed: " + stringToLog)
-      frontLogger.error("Error from frontend, separate feed: " + stringToLog)
+      frontLogger.error("Error from frontend : user (" + user().oid + "), error breakdown: " + asMap.mkString(", "))
     } catch {
       case t: Throwable =>
-        logger.error("Fronttivirheen logituksessa tapahtui virhe: {}. Request: {}, body: {}", t, request, request.body)
+        logger.error("Error when trying to log frontend error for user (" + user().oid + "). Error: " + t + " ,Request: " + request)
+        response.setStatus(500)
     }
   }
 

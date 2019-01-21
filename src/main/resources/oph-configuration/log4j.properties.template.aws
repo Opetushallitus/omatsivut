@@ -36,7 +36,8 @@ log4j.appender.AUDIT.layout.ConversionPattern=%m%n
 log4j.appender.AUDIT.encoding=UTF-8
 # Frontend logging
 log4j.logger.frontend=INFO, FRONTEND
-log4j.appender.FRONTEND.Threshold=INFO
+log4j.additivity.frontend=false
+log4j.appender.FRONTEND.Threshold=ERROR
 log4j.appender.FRONTEND.File=/root/logs/oph-omatsivut-frontend.log
 log4j.appender.FRONTEND=org.apache.log4j.RollingFileAppender
 log4j.appender.FRONTEND.Append=true

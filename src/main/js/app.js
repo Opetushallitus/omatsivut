@@ -80,8 +80,9 @@ window.Service = {
     });
   }
 };
-//  "exceptionOverride"
-const listApp = angular.module('listApp', [ngResource, ngSanitize, ngAnimate, ngCookies, typeahead, "RecursionHelper", "debounce", "exceptionOverride"]);
+
+const listApp = angular.module('listApp',
+  [ngResource, ngSanitize, ngAnimate, ngCookies, typeahead, "RecursionHelper", "debounce", "exceptionOverride"]);
 
 listApp
   .config(router)
@@ -142,7 +143,6 @@ function logExceptionToPiwik(msg, data) {
 }
 
 window.onerror = function(errorMsg, url, lineNumber, columnNumber, exception) {
-  console.log("Window.onerror", errorMsg);
   let data = url + ":" + lineNumber;
   if (typeof columnNumber !== "undefined") data += ":" + columnNumber;
   if (typeof exception !==  "undefined") data += "\n" + exception.stack;
@@ -192,41 +192,46 @@ angular.module("exceptionOverride", []).factory("$exceptionHandler", ["$injector
     function logToBackend(data) {
       $http.post(window.url("omatsivut.errorlogtobackend"), JSON.stringify(data))
         .then(function(success){
-          console.log("Virhe logitettu onnistuneesti backendiin, statuscode " + success.status);
-        },
-        function(failure) {
-          console.log("(debug) Kutsu backendiin epäonnistui, ", failure);
-        });
+            console.log("Error successfully logged to backend, " + success.status);
+          },
+          function(failure) {
+            console.log("Backend call for error logging failed, ", failure.status);
+          });
     }
-    var browser = '';
-    var browserVersion = '';
     try {
-      browser = get_browser();
-      browserVersion = get_browser_version();
-    } catch (e) {
-      console.log("Something went wrong in deducing browser or browser version: ", e);
-    }
-    var errorMessage = '';
-    var stackTrace = '';
-    if (exception !== undefined) {
-      errorMessage = exception.toString();
-      if(exception.stack !== undefined) {
-        stackTrace = exception.stack.toString();
+
+      var browser = '';
+      var browserVersion = '';
+      try {
+        browser = get_browser();
+        browserVersion = get_browser_version();
+      } catch (e) {
+        console.log("Something went wrong in deducing browser or browser version: ", e);
       }
-    }
-    var errorInfo = {
-      errorUrl: $window.location.href,
-      errorMessage: errorMessage,
-      stackTrace: stackTrace,
-      cause: cause || '',
-      browser: browser,
-      browserVersion: browserVersion
-    };
-    if (isTestMode()) {
-      logToBackend(errorInfo);
-    } else {
-      logExceptionToPiwik(exception.message, exception.stack);
-      logToBackend(errorInfo);
+      var errorMessage = '';
+      var stackTrace = '';
+      if (exception !== undefined) {
+        errorMessage = exception.toString();
+        if(exception.stack !== undefined) {
+          stackTrace = exception.stack.toString();
+        }
+      }
+      var errorInfo = {
+        errorUrl: $window.location.href,
+        errorMessage: errorMessage,
+        stackTrace: stackTrace,
+        cause: cause || '',
+        browser: browser,
+        browserVersion: browserVersion
+      };
+      if (isTestMode()) {
+        logToBackend(errorInfo);
+      } else {
+        logToBackend(errorInfo);
+        logExceptionToPiwik(exception.message, exception.stack);
+      }
+    } catch (e) {
+        console.log("Error while sending error data to backend: ", e.toString())
     }
   };
 }]);
