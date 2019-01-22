@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletRequest
 
 
 case class ShowValidatedHakemus(request: HttpServletRequest, userOid: String, hakemusOid: String, hakuOid: String) extends AuditLogUtils with AuditEvent {
-  override val operation: OmatSivutOperation = OmatSivutOperation.VIEW_HAKEMUS
+  override val operation: OmatSivutOperation = OmatSivutOperation.VIEW_HAKEMUS_WITH_VALIDATION
   override val changes: Changes = new Changes.Builder().build()
   override val target: Target = {
     new Target.Builder()
