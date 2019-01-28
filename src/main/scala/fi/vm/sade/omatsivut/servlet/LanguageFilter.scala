@@ -32,7 +32,7 @@ class LanguageFilter extends ScalatraFilter with Logging {
       .orElse(chooseLanguageFromCookie(cookies))
       .orElse(chooseLanguageFromHost(url))
       .getOrElse{
-        logger.warn("Could not decide language from params, cookies, or URL. Using default language. URL: {}", url)
+        logger.warn("Could not decide language from params, cookies, or URL. Using default language (fi). URL: {}", url)
         Language.fi
       }
     (language, true)
