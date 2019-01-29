@@ -1,4 +1,5 @@
 //import { getBearerToken, setBearerToken } from '../util';
+import { isTestMode } from '../util';
 
 function shouldRerouteRequest(config) {
   var decodedUrl = decodeURIComponent(window.location.href);
@@ -11,6 +12,10 @@ function shouldAuthenticate(config) {
 }
 
 export default ["$injector", function RestErrorInterceptor($injector) {
+  var errors = 0;
+  var duplicates_skipped = 0;
+  var loggedErrors = [];
+
   return {
     responseError: function (error) {
       var $http = $injector.get("$http");
@@ -18,6 +23,7 @@ export default ["$injector", function RestErrorInterceptor($injector) {
       if (error === undefined) {
         return error;
       }
+      console.log("Caught REST error. Errors so far: " + errors);
       try {
         var failedRequestUrl = (error.config !== undefined && error.config.url !== undefined) ? error.config.url : 'unknown url';
         if (failedRequestUrl.indexOf(logEndpoint) !== -1) {
@@ -33,20 +39,28 @@ export default ["$injector", function RestErrorInterceptor($injector) {
             statusText: statusText,
             errorData: errorData
           });
-          //console.log("kissaD (debug) logging to backend: ", errorInfo);
+          var errorId = failedRequestUrl + ' - ' + statusCode;
+          if (loggedErrors.indexOf(errorId) !== -1) {
+            console.log("Error with id has already been logged, aborting! ", errorId);
+            console.log("Duplicates skipped: ", duplicates_skipped);
+            duplicates_skipped += 1;
+            return error;
+          } else {
+            errors += 1;
+            loggedErrors.push(errorId)
+          }
           $http.post(logEndpoint, errorInfo)
             .then(function (success) {
                 console.log("Failed resource call successfully logged to backend");
               },
               function (failure) {
-                console.log("Failed resource call detected, logging to backend failed, ", failure);
+                console.log("Failed resource call detected, logging to backend failed");
               }
             );
         }
       } catch (e) {
         console.log("Something went wrong while trying to log backend rest error: " , e)
       }
-      //console.log("returning error...");
       return error;
     }
   }
