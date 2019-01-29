@@ -1,11 +1,13 @@
 package fi.vm.sade.omatsivut.servlet
 
+import java.util
+
 import fi.vm.sade.hakemuseditori.HakemusEditoriUserContext
 import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.hakemuseditori.user.Oppija
 import fi.vm.sade.omatsivut.security.AuthenticationRequiringServlet
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
-import org.scalatra.ScalatraServlet
+import org.scalatra.{InternalServerError, Ok, ScalatraServlet}
 import org.scalatra.json.JacksonJsonSupport
 import org.slf4j.LoggerFactory
 
@@ -21,13 +23,13 @@ class ClientErrorLoggingServlet(val appConfig: AppConfig) extends ScalatraServle
       contentType = formats("json")
     }
     try {
-      val asMap = parsedBody.extract[Map[String, String]]
-      frontLogger.error("Error from frontend : user (" + user().oid + "), error breakdown: " + asMap.mkString(", "))
+      val asMap = parsedBody.extract[Map[String, Any]]
+      frontLogger.error("Error from frontend : user (" + user().oid + "), " + asMap.mkString(", "))
+      Ok("Error successfully logged to backend")
     } catch {
       case t: Throwable =>
         logger.error("Error when trying to log frontend error for user (" + user().oid + "). Error: " + t + " ,Request: " + request)
-        response.setStatus(500)
+        InternalServerError("Error when logging to backend")
     }
   }
-
 }
