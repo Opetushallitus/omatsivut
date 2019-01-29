@@ -150,6 +150,8 @@ window.onerror = function(errorMsg, url, lineNumber, columnNumber, exception) {
 };
 
 angular.module("exceptionOverride", []).factory("$exceptionHandler", ["$injector", function($injector) {
+  var loggedErrors = [];
+  var skippedErrors = 0;
   return function (exception, cause) {
     var $http = $injector.get("$http");
     var $window = $injector.get("$window");
@@ -189,9 +191,10 @@ angular.module("exceptionOverride", []).factory("$exceptionHandler", ["$injector
       ];
       return M[1];
     }
-    function logToBackend(data) {
+    function logToBackend(data, errorId) {
       $http.post(window.url("omatsivut.errorlogtobackend"), JSON.stringify(data))
         .then(function(success){
+            loggedErrors.push(errorId);
             console.log("Error successfully logged to backend, " + success.status);
           },
           function(failure) {
@@ -224,11 +227,20 @@ angular.module("exceptionOverride", []).factory("$exceptionHandler", ["$injector
         browser: browser,
         browserVersion: browserVersion
       };
-      if (isTestMode()) {
-        logToBackend(errorInfo);
+      var errorId = $window.location.href + '---' + errorMessage;
+      if (loggedErrors.indexOf(errorId) !== -1) {
+        console.log("Error with id has already been logged, aborting! ", errorId);
+        skippedErrors += 1;
+        console.log("skipped errors: ", skippedErrors );
+        // älä lähetä, jos jo lokitettu tai lokitus keskeytetty
+        return;
       } else {
-        logToBackend(errorInfo);
-        logExceptionToPiwik(exception.message, exception.stack);
+        if (isTestMode()) {
+          logToBackend(errorInfo, errorId);
+        } else {
+          logToBackend(errorInfo, errorId);
+          logExceptionToPiwik(exception.message, exception.stack);
+        }
       }
     } catch (e) {
         console.log("Error while sending error data to backend: ", e.toString())
