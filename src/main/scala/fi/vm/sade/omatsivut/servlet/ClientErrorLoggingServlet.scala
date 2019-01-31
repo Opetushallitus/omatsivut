@@ -22,14 +22,15 @@ class ClientErrorLoggingServlet(val appConfig: AppConfig) extends ScalatraServle
     before() {
       contentType = formats("json")
     }
+    logger.info("A frontend error from user ({}) is being logged to oph-omatsivut-frontend.log", {user().oid})
     try {
-      val asMap = parsedBody.extract[Map[String, Any]]
-      frontLogger.error("Error from frontend : user (" + user().oid + "), " + asMap.mkString(", "))
-      Ok("Error successfully logged to backend")
+      val stringToLog = parsedBody.extract[Map[String, Any]].map {case (k, v) => k + ": " + v}.mkString(" | ")
+      frontLogger.error("Error from frontend - user " + user().oid + ", " + stringToLog)
+      Ok(body = {"Error successfully logged to backend"})
     } catch {
       case t: Throwable =>
         logger.error("Error when trying to log frontend error for user (" + user().oid + "). Error: " + t + " ,Request: " + request)
-        InternalServerError("Error when logging to backend")
+        InternalServerError(body = {"Error when logging to backend"}, reason = "Parsing failed")
     }
   }
 }
