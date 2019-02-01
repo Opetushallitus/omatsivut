@@ -82,7 +82,7 @@ window.Service = {
 };
 
 const listApp = angular.module('listApp',
-  [ngResource, ngSanitize, ngAnimate, ngCookies, typeahead, "RecursionHelper", "debounce", "exceptionOverride"]);
+  [ngResource, ngSanitize, ngAnimate, ngCookies, typeahead, "RecursionHelper", "debounce"]);
 
 listApp
   .config(router)
