@@ -28,7 +28,7 @@ export default ["$injector", function RestErrorInterceptor($injector) {
         var failedRequestUrl = (error.config !== undefined && error.config.url !== undefined) ? error.config.url : 'unknown url';
         if (failedRequestUrl.indexOf(logEndpoint) !== -1 || failedRequestUrl === 'unknown url') {
           if (failedRequestUrl === 'unknown url') {
-            console.log("Won't log a failed rest request to an unknown url");
+            console.log("Won't log a failed rest request to an unknown url", error);
           } else {
             console.log("Error came from logging endpoint, won't try to log it to avoid a loop")
           }
@@ -47,10 +47,11 @@ export default ["$injector", function RestErrorInterceptor($injector) {
             errorData: errorData,
             requestMethod: requestMethod
           });
-          var errorId = failedRequestUrl + ' - ' + statusCode;
+          var errorId = failedRequestUrl + ' - ' + statusCode + ' - ' + statusText;
           if (loggedErrors.indexOf(errorId) !== -1) {
             console.log("Error with id has already been logged, aborting! ", errorId);
             duplicates_skipped += 1;
+            errors += 1;
             return error;
           } else {
             errors += 1;

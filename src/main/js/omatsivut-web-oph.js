@@ -11,5 +11,5 @@ window.urls.addProperties({
   "omatsivut.login": "/omatsivut/login",
   "omatsivut.applications.tuloskirje": "/omatsivut/secure/applications/tuloskirje/$1",
   "omatsivut.lasnaoloilmoittautuminen": "/omatsivut/secure/ilmoittaudu",
-  "omatsivut.errorlogtobackend": "/omatsivut/secure/errorlogtobackend"
+  "omatsivut.errorlogtobackend": "/omatsivut/errorlogtobackend"
 });
