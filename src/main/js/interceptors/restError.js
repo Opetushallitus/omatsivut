@@ -23,7 +23,7 @@ export default ["$injector", function RestErrorInterceptor($injector) {
       if (error === undefined) {
         return error;
       }
-      console.log("Caught REST error. Errors before this one: " + errors + ", duplicates skipped: " + duplicates_skipped);
+      console.log("Caught REST error. Errors before this one: " + errors + ", duplicates before this one: " + duplicates_skipped);
       try {
         var failedRequestUrl = (error.config !== undefined && error.config.url !== undefined) ? error.config.url : 'unknown url';
         if (failedRequestUrl.indexOf(logEndpoint) !== -1 || failedRequestUrl === 'unknown url') {
@@ -49,10 +49,10 @@ export default ["$injector", function RestErrorInterceptor($injector) {
           });
           var errorId = failedRequestUrl + ' - ' + statusCode + ' - ' + statusText;
           if (loggedErrors.indexOf(errorId) !== -1) {
-            console.log("Error with id has already been logged, aborting! ", errorId);
+            console.log("Error with id has already been logged! ", errorId);
             duplicates_skipped += 1;
             errors += 1;
-            return error;
+            //return error;
           } else {
             errors += 1;
             loggedErrors.push(errorId)
