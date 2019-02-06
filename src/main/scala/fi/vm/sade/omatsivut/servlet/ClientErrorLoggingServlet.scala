@@ -27,12 +27,12 @@ class ClientErrorLoggingServlet(val appConfig: AppConfig) extends ScalatraServle
       val stringToLog = parsedBody.extract[Map[String, Any]].map {case (k, v) => k + ": " + v}.mkString(" | ")
       //frontLogger.error("Error from frontend - user " + user().oid + ", " + stringToLog)
       frontLogger.error("Error from frontend - " + stringToLog)
-      Ok(body = {"Error successfully logged to backend"})
+      Ok(body = "Error successfully logged to backend")
     } catch {
       case t: Throwable =>
         //logger.error("Error when trying to log frontend error for user (" + user().oid + "). Error: " + t + " ,Request: " + request)
         logger.error("Error when trying to log frontend error:: " + t + ", Request: " + request)
-        InternalServerError(body = {"Error when logging to backend"}, reason = "Parsing failed")
+        InternalServerError(body = "Error when logging to backend", reason = "Parsing failed")
     }
   }
 }
