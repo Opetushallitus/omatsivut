@@ -1,5 +1,6 @@
 package fi.vm.sade.hakemuseditori.hakemus
 
+import fi.vm.sade.hakemuseditori.auditlog.{Audit, ShowValidatedHakemus}
 import fi.vm.sade.hakemuseditori.domain.Language
 import fi.vm.sade.hakemuseditori.hakemus.HakemusInfo.{ApplicationOptionOid, ShouldPay}
 import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus._
@@ -17,6 +18,7 @@ import fi.vm.sade.haku.oppija.lomake.validation.{ElementTreeValidator, Validatio
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants._
 import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.utils.slf4j.Logging
+import javax.servlet.http.HttpServletRequest
 
 import scala.collection.JavaConversions._
 
@@ -42,7 +44,7 @@ trait ApplicationValidatorComponent {
       result.distinct
     }
 
-    def validateAndFindQuestions(lomake: Lomake, hakemusMuutos: HakemusMuutos, haku: Haku, user: User)(implicit lang: Language.Language): HakemusInfo = {
+    def validateAndFindQuestions(request: HttpServletRequest, lomake: Lomake, hakemusMuutos: HakemusMuutos, haku: Haku, user: User)(implicit lang: Language.Language): HakemusInfo = {
       withErrorLogging {
         val storedApplication = applicationRepository.findStoredApplicationByOid(hakemusMuutos.oid).getOrElse(throw new RuntimeException(s"Application ${hakemusMuutos.oid} not found"))
         lazy val duplicateSelectionsInApplications: List[ValidationError] = validateDuplicateApplicationAnswersForPerson(storedApplication, lomake, hakemusMuutos)
@@ -54,6 +56,7 @@ trait ApplicationValidatorComponent {
           case (app, errors, questions) =>
             val resultErrors = duplicateSelectionsInApplications ++ errors
             val hakemus = hakemusConverter.convertToHakemus(None, Some(lomake), haku, app)
+            Audit.oppija.log(ShowValidatedHakemus(request, hakemus.personOid, hakemus.oid, haku.oid))
             HakemusInfo(
               hakemus = hakemus,
               errors = resultErrors.distinct,

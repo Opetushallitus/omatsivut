@@ -135,12 +135,12 @@ trait HakemusEditoriComponent extends ApplicationValidatorComponent
       lang.flatMap(Language.parse).getOrElse(Language.fi)
     }
 
-    def validateHakemus(muutos: HakemusMuutos): Option[HakemusInfo] = {
+    def validateHakemus(request: HttpServletRequest, muutos: HakemusMuutos): Option[HakemusInfo] = {
       val lomakeOpt = lomakeRepository.lomakeByOid(muutos.hakuOid)
       val hakuOpt = tarjontaService.haku(muutos.hakuOid, language)
       (lomakeOpt, hakuOpt) match {
         case (Some(lomake), Some(haku)) => {
-          Some(applicationValidator.validateAndFindQuestions(lomake, muutos, haku, user()))
+          Some(applicationValidator.validateAndFindQuestions(request, lomake, muutos, haku, user()))
         }
         case _ => None
       }
