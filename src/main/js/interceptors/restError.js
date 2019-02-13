@@ -1,19 +1,7 @@
-//import { getBearerToken, setBearerToken } from '../util';
-import { isTestMode } from '../util';
-
-function shouldRerouteRequest(config) {
-  var decodedUrl = decodeURIComponent(window.location.href);
-  var pageReachedBySecureLink = (decodedUrl.includes('hakutoiveidenMuokkaus.html') || decodedUrl.includes('token'));
-  return pageReachedBySecureLink && config.url.includes('/secure/')
-}
-
-function shouldAuthenticate(config) {
-  return config.url.includes('insecure/')
-}
 
 export default ["$injector", function RestErrorInterceptor($injector) {
   var errors = 0;
-  var duplicates_skipped = 0;
+  var duplicates = 0;
   var loggedErrors = [];
 
   return {
@@ -23,7 +11,7 @@ export default ["$injector", function RestErrorInterceptor($injector) {
       if (error === undefined) {
         return error;
       }
-      console.log("Caught REST error. Errors before this one: " + errors + ", duplicates before this one: " + duplicates_skipped);
+      //console.log("Caught REST error. Errors before this one: " + errors + ", duplicates before this one: " + duplicates);
       try {
         var failedRequestUrl = (error.config !== undefined && error.config.url !== undefined) ? error.config.url : 'unknown url';
         if (failedRequestUrl.indexOf(logEndpoint) !== -1 || failedRequestUrl === 'unknown url') {
@@ -33,7 +21,6 @@ export default ["$injector", function RestErrorInterceptor($injector) {
             console.log("Error came from logging endpoint, won't try to log it to avoid a loop")
           }
         } else {
-          console.log("kissa ready to parse error! ", error);
           var errorData = error.data !== undefined ? JSON.stringify(error.data) : '';
           var statusCode = error.status !== undefined ? error.status : '-1';
           var statusText = error.statusText !== undefined ? error.statusText : '';
@@ -50,9 +37,8 @@ export default ["$injector", function RestErrorInterceptor($injector) {
           var errorId = failedRequestUrl + ' - ' + statusCode + ' - ' + statusText;
           if (loggedErrors.indexOf(errorId) !== -1) {
             console.log("Error with id has already been logged! ", errorId);
-            duplicates_skipped += 1;
+            duplicates += 1;
             errors += 1;
-            //return error;
           } else {
             errors += 1;
             loggedErrors.push(errorId)

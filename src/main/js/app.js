@@ -196,9 +196,9 @@ angular.module("exceptionOverride", []).factory("$exceptionHandler", ["$injector
       return M[1];
     }
     function logToBackend(data, errorId) {
+      loggedErrors.push(errorId);
       $http.post(window.url("omatsivut.errorlogtobackend"), JSON.stringify(data))
         .then(function(success){
-            loggedErrors.push(errorId);
             console.log("Error successfully logged to backend, " + success.status);
           },
           function(failure) {
