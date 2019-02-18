@@ -153,20 +153,16 @@ angular.module("exceptionOverride", []).factory("$exceptionHandler", ["$injector
   var loggedErrors = [];
   var skippedErrors = 0;
   return function (exception, cause) {
-    if(isTestMode()) {
+    if (isTestMode()) {
       console.log("Won't log errors to backend in test mode");
       return;
     }
     var $http = $injector.get("$http");
     var $window = $injector.get("$window");
-    function get_browser() {
+    function getBrowserAndVersion() {
       var N = navigator.appName;
       var ua = navigator.userAgent;
-      var tem;
       var M = ua.match(/(opera|chrome|safari|firefox|msie)\/?\s*(\.?\d+(\.\d+)*)/i);
-      if (M && (tem = ua.match(/version\/([\.\d]+)/i)) !== null) {
-        M[2] = tem[1];
-      }
       M = M ? [
         M[1],
         M[2]
@@ -175,25 +171,7 @@ angular.module("exceptionOverride", []).factory("$exceptionHandler", ["$injector
         navigator.appVersion,
         '-?'
       ];
-      return M[0];
-    }
-    function get_browser_version() {
-      var N = navigator.appName;
-      var ua = navigator.userAgent;
-      var tem;
-      var M = ua.match(/(opera|chrome|safari|firefox|msie)\/?\s*(\.?\d+(\.\d+)*)/i);
-      if (M && (tem = ua.match(/version\/([\.\d]+)/i)) !== null) {
-        M[2] = tem[1];
-      }
-      M = M ? [
-        M[1],
-        M[2]
-      ] : [
-        N,
-        navigator.appVersion,
-        '-?'
-      ];
-      return M[1];
+      return [M[0],M[1]];
     }
     function logToBackend(data, errorId) {
       loggedErrors.push(errorId);
@@ -210,8 +188,9 @@ angular.module("exceptionOverride", []).factory("$exceptionHandler", ["$injector
       var browser = '';
       var browserVersion = '';
       try {
-        browser = get_browser();
-        browserVersion = get_browser_version();
+        var bv = getBrowserAndVersion();
+        browser = bv[0];
+        browserVersion = bv[1];
       } catch (e) {
         console.log("Something went wrong in deducing browser or browser version: ", e);
       }
