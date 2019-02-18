@@ -32,7 +32,7 @@ class LanguageFilter extends ScalatraFilter with Logging {
       .orElse(chooseLanguageFromCookie(cookies))
       .orElse(chooseLanguageFromHost(url))
       .getOrElse{
-        logger.warn("Could not decide language from params, cookies, or URL. Using default language.")
+        logger.warn("Could not decide language from params, cookies, or URL. Using default language (fi). URL: {}", url)
         Language.fi
       }
     (language, true)
@@ -61,7 +61,7 @@ class LanguageFilter extends ScalatraFilter with Logging {
     request.header("X-Forwarded-Host")
       .orElse(request.header("Referer"))
       .getOrElse{
-      logger.warn(s"Headers X-Forwarded-Host and Referer were not set, reading language from request url.")
+      logger.debug(s"Headers X-Forwarded-Host and Referer were not set, reading language from request url.")
       request.getRequestURL.toString
     }
   }

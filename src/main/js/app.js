@@ -80,8 +80,9 @@ window.Service = {
     });
   }
 };
-//  "exceptionOverride"
-const listApp = angular.module('listApp', [ngResource, ngSanitize, ngAnimate, ngCookies, typeahead, "RecursionHelper", "debounce"]);
+
+const listApp = angular.module('listApp',
+  [ngResource, ngSanitize, ngAnimate, ngCookies, typeahead, "RecursionHelper", "debounce", "exceptionOverride"]);
 
 listApp
   .config(router)
@@ -145,15 +146,87 @@ window.onerror = function(errorMsg, url, lineNumber, columnNumber, exception) {
   let data = url + ":" + lineNumber;
   if (typeof columnNumber !== "undefined") data += ":" + columnNumber;
   if (typeof exception !==  "undefined") data += "\n" + exception.stack;
-  logExceptionToPiwik(errorMsg, data)
+  logExceptionToPiwik(errorMsg, data);
 };
 
-angular.module("exceptionOverride", []).factory("$exceptionHandler", function() {
-  return function (exception) {
+angular.module("exceptionOverride", []).factory("$exceptionHandler", ["$injector", function($injector) {
+  var loggedErrors = [];
+  var skippedErrors = 0;
+  return function (exception, cause) {
     if (isTestMode()) {
-      throw exception
-    } else {
-      logExceptionToPiwik(exception.message, exception.stack)
+      console.log("Won't log errors to backend in test mode");
+      return;
+    }
+    var $http = $injector.get("$http");
+    var $window = $injector.get("$window");
+    function getBrowserAndVersion() {
+      var N = navigator.appName;
+      var ua = navigator.userAgent;
+      var M = ua.match(/(opera|chrome|safari|firefox|msie)\/?\s*(\.?\d+(\.\d+)*)/i);
+      M = M ? [
+        M[1],
+        M[2]
+      ] : [
+        N,
+        navigator.appVersion,
+        '-?'
+      ];
+      return [M[0],M[1]];
+    }
+    function logToBackend(data, errorId) {
+      loggedErrors.push(errorId);
+      $http.post(window.url("omatsivut.errorlogtobackend"), JSON.stringify(data))
+        .then(function(success){
+            console.log("Error successfully logged to backend, " + success.status);
+          },
+          function(failure) {
+            console.log("Backend call for error logging failed, ", failure.status);
+          });
+    }
+    try {
+
+      var browser = '';
+      var browserVersion = '';
+      try {
+        var bv = getBrowserAndVersion();
+        browser = bv[0];
+        browserVersion = bv[1];
+      } catch (e) {
+        console.log("Something went wrong in deducing browser or browser version: ", e);
+      }
+      var errorMessage = '';
+      var stackTrace = '';
+      if (exception !== undefined) {
+        errorMessage = exception.toString();
+        if(exception.stack !== undefined) {
+          stackTrace = exception.stack.toString();
+        }
+      }
+      var errorInfo = {
+        errorUrl: $window.location.href,
+        errorMessage: errorMessage,
+        stackTrace: stackTrace,
+        cause: cause || '',
+        browser: browser,
+        browserVersion: browserVersion
+      };
+      var errorId = $window.location.href + '---' + errorMessage;
+      if (loggedErrors.indexOf(errorId) !== -1) {
+        console.log("Error with id has already been logged, aborting! ", errorId);
+        skippedErrors += 1;
+        console.log("skipped errors: ", skippedErrors );
+        // älä lähetä, jos jo lokitettu tai lokitus keskeytetty
+        return;
+      } else {
+        if (isTestMode()) {
+          logToBackend(errorInfo, errorId);
+        } else {
+          logToBackend(errorInfo, errorId);
+          logExceptionToPiwik(exception.message, exception.stack);
+        }
+      }
+    } catch (e) {
+        console.log("Error while sending error data to backend: ", e.toString())
     }
   };
-});
+}]);

@@ -153,6 +153,7 @@ class ComponentRegistry(val config: AppConfig)
   def newMuistilistaServlet = new MuistilistaServlet(config)
   def newNonSensitiveApplicationServlet = new NonSensitiveApplicationServlet(config)
   def newTuloskirjeetServlet = new TuloskirjeetServlet(config)
+  def newClientErrorLoggingServlet = new ClientErrorLoggingServlet(config)
 
   def start() {
     try {

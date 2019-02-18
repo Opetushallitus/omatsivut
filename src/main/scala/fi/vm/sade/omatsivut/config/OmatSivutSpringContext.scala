@@ -69,6 +69,12 @@ object OmatSivutSpringContext extends Logging {
       override def generateNewOid() = "1.2.246.562.11.00000441369"
     }
 
+    @Bean def virkailijaAuditLogger: fi.vm.sade.haku.VirkailijaAuditLogger = new fi.vm.sade.haku.VirkailijaAuditLogger
+
+    @Bean def oppijaAuditLogger: fi.vm.sade.haku.OppijaAuditLogger = new fi.vm.sade.haku.OppijaAuditLogger
+
+    @Bean def apiAuditLogger: fi.vm.sade.haku.ApiAuditLogger = new fi.vm.sade.haku.ApiAuditLogger
+
     @Bean def hakumaksuService = null
 
     @Bean def sendMailService = null
@@ -107,6 +113,12 @@ object OmatSivutSpringContext extends Logging {
     @Bean def userSession: Session = new SystemSession {
       override def getUser(): User = new User("HAKIJA")
     }
+
+    @Bean def virkailijaAuditLogger: fi.vm.sade.haku.VirkailijaAuditLogger = new fi.vm.sade.haku.VirkailijaAuditLogger
+
+    @Bean def oppijaAuditLogger: fi.vm.sade.haku.OppijaAuditLogger = new fi.vm.sade.haku.OppijaAuditLogger
+
+    @Bean def apiAuditLogger: fi.vm.sade.haku.ApiAuditLogger = new fi.vm.sade.haku.ApiAuditLogger
 
     @Bean def valintaService: ValintaService = new ValintaService {
       override def getHakemus(asOid: String, applicationOid: String): HakemusDTO = unsupportedIntegrationException
