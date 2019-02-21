@@ -11,12 +11,16 @@
 host.haku={{host_haku}}
 host.haku.sv={{host_haku_sv}}
 host.haku.en={{host_haku_en}}
+host.ldap={{host_ldap}}
 auth.mode={{auth_mode}}
 env.loglevel={{env_loglevel}}
 host.cas={{host_cas}}
 host.ilb={{host_ilb}}
 host.virkailija={{host_virkailija}}
 host.oppija={{host_oppija}}
+ldap.manager.password={{ldap_manager_password}}
+ldap.manager-password={{ldap_manager_password}}
+ldap.manager.userdn={{ldap_manager_userdn}}
 
 omatsivut.crypto.aes.key={{omatsivut_crypto_aes_key}}
 omatsivut.crypto.hmac.key={{omatsivut_crypto_hmac_key}}
@@ -119,6 +123,14 @@ koodi.public.webservice.url.backend=https://{{host_virkailija}}/koodisto-service
 koodisto.public.webservice.url.backend=https://{{host_virkailija}}/koodisto-service/services/koodistoService
 jpa.schemaUpdate=validate
 jpa.showSql=false
+ldap.cache.size=10000
+ldap.data.dir=${user.home}/data
+ldap.filter.people=uid\=%u
+ldap.index.cache.size=10000
+ldap.manager-dn=${ldap.manager.userdn}
+ldap.search.base.people=ou=People,dc=opintopolku,dc=fi
+ldap.url=ldap://${host.ldap}
+ldap.url.with.base=ldap\://${host.ldap}/dc\=opintopolku,dc\=fi
 log4j.properties.file=${user.home.conf}/log4j.properties
 oid.rest.url.backend=${host.ilb}/oid-service/rest/oid
 oid.webservice.url.backend=${host.ilb}/services/oidService
