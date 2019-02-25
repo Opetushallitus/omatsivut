@@ -14,6 +14,15 @@
     <properties>
         <valinta-tulos-service.version>4.9-SNAPSHOT</valinta-tulos-service.version>
     </properties>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>fi.vm.sade.generic</groupId>
+                <artifactId>generic-common</artifactId>
+                <version>9.6-SNAPSHOT</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
     <dependencies>
         <dependency>
             <groupId>fi.vm.sade</groupId>
@@ -179,6 +188,11 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
             <version>3.2.9.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-ldap</artifactId>
+            <version>4.1.3.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
