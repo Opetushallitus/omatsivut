@@ -16,8 +16,8 @@
             <img ng-src="img/opintopolku_large-{{lang}}.png">
         </a>
         <div class="center">
-            <h1 ng-if="application.vastaanotettavatHakutoiveet().length == 0">{{ localization("hakutoiveidenMuokkaus.title") }}</h1>
-            <h1 ng-if="application.vastaanotettavatHakutoiveet().length > 0">{{ localization("hakutoiveidenMuokkaus.titleWithVastaanotto") }}</h1>
+            <h1 ng-if="!application.hasVastaanotettaviaOrIlmoittauduttavia()">{{ localization("hakutoiveidenMuokkaus.title") }}</h1>
+            <h1 ng-if="application.hasVastaanotettaviaOrIlmoittauduttavia()">{{ localization("hakutoiveidenMuokkaus.titleWithVastaanotto") }}</h1>
             <span ng-if="application">
                 {{ localization("applicationPreview.applicationId") }}
                 {{ application.oid }}
