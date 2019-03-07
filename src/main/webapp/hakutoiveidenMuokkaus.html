@@ -16,7 +16,7 @@
             <img ng-src="img/opintopolku_large-{{lang}}.png">
         </a>
         <div class="center">
-            <h1 ng-if="!application.hasVastaanotettaviaOrIlmoittauduttavia() && resultFetchedSuccessfully()">{{ localization("hakutoiveidenMuokkaus.title") }}</h1>
+            <h1 ng-if="!application.hasVastaanotettaviaOrIlmoittauduttavia() && !loading">{{ localization("hakutoiveidenMuokkaus.title") }}</h1>
             <h1 ng-if="application.hasVastaanotettaviaOrIlmoittauduttavia()">{{ localization("hakutoiveidenMuokkaus.titleWithVastaanotto") }}</h1>
             <span ng-if="application">
                 {{ localization("applicationPreview.applicationId") }}
@@ -38,7 +38,7 @@
     </section>
 
     <section id="appRoot" class="content hakemus" ng-if="application">
-        <notification ng-hide="allowVastaanotto" message="{{localization('hakutoiveidenMuokkaus.infoNotification')}}"></notification>
+        <notification ng-hide="application.hasVastaanotettaviaOrIlmoittauduttavia()" message="{{localization('hakutoiveidenMuokkaus.infoNotification')}}"></notification>
         <application application="application"></application>
     </section>
 
