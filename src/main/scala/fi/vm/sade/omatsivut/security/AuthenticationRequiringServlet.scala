@@ -8,7 +8,7 @@ import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
 import fi.vm.sade.utils.slf4j.Logging
 import org.json4s.JsonDSL._
 import org.json4s.jackson.JsonMethods._
-import org.scalatra.{NotFound, Unauthorized}
+import org.scalatra.{NotFound, Ok, Unauthorized}
 
 trait AuthenticationRequiringServlet extends OmatSivutServletBase with Logging {
   val appConfig: AppConfig
@@ -18,13 +18,17 @@ trait AuthenticationRequiringServlet extends OmatSivutServletBase with Logging {
   def personOid(): String = getAuthenticationInfo(request).oppijaNumero.getOrElse(sys.error("Unauthenticated account"))
 
   before() {
-    val AuthenticationInfo(personOidOption, sessionIdOption) = getAuthenticationInfo(request)
     sessionService.getSession(
-      sessionIdOption.map(UUID.fromString).map(SessionId)
+      cookies.get(sessionCookieName).map(UUID.fromString).map(SessionId)
     ) match {
       case Right(session) =>
         logger.debug("Found session: " + session.oppijaNumero)
+        if (session.oppijaNumero.value.isEmpty()) {
+          logger.debug("Session has no oppijaNumero, should not find anything")
+          halt(NotFound(render("error" -> "no oid was present")))
+        }
       case _ =>
+        logger.debug("Session not found, fail the API request")
         halt(Unauthorized(render("error" -> "unauthorized")))
     }
   }

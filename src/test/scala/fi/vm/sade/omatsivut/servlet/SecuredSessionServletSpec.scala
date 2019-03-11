@@ -4,6 +4,7 @@ import java.util.UUID
 
 import fi.vm.sade.omatsivut.{ScalatraTestCookiesSupport, ScalatraTestSupport}
 import fi.vm.sade.omatsivut.fixtures.TestFixture
+import fi.vm.sade.omatsivut.security.AuthenticationInfoParser.getAuthenticationInfo
 import fi.vm.sade.omatsivut.security.fake.FakeSAMLMessages
 import fi.vm.sade.omatsivut.security.{CookieNames, SessionId}
 import org.junit.runner.RunWith
@@ -33,7 +34,7 @@ class SecuredSessionServletSpec extends ScalatraTestSupport with CookieNames wit
 
     "creates a session in repository and forwards to root if the request body contains the SAML message with hetu, ignoring the 'target' parameter" in {
       deleteAllSessions
-      post(urlUsedByShibboleth, requestBody(TestFixture.testHetu)) {
+      post(urlUsedByShibboleth, createSamlBodyWithHetu(TestFixture.testHetu)) {
         status must_== 302
         val location = response.headers("Location")(0)
         location must endWith("omatsivut/index.html")
@@ -41,6 +42,19 @@ class SecuredSessionServletSpec extends ScalatraTestSupport with CookieNames wit
         val personOid = getPersonFromSession(sessionId).getOrElse("not found in repository")
         personOid must_== TestFixture.personOid
         cookieGetValue(response, oppijaNumeroCookieName) must_== Some(TestFixture.personOid)
+      }
+    }
+
+    "creates a session with no oid if hetu does not have the corresponding oid" in {
+      deleteAllSessions
+      post(urlUsedByShibboleth, createSamlBodyWithHetu(TestFixture.testHetuWithNoPersonOid)) {
+        status must_== 302
+        val location = response.headers("Location")(0)
+        location must endWith("omatsivut/index.html")
+        val sessionId = cookieGetValue(response, sessionCookieName).getOrElse("not found session cookie")
+        val personOid = getPersonFromSession(sessionId).getOrElse("not found in repository")
+        personOid must_== ""
+        cookieGetValue(response, oppijaNumeroCookieName) must beNone
       }
     }
   }

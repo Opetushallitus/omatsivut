@@ -2,7 +2,7 @@ package fi.vm.sade.omatsivut.security.fake
 
 trait FakeSAMLMessages {
 
-  def requestBody(hetu: String) = <samlp:AttributeQuery
+  def createSamlBodyWithHetu(hetu: String) = <samlp:AttributeQuery
   xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion"
   xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"
   ID="MyMessageId"

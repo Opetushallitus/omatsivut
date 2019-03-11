@@ -16,7 +16,7 @@ class LogoutServletSpec extends ScalatraTestSupport with CookieNames with Scalat
       authGet("logout") {
         status must_== 302
         val location = response.headers("Location")(0)
-        location must endWith("omatsivut/shibboleth/Logout?return=%2Foma-opintopolku")
+        location must endWith("omatsivut/Shibboleth.sso/Logout?return=%2Foma-opintopolku")
         getPersonFromSession(lastSessionId) must beNone
         cookieGetValue(response, sessionCookieName) must beNone
         cookieGetValue(response, oppijaNumeroCookieName) must beNone

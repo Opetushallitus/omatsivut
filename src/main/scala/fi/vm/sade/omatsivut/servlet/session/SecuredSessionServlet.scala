@@ -12,7 +12,7 @@ trait SecuredSessionServletContainer {
   class SecuredSessionServlet(val authenticationInfoService: AuthenticationInfoService, val sessionService: SessionService)
     extends OmatSivutServletBase with CookieNames {
 
-    private def getHetu(msg: Elem): Option[String] = {
+    private def getHetuFromSaml(msg: Elem): Option[String] = {
       (for {
         item <- msg \\ "NameID" if (item \ "@Format").text == "urn:oid:1.2.246.21"
       } yield item.text.trim) match {
@@ -47,11 +47,11 @@ trait SecuredSessionServletContainer {
       try {
         val r = request.body
         val msg = XML.loadString(request.body)
-        getHetu(msg) match {
+        getHetuFromSaml(msg) match {
           case Some(hetu) => {
             authenticationInfoService.getHenkiloOID(hetu) match {
               case Some(henkiloOid) => initializeSessionAndRedirect(henkiloOid)
-              case _ => halt(500, "person " + hetu + " not found")
+              case _ => initializeSessionAndRedirect("")
             }
           }
           case None =>
