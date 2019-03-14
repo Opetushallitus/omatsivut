@@ -1,5 +1,5 @@
 
-export default ["$injector", function RestErrorInterceptor($injector) {
+export default ["$injector", "$q", function RestErrorInterceptor($injector, $q) {
   var errors = 0;
   var duplicates = 0;
   var loggedErrors = [];
@@ -56,7 +56,7 @@ export default ["$injector", function RestErrorInterceptor($injector) {
       } catch (e) {
         console.log("Something went wrong while trying to log backend rest error: " , e)
       }
-      return error;
+      return $q.reject(error);
     }
   }
 }]
