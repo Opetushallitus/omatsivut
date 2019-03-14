@@ -16,7 +16,9 @@
     var testTimeoutDefault = 30000;
     var testTimeoutPageLoad = 60000;
     mocha.ui('bdd');
-    mocha.reporter('spec');
+    var mochaReporter = new URLSearchParams(window.location.search).get('mochaReporter') || 'spec';
+    console.log('Using mocha reporter', mochaReporter);
+    mocha.reporter(mochaReporter);
     mocha.timeout(testTimeoutDefault);
 </script>
 <script src="util/testHelpers.js"></script>
