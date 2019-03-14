@@ -153,10 +153,6 @@ angular.module("exceptionOverride", []).factory("$exceptionHandler", ["$injector
   var loggedErrors = [];
   var skippedErrors = 0;
   return function (exception, cause) {
-    if (isTestMode()) {
-      console.log("Won't log errors to backend in test mode");
-      return;
-    }
     var $http = $injector.get("$http");
     var $window = $injector.get("$window");
     function getBrowserAndVersion() {
