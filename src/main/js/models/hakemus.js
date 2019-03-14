@@ -121,6 +121,10 @@ export default class Hakemus {
     return this.editHakutoiveetEnabled() || (this.state && this.state.id === "HAKUKAUSIPAATTYNYT" && this.hakemusSource !== 'Ataru')
   }
 
+  hasVastaanotettaviaOrIlmoittauduttavia() {
+    return this.ilmoittautumisLinkit().length > 0 || this.vastaanotettavatHakutoiveet().length > 0;
+  }
+
   vastaanotettavatHakutoiveet() {
     return _(this.valintatulosHakutoiveet()).filter(function(hakutoive) {
       return (hakutoive.vastaanotettavuustila === "VASTAANOTETTAVISSA_SITOVASTI" || hakutoive.vastaanotettavuustila === "VASTAANOTETTAVISSA_EHDOLLISESTI") && hakutoive.vastaanottotila == "KESKEN"
