@@ -7,6 +7,7 @@ import org.specs2.runner.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
 class AuthenticationSpec extends ScalatraTestSupport {
+  sequential
 
   implicit val personOid: PersonOid = PersonOid("dummy")
 

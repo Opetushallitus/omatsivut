@@ -5,7 +5,6 @@ import java.security.MessageDigest
 import ch.qos.logback.access.jetty.RequestLogImpl
 import com.typesafe.scalalogging.LazyLogging
 import org.eclipse.jetty.server._
-import org.eclipse.jetty.server.session._
 import org.eclipse.jetty.util.ssl.SslContextFactory
 import org.eclipse.jetty.webapp.WebAppContext
 
