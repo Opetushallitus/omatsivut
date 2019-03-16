@@ -18,7 +18,10 @@ cache:
 
 before_script:
   - DB_NAME=valintarekisteri
+  - OMATSIVUT_DB_NAME=omatsivutdb
   - psql -c "create database $DB_NAME;" -U postgres
+  - psql -c "create database $OMATSIVUT_DB_NAME;" -U postgres
+  - psql -d $OMATSIVUT_DB_NAME -f postgresql/init_omatsivut_it_postgresql.sql
   # Temporary workaround until valinta-tulos-service works regardless of timezone
   - export TZ=Europe/Helsinki
 
