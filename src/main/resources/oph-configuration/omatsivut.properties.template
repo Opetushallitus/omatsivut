@@ -166,7 +166,6 @@ recaptcha.secret={{recaptcha_secret}}
 omatsivut.vetuma.url={{omatsivut_vetuma_url}}
 shibboleth.logout={{shibboleth_logout}}
 shibboleth.login={{shibboleth_login}}
-shibboleth.redirect.url={{shibboleth_redirect_url}}
 
 # (Ainakin) nämä propertiet valuvat hakemus-apista ja ne täytyy määritellä täällä, jotta resolvautuvat hakemus-apin luokissa
 cas.service.oppijanumerorekisteri-service=https://${host.virkailija}/oppijanumerorekisteri-service
