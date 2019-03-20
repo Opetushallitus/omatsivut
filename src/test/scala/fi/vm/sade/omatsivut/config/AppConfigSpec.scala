@@ -34,9 +34,9 @@ class AppConfigSpec extends Specification with ITSetup with OmatsivutDbTools {
     }
   }
 
-  "omatsivut.properties.template" should {
+  "common.properties.template" should {
     "must exist with that name for deployment process" in {
-      "src/main/resources/oph-configuration/omatsivut.properties.template" must PathMatchers.beAnExistingPath
+      "src/main/resources/oph-configuration/common.properties.template" must PathMatchers.beAnExistingPath
     }
   }
 

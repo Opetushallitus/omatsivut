@@ -151,7 +151,7 @@ Paikallisen mongon käynnistys:
 
 ### templated-profiili
 
-Tällä profiililla sovelluksen asetukset generoidaan tuotantoympäristöä vastaavasti `omatsivut.properties.template` -tiedostosta
+Tällä profiililla sovelluksen asetukset generoidaan tuotantoympäristöä vastaavasti `common.properties.template` -tiedostosta
 ja annetusta muuttujatiedostosta. Testi- ja tuotantoympäristöissä käytettävät muuttujatiedostot sijaitsevat erillisissä sisäisissä
  "environment" -repositorioissa.
 
@@ -161,7 +161,7 @@ Mallia vars-tiedostoon voi ottaa tiedostosta `src/main/resources/oph-configurati
 ### default-profiili
 
 Oletusasetuksilla käytetään ulkoista konfiguraatiotiedostoa `omatsivut.properties`, joka generoidaan deployn yhteydessä
- `omatsivut.properties.template` ja ulkoisesta muuttujatiedostosta. Tätä profiilia käytetään testi- ja
+ `common.properties.template` ja ulkoisesta muuttujatiedostosta. Tätä profiilia käytetään testi- ja
 tuotantoympäristöissä.
 
 ### cloud-profiili

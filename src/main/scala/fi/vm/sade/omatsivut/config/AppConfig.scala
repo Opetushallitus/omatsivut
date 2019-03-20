@@ -57,7 +57,7 @@ object AppConfig extends Logging {
   class Dev extends AppConfig with ExampleTemplatedProps with MockAuthentication with StubbedExternalDeps {
     def springConfiguration = new OmatSivutSpringContext.Dev()
 
-    override lazy val settings = ConfigTemplateProcessor.createSettings("omatsivut", templateAttributesFile)
+    override lazy val settings = ConfigTemplateProcessor.createSettings("common", templateAttributesFile)
       .withOverride("mongodb.oppija.uri", "mongodb://localhost:27017")
   }
 
@@ -76,7 +76,7 @@ object AppConfig extends Logging {
     val embeddedMongoService = new EmbeddedMongoService
     val localPostgresService = new LocalPostgresService
 
-    override lazy val settings = ConfigTemplateProcessor.createSettings("omatsivut", templateAttributesFile)
+    override lazy val settings = ConfigTemplateProcessor.createSettings("common", templateAttributesFile)
       .withOverride("omatsivut.valinta-tulos-service.url", "http://localhost:"+ embeddedJettyPortChooser.chosenPort + "/valinta-tulos-service")
       .withOverride("mongo.db.name", "hakulomake")
       .withOverride("mongodb.oppija.uri", "mongodb://localhost:" + embeddedMongoPortChooser.chosenPort)
@@ -112,7 +112,7 @@ object AppConfig extends Logging {
 
   trait TemplatedProps {
     logger.info("Using template variables from " + templateAttributesFile)
-    lazy val settings = ConfigTemplateProcessor.createSettings("omatsivut", templateAttributesFile)
+    lazy val settings = ConfigTemplateProcessor.createSettings("common", templateAttributesFile)
     def templateAttributesFile: String
   }
 
