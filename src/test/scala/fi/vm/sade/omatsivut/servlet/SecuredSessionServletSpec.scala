@@ -4,37 +4,28 @@ import java.util.UUID
 
 import fi.vm.sade.omatsivut.{ScalatraTestCookiesSupport, ScalatraTestSupport}
 import fi.vm.sade.omatsivut.fixtures.TestFixture
-import fi.vm.sade.omatsivut.security.AuthenticationInfoParser.getAuthenticationInfo
-import fi.vm.sade.omatsivut.security.fake.FakeSAMLMessages
-import fi.vm.sade.omatsivut.security.{CookieNames, SessionId}
+import fi.vm.sade.omatsivut.security.{CookieNames}
 import org.junit.runner.RunWith
 import org.specs2.runner.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class SecuredSessionServletSpec extends ScalatraTestSupport with CookieNames with ScalatraTestCookiesSupport with FakeSAMLMessages {
+class SecuredSessionServletSpec extends ScalatraTestSupport with CookieNames with ScalatraTestCookiesSupport {
   val originalUrl = "/foo/bar"
   val initsessionUrl = "initsession"
   val urlUsedByShibboleth = initsessionUrl + "?target=" + originalUrl
+  def hetuParam(hetu: String) = Tuple2("hetu", hetu)
 
   "GET /initsession" should {
-
-    "fails with bad request (400) if request does not contain body" in {
-      post(urlUsedByShibboleth) {
-        status must_== 400
-        response.statusLine.message must contain("Invalid SOAP (SAML) message")
-      }
-    }
-
     "fails with bad request (400) if request does not contain henkilötunnus" in {
-      post(urlUsedByShibboleth, invalidXMLBody()) {
+      get(urlUsedByShibboleth) {
         status must_== 400
         response.statusLine.message must contain("No hetu found in request from shibboleth")
       }
     }
 
-    "creates a session in repository and forwards to root if the request body contains the SAML message with hetu, ignoring the 'target' parameter" in {
+    "creates a session in repository and forwards to root if the request contains hetu header, ignoring the 'target' parameter" in {
       deleteAllSessions
-      post(urlUsedByShibboleth, createSamlBodyWithHetu(TestFixture.testHetu)) {
+      get(urlUsedByShibboleth, headers = Map("hetu" -> TestFixture.testHetu)) {
         status must_== 302
         val location = response.headers("Location")(0)
         location must endWith("omatsivut/index.html")
@@ -47,7 +38,7 @@ class SecuredSessionServletSpec extends ScalatraTestSupport with CookieNames wit
 
     "creates a session with no oid if hetu does not have the corresponding oid" in {
       deleteAllSessions
-      post(urlUsedByShibboleth, createSamlBodyWithHetu(TestFixture.testHetuWithNoPersonOid)) {
+      get(urlUsedByShibboleth, headers = Map("hetu" -> TestFixture.testHetuWithNoPersonOid)) {
         status must_== 302
         val location = response.headers("Location")(0)
         location must endWith("omatsivut/index.html")

@@ -6,9 +6,6 @@ import org.scalatra.servlet.RichResponse
 
 trait ShibbolethPaths {
   def shibbolethPath(ssoContextPath: String)(implicit lang: Language.Language): String = {
-
-    // PETAR TODO decide what is the format of shibboleth login url
-
     ssoContextPath + OphUrlProperties.url("shibboleth.login", lang.toString().toUpperCase())
   }
 
