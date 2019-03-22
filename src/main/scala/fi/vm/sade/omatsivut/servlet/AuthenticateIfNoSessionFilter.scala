@@ -24,7 +24,8 @@ class AuthenticateIfNoSessionFilter(val sessionService: SessionService)
         logger.debug("Found session: " + session.oppijaNumero)
       case _ =>
         logger.debug("Session not found, redirect to login")
-        redirectToShibbolethLogin(ServerContextPath(request).path, response)
+        val noContextPath: Boolean = request.getContextPath.isEmpty
+        redirectToShibbolethLogin(ServerContextPath(request).path, noContextPath, response)
     }
   }
 

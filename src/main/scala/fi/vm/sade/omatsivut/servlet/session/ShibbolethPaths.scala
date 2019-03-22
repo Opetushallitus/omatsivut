@@ -9,12 +9,13 @@ import org.scalatra.servlet.RichResponse
 trait ShibbolethPaths {
   def urlEncode(str: String): String = URLEncoder.encode(str, "UTF-8")
 
-  def shibbolethPath(targetUrlPrefix: String)(implicit lang: Language.Language): String = {
+  def shibbolethPath(targetUrlPrefix: String, noContextPath: Boolean)(implicit lang: Language.Language): String = {
+    val contextPath = if (noContextPath) "/omatsivut" else ""
     OphUrlProperties.url("shibboleth.login", lang.toString().toUpperCase()) +
-      "?target=" + urlEncode(targetUrlPrefix + "/omatsivut/initsession")
+      "?target=" + urlEncode(targetUrlPrefix + contextPath + "/initsession")
   }
 
-  def redirectToShibbolethLogin(targetUrlPrefix: String, response: RichResponse)(implicit lang: Language.Language) {
-    response.redirect(shibbolethPath(targetUrlPrefix))
+  def redirectToShibbolethLogin(targetUrlPrefix: String, noContextPath: Boolean, response: RichResponse)(implicit lang: Language.Language) {
+    response.redirect(shibbolethPath(targetUrlPrefix, noContextPath))
   }
 }
