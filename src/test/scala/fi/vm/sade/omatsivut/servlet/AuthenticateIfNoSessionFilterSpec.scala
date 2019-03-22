@@ -3,7 +3,6 @@ package fi.vm.sade.omatsivut.servlet
 import java.util.UUID
 
 import fi.vm.sade.hakemuseditori.domain.Language
-import fi.vm.sade.omatsivut.ScalatraTestCookiesSupport
 import fi.vm.sade.omatsivut.db.SessionRepository
 import fi.vm.sade.omatsivut.security._
 import org.junit.runner.RunWith
@@ -16,14 +15,13 @@ import org.specs2.specification.Scope
 
 @RunWith(classOf[JUnitRunner])
 class AuthenticateIfNoSessionFilterSpec extends MutableScalatraSpec with Mockito {
-  val originalUrl = "/foo/bar"
+  val originalUrl = "/index.html"
   val redirectedUrl = "/shib/omatsivut/initsession?target=" + originalUrl
   implicit val language: Language.Language = Language.fi
   val id = SessionId(UUID.randomUUID())
   val sessionRepository: SessionRepository = mock[SessionRepository]
   val sessionService = new SessionService(sessionRepository)
-  val authenticationContext = new TestAuthenticationContext
-  val authenticateIfNoSessionFilter = new AuthenticateIfNoSessionFilter(sessionService, authenticationContext)
+  val authenticateIfNoSessionFilter = new AuthenticateIfNoSessionFilter(sessionService)
 
   addFilter(authenticateIfNoSessionFilter, "/*")
 
@@ -32,7 +30,7 @@ class AuthenticateIfNoSessionFilterSpec extends MutableScalatraSpec with Mockito
       Ok("ok")
     }
   }
-  addServlet(dummyServlet, "/*")
+  addServlet(dummyServlet, "/omatsivut/*")
 
   sequential
 
@@ -40,11 +38,10 @@ class AuthenticateIfNoSessionFilterSpec extends MutableScalatraSpec with Mockito
 
     "redirect to login if session does not exist in cookie" in {
       sessionRepository.get(id) returns None
-      get(originalUrl) {
+      get("omatsivut" + originalUrl) {
         status must_== 302
         val location = response.headers("Location")(0)
-        success
- // petar uncomment when sure about login url        location must endWith(redirectedUrl)
+        location must find("""Shibboleth.sso\/LoginFI\?target=http.+%2Fomatsivut%2Finitsession$""")
       }
     }
 

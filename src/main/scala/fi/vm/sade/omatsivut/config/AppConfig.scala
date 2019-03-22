@@ -2,7 +2,6 @@ package fi.vm.sade.omatsivut.config
 
 import com.typesafe.config.Config
 import fi.vm.sade.omatsivut.OphUrlProperties
-import fi.vm.sade.omatsivut.security.{AuthenticationContext, ProductionAuthenticationContext, TestAuthenticationContext}
 import fi.vm.sade.utils.config.{ApplicationSettingsLoader, ConfigTemplateProcessor}
 import fi.vm.sade.utils.mongo.{EmbeddedMongo, MongoServer}
 import fi.vm.sade.utils.slf4j.Logging
@@ -43,7 +42,6 @@ object AppConfig extends Logging {
 
   class Default extends AppConfig with ExternalProps {
     def springConfiguration = new OmatSivutSpringContext.Default()
-    override def usesFakeAuthentication = settings.environment.isDev || settings.environment.isLuokka || settings.environment.isKoulutus || settings.environment.isVagrant
   }
 
   class Cloud extends AppConfig with ExternalProps {
@@ -150,15 +148,12 @@ object AppConfig extends Logging {
   }
 
   trait MockAuthentication extends AppConfig {
-    override def usesFakeAuthentication = true
   }
 
   trait AppConfig {
     def springConfiguration: OmatSivutConfiguration
-    lazy val authContext: AuthenticationContext = if (usesFakeAuthentication) new TestAuthenticationContext else new ProductionAuthenticationContext
     val cookieTimeoutMinutes = 30
 
-    def usesFakeAuthentication: Boolean = false
     def usesLocalDatabase = false
 
     def onStart {}

@@ -6,13 +6,13 @@ import javax.servlet.http.HttpServletRequest
 import fi.vm.sade.hakemuseditori.auditlog.Audit
 import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.omatsivut.auditlog.Logout
-import fi.vm.sade.omatsivut.security.{AuthenticationContext, CookieNames, SessionId, SessionService}
+import fi.vm.sade.omatsivut.security.{CookieNames, SessionId, SessionService}
 import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
 import org.scalatra.servlet.RichResponse
 
 trait LogoutServletContainer {
 
-  class LogoutServlet(val authenticationContext: AuthenticationContext, val sessionService: SessionService) extends OmatSivutServletBase with CookieNames {
+  class LogoutServlet(val sessionService: SessionService) extends OmatSivutServletBase with CookieNames {
     get("/*") {
       sessionService.deleteSession(cookies.get(sessionCookieName).map(UUID.fromString).map(SessionId))
       clearCookie(sessionCookieName)
@@ -38,7 +38,7 @@ trait LogoutServletContainer {
 
     def redirectToShibbolethLogout(request: HttpServletRequest, response: RichResponse): Unit = {
       val returnUrl = "/oma-opintopolku" // check authentication context for test specific context-path ?
-      response.redirect(authenticationContext.ssoContextPath + OphUrlProperties.url("shibboleth.logout", returnUrl))
+      response.redirect(OphUrlProperties.url("shibboleth.logout", returnUrl))
     }
   }
 }

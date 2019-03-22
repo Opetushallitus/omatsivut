@@ -1,15 +1,20 @@
 package fi.vm.sade.omatsivut.servlet.session
 
+import java.net.URLEncoder
+
 import fi.vm.sade.hakemuseditori.domain.Language
 import fi.vm.sade.omatsivut.OphUrlProperties
 import org.scalatra.servlet.RichResponse
 
 trait ShibbolethPaths {
-  def shibbolethPath(ssoContextPath: String)(implicit lang: Language.Language): String = {
-    ssoContextPath + OphUrlProperties.url("shibboleth.login", lang.toString().toUpperCase())
+  def urlEncode(str: String): String = URLEncoder.encode(str, "UTF-8")
+
+  def shibbolethPath(targetUrlPrefix: String)(implicit lang: Language.Language): String = {
+    OphUrlProperties.url("shibboleth.login", lang.toString().toUpperCase()) +
+      "?target=" + urlEncode(targetUrlPrefix + "/omatsivut/initsession")
   }
 
-  def redirectToShibbolethLogin(response: RichResponse, ssoContextPath: String)(implicit lang: Language.Language) {
-    response.redirect(shibbolethPath(ssoContextPath))
+  def redirectToShibbolethLogin(targetUrlPrefix: String, response: RichResponse)(implicit lang: Language.Language) {
+    response.redirect(shibbolethPath(targetUrlPrefix))
   }
 }
