@@ -1,10 +1,9 @@
 package fi.vm.sade.omatsivut.servlet.session
 
-import fi.vm.sade.omatsivut.servlet.{OmatSivutServletBase, ServerContextPath}
+import fi.vm.sade.omatsivut.servlet.{OmatSivutServletBase}
 
-class LoginServlet() extends OmatSivutServletBase with ShibbolethPaths {
+class LoginServlet() extends OmatSivutServletBase with OmatsivutPaths {
   get("/*") {
-    val noContextPath: Boolean = request.getContextPath.isEmpty
-    redirectToShibbolethLogin(ServerContextPath(request).path, noContextPath ,response)
+    response.redirect(shibbolethPath(request.getContextPath))
   }
 }
