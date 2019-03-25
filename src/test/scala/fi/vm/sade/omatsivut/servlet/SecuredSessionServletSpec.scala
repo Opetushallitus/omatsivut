@@ -10,9 +10,8 @@ import org.specs2.runner.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
 class SecuredSessionServletSpec extends ScalatraTestSupport with CookieNames with ScalatraTestCookiesSupport {
-  val originalUrl = "/foo/bar"
   val initsessionUrl = "initsession"
-  val urlUsedByShibboleth = initsessionUrl + "?target=" + originalUrl
+  val urlUsedByShibboleth = initsessionUrl
   def hetuParam(hetu: String) = Tuple2("hetu", hetu)
 
   "GET /initsession" should {

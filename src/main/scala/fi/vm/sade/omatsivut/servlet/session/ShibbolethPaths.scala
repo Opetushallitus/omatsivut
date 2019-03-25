@@ -12,7 +12,7 @@ trait ShibbolethPaths {
   def shibbolethPath(targetUrlPrefix: String, noContextPath: Boolean)(implicit lang: Language.Language): String = {
     val contextPath = if (noContextPath) "/omatsivut" else ""
     OphUrlProperties.url("shibboleth.login", lang.toString().toUpperCase()) +
-      "?target=" + urlEncode(targetUrlPrefix + contextPath + "/initsession")
+      "?target=" + urlEncode(targetUrlPrefix + contextPath + "/initsession/")
   }
 
   def redirectToShibbolethLogin(targetUrlPrefix: String, noContextPath: Boolean, response: RichResponse)(implicit lang: Language.Language) {
