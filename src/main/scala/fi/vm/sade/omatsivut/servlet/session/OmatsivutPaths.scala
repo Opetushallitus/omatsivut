@@ -8,6 +8,10 @@ import fi.vm.sade.omatsivut.OphUrlProperties
 trait OmatsivutPaths {
   private def urlEncode(str: String): String = URLEncoder.encode(str, "UTF-8")
 
+  private def getContextPath(contextPathFromRequest: String): String = {
+    if (contextPathFromRequest.isEmpty) "/omatsivut" else contextPathFromRequest
+  }
+
   private def hostHakuParameterName(lang: String): String = {
     val hostHakuBase = "host.haku"
     val hostHakuSuffix = lang match {
@@ -23,8 +27,13 @@ trait OmatsivutPaths {
   }
 
   def shibbolethPath(contextPath: String)(implicit lang: Language.Language): String = {
-    val realContextPath = if (contextPath.isEmpty) "/omatsivut" else contextPath
+    val realContextPath = getContextPath(contextPath)
     OphUrlProperties.url("shibboleth.login", lang.toString().toUpperCase()) +
       "?target=" + urlEncode(urlPrefix(lang.toString.toLowerCase) + realContextPath + "/initsession/")
+  }
+
+  def omatsivutPath(contextPath: String)(implicit lang: Language.Language): String = {
+    val realContextPath = getContextPath(contextPath)
+    urlEncode(urlPrefix(lang.toString.toLowerCase) + realContextPath)
   }
 }

@@ -10,7 +10,7 @@ import scala.xml.{Elem, SAXParseException, XML}
 
 trait SecuredSessionServletContainer {
   class SecuredSessionServlet(val authenticationInfoService: AuthenticationInfoService, val sessionService: SessionService)
-    extends OmatSivutServletBase with CookieNames {
+    extends OmatSivutServletBase with CookieNames with OmatsivutPaths {
 
     private def initializeSessionAndRedirect(personOid: String): Unit = {
       val newSession = sessionService.storeSession(OppijaNumero(personOid))
@@ -40,7 +40,7 @@ trait SecuredSessionServletContainer {
     }
 
     private def redirectUri: String = {
-      request.getContextPath + paramOption("redirect").getOrElse("/index.html")
+      omatsivutPath(request.getContextPath) + paramOption("redirect").getOrElse("/index.html")
     }
   }
 }
