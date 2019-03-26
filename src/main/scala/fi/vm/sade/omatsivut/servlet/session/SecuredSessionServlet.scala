@@ -4,13 +4,12 @@ import java.util.UUID
 
 import fi.vm.sade.omatsivut.security.{AuthenticationInfoService, CookieNames, OppijaNumero, SessionService}
 import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
+import fi.vm.sade.utils.slf4j.Logging
 import org.scalatra.{BadRequest, Cookie, InternalServerError}
-
-import scala.xml.{Elem, SAXParseException, XML}
 
 trait SecuredSessionServletContainer {
   class SecuredSessionServlet(val authenticationInfoService: AuthenticationInfoService, val sessionService: SessionService)
-    extends OmatSivutServletBase with CookieNames with OmatsivutPaths {
+    extends OmatSivutServletBase with CookieNames with OmatsivutPaths with Logging {
 
     private def initializeSessionAndRedirect(personOid: String): Unit = {
       val newSession = sessionService.storeSession(OppijaNumero(personOid))
@@ -40,9 +39,9 @@ trait SecuredSessionServletContainer {
     }
 
     private def redirectUri: String = {
-      val a = omatsivutPath(request.getContextPath) + paramOption("redirect").getOrElse("/index.html")
-      println("petar path = " + a)
-      a
+      val link = omatsivutPath(request.getContextPath) + paramOption("redirect").getOrElse("/index.html")
+      logger.info("Link to forward to, after a session is established: " + link)
+      link
     }
   }
 }
