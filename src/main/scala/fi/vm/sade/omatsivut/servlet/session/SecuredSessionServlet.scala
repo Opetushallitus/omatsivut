@@ -40,7 +40,9 @@ trait SecuredSessionServletContainer {
     }
 
     private def redirectUri: String = {
-      omatsivutPath(request.getContextPath) + paramOption("redirect").getOrElse("/index.html")
+      val a = omatsivutPath(request.getContextPath) + paramOption("redirect").getOrElse("/index.html")
+      println("petar path = " + a)
+      a
     }
   }
 }

@@ -15,7 +15,7 @@ trait OmatsivutPaths {
   private def hostHakuParameterName(lang: String): String = {
     val hostHakuBase = "host.haku"
     val hostHakuSuffix = lang match {
-      case "en" | "sv" => lang
+      case "en" | "sv" => "." + lang
       case _ => ""
     }
     hostHakuBase + hostHakuSuffix
@@ -23,7 +23,8 @@ trait OmatsivutPaths {
 
   private def urlPrefix(lang: String): String = {
     val host = OphUrlProperties.url(hostHakuParameterName(lang))
-    "https://" + host
+    val protocol = if (host.startsWith("http")) "" else "https://"
+    protocol + host
   }
 
   def shibbolethPath(contextPath: String)(implicit lang: Language.Language): String = {
@@ -34,6 +35,6 @@ trait OmatsivutPaths {
 
   def omatsivutPath(contextPath: String)(implicit lang: Language.Language): String = {
     val realContextPath = getContextPath(contextPath)
-    urlEncode(urlPrefix(lang.toString.toLowerCase) + realContextPath)
+    urlPrefix(lang.toString.toLowerCase) + realContextPath
   }
 }
