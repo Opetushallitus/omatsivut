@@ -25,7 +25,9 @@ trait SecuredSessionServletContainer {
     private def clientAddress = " [" + request.getRemoteAddr + "]"
 
     get("/") {
+      logger.info("Initsession exxxxecution")
       val hetu = request.header("hetu")
+      logger.info("Initsession hetu parameter = " + hetu)
       hetu match {
         case Some(hetu) => {
           authenticationInfoService.getHenkiloOID(hetu) match {
