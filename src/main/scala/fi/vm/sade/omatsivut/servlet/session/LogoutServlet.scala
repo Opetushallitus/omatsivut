@@ -6,17 +6,16 @@ import javax.servlet.http.HttpServletRequest
 import fi.vm.sade.hakemuseditori.auditlog.Audit
 import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.omatsivut.auditlog.Logout
-import fi.vm.sade.omatsivut.security.{CookieNames, SessionId, SessionService}
+import fi.vm.sade.omatsivut.security.{AttributeNames, SessionId, SessionService}
 import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
 import org.scalatra.servlet.RichResponse
 
 trait LogoutServletContainer {
 
-  class LogoutServlet(val sessionService: SessionService) extends OmatSivutServletBase with CookieNames {
+  class LogoutServlet(val sessionService: SessionService) extends OmatSivutServletBase with AttributeNames {
     get("/*") {
       sessionService.deleteSession(cookies.get(sessionCookieName).map(UUID.fromString).map(SessionId))
       clearCookie(sessionCookieName)
-      clearCookie(oppijaNumeroCookieName)
       redirectToShibbolethLogout(request, response)
     }
 

@@ -19,8 +19,8 @@ class SessionService(sessionRepository: SessionRepository) extends Logging {
   }
 
 
-  def storeSession(oppijaNumero: OppijaNumero): Either[Throwable, (SessionId, Session)] = {
-    val session = Session(oppijaNumero)
+  def storeSession(hetu: Hetu, oppijaNumero: OppijaNumero, oppijaNimi: String): Either[Throwable, (SessionId, SessionInfo)] = {
+    val session = SessionInfo(hetu, oppijaNumero, oppijaNimi)
     logger.debug("Storing to session: " + session.oppijaNumero)
     Try(sessionRepository.store(session)) match {
       case Success(id) => Right((id, session))
@@ -28,7 +28,7 @@ class SessionService(sessionRepository: SessionRepository) extends Logging {
     }
   }
 
-  def getSession(id: Option[SessionId]): Either[Throwable, Session] = id match {
+  def getSession(id: Option[SessionId]): Either[Throwable, SessionInfo] = id match {
     case None => Left(new AuthenticationFailedException(s"No credentials given"))
     case Some(id) => {
       Try(sessionRepository.get(id)) match {

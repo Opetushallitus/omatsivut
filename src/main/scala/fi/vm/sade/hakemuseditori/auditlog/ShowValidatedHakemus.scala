@@ -1,7 +1,7 @@
 package fi.vm.sade.hakemuseditori.auditlog
 
 import fi.vm.sade.auditlog.{Changes, Target, User}
-import fi.vm.sade.omatsivut.security.AuthenticationInfoParser.getAuthenticationInfo
+import fi.vm.sade.omatsivut.security.SessionInfoRetriever.getSessionId
 import javax.servlet.http.HttpServletRequest
 
 
@@ -17,7 +17,6 @@ case class ShowValidatedHakemus(request: HttpServletRequest, userOid: String, ha
   }
 
   override def user: User = {
-    val authInfo = getAuthenticationInfo(request)
-    new User(getOid(userOid), getAddress(request), authInfo.sessionId.getOrElse("(no session cookie)"), getUserAgent(request))
+    new User(getOid(userOid), getAddress(request), getSessionId(request).getOrElse("(no session cookie)"), getUserAgent(request))
   }
 }

@@ -41,7 +41,7 @@ class SessionServiceSpec extends Specification with MockitoStubs {
     "storeSession will persist a session in repository" in new SessionServiceWithMocks {
       sessionRepository.get(id) returns None
       sessionRepository.store(session) returns id
-      sessionService.storeSession(oppijaNumero) must_== Right((id, session))
+      sessionService.storeSession(hetu, oppijaNumero, oppijaNimi) must_== Right((id, session))
     }
 
     "deleteSession will delete a session from repository" in new SessionServiceWithMocks {
@@ -54,9 +54,11 @@ class SessionServiceSpec extends Specification with MockitoStubs {
   trait SessionServiceWithMocks extends Mockito with Scope with MustThrownExpectations {
     val id = SessionId(UUID.randomUUID())
     val newId = SessionId(UUID.randomUUID())
-    val oppijaNumero = OppijaNumero("123")
+    val hetu = Hetu("123456-789A")
+    val oppijaNumero = OppijaNumero("1.2.3.4.5.6")
+    val oppijaNimi = "John Smith"
     val uid: String = "uid"
-    val session = Session(oppijaNumero)
+    val session = SessionInfo(hetu, oppijaNumero, oppijaNimi)
     val casClient: CasClient = mock[CasClient]
 
     val sessionRepository: SessionRepository = mock[SessionRepository]

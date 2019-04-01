@@ -2,7 +2,7 @@ package fi.vm.sade.omatsivut.db
 
 import java.util.UUID
 
-import fi.vm.sade.omatsivut.security.{SessionId, OppijaNumero, Session}
+import fi.vm.sade.omatsivut.security.{Hetu, OppijaNumero, SessionInfo, SessionId}
 import fi.vm.sade.omatsivut.{ITSetup, OmatsivutDbTools}
 import org.junit.runner.RunWith
 import org.specs2.matcher.MustThrownExpectations
@@ -26,7 +26,7 @@ class OmatsivutDbSessionSpec extends Specification with ITSetup with OmatsivutDb
     "find a stored session" in new OneSessionInDatabase {
       val session = singleConnectionOmatsivutDb.get(id)
       session must not be none
-      session.get must_== Session(oppijaNumero)
+      session.get must_== SessionInfo(hetu, oppijaNumero, oppijaNimi)
     }
 
     "delete a stored session by id" in new OneSessionInDatabase {
@@ -39,7 +39,9 @@ class OmatsivutDbSessionSpec extends Specification with ITSetup with OmatsivutDb
   step(deleteAllSessions())
 
   trait OneSessionInDatabase extends Scope with MustThrownExpectations {
-    val oppijaNumero = OppijaNumero("dummy")
-    val id = singleConnectionOmatsivutDb.store(Session(oppijaNumero))
+    val hetu = Hetu("123456-789A")
+    val oppijaNumero = OppijaNumero("1.2.3.4.5.6")
+    val oppijaNimi = "John Smith"
+    val id = singleConnectionOmatsivutDb.store(SessionInfo(hetu, oppijaNumero, oppijaNimi))
   }
 }

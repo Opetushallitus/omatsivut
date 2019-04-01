@@ -25,7 +25,7 @@ import fi.vm.sade.omatsivut.muistilista.MuistilistaServiceComponent
 import fi.vm.sade.omatsivut.oppijantunnistus.{OppijanTunnistusComponent, OppijanTunnistusService, RemoteOppijanTunnistusService, StubbedOppijanTunnistusService}
 import fi.vm.sade.omatsivut.security._
 import fi.vm.sade.omatsivut.servlet._
-import fi.vm.sade.omatsivut.servlet.session.{LogoutServletContainer, SecuredSessionServletContainer}
+import fi.vm.sade.omatsivut.servlet.session.{LogoutServletContainer, SecuredSessionServletContainer, SessionServlet}
 import fi.vm.sade.omatsivut.vastaanotto.VastaanottoComponent
 import fi.vm.sade.utils.captcha.CaptchaServiceComponent
 
@@ -158,6 +158,7 @@ class ComponentRegistry(val config: AppConfig)
   def newKoulutusServlet = new KoulutusServlet
   def newValintatulosServlet = new ValintatulosServlet(config, sessionService)
   def newSecuredSessionServlet = new SecuredSessionServlet(authenticationInfoService, sessionService)
+  def newSessionServlet = new SessionServlet(sessionService)
   def newLogoutServlet = new LogoutServlet(sessionService)
   def newFixtureServlet = new FixtureServlet(config)
   def newKoodistoServlet = new KoodistoServlet

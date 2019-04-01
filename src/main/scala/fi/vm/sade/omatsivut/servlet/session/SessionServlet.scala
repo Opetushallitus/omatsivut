@@ -2,51 +2,43 @@ package fi.vm.sade.omatsivut.servlet.session
 
 import java.nio.charset.Charset
 
+import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
 import org.joda.time.LocalDate
 import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
 import org.scalatra.json.JacksonJsonSupport
-import fi.vm.sade.hakemuseditori.json.JsonFormats
+import fi.vm.sade.omatsivut.security.{AttributeNames, AuthenticationRequiringServlet, SessionService}
+import fi.vm.sade.omatsivut.security.SessionInfoRetriever.getSessionInfo
+import org.json4s.Formats
 
-class SessionServlet extends OmatSivutServletBase with JsonFormats with JacksonJsonSupport {
+class SessionServlet(val sessionService: SessionService)
+  extends OmatSivutServletBase
+    with AuthenticationRequiringServlet with AttributeNames with JacksonJsonSupport with JsonFormats{
   private val formatter: DateTimeFormatter = DateTimeFormat.forPattern("ddMMYY")
 
   get("/") {
     contentType = formats("json")
-    val hetu: Option[String] = Option(request.getHeader("nationalidentificationnumber"))
-    val firstName: Option[String] = Option(request.getHeader("firstname"))
-    val lastName: Option[String] = Option(request.getHeader("sn"))
+    val sessionInfo = getSessionInfo(request)
+    val displayName = sessionInfo.map(_.oppijaNimi)
+    val hetu = sessionInfo.map(_.hetu)
 
     User(
-      parseDisplayName(firstName, lastName),
-      parseDateFromHetu(hetu)
+      displayName.getOrElse(""),
+      parseDateFromHetu(hetu.map(_.value))
     )
   }
 
   def parseDateFromHetu(hetu: Option[String]): Option[LocalDate] = {
     if (hetu.isDefined) {
       val date = hetu.get.substring(0, 6)
-      return Option(formatter.parseLocalDate(date))
+      try {
+        return Option(formatter.parseLocalDate(date))
+      } catch {
+        case _: Throwable => return Option.empty
+      }
     }
     Option.empty
   }
-
-  def parseDisplayName(firstName: Option[String], lastName: Option[String]): String = {
-    // Dekoodataan etunimet ja sukunimi manuaalisesti, koska shibboleth välittää ASCII-enkoodatut request headerit UTF-8 -merkistössä
-
-    val ISO88591 = Charset.forName("ISO-8859-1")
-    val utf8 = Charset.forName("UTF-8")
-    val builder = new StringBuilder
-    if (firstName.isDefined) {
-      builder.append(new String(firstName.get.getBytes(ISO88591), utf8))
-    }
-    if (firstName.isDefined && lastName.isDefined) builder.append(" ")
-    if (lastName.isDefined) {
-      builder.append(new String(lastName.get.getBytes(ISO88591), utf8))
-    }
-    builder.toString
-  }
-
 }
 
 case class User(name: String, birthDay: Option[LocalDate])

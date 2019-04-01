@@ -2,7 +2,7 @@ package fi.vm.sade.hakemuseditori.auditlog
 
 import fi.vm.sade.auditlog.{Changes, Target, User}
 import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus.Answers
-import fi.vm.sade.omatsivut.security.AuthenticationInfoParser.getAuthenticationInfo
+import fi.vm.sade.omatsivut.security.SessionInfoRetriever.getSessionId
 import javax.servlet.http.HttpServletRequest
 
 case class UpdateHakemus(request: HttpServletRequest, userOid: String, hakemusOid: String, hakuOid: String, originalAnswers: Answers, updatedAnswers: Answers) extends AuditLogUtils with AuditEvent {
@@ -21,8 +21,7 @@ case class UpdateHakemus(request: HttpServletRequest, userOid: String, hakemusOi
   }
 
   override def user: User = {
-    val authInfo = getAuthenticationInfo(request)
-    new User(getOid(userOid), getAddress(request), authInfo.sessionId.getOrElse("(no session cookie)"), getUserAgent(request))
+    new User(getOid(userOid), getAddress(request), getSessionId(request).getOrElse("(no session cookie)"), getUserAgent(request))
   }
 
   /**

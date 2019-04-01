@@ -12,13 +12,12 @@ import org.specs2.mock.Mockito
 import org.specs2.runner.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class AuthenticationRequiringServletSpec extends MutableScalatraSpec with Mockito with CookieNames {
+class AuthenticationRequiringServletSpec extends MutableScalatraSpec with Mockito with AttributeNames {
   val testUrl = "/test"
   val id = SessionId(UUID.randomUUID())
   val sessionRepository: SessionRepository = mock[SessionRepository]
 
   val dummyServlet = new AuthenticationRequiringServlet {
-    override val appConfig: AppConfig.AppConfig = new AppConfig.IT
     override implicit def sessionService: SessionService = new SessionService(sessionRepository)
 
     get(testUrl) {
@@ -38,9 +37,11 @@ class AuthenticationRequiringServletSpec extends MutableScalatraSpec with Mockit
     }
 
     "let the servlet execute its route if authenticated" in {
-      val oppijaNumero = "123"
-      val session = Session(OppijaNumero(oppijaNumero))
-      sessionRepository.get(id) returns Some(session)
+      val hetu = "123456-789A"
+      val oppijaNumero = "1.2.3.4.5.6"
+      val oppijaName = "John Smith"
+      val sessionData = SessionInfo(Hetu(hetu), OppijaNumero(oppijaNumero), oppijaName)
+      sessionRepository.get(id) returns Some(sessionData)
       val coo = CookieHelper.cookieHeaderWith(sessionCookieName -> id.value.toString)
 
       get(testUrl, headers = coo) {

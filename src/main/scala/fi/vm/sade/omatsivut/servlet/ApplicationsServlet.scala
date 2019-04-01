@@ -35,7 +35,9 @@ trait ApplicationsServletContainer {
         VastaanottoComponent with
         TranslationsComponent =>
 
-  class ApplicationsServlet(val appConfig: AppConfig, val sessionService: SessionService) extends OmatSivutServletBase with JsonFormats with JacksonJsonSupport with AuthenticationRequiringServlet with HakemusEditoriUserContext {
+  class ApplicationsServlet(val appConfig: AppConfig, val sessionService: SessionService)
+    extends OmatSivutServletBase
+      with JsonFormats with JacksonJsonSupport with AuthenticationRequiringServlet with HakemusEditoriUserContext {
 
     def user = Oppija(personOid())
     private val hakemusEditori = newEditor(this)

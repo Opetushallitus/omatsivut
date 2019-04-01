@@ -4,15 +4,13 @@ import java.util.UUID
 
 import fi.vm.sade.omatsivut.{ScalatraTestCookiesSupport, ScalatraTestSupport}
 import fi.vm.sade.omatsivut.fixtures.TestFixture
-import fi.vm.sade.omatsivut.security.{CookieNames}
+import fi.vm.sade.omatsivut.security.{AttributeNames}
 import org.junit.runner.RunWith
 import org.specs2.runner.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class SecuredSessionServletSpec extends ScalatraTestSupport with CookieNames with ScalatraTestCookiesSupport {
-  val initsessionUrl = "initsession"
-  val urlUsedByShibboleth = initsessionUrl
-  def hetuParam(hetu: String) = Tuple2("hetu", hetu)
+class SecuredSessionServletSpec extends ScalatraTestSupport with AttributeNames with ScalatraTestCookiesSupport {
+  val urlUsedByShibboleth = "initsession"
 
   "GET /initsession" should {
     "fails with bad request (400) if request does not contain henkilötunnus" in {
@@ -22,7 +20,7 @@ class SecuredSessionServletSpec extends ScalatraTestSupport with CookieNames wit
       }
     }
 
-    "creates a session in repository and forwards to root if the request contains hetu header, ignoring the 'target' parameter" in {
+    "create a session in repository and forwards to root if the request contains hetu header" in {
       deleteAllSessions
       get(urlUsedByShibboleth, headers = Map("hetu" -> TestFixture.testHetu)) {
         status must_== 302
@@ -31,11 +29,10 @@ class SecuredSessionServletSpec extends ScalatraTestSupport with CookieNames wit
         val sessionId = cookieGetValue(response, sessionCookieName).getOrElse("not found session cookie")
         val personOid = getPersonFromSession(sessionId).getOrElse("not found in repository")
         personOid must_== TestFixture.personOid
-        cookieGetValue(response, oppijaNumeroCookieName) must_== Some(TestFixture.personOid)
       }
     }
 
-    "creates a session with no oid if hetu does not have the corresponding oid" in {
+    "create a session with no oid if hetu does not have the corresponding oid" in {
       deleteAllSessions
       get(urlUsedByShibboleth, headers = Map("hetu" -> TestFixture.testHetuWithNoPersonOid)) {
         status must_== 302
@@ -44,7 +41,18 @@ class SecuredSessionServletSpec extends ScalatraTestSupport with CookieNames wit
         val sessionId = cookieGetValue(response, sessionCookieName).getOrElse("not found session cookie")
         val personOid = getPersonFromSession(sessionId).getOrElse("not found in repository")
         personOid must_== ""
-        cookieGetValue(response, oppijaNumeroCookieName) must beNone
+      }
+    }
+
+    "create a session in repository, and it will contain also the display name of the user" in {
+      deleteAllSessions
+      val firstName = "Wolfgang"
+      val secondName = "Mozart"
+      get(urlUsedByShibboleth, headers = Map("hetu" -> TestFixture.testHetu, "firstname" -> firstName, "sn" -> secondName)) {
+        status must_== 302
+        val sessionId = cookieGetValue(response, sessionCookieName).getOrElse("not found session cookie")
+        val displayName = getDisplayNameFromSession(sessionId).getOrElse("not found in repository")
+        displayName must_== firstName + " " + secondName
       }
     }
   }
