@@ -3,7 +3,7 @@ package fi.vm.sade.omatsivut
 import fi.vm.sade.jetty.OpintopolkuJetty
 import org.slf4j.LoggerFactory
 
-class OmatsivutServer extends OpintopolkuJetty {
+class OmatsivutServer extends OpintopolkuJetty
 
 }
 
