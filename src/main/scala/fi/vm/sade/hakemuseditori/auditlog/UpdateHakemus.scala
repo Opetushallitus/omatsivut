@@ -20,9 +20,7 @@ case class UpdateHakemus(request: HttpServletRequest, userOid: String, hakemusOi
     builder.build()
   }
 
-  override def user: User = {
-    new User(getOid(userOid), getAddress(request), getSessionId(request).getOrElse("(no session cookie)"), getUserAgent(request))
-  }
+  override def user = getUser(userOid, request)
 
   /**
     * Gets a list of triplets that contain (key, original value, new value)

@@ -19,7 +19,5 @@ case class SaveIlmoittautuminen(request: HttpServletRequest, hakuOid: String, ha
     .setField(OmatSivutMessageField.ILMOITTAUTUMINEN_SUCCESS, if (success) "kyllä" else "ei")
     .build()
 
-  override def user: User = {
-    new User(getOid(ilmoittautuminen.muokkaaja), getAddress(request), getSessionId(request).getOrElse("(no session cookie)"), getUserAgent(request))
-  }
+  override def user = getUser(ilmoittautuminen.muokkaaja, request)
 }

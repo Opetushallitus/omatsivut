@@ -16,7 +16,5 @@ case class ShowValidatedHakemus(request: HttpServletRequest, userOid: String, ha
       .build()
   }
 
-  override def user: User = {
-    new User(getOid(userOid), getAddress(request), getSessionId(request).getOrElse("(no session cookie)"), getUserAgent(request))
-  }
+  override def user = getUser(userOid, request)
 }

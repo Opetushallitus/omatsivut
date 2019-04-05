@@ -51,13 +51,4 @@ trait OmatsivutRepository extends Logging {
       case NonFatal(e) => Left(e)
     }
   }
-
-  protected def formatMultipleValuesForSql(oids: Iterable[String]): String = {
-    val allowedChars = "01234567890.,'".toCharArray.toSet
-    if (oids.isEmpty) {
-      "''"
-    } else {
-      oids.map(oid => s"'$oid'").mkString(",").filter(allowedChars.contains)
-    }
-  }
 }

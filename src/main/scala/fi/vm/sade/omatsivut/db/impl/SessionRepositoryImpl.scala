@@ -18,7 +18,7 @@ trait SessionRepositoryImpl extends SessionRepository with OmatsivutRepository {
       runBlocking(
         sqlu"""insert into sessions (id, hetu, oppija_numero, oppija_nimi)
                values (${id.toString}::uuid, $hetu, $oppijaNumero, $oppijaNimi)""",
-          timeout = Duration(1, TimeUnit.MINUTES))
+          timeout = Duration(10, TimeUnit.SECONDS))
       SessionId(id)
   }
 
@@ -38,7 +38,7 @@ trait SessionRepositoryImpl extends SessionRepository with OmatsivutRepository {
           sqlu"""update sessions set viimeksi_luettu = now()
                  where id = ${id.value.toString}::uuid and viimeksi_luettu < now() - interval '30 minutes'"""
             .andThen(DBIO.successful(Some(t)))
-      }.transactionally, Duration(2, TimeUnit.SECONDS)
+      }.transactionally, Duration(20, TimeUnit.SECONDS)
     ).map {
       case (hetu, oppijaNumero, oppijaNimi) =>
         SessionInfo(Hetu(hetu), OppijaNumero(oppijaNumero.getOrElse("")), oppijaNimi)

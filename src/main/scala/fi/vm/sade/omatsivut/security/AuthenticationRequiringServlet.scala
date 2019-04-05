@@ -15,18 +15,19 @@ trait AuthenticationRequiringServlet extends OmatSivutServletBase with Logging {
   def personOid(): String = getOppijaNumero(request).getOrElse(sys.error("Unauthenticated account"))
 
   before() {
-    sessionService.getSession(
-      cookies.get(sessionCookieName).map(UUID.fromString).map(SessionId)
-    ) match {
+    val sessionCookie: Option[String] = cookies.get(sessionCookieName)
+    val sessionUUID: Option[UUID] = sessionCookie.map(UUID.fromString)
+    val sessionId: Option[SessionId] = sessionUUID.map(SessionId)
+    sessionService.getSession(sessionId) match {
       case Right(sessionInfo) =>
         logger.debug("Found session: " + sessionInfo.oppijaNumero)
-        session.setAttribute(sessionInfoAttributeName, sessionInfo)
         if (sessionInfo.oppijaNumero.value.isEmpty) {
-          logger.debug("Session has no oppijaNumero, should not find anything")
+          logger.info("Session has no oppijaNumero, should not find anything")
           halt(NotFound(render("error" -> "no oid was present")))
         }
+        session.setAttribute(sessionInfoAttributeName, sessionInfo)
       case _ =>
-        logger.debug("Session not found, fail the API request")
+        logger.info("Session not found, fail the API request")
         halt(Unauthorized(render("error" -> "unauthorized")))
     }
   }

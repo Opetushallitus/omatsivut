@@ -16,7 +16,5 @@ case class SaveVastaanotto(request: HttpServletRequest, userOid: String, hakemus
     .setField(OmatSivutMessageField.VASTAANOTTO, vastaanotto.toString)
     .build()
 
-  override def user: User = {
-    new User(getOid(userOid), getAddress(request), getSessionId(request).getOrElse("(no session cookie)"), getUserAgent(request))
-  }
+  override def user = getUser(userOid, request)
 }

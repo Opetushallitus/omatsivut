@@ -17,7 +17,7 @@ case class DbConfig(url: String,
                     initializationFailTimeout: Option[Long],
                     leakDetectionThresholdMillis: Option[Long])
 
-class OmatsivutDb(config: DbConfig, isItProfile:Boolean = false) extends OmatsivutRepository
+class OmatsivutDb(config: DbConfig, itProfile: Boolean = false) extends OmatsivutRepository
   with SessionRepositoryImpl {
 
   logger.info(s"Database configuration: ${config.copy(password = Some("***"))}")
@@ -40,7 +40,7 @@ class OmatsivutDb(config: DbConfig, isItProfile:Boolean = false) extends Omatsiv
          s" and executor ${ToStringBuilder.reflectionToString(executor)}")
     Database.forDataSource(new HikariDataSource(c), maxConnections = Some(maxConnections), executor)
   }
-  if(isItProfile) {
+  if (itProfile) {
     logger.warn("alter table public.schema_version owner to oph")
     runBlocking(sqlu"""alter table public.schema_version owner to oph""")
   }

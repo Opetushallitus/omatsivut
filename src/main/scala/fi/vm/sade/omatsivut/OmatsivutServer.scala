@@ -5,10 +5,8 @@ import org.slf4j.LoggerFactory
 
 class OmatsivutServer extends OpintopolkuJetty
 
-}
-
 object OmatsivutServer {
-  val logger = LoggerFactory.getLogger(this.getClass)
+  val logger = LoggerFactory.getLogger(classOf[OmatsivutServer])
 
   def main(args: Array[String]): Unit = {
     logger.info("About to start OmatsivutServer")

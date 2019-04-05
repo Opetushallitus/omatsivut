@@ -46,8 +46,6 @@ object CookieHelper {
     * instead of
     * cookieHeaderWith(Map("testcookie" -> "what"))
     *
-    * @param cookies
-    * @return
     */
   def cookieHeaderWith(cookies: (String, String)*): Map[String, String] = {
     cookieHeaderWith(cookies.toMap)

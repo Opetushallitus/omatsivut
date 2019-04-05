@@ -9,7 +9,7 @@ import org.specs2.runner.JUnitRunner
 class AuthenticationSpec extends ScalatraTestSupport {
   sequential
 
-  implicit val personOid: PersonOid = PersonOid("dummy")
+  implicit val personOid: PersonOid = PersonOid("1.2.246.562.24.14229104472")
 
   trait CleaningContext extends Before {
     def before: Any = deleteAllSessions()

@@ -29,15 +29,14 @@ class SessionServlet(val sessionService: SessionService)
   }
 
   def parseDateFromHetu(hetu: Option[String]): Option[LocalDate] = {
-    if (hetu.isDefined) {
-      val date = hetu.get.substring(0, 6)
+    hetu.map(h => {
+      val date = h.substring(0, 6)
       try {
         return Option(formatter.parseLocalDate(date))
       } catch {
         case _: Throwable => return Option.empty
       }
-    }
-    Option.empty
+    })
   }
 }
 

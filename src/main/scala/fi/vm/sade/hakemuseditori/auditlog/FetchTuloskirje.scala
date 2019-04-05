@@ -13,7 +13,5 @@ case class FetchTuloskirje(request: HttpServletRequest, hakuOid: String, hakemus
     .setField(OmatSivutMessageField.HAKEMUS_OID, hakemusOid)
     .build()
 
-  override def user: User = {
-    new User(null, getAddress(request), getSessionId(request).getOrElse("(no session cookie)"), getUserAgent(request))
-  }
+  override def user = getUser(null, request)
 }

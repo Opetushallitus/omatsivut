@@ -16,7 +16,5 @@ case class ShowHakemus(request: HttpServletRequest, userOid: String, hakemusOid:
       .build()
   }
 
-  override def user: User = {
-    new User(getOid(userOid), getAddress(request), getSessionId(request).getOrElse("(no session cookie)"), getUserAgent(request))
-  }
+  override def user = getUser(userOid, request)
 }

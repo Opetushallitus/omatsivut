@@ -15,7 +15,6 @@ trait SecuredSessionServletContainer {
 
     get("/") {
       logger.debug("initsession request received")
-      logger.debug(headers)
       val hetu = request.header("hetu")
       val firstName: Option[String] = Option(request.getHeader("firstname"))
       val lastName: Option[String] = Option(request.getHeader("sn"))
@@ -39,7 +38,9 @@ trait SecuredSessionServletContainer {
         case Right((sessionId, _)) =>
           response.addCookie(Cookie(sessionCookieName, sessionId.value.toString))
           response.redirect(redirectUri)
-        case Left(e) => halt(500, "unable to create session, exception = " + e)
+        case Left(e) =>
+          logger.error("Unable to create session. (" + e + ")")
+          halt(500, "unable to create session, exception = " + e)
       }
     }
 
@@ -54,17 +55,12 @@ trait SecuredSessionServletContainer {
     private def parseDisplayName(firstName: Option[String], lastName: Option[String]): String = {
       // Dekoodataan etunimet ja sukunimi manuaalisesti, koska shibboleth välittää ASCII-enkoodatut request headerit UTF-8 -merkistössä
 
-      val ISO88591 = Charset.forName("ISO-8859-1")
+      val iso88591 = Charset.forName("ISO-8859-1")
       val utf8 = Charset.forName("UTF-8")
       val builder = new StringBuilder
-      if (firstName.isDefined) {
-        builder.append(new String(firstName.get.getBytes(ISO88591), utf8))
-      }
-      if (firstName.isDefined && lastName.isDefined) builder.append(" ")
-      if (lastName.isDefined) {
-        builder.append(new String(lastName.get.getBytes(ISO88591), utf8))
-      }
-      builder.toString
+      List(firstName, lastName).flatten.
+        map(n => new String(n.getBytes(iso88591), utf8)).
+        mkString(" ")
     }
 
     private val sensitiveHeaders = List("security", "hetu")

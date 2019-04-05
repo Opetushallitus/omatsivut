@@ -8,7 +8,7 @@ import org.junit.runner.RunWith
 import org.specs2.matcher.MustThrownExpectations
 import org.specs2.mutable.Specification
 import org.specs2.runner.JUnitRunner
-import org.specs2.specification.{BeforeAfterExample, Scope}
+import org.specs2.specification.{Scope}
 
 @RunWith(classOf[JUnitRunner])
 class OmatsivutDbSessionSpec extends Specification with ITSetup with OmatsivutDbTools {
