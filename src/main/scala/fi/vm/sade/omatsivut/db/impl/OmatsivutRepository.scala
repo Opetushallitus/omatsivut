@@ -1,12 +1,10 @@
 package fi.vm.sade.omatsivut.db.impl
 
 import java.sql.Timestamp
-import java.time.Instant
 import java.util.ConcurrentModificationException
 import java.util.concurrent.TimeUnit
 
 import fi.vm.sade.utils.slf4j.Logging
-import fi.vm.sade.hakemuseditori.auditlog.OmatSivutLogger
 import org.postgresql.util.PSQLException
 import org.springframework.util.ReflectionUtils
 import slick.dbio._
