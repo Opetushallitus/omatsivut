@@ -31,4 +31,9 @@ trait AuthenticationRequiringServlet extends OmatSivutServletBase with Logging {
         halt(Unauthorized(render("error" -> "unauthorized")))
     }
   }
+
+  after() {
+    // clean the http session, to avoid sessioninfo hanging in session object and maybe misleading somebody
+    session.removeAttribute(sessionInfoAttributeName)
+  }
 }

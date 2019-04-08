@@ -1,8 +1,9 @@
+import java.security.Security
 import java.util
-import javax.servlet.{DispatcherType, ServletContext}
 
+import javax.servlet.{DispatcherType, ServletContext}
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
-import fi.vm.sade.omatsivut.config.{OmatSivutSpringContext, AppConfig, ComponentRegistry}
+import fi.vm.sade.omatsivut.config.{AppConfig, ComponentRegistry, OmatSivutSpringContext}
 import fi.vm.sade.omatsivut.servlet._
 import fi.vm.sade.omatsivut.servlet.session.{LoginServlet, SessionServlet}
 import fi.vm.sade.utils.slf4j.Logging
@@ -15,6 +16,7 @@ class ScalatraBootstrap extends LifeCycle with Logging {
   OmatSivutSpringContext.check
 
   override def init(context: ServletContext) {
+    Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider())
     val config: AppConfig = AppConfig.fromOptionalString(Option(context.getAttribute("omatsivut.profile").asInstanceOf[String]))
     val componentRegistry = new ComponentRegistry(config)
 

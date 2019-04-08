@@ -54,7 +54,6 @@ trait SecuredSessionServletContainer {
 
     private def parseDisplayName(firstName: Option[String], lastName: Option[String]): String = {
       // Dekoodataan etunimet ja sukunimi manuaalisesti, koska shibboleth välittää ASCII-enkoodatut request headerit UTF-8 -merkistössä
-
       val iso88591 = Charset.forName("ISO-8859-1")
       val utf8 = Charset.forName("UTF-8")
       val builder = new StringBuilder
