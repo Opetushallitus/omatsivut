@@ -7,10 +7,12 @@ import fi.vm.sade.omatsivut.security._
 import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
 import fi.vm.sade.utils.slf4j.Logging
 import org.joda.time.LocalDate
-import org.scalatra.{BadRequest, Cookie, InternalServerError}
+import org.scalatra.{BadRequest, Cookie, CookieOptions, InternalServerError}
 
 trait SecuredSessionServletContainer {
-  class SecuredSessionServlet(val authenticationInfoService: AuthenticationInfoService, val sessionService: SessionService)
+  class SecuredSessionServlet(val authenticationInfoService: AuthenticationInfoService,
+                              val sessionService: SessionService,
+                              val sessionTimeout: Option[Int] = None)
     extends OmatSivutServletBase with AttributeNames with OmatsivutPaths with Logging {
 
     get("/") {
@@ -36,7 +38,8 @@ trait SecuredSessionServletContainer {
       val newSession = sessionService.storeSession(Hetu(hetu), OppijaNumero(personOid), displayName)
       newSession match {
         case Right((sessionId, _)) =>
-          response.addCookie(Cookie(sessionCookieName, sessionId.value.toString))
+          response.addCookie(Cookie(sessionCookieName, sessionId.value.toString)
+            (CookieOptions(domain = "", secure = isHttps, path = "/", maxAge = sessionTimeout.getOrElse(3600), httpOnly = true)))
           response.redirect(redirectUri)
         case Left(e) =>
           logger.error("Unable to create session. (" + e + ")")

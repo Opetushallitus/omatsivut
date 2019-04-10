@@ -6,7 +6,7 @@ import fi.vm.sade.utils.slf4j.Logging
 import scala.util.{Failure, Success, Try}
 
 
-class SessionService(sessionRepository: SessionRepository) extends Logging {
+class SessionService(val sessionRepository: SessionRepository) extends Logging {
 
   def deleteSession(sessionId: Option[SessionId]): Unit = sessionId match {
     case None => logger.debug("no sessionId given")
@@ -17,7 +17,6 @@ class SessionService(sessionRepository: SessionRepository) extends Logging {
       }
     }
   }
-
 
   def storeSession(hetu: Hetu, oppijaNumero: OppijaNumero, oppijaNimi: String): Either[Throwable, (SessionId, SessionInfo)] = {
     val session = SessionInfo(hetu, oppijaNumero, oppijaNimi)

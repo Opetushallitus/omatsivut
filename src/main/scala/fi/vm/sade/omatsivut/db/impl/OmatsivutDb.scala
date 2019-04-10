@@ -15,7 +15,8 @@ case class DbConfig(url: String,
                     queueSize: Option[Int],
                     registerMbeans: Option[Boolean],
                     initializationFailTimeout: Option[Long],
-                    leakDetectionThresholdMillis: Option[Long])
+                    leakDetectionThresholdMillis: Option[Long],
+                    sessionTimeoutSeconds: Option[Int])
 
 class OmatsivutDb(config: DbConfig, itProfile: Boolean = false) extends OmatsivutRepository
   with SessionRepositoryImpl {

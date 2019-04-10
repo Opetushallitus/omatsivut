@@ -157,7 +157,8 @@ class ComponentRegistry(val config: AppConfig)
   def newApplicationsServlet = new ApplicationsServlet(config, sessionService)
   def newKoulutusServlet = new KoulutusServlet
   def newValintatulosServlet = new ValintatulosServlet(config, sessionService)
-  def newSecuredSessionServlet = new SecuredSessionServlet(authenticationInfoService, sessionService)
+  def newSecuredSessionServlet = new SecuredSessionServlet(authenticationInfoService, sessionService,
+                                                            config.settings.omatsivutDbConfig.sessionTimeoutSeconds)
   def newSessionServlet = new SessionServlet(sessionService)
   def newLogoutServlet = new LogoutServlet(sessionService)
   def newFixtureServlet = new FixtureServlet(config)
