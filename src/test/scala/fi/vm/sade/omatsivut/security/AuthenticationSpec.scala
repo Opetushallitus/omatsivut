@@ -36,7 +36,7 @@ class AuthenticationSpec extends ScalatraTestSupport {
       get("") {
         status must_== 302
         val location = response.headers("Location")(0)
-        location must beMatching(".*Login.*omatsivut.*initsession.*")
+        location must beMatching(".*omatsivut.*initsession.*")
       }
     }
 
