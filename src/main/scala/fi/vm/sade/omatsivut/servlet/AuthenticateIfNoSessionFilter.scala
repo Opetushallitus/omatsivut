@@ -27,7 +27,7 @@ class AuthenticateIfNoSessionFilter(val sessionService: SessionService)
         session.setAttribute(sessionInfoAttributeName, sessionInfo)
       case _ =>
         logger.debug("Session not found, redirect to login")
-        response.redirect(shibbolethPath(request.getContextPath))
+        response.redirect(loginPath(request.getContextPath))
     }
   }
 

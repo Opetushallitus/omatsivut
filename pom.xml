@@ -178,12 +178,6 @@
             <artifactId>logback-access</artifactId>
             <version>1.2.3</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk15on -->
-        <dependency>
-            <groupId>org.bouncycastle</groupId>
-            <artifactId>bcprov-jdk15on</artifactId>
-            <version>1.61</version>
-        </dependency>
         <dependency>
             <groupId>fi.vm.sade.haku</groupId>
             <artifactId>hakemus-api</artifactId>

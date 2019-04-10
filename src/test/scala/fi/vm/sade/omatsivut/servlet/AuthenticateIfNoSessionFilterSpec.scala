@@ -3,6 +3,7 @@ package fi.vm.sade.omatsivut.servlet
 import java.util.UUID
 
 import fi.vm.sade.hakemuseditori.domain.Language
+import fi.vm.sade.omatsivut.ITSetup
 import fi.vm.sade.omatsivut.db.SessionRepository
 import fi.vm.sade.omatsivut.security._
 import org.junit.runner.RunWith
@@ -14,9 +15,8 @@ import org.specs2.runner.JUnitRunner
 import org.specs2.specification.Scope
 
 @RunWith(classOf[JUnitRunner])
-class AuthenticateIfNoSessionFilterSpec extends MutableScalatraSpec with Mockito {
+class AuthenticateIfNoSessionFilterSpec extends MutableScalatraSpec with Mockito with ITSetup {
   val originalUrl = "/index.html"
-  val redirectedUrl = "/shib/omatsivut/initsession?target=" + originalUrl
   implicit val language: Language.Language = Language.fi
   val id = SessionId(UUID.randomUUID())
   val sessionRepository: SessionRepository = mock[SessionRepository]
@@ -44,7 +44,7 @@ class AuthenticateIfNoSessionFilterSpec extends MutableScalatraSpec with Mockito
       get("omatsivut" + originalUrl) {
         status must_== 302
         val location = response.headers("Location")(0)
-        location must find("""Shibboleth.sso\/LoginFI\?target=http.+%2Fomatsivut%2Finitsession%2F$""")
+        location must find("""/omatsivut/initsession/$""")
       }
     }
 

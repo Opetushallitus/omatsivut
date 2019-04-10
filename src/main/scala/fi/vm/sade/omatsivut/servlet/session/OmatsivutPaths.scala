@@ -27,10 +27,10 @@ trait OmatsivutPaths {
     protocol + host
   }
 
-  def shibbolethPath(contextPath: String)(implicit lang: Language.Language): String = {
+  // magically it will go through shibboleth
+  def loginPath(contextPath: String)(implicit lang: Language.Language): String = {
     val realContextPath = getContextPath(contextPath)
-    OphUrlProperties.url("shibboleth.login", lang.toString().toUpperCase()) +
-      "?target=" + urlEncode(urlPrefix(lang.toString.toLowerCase) + realContextPath + "/initsession/")
+    urlPrefix(lang.toString.toLowerCase) + realContextPath + "/initsession/"
   }
 
   def omatsivutPath(contextPath: String)(implicit lang: Language.Language): String = {

@@ -16,7 +16,6 @@ class ScalatraBootstrap extends LifeCycle with Logging {
   OmatSivutSpringContext.check
 
   override def init(context: ServletContext) {
-    Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider())
     val config: AppConfig = AppConfig.fromOptionalString(Option(context.getAttribute("omatsivut.profile").asInstanceOf[String]))
     val componentRegistry = new ComponentRegistry(config)
 
