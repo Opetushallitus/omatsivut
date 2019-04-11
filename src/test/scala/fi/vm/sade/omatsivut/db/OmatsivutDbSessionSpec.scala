@@ -29,6 +29,14 @@ class OmatsivutDbSessionSpec extends Specification with ITSetup with OmatsivutDb
       session.get must_== SessionInfo(hetu, oppijaNumero, oppijaNimi)
     }
 
+    "not find a stored session if timeout has expired" in new ExpiredSessionInDatabase {
+      val session = singleConnectionOmatsivutDb.get(id)
+      setSessionLastAccessTime(id.value.toString, testSessionTimeout + 1)
+      val sessionObsolete = singleConnectionOmatsivutDb.get(id)
+      session must not beNone;
+      sessionObsolete must beNone
+    }
+
     "delete a stored session by id" in new OneSessionInDatabase {
       singleConnectionOmatsivutDb.delete(id)
       val session = singleConnectionOmatsivutDb.get(id)
@@ -43,5 +51,9 @@ class OmatsivutDbSessionSpec extends Specification with ITSetup with OmatsivutDb
     val oppijaNumero = OppijaNumero("1.2.3.4.5.6")
     val oppijaNimi = "John Smith"
     val id = singleConnectionOmatsivutDb.store(SessionInfo(hetu, oppijaNumero, oppijaNimi))
+  }
+
+  trait ExpiredSessionInDatabase extends OneSessionInDatabase {
+
   }
 }

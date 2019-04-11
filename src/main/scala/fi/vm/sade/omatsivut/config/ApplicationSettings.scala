@@ -25,9 +25,10 @@ case class ApplicationSettings(config: Config) extends GroupEmailerSettings(conf
     queueSize = getInt(config, "omatsivut.db.queueSize"),
     registerMbeans = getBoolean(config, "omatsivut.db.registerMbeans"),
     initializationFailTimeout = getLong(config, "omatsivut.db.initializationFailFast"),
-    leakDetectionThresholdMillis = getLong(config, "omatsivut.db.leakDetectionThresholdMillis"),
-    sessionTimeoutSeconds = getInt(config, "omatsivut.db.sessionTimeoutSeconds")
+    leakDetectionThresholdMillis = getLong(config, "omatsivut.db.leakDetectionThresholdMillis")
   )
+
+  val sessionTimeoutSeconds = getInt(config, "omatsivut.sessionTimeoutSeconds")
 
   val aesKey : String = config.getString("omatsivut.crypto.aes.key")
   val hmacKey : String = config.getString("omatsivut.crypto.hmac.key")

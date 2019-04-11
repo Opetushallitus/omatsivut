@@ -144,7 +144,9 @@ class ComponentRegistry(val config: AppConfig)
   val oppijanTunnistusService = configureOppijanTunnistusService
   val ataruService: AtaruService = configureAtaruService
   val oppijanumerorekisteriService: OppijanumerorekisteriService = configureOppijanumerorekisteriService
-  lazy val omatsivutDb = new OmatsivutDb(config.settings.omatsivutDbConfig, config.isInstanceOf[IT])
+  lazy val omatsivutDb = new OmatsivutDb(config.settings.omatsivutDbConfig,
+                                         config.isInstanceOf[IT],
+                                         config.settings.sessionTimeoutSeconds.getOrElse(3600))
   lazy val sessionService = new SessionService(omatsivutDb)
   lazy val authenticationInfoService = configureAuthenticationInfoService
 
@@ -157,8 +159,9 @@ class ComponentRegistry(val config: AppConfig)
   def newApplicationsServlet = new ApplicationsServlet(config, sessionService)
   def newKoulutusServlet = new KoulutusServlet
   def newValintatulosServlet = new ValintatulosServlet(config, sessionService)
-  def newSecuredSessionServlet = new SecuredSessionServlet(authenticationInfoService, sessionService,
-                                                            config.settings.omatsivutDbConfig.sessionTimeoutSeconds)
+  def newSecuredSessionServlet = new SecuredSessionServlet(authenticationInfoService,
+                                                           sessionService,
+                                                           config.settings.sessionTimeoutSeconds)
   def newSessionServlet = new SessionServlet(sessionService)
   def newLogoutServlet = new LogoutServlet(sessionService)
   def newFixtureServlet = new FixtureServlet(config)

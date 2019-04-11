@@ -30,13 +30,13 @@ trait SessionRepositoryImpl extends SessionRepository with OmatsivutRepository {
     val id = sessionId.value
     runBlocking(
       sql"""select hetu, oppija_numero, oppija_nimi from sessions
-            where id = ${id.value.toString}::uuid and viimeksi_luettu > now() - interval '60 minutes'
+            where id = ${id.value.toString}::uuid and viimeksi_luettu > now() - interval '#${sessionTimeoutSeconds} seconds'
       """.as[(String, Option[String], String)].map(_.headOption).flatMap {
         case None =>
           sqlu"""delete from sessions where id = ${id.value.toString}::uuid""".andThen(DBIO.successful(None))
         case Some(t) =>
           sqlu"""update sessions set viimeksi_luettu = now()
-                 where id = ${id.value.toString}::uuid and viimeksi_luettu < now() - interval '30 minutes'"""
+                 where id = ${id.value.toString}::uuid and viimeksi_luettu < now() - interval '#${sessionTimeoutSeconds / 2} seconds'"""
             .andThen(DBIO.successful(Some(t)))
       }.transactionally, Duration(20, TimeUnit.SECONDS)
     ).map {

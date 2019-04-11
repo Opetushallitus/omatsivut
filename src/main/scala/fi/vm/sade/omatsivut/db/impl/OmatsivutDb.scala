@@ -15,10 +15,9 @@ case class DbConfig(url: String,
                     queueSize: Option[Int],
                     registerMbeans: Option[Boolean],
                     initializationFailTimeout: Option[Long],
-                    leakDetectionThresholdMillis: Option[Long],
-                    sessionTimeoutSeconds: Option[Int])
+                    leakDetectionThresholdMillis: Option[Long])
 
-class OmatsivutDb(config: DbConfig, itProfile: Boolean = false) extends OmatsivutRepository
+class OmatsivutDb(config: DbConfig, itProfile: Boolean = false, override val sessionTimeoutSeconds: Int = 3600) extends OmatsivutRepository
   with SessionRepositoryImpl {
 
   logger.info(s"Database configuration: ${config.copy(password = Some("***"))}")

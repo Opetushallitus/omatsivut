@@ -60,7 +60,8 @@ omatsivut.db.minConnections={{ omatsivut_db_min_active | default("10") }}
 omatsivut.db.queueSize={{ omatsivut_db_queue_size | default("10000") }}
 omatsivut.db.registerMbeans=true
 omatsivut.db.initializationFailTimeout=1000
-omatsivut.db.sessionTimeoutSeconds={{ omatsivut_session_timeout | default("3600")}}
+
+omatsivut.sessionTimeoutSeconds={{ omatsivut_session_timeout | default("3600")}}
 
 protocol_ataru_hakija: {{protocol_ataru_hakija}}
 host_ataru_hakija: {{host_ataru_hakija}}
