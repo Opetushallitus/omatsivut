@@ -6,8 +6,7 @@ import fi.vm.sade.utils.slf4j.Logging
 object SessionInfoRetriever extends Logging with AttributeNames {
   def getSessionId(request: HttpServletRequest): Option[String] = {
     val sessionIdCookie: Option[Cookie] = CookieHelper.getCookie(request, sessionCookieName)
-    val sessionId: Option[String] = sessionIdCookie.map(_.getValue)
-    sessionId
+    sessionIdCookie.map(_.getValue)
   }
 
   def getOppijaNumero(request: HttpServletRequest): Option[String] = {
