@@ -11,6 +11,7 @@ import org.scalatra.{NotFound, Ok, Unauthorized}
 
 trait AuthenticationRequiringServlet extends OmatSivutServletBase with Logging {
   implicit def sessionService: SessionService
+  val returnNotFoundIfNoOid = true
 
   def personOid(): String = getOppijaNumero(request).getOrElse(sys.error("Unauthenticated account"))
 
@@ -21,7 +22,7 @@ trait AuthenticationRequiringServlet extends OmatSivutServletBase with Logging {
     sessionService.getSession(sessionId) match {
       case Right(sessionInfo) =>
         logger.debug("Found session: " + sessionInfo.oppijaNumero)
-        if (sessionInfo.oppijaNumero.value.isEmpty) {
+        if (returnNotFoundIfNoOid && sessionInfo.oppijaNumero.value.isEmpty) {
           logger.info("Session has no oppijaNumero, should not find anything")
           halt(NotFound(render("error" -> "no oid was present")))
         }

@@ -13,9 +13,19 @@ import org.specs2.runner.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
 class AuthenticationRequiringServletSpec extends MutableScalatraSpec with Mockito with AttributeNames {
+  sequential
+
   val testUrl = "/test"
   val id = SessionId(UUID.randomUUID())
   val sessionRepository: SessionRepository = mock[SessionRepository]
+
+  def createTestSession(oppijaNumero: String): Map[String, String] = {
+    val hetu = "123456-789A"
+    val oppijaName = "John Smith"
+    val sessionData = SessionInfo(Hetu(hetu), OppijaNumero(oppijaNumero), oppijaName)
+    sessionRepository.get(id) returns Some(sessionData)
+    CookieHelper.cookieHeaderWith(sessionCookieName -> id.value.toString)
+  }
 
   val dummyServlet = new AuthenticationRequiringServlet {
     override implicit def sessionService: SessionService = new SessionService(sessionRepository)
@@ -37,15 +47,14 @@ class AuthenticationRequiringServletSpec extends MutableScalatraSpec with Mockit
     }
 
     "let the servlet execute its route if authenticated" in {
-      val hetu = "123456-789A"
-      val oppijaNumero = "1.2.3.4.5.6"
-      val oppijaName = "John Smith"
-      val sessionData = SessionInfo(Hetu(hetu), OppijaNumero(oppijaNumero), oppijaName)
-      sessionRepository.get(id) returns Some(sessionData)
-      val coo = CookieHelper.cookieHeaderWith(sessionCookieName -> id.value.toString)
-
-      get(testUrl, headers = coo) {
+      get(testUrl, headers = createTestSession("1.2.3.4.5.6")) {
         status must_== 200
+      }
+    }
+
+    "return 404 if session does not have person oid" in {
+      get(testUrl, headers = createTestSession("")) {
+        status must_== 404
       }
     }
   }

@@ -16,6 +16,8 @@ class SessionServlet(val sessionService: SessionService)
     with AuthenticationRequiringServlet with AttributeNames with JacksonJsonSupport with JsonFormats{
   private val formatter: DateTimeFormatter = DateTimeFormat.forPattern("ddMMYY")
 
+  override val returnNotFoundIfNoOid = false
+
   get("/") {
     contentType = formats("json")
     val sessionInfo = getSessionInfo(request)

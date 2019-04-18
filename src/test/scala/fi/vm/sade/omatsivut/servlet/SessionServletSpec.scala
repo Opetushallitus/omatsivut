@@ -10,7 +10,12 @@ import scala.util.parsing.json.JSON
 class SessionServletSpec extends ScalatraTestSupport {
   sequential
 
-  implicit val personOid: PersonOid = PersonOid("dummy")
+  def getNameFromJsonBody(body: String): String = {
+    val result = JSON.parseFull(body)
+    result must not(beNone)
+    val resultMap: Map[String, String] = result.getOrElse(Map()).asInstanceOf[Map[String, String]]
+    resultMap("name")
+  }
 
   "GET /session" should {
 
@@ -22,12 +27,18 @@ class SessionServletSpec extends ScalatraTestSupport {
     }
 
     "return json containing user's display name and birthday, if session does exist" in {
+      implicit val personOid: PersonOid = PersonOid("1.2.3.4.5.6")
       authGet("session/") {
         status must_== 200
-        val result = JSON.parseFull(body)
-        result must not(beNone)
-        val resultMap: Map[String, String] = result.getOrElse(Map()).asInstanceOf[Map[String, String]]
-        resultMap("name") must_== "John Smith"
+        getNameFromJsonBody(body) must_== "John Smith"
+      }
+    }
+
+    "return json containing user's display name and birthday, if session does exist, even if oid is not in the session" in {
+      implicit val personOid: PersonOid = PersonOid("")
+      authGet("session/") {
+        status must_== 200
+        getNameFromJsonBody(body) must_== "John Smith"
       }
     }
   }
