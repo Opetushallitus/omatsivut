@@ -34,8 +34,12 @@ class OmatsivutDb(config: DbConfig, itProfile: Boolean = false, override val ses
     config.registerMbeans.foreach(c.setRegisterMbeans)
     config.initializationFailTimeout.foreach(c.setInitializationFailTimeout)
     c.setLeakDetectionThreshold(config.leakDetectionThresholdMillis.getOrElse(c.getMaxLifetime))
-    val maxConnections = config.numThreads.getOrElse(20)
-    val executor = AsyncExecutor("omatsivut", maxConnections, config.queueSize.getOrElse(1000))
+    val maxConnections = config.numThreads.getOrElse(10)
+    val executor = AsyncExecutor("omatsivut",
+                                  config.numThreads.getOrElse(10),
+                                  config.numThreads.getOrElse(10),
+                                  config.queueSize.getOrElse(1000),
+                                  config.maxConnections.getOrElse(10))
     logger.info(s"Configured Hikari with ${classOf[HikariConfig].getSimpleName} ${ToStringBuilder.reflectionToString(c).replaceAll("password=.*?,", "password=<HIDDEN>,")}" +
          s" and executor ${ToStringBuilder.reflectionToString(executor)}")
     Database.forDataSource(new HikariDataSource(c), maxConnections = Some(maxConnections), executor)

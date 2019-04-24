@@ -30,7 +30,7 @@ trait OmatsivutRepository extends Logging {
         ReflectionUtils.makeAccessible(f)
         if (f.getName.startsWith("query")) {
           val value = f.get(operations).toString.replaceAll("\n", " ").replaceAll("\r", " ")
-          System.err.println(s"QUERY: $value")
+          logger.error(s"QUERY: $value")
         }
       }
     }

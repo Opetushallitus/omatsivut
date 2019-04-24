@@ -93,7 +93,7 @@ object AppConfig extends Logging {
       try {
         embeddedMongoService.stop()
       } catch {
-        case e => logger.info("Failed to stop embedded mongo " + e)
+        case e: Throwable => logger.info("Failed to stop embedded mongo ", e)
       }
       localPostgresService.stop()
     }
