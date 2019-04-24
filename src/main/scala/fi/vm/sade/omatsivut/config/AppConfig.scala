@@ -85,13 +85,17 @@ object AppConfig extends Logging {
       .withOverride("omatsivut.db.url", "jdbc:postgresql://localhost:" + itPostgresPortChooser.chosenPort + "/omatsivutdb")
 
     override def onStart: Unit = {
-      embeddedMongoService.start
-      localPostgresService.start
+      embeddedMongoService.start()
+      localPostgresService.start()
     }
 
     override def onStop: Unit = {
-      embeddedMongoService.stop
-      localPostgresService.stop
+      try {
+        embeddedMongoService.stop()
+      } catch {
+        case e => logger.info("Failed to stop embedded mongo " + e)
+      }
+      localPostgresService.stop()
     }
 
   }
@@ -120,18 +124,18 @@ object AppConfig extends Logging {
   }
 
   trait LocalService {
-    def start {}
-    def stop {}
+    def start() {}
+    def stop() {}
   }
 
   class EmbeddedMongoService extends LocalService {
     private var mongo: Option[MongoServer] = None
 
-    override def start {
+    override def start() {
       mongo = EmbeddedMongo.start(embeddedMongoPortChooser)
     }
 
-    override def stop {
+    override def stop() {
       mongo.foreach(_.stop)
       mongo = None
     }
@@ -140,11 +144,11 @@ object AppConfig extends Logging {
   class LocalPostgresService extends LocalService {
     private lazy val itPostgres = new ITPostgres(itPostgresPortChooser)
 
-    override def start {
+    override def start() {
       itPostgres.start()
     }
 
-    override def stop: Unit = {
+    override def stop(): Unit = {
       itPostgres.stop()
     }
   }
@@ -158,8 +162,8 @@ object AppConfig extends Logging {
 
     def usesLocalDatabase = false
 
-    def onStart {}
-    def onStop {}
+    def onStart() {}
+    def onStop() {}
 
     def settings: ApplicationSettings
   }

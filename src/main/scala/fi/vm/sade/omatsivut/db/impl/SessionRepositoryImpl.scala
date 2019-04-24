@@ -3,9 +3,13 @@ package fi.vm.sade.omatsivut.db.impl
 import java.util.UUID
 import java.util.concurrent.TimeUnit
 
+import fi.vm.sade.omatsivut.SessionFailure
+import fi.vm.sade.omatsivut.SessionFailure.SessionFailure
 import fi.vm.sade.omatsivut.db.SessionRepository
-import fi.vm.sade.omatsivut.security.{SessionId, Hetu, OppijaNumero, SessionInfo}
+import fi.vm.sade.omatsivut.security.{Hetu, OppijaNumero, SessionId, SessionInfo}
+import slick.jdbc.PostgresProfile
 import slick.jdbc.PostgresProfile.api._
+import slick.sql.{SqlAction, SqlStreamingAction}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
@@ -26,23 +30,38 @@ trait SessionRepositoryImpl extends SessionRepository with OmatsivutRepository {
     runBlocking(sqlu"""delete from sessions where id = ${id.value.toString}::uuid""", timeout = Duration(10, TimeUnit.SECONDS))
   }
 
-  override def get(sessionId: SessionId): Option[SessionInfo] = {
+  override def get(sessionId: SessionId): Either[SessionFailure, SessionInfo] = {
     val id = sessionId.value
+    val sessionQuery: SqlStreamingAction[Vector[(String, Option[String], String, Boolean)], (String, Option[String], String, Boolean), Effect] =
+      sql"""select hetu, oppija_numero, oppija_nimi,
+              viimeksi_luettu > now() - interval '#${sessionTimeoutSeconds} seconds' as is_valid
+            from sessions
+            where id = ${id.value.toString}::uuid
+      """.as[(String, Option[String], String, Boolean)]
+
     runBlocking(
-      sql"""select hetu, oppija_numero, oppija_nimi from sessions
-            where id = ${id.value.toString}::uuid and viimeksi_luettu > now() - interval '#${sessionTimeoutSeconds} seconds'
-      """.as[(String, Option[String], String)].map(_.headOption).flatMap {
+      sessionQuery.map(_.headOption).flatMap {
         case None =>
-          sqlu"""delete from sessions where id = ${id.value.toString}::uuid""".andThen(DBIO.successful(None))
-        case Some(t) =>
-          sqlu"""update sessions set viimeksi_luettu = now()
+          DBIO.successful(None)
+        case Some(t) => {
+          val sessionIsValid = t._4
+          if (sessionIsValid) {
+            sqlu"""update sessions set viimeksi_luettu = now()
                  where id = ${id.value.toString}::uuid and viimeksi_luettu < now() - interval '#${sessionTimeoutSeconds / 2} seconds'"""
-            .andThen(DBIO.successful(Some(t)))
+              .andThen(DBIO.successful(Some(t)))
+          } else {
+            sqlu"""delete from sessions where id = ${id.value.toString}::uuid"""
+              .andThen(DBIO.successful(Some(t)))
+          }
+        }
       }.transactionally, Duration(20, TimeUnit.SECONDS)
-    ).map {
-      case (hetu, oppijaNumero, oppijaNimi) =>
-        SessionInfo(Hetu(hetu), OppijaNumero(oppijaNumero.getOrElse("")), oppijaNimi)
+    ) match {
+      case Some((hetu, oppijaNumero, oppijaNimi, true)) =>
+        Right(SessionInfo(Hetu(hetu), OppijaNumero(oppijaNumero.getOrElse("")), oppijaNimi))
+      case Some((_, _, _, false)) =>
+        Left(SessionFailure.SESSION_EXPIRED)
+      case None =>
+        Left(SessionFailure.SESSION_NOT_FOUND)
     }
   }
-
 }

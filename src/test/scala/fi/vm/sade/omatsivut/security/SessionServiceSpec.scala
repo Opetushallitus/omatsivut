@@ -2,6 +2,7 @@ package fi.vm.sade.omatsivut.security
 
 import java.util.UUID
 
+import fi.vm.sade.omatsivut.SessionFailure
 import fi.vm.sade.omatsivut.db.SessionRepository
 import fi.vm.sade.utils.cas.{CasAuthenticatingClient, CasClient, CasParams}
 import org.junit.runner.RunWith
@@ -24,28 +25,33 @@ class SessionServiceSpec extends Specification with MockitoStubs {
     }
 
     "Authentication fails without credentials" in new SessionServiceWithMocks {
-      sessionRepository.get(id) returns None
+      sessionRepository.get(id) returns Left(SessionFailure.SESSION_NOT_FOUND)
       sessionService.getSession(None) must beLeft.like { case t => t must beAnInstanceOf[AuthenticationFailedException]}
     }
 
     "Authentication fails if session not found in repository" in new SessionServiceWithMocks {
-      sessionRepository.get(id) returns None
+      sessionRepository.get(id) returns Left(SessionFailure.SESSION_NOT_FOUND)
+      sessionService.getSession(Some(id)) must beLeft.like { case t => t must beAnInstanceOf[AuthenticationFailedException] }
+    }
+
+    "Authentication fails if session is found but expired" in new SessionServiceWithMocks {
+      sessionRepository.get(id) returns Left(SessionFailure.SESSION_EXPIRED)
       sessionService.getSession(Some(id)) must beLeft.like { case t => t must beAnInstanceOf[AuthenticationFailedException] }
     }
 
     "Authentication succeeds if session is found in repository" in new SessionServiceWithMocks {
-      sessionRepository.get(id) returns Some(session)
+      sessionRepository.get(id) returns Right(session)
       sessionService.getSession(Some(id)) must_== Right(session)
     }
 
     "storeSession will persist a session in repository" in new SessionServiceWithMocks {
-      sessionRepository.get(id) returns None
+      sessionRepository.get(id) returns Left(SessionFailure.SESSION_NOT_FOUND)
       sessionRepository.store(session) returns id
       sessionService.storeSession(hetu, oppijaNumero, oppijaNimi) must_== Right((id, session))
     }
 
     "deleteSession will delete a session from repository" in new SessionServiceWithMocks {
-      sessionRepository.get(id) returns None
+      sessionRepository.get(id) returns Left(SessionFailure.SESSION_NOT_FOUND)
       sessionService.deleteSession(Some(id))
       there was one(sessionRepository).delete(id)
     }

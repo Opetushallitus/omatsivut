@@ -23,7 +23,7 @@ class AuthenticationRequiringServletSpec extends MutableScalatraSpec with Mockit
     val hetu = "123456-789A"
     val oppijaName = "John Smith"
     val sessionData = SessionInfo(Hetu(hetu), OppijaNumero(oppijaNumero), oppijaName)
-    sessionRepository.get(id) returns Some(sessionData)
+    sessionRepository.get(id) returns Right(sessionData)
     CookieHelper.cookieHeaderWith(sessionCookieName -> id.value.toString)
   }
 

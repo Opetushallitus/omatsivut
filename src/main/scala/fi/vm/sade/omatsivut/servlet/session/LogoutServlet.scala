@@ -26,7 +26,7 @@ trait LogoutServletContainer {
 
     def clearCookie(name: String) = {
       request.getCookies
-        .filter(cookie => cookie.getName == name)
+        .filter(_.getName == name)
         .foreach(cookie => {
           cookie.setValue("")
           cookie.setPath("/")

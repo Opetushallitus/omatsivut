@@ -3,7 +3,7 @@ package fi.vm.sade.omatsivut.servlet
 import java.util.UUID
 
 import fi.vm.sade.hakemuseditori.domain.Language
-import fi.vm.sade.omatsivut.ITSetup
+import fi.vm.sade.omatsivut.{ITSetup, SessionFailure}
 import fi.vm.sade.omatsivut.db.SessionRepository
 import fi.vm.sade.omatsivut.security._
 import org.junit.runner.RunWith
@@ -40,7 +40,7 @@ class AuthenticateIfNoSessionFilterSpec extends MutableScalatraSpec with Mockito
   "AuthenticateIfNoSessionFilter" should {
 
     "redirect to login if session does not exist in cookie" in {
-      sessionRepository.get(id) returns None
+      sessionRepository.get(id) returns Left(SessionFailure.SESSION_NOT_FOUND)
       get("omatsivut" + originalUrl) {
         status must_== 302
         val location = response.headers("Location")(0)
@@ -49,7 +49,7 @@ class AuthenticateIfNoSessionFilterSpec extends MutableScalatraSpec with Mockito
     }
 
     "redirect to login if session exists in cookie but not in repository" in {
-      sessionRepository.get(id) returns None
+      sessionRepository.get(id) returns Left(SessionFailure.SESSION_NOT_FOUND)
       get(originalUrl, headers = CookieHelper.cookieHeaderWith("session" -> id.value.toString)) {
         status must_== 302
       }
@@ -70,7 +70,7 @@ class AuthenticateIfNoSessionFilterSpec extends MutableScalatraSpec with Mockito
     val oppijaNumero = OppijaNumero("1.2.3.4.5.6")
     val oppijaNimi = "John Smith"
     val testSession = SessionInfo(hetu, oppijaNumero, oppijaNimi)
-    sessionRepository.get(id) returns Some(testSession)
+    sessionRepository.get(id) returns Right(testSession)
   }
 }
 

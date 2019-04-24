@@ -32,7 +32,7 @@ trait OmatsivutDbTools extends Specification {
   def getPersonFromSession(sessionIdString: String): Option[String] = {
     val sessionId = SessionId(UUID.fromString(sessionIdString))
     singleConnectionOmatsivutDb.get(sessionId) match {
-      case Some(SessionInfo(hetu, oppijaNumero, oppijaNimi)) => Some(oppijaNumero.value)
+      case Right(SessionInfo(hetu, oppijaNumero, oppijaNimi)) => Some(oppijaNumero.value)
       case _ => None
     }
   }
@@ -40,7 +40,7 @@ trait OmatsivutDbTools extends Specification {
   def getDisplayNameFromSession(sessionIdString: String): Option[String] = {
     val sessionId = SessionId(UUID.fromString(sessionIdString))
     singleConnectionOmatsivutDb.get(sessionId) match {
-      case Some(SessionInfo(hetu, oppijaNumero, oppijaNimi)) => Some(oppijaNimi)
+      case Right(SessionInfo(hetu, oppijaNumero, oppijaNimi)) => Some(oppijaNimi)
       case _ => None
     }
   }
