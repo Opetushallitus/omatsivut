@@ -30,7 +30,7 @@ trait OmatsivutPaths {
   // magically it will go through shibboleth
   def loginPath(contextPath: String)(implicit lang: Language.Language): String = {
     val realContextPath = getContextPath(contextPath)
-    urlPrefix(lang.toString.toLowerCase) + realContextPath + "/initsession/"
+    urlPrefix(lang.toString.toLowerCase) + realContextPath + "/initsession/?lang=" + lang.toString.toLowerCase
   }
 
   def omatsivutPath(contextPath: String)(implicit lang: Language.Language): String = {
