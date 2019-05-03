@@ -22,8 +22,6 @@ class ScalatraBootstrap extends LifeCycle with Logging {
     componentRegistry.start
     globalRegistry = Some(componentRegistry)
 
-    context.addFilter("AuditLoginFilter", componentRegistry.newAuditLoginFilter)
-      .addMappingForUrlPatterns(util.EnumSet.allOf(classOf[DispatcherType]), true, "/*")
     context.addFilter("CacheControl", new CacheControlFilter)
       .addMappingForUrlPatterns(util.EnumSet.allOf(classOf[DispatcherType]), true, "/*")
     context.addFilter("Language", new LanguageFilter)

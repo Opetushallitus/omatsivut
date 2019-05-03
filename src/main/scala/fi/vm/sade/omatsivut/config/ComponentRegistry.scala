@@ -150,8 +150,6 @@ class ComponentRegistry(val config: AppConfig)
   lazy val sessionService = new SessionService(omatsivutDb)
   lazy val authenticationInfoService = configureAuthenticationInfoService
 
-  def newAuditLoginFilter = new AuditLoginFilter(OphUrlProperties.url("vetuma.url"))
-
   def muistilistaService(language: Language): MuistilistaService = new MuistilistaService(language)
   def vastaanottoService(implicit language: Language): VastaanottoService = new VastaanottoService()
   def newApplicationValidator: ApplicationValidator = new ApplicationValidator

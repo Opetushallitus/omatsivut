@@ -3,6 +3,8 @@ package fi.vm.sade.omatsivut.servlet.session
 import java.nio.charset.Charset
 import java.util.UUID
 
+import fi.vm.sade.hakemuseditori.auditlog.Audit
+import fi.vm.sade.omatsivut.auditlog.Login
 import fi.vm.sade.omatsivut.security._
 import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
 import fi.vm.sade.utils.slf4j.Logging
@@ -40,6 +42,7 @@ trait SecuredSessionServletContainer {
         case Right((sessionId, _)) =>
           response.addCookie(Cookie(sessionCookieName, sessionId.value.toString)
             (CookieOptions(domain = "", secure = isHttps, path = "/", maxAge = sessionTimeout.getOrElse(3600), httpOnly = true)))
+          Audit.oppija.log(Login(request))
           response.redirect(redirectUri)
         case Left(e) =>
           logger.error("Unable to create session. (" + e + ")")
