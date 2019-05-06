@@ -44,7 +44,7 @@ class AuthenticateIfNoSessionFilterSpec extends MutableScalatraSpec with Mockito
       get("omatsivut" + originalUrl) {
         status must_== 302
         val location = response.headers("Location")(0)
-        location must find("""/omatsivut/initsession/\?lang=fi$""")
+        location must find("""/omatsivut/initsession/$""")
       }
     }
 
