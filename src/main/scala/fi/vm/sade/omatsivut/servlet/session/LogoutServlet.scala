@@ -36,7 +36,10 @@ trait LogoutServletContainer {
     }
 
     def redirectToShibbolethLogout(request: HttpServletRequest, response: RichResponse): Unit = {
-      val returnUrl = "/oma-opintopolku" // check authentication context for test specific context-path ?
+      val returnUrl = if (request.getParameter("koski") == null)
+        "/oma-opintopolku"
+      else
+        "/koski/user/logout"
       response.redirect(OphUrlProperties.url("shibboleth.logout", returnUrl))
     }
   }
