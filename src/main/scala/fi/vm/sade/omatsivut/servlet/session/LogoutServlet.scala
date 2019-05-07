@@ -36,7 +36,8 @@ trait LogoutServletContainer {
     }
 
     def redirectToShibbolethLogout(request: HttpServletRequest, response: RichResponse): Unit = {
-      val returnUrl = if (request.getParameter("koski") == null)
+      val koskiParameter = request.getParameter("koski")
+      val returnUrl = if (koskiParameter != null && koskiParameter == "true")
         "/oma-opintopolku"
       else
         "/koski/user/logout"
