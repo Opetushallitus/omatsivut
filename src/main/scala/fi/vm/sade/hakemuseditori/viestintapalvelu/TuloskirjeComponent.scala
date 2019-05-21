@@ -3,7 +3,6 @@ package fi.vm.sade.hakemuseditori.viestintapalvelu
 import java.io.{File, FileInputStream, IOException}
 
 import com.amazonaws.{AmazonClientException, AmazonServiceException}
-import com.amazonaws.auth.InstanceProfileCredentialsProvider
 import com.amazonaws.services.s3.AmazonS3ClientBuilder
 import com.amazonaws.services.s3.model.{AmazonS3Exception, ObjectMetadata, S3Object}
 import fi.vm.sade.hakemuseditori.auditlog.{Audit, FetchTuloskirje}
@@ -65,7 +64,6 @@ trait TuloskirjeComponent {
   class S3TulosKirjeService(appConfig: AppConfig) extends TuloskirjeService with JsonFormats with Logging {
     private val s3Settings = appConfig.settings.s3Settings
     private val s3client = AmazonS3ClientBuilder.standard
-      .withCredentials(InstanceProfileCredentialsProvider.createAsyncRefreshingProvider(true))
       .withRegion(s3Settings.region)
       .build()
 
