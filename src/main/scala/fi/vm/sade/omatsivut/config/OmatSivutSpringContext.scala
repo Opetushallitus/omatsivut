@@ -16,10 +16,12 @@ import fi.vm.sade.haku.virkailija.authentication.AuthenticationService
 import fi.vm.sade.haku.virkailija.authentication.impl.AuthenticationServiceMockImpl
 import fi.vm.sade.haku.virkailija.valinta.ValintaService
 import fi.vm.sade.haku.virkailija.valinta.dto.{HakemusDTO, HakijaDTO}
+import fi.vm.sade.koodisto.util.{CachingKoodistoClient, KoodistoClient}
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.mongo.OmatSivutMongoConfiguration
 import fi.vm.sade.properties.OphProperties
 import fi.vm.sade.utils.slf4j.Logging
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation._
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer
 import org.springframework.core.env.{MapPropertySource, MutablePropertySources}
@@ -98,7 +100,9 @@ object OmatSivutSpringContext extends Logging {
     "fi.vm.sade.haku.virkailija.lomakkeenhallinta.ohjausparametrit",
     "fi.vm.sade.haku.virkailija.lomakkeenhallinta.tarjonta.impl",
     "fi.vm.sade.haku.oppija.common.suoritusrekisteri.impl",
-    "fi.vm.sade.haku.virkailija.authentication.impl"
+    "fi.vm.sade.haku.virkailija.authentication.impl",
+    "fi.vm.sade.haku.virkailija.lomakkeenhallinta.koodisto.impl"
+
   ),
   excludeFilters = Array(new ComponentScan.Filter(`type` = FilterType.ASSIGNABLE_TYPE, value = Array[Class[_]](classOf[Session])))
   )
@@ -129,6 +133,9 @@ object OmatSivutSpringContext extends Logging {
 
       override def getHakijaFromValintarekisteri(asOid: String, application: String): HakijaDTO = unsupportedIntegrationException
     }
+
+    @Bean def koodistoClient(@Value("${cas.service.koodisto-service}")koodistoBaseUrl: String): KoodistoClient =
+      new CachingKoodistoClient(koodistoBaseUrl)
 
     def unsupportedIntegrationException: Nothing = {
       throw new scala.UnsupportedOperationException("This integration is unsupported and should not be called in omatsivut")

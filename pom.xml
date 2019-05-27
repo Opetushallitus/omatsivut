@@ -194,6 +194,11 @@
             </exclusions>
         </dependency>
         <dependency>
+            <groupId>fi.vm.sade.koodisto</groupId>
+            <artifactId>koodisto-api</artifactId>
+            <version>2019-01-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>fi.vm.sade.haku</groupId>
             <artifactId>haku-auditlogger</artifactId>
             <version>1.1-SNAPSHOT</version>
@@ -485,6 +490,9 @@
         <repository>
             <id>oph-sade-artifactory-releases</id>
             <url>https://artifactory.opintopolku.fi/artifactory/oph-sade-release-local</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
             <releases>
                 <enabled>true</enabled>
             </releases>
