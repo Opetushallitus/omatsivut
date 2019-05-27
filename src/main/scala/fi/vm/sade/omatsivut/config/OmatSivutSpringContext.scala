@@ -134,8 +134,8 @@ object OmatSivutSpringContext extends Logging {
       override def getHakijaFromValintarekisteri(asOid: String, application: String): HakijaDTO = unsupportedIntegrationException
     }
 
-    @Bean def koodistoClient(@Value("${cas.service.koodisto-service}")koodistoBaseUrl: String): KoodistoClient =
-      new CachingKoodistoClient(koodistoBaseUrl)
+    @Bean def koodistoClient(@Value("${host.virkailija}") hostVirkailija: String): KoodistoClient =
+      new CachingKoodistoClient(s"https://$hostVirkailija").setClientSubSystemCode(AppConfig.clientSubSystemCode)
 
     def unsupportedIntegrationException: Nothing = {
       throw new scala.UnsupportedOperationException("This integration is unsupported and should not be called in omatsivut")
