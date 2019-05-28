@@ -54,7 +54,7 @@ trait SecuredSessionServletContainer {
 
     private def redirectUri: String = {
       val link = omatsivutPath(request.getContextPath) + paramOption("redirect").getOrElse("/index.html")
-      logger.info("Link to forward to, after a session is established: " + link)
+      logger.debug("Link to forward to, after a session is established: " + link)
       link
     }
 
