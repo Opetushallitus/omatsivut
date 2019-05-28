@@ -135,9 +135,9 @@ Profiili määrittää lähinnä, mistä propertyt haetaan, mutta sen avulla my�
 ### it-profiili
 
 Tämä on kätevin profiili kehityskäyttöön, ja ainoa profiili, jolla esimerkiksi mocha-testit voidaan onnistuneesti ajaa.
-It-profiililla käytetään: 
+It-profiililla käytetään:
 - embedded mongo-kantaa, joka käynnistetään serverin käynnistyksen yhteydessä porttiin 28018.
-- paikallista postgres-kantaa, toistaiseksi session tallentamisen takia, joka myöskin käynnistetään serverin käynnistyksen 
+- paikallista postgres-kantaa, toistaiseksi session tallentamisen takia, joka myöskin käynnistetään serverin käynnistyksen
 yhteydessä
 
 
