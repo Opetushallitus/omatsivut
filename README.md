@@ -69,7 +69,7 @@ Näin ajat testit komentoriviltä.
 
 Komento ajaa kaikki testit, mukaan lukien yksikkötestit, REST-palvelujen testit, mocha-selaintestit.
 
-### War-paketointi
+### Fatjar-paketointi
 
 `mvn package`
 
