@@ -14,7 +14,7 @@ class SessionService(val sessionRepository: SessionRepository) extends Logging {
     case Some(id) => {
       Try(sessionRepository.delete(id)) match {
         case Success(_) => logger.debug("session " + id + " removed from database")
-        case Failure(t) => logger.info("Did not manage to remove session " + id + " from database", t)
+        case Failure(t) => logger.error("Did not manage to remove session " + id + " from database", t)
       }
     }
   }
