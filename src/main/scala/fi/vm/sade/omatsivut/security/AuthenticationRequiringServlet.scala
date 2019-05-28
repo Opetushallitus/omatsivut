@@ -7,7 +7,7 @@ import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
 import fi.vm.sade.utils.slf4j.Logging
 import org.json4s.JsonDSL._
 import org.json4s.jackson.JsonMethods._
-import org.scalatra.{NotFound, Ok, Unauthorized}
+import org.scalatra.{BadRequest, NotFound, Ok, Unauthorized}
 
 trait AuthenticationRequiringServlet extends OmatSivutServletBase with Logging {
   implicit def sessionService: SessionService
@@ -17,7 +17,12 @@ trait AuthenticationRequiringServlet extends OmatSivutServletBase with Logging {
 
   before() {
     val sessionCookie: Option[String] = cookies.get(sessionCookieName)
-    val sessionUUID: Option[UUID] = sessionCookie.map(UUID.fromString)
+    val sessionUUID: Option[UUID] = try {
+      sessionCookie.map(UUID.fromString)
+    } catch {
+      case e: Throwable =>
+        halt(BadRequest(s"Problem verifying the session with id=$sessionCookie ($e)"))
+    }
     val sessionId: Option[SessionId] = sessionUUID.map(SessionId)
     sessionService.getSession(sessionId) match {
       case Right(sessionInfo) =>

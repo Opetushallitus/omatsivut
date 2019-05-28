@@ -1,14 +1,12 @@
 package fi.vm.sade.omatsivut.servlet
 
-import java.net.URLEncoder
 import java.util.UUID
 
 import fi.vm.sade.hakemuseditori.domain.Language
-import fi.vm.sade.omatsivut.security.SessionInfoRetriever.sessionCookieName
 import fi.vm.sade.omatsivut.security.{AttributeNames, SessionId, SessionService}
 import fi.vm.sade.omatsivut.servlet.session.OmatsivutPaths
 import fi.vm.sade.utils.slf4j.Logging
-import org.scalatra.ScalatraFilter
+import org.scalatra.{BadRequest, ScalatraFilter}
 
 class AuthenticateIfNoSessionFilter(val sessionService: SessionService)
   extends ScalatraFilter with OmatsivutPaths with AttributeNames with Logging {
@@ -19,7 +17,12 @@ class AuthenticateIfNoSessionFilter(val sessionService: SessionService)
 
   before() {
     val sessionCookie: Option[String] = cookies.get(sessionCookieName)
-    val sessionUUID: Option[UUID] = sessionCookie.map(UUID.fromString)
+    val sessionUUID: Option[UUID] = try {
+      sessionCookie.map(UUID.fromString)
+    } catch {
+      case e: Throwable =>
+        halt(BadRequest(s"Problem verifying the session with id=$sessionCookie ($e)"))
+    }
     val sessionId: Option[SessionId] = sessionUUID.map(SessionId)
     sessionService.getSession(sessionId) match {
       case Right(sessionInfo) =>

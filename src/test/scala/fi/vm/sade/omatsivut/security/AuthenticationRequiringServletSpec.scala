@@ -40,9 +40,14 @@ class AuthenticationRequiringServletSpec extends MutableScalatraSpec with Mockit
   "AuthenticationRequiringServlet" should {
 
     "return authorization error if not authenticated" in {
-      val evo = 4
       get(testUrl) {
         status must_== 401
+      }
+    }
+
+    "return bad request (400) if session cookie is not a correct UUID" in {
+      get(testUrl, headers = CookieHelper.cookieHeaderWith(sessionCookieName -> "NOT-AN-UUID")) {
+        status must_== 400
       }
     }
 

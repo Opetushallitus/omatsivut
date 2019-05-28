@@ -48,10 +48,16 @@ class AuthenticateIfNoSessionFilterSpec extends MutableScalatraSpec with Mockito
       }
     }
 
-    "redirect to login if session exists in cookie but not in repository" in {
+    "redirect to login if correctly formatted session exists in cookie, but not in repository" in {
       sessionRepository.get(id) returns Left(SessionFailure.SESSION_NOT_FOUND)
       get(originalUrl, headers = CookieHelper.cookieHeaderWith("session" -> id.value.toString)) {
         status must_== 302
+      }
+    }
+
+    "return BadRequest (400) if session exists in cookie, but is not a correct UUID" in {
+      get(originalUrl, headers = CookieHelper.cookieHeaderWith("session" -> "NOT-AN-UUID")) {
+        status must_== 400
       }
     }
 
