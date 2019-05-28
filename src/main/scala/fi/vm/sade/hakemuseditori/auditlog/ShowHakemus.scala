@@ -1,7 +1,7 @@
 package fi.vm.sade.hakemuseditori.auditlog
 
 import fi.vm.sade.auditlog.{Changes, Target, User}
-import fi.vm.sade.omatsivut.security.AuthenticationInfoParser.getAuthenticationInfo
+import fi.vm.sade.omatsivut.security.SessionInfoRetriever.getSessionId
 import javax.servlet.http.HttpServletRequest
 
 
@@ -16,9 +16,5 @@ case class ShowHakemus(request: HttpServletRequest, userOid: String, hakemusOid:
       .build()
   }
 
-  override def user: User = {
-    val authInfo = getAuthenticationInfo(request)
-    val shib = authInfo.shibbolethCookie
-    new User(getOid(userOid), getAddress(request), shib.map(_.toString).getOrElse("(no shibboleth cookie)"), getUserAgent(request))
-  }
+  override def user = getUser(userOid, request)
 }

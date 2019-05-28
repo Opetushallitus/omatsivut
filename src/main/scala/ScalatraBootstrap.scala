@@ -1,9 +1,9 @@
+import java.security.Security
 import java.util
-import javax.servlet.{DispatcherType, ServletContext}
 
+import javax.servlet.{DispatcherType, ServletContext}
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
-import fi.vm.sade.omatsivut.config.{OmatSivutSpringContext, AppConfig, ComponentRegistry}
-import fi.vm.sade.omatsivut.security.fake.{FakeShibbolethFilter, FakeShibbolethServlet}
+import fi.vm.sade.omatsivut.config.{AppConfig, ComponentRegistry, OmatSivutSpringContext}
 import fi.vm.sade.omatsivut.servlet._
 import fi.vm.sade.omatsivut.servlet.session.{LoginServlet, SessionServlet}
 import fi.vm.sade.utils.slf4j.Logging
@@ -22,18 +22,12 @@ class ScalatraBootstrap extends LifeCycle with Logging {
     componentRegistry.start
     globalRegistry = Some(componentRegistry)
 
-    if(config.usesFakeAuthentication) {
-      logger.info("Using fake authentication")
-      context.addFilter("FakeShibboleth", new FakeShibbolethFilter)
-        .addMappingForUrlPatterns(util.EnumSet.allOf(classOf[DispatcherType]), true,  "/", "/index.html", "/secure/*")
-      context.mount(new FakeShibbolethServlet(config), "/Shibboleth.sso")
-    }
-    context.addFilter("AuditLoginFilter", componentRegistry.newAuditLoginFilter)
-      .addMappingForUrlPatterns(util.EnumSet.allOf(classOf[DispatcherType]), true, "/*")
     context.addFilter("CacheControl", new CacheControlFilter)
       .addMappingForUrlPatterns(util.EnumSet.allOf(classOf[DispatcherType]), true, "/*")
     context.addFilter("Language", new LanguageFilter)
       .addMappingForUrlPatterns(util.EnumSet.allOf(classOf[DispatcherType]), true, "/*")
+    context.addFilter("AuthenticateIfNoSessionFilter", new AuthenticateIfNoSessionFilter(componentRegistry.sessionService))
+      .addMappingForUrlPatterns(util.EnumSet.allOf(classOf[DispatcherType]), true, "/", "/index.html")
 
     context.mount(componentRegistry.newApplicationsServlet, "/secure/applications")
     context.mount(componentRegistry.newValintatulosServlet, "/secure/ilmoittaudu")
@@ -44,11 +38,11 @@ class ScalatraBootstrap extends LifeCycle with Logging {
     context.mount(componentRegistry.newMuistilistaServlet, "/muistilista")
     context.mount(componentRegistry.newKoodistoServlet, "/koodisto")
     context.mount(componentRegistry.newKoulutusServlet, "/koulutusinformaatio")
-    context.mount(componentRegistry.newSecuredSessionServlet, "/secure")
-    context.mount(new SessionServlet, "/session")
+    context.mount(componentRegistry.newSecuredSessionServlet, "/initsession")
+    context.mount(componentRegistry.newSessionServlet, "/session")
     context.mount(new RaamitServlet(config), "/raamit")
     context.mount(new PiwikServlet(config), "/piwik")
-    context.mount(new LoginServlet(config.authContext), "/login")
+    context.mount(new LoginServlet(), "/login")
     context.mount(componentRegistry.newLogoutServlet, "/logout")
     context.mount(componentRegistry.newFixtureServlet, "/util")
     context.mount(new HealthServlet, "/health")

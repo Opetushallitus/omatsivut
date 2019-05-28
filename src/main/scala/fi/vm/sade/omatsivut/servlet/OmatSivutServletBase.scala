@@ -11,6 +11,10 @@ trait OmatSivutServletBase extends ScalatraServlet with Logging {
     Option(request.getAttribute("lang").asInstanceOf[Language.Language]).getOrElse(Language.fi)
   }
 
+  def isHttps = {
+    request.header("X-Forwarded-For").isDefined || request.isSecure // If we are behind a loadbalancer proxy, we assume that https is used
+  }
+
   notFound {
     // remove content type in case it was set through an action
     contentType = null

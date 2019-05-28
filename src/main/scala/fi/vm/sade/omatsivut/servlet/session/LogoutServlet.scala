@@ -1,18 +1,21 @@
 package fi.vm.sade.omatsivut.servlet.session
 
-import javax.servlet.http.HttpServletRequest
+import java.util.UUID
 
+import javax.servlet.http.HttpServletRequest
 import fi.vm.sade.hakemuseditori.auditlog.Audit
 import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.omatsivut.auditlog.Logout
-import fi.vm.sade.omatsivut.security.AuthenticationContext
+import fi.vm.sade.omatsivut.security.{AttributeNames, SessionId, SessionService}
 import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
 import org.scalatra.servlet.RichResponse
 
 trait LogoutServletContainer {
 
-  class LogoutServlet(val authenticationContext: AuthenticationContext) extends OmatSivutServletBase {
+  class LogoutServlet(val sessionService: SessionService) extends OmatSivutServletBase with AttributeNames {
     get("/*") {
+      sessionService.deleteSession(cookies.get(sessionCookieName).map(UUID.fromString).map(SessionId))
+      clearCookie(sessionCookieName)
       redirectToShibbolethLogout(request, response)
     }
 
@@ -21,9 +24,24 @@ trait LogoutServletContainer {
       redirectToShibbolethLogout(request, response)
     }
 
+    def clearCookie(name: String) = {
+      request.getCookies
+        .filter(_.getName == name)
+        .foreach(cookie => {
+          cookie.setValue("")
+          cookie.setPath("/")
+          cookie.setMaxAge(0);
+          response.addCookie(cookie)
+        })
+    }
+
     def redirectToShibbolethLogout(request: HttpServletRequest, response: RichResponse): Unit = {
-      val returnUrl = "/oma-opintopolku" // check authentication context for test specific context-path ?
-      response.redirect(authenticationContext.ssoContextPath + OphUrlProperties.url("shibboleth.logout", returnUrl))
+      val koskiParameter = request.getParameter("koski")
+      val returnUrl = if (koskiParameter != null && koskiParameter == "true")
+        "/oma-opintopolku"
+      else
+        "/koski/user/logout"
+      response.redirect(OphUrlProperties.url("shibboleth.logout", returnUrl))
     }
   }
 }

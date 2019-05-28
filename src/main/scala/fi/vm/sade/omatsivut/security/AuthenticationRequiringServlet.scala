@@ -1,29 +1,40 @@
 package fi.vm.sade.omatsivut.security
 
-import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
-import fi.vm.sade.omatsivut.security.AuthenticationInfoParser._
+import java.util.UUID
+
+import fi.vm.sade.omatsivut.security.SessionInfoRetriever._
 import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
 import fi.vm.sade.utils.slf4j.Logging
 import org.json4s.JsonDSL._
 import org.json4s.jackson.JsonMethods._
-import org.scalatra.{NotFound, Unauthorized}
+import org.scalatra.{NotFound, Ok, Unauthorized}
 
 trait AuthenticationRequiringServlet extends OmatSivutServletBase with Logging {
-  val appConfig: AppConfig
+  implicit def sessionService: SessionService
+  val returnNotFoundIfNoOid = true
 
-  def personOid(): String = getAuthenticationInfo(request).personOid.getOrElse(sys.error("Unauthenticated account"))
+  def personOid(): String = getOppijaNumero(request).getOrElse(sys.error("Unauthenticated account"))
 
   before() {
-    val AuthenticationInfo(personOidOption, shibbolethCookieOption) = getAuthenticationInfo(request)
-    shibbolethCookieOption match {
-      case Some(cookie) => personOidOption match {
-        case Some(oid) if !oid.isEmpty =>
-          true
-        case _ =>
+    val sessionCookie: Option[String] = cookies.get(sessionCookieName)
+    val sessionUUID: Option[UUID] = sessionCookie.map(UUID.fromString)
+    val sessionId: Option[SessionId] = sessionUUID.map(SessionId)
+    sessionService.getSession(sessionId) match {
+      case Right(sessionInfo) =>
+        logger.debug("Found session: " + sessionInfo.oppijaNumero)
+        if (returnNotFoundIfNoOid && sessionInfo.oppijaNumero.value.isEmpty) {
+          logger.info("Session has no oppijaNumero, should not find anything")
           halt(NotFound(render("error" -> "no oid was present")))
-      }
+        }
+        session.setAttribute(sessionInfoAttributeName, sessionInfo)
       case _ =>
+        logger.info("Session not found, fail the API request")
         halt(Unauthorized(render("error" -> "unauthorized")))
     }
+  }
+
+  after() {
+    // clean the http session, to avoid sessioninfo hanging in session object and maybe misleading somebody
+    session.removeAttribute(sessionInfoAttributeName)
   }
 }

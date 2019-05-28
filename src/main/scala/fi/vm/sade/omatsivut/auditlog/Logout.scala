@@ -1,10 +1,10 @@
 package fi.vm.sade.omatsivut.auditlog
 
 import javax.servlet.http.HttpServletRequest
-
 import fi.vm.sade.auditlog.{Changes, Target, User}
 import fi.vm.sade.hakemuseditori.auditlog.{AuditEvent, AuditLogUtils, OmatSivutMessageField, OmatSivutOperation}
-import fi.vm.sade.omatsivut.security.AuthenticationInfoParser._
+import fi.vm.sade.omatsivut.security.OppijaNumero
+import fi.vm.sade.omatsivut.security.SessionInfoRetriever._
 
 case class Logout(request: HttpServletRequest) extends AuditLogUtils with AuditEvent {
   override val operation: OmatSivutOperation = OmatSivutOperation.LOGOUT
@@ -15,8 +15,6 @@ case class Logout(request: HttpServletRequest) extends AuditLogUtils with AuditE
       .build()
   }
   override def user: User = {
-    val authInfo = getAuthenticationInfo(request)
-    val shib = authInfo.shibbolethCookie
-    new User(getOid(authInfo.personOid.get), getAddress(request), shib.map(_.toString).getOrElse("(no shibboleth cookie)"), getUserAgent(request))
+    new User(getOid(getOppijaNumero(request).getOrElse("")), getAddress(request), getSessionId(request).getOrElse("(no session cookie)"), getUserAgent(request))
   }
 }

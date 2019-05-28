@@ -13,6 +13,7 @@ tmp/*
 
 # java specific
 *.class
+.java-version
 
 # python specific
 *.pyc
@@ -99,6 +100,7 @@ gatling/
 gradle/
 
 valintarekisteri-it-db
+omatsivut-it-db
 
 .idea*
 *.iml

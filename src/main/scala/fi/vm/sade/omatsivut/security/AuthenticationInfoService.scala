@@ -2,16 +2,26 @@ package fi.vm.sade.omatsivut.security
 
 import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.omatsivut.config.{RemoteApplicationConfig, SecuritySettings}
+import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.utils.cas.{CasAuthenticatingClient, CasClient, CasParams}
 import fi.vm.sade.utils.slf4j.Logging
 import org.http4s._
 import org.http4s.client.blaze
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
-
 import scalaz.concurrent.Task
 
-class RemoteAuthenticationInfoService(val remoteAppConfig: RemoteApplicationConfig, val securitySettings: SecuritySettings) extends Logging {
+trait AuthenticationInfoService {
+  def getHenkiloOID(hetu: String): Option[String]
+}
+
+class StubbedAuthenticationInfoService() extends AuthenticationInfoService {
+  override def getHenkiloOID(hetu: String): Option[String] = {
+    TestFixture.persons.get(hetu)
+  }
+}
+
+class RemoteAuthenticationInfoService(val remoteAppConfig: RemoteApplicationConfig, val securitySettings: SecuritySettings) extends AuthenticationInfoService with Logging {
   private val blazeHttpClient = blaze.defaultClient
   private val casClient = new CasClient(securitySettings.casUrl, blazeHttpClient)
   private val serviceUrl = remoteAppConfig.url + "/"
@@ -29,7 +39,7 @@ class RemoteAuthenticationInfoService(val remoteAppConfig: RemoteApplicationConf
     httpClient.fetch(request)(r => r.as[String].map(body => decoder(r.status.code, body, request)))
   }
 
-  def getHenkiloOID(hetu: String) : Option[String] = {
+  override def getHenkiloOID(hetu: String) : Option[String] = {
     val path = OphUrlProperties.url("oppijanumerorekisteri-service.henkiloByHetu", hetu)
     val request: Request = Request(uri = uriFromString(path), headers = Headers(callerIdHeader))
 

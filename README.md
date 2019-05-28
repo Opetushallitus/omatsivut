@@ -69,7 +69,7 @@ Näin ajat testit komentoriviltä.
 
 Komento ajaa kaikki testit, mukaan lukien yksikkötestit, REST-palvelujen testit, mocha-selaintestit.
 
-### War-paketointi
+### Fatjar-paketointi
 
 `mvn package`
 
@@ -134,8 +134,12 @@ Profiili määrittää lähinnä, mistä propertyt haetaan, mutta sen avulla my�
 
 ### it-profiili
 
-It-profiililla käytetään embedded mongo-kantaa, joka käynnistetään serverin käynnistyksen yhteydessä porttiin 28018.
 Tämä on kätevin profiili kehityskäyttöön, ja ainoa profiili, jolla esimerkiksi mocha-testit voidaan onnistuneesti ajaa.
+It-profiililla käytetään:
+- embedded mongo-kantaa, joka käynnistetään serverin käynnistyksen yhteydessä porttiin 28018.
+- paikallista postgres-kantaa, toistaiseksi session tallentamisen takia, joka myöskin käynnistetään serverin käynnistyksen
+yhteydessä
+
 
 ### dev-profiili
 
@@ -147,7 +151,7 @@ Paikallisen mongon käynnistys:
 
 ### templated-profiili
 
-Tällä profiililla sovelluksen asetukset generoidaan tuotantoympäristöä vastaavasti `omatsivut.properties.template` -tiedostosta
+Tällä profiililla sovelluksen asetukset generoidaan tuotantoympäristöä vastaavasti `common.properties.template` -tiedostosta
 ja annetusta muuttujatiedostosta. Testi- ja tuotantoympäristöissä käytettävät muuttujatiedostot sijaitsevat erillisissä sisäisissä
  "environment" -repositorioissa.
 
@@ -157,7 +161,7 @@ Mallia vars-tiedostoon voi ottaa tiedostosta `src/main/resources/oph-configurati
 ### default-profiili
 
 Oletusasetuksilla käytetään ulkoista konfiguraatiotiedostoa `omatsivut.properties`, joka generoidaan deployn yhteydessä
- `omatsivut.properties.template` ja ulkoisesta muuttujatiedostosta. Tätä profiilia käytetään testi- ja
+ `common.properties.template` ja ulkoisesta muuttujatiedostosta. Tätä profiilia käytetään testi- ja
 tuotantoympäristöissä.
 
 ### cloud-profiili

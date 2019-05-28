@@ -1,14 +1,19 @@
 package fi.vm.sade.omatsivut
 
+import java.net.HttpCookie
+
 import fi.vm.sade.hakemuseditori.hakemus.HakemusSpringContext
 import fi.vm.sade.omatsivut.config.AppConfig
+import fi.vm.sade.omatsivut.security.CookieHelper
 import fi.vm.sade.omatsivut.security.fake.FakeAuthentication
-import org.scalatra.test.HttpComponentsClient
+import org.scalatra.test.{ClientResponse, HttpComponentsClient}
 import org.specs2.mutable.Specification
 
-trait ScalatraTestSupport extends Specification with HttpComponentsClient {
+trait ScalatraTestSupport extends Specification with HttpComponentsClient with OmatsivutDbTools with ITSetup {
 
   protected lazy val springContext: HakemusSpringContext = SharedAppConfig.componentRegistry.springContext
+
+  var lastSessionId: String = ""
 
   step {
     SharedJetty.start
@@ -18,15 +23,21 @@ trait ScalatraTestSupport extends Specification with HttpComponentsClient {
   def baseUrl = "http://localhost:" + AppConfig.embeddedJettyPortChooser.chosenPort + "/omatsivut"
 
   def authGet[A](uri: String)(f: => A)(implicit personOid: PersonOid): A = {
-    get(uri, headers = FakeAuthentication.authHeaders(personOid.oid))(f)
+    val sessionId = createTestSession()
+    lastSessionId = sessionId
+    get(uri, headers = FakeAuthentication.authHeaders(personOid.oid, sessionId))(f)
   }
 
   def authPost[A](uri: String, body: Array[Byte])(f: => A)(implicit personOid: PersonOid): A = {
-    post(uri, body, headers = FakeAuthentication.authHeaders(personOid.oid))(f)
+    val sessionId = createTestSession()
+    lastSessionId = sessionId
+    post(uri, body, headers = FakeAuthentication.authHeaders(personOid.oid, sessionId))(f)
   }
 
   def authPut[A](uri: String, body: Array[Byte])(f: => A)(implicit personOid: PersonOid): A = {
-    put(uri, body, headers = FakeAuthentication.authHeaders(personOid.oid))(f)
+    val sessionId = createTestSession()
+    lastSessionId = sessionId
+    put(uri, body, headers = FakeAuthentication.authHeaders(personOid.oid, sessionId))(f)
   }
 
   def postJSON[T](path: String, body: String, headers: Map[String, String] = Map.empty)(block: => T): T = {
@@ -34,5 +45,10 @@ trait ScalatraTestSupport extends Specification with HttpComponentsClient {
   }
 }
 
+trait ScalatraTestCookiesSupport {
+  def cookieGetValue(response: ClientResponse, cookieName: String): Option[String] = {
+    response.headers("Set-Cookie").map(CookieHelper.cookieExtractValue(_, cookieName)).find(v => v.isDefined && v.get.length > 0).getOrElse(None)
+  }
+}
 
 case class PersonOid(oid: String)

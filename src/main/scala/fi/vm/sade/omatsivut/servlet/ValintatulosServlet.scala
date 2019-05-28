@@ -7,14 +7,14 @@ import fi.vm.sade.hakemuseditori.user.Oppija
 import fi.vm.sade.hakemuseditori.valintatulokset.ValintatulosService
 import fi.vm.sade.hakemuseditori.valintatulokset.domain.Ilmoittautuminen
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
-import fi.vm.sade.omatsivut.security.AuthenticationRequiringServlet
+import fi.vm.sade.omatsivut.security.{AuthenticationRequiringServlet, SessionService}
 import org.scalatra.json.JacksonJsonSupport
 
 trait ValintatulosServletContainer {
 
   val valintatulosService: ValintatulosService
 
-  class ValintatulosServlet(val appConfig: AppConfig) extends OmatSivutServletBase with JacksonJsonSupport with JsonFormats with
+  class ValintatulosServlet(val appConfig: AppConfig, val sessionService: SessionService) extends OmatSivutServletBase with JacksonJsonSupport with JsonFormats with
                                                               AuthenticationRequiringServlet with HakemusEditoriUserContext {
     override def user() = Oppija(personOid())
 

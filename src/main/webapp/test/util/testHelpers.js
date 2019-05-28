@@ -71,12 +71,13 @@ session = {
     return function () {
       langParam = ""
       if (lang) {
-        langParam = "&lang=" + lang
+        langParam = "lang=" + lang
       }
-      var url = "/omatsivut/Shibboleth.sso/fakesession?hetu=" + hetu + langParam;
+      var url = "/omatsivut/initsession?" + langParam;
       var response = Q.defer();
       var request = new XMLHttpRequest();
       request.open('GET', url);
+      request.setRequestHeader("hetu", hetu);
       request.onreadystatechange = function () {
         if (request.readyState === 4) {
           if (request.status === 200) {

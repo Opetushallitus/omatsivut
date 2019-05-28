@@ -17,13 +17,15 @@ import fi.vm.sade.hakemuseditori.viestintapalvelu.{TuloskirjeComponent, Tuloskir
 import fi.vm.sade.hakemuseditori.{HakemusEditoriComponent, RemoteSendMailServiceWrapper, SendMailServiceWrapper, StubbedSendMailServiceWrapper}
 import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.omatsivut.config.AppConfig._
+import fi.vm.sade.omatsivut.db.impl.OmatsivutDb
 import fi.vm.sade.omatsivut.fixtures.hakemus.ApplicationFixtureImporter
 import fi.vm.sade.omatsivut.hakemuspreview.HakemusPreviewGeneratorComponent
 import fi.vm.sade.omatsivut.localization.OmatSivutTranslations
 import fi.vm.sade.omatsivut.muistilista.MuistilistaServiceComponent
 import fi.vm.sade.omatsivut.oppijantunnistus.{OppijanTunnistusComponent, OppijanTunnistusService, RemoteOppijanTunnistusService, StubbedOppijanTunnistusService}
+import fi.vm.sade.omatsivut.security._
 import fi.vm.sade.omatsivut.servlet._
-import fi.vm.sade.omatsivut.servlet.session.{LogoutServletContainer, SecuredSessionServletContainer}
+import fi.vm.sade.omatsivut.servlet.session.{LogoutServletContainer, SecuredSessionServletContainer, SessionServlet}
 import fi.vm.sade.omatsivut.vastaanotto.VastaanottoComponent
 import fi.vm.sade.utils.captcha.CaptchaServiceComponent
 
@@ -121,6 +123,11 @@ class ComponentRegistry(val config: AppConfig)
     case _ => new RemoteOppijanumerorekisteriService(config)
   }
 
+  private def configureAuthenticationInfoService: AuthenticationInfoService = config match {
+    case _: StubbedExternalDeps => new StubbedAuthenticationInfoService
+    case _ => new RemoteAuthenticationInfoService(config.settings.authenticationServiceConfig, config.settings.securitySettings)
+  }
+
   lazy val springContext = new HakemusSpringContext(OmatSivutSpringContext.createApplicationContext(config))
   val hakumaksuService: HakumaksuServiceWrapper = configureHakumaksuService
   val sendMailService: SendMailServiceWrapper = configureSendMailService
@@ -137,17 +144,24 @@ class ComponentRegistry(val config: AppConfig)
   val oppijanTunnistusService = configureOppijanTunnistusService
   val ataruService: AtaruService = configureAtaruService
   val oppijanumerorekisteriService: OppijanumerorekisteriService = configureOppijanumerorekisteriService
+  lazy val omatsivutDb = new OmatsivutDb(config.settings.omatsivutDbConfig,
+                                         config.isInstanceOf[IT],
+                                         config.settings.sessionTimeoutSeconds.getOrElse(3600))
+  lazy val sessionService = new SessionService(omatsivutDb)
+  lazy val authenticationInfoService = configureAuthenticationInfoService
 
-  def newAuditLoginFilter = new AuditLoginFilter(OphUrlProperties.url("vetuma.url"))
   def muistilistaService(language: Language): MuistilistaService = new MuistilistaService(language)
   def vastaanottoService(implicit language: Language): VastaanottoService = new VastaanottoService()
   def newApplicationValidator: ApplicationValidator = new ApplicationValidator
   def newHakemusPreviewGenerator(language: Language): HakemusPreviewGenerator = new HakemusPreviewGenerator(language)
-  def newApplicationsServlet = new ApplicationsServlet(config)
+  def newApplicationsServlet = new ApplicationsServlet(config, sessionService)
   def newKoulutusServlet = new KoulutusServlet
-  def newValintatulosServlet = new ValintatulosServlet(config)
-  def newSecuredSessionServlet = new SecuredSessionServlet(config.authContext)
-  def newLogoutServlet = new LogoutServlet(config.authContext)
+  def newValintatulosServlet = new ValintatulosServlet(config, sessionService)
+  def newSecuredSessionServlet = new SecuredSessionServlet(authenticationInfoService,
+                                                           sessionService,
+                                                           config.settings.sessionTimeoutSeconds)
+  def newSessionServlet = new SessionServlet(sessionService)
+  def newLogoutServlet = new LogoutServlet(sessionService)
   def newFixtureServlet = new FixtureServlet(config)
   def newKoodistoServlet = new KoodistoServlet
   def newMuistilistaServlet = new MuistilistaServlet(config)

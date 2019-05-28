@@ -4,7 +4,7 @@ import javax.servlet.http.HttpServletRequest
 
 import fi.vm.sade.auditlog.{Changes, Target, User}
 import fi.vm.sade.hakemuseditori.valintatulokset.domain.Ilmoittautuminen
-import fi.vm.sade.omatsivut.security.AuthenticationInfoParser.getAuthenticationInfo
+import fi.vm.sade.omatsivut.security.SessionInfoRetriever.getSessionId
 
 case class SaveIlmoittautuminen(request: HttpServletRequest, hakuOid: String, hakemusOid: String, ilmoittautuminen: Ilmoittautuminen, success: Boolean) extends AuditLogUtils with AuditEvent {
   override val operation: OmatSivutOperation = OmatSivutOperation.SAVE_ILMOITTAUTUMINEN
@@ -19,9 +19,5 @@ case class SaveIlmoittautuminen(request: HttpServletRequest, hakuOid: String, ha
     .setField(OmatSivutMessageField.ILMOITTAUTUMINEN_SUCCESS, if (success) "kyllä" else "ei")
     .build()
 
-  override def user: User = {
-    val authInfo = getAuthenticationInfo(request)
-    val shib = authInfo.shibbolethCookie
-    new User(getOid(ilmoittautuminen.muokkaaja), getAddress(request), shib.map(_.toString).getOrElse("(no shibboleth cookie)"), getUserAgent(request))
-  }
+  override def user = getUser(ilmoittautuminen.muokkaaja, request)
 }

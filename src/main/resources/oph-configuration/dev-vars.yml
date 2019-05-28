@@ -36,6 +36,13 @@ omatsivut_haku_app_password: ""
 omatsivut_authentication_service_username: ""
 omatsivut_authentication_service_password: ""
 omatsivut_vetuma_url: "fakevetuma"
+omatsivut_db_username: "oph"
+omatsivut_db_password: ""
+omatsivut_db_host: "localhost"
+omatsivut_db_port: 5432
+omatsivut_db_name: "omatsivutdb"
+omatsivut_db_max_active: 10
+omatsivut_db_min_active: 10
 ymparisto: "dev"
 oppija_raamit_url: "https://virkailija.testiopintopolku.fi"
 email_batch_size: 500

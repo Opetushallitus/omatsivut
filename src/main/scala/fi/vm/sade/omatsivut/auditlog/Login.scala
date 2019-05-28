@@ -1,10 +1,9 @@
 package fi.vm.sade.omatsivut.auditlog
 
 import javax.servlet.http.HttpServletRequest
-
 import fi.vm.sade.auditlog.{Changes, Target, User}
 import fi.vm.sade.hakemuseditori.auditlog.{AuditEvent, AuditLogUtils, OmatSivutMessageField, OmatSivutOperation}
-import fi.vm.sade.omatsivut.security.AuthenticationInfoParser.getAuthenticationInfo
+import fi.vm.sade.omatsivut.security.SessionInfoRetriever.{getOppijaNumero, getSessionId}
 
 case class Login(request: HttpServletRequest) extends AuditLogUtils with AuditEvent {
   override val operation: OmatSivutOperation = OmatSivutOperation.LOGIN
@@ -15,8 +14,11 @@ case class Login(request: HttpServletRequest) extends AuditLogUtils with AuditEv
       .build()
   }
   override def user: User = {
-    val authInfo = getAuthenticationInfo(request)
-    val shib = authInfo.shibbolethCookie
-    new User(getOid(authInfo.personOid.get), getAddress(request), shib.map(_.toString).getOrElse("(no shibboleth cookie)"), getUserAgent(request))
+    val oppijaNumero = getOppijaNumero(request)
+    val oid = oppijaNumero match {
+      case Some(oppija) if oppija != "" => getOid(oppija)
+      case _ => null
+    }
+    new User(oid, getAddress(request), getSessionId(request).getOrElse("(no session cookie)"), getUserAgent(request))
   }
 }
