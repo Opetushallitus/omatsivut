@@ -19,7 +19,6 @@ import scala.util.control.NonFatal
 
 // inspired by (copied from) fi/vm/sade/valintatulosservice/valintarekisteri/db/impl/ValintarekisteriRepository.scala
 trait OmatsivutRepository extends Logging {
-  type TilanViimeisinMuutos = Timestamp
   private val logSqlOfSomeQueries = false // For debugging only. Do NOT enable in production.
 
   val db: Database
