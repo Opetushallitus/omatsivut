@@ -31,15 +31,10 @@ trait AuthenticationRequiringServlet extends OmatSivutServletBase with Logging {
           logger.info("Session has no oppijaNumero, should not find anything")
           halt(NotFound(render("error" -> "no oid was present")))
         }
-        session.setAttribute(sessionInfoAttributeName, sessionInfo)
+        pass()
       case _ =>
         logger.info("Session not found, fail the API request")
         halt(Unauthorized(render("error" -> "unauthorized")))
     }
-  }
-
-  after() {
-    // clean the http session, to avoid sessioninfo hanging in session object and maybe misleading somebody
-    session.removeAttribute(sessionInfoAttributeName)
   }
 }

@@ -1,7 +1,6 @@
 package fi.vm.sade.hakemuseditori.auditlog
 
 import fi.vm.sade.auditlog.{Changes, Target, User}
-import fi.vm.sade.omatsivut.security.SessionInfoRetriever.getSessionId
 import javax.servlet.http.HttpServletRequest
 
 

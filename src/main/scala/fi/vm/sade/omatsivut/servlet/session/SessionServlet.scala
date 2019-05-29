@@ -11,7 +11,7 @@ import fi.vm.sade.omatsivut.security.{AttributeNames, AuthenticationRequiringSer
 import fi.vm.sade.omatsivut.security.SessionInfoRetriever.getSessionInfo
 import org.json4s.Formats
 
-class SessionServlet(val sessionService: SessionService)
+class SessionServlet(implicit val sessionService: SessionService)
   extends OmatSivutServletBase
     with AuthenticationRequiringServlet with AttributeNames with JacksonJsonSupport with JsonFormats{
   private val formatter: DateTimeFormatter = DateTimeFormat.forPattern("ddMMYY")

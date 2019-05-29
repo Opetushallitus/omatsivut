@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServletRequest
 import fi.vm.sade.utils.slf4j.Logging
 import org.ietf.jgss.Oid
 
-import scala.util.{Failure, Success, Try}
 import fi.vm.sade.javautils.http.HttpServletRequestUtils.getRemoteAddress
 import fi.vm.sade.omatsivut.security.SessionInfoRetriever.getSessionId
 

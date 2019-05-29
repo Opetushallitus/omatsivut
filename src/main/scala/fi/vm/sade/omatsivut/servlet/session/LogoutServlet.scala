@@ -12,7 +12,7 @@ import org.scalatra.servlet.RichResponse
 
 trait LogoutServletContainer {
 
-  class LogoutServlet(val sessionService: SessionService) extends OmatSivutServletBase with AttributeNames {
+  class LogoutServlet(implicit val sessionService: SessionService) extends OmatSivutServletBase with AttributeNames {
     get("/*") {
       sessionService.deleteSession(cookies.get(sessionCookieName).map(UUID.fromString).map(SessionId))
       clearCookie(sessionCookieName)

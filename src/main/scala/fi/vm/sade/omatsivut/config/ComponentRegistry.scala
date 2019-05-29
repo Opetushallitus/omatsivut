@@ -147,7 +147,7 @@ class ComponentRegistry(val config: AppConfig)
   lazy val omatsivutDb = new OmatsivutDb(config.settings.omatsivutDbConfig,
                                          config.isInstanceOf[IT],
                                          config.settings.sessionTimeoutSeconds.getOrElse(3600))
-  lazy val sessionService = new SessionService(omatsivutDb)
+  lazy implicit val sessionService = new SessionService(omatsivutDb)
   lazy val authenticationInfoService = configureAuthenticationInfoService
 
   def muistilistaService(language: Language): MuistilistaService = new MuistilistaService(language)
@@ -160,8 +160,8 @@ class ComponentRegistry(val config: AppConfig)
   def newSecuredSessionServlet = new SecuredSessionServlet(authenticationInfoService,
                                                            sessionService,
                                                            config.settings.sessionTimeoutSeconds)
-  def newSessionServlet = new SessionServlet(sessionService)
-  def newLogoutServlet = new LogoutServlet(sessionService)
+  def newSessionServlet = new SessionServlet()
+  def newLogoutServlet = new LogoutServlet()
   def newFixtureServlet = new FixtureServlet(config)
   def newKoodistoServlet = new KoodistoServlet
   def newMuistilistaServlet = new MuistilistaServlet(config)

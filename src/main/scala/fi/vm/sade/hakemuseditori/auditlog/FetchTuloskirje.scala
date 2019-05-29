@@ -1,7 +1,6 @@
 package fi.vm.sade.hakemuseditori.auditlog
 
-import fi.vm.sade.auditlog.{Changes, Target, User}
-import fi.vm.sade.omatsivut.security.SessionInfoRetriever.getSessionId
+import fi.vm.sade.auditlog.{Changes, Target}
 import javax.servlet.http.HttpServletRequest
 
 case class FetchTuloskirje(request: HttpServletRequest, hakuOid: String, hakemusOid: String) extends AuditLogUtils with AuditEvent {

@@ -27,16 +27,10 @@ class AuthenticateIfNoSessionFilter(val sessionService: SessionService)
     sessionService.getSession(sessionId) match {
       case Right(sessionInfo) =>
         logger.debug("Found session: " + sessionInfo.oppijaNumero)
-        session.setAttribute(sessionInfoAttributeName, sessionInfo)
+        pass()
       case _ =>
         logger.debug("Session not found, redirect to login")
         response.redirect(loginPath(request.getContextPath))
     }
   }
-
-  after() {
-    // clean the http session, to avoid sessioninfo hanging in session object and maybe misleading somebody
-    session.removeAttribute(sessionInfoAttributeName)
-  }
-
 }

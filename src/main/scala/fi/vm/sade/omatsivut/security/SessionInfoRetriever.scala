@@ -1,5 +1,7 @@
 package fi.vm.sade.omatsivut.security
 
+import java.util.UUID
+
 import javax.servlet.http.{Cookie, HttpServletRequest}
 import fi.vm.sade.utils.slf4j.Logging
 
@@ -9,19 +11,31 @@ object SessionInfoRetriever extends Logging with AttributeNames {
     sessionIdCookie.map(_.getValue)
   }
 
-  def getOppijaNumero(request: HttpServletRequest): Option[String] = {
+  def getOppijaNumero(request: HttpServletRequest)(implicit sessionService: SessionService): Option[String] = {
     val sessionInfo = getSessionInfo(request)
     sessionInfo.map(_.oppijaNumero.value)
   }
 
-  def getOppijaNimi(request: HttpServletRequest): Option[String] = {
+  def getOppijaNimi(request: HttpServletRequest)(implicit sessionService: SessionService): Option[String] = {
     val sessionInfo = getSessionInfo(request)
     sessionInfo.map(_.oppijaNimi)
   }
 
-  def getSessionInfo(request: HttpServletRequest): Option[SessionInfo] = {
-    val session = request.getSession
-    val sessionInfoAttribute = session.getAttribute(sessionInfoAttributeName).asInstanceOf[SessionInfo]
-    if (sessionInfoAttribute != null) Some(sessionInfoAttribute) else None
+  def getSessionInfo(request: HttpServletRequest)(implicit sessionService: SessionService): Option[SessionInfo] = {
+    val sessionCookie: Option[String] = getSessionId(request)
+    val sessionUUID: Option[UUID] = try {
+      sessionCookie.map(UUID.fromString)
+    } catch {
+      case e: Throwable =>
+        logger.error(s"Problem verifying the session with id=$sessionCookie ($e)")
+        None
+    }
+    val sessionId: Option[SessionId] = sessionUUID.map(SessionId)
+    sessionService.getSession(sessionId) match {
+      case Right(sessionInfo) => Some(sessionInfo)
+      case Left(t) =>
+        logger.error(s"Error reading session id=$sessionId ($t)")
+        None
+    }
   }
 }
