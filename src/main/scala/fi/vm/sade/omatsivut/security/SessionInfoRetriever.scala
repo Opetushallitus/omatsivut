@@ -23,19 +23,21 @@ object SessionInfoRetriever extends Logging with AttributeNames {
 
   def getSessionInfo(request: HttpServletRequest)(implicit sessionService: SessionService): Option[SessionInfo] = {
     val sessionCookie: Option[String] = getSessionId(request)
-    val sessionUUID: Option[UUID] = try {
-      sessionCookie.map(UUID.fromString)
-    } catch {
-      case e: Throwable =>
-        logger.error(s"Problem verifying the session with id=$sessionCookie ($e)")
-        None
-    }
-    val sessionId: Option[SessionId] = sessionUUID.map(SessionId)
-    sessionService.getSession(sessionId) match {
-      case Right(sessionInfo) => Some(sessionInfo)
-      case Left(t) =>
-        logger.error(s"Error reading session id=$sessionId ($t)")
-        None
-    }
+    sessionCookie.flatMap(sessionIdFromCookie => {
+      val sessionUUID: Option[UUID] = try {
+        Some(UUID.fromString(sessionIdFromCookie))
+      } catch {
+        case e: Throwable =>
+          logger.error(s"Problem verifying the session with id=$sessionIdFromCookie ($e)")
+          None
+      }
+      val sessionId: Option[SessionId] = sessionUUID.map(SessionId)
+      sessionService.getSession(sessionId) match {
+        case Right(sessionInfo) => Some(sessionInfo)
+        case Left(t) =>
+          logger.error(s"Error reading session id=$sessionIdFromCookie ($t)")
+          None
+      }
+    })
   }
 }
