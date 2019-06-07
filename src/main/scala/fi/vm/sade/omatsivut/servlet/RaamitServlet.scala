@@ -16,7 +16,7 @@ class RaamitServlet(val appConfig: AppConfig) extends OmatSivutServletBase {
   if(!raamit) {
       raamit = document.createElement("script");
       raamit.id = "apply-raamit";
-      raamit.src = """" + OphUrlProperties.url("oppija-raamit.apply-raamit.js")  + """";
+      raamit.src = "/oppija-raamit/js/apply-raamit.js";
       document.getElementsByTagName("head")[0].appendChild(raamit);
   }
 }"""
