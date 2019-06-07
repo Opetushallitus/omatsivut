@@ -46,7 +46,7 @@ trait ApplicationsServletContainer {
     private val casClient = new CasClient(securitySettings.casUrl, blazeHttpClient)
     private val serviceUrl = appConfig.settings.authenticationServiceConfig.url + "/"
     private val casParams = CasParams(serviceUrl, securitySettings.casUsername, securitySettings.casPassword)
-    private val httpClient = CasAuthenticatingClient(casClient, casParams, blazeHttpClient, Some("omatsivut.omatsivut.backend"), "JSESSIONID")
+    private val httpClient = CasAuthenticatingClient(casClient, casParams, blazeHttpClient, "omatsivut.omatsivut.backend", "JSESSIONID")
     protected val applicationDescription = "Oppijan henkilökohtaisen palvelun REST API, jolla voi hakea ja muokata hakemuksia ja omia tietoja"
 
     before() {

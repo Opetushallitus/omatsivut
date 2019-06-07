@@ -167,7 +167,7 @@ trait AtaruServiceComponent  {
       casClient,
       casParams,
       blazeHttpClient,
-      Some("omatsivut.omatsivut.backend"),
+      "omatsivut.omatsivut.backend",
       "ring-session"
     )
 
