@@ -15,6 +15,9 @@ class ScalatraBootstrap extends LifeCycle with Logging {
 
   OmatSivutSpringContext.check
 
+  private val healthCheckPath = "/health"
+  private val languageFilterWhitelistedServlets: Seq[String] = Seq(healthCheckPath)
+
   override def init(context: ServletContext) {
     val config: AppConfig = AppConfig.fromOptionalString(Option(context.getAttribute("omatsivut.profile").asInstanceOf[String]))
     val componentRegistry = new ComponentRegistry(config)
@@ -24,7 +27,7 @@ class ScalatraBootstrap extends LifeCycle with Logging {
 
     context.addFilter("CacheControl", new CacheControlFilter)
       .addMappingForUrlPatterns(util.EnumSet.allOf(classOf[DispatcherType]), true, "/*")
-    context.addFilter("Language", new LanguageFilter)
+    context.addFilter("Language", new LanguageFilter(languageFilterWhitelistedServlets))
       .addMappingForUrlPatterns(util.EnumSet.allOf(classOf[DispatcherType]), true, "/*")
     context.addFilter("AuthenticateIfNoSessionFilter", new AuthenticateIfNoSessionFilter(componentRegistry.sessionService))
       .addMappingForUrlPatterns(util.EnumSet.allOf(classOf[DispatcherType]), true, "/", "/index.html")
@@ -45,7 +48,7 @@ class ScalatraBootstrap extends LifeCycle with Logging {
     context.mount(new LoginServlet(), "/login")
     context.mount(componentRegistry.newLogoutServlet, "/logout")
     context.mount(componentRegistry.newFixtureServlet, "/util")
-    context.mount(new HealthServlet, "/health")
+    context.mount(new HealthServlet, healthCheckPath)
   }
 
   override def destroy(context: ServletContext) = {
