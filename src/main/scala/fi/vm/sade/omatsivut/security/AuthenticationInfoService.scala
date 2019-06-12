@@ -26,8 +26,8 @@ class RemoteAuthenticationInfoService(val remoteAppConfig: RemoteApplicationConf
   private val casClient = new CasClient(securitySettings.casUrl, blazeHttpClient)
   private val serviceUrl = remoteAppConfig.url + "/"
   private val casParams = CasParams(serviceUrl, securitySettings.casUsername, securitySettings.casPassword)
-  private val httpClient = CasAuthenticatingClient(casClient, casParams, blazeHttpClient, Some("omatsivut.omatsivut.backend"), "JSESSIONID")
-  private val callerIdHeader = Header("Caller-Id", "omatsivut.omatsivut.backend")
+  private val httpClient = CasAuthenticatingClient(casClient, casParams, blazeHttpClient, "1.2.246.562.10.00000000001.omatsivut.backend", "JSESSIONID")
+  private val callerIdHeader = Header("Caller-Id", "1.2.246.562.10.00000000001.omatsivut.backend")
 
   private def uriFromString(url: String): Uri = {
     Uri.fromString(url).toOption.get

@@ -71,10 +71,10 @@ trait OppijanumerorekisteriComponent {
       casClient,
       casParams,
       blazeHttpClient,
-      Some("omatsivut.omatsivut.backend"),
+      "1.2.246.562.10.00000000001.omatsivut.backend",
       "JSESSIONID"
     )
-    private val callerIdHeader = Header("Caller-Id", "omatsivut.omatsivut.backend")
+    private val callerIdHeader = Header("Caller-Id", "1.2.246.562.10.00000000001.omatsivut.backend")
     implicit private val formats = DefaultFormats
     implicit private val henkiloReader = Henkilo.henkiloReader
 
