@@ -74,7 +74,7 @@ class ComponentRegistry(val config: AppConfig)
 
   private def configureGroupEmailService: GroupEmailService = config match {
     case x: StubbedExternalDeps => new FakeGroupEmailService
-    case _ => new RemoteGroupEmailService(config.settings, "omatsivut.omatsivut.backend")
+    case _ => new RemoteGroupEmailService(config.settings, "1.2.246.562.10.00000000001.omatsivut.backend")
   }
 
   private def configureValintatulosService: ValintatulosService = config match {

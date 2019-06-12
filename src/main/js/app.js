@@ -119,7 +119,7 @@ listApp.run(['$rootScope', function ($rootScope) {
 }]);
 
 listApp.run(['$http', '$cookies', function($http, $cookies) {
-  $http.defaults.headers.common['clientSubSystemCode'] = "omatsivut.frontend";
+  $http.defaults.headers.common['clientSubSystemCode'] = "1.2.246.562.10.00000000001.omatsivut.frontend";
   if($cookies['CSRF']) {
     $http.defaults.headers.common['CSRF'] = $cookies['CSRF'];
   }
