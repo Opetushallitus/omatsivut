@@ -178,7 +178,7 @@
       })
 
       it("hakuaika näkyy", function() {
-        hakemusNivelKesa2013WithPeruskouluBaseEducation.applicationPeriods().should.equal("Hakuaika päättyy 1. joulukuuta 2100 klo 07.00")
+        hakemusNivelKesa2013WithPeruskouluBaseEducation.applicationPeriods().should.equal("Hakuaika päättyy 1. joulukuuta 2100 klo 07.00 (EET)")
       })
 
       it("pohjakoulutus ristiriitaa ei näytetään", function() {
@@ -375,7 +375,7 @@
 
       before(page.applyFixtureAndOpen({applicationOid: hakemusErityisopetuksenaId, overrideStart: daysFromNow(0)}))
       var date = "\\d+\\. .*?\\d{4} klo \\d\\d\\.\\d\\d"
-      var dateRange = new RegExp("^Hakuaika päättyy " + date + "$")
+      var dateRange = new RegExp("^Hakuaika päättyy " + date + " \\(EEST\\)$");
 
       it("hakutoive lukittuu hakutoivekohtaisen hakuajan jälkeen", function() {
         hakemusErityisopetuksena.getPreference(0).isLocked().should.be.true
@@ -654,7 +654,7 @@
           describe("ennen valintaa", function() {
             it("vastausaika näkyy", function () {
               expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).info()).to.deep.equal([
-                "Lähetä vastauksesi 10. tammikuuta 2100 klo 12.00 mennessä tai menetät tarjotun opiskelupaikan."
+                "Lähetä vastauksesi 10. tammikuuta 2100 klo 12.00 (EET) mennessä tai menetät tarjotun opiskelupaikan."
               ])
             })
 
@@ -707,7 +707,7 @@
           describe("ennen vastaanottoa", function() {
             it("vastausaika näkyy", function () {
               expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).info()).to.deep.equal([
-                "Lähetä vastauksesi 11. tammikuuta 2042 klo 12.00 mennessä tai menetät tarjotun opiskelupaikan."
+                "Lähetä vastauksesi 11. tammikuuta 2042 klo 12.00 (EET) mennessä tai menetät tarjotun opiskelupaikan."
               ])
             })
           })
@@ -735,7 +735,7 @@
 
           it("vastausaika näkyy", function() {
             expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).info()).to.deep.equal([
-                  "Lähetä vastauksesi 10. tammikuuta 2100 klo 12.00 mennessä tai menetät tarjotun opiskelupaikan."
+                  "Lähetä vastauksesi 10. tammikuuta 2100 klo 12.00 (EET) mennessä tai menetät tarjotun opiskelupaikan."
             ])
           })
 
@@ -782,7 +782,7 @@
 
           it("vastausaika näkyy", function() {
             expect(hakemusKorkeakouluJatkoHaku.vastaanotto(0).info()).to.deep.equal([
-                  "Lähetä vastauksesi 10. tammikuuta 2100 klo 12.00 mennessä tai menetät tarjotun opiskelupaikan."
+                  "Lähetä vastauksesi 10. tammikuuta 2100 klo 12.00 (EET) mennessä tai menetät tarjotun opiskelupaikan."
             ])
           })
 
