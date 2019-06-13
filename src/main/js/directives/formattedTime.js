@@ -10,9 +10,13 @@ export default function () {
         if (dt == null) {
           return ""
         } else {
-          var m = window.moment(dt)
-          element.attr("datetime", m.format())
-          element.text(m.format(attrs.format || 'LLLL').replace(/,/g, ""))
+          var m = window.moment(dt);
+          var format = m.format();
+          element.attr("datetime", format);
+
+          var text = m.format(attrs.format || 'LLLL Z');
+          text = text.replace(/,/g, "").replace(/\+02:00/, "(EET)").replace(/\+03:00/, "(EEST)");
+          element.text(text);
         }
       })
     }

@@ -45,7 +45,7 @@
                 </div>
 
                 <div class="row hakuaika" ng-if="hakutoive.kohdekohtainenHakuaika != null && !application.preferenceLocked($index)">
-                    {{ localization('label.applicationPeriodEnds') }} <time formatted-time="hakutoive.kohdekohtainenHakuaika.end" format="LLL" />
+                    {{ localization('label.applicationPeriodEnds') }} <time formatted-time="hakutoive.kohdekohtainenHakuaika.end" format="LLL Z" />
                 </div>
             </div>
 
