@@ -10,7 +10,7 @@ export default function () {
         if (dt == null) {
           return ""
         } else {
-          var m = window.moment(dt);
+          var m = window.moment(dt).tz('Europe/Helsinki');
           var format = m.format();
           element.attr("datetime", format);
 

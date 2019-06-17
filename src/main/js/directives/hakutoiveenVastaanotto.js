@@ -34,7 +34,11 @@ class HakutoiveenVastaanottoController {
   }
 
   formatTimestamp(dt) {
-    return moment(dt).format('LLL Z').replace(/,/g, "").replace(/\+02:00/, "(EET)").replace(/\+03:00/, "(EEST)");
+    return moment(dt).tz('Europe/Helsinki')
+      .format('LLL Z')
+      .replace(/,/g, "")
+      .replace(/\+02:00/, "(EET)")
+      .replace(/\+03:00/, "(EEST)");
   };
 
   isVastaanottoKesken() {
