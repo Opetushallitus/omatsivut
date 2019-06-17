@@ -1,19 +1,17 @@
 package fi.vm.sade.omatsivut.servlet.session
 
 import java.nio.charset.Charset
-import java.util.UUID
 
 import fi.vm.sade.hakemuseditori.auditlog.Audit
 import fi.vm.sade.omatsivut.auditlog.Login
 import fi.vm.sade.omatsivut.security._
 import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
 import fi.vm.sade.utils.slf4j.Logging
-import org.joda.time.LocalDate
-import org.scalatra.{BadRequest, Cookie, CookieOptions, InternalServerError}
+import org.scalatra.{BadRequest, Cookie, CookieOptions}
 
 trait SecuredSessionServletContainer {
   class SecuredSessionServlet(val authenticationInfoService: AuthenticationInfoService,
-                              val sessionService: SessionService,
+                              implicit val sessionService: SessionService,
                               val sessionTimeout: Option[Int] = None)
     extends OmatSivutServletBase with AttributeNames with OmatsivutPaths with Logging {
 
@@ -54,7 +52,7 @@ trait SecuredSessionServletContainer {
 
     private def redirectUri: String = {
       val link = omatsivutPath(request.getContextPath) + paramOption("redirect").getOrElse("/index.html")
-      logger.info("Link to forward to, after a session is established: " + link)
+      logger.debug("Link to forward to, after a session is established: " + link)
       link
     }
 

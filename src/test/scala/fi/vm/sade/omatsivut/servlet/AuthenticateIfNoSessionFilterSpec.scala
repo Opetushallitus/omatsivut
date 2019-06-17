@@ -22,14 +22,11 @@ class AuthenticateIfNoSessionFilterSpec extends MutableScalatraSpec with Mockito
   val sessionRepository: SessionRepository = mock[SessionRepository]
   val sessionService = new SessionService(sessionRepository)
   val authenticateIfNoSessionFilter = new AuthenticateIfNoSessionFilter(sessionService)
-  var sessionInfoFromSession: Option[SessionInfo] = None
 
   addFilter(authenticateIfNoSessionFilter, "/*")
 
   val dummyServlet = new ScalatraServlet {
     get(originalUrl) {
-      val sessionInfo = request.getSession().getAttribute("sessionInfo").asInstanceOf[SessionInfo]
-      sessionInfoFromSession = if (sessionInfo != null) Some(sessionInfo) else None
       Ok("ok")
     }
   }
@@ -39,8 +36,7 @@ class AuthenticateIfNoSessionFilterSpec extends MutableScalatraSpec with Mockito
 
   "AuthenticateIfNoSessionFilter" should {
 
-    "redirect to login if session does not exist in cookie" in {
-      sessionRepository.get(id) returns Left(SessionFailure.SESSION_NOT_FOUND)
+    "redirect to login if session does not exist in cookie" in new NoSessionInDatabase {
       get("omatsivut" + originalUrl) {
         status must_== 302
         val location = response.headers("Location")(0)
@@ -48,24 +44,30 @@ class AuthenticateIfNoSessionFilterSpec extends MutableScalatraSpec with Mockito
       }
     }
 
-    "redirect to login if session exists in cookie but not in repository" in {
-      sessionRepository.get(id) returns Left(SessionFailure.SESSION_NOT_FOUND)
+    "redirect to login if correctly formatted session exists in cookie, but not in repository" in new NoSessionInDatabase {
       get(originalUrl, headers = CookieHelper.cookieHeaderWith("session" -> id.value.toString)) {
         status must_== 302
       }
     }
 
-    "pass if session exists in cookie and in repository, and create a copy in http request's session" in new WithTestSession {
-      sessionInfoFromSession = None
+    "return BadRequest (400) if session exists in cookie, but is not a correct UUID" in {
+      get(originalUrl, headers = CookieHelper.cookieHeaderWith("session" -> "NOT-AN-UUID")) {
+        status must_== 400
+      }
+    }
+
+    "pass if session exists in cookie and in repository" in new WithTestSession {
       get(originalUrl, headers = CookieHelper.cookieHeaderWith("session" -> id.value.toString)) {
         status must_== 200
-        sessionInfoFromSession must_!= None
-        sessionInfoFromSession.map(_.hetu) must_== Some(hetu)
       }
     }
   }
 
-  trait WithTestSession extends Scope with MustThrownExpectations {
+  trait NoSessionInDatabase extends Scope {
+    sessionRepository.get(id) returns Left(SessionFailure.SESSION_NOT_FOUND)
+  }
+
+  trait WithTestSession extends Scope {
     val hetu = Hetu("123456-789A")
     val oppijaNumero = OppijaNumero("1.2.3.4.5.6")
     val oppijaNimi = "John Smith"

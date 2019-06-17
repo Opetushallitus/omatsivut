@@ -4,8 +4,9 @@ import javax.servlet.http.HttpServletRequest
 import fi.vm.sade.auditlog.{Changes, Target, User}
 import fi.vm.sade.hakemuseditori.auditlog.{AuditEvent, AuditLogUtils, OmatSivutMessageField, OmatSivutOperation}
 import fi.vm.sade.omatsivut.security.SessionInfoRetriever.{getOppijaNumero, getSessionId}
+import fi.vm.sade.omatsivut.security.SessionService
 
-case class Login(request: HttpServletRequest) extends AuditLogUtils with AuditEvent {
+case class Login(request: HttpServletRequest)(implicit sessionService: SessionService) extends AuditLogUtils with AuditEvent {
   override val operation: OmatSivutOperation = OmatSivutOperation.LOGIN
   override val changes: Changes = new Changes.Builder().build()
   override val target: Target = {

@@ -2,9 +2,8 @@ package fi.vm.sade.hakemuseditori.auditlog
 
 import javax.servlet.http.HttpServletRequest
 
-import fi.vm.sade.auditlog.{Changes, Target, User}
+import fi.vm.sade.auditlog.{Changes, Target}
 import fi.vm.sade.hakemuseditori.valintatulokset.domain.Ilmoittautuminen
-import fi.vm.sade.omatsivut.security.SessionInfoRetriever.getSessionId
 
 case class SaveIlmoittautuminen(request: HttpServletRequest, hakuOid: String, hakemusOid: String, ilmoittautuminen: Ilmoittautuminen, success: Boolean) extends AuditLogUtils with AuditEvent {
   override val operation: OmatSivutOperation = OmatSivutOperation.SAVE_ILMOITTAUTUMINEN
