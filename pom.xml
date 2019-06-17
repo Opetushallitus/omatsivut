@@ -195,7 +195,7 @@
         <dependency>
             <groupId>fi.vm.sade.koodisto</groupId>
             <artifactId>koodisto-api</artifactId>
-            <version>2019-01-SNAPSHOT</version>
+            <version>2019-06-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>fi.vm.sade.haku</groupId>
