@@ -10,6 +10,7 @@ import fi.vm.sade.hakemuseditori.localization.TranslationsComponent
 import fi.vm.sade.hakemuseditori.lomake.LomakeRepositoryComponent
 import fi.vm.sade.hakemuseditori.user.Oppija
 import fi.vm.sade.hakemuseditori.valintatulokset.ValintatulosServiceComponent
+import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.hakemuspreview.HakemusPreviewGeneratorComponent
 import fi.vm.sade.omatsivut.security.{AuthenticationRequiringServlet, SessionService}
@@ -46,7 +47,7 @@ trait ApplicationsServletContainer {
     private val casClient = new CasClient(securitySettings.casUrl, blazeHttpClient)
     private val serviceUrl = appConfig.settings.authenticationServiceConfig.url + "/"
     private val casParams = CasParams(serviceUrl, securitySettings.casUsername, securitySettings.casPassword)
-    private val httpClient = CasAuthenticatingClient(casClient, casParams, blazeHttpClient, "1.2.246.562.10.00000000001.omatsivut.backend", "JSESSIONID")
+    private val httpClient = CasAuthenticatingClient(casClient, casParams, blazeHttpClient, AppConfig.callerId, "JSESSIONID")
     protected val applicationDescription = "Oppijan henkilökohtaisen palvelun REST API, jolla voi hakea ja muokata hakemuksia ja omia tietoja"
 
     before() {

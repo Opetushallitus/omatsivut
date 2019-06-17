@@ -1,7 +1,7 @@
 package fi.vm.sade.omatsivut.security
 
 import fi.vm.sade.omatsivut.OphUrlProperties
-import fi.vm.sade.omatsivut.config.{RemoteApplicationConfig, SecuritySettings}
+import fi.vm.sade.omatsivut.config.{AppConfig, RemoteApplicationConfig, SecuritySettings}
 import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.utils.cas.{CasAuthenticatingClient, CasClient, CasParams}
 import fi.vm.sade.utils.slf4j.Logging
@@ -26,8 +26,8 @@ class RemoteAuthenticationInfoService(val remoteAppConfig: RemoteApplicationConf
   private val casClient = new CasClient(securitySettings.casUrl, blazeHttpClient)
   private val serviceUrl = remoteAppConfig.url + "/"
   private val casParams = CasParams(serviceUrl, securitySettings.casUsername, securitySettings.casPassword)
-  private val httpClient = CasAuthenticatingClient(casClient, casParams, blazeHttpClient, "1.2.246.562.10.00000000001.omatsivut.backend", "JSESSIONID")
-  private val callerIdHeader = Header("Caller-Id", "1.2.246.562.10.00000000001.omatsivut.backend")
+  private val httpClient = CasAuthenticatingClient(casClient, casParams, blazeHttpClient, AppConfig.callerId, "JSESSIONID")
+  private val callerIdHeader = Header("Caller-Id", AppConfig.callerId)
 
   private def uriFromString(url: String): Uri = {
     Uri.fromString(url).toOption.get

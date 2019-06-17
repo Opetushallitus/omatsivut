@@ -12,10 +12,9 @@ import fi.vm.sade.hakemuseditori.tarjonta.TarjontaComponent
 import fi.vm.sade.hakemuseditori.tarjonta.domain.{Haku, Hakuaika, Hakukohde}
 import fi.vm.sade.hakemuseditori.valintatulokset.ValintatulosServiceComponent
 import fi.vm.sade.hakemuseditori.viestintapalvelu.TuloskirjeComponent
-import fi.vm.sade.haku.oppija.hakemus.domain.dto.SyntheticApplication
 import fi.vm.sade.omatsivut.OphUrlProperties
+import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
-import fi.vm.sade.utils.Timer.timed
 import fi.vm.sade.utils.cas.{CasAuthenticatingClient, CasClient, CasParams}
 import javax.servlet.http.HttpServletRequest
 import org.http4s.Method.GET
@@ -25,10 +24,10 @@ import org.joda.time.LocalDateTime
 import org.json4s.DefaultFormats
 import org.json4s.jackson.JsonMethods
 import org.json4s.jackson.JsonMethods.parse
+import scalaz.concurrent.Task
 
 import scala.concurrent.duration.Duration
 import scala.util.Try
-import scalaz.concurrent.Task
 
 case class AtaruApplication(oid: String,
                             secret: String,
@@ -167,7 +166,7 @@ trait AtaruServiceComponent  {
       casClient,
       casParams,
       blazeHttpClient,
-      "1.2.246.562.10.00000000001.omatsivut.backend",
+      AppConfig.callerId,
       "ring-session"
     )
 

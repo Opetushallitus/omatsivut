@@ -5,6 +5,7 @@ import java.util.concurrent.TimeUnit
 import fi.vm.sade.groupemailer.Json4sHttp4s
 import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.omatsivut.OphUrlProperties
+import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.utils.cas.{CasAuthenticatingClient, CasClient, CasParams}
 import fi.vm.sade.utils.slf4j.Logging
@@ -71,10 +72,10 @@ trait OppijanumerorekisteriComponent {
       casClient,
       casParams,
       blazeHttpClient,
-      "1.2.246.562.10.00000000001.omatsivut.backend",
+      AppConfig.callerId,
       "JSESSIONID"
     )
-    private val callerIdHeader = Header("Caller-Id", "1.2.246.562.10.00000000001.omatsivut.backend")
+    private val callerIdHeader = Header("Caller-Id", AppConfig.callerId)
     implicit private val formats = DefaultFormats
     implicit private val henkiloReader = Henkilo.henkiloReader
 

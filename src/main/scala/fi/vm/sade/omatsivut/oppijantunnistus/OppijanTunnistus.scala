@@ -2,6 +2,7 @@ package fi.vm.sade.omatsivut.oppijantunnistus
 
 import fi.vm.sade.omatsivut.NonSensitiveHakemusInfo.Oid
 import fi.vm.sade.omatsivut.OphUrlProperties
+import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.utils.http.{DefaultHttpClient, HttpClient}
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
@@ -30,7 +31,7 @@ class RemoteOppijanTunnistusService(client: HttpClient = DefaultHttpClient) exte
   def validateToken(token: String): Try[OppijantunnistusMetadata] = {
 
     val request = client.httpGet(OphUrlProperties.url("oppijan-tunnistus.verify", token))
-                    .header("Caller-Id", "1.2.246.562.10.00000000001.omatsivut.backend")
+                    .header("Caller-Id", AppConfig.callerId)
 
     request.responseWithHeaders() match {
       case (200, _, resultString) =>
