@@ -9,7 +9,7 @@ import fi.vm.sade.utils.tcp.{PortFromSystemPropertyOrFindFree}
 
 object AppConfig extends Logging {
 
-  val callerId = "omatsivut"
+  val callerId = "1.2.246.562.10.00000000001.omatsivut"
 
   private implicit val settingsParser = ApplicationSettingsParser
   val embeddedMongoPortChooser = new PortFromSystemPropertyOrFindFree("omatsivut.embeddedmongo.port")
