@@ -100,7 +100,7 @@ class ComponentRegistry(val config: AppConfig)
 
   private def configureKoodistoService: KoodistoService = config match {
     case _: StubbedExternalDeps => new StubbedKoodistoService
-    case _ => new RemoteKoodistoService(springContext, AppConfig.clientSubSystemCode)
+    case _ => new RemoteKoodistoService(springContext, AppConfig.callerId)
   }
 
   private def configureHakumaksuService: HakumaksuServiceWrapper = config match {

@@ -135,7 +135,7 @@ object OmatSivutSpringContext extends Logging {
     }
 
     @Bean def koodistoClient(@Value("${host.virkailija}") hostVirkailija: String): KoodistoClient =
-      new CachingKoodistoClient(s"https://$hostVirkailija").setClientSubSystemCode(AppConfig.clientSubSystemCode)
+      new CachingKoodistoClient(s"https://$hostVirkailija").setCallerId(AppConfig.callerId)
 
     def unsupportedIntegrationException: Nothing = {
       throw new scala.UnsupportedOperationException("This integration is unsupported and should not be called in omatsivut")

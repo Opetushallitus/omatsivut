@@ -38,8 +38,8 @@ trait KoodistoComponent {
   def koodistoService: KoodistoService
 }
 
-class RemoteKoodistoService(springContext: HakemusSpringContext, clientSubSystemCode: String) extends KoodistoService {
-  lazy val client = new CachingKoodistoClient(OphUrlProperties.url("url-virkailija")).setClientSubSystemCode(clientSubSystemCode)
+class RemoteKoodistoService(springContext: HakemusSpringContext, callerId: String) extends KoodistoService {
+  lazy val client = new CachingKoodistoClient(OphUrlProperties.url("url-virkailija")).setCallerId(callerId)
   lazy val service = new KoodistoServiceImpl(client, springContext.organizationService)
 }
 
