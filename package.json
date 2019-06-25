@@ -19,7 +19,7 @@
     "babel-polyfill": "^6.26.0",
     "baconjs": "^0.7.24",
     "js-cookie": "^2.2.0",
-    "moment": "^2.22.1"
+    "moment-timezone": "^0.5.25"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",

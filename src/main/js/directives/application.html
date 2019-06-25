@@ -19,7 +19,7 @@
                 </a>
             </span>
             <span class="timestamp" ng-if="false" ng-class="{disabled: form.$dirty || statusMessageType=='pending' || isValidating}">
-                {{ timestampLabel() }} <time formatted-time="application.updated" format="LLL" />
+                {{ timestampLabel() }} <time formatted-time="application.updated" format="LLL Z" />
             </span>
             <div callout="attachments"
                  ng-if="application.previewUrl">
