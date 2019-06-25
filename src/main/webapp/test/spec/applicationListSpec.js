@@ -373,9 +373,7 @@
 
     describe("hakutoivekohtaiset hakuajat", function() {
 
-      before(page.applyFixtureAndOpen({applicationOid: hakemusErityisopetuksenaId, overrideStart: daysFromNow(0)}))
-      var date = "\\d+\\. .*?\\d{4} klo \\d\\d\\.\\d\\d"
-      var dateRange = new RegExp("^Hakuaika päättyy " + date + " \\(EEST\\)$");
+      before(page.applyFixtureAndOpen({applicationOid: hakemusErityisopetuksenaId, overrideStart: new Date("2100-06-06").getTime()}))
 
       it("hakutoive lukittuu hakutoivekohtaisen hakuajan jälkeen", function() {
         hakemusErityisopetuksena.getPreference(0).isLocked().should.be.true
@@ -392,7 +390,7 @@
         })
 
         it("hakuaika päivittyy", function() {
-          hakemusErityisopetuksena.getPreference(2).hakuaika().should.match(dateRange)
+          hakemusErityisopetuksena.getPreference(2).hakuaika().should.equal("Hakuaika päättyy 17. elokuuta 2100 klo 08.37 (EEST)")
         })
       })
 
