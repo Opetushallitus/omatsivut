@@ -26,7 +26,7 @@
             </div>
 
             <div class="save-btn-wrapper">
-                <button class="save-btn" ng-click="postLasnaoloilmoittautuminen()">{{ localization('lasnaoloilmoittautuminen.send') }}</button>
+                <button class="save-btn" ng-click="postLasnaoloilmoittautuminen()" ng-disabled="!ilmoittautuminen">{{ localization('lasnaoloilmoittautuminen.send') }}</button>
             </div>
             <div class="lasnaolo-error" ng-if="error">
                 {{ getErrorTranslation() }}

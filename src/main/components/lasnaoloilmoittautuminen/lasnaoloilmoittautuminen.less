@@ -36,9 +36,22 @@
   .save-btn-wrapper {
     margin-top: 15px;
     .save-btn {
-      color: #ffffff;
-      background-color: #0093ba;
-      line-height: 25px;
+      .body-font(@button-color);
+      font-size: @body-font-size;
+      padding: 4px 12px;
+      background-color: @button-background;
+      cursor: pointer;
+      border: 0;
+
+      &:hover {
+        color: @button-hover-color;
+        background: @button-hover-background-color;
+      }
+
+      &[disabled] {
+        color: @button-disabled-color;
+        background: @button-disabled-background;
+      }
     }
   }
 }
