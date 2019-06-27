@@ -41,7 +41,7 @@ trait SecuredSessionServletContainer {
           response.addCookie(Cookie(sessionCookieName, sessionId.value.toString)
             (CookieOptions(domain = "", secure = isHttps, path = "/", maxAge = sessionTimeout.getOrElse(3600), httpOnly = true)))
           Audit.oppija.log(Login(request))
-          response.redirect(redirectUri)
+          redirect(redirectUri)
         case Left(e) =>
           logger.error("Unable to create session. (" + e + ")")
           halt(500, "unable to create session, exception = " + e)

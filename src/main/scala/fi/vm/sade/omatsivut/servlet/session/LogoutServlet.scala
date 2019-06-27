@@ -41,7 +41,7 @@ trait LogoutServletContainer {
         "/oma-opintopolku"
       else
         "/koski/user/logout"
-      response.redirect(OphUrlProperties.url("shibboleth.logout", returnUrl))
+      redirect(OphUrlProperties.url("shibboleth.logout", returnUrl))(request, response.res)
     }
   }
 }

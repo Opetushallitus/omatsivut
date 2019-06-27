@@ -25,7 +25,7 @@ trait MuistilistaServletContainer {
       val compressedMuistilista = params("compressedMuistilista")
       val asString = UrlValueCompressor.decompress(compressedMuistilista)
       response.addCookie(Cookie("basket", URLEncoder.encode(asString, "UTF-8"))(CookieOptions(path = "/")))
-      response.redirect(OphUrlProperties.url("koulutusinformaatio-app.muistilista"))
+      redirect(OphUrlProperties.url("koulutusinformaatio-app.muistilista"))
     }
 
     post() {
