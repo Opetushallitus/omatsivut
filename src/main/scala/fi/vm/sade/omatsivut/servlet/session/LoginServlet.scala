@@ -4,6 +4,6 @@ import fi.vm.sade.omatsivut.servlet.{OmatSivutServletBase}
 
 class LoginServlet() extends OmatSivutServletBase with OmatsivutPaths {
   get("/*") {
-    response.redirect(loginPath(request.getContextPath))
+    redirect(loginPath(request.getContextPath))
   }
 }

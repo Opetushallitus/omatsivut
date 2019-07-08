@@ -471,7 +471,7 @@
         <repository>
             <id>ScalazBintrayRepo</id>
             <name>Scalaz Bintray Repo</name>
-            <url>http://dl.bintray.com/scalaz/releases/</url>
+            <url>https://dl.bintray.com/scalaz/releases/</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
