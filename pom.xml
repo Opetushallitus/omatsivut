@@ -180,7 +180,7 @@
         <dependency>
             <groupId>fi.vm.sade.haku</groupId>
             <artifactId>hakemus-api</artifactId>
-            <version>15.3-SNAPSHOT</version>
+            <version>15.4-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>com.wordnik</groupId>
