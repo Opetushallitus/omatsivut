@@ -19,7 +19,7 @@
                     "hakuaikaId": "5474",
                     "nimi": "",
                     "alkuPvm": 1404190831839,
-                    "loppuPvm": 4131320431839
+                    "loppuPvm": 1922331631839
                 }
             ],
             "hakukohdeOids": [
@@ -736,7 +736,7 @@
                     "hakuaikaId": "5474",
                     "nimi": "",
                     "alkuPvm": 1404190831839,
-                    "loppuPvm": 4131320431839
+                    "loppuPvm": 1922331631839
                 }
             ],
             "hakukohdeOids": [
@@ -960,7 +960,7 @@
                 {
                     "hakuaikaId": "5474",
                     "alkuPvm": 1404190831839,
-                    "loppuPvm": 4131320431839
+                    "loppuPvm": 1922331631839
                 }
             ],
             "hakukohdeOids": [
@@ -3996,7 +3996,7 @@
                 {
                     "hakuaikaId": "5474",
                     "alkuPvm": 1404190831839,
-                    "loppuPvm": 4131320431839,
+                    "loppuPvm": 1922331631839,
                     "nimet": {
                         "kieli_fi": "Yhteishaun hakuajan nimi"
                     }
@@ -4543,7 +4543,7 @@
                 {
                     "hakuaikaId": "220207",
                     "alkuPvm": 1423157008000,
-                    "loppuPvm": 4131320431839,
+                    "loppuPvm": 1922331631839,
                     "nimet": {
                         "kieli_sv": "Den andra ansökningstiden",
                         "kieli_en": "Second application period",

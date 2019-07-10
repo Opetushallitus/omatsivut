@@ -178,7 +178,7 @@
       })
 
       it("hakuaika näkyy", function() {
-        hakemusNivelKesa2013WithPeruskouluBaseEducation.applicationPeriods().should.equal("Hakuaika päättyy 1. joulukuuta 2100 klo 07.00 (EET)")
+        hakemusNivelKesa2013WithPeruskouluBaseEducation.applicationPeriods().should.equal("Hakuaika päättyy 1. joulukuuta 2030 klo 07.00 (EET)")
       })
 
       it("pohjakoulutus ristiriitaa ei näytetään", function() {
@@ -373,7 +373,7 @@
 
     describe("hakutoivekohtaiset hakuajat", function() {
 
-      before(page.applyFixtureAndOpen({applicationOid: hakemusErityisopetuksenaId, overrideStart: new Date("2100-06-06").getTime()}))
+      before(page.applyFixtureAndOpen({applicationOid: hakemusErityisopetuksenaId, overrideStart: new Date("2030-06-06").getTime()}))
 
       it("hakutoive lukittuu hakutoivekohtaisen hakuajan jälkeen", function() {
         hakemusErityisopetuksena.getPreference(0).isLocked().should.be.true
@@ -390,7 +390,7 @@
         })
 
         it("hakuaika päivittyy", function() {
-          hakemusErityisopetuksena.getPreference(2).hakuaika().should.equal("Hakuaika päättyy 17. elokuuta 2100 klo 08.37 (EEST)")
+          hakemusErityisopetuksena.getPreference(2).hakuaika().should.equal("Hakuaika päättyy 17. elokuuta 2030 klo 08.37 (EEST)")
         })
       })
 
@@ -652,7 +652,7 @@
           describe("ennen valintaa", function() {
             it("vastausaika näkyy", function () {
               expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).info()).to.deep.equal([
-                "Lähetä vastauksesi 10. tammikuuta 2100 klo 12.00 (EET) mennessä tai menetät tarjotun opiskelupaikan."
+                "Lähetä vastauksesi 10. tammikuuta 2030 klo 12.00 (EET) mennessä tai menetät tarjotun opiskelupaikan."
               ])
             })
 
@@ -733,7 +733,7 @@
 
           it("vastausaika näkyy", function() {
             expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).info()).to.deep.equal([
-                  "Lähetä vastauksesi 10. tammikuuta 2100 klo 12.00 (EET) mennessä tai menetät tarjotun opiskelupaikan."
+                  "Lähetä vastauksesi 10. tammikuuta 2030 klo 12.00 (EET) mennessä tai menetät tarjotun opiskelupaikan."
             ])
           })
 
@@ -780,7 +780,7 @@
 
           it("vastausaika näkyy", function() {
             expect(hakemusKorkeakouluJatkoHaku.vastaanotto(0).info()).to.deep.equal([
-                  "Lähetä vastauksesi 10. tammikuuta 2100 klo 12.00 (EET) mennessä tai menetät tarjotun opiskelupaikan."
+                  "Lähetä vastauksesi 10. tammikuuta 2030 klo 12.00 (EET) mennessä tai menetät tarjotun opiskelupaikan."
             ])
           })
 
@@ -1264,7 +1264,7 @@
       })
 
       describe("Jos tulee validaatiovirhe hakutoiveesta", function() {
-        before(function() { mockAjax.respondOnce("POST", "/omatsivut/secure/applications/validate/1.2.246.562.11.00000877107", 200, '{"errors":[{"key":"preference1-Koulutus","message":"Testi virhe."}],"questions":[{"title":"Etelä-Savon ammattiopisto,  Otavankatu 4 - Ammattistartti","questions":[{"title":"Hakutoiveet - Hakutoiveet","questions":[{"id":{"phaseId":"hakutoiveet","questionId":"539ecf15e4b09a485311aac9"},"title":"Testikysymys, avaoin vastaus kenttä (pakollinen)?","help":"100 merkkiä max (kolmella kielellä kysymys)","required":true,"maxlength":100,"questionType":"Text"}]}]}],"applicationPeriods":[{"start":1404190831839,"end":4131320431839,"active":true}]}')})
+        before(function() { mockAjax.respondOnce("POST", "/omatsivut/secure/applications/validate/1.2.246.562.11.00000877107", 200, '{"errors":[{"key":"preference1-Koulutus","message":"Testi virhe."}],"questions":[{"title":"Etelä-Savon ammattiopisto,  Otavankatu 4 - Ammattistartti","questions":[{"title":"Hakutoiveet - Hakutoiveet","questions":[{"id":{"phaseId":"hakutoiveet","questionId":"539ecf15e4b09a485311aac9"},"title":"Testikysymys, avaoin vastaus kenttä (pakollinen)?","help":"100 merkkiä max (kolmella kielellä kysymys)","required":true,"maxlength":100,"questionType":"Text"}]}]}],"applicationPeriods":[{"start":1404190831839,"end":1922331631839,"active":true}]}')})
         before(
             hakemusNivelKesa2013WithPeruskouluBaseEducation.getPreference(0).moveDown,
             function() { return hakemusNivelKesa2013WithPeruskouluBaseEducation.saveError().length > 0 }
