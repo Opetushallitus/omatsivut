@@ -5,7 +5,7 @@ import java.net.HttpCookie
 import javax.servlet.http.{Cookie, HttpServletRequest}
 
 object CookieHelper {
-  def reqCookie(req: HttpServletRequest, matcher: (Cookie) => Boolean) = {
+  def reqCookie(req: HttpServletRequest, matcher: Cookie => Boolean): Option[Cookie] = {
     for {
       cookies <- Option(req.getCookies)
       cookie <- cookies.find(matcher)
@@ -13,7 +13,7 @@ object CookieHelper {
   }
 
   def getCookie(req: HttpServletRequest, cookieName: String): Option[Cookie] = {
-    reqCookie(req, (c) => c.getName == cookieName)
+    reqCookie(req, c => c.getName == cookieName)
   }
 
   def cookieExtractValue(cookieString: String, cookieName: String): Option[String] = {
