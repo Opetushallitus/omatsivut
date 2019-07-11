@@ -2,12 +2,12 @@ package fi.vm.sade.omatsivut.servlet.session
 
 import java.util.UUID
 
-import javax.servlet.http.{Cookie, HttpServletRequest}
 import fi.vm.sade.hakemuseditori.auditlog.Audit
 import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.omatsivut.auditlog.Logout
-import fi.vm.sade.omatsivut.security.{AttributeNames, SessionId, SessionService}
+import fi.vm.sade.omatsivut.security.{AttributeNames, CookieHelper, SessionId, SessionService}
 import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
+import javax.servlet.http.HttpServletRequest
 import org.scalatra.servlet.RichResponse
 
 trait LogoutServletContainer {
@@ -25,18 +25,12 @@ trait LogoutServletContainer {
     }
 
     def clearCookie(name: String): Unit = {
-      val cookies: Array[Cookie] = request.getCookies
-      if (cookies == null) {
-        return
-      }
-      cookies
-        .filter(_.getName == name)
-        .foreach(cookie => {
-          cookie.setValue("")
-          cookie.setPath("/")
-          cookie.setMaxAge(0);
-          response.addCookie(cookie)
-        })
+      CookieHelper.getCookie(request, name).foreach(cookie => {
+        cookie.setValue("")
+        cookie.setPath("/")
+        cookie.setMaxAge(0)
+        response.addCookie(cookie)
+      })
     }
 
     def redirectToShibbolethLogout(request: HttpServletRequest, response: RichResponse): Unit = {
