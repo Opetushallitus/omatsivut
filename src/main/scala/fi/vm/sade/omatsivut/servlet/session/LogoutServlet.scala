@@ -19,12 +19,12 @@ trait LogoutServletContainer {
       redirectToShibbolethLogout(request, response)
     }
 
-    def sendLogOut {
+    def sendLogOut(): Unit = {
       Audit.oppija.log(Logout(request))
       redirectToShibbolethLogout(request, response)
     }
 
-    def clearCookie(name: String) = {
+    def clearCookie(name: String): Unit = {
       request.getCookies
         .filter(_.getName == name)
         .foreach(cookie => {
