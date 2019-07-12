@@ -40,15 +40,39 @@ Aja JettyLauncher-luokka.
 - jotta impersonointi/autentikoinnin ohitus onnistuu, anna parametri `-Domatsivut.profile=it`.
 - lisäksi `-Xss2M`, ettei stäkki lopu fikstuuridatalla, jossa on erittäin syviä rakenteita
 
-#### Ajo luokkaa vasten
+#### Ajo oikealla Jettyllä
 
-Sovellusta voi ajaa luokkaa vasten `default` -profiililla. Tällöin luokalta kannattaa kopioida
-omaan kotihakemistoon oph-configuration, jolloin propertiet saa kuntoon.
+Valmistele ensin sopiva, ympäristökohtainen common.properties. Valitse, käytätkö tietokantoja omalta koneeltasi vai palvelinympäristöltä.
 
-Konsoliin tulee virheitä johtuen siitä, että JettyLauncher käynnistää paikallisen
-valinta-tulos-servicen ja se yritää käyttää paikallista PostgreSQl-kantaa. Tämä ei sinänsä
-estä sovelluksen käyttöä. Tälle voisi kuitenkin jossakin vaiheessa jotakin tehdä, kuten
-jotakin siihen tapaan, että default-profiililla lokaalia VTS:ää ei ajeta.
+Tässä yhdet esimerkkitweakkaukset.
+
+```
+11c11,12
+< host.haku=testiopintopolku.fi
+---
+> #host.haku=testiopintopolku.fi
+> host.haku=http://localhost:8080
+36c37,38
+< omatsivut.valinta-tulos-service.url=https://virkailija.testiopintopolku.fi/valinta-tulos-service
+---
+> #omatsivut.valinta-tulos-service.url=https://virkailija.testiopintopolku.fi/valinta-tulos-service
+> omatsivut.valinta-tulos-service.url=http://david.devaaja.devaa.opintopolku.fi:18888/valinta-tulos-service  # huom, /etc/hosts :issa pitää olla 127.0.0.1 david.devaaja.devaa.opintopolku.fi
+55c57,58
+< omatsivut.db.url=jdbc:postgresql://omatsivut.db.testiopintopolku.fi:5432/omatsivut
+---
+> #omatsivut.db.url=jdbc:postgresql://omatsivut.db.testiopintopolku.fi:5432/omatsivut
+> omatsivut.db.url=jdbc:postgresql://localhost:25440/omatsivut  # huom, localhost:25440 on ssh-putkitettu omatsivut.db.testiopintopolku.fi:5432:hen
+99c102
+< mongodb.oppija.uri=mongodb://tunnus:salasana@mongocluster-1.testiopintopolku.fi,mongocluster-2.testiopintopolku.fi,mongocluster-3.testiopintopolku.fi:27017
+---
+> mongodb.oppija.uri=mongodb://tunnus:salasana@localhost:47018 # huom, localhost:47018 on ssh-putkitettu mongo-clusterin masteriin
+
+```
+
+Starttaa sitten [`OmatsivutServerLauncher`](src/test/scala/fi/vm/sade/omatsivut/OmatsivutServerLauncher.scala) sopivilla parametreilla, esim `-Xss2m -Duser.home=/home/thrantal/oph-confs/omatsivut-pallero-local-oph-configuration/`.
+Huomaa, että `oph-configuration` -hakemiston tulee olla `user.home`-hakemiston alla.
+
+Sisäänkirjautumisen saa feikattua tekemällä URLiin http://localhost:8080/omatsivut/initsession pyyntö, jossa `hetu`-headeriin annetaan halutun käyttäjän henkilötunnus.
 
 ##### Offline-käyttö (skipRaamit) ja käyttö IE9:llä
 
