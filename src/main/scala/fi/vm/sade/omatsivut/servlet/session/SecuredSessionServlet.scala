@@ -38,8 +38,10 @@ trait SecuredSessionServletContainer {
       val newSession = sessionService.storeSession(Hetu(hetu), OppijaNumero(personOid), displayName)
       newSession match {
         case Right((sessionId, _)) =>
-          response.addCookie(Cookie(sessionCookieName, sessionId.value.toString)
-            (CookieOptions(domain = "", secure = isHttps, path = "/", maxAge = sessionTimeout.getOrElse(3600), httpOnly = true)))
+          val cookieOptions = CookieOptions(domain = "", secure = isHttps, path = "/", maxAge = sessionTimeout.getOrElse(3600), httpOnly = true)
+          val sessionCookie: Cookie = Cookie(sessionCookieName, sessionId.value.toString)(cookieOptions)
+          logger.debug(s"Created new session with id $sessionId , adding session cookie $sessionCookie with options $cookieOptions to response")
+          response.addCookie(sessionCookie)
           Audit.oppija.log(Login(request))
           redirect(redirectUri)
         case Left(e) =>
