@@ -36,7 +36,7 @@ trait OmatsivutDbTools extends Specification {
     logger.info(s"sessionIdString: $sessionIdString")
     logger.info(s"sessionId: $sessionId")
     singleConnectionOmatsivutDb.get(sessionId) match {
-      case x@Right(SessionInfo(hetu, oppijaNumero, oppijaNimi)) =>
+      case x@Right(SessionInfo(_, oppijaNumero, _)) =>
         logger.info(s"Found from db: $x")
         Some(oppijaNumero.value)
       case x =>
@@ -48,7 +48,7 @@ trait OmatsivutDbTools extends Specification {
   def getDisplayNameFromSession(sessionIdString: String): Option[String] = {
     val sessionId = SessionId(UUID.fromString(sessionIdString))
     singleConnectionOmatsivutDb.get(sessionId) match {
-      case Right(SessionInfo(hetu, oppijaNumero, oppijaNimi)) => Some(oppijaNimi)
+      case Right(SessionInfo(_, _, oppijaNimi)) => Some(oppijaNimi)
       case _ => None
     }
   }
