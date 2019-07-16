@@ -23,7 +23,7 @@ trait OmatsivutDbTools extends Specification {
     singleConnectionOmatsivutDb.store(SessionInfo(dummyHetu, OppijaNumero(personOid.oid), dummyName)).value.toString
   }
 
-  def setSessionLastAccessTime(sessionIdString: String, howManySecondsFromNow: Int) = {
+  def setSessionLastAccessTime(sessionIdString: String, howManySecondsFromNow: Int): Unit = {
     singleConnectionOmatsivutDb.runBlocking(DBIO.seq(
       sqlu"""update sessions
                         set viimeksi_luettu = now() - interval '#${howManySecondsFromNow} seconds'
