@@ -1,10 +1,8 @@
 package fi.vm.sade.omatsivut.servlet
 
-import java.util.UUID
-
-import fi.vm.sade.omatsivut.{ScalatraTestCookiesSupport, ScalatraTestSupport}
 import fi.vm.sade.omatsivut.fixtures.TestFixture
-import fi.vm.sade.omatsivut.security.{AttributeNames}
+import fi.vm.sade.omatsivut.security.AttributeNames
+import fi.vm.sade.omatsivut.{ScalatraTestCookiesSupport, ScalatraTestSupport}
 import org.junit.runner.RunWith
 import org.specs2.runner.JUnitRunner
 
@@ -21,10 +19,10 @@ class SecuredSessionServletSpec extends ScalatraTestSupport with AttributeNames 
     }
 
     "create a session in repository and forwards to root if the request contains hetu header" in {
-      deleteAllSessions
+      deleteAllSessions()
       get(urlUsedByShibboleth, headers = Map("hetu" -> TestFixture.testHetu)) {
         status must_== 302
-        val location = response.headers("Location")(0)
+        val location = response.headers("Location").head
         location must endWith("omatsivut/index.html")
         val sessionId = cookieGetValue(response, sessionCookieName).getOrElse("not found session cookie")
         val personOid = getPersonFromSession(sessionId).getOrElse("not found in repository")
@@ -33,10 +31,10 @@ class SecuredSessionServletSpec extends ScalatraTestSupport with AttributeNames 
     }
 
     "create a session with no oid if hetu does not have the corresponding oid" in {
-      deleteAllSessions
+      deleteAllSessions()
       get(urlUsedByShibboleth, headers = Map("hetu" -> TestFixture.testHetuWithNoPersonOid)) {
         status must_== 302
-        val location = response.headers("Location")(0)
+        val location = response.headers("Location").head
         location must endWith("omatsivut/index.html")
         val sessionId = cookieGetValue(response, sessionCookieName).getOrElse("not found session cookie")
         val personOid = getPersonFromSession(sessionId).getOrElse("not found in repository")
@@ -45,7 +43,7 @@ class SecuredSessionServletSpec extends ScalatraTestSupport with AttributeNames 
     }
 
     "create a session in repository, and it will contain also the display name of the user" in {
-      deleteAllSessions
+      deleteAllSessions()
       val firstName = "Wolfgang"
       val secondName = "Mozart"
       get(urlUsedByShibboleth, headers = Map("hetu" -> TestFixture.testHetu, "firstname" -> firstName, "sn" -> secondName)) {
