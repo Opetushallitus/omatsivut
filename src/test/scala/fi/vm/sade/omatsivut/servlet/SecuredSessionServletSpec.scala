@@ -4,11 +4,13 @@ import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.omatsivut.security.AttributeNames
 import fi.vm.sade.omatsivut.{ScalatraTestCookiesSupport, ScalatraTestSupport}
 import org.junit.runner.RunWith
+import org.slf4j.LoggerFactory
 import org.specs2.runner.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
 class SecuredSessionServletSpec extends ScalatraTestSupport with AttributeNames with ScalatraTestCookiesSupport {
   val urlUsedByShibboleth = "initsession"
+  private val logger = LoggerFactory.getLogger(getClass)
 
   "GET /initsession" should {
     "fails with bad request (400) if request does not contain henkilötunnus" in {
@@ -26,6 +28,10 @@ class SecuredSessionServletSpec extends ScalatraTestSupport with AttributeNames 
         location must endWith("omatsivut/index.html")
         val sessionId = cookieGetValue(response, sessionCookieName).getOrElse("not found session cookie")
         val personOid = getPersonFromSession(sessionId).getOrElse("not found in repository")
+        logger.info(s"response: $response")
+        logger.info(s"location: $location")
+        logger.info(s"sessionId: $sessionId")
+        logger.info(s"personOid: $personOid")
         personOid must_== TestFixture.personOid
       }
     }
