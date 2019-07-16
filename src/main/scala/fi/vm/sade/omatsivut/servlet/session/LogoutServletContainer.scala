@@ -39,7 +39,9 @@ trait LogoutServletContainer {
         "/oma-opintopolku"
       else
         "/koski/user/logout"
-      redirect(OphUrlProperties.url("shibboleth.logout", returnUrl))(request, response.res)
+      val logoutRedirectUrl = OphUrlProperties.url("shibboleth.logout", returnUrl)
+      logger.debug(s"Redirecting to $logoutRedirectUrl for logout")
+      redirect(logoutRedirectUrl)(request, response.res)
     }
   }
 }
