@@ -33,14 +33,13 @@ trait OmatsivutDbTools extends Specification {
 
   def getPersonFromSession(sessionIdString: String): Option[String] = {
     val sessionId = SessionId(UUID.fromString(sessionIdString))
-    logger.info(s"sessionIdString: $sessionIdString")
     logger.info(s"sessionId: $sessionId")
     singleConnectionOmatsivutDb.get(sessionId) match {
       case x@Right(SessionInfo(_, oppijaNumero, _)) =>
         logger.info(s"Found from db: $x")
         Some(oppijaNumero.value)
       case x =>
-        logger.info(s"Problem when getting session from db: got $x")
+        logger.info(s"Problem when getting session $sessionIdString from db: got $x")
         None
     }
   }
