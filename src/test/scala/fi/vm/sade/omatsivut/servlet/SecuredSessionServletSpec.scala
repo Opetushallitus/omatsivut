@@ -21,7 +21,6 @@ class SecuredSessionServletSpec extends ScalatraTestSupport with AttributeNames 
     }
 
     "create a session in repository and forwards to root if the request contains hetu header" in {
-      deleteAllSessions()
       get(urlUsedByShibboleth, headers = Map("hetu" -> TestFixture.testHetu)) {
         status must_== 302
         val location = response.headers("Location").head
@@ -33,11 +32,15 @@ class SecuredSessionServletSpec extends ScalatraTestSupport with AttributeNames 
         logger.info(s"sessionId: $sessionId")
         logger.info(s"personOid: $personOid")
         personOid must_== TestFixture.personOid
+
+        get("logout", headers = Map("Cookie" -> s"$sessionCookieName=$sessionId")) {
+          response.status must_== 302
+          response.getHeader("Location") must endWith("/omatsivut/Shibboleth.sso/Logout?return=%2Fkoski%2Fuser%2Flogout")
+        }
       }
     }
 
     "create a session with no oid if hetu does not have the corresponding oid" in {
-      deleteAllSessions()
       get(urlUsedByShibboleth, headers = Map("hetu" -> TestFixture.testHetuWithNoPersonOid)) {
         status must_== 302
         val location = response.headers("Location").head
@@ -45,11 +48,15 @@ class SecuredSessionServletSpec extends ScalatraTestSupport with AttributeNames 
         val sessionId = cookieGetValue(response, sessionCookieName).getOrElse("not found session cookie")
         val personOid = getPersonFromSession(sessionId).getOrElse("not found in repository")
         personOid must_== ""
+
+        get("logout", headers = Map("Cookie" -> s"$sessionCookieName=$sessionId")) {
+          response.status must_== 302
+          response.getHeader("Location") must endWith("/omatsivut/Shibboleth.sso/Logout?return=%2Fkoski%2Fuser%2Flogout")
+        }
       }
     }
 
     "create a session in repository, and it will contain also the display name of the user" in {
-      deleteAllSessions()
       val firstName = "Wolfgang"
       val secondName = "Mozart"
       get(urlUsedByShibboleth, headers = Map("hetu" -> TestFixture.testHetu, "firstname" -> firstName, "sn" -> secondName)) {
@@ -57,6 +64,11 @@ class SecuredSessionServletSpec extends ScalatraTestSupport with AttributeNames 
         val sessionId = cookieGetValue(response, sessionCookieName).getOrElse("not found session cookie")
         val displayName = getDisplayNameFromSession(sessionId).getOrElse("not found in repository")
         displayName must_== firstName + " " + secondName
+
+        get("logout", headers = Map("Cookie" -> s"$sessionCookieName=$sessionId")) {
+          response.status must_== 302
+          response.getHeader("Location") must endWith("/omatsivut/Shibboleth.sso/Logout?return=%2Fkoski%2Fuser%2Flogout")
+        }
       }
     }
   }
