@@ -17,10 +17,10 @@ trait OmatsivutDbTools extends Specification {
 
   val singleConnectionOmatsivutDb: OmatsivutDb
 
-  def createTestSession()(implicit personOid: PersonOid): String = {
+  def createTestSession()(implicit personOid: PersonOid): SessionId = {
     val dummyHetu = Hetu("121212-789A")
     val dummyName = "John Smith"
-    singleConnectionOmatsivutDb.store(SessionInfo(dummyHetu, OppijaNumero(personOid.oid), dummyName)).value.toString
+    singleConnectionOmatsivutDb.store(SessionInfo(dummyHetu, OppijaNumero(personOid.oid), dummyName))
   }
 
   def setSessionLastAccessTime(sessionIdString: String, howManySecondsFromNow: Int): Unit = {
@@ -31,15 +31,16 @@ trait OmatsivutDbTools extends Specification {
     ).transactionally, Duration(20, TimeUnit.SECONDS))
   }
 
-  def getPersonFromSession(sessionIdString: String): Option[String] = {
-    val sessionId = SessionId(UUID.fromString(sessionIdString))
+  def getPersonFromSession(sessionId: String): Option[String] = getPersonFromSession(SessionId(UUID.fromString(sessionId)))
+
+  def getPersonFromSession(sessionId: SessionId): Option[String] = {
     logger.info(s"sessionId: $sessionId")
     singleConnectionOmatsivutDb.get(sessionId) match {
       case x@Right(SessionInfo(_, oppijaNumero, _)) =>
         logger.info(s"Found from db: $x")
         Some(oppijaNumero.value)
       case x =>
-        logger.info(s"Problem when getting session $sessionIdString from db: got $x")
+        logger.info(s"Problem when getting session $sessionId from db: got $x")
         None
     }
   }

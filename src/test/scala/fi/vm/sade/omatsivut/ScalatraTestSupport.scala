@@ -1,11 +1,11 @@
 package fi.vm.sade.omatsivut
 
-import java.net.HttpCookie
+import java.util.UUID
 
 import fi.vm.sade.hakemuseditori.hakemus.HakemusSpringContext
 import fi.vm.sade.omatsivut.config.AppConfig
-import fi.vm.sade.omatsivut.security.CookieHelper
 import fi.vm.sade.omatsivut.security.fake.FakeAuthentication
+import fi.vm.sade.omatsivut.security.{CookieHelper, SessionId}
 import org.scalatra.test.{ClientResponse, HttpComponentsClient}
 import org.specs2.mutable.Specification
 
@@ -13,7 +13,7 @@ trait ScalatraTestSupport extends Specification with HttpComponentsClient with O
 
   protected lazy val springContext: HakemusSpringContext = SharedAppConfig.componentRegistry.springContext
 
-  var lastSessionId: String = ""
+  var lastSessionId: SessionId = SessionId(UUID.randomUUID())
 
   step {
     SharedJetty.start
