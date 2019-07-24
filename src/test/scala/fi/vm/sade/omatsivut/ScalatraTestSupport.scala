@@ -20,7 +20,7 @@ trait ScalatraTestSupport extends Specification with HttpComponentsClient with O
     springContext
   }
 
-  def baseUrl = "http://localhost:" + AppConfig.embeddedJettyPortChooser.chosenPort + "/omatsivut"
+  def baseUrl: String = "http://localhost:" + AppConfig.embeddedJettyPortChooser.chosenPort + "/omatsivut"
 
   def authGet[A](uri: String)(f: => A)(implicit personOid: PersonOid): A = {
     val sessionId = createTestSession()
