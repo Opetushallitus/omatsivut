@@ -47,7 +47,10 @@ trait ScalatraTestSupport extends Specification with HttpComponentsClient with O
 
 trait ScalatraTestCookiesSupport {
   def cookieGetValue(response: ClientResponse, cookieName: String): Option[String] = {
-    response.headers("Set-Cookie").map(CookieHelper.cookieExtractValue(_, cookieName)).find(v => v.isDefined && v.get.length > 0).getOrElse(None)
+    response.headers("Set-Cookie").
+      map(CookieHelper.cookieExtractValue(_, cookieName)).
+      find(v => v.isDefined && v.get.length > 0).
+      flatten
   }
 }
 
