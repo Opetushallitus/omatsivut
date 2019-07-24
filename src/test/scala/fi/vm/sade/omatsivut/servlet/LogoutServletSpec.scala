@@ -1,6 +1,6 @@
 package fi.vm.sade.omatsivut.servlet
 
-import fi.vm.sade.omatsivut.security.{AttributeNames, SessionId, OppijaNumero}
+import fi.vm.sade.omatsivut.security.AttributeNames
 import fi.vm.sade.omatsivut.{PersonOid, ScalatraTestCookiesSupport, ScalatraTestSupport}
 import org.junit.runner.RunWith
 import org.specs2.runner.JUnitRunner
@@ -13,21 +13,21 @@ class LogoutServletSpec extends ScalatraTestSupport with AttributeNames with Sca
   "logout" should {
 
     "clear the session and oppijaNumero cookies and deletes the session from repository, redirect to oma-opintopolku" in {
-      authGet("logout?koski=true") {
+      authGetAndReturnSession("logout?koski=true") { sessionId =>
         status must_== 302
         val location = response.headers("Location")(0)
         location must endWith("Shibboleth.sso/Logout?return=%2Foma-opintopolku")
-        getPersonFromSession(lastSessionId) must beNone
+        getPersonFromSession(sessionId) must beNone
         cookieGetValue(response, sessionCookieName) must beNone
       }
     }
 
     "redirect to koski logout if koski parameter is not given" in {
-      authGet("logout") {
+      authGetAndReturnSession("logout") { sessionId =>
         status must_== 302
         val location = response.headers("Location")(0)
         location must endWith("Shibboleth.sso/Logout?return=%2Fkoski%2Fuser%2Flogout")
-        getPersonFromSession(lastSessionId) must beNone
+        getPersonFromSession(sessionId) must beNone
         cookieGetValue(response, sessionCookieName) must beNone
       }
     }
