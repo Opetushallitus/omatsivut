@@ -5,6 +5,7 @@ import java.util.ConcurrentModificationException
 import java.util.concurrent.TimeUnit
 
 import fi.vm.sade.utils.slf4j.Logging
+import javax.sql.DataSource
 import org.postgresql.util.PSQLException
 import org.springframework.util.ReflectionUtils
 import slick.dbio._
@@ -22,6 +23,7 @@ trait OmatsivutRepository extends Logging {
   private val logSqlOfSomeQueries = false // For debugging only. Do NOT enable in production.
 
   val db: Database
+  val dataSource: DataSource
   def runBlocking[R](operations: DBIO[R], timeout: Duration = Duration(10, TimeUnit.MINUTES)): R = {  // TODO put these 3–4 different default timeouts behind common, configurable value
     if (logSqlOfSomeQueries) {
       logger.error("This should not happen in production.")
