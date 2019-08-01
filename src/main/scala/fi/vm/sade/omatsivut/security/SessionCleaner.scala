@@ -35,7 +35,7 @@ object SessionCleaner extends Logging {
     val cronSchedule: Schedule = new CronSchedule(cronString)
     val deadExecutionRescheduler = new DeadExecutionRescheduler(cronSchedule)
 
-    logger.info(s"Session clean up, scheduled task created (cron=$cronString)")
+    logger.info(s"Session cleanup, scheduled task created (cron=$cronString)")
 
     Tasks.recurring(s"cron-session-cleaner-task", cronSchedule)
       .onDeadExecution(deadExecutionRescheduler)

@@ -13,11 +13,14 @@ class SessionCleanerSpec extends Specification {
 
   "SessionCleaner task" should {
 
-    "is constructed" in new SessionCleanerWithMocks {
-      task must_!= null
+    "is not constructed if cron string is not correct" in new MockSessionService {
+      SessionCleaner.createTaskForScheduler(sessionService, "0 15 0 *") must throwA[IllegalArgumentException].like {
+        case e => e.getMessage must contain("contains 4 parts but we expect one of [6]")
+      }
     }
 
-    "when executed will invoke the deleteAllExpired method" in new SessionCleanerWithMocks {
+    "when executed will invoke the deleteAllExpired method" in new MockSessionService {
+      val task = SessionCleaner.createTaskForScheduler(sessionService, "0 15 0 * * ?")
 
       task.execute(null, null)
 
@@ -25,8 +28,7 @@ class SessionCleanerSpec extends Specification {
     }
   }
 
-  trait SessionCleanerWithMocks extends Mockito with Scope with MustThrownExpectations {
+  trait MockSessionService extends Mockito with Scope with MustThrownExpectations {
     val sessionService: SessionService = mock[SessionService]
-    val task = SessionCleaner.createTaskForScheduler(sessionService, "0 15 0 * * ?")
   }
 }
