@@ -36,7 +36,10 @@ class OmatsivutDb(config: DbConfig, itProfile: Boolean = false, override val ses
     c.setLeakDetectionThreshold(config.leakDetectionThresholdMillis.getOrElse(c.getMaxLifetime))
     c
   }
-  override val dataSource = new HikariDataSource(hikariConfig)
+  override val dataSource = {
+    new HikariDataSource(hikariConfig)
+  }
+
   override val db = {
     val maxConnections = config.numThreads.getOrElse(10)
     val executor = AsyncExecutor("omatsivut",

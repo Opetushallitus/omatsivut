@@ -1,5 +1,5 @@
 /* based on https://github.com/kagkarlsson/db-scheduler/blob/master/src/test/resources/postgresql_tables.sql */
-
+drop table if exists scheduled_tasks;
 create table scheduled_tasks (
     task_name text not null,
     task_instance text not null,

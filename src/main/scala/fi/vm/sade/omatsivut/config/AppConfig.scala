@@ -142,7 +142,7 @@ object AppConfig extends Logging {
   }
 
   class LocalPostgresService extends LocalService {
-    private lazy val itPostgres = new ITPostgres(itPostgresPortChooser)
+    private val itPostgres = new ITPostgres(itPostgresPortChooser)
 
     override def start() {
       itPostgres.start()

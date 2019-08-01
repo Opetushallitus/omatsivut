@@ -132,6 +132,9 @@ class ComponentRegistry(val config: AppConfig)
   }
 
   lazy val springContext = new HakemusSpringContext(OmatSivutSpringContext.createApplicationContext(config))
+  if (config.isInstanceOf[IT]) {
+    new ApplicationFixtureImporter(springContext).applyFixtures()
+  }
   val hakumaksuService: HakumaksuServiceWrapper = configureHakumaksuService
   val sendMailService: SendMailServiceWrapper = configureSendMailService
   val koulutusInformaatioService: KoulutusInformaatioService = configureKoulutusInformaatioService
@@ -147,10 +150,10 @@ class ComponentRegistry(val config: AppConfig)
   val oppijanTunnistusService = configureOppijanTunnistusService
   val ataruService: AtaruService = configureAtaruService
   val oppijanumerorekisteriService: OppijanumerorekisteriService = configureOppijanumerorekisteriService
-  lazy val omatsivutDb = new OmatsivutDb(config.settings.omatsivutDbConfig,
+  val omatsivutDb = new OmatsivutDb(config.settings.omatsivutDbConfig,
                                          config.isInstanceOf[IT],
                                          config.settings.sessionTimeoutSeconds.getOrElse(3600))
-  lazy implicit val sessionService = new SessionService(omatsivutDb)
+  implicit val sessionService = new SessionService(omatsivutDb)
   lazy val authenticationInfoService = configureAuthenticationInfoService
 
   private def configureScheduler() = {
@@ -161,9 +164,10 @@ class ComponentRegistry(val config: AppConfig)
     val scheduler: Scheduler = Scheduler.create(omatsivutDb.dataSource).startTasks(scheduledTasks.asJava).threads(numberOfThreads).build
     logger.info(s"Starting scheduler with ${scheduledTasks.length} task(s)")
     scheduler.start()
+    scheduler
   }
 
-  val scheduler = configureScheduler()
+  val scheduler: Scheduler = configureScheduler()
 
   def muistilistaService(language: Language): MuistilistaService = new MuistilistaService(language)
   def vastaanottoService(implicit language: Language): VastaanottoService = new VastaanottoService()
@@ -183,23 +187,6 @@ class ComponentRegistry(val config: AppConfig)
   def newNonSensitiveApplicationServlet = new NonSensitiveApplicationServlet(config)
   def newTuloskirjeetServlet = new TuloskirjeetServlet(config)
   def newClientErrorLoggingServlet = new ClientErrorLoggingServlet(config)
-
-  def start() {
-    try {
-      config.onStart
-      if (config.isInstanceOf[IT]) {
-        new ApplicationFixtureImporter(springContext).applyFixtures()
-      }
-    } catch {
-      case e: Exception =>
-        stop()
-        throw e
-    }
-  }
-
-  def stop() {
-    config.onStop
-  }
 
   override val translations = OmatSivutTranslations
 }
