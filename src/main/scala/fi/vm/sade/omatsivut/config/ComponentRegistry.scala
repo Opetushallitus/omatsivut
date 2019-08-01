@@ -156,7 +156,7 @@ class ComponentRegistry(val config: AppConfig)
   private def configureScheduler() = {
     val numberOfThreads: Int = 1
     val scheduledTasks = List(
-      SessionCleaner.createTaskForScheduler(sessionService, config.settings.sessionCleanupCronString.getOrElse("0 10 0 * * ? *"))
+      SessionCleaner.createTaskForScheduler(sessionService, config.settings.sessionCleanupCronString.getOrElse("0 10 0 * * ?"))
     )
     val scheduler: Scheduler = Scheduler.create(omatsivutDb.dataSource).startTasks(scheduledTasks.asJava).threads(numberOfThreads).build
     logger.info(s"Starting scheduler with ${scheduledTasks.length} task(s)")
