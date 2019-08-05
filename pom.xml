@@ -12,7 +12,7 @@
         <name>fi.vm.sade</name>
     </organization>
     <properties>
-        <valinta-tulos-service.version>5.0.1-SNAPSHOT</valinta-tulos-service.version>
+        <valinta-tulos-service.version>5.0.2-SNAPSHOT</valinta-tulos-service.version>
         <jetty.version>9.4.15.v20190215</jetty.version>
         <postgresql.version>42.2.5</postgresql.version>
         <scalatra.version>2.5.1</scalatra.version>
