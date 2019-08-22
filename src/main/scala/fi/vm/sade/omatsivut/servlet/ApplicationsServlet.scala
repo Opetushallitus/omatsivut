@@ -82,9 +82,9 @@ trait ApplicationsServletContainer {
       val content: String = request.body
       val updated = Serialization.read[HakemusMuutos](content)
       hakemusEditori.updateHakemus(request, updated) match {
-        case Success(body) => ActionResult(ResponseStatus(200), body, Map.empty)
-        case Failure(e: ForbiddenException) => ActionResult(ResponseStatus(403), "error" -> "Forbidden", Map.empty)
-        case Failure(e: ValidationException) => ActionResult(ResponseStatus(400), e.validationErrors, Map.empty)
+        case Success(body) => ActionResult(200, body, Map.empty)
+        case Failure(e: ForbiddenException) => ActionResult(403, "error" -> "Forbidden", Map.empty)
+        case Failure(e: ValidationException) => ActionResult(400, e.validationErrors, Map.empty)
         case Failure(e) => InternalServerError("error" -> "Internal service unavailable")
       }
     }
