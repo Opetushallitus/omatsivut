@@ -7,7 +7,6 @@ import fi.vm.sade.omatsivut.SessionFailure
 import fi.vm.sade.omatsivut.SessionFailure.SessionFailure
 import fi.vm.sade.omatsivut.db.SessionRepository
 import fi.vm.sade.omatsivut.security.{Hetu, OppijaNumero, SessionId, SessionInfo}
-import slick.jdbc.PostgresProfile
 import slick.jdbc.PostgresProfile.api._
 import slick.sql.{SqlAction, SqlStreamingAction}
 
@@ -28,6 +27,12 @@ trait SessionRepositoryImpl extends SessionRepository with OmatsivutRepository {
 
   override def delete(id: SessionId): Unit = {
     runBlocking(sqlu"""delete from sessions where id = ${id.value.toString}::uuid""", timeout = Duration(10, TimeUnit.SECONDS))
+  }
+
+  override def deleteExpired(): Int = {
+    val deletedRowsCount = runBlocking(sqlu"""delete from sessions where viimeksi_luettu < now() - interval '#${sessionTimeoutSeconds} seconds'""",
+      timeout = Duration(300, TimeUnit.SECONDS))
+    deletedRowsCount
   }
 
   override def get(sessionId: SessionId): Either[SessionFailure, SessionInfo] = {

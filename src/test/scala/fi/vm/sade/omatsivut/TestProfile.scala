@@ -9,8 +9,8 @@ import org.apache.commons.io.FileUtils
 object SharedAppConfig {
   lazy final val appConfig = new AppConfig.IT
   lazy val componentRegistry: ComponentRegistry = {
+    appConfig.onStart()
     val registry = new ComponentRegistry(appConfig)
-    registry.start()
     registry
   }
 }

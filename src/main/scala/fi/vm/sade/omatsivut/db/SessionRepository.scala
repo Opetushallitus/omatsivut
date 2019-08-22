@@ -8,4 +8,5 @@ trait SessionRepository {
   def store(session: SessionInfo): SessionId
   def get(id: SessionId): Either[SessionFailure, SessionInfo]
   def delete(id: SessionId): Unit
+  def deleteExpired(): Int
 }

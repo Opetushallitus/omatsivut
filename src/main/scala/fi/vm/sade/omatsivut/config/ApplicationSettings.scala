@@ -29,6 +29,7 @@ case class ApplicationSettings(config: Config) extends GroupEmailerSettings(conf
   )
 
   val sessionTimeoutSeconds = getInt(config, "omatsivut.sessionTimeoutSeconds")
+  val sessionCleanupCronString = getString(config, "omatsivut.sessionCleanupCronString")
 
   val aesKey : String = config.getString("omatsivut.crypto.aes.key")
   val hmacKey : String = config.getString("omatsivut.crypto.hmac.key")

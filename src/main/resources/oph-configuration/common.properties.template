@@ -62,6 +62,7 @@ omatsivut.db.registerMbeans=true
 omatsivut.db.initializationFailTimeout=1000
 
 omatsivut.sessionTimeoutSeconds={{ omatsivut_session_timeout | default("3600")}}
+omatsivut.sessionCleanupCronString={{ omatsivut_session_cleanup_cron | default("0 10 0 * * ?") }}
 
 protocol_ataru_hakija: {{protocol_ataru_hakija}}
 host_ataru_hakija: {{host_ataru_hakija}}

@@ -51,9 +51,13 @@ class SessionServiceSpec extends Specification with MockitoStubs {
     }
 
     "deleteSession will delete a session from repository" in new SessionServiceWithMocks {
-      sessionRepository.get(id) returns Left(SessionFailure.SESSION_NOT_FOUND)
       sessionService.deleteSession(Some(id))
       there was one(sessionRepository).delete(id)
+    }
+
+    "deleteAllExpiredSessions will delete expired sessions" in new SessionServiceWithMocks {
+      sessionService.deleteAllExpired()
+      there was one(sessionRepository).deleteExpired()
     }
   }
 

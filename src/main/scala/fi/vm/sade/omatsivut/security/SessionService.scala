@@ -13,9 +13,16 @@ class SessionService(val sessionRepository: SessionRepository) extends Logging {
     case None => logger.debug("no sessionId given")
     case Some(id) => {
       Try(sessionRepository.delete(id)) match {
-        case Success(_) => logger.debug("session " + id + " removed from database")
-        case Failure(t) => logger.error("Did not manage to remove session " + id + " from database", t)
+        case Success(_) => logger.debug("Session " + id + " removed from database")
+        case Failure(t) => logger.error("Failed to remove session " + id + " from database", t)
       }
+    }
+  }
+
+  def deleteAllExpired(): Unit = {
+    Try(sessionRepository.deleteExpired()) match {
+      case Success(count) => logger.info("Deleted " + count + " expired sessions from database")
+      case Failure(t) => logger.error("Failed to delete expired sessions from database", t)
     }
   }
 

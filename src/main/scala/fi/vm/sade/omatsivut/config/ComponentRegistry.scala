@@ -1,5 +1,6 @@
 package fi.vm.sade.omatsivut.config
 
+import com.github.kagkarlsson.scheduler.Scheduler
 import fi.vm.sade.ataru.{AtaruService, AtaruServiceComponent}
 import fi.vm.sade.groupemailer.{GroupEmailComponent, GroupEmailService}
 import fi.vm.sade.hakemuseditori.domain.Language.Language
@@ -28,6 +29,8 @@ import fi.vm.sade.omatsivut.servlet._
 import fi.vm.sade.omatsivut.servlet.session.{LogoutServletContainer, SecuredSessionServletContainer, SessionServlet}
 import fi.vm.sade.omatsivut.vastaanotto.VastaanottoComponent
 import fi.vm.sade.utils.captcha.CaptchaServiceComponent
+
+import scala.collection.JavaConverters._
 
 class ComponentRegistry(val config: AppConfig)
   extends SpringContextComponent with
@@ -129,6 +132,9 @@ class ComponentRegistry(val config: AppConfig)
   }
 
   lazy val springContext = new HakemusSpringContext(OmatSivutSpringContext.createApplicationContext(config))
+  if (config.isInstanceOf[IT]) {
+    new ApplicationFixtureImporter(springContext).applyFixtures()
+  }
   val hakumaksuService: HakumaksuServiceWrapper = configureHakumaksuService
   val sendMailService: SendMailServiceWrapper = configureSendMailService
   val koulutusInformaatioService: KoulutusInformaatioService = configureKoulutusInformaatioService
@@ -144,11 +150,24 @@ class ComponentRegistry(val config: AppConfig)
   val oppijanTunnistusService = configureOppijanTunnistusService
   val ataruService: AtaruService = configureAtaruService
   val oppijanumerorekisteriService: OppijanumerorekisteriService = configureOppijanumerorekisteriService
-  lazy val omatsivutDb = new OmatsivutDb(config.settings.omatsivutDbConfig,
+  val omatsivutDb = new OmatsivutDb(config.settings.omatsivutDbConfig,
                                          config.isInstanceOf[IT],
                                          config.settings.sessionTimeoutSeconds.getOrElse(3600))
-  lazy implicit val sessionService = new SessionService(omatsivutDb)
+  implicit val sessionService = new SessionService(omatsivutDb)
   lazy val authenticationInfoService = configureAuthenticationInfoService
+
+  private def configureScheduler() = {
+    val numberOfThreads: Int = 1
+    val scheduledTasks = List(
+      SessionCleaner.createTaskForScheduler(sessionService, config.settings.sessionCleanupCronString.getOrElse("0 10 0 * * ?"))
+    )
+    val scheduler: Scheduler = Scheduler.create(omatsivutDb.dataSource).startTasks(scheduledTasks.asJava).threads(numberOfThreads).build
+    logger.info(s"Starting scheduler with ${scheduledTasks.length} task(s)")
+    scheduler.start()
+    scheduler
+  }
+
+  val scheduler: Scheduler = configureScheduler()
 
   def muistilistaService(language: Language): MuistilistaService = new MuistilistaService(language)
   def vastaanottoService(implicit language: Language): VastaanottoService = new VastaanottoService()
@@ -168,23 +187,6 @@ class ComponentRegistry(val config: AppConfig)
   def newNonSensitiveApplicationServlet = new NonSensitiveApplicationServlet(config)
   def newTuloskirjeetServlet = new TuloskirjeetServlet(config)
   def newClientErrorLoggingServlet = new ClientErrorLoggingServlet(config)
-
-  def start() {
-    try {
-      config.onStart
-      if (config.isInstanceOf[IT]) {
-        new ApplicationFixtureImporter(springContext).applyFixtures()
-      }
-    } catch {
-      case e: Exception =>
-        stop()
-        throw e
-    }
-  }
-
-  def stop() {
-    config.onStop
-  }
 
   override val translations = OmatSivutTranslations
 }

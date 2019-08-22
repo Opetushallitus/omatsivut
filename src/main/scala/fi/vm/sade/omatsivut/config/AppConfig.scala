@@ -53,14 +53,27 @@ object AppConfig extends Logging {
   }
 
   class Dev extends AppConfig with ExampleTemplatedProps with MockAuthentication with StubbedExternalDeps {
+    val localPostgresService = new LocalPostgresService
+
     def springConfiguration = new OmatSivutSpringContext.Dev()
 
     override lazy val settings = ConfigTemplateProcessor.createSettings("common", templateAttributesFile)
       .withOverride("mongodb.oppija.uri", "mongodb://localhost:27017")
+      .withOverride("omatsivut.db.port", itPostgresPortChooser.chosenPort.toString)
+      .withOverride("omatsivut.db.host", "localhost")
+      .withOverride("omatsivut.db.url", "jdbc:postgresql://localhost:" + itPostgresPortChooser.chosenPort + "/omatsivutdb")
+
+    override def onStart: Unit = {
+      localPostgresService.start()
+    }
+
+    override def onStop: Unit = {
+      localPostgresService.stop()
+    }
   }
 
   class IT extends AppConfig with ExampleTemplatedProps with MockAuthentication with StubbedExternalDeps {
-    def springConfiguration = new OmatSivutSpringContext.Dev()
+    def springConfiguration: OmatSivutConfiguration = new OmatSivutSpringContext.Dev()
 
     // Testien vaatimat overridet
     OphUrlProperties.addOverride("url-oppija", "http://localhost:" + AppConfig.embeddedJettyPortChooser.chosenPort.toString)
@@ -142,7 +155,7 @@ object AppConfig extends Logging {
   }
 
   class LocalPostgresService extends LocalService {
-    private lazy val itPostgres = new ITPostgres(itPostgresPortChooser)
+    private val itPostgres = new ITPostgres(itPostgresPortChooser)
 
     override def start() {
       itPostgres.start()

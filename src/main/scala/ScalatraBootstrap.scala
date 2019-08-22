@@ -11,19 +11,22 @@ import org.scalatra._
 
 class ScalatraBootstrap extends LifeCycle with Logging {
 
-  var globalRegistry: Option[ComponentRegistry] = None
-
   OmatSivutSpringContext.check
+
+  var config: AppConfig = null
 
   private val healthCheckPath = "/health"
   private val languageFilterWhitelistedServlets: Seq[String] = Seq(healthCheckPath)
 
-  override def init(context: ServletContext) {
-    val config: AppConfig = AppConfig.fromOptionalString(Option(context.getAttribute("omatsivut.profile").asInstanceOf[String]))
-    val componentRegistry = new ComponentRegistry(config)
+  private def assertConfigInitialized(): Unit = {
+    if (config == null) throw new RuntimeException(s"config is not initialized")
+  }
 
-    componentRegistry.start
-    globalRegistry = Some(componentRegistry)
+  override def init(context: ServletContext) {
+    config = AppConfig.fromOptionalString(Option(context.getAttribute("omatsivut.profile").asInstanceOf[String]))
+    assertConfigInitialized()
+    config.onStart()
+    val componentRegistry = new ComponentRegistry(config)
 
     context.addFilter("CacheControl", new CacheControlFilter)
       .addMappingForUrlPatterns(util.EnumSet.allOf(classOf[DispatcherType]), true, "/*")
@@ -52,7 +55,8 @@ class ScalatraBootstrap extends LifeCycle with Logging {
   }
 
   override def destroy(context: ServletContext) = {
-    globalRegistry.foreach(_.stop)
+    assertConfigInitialized()
+    config.onStop()
     super.destroy(context)
   }
 }
