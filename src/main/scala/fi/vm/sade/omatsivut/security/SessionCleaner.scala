@@ -9,7 +9,7 @@ import fi.vm.sade.utils.slf4j.Logging
 
 object SessionCleaner extends Logging {
 
-  def createTaskForScheduler(sessionService: SessionService, cronString: String) = {
+  def createTaskForScheduler(sessionService: SessionService, cronString: String): RecurringTask[Void] = {
 
     val executionHandler: VoidExecutionHandler[Void] = new VoidExecutionHandler[Void] {
       logger.info("Scheduled task execution handler setup")
