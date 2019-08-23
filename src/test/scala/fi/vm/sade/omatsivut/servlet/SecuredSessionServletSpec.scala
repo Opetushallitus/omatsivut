@@ -16,7 +16,7 @@ class SecuredSessionServletSpec extends ScalatraTestSupport with AttributeNames 
     "fails with bad request (400) if request does not contain henkilötunnus" in {
       get(urlUsedByShibboleth) {
         status must_== 400
-        response.statusLine.message must contain("No hetu found in request from shibboleth")
+        body must contain("No hetu found in request from shibboleth")
       }
     }
 
