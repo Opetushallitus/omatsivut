@@ -1,6 +1,7 @@
 import java.security.Security
 import java.util
 
+import fi.vm.sade.hakemuseditori.auditlog.Audit
 import javax.servlet.{DispatcherType, ServletContext}
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.config.{AppConfig, ComponentRegistry, OmatSivutSpringContext}
@@ -34,6 +35,9 @@ class ScalatraBootstrap extends LifeCycle with Logging {
       .addMappingForUrlPatterns(util.EnumSet.allOf(classOf[DispatcherType]), true, "/*")
     context.addFilter("AuthenticateIfNoSessionFilter", new AuthenticateIfNoSessionFilter(componentRegistry.sessionService))
       .addMappingForUrlPatterns(util.EnumSet.allOf(classOf[DispatcherType]), true, "/", "/index.html")
+
+    // Initialize auditloggers on startup
+    Audit.oppija
 
     context.mount(componentRegistry.newApplicationsServlet, "/secure/applications")
     context.mount(componentRegistry.newValintatulosServlet, "/secure/ilmoittaudu")

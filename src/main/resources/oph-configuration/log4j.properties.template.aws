@@ -23,8 +23,10 @@ log4j.additivity.fi.vm.sade.hakemuseditori.auditlog=false
 log4j.logger.fi.vm.sade.hakemuseditori.auditlog=INFO, AUDIT
 log4j.additivity.fi.vm.sade.auditlog=false
 log4j.logger.fi.vm.sade.auditlog=INFO, AUDIT
-log4j.additivity.fi.vm.sade.haku.ApiAuditHelper=false
-log4j.logger.fi.vm.sade.haku.ApiAuditHelper=INFO, AUDIT
+
+#Disable haku auditlogger (by dependency)
+log4j.logger.fi.vm.sade.haku = OFF
+
 log4j.appender.AUDIT=org.apache.log4j.RollingFileAppender
 log4j.appender.AUDIT.File=/root/logs/auditlog_omatsivut.log
 log4j.appender.AUDIT.Append=true
@@ -59,3 +61,5 @@ log4j.logger.org.vaadin=ERROR
 log4j.logger.javax.sql=ERROR
 # cas session + singlelogout tracing
 log4j.logger.org.jasig.cas.client.session=INFO
+
+
