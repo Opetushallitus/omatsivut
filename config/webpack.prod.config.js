@@ -15,6 +15,7 @@ module.exports = {
     publicPath: '/omatsivut/',
   },
   optimization: {
+    minimize: false,
     splitChunks: {
       cacheGroups: {
         vendor: {
