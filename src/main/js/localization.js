@@ -1,4 +1,4 @@
-import { getTranslations }  from './staticResources';
+import { getTranslations, getLanguage } from './staticResources';
 const _ = require('underscore');
 
 function getValue(obj, path) {
@@ -16,9 +16,10 @@ function replaceVars(value, vars) {
 }
 
 export default function localize(key, vars) {
-  const val = getValue(getTranslations(), key);
+  const translations = getTranslations();
+  const val = getValue(translations, key);
   if (!val) {
-    throw new Error("no translation for " + key);
+    throw new Error("no translation for " + key + ", language: " + getLanguage() + ", translations: " + JSON.stringify(translations));
   } else {
     return replaceVars(val, vars || {});
   }
