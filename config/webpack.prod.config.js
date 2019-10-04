@@ -84,7 +84,8 @@ module.exports = {
       /fi|sv|en-gb/
     ),
     new UglifyJSPlugin({
-      sourceMap: true
+      sourceMap: true,
+      test: 'vendor.bundle.js'
     })
   ]
   /*
