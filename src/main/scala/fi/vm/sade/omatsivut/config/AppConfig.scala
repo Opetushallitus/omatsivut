@@ -58,7 +58,7 @@ object AppConfig extends Logging {
     def springConfiguration = new OmatSivutSpringContext.Dev()
 
     override lazy val settings = ConfigTemplateProcessor.createSettings("common", templateAttributesFile)
-      .withOverride("mongodb.oppija.uri", "mongodb://localhost:27017")
+      .withOverride("mongodb.oppija.uri", "mongodb://localhost:" + embeddedMongoPortChooser.chosenPort)
       .withOverride("omatsivut.db.port", itPostgresPortChooser.chosenPort.toString)
       .withOverride("omatsivut.db.host", "localhost")
       .withOverride("omatsivut.db.url", "jdbc:postgresql://localhost:" + itPostgresPortChooser.chosenPort + "/omatsivutdb")
