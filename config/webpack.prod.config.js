@@ -15,6 +15,7 @@ module.exports = {
     publicPath: '/omatsivut/',
   },
   optimization: {
+    minimize: false,
     splitChunks: {
       cacheGroups: {
         vendor: {
@@ -83,7 +84,8 @@ module.exports = {
       /fi|sv|en-gb/
     ),
     new UglifyJSPlugin({
-      sourceMap: true
+      sourceMap: true,
+      test: 'vendor.bundle.js'
     })
   ]
   /*
