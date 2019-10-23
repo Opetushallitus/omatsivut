@@ -18,6 +18,7 @@ class RemoteOppijanTunnistusServiceSpec extends MutableScalatraSpec with Mockito
   val testToken: String = "testToken"
   val url: String = OphUrlProperties.url("oppijan-tunnistus.verify", testToken)
   val expectedHakemusOid: String = "expectedHakemusOid"
+  val callerId = "mock.caller.id"
 
   "RemoteOppijanTunnistusService" should {
 
@@ -30,7 +31,7 @@ class RemoteOppijanTunnistusServiceSpec extends MutableScalatraSpec with Mockito
       request.header(Matchers.any[String], Matchers.any[String]).returns(request)
       request.responseWithHeaders().returns((200, Map(), compact(render(response))))
       println(url)
-      client.httpGet(url).returns(request)
+      client.httpGet(url)(callerId).returns(request)
 
       validateToken(testToken, client) should_== Success(OppijantunnistusMetadata(expectedHakemusOid, None, None))
     }
@@ -43,7 +44,7 @@ class RemoteOppijanTunnistusServiceSpec extends MutableScalatraSpec with Mockito
 
       request.header(Matchers.any[String], Matchers.any[String]).returns(request)
       request.responseWithHeaders().returns((200, Map(), compact(render(response))))
-      client.httpGet(url).returns(request)
+      client.httpGet(url)(callerId).returns(request)
 
       validateToken(testToken, client) must beFailedTry.withThrowable[InvalidTokenException]
     }
@@ -56,7 +57,7 @@ class RemoteOppijanTunnistusServiceSpec extends MutableScalatraSpec with Mockito
 
       request.header(Matchers.any[String], Matchers.any[String]).returns(request)
       request.responseWithHeaders().returns((200, Map(), compact(render(response))))
-      client.httpGet(url).returns(request)
+      client.httpGet(url)(callerId).returns(request)
 
       validateToken(testToken, client) must beFailedTry.withThrowable[ExpiredTokenException]
     }
@@ -67,7 +68,7 @@ class RemoteOppijanTunnistusServiceSpec extends MutableScalatraSpec with Mockito
 
       request.header(Matchers.any[String], Matchers.any[String]).returns(request)
       request.responseWithHeaders().returns((500, Map(), ""))
-      client.httpGet(url).returns(request)
+      client.httpGet(url)(callerId).returns(request)
 
       validateToken(testToken, client) must beFailedTry.withThrowable[RuntimeException]
     }

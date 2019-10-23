@@ -5,6 +5,7 @@ import fi.vm.sade.utils.http.DefaultHttpClient
 import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.hakemuseditori.memoize.TTLOptionalMemoize
 import fi.vm.sade.hakemuseditori.ohjausparametrit.domain.{HaunAikataulu, TulostenJulkistus}
+import fi.vm.sade.omatsivut.config.AppConfig.callerId
 import fi.vm.sade.utils.slf4j.Logging
 import org.json4s.JsonAST.JValue
 
@@ -34,7 +35,7 @@ trait OhjausparametritComponent {
 
     def haunAikataulu(asId: String) = {
       val url = ohjausparametritUrl + "/" + asId
-      val (responseCode, _, resultString) = DefaultHttpClient.httpGet(url)
+      val (responseCode, _, resultString) = DefaultHttpClient.httpGet(url)(callerId)
         .responseWithHeaders
 
       responseCode match {

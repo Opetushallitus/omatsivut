@@ -1,6 +1,7 @@
 package fi.vm.sade.hakemuseditori.http
 
 import fi.vm.sade.hakemuseditori.json.JsonFormats
+import fi.vm.sade.omatsivut.config.AppConfig.callerId
 import fi.vm.sade.utils.Timer._
 import fi.vm.sade.utils.http.DefaultHttpClient
 import fi.vm.sade.utils.slf4j.Logging
@@ -12,7 +13,7 @@ trait HttpCall extends JsonFormats with Logging {
   def withHttpGet[T](timedDesc: String, url: String, block: Option[JValue] => Option[T]): Option[T] = {
     timed(timedDesc, 1000) {
       val (responseCode, _, resultString) =
-        DefaultHttpClient.httpGet(url).responseWithHeaders()
+        DefaultHttpClient.httpGet(url)(callerId).responseWithHeaders()
       responseCode match {
         case 200 =>
           val parsed = parse(resultString, useBigDecimalForDouble = false).extractOpt[JValue]

@@ -7,6 +7,7 @@ import fi.vm.sade.utils.slf4j.Logging
 import fi.vm.sade.utils.Timer.timed
 import fi.vm.sade.hakemuseditori.valintatulokset.domain.{Ilmoittautuminen, VastaanottoAction}
 import fi.vm.sade.omatsivut.OphUrlProperties
+import fi.vm.sade.omatsivut.config.AppConfig.callerId
 import org.json4s.JsonAST.JValue
 
 class ValintatulosException extends Exception
@@ -49,7 +50,7 @@ class RemoteValintatulosService extends ValintatulosService with JsonFormats wit
 
   def applyFixtureWithQuery(query: Map[String,AnyRef]) {
     val url = OphUrlProperties.url("valinta-tulos-service.fixtures.apply", query)
-    DefaultHttpClient.httpPut(url).responseWithHeaders match {
+    DefaultHttpClient.httpPut(url)(callerId).responseWithHeaders match {
       case (200, _, resultString) =>
         logger.info("Using valinta-tulos-service fixture: " + query)
       case (errorCode, _, resultString) =>
@@ -60,7 +61,7 @@ class RemoteValintatulosService extends ValintatulosService with JsonFormats wit
 
   override def getValintatulos(hakemusOid: String, hakuOid: String): Option[Valintatulos] = {
     val url = OphUrlProperties.url("valinta-tulos-service.valintatulos", hakuOid, hakemusOid)
-    val request = DefaultHttpClient.httpGet(url)
+    val request = DefaultHttpClient.httpGet(url)(callerId)
 
     timed("ValintatulosService get", 1000){request.responseWithHeaders} match {
       case (200, _, resultString) => {
@@ -85,7 +86,7 @@ class RemoteValintatulosService extends ValintatulosService with JsonFormats wit
     import org.json4s.jackson.Serialization
 
     val url = OphUrlProperties.url("valinta-tulos-service.vastaanota", henkiloOid, hakemusOid, hakukohdeOid)
-    val request = DefaultHttpClient.httpPost(url, Some(Serialization.write(vastaanotto))).header("Content-type", "application/json")
+    val request = DefaultHttpClient.httpPost(url, Some(Serialization.write(vastaanotto)))(callerId).header("Content-type", "application/json")
     request.responseWithHeaders match {
       case (200, _, resultString) => {
         logger.debug("POST " + url + ": " + resultString)
@@ -103,7 +104,7 @@ class RemoteValintatulosService extends ValintatulosService with JsonFormats wit
   override def ilmoittaudu(hakuOid: String, hakemusOid: String, ilmoittautuminen: Ilmoittautuminen) : Boolean = {
     import org.json4s.jackson.Serialization
     val url = OphUrlProperties.url("valinta-tulos-service.ilmoittaudu", hakuOid, hakemusOid)
-    val request = DefaultHttpClient.httpPost(url, Some(Serialization.write(ilmoittautuminen))).header("Content-type", "application/json")
+    val request = DefaultHttpClient.httpPost(url, Some(Serialization.write(ilmoittautuminen)))(callerId).header("Content-type", "application/json")
 
     request.responseWithHeaders match {
       case (200, _, resultString) => {
