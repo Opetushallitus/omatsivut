@@ -30,7 +30,8 @@ class RemoteOppijanTunnistusService(client: HttpClient = DefaultHttpClient) exte
 
   def validateToken(token: String): Try[OppijantunnistusMetadata] = {
 
-    val request = client.httpGet(OphUrlProperties.url("oppijan-tunnistus.verify", token))(AppConfig.callerId)
+    val url = OphUrlProperties.url("oppijan-tunnistus.verify", token)
+    val request = client.httpGet(url)(AppConfig.callerId)
 
     request.responseWithHeaders() match {
       case (200, _, resultString) =>
