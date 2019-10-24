@@ -30,7 +30,7 @@ trait SecuredSessionServletContainer {
           }
         }
         case None =>
-          BadRequest(reason = "No hetu found in request from shibboleth" + clientAddress)
+          BadRequest("No hetu found in request from shibboleth " + clientAddress)
       }
     }
 

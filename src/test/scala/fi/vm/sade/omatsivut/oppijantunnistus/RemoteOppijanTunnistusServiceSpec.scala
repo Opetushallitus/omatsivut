@@ -5,7 +5,7 @@ import fi.vm.sade.utils.http.{HttpClient, HttpRequest}
 import org.json4s.JsonDSL._
 import org.json4s.jackson.JsonMethods._
 import org.junit.runner.RunWith
-import org.mockito.Matchers
+import org.mockito.{ArgumentMatchers, Matchers}
 import org.scalatra.test.specs2.MutableScalatraSpec
 import org.specs2.mock.Mockito
 import org.specs2.runner.JUnitRunner
@@ -27,7 +27,7 @@ class RemoteOppijanTunnistusServiceSpec extends MutableScalatraSpec with Mockito
 
       val response = ("exists" -> true) ~ ("valid" -> true) ~ ("metadata" -> ("hakemusOid" -> expectedHakemusOid))
 
-      request.header(Matchers.any[String], Matchers.any[String]).returns(request)
+      request.header(ArgumentMatchers.any[String], ArgumentMatchers.any[String]).returns(request)
       request.responseWithHeaders().returns((200, Map(), compact(render(response))))
       println(url)
       client.httpGet(url).returns(request)
@@ -41,7 +41,7 @@ class RemoteOppijanTunnistusServiceSpec extends MutableScalatraSpec with Mockito
 
       val response = ("exists" -> false) ~ ("valid" -> false)
 
-      request.header(Matchers.any[String], Matchers.any[String]).returns(request)
+      request.header(ArgumentMatchers.any[String], ArgumentMatchers.any[String]).returns(request)
       request.responseWithHeaders().returns((200, Map(), compact(render(response))))
       client.httpGet(url).returns(request)
 
@@ -54,7 +54,7 @@ class RemoteOppijanTunnistusServiceSpec extends MutableScalatraSpec with Mockito
 
       val response = ("exists" -> true) ~ ("valid" -> false)
 
-      request.header(Matchers.any[String], Matchers.any[String]).returns(request)
+      request.header(ArgumentMatchers.any[String], ArgumentMatchers.any[String]).returns(request)
       request.responseWithHeaders().returns((200, Map(), compact(render(response))))
       client.httpGet(url).returns(request)
 
@@ -65,7 +65,7 @@ class RemoteOppijanTunnistusServiceSpec extends MutableScalatraSpec with Mockito
       val client = mock[HttpClient]
       val request = mock[HttpRequest]
 
-      request.header(Matchers.any[String], Matchers.any[String]).returns(request)
+      request.header(ArgumentMatchers.any[String], ArgumentMatchers.any[String]).returns(request)
       request.responseWithHeaders().returns((500, Map(), ""))
       client.httpGet(url).returns(request)
 
