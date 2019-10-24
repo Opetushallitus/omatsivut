@@ -145,7 +145,9 @@ object AppConfig extends Logging {
     private var mongo: Option[MongoServer] = None
 
     override def start() {
+      logger.info("Starting embedded mongo")
       mongo = EmbeddedMongo.start(embeddedMongoPortChooser)
+      logger.info("Started embedded mongo")
     }
 
     override def stop() {
