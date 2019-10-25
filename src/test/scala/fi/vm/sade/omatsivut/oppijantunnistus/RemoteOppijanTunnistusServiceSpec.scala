@@ -1,6 +1,7 @@
 package fi.vm.sade.omatsivut.oppijantunnistus
 
 import fi.vm.sade.omatsivut.OphUrlProperties
+import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.utils.http.{HttpClient, HttpRequest}
 import org.json4s.JsonDSL._
 import org.json4s.jackson.JsonMethods._
@@ -18,7 +19,7 @@ class RemoteOppijanTunnistusServiceSpec extends MutableScalatraSpec with Mockito
   val testToken: String = "testToken"
   val url: String = OphUrlProperties.url("oppijan-tunnistus.verify", testToken)
   val expectedHakemusOid: String = "expectedHakemusOid"
-  val callerId = "mock.caller.id"
+  val callerId = AppConfig.callerId
 
   "RemoteOppijanTunnistusService" should {
 
