@@ -76,19 +76,7 @@ class RemoteOppijanTunnistusServiceSpec extends MutableScalatraSpec with Mockito
 
   }
 
-  def validateToken(token: String, httpClientMock: HttpClient): Try[OppijantunnistusMetadata] = {
-    println("Creating tunnistuService for httpClientMock " + httpClientMock)
-    val tunnistusService = new RemoteOppijanTunnistusService(httpClientMock)
-    println("Calling tunnistusService.validateToken for token" + token)
-    try {
-      tunnistusService.validateToken(token)
-    } catch {
-      case t: Throwable =>
-        println("Error calling validateToken: " + t.getStackTrace)
-        println("Cause: " + t.getCause)
-        t.printStackTrace()
-        throw t
-    }
-  }
+  def validateToken(token: String, httpClientMock: HttpClient): Try[OppijantunnistusMetadata] =
+    new RemoteOppijanTunnistusService(httpClientMock).validateToken(token)
 
 }
