@@ -71,7 +71,7 @@ trait HakemusEditoriComponent extends ApplicationValidatorComponent
     def fetchByPersonOid(request: HttpServletRequest,
                          personOid: String,
                          valintatulosFetchStrategy: ValintatulosFetchStrategy): HakemusResult = {
-      val ataruHakemukset = Try(ataruService.findApplications(request, personOid, valintatulosFetchStrategy))
+      val ataruHakemukset = Try(ataruService.findApplications(request, personOid, valintatulosFetchStrategy, language))
       val hakuAppHakemukset = oppijanumerorekisteriService.fetchAllDuplicateOids(personOid).toList
         .map(oid => Try(hakemusRepository.fetchHakemukset(request, oid, valintatulosFetchStrategy)))
       (ataruHakemukset :: hakuAppHakemukset).foldLeft((List.empty[HakemusInfo], List.empty[Throwable])) {
@@ -104,7 +104,7 @@ trait HakemusEditoriComponent extends ApplicationValidatorComponent
       }
 
       val result: Option[HakemusInfo] = matchingFromHakemusRepository.orElse {
-        val ataruApplications = ataruService.findApplications(request, personOid, valintatulosFetchStrategy)
+        val ataruApplications = ataruService.findApplications(request, personOid, valintatulosFetchStrategy, language)
         val matchingAtaruApplication = ataruApplications.find(_.hakemus.oid == hakemusOid)
         if (ataruApplications.isEmpty) {
           logger.warn("fetchByHakemusOid(): Ataru returned no applications for given personOid {}", personOid)

@@ -4,6 +4,7 @@ import java.util.concurrent.TimeUnit
 
 import fi.vm.sade.hakemuseditori.auditlog.{Audit, ShowHakemus}
 import fi.vm.sade.hakemuseditori.domain.Language
+import fi.vm.sade.hakemuseditori.domain.Language.Language
 import fi.vm.sade.hakemuseditori.hakemus.domain.{Active, EducationBackground, HakemuksenTila, Hakemus, HakukausiPaattynyt, HakukierrosPaattynyt}
 import fi.vm.sade.hakemuseditori.hakemus.{HakemusInfo, ValintatulosFetchStrategy}
 import fi.vm.sade.hakemuseditori.lomake.LomakeRepositoryComponent
@@ -49,14 +50,15 @@ trait AtaruServiceComponent  {
 
     def findApplications(request: HttpServletRequest,
                          personOid: String,
-                         valintatulosFetchStrategy: ValintatulosFetchStrategy): List[HakemusInfo] = {
+                         valintatulosFetchStrategy: ValintatulosFetchStrategy,
+                         language: Language): List[HakemusInfo] = {
       val now = new LocalDateTime().toDate.getTime
       val henkilo = oppijanumerorekisteriService.henkilo(personOid)
 
       getApplications(personOid)
         .map(a => (
           a,
-          tarjontaService.haku(a.haku, Language.fi),
+          tarjontaService.haku(a.haku, language),
           getHakukohteet(a.hakukohteet),
           tuloskirjeService.getTuloskirjeInfo(request, a.haku, a.oid)
         ))
@@ -185,5 +187,5 @@ trait AtaruServiceComponent  {
 }
 
 trait AtaruService {
-  def findApplications(request: HttpServletRequest, personOid: String, valintatulosFetchStrategy: ValintatulosFetchStrategy): List[HakemusInfo]
+  def findApplications(request: HttpServletRequest, personOid: String, valintatulosFetchStrategy: ValintatulosFetchStrategy, language: Language): List[HakemusInfo]
 }
