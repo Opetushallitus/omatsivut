@@ -18,24 +18,31 @@ import scala.util.{Failure, Success, Try}
 trait TuloskirjeComponent {
   val tuloskirjeService: TuloskirjeService
 
+  private def getFileSuffix(tuloskirjeKind: TuloskirjeKind) = {
+    tuloskirjeKind match {
+      case Pdf => "pdf"
+      case AccessibleHtml => "html"
+    }
+  }
+
   class StubbedTuloskirjeService extends TuloskirjeService with JsonFormats with Logging {
-    override def fetchTuloskirje(request: HttpServletRequest,hakuOid: String, hakemusOid: String) : Option[Array[Byte]] = {
+    override def fetchTuloskirje(request: HttpServletRequest,hakuOid: String, hakemusOid: String, tuloskirjeKind: TuloskirjeKind) : Option[Array[Byte]] = {
       logger.info(s"Get tuloskirje info for hakemus $hakemusOid")
       hakemusOid match {
         case "1.2.246.562.11.00000441369" => Some("1.2.246.562.11.00000441369_hyvaksymiskirje".getBytes)
         case _ => None
       }
     }
-    override def getTuloskirjeInfo(request: HttpServletRequest,hakuOid: String, hakemusOid: String) : Option[Tuloskirje] ={
-      fetchTuloskirje(request,hakuOid, hakemusOid).map(_ => Tuloskirje(hakuOid, 1479099404159L))
+    override def getTuloskirjeInfo(request: HttpServletRequest,hakuOid: String, hakemusOid: String, tuloskirjeKind: TuloskirjeKind) : Option[Tuloskirje] ={
+      fetchTuloskirje(request,hakuOid, hakemusOid, tuloskirjeKind).map(_ => Tuloskirje(hakuOid, 1479099404159L))
     }
   }
 
   class SharedDirTuloskirjeService(appConfig: AppConfig) extends TuloskirjeService with Logging {
     private val fileSystemUrl = appConfig.settings.tuloskirjeetFileSystemUrl
 
-    override def fetchTuloskirje(request: HttpServletRequest,hakuOid: String, hakemusOid: String) : Option[Array[Byte]] = {
-      val file = getLocalFile(hakuOid, hakemusOid)
+    override def fetchTuloskirje(request: HttpServletRequest,hakuOid: String, hakemusOid: String, tuloskirjeKind: TuloskirjeKind) : Option[Array[Byte]] = {
+      val file = getLocalFile(hakuOid, hakemusOid, tuloskirjeKind)
       if (file.exists()) {
         val fileStream = new FileInputStream(file)
         val byteArray: Array[Byte] = IOUtils.toByteArray(fileStream)
@@ -48,16 +55,17 @@ trait TuloskirjeComponent {
       }
     }
 
-    override def getTuloskirjeInfo(request: HttpServletRequest, hakuOid: String, hakemusOid: String) : Option[Tuloskirje] = {
-      val file = getLocalFile(hakuOid, hakemusOid)
+    override def getTuloskirjeInfo(request: HttpServletRequest, hakuOid: String, hakemusOid: String, tuloskirjeKind: TuloskirjeKind) : Option[Tuloskirje] = {
+      val file = getLocalFile(hakuOid, hakemusOid, tuloskirjeKind)
       if (file.exists()) {
         Some(Tuloskirje(hakuOid, file.lastModified()))
       } else {
         None
       }
     }
-    private def getLocalFile(hakuOid: String, hakemusOid: String): File = {
-      new File(s"$fileSystemUrl/$hakuOid/$hakemusOid.pdf")
+    private def getLocalFile(hakuOid: String, hakemusOid: String, tuloskirjeKind: TuloskirjeKind): File = {
+      val fileSuffix = getFileSuffix(tuloskirjeKind)
+      new File(s"$fileSystemUrl/$hakuOid/$hakemusOid.$fileSuffix")
     }
   }
 
@@ -67,12 +75,13 @@ trait TuloskirjeComponent {
       .withRegion(s3Settings.region)
       .build()
 
-    override def fetchTuloskirje(request: HttpServletRequest, hakuOid: String, hakemusOid: String) : Option[Array[Byte]] = {
+    override def fetchTuloskirje(request: HttpServletRequest, hakuOid: String, hakemusOid: String, tuloskirjeKind: TuloskirjeKind) : Option[Array[Byte]] = {
       if (!s3client.doesBucketExistV2(s3Settings.bucket)) {
         logger.error("Defined bucket {} does not exist.", s3Settings.bucket)
         return None
       }
-      val filename = s"$hakuOid/$hakemusOid.pdf"
+      val fileSuffix = getFileSuffix(tuloskirjeKind)
+      val filename = s"$hakuOid/$hakemusOid.$fileSuffix"
       Try(s3client.getObject(s3Settings.bucket, filename)) match {
         case Success(s3Object) =>
           val content = getContent(s3Object)
@@ -91,15 +100,16 @@ trait TuloskirjeComponent {
       }
     }
 
-    override def getTuloskirjeInfo(request: HttpServletRequest, hakuOid: String, hakemusOid: String) : Option[Tuloskirje] = {
-      getObjectMetadata(hakuOid, hakemusOid) match {
+    override def getTuloskirjeInfo(request: HttpServletRequest, hakuOid: String, hakemusOid: String, tuloskirjeKind: TuloskirjeKind) : Option[Tuloskirje] = {
+      getObjectMetadata(hakuOid, hakemusOid, tuloskirjeKind) match {
         case Some(metadata) => Some(Tuloskirje(hakuOid, metadata.getLastModified.getTime))
         case None => None
       }
     }
 
-    private def getObjectMetadata(hakuOid: String, hakemusOid: String) : Option[ObjectMetadata] = {
-      val filename = s"$hakuOid/$hakemusOid.pdf"
+    private def getObjectMetadata(hakuOid: String, hakemusOid: String, tuloskirjeKind: TuloskirjeKind) : Option[ObjectMetadata] = {
+      val fileSuffix = getFileSuffix(tuloskirjeKind)
+      val filename = s"$hakuOid/$hakemusOid.$fileSuffix"
       Try(s3client.getObjectMetadata(s3Settings.bucket, filename)) match {
         case Success(metadata) =>
           Some(metadata)
@@ -125,6 +135,6 @@ trait TuloskirjeComponent {
 }
 
 trait TuloskirjeService {
-  def fetchTuloskirje(request: HttpServletRequest, hakuOid: String, hakemusOid: String) : Option[Array[Byte]]
-  def getTuloskirjeInfo(request: HttpServletRequest, hakuOid: String, hakemusOid: String) : Option[Tuloskirje]
+  def fetchTuloskirje(request: HttpServletRequest, hakuOid: String, hakemusOid: String, tuloskirjeKind: TuloskirjeKind) : Option[Array[Byte]]
+  def getTuloskirjeInfo(request: HttpServletRequest, hakuOid: String, hakemusOid: String, tuloskirjeKind: TuloskirjeKind) : Option[Tuloskirje]
 }

@@ -16,7 +16,7 @@ import fi.vm.sade.hakemuseditori.oppijanumerorekisteri.OppijanumerorekisteriComp
 import fi.vm.sade.hakemuseditori.tarjonta.TarjontaComponent
 import fi.vm.sade.hakemuseditori.user.User
 import fi.vm.sade.hakemuseditori.valintatulokset.{NoOpValintatulosService, ValintatulosService, ValintatulosServiceComponent}
-import fi.vm.sade.hakemuseditori.viestintapalvelu.TuloskirjeComponent
+import fi.vm.sade.hakemuseditori.viestintapalvelu.{Pdf, TuloskirjeComponent}
 import fi.vm.sade.utils.slf4j.Logging
 import javax.servlet.http.HttpServletRequest
 import org.json4s.jackson.Serialization
@@ -65,7 +65,7 @@ trait HakemusEditoriComponent extends ApplicationValidatorComponent
         case PartialSuccess(_, ts) => throw ts.head
         case FullFailure(ts) => throw ts.head
       }
-      hakemukset.flatMap(hakemus => tuloskirjeService.fetchTuloskirje(request, hakuOid, hakemus.hakemus.oid))
+      hakemukset.flatMap(hakemus => tuloskirjeService.fetchTuloskirje(request, hakuOid, hakemus.hakemus.oid, Pdf))
     }
 
     def fetchByPersonOid(request: HttpServletRequest,

@@ -12,7 +12,7 @@ import fi.vm.sade.hakemuseditori.oppijanumerorekisteri.OppijanumerorekisteriComp
 import fi.vm.sade.hakemuseditori.tarjonta.TarjontaComponent
 import fi.vm.sade.hakemuseditori.tarjonta.domain.{Haku, Hakuaika, Hakukohde}
 import fi.vm.sade.hakemuseditori.valintatulokset.ValintatulosServiceComponent
-import fi.vm.sade.hakemuseditori.viestintapalvelu.TuloskirjeComponent
+import fi.vm.sade.hakemuseditori.viestintapalvelu.{Pdf, TuloskirjeComponent}
 import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
@@ -60,7 +60,7 @@ trait AtaruServiceComponent  {
           a,
           tarjontaService.haku(a.haku, language),
           getHakukohteet(a.hakukohteet),
-          tuloskirjeService.getTuloskirjeInfo(request, a.haku, a.oid)
+          tuloskirjeService.getTuloskirjeInfo(request, a.haku, a.oid, Pdf)
         ))
         .collect {
           case (a, Some(haku), Some(hakukohteet), tuloskirje) =>
