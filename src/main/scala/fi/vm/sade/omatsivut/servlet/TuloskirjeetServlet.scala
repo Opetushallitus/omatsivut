@@ -73,9 +73,12 @@ trait TuloskirjeetServletContainer {
           AccessibleHtml))
       } yield {
         tuloskirje match {
-          case Some(data: Array[Byte]) => Ok(data, Map(
-            "Content-Type" -> "text/html; charset=UTF-8",
-            "Content-Disposition" -> "inline"))
+          case Some(data: Array[Byte]) =>
+            response.setStatus(200)
+            response.setContentType("text/html")
+            response.setCharacterEncoding("utf-8")
+            response.getWriter.println(new String(data))
+            response.getWriter.flush()
           case None => throw new NoSuchElementException
         }
       }).get
