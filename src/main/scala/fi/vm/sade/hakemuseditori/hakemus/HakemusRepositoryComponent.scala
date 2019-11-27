@@ -17,7 +17,7 @@ import fi.vm.sade.hakemuseditori.tarjonta.TarjontaComponent
 import fi.vm.sade.hakemuseditori.tarjonta.domain.Haku
 import fi.vm.sade.hakemuseditori.user.{Oppija, User}
 import fi.vm.sade.hakemuseditori.valintatulokset.ValintatulosServiceComponent
-import fi.vm.sade.hakemuseditori.viestintapalvelu.TuloskirjeComponent
+import fi.vm.sade.hakemuseditori.viestintapalvelu.{Pdf, TuloskirjeComponent}
 import fi.vm.sade.haku.oppija.hakemus.aspect.ApplicationDiffUtil
 import fi.vm.sade.haku.oppija.hakemus.domain.{Application, ApplicationNote}
 import fi.vm.sade.haku.oppija.lomake.domain.ApplicationPeriod
@@ -226,7 +226,7 @@ trait HakemusRepositoryComponent {
             } else {
               (None, true)
             }
-            val letterForHaku = tuloskirjeService.getTuloskirjeInfo(request, haku.oid, application.oid)
+            val letterForHaku = tuloskirjeService.getTuloskirjeInfo(request, haku.oid, application.oid, Pdf)
             val hakemus = timed("fetchHakemukset -> hakemusConverter.convertToHakemus", 100) { hakemusConverter.convertToHakemus(letterForHaku, lomakeOption, haku, application, valintatulos) }
             timed("fetchHakemukset -> auditLogger.log", 100) { Audit.oppija.log(ShowHakemus(request, application.personOid, hakemus.oid, haku.oid)) }
 

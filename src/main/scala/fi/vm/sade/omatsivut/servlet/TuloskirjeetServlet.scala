@@ -3,7 +3,7 @@ package fi.vm.sade.omatsivut.servlet
 import fi.vm.sade.hakemuseditori._
 import fi.vm.sade.hakemuseditori.hakemus.{FetchIfNoHetuOrToinenAste, HakemusInfo, HakemusRepositoryComponent}
 import fi.vm.sade.hakemuseditori.user.Oppija
-import fi.vm.sade.hakemuseditori.viestintapalvelu.TuloskirjeComponent
+import fi.vm.sade.hakemuseditori.viestintapalvelu.{AccessibleHtml, Pdf, TuloskirjeComponent}
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.oppijantunnistus.{ExpiredTokenException, InvalidTokenException, OppijanTunnistusComponent, OppijantunnistusMetadata}
 import javax.servlet.http.HttpServletRequest
@@ -50,12 +50,35 @@ trait TuloskirjeetServletContainer {
         tuloskirje <- Try(tuloskirjeService.fetchTuloskirje(
           request,
           metadata.hakuOid.getOrElse(throw new RuntimeException(s"Haku OID not part of metadata for token ${token}")),
-          metadata.hakemusOid))
+          metadata.hakemusOid,
+          Pdf))
       } yield {
         tuloskirje match {
           case Some(data: Array[Byte]) => Ok(data, Map(
             "Content-Type" -> "application/octet-stream",
             "Content-Disposition" -> "attachment; filename=tuloskirje.pdf"))
+          case None => throw new NoSuchElementException
+        }
+      }).get
+    }
+
+    get("/:token/tuloskirje.html") {
+      val token = params("token")
+      (for {
+        metadata <- oppijanTunnistusService.validateToken(token)
+        tuloskirje <- Try(tuloskirjeService.fetchTuloskirje(
+          request,
+          metadata.hakuOid.getOrElse(throw new RuntimeException(s"Haku OID not part of metadata for token ${token}")),
+          metadata.hakemusOid,
+          AccessibleHtml))
+      } yield {
+        tuloskirje match {
+          case Some(data: Array[Byte]) =>
+            response.setStatus(200)
+            response.setContentType("text/html")
+            response.setCharacterEncoding("utf-8")
+            response.getWriter.println(new String(data))
+            response.getWriter.flush()
           case None => throw new NoSuchElementException
         }
       }).get
