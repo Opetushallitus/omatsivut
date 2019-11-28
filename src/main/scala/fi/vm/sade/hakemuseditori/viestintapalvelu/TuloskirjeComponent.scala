@@ -87,7 +87,13 @@ trait TuloskirjeComponent {
           val content = getContent(s3Object)
           Audit.oppija.log(FetchTuloskirje(request, hakuOid, hakemusOid))
           content
+        case Failure(e: AmazonS3Exception) =>
+          if (!"NoSuchKey".equals(e.getErrorCode)) {
+            logExceptions(e, filename)
+          }
+          None
         case Failure(e) =>
+          logExceptions(e, filename)
           None
       }
     }
