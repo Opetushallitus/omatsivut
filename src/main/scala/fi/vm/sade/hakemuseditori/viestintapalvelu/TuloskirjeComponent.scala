@@ -88,7 +88,6 @@ trait TuloskirjeComponent {
           Audit.oppija.log(FetchTuloskirje(request, hakuOid, hakemusOid))
           content
         case Failure(e) =>
-          logExceptions(e, filename)
           None
       }
     }
