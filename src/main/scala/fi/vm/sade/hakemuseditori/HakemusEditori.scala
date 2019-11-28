@@ -16,7 +16,7 @@ import fi.vm.sade.hakemuseditori.oppijanumerorekisteri.OppijanumerorekisteriComp
 import fi.vm.sade.hakemuseditori.tarjonta.TarjontaComponent
 import fi.vm.sade.hakemuseditori.user.User
 import fi.vm.sade.hakemuseditori.valintatulokset.{NoOpValintatulosService, ValintatulosService, ValintatulosServiceComponent}
-import fi.vm.sade.hakemuseditori.viestintapalvelu.{Pdf, TuloskirjeComponent}
+import fi.vm.sade.hakemuseditori.viestintapalvelu.{AccessibleHtml, Pdf, TuloskirjeComponent, TuloskirjeKind}
 import fi.vm.sade.utils.slf4j.Logging
 import javax.servlet.http.HttpServletRequest
 import org.json4s.jackson.Serialization
@@ -59,13 +59,13 @@ trait HakemusEditoriComponent extends ApplicationValidatorComponent
     implicit def language: Language.Language
     def user(): User
 
-    def fetchTuloskirje(request: HttpServletRequest, personOid: String, hakuOid: String): Option[Array[Byte]] = {
+    def fetchTuloskirje(request: HttpServletRequest, personOid: String, hakuOid: String, tuloskirjeKind: TuloskirjeKind): Option[Array[Byte]] = {
       val hakemukset = fetchByPersonOid(request, personOid, DontFetch) match {
         case FullSuccess(hs) => hs.find(_.hakemus.haku.oid == hakuOid)
         case PartialSuccess(_, ts) => throw ts.head
         case FullFailure(ts) => throw ts.head
       }
-      hakemukset.flatMap(hakemus => tuloskirjeService.fetchTuloskirje(request, hakuOid, hakemus.hakemus.oid, Pdf))
+      hakemukset.flatMap(hakemus => tuloskirjeService.fetchTuloskirje(request, hakuOid, hakemus.hakemus.oid, tuloskirjeKind))
     }
 
     def fetchByPersonOid(request: HttpServletRequest,

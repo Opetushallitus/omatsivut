@@ -9,6 +9,7 @@ import fi.vm.sade.hakemuseditori.lomake.domain.AnswerId
 import fi.vm.sade.hakemuseditori.tarjonta.TarjontaComponent
 import fi.vm.sade.hakemuseditori.user.Oppija
 import fi.vm.sade.hakemuseditori.valintatulokset.domain.Ilmoittautuminen
+import fi.vm.sade.hakemuseditori.viestintapalvelu.{AccessibleHtml, Pdf}
 import fi.vm.sade.omatsivut.NonSensitiveHakemusInfo.answerIds
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.oppijantunnistus.{ExpiredTokenException, InvalidTokenException, OppijanTunnistusComponent}
@@ -96,13 +97,22 @@ trait NonSensitiveApplicationServletContainer {
       val hakuOid = params("hakuOid")
       (for {
         token <- jwtAuthorize
-        tuloskirje <- Try(fetchTuloskirje(request, token.personOid, hakuOid))
+        tuloskirje <- Try(fetchTuloskirje(request, token.personOid, hakuOid, AccessibleHtml))
       } yield {
         tuloskirje match {
-          case Some(data) => Ok(tuloskirje, Map(
-            "Content-Type" -> "application/octet-stream",
-            "Content-Disposition" -> "attachment; filename=tuloskirje.pdf"))
-          case None => InternalServerError("error" -> "Internal Server Error")
+          case Some(data) =>
+            response.setStatus(200)
+            response.setContentType("text/html")
+            response.setCharacterEncoding("utf-8")
+            response.getWriter.println(new String(data))
+            response.getWriter.flush()
+          case None =>
+            fetchTuloskirje(request, token.personOid, hakuOid, Pdf) match {
+              case Some(data) => Ok(data, Map(
+                "Content-Type" -> "application/octet-stream",
+                "Content-Disposition" -> "attachment; filename=tuloskirje.pdf"))
+              case None => InternalServerError("error" -> "Internal Server Error")
+            }
         }
       }).get
     }

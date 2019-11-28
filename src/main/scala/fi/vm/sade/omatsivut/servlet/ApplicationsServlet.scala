@@ -10,6 +10,7 @@ import fi.vm.sade.hakemuseditori.localization.TranslationsComponent
 import fi.vm.sade.hakemuseditori.lomake.LomakeRepositoryComponent
 import fi.vm.sade.hakemuseditori.user.Oppija
 import fi.vm.sade.hakemuseditori.valintatulokset.ValintatulosServiceComponent
+import fi.vm.sade.hakemuseditori.viestintapalvelu.{AccessibleHtml, Pdf}
 import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.hakemuspreview.HakemusPreviewGeneratorComponent
@@ -56,11 +57,19 @@ trait ApplicationsServletContainer {
 
     get("/tuloskirje/:hakuOid") {
       val hakuOid = params("hakuOid")
-      hakemusEditori.fetchTuloskirje(request, personOid(), hakuOid) match {
-        case Some(tuloskirje) => Ok(tuloskirje, Map(
-          "Content-Type" -> "application/octet-stream",
-          "Content-Disposition" -> "attachment; filename=tuloskirje.pdf"))
-        case None => NotFound("error" -> "Not found")
+      hakemusEditori.fetchTuloskirje(request, personOid(), hakuOid, AccessibleHtml) match {
+        case Some(data) =>
+          response.setStatus(200)
+          response.setContentType("text/html")
+          response.setCharacterEncoding("utf-8")
+          response.getWriter.println(new String(data))
+          response.getWriter.flush()
+        case None => hakemusEditori.fetchTuloskirje(request, personOid(), hakuOid, Pdf) match {
+          case Some(tuloskirje) => Ok(tuloskirje, Map(
+            "Content-Type" -> "application/octet-stream",
+            "Content-Disposition" -> "attachment; filename=tuloskirje.pdf"))
+          case None => NotFound("error" -> "Not found")
+        }
       }
     }
 
