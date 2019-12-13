@@ -27,7 +27,13 @@ export function getTranslations() {
 function loadTranslations(language) {
   const url = urls["omatsivut.translations"] + '?lang=' + language;
   return fetch(url)
-    .then(response => response.json())
+    .then(response => {
+      if (response.status === 200) {
+        return response.json();
+      } else {
+        throw new Error("Bad response from " + url + ": " + response);
+      }
+    })
     .then(translations => translations)
     .catch(err => {
         console.error(err);
