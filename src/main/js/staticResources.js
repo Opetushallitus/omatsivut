@@ -4,7 +4,11 @@ import { urls } from './constants';
 export async function init() {
   const language = getLanguage();
   document.documentElement.lang = language;
-  window.translations = await loadTranslations(language);
+  let translations = await loadTranslations(language);
+  if (translations === undefined) {
+    throw new Error("Error in init(): loadTranslations() returned undefined. language:" + language);
+  }
+  window.translations = translations;
 }
 
 export function getLanguage() {
