@@ -25,7 +25,10 @@ function loadTranslations(language) {
   return fetch(url)
     .then(response => response.json())
     .then(translations => translations)
-    .catch(err => console.error(err));
+    .catch(err => {
+        console.error(err);
+        throw new Error("Failed to load translations from " + url + ": " + err);
+      });
 }
 
 function getLanguageFromHost(host) {
