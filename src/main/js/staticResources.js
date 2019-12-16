@@ -4,7 +4,17 @@ import { urls } from './constants';
 export async function init() {
   const language = getLanguage();
   document.documentElement.lang = language;
-  window.translations = await loadTranslations(language);
+  try {
+    let translations = await loadTranslations(language);
+    window.translations = translations;
+  } catch (err) {
+    console.error(err);
+    throw new Error("Error in init(): failed to await loadTranslations: " + err);
+  }
+
+  if (window.translations === undefined) {
+    throw new Error("Error in init(): loadTranslations() returned undefined. language: " + language);
+  }
 }
 
 export function getLanguage() {
@@ -23,9 +33,18 @@ export function getTranslations() {
 function loadTranslations(language) {
   const url = urls["omatsivut.translations"] + '?lang=' + language;
   return fetch(url)
-    .then(response => response.json())
+    .then(response => {
+      if (response.status === 200) {
+        return response.json();
+      } else {
+        throw new Error("Bad response from " + url + ": " + response);
+      }
+    })
     .then(translations => translations)
-    .catch(err => console.error(err));
+    .catch(err => {
+        console.error(err);
+        throw new Error("Failed to load translations from " + url + ": " + err);
+      });
 }
 
 function getLanguageFromHost(host) {
