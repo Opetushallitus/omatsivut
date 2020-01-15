@@ -3,21 +3,20 @@ package fi.vm.sade.hakemuseditori.tarjonta
 import fi.vm.sade.hakemuseditori.domain.Language
 import fi.vm.sade.hakemuseditori.domain.Language.Language
 import fi.vm.sade.hakemuseditori.fixtures.JsonFixtureMaps
-import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus
-import fi.vm.sade.hakemuseditori.http.HttpCall
 import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.hakemuseditori.memoize.TTLOptionalMemoize
 import fi.vm.sade.hakemuseditori.ohjausparametrit.OhjausparametritComponent
 import fi.vm.sade.hakemuseditori.ohjausparametrit.domain.HaunAikataulu
 import fi.vm.sade.hakemuseditori.tarjonta.domain.{Haku, Hakukohde, KohteenHakuaika}
-import fi.vm.sade.omatsivut.OphUrlProperties
+import fi.vm.sade.hakemuseditori.tarjonta.vanha.RemoteTarjontaComponent
 import fi.vm.sade.utils.slf4j.Logging
 import org.json4s.JsonAST.JValue
 
 import scala.collection.mutable
 
 trait TarjontaComponent {
-  this: OhjausparametritComponent =>
+  this: OhjausparametritComponent
+    with RemoteTarjontaComponent =>
 
   val tarjontaService: TarjontaService
 
@@ -128,24 +127,6 @@ trait TarjontaComponent {
       new TarjontaService {
         override def haku(oid: String, lang: Language): Option[Haku] = hakuMemo(oid, lang)
         override def hakukohde(oid: String): Option[Hakukohde] = hakukohdeMemo(oid)
-      }
-    }
-  }
-
-  class RemoteTarjontaService() extends TarjontaService with HttpCall {
-    override def haku(oid: String, lang: Language.Language) : Option[Haku] = {
-      withHttpGet("Tarjonta fetch haku", OphUrlProperties.url("tarjonta-service.haku", oid), {_.flatMap(TarjontaParser.parseHaku).map({ tarjontaHaku =>
-          val haunAikataulu = ohjausparametritService.haunAikataulu(oid)
-          Haku(tarjontaHaku, lang).copy(aikataulu = haunAikataulu)
-        })}
-      )
-    }
-
-    override def hakukohde(oid: String): Option[Hakukohde] = {
-      if (oid != "") {
-        withHttpGet( "Tarjonta fetch hakukohde", OphUrlProperties.url("tarjonta-service.hakukohde", oid), {_.flatMap(TarjontaParser.parseHakukohde)})
-      } else {
-        None
       }
     }
   }
