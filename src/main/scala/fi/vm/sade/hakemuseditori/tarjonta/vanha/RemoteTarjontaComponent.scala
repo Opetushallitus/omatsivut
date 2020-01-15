@@ -3,7 +3,7 @@ package fi.vm.sade.hakemuseditori.tarjonta.vanha
 import fi.vm.sade.hakemuseditori.domain.Language
 import fi.vm.sade.hakemuseditori.http.HttpCall
 import fi.vm.sade.hakemuseditori.ohjausparametrit.OhjausparametritComponent
-import fi.vm.sade.hakemuseditori.tarjonta.{TarjontaParser, TarjontaService}
+import fi.vm.sade.hakemuseditori.tarjonta.TarjontaService
 import fi.vm.sade.hakemuseditori.tarjonta.domain.{Haku, Hakukohde}
 import fi.vm.sade.omatsivut.OphUrlProperties
 
