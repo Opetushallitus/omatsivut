@@ -8,7 +8,9 @@ import fi.vm.sade.hakemuseditori.memoize.TTLOptionalMemoize
 import fi.vm.sade.hakemuseditori.ohjausparametrit.OhjausparametritComponent
 import fi.vm.sade.hakemuseditori.ohjausparametrit.domain.HaunAikataulu
 import fi.vm.sade.hakemuseditori.tarjonta.domain.{Haku, Hakukohde, KohteenHakuaika}
+import fi.vm.sade.hakemuseditori.tarjonta.kouta.RemoteKoutaComponent
 import fi.vm.sade.hakemuseditori.tarjonta.vanha.{RemoteTarjontaComponent, TarjontaParser}
+import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.utils.slf4j.Logging
 import org.json4s.JsonAST.JValue
 
@@ -16,7 +18,8 @@ import scala.collection.mutable
 
 trait TarjontaComponent {
   this: OhjausparametritComponent
-    with RemoteTarjontaComponent =>
+    with RemoteTarjontaComponent
+    with RemoteKoutaComponent =>
 
   val tarjontaService: TarjontaService
 

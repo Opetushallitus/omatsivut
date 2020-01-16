@@ -39,6 +39,22 @@ object Haku {
   private def checkeBaseEducationConflict(tarjontaHaku: TarjontaHaku): Boolean = {
     isKorkeakouluhaku(tarjontaHaku) && tarjontaHaku.kohdejoukonTarkenne.getOrElse("").trim.isEmpty
   }
+
+  def fromKoutaHaku(koutaHaku: KoutaHaku, lang: Language): Haku = {
+    Haku(oid = koutaHaku.oid,
+      tila = koutaHaku.tila,
+      name = koutaHaku.getLocalizedName(lang),
+      applicationPeriods = List.empty,
+      tyyppi = "",
+      korkeakouluhaku = false,
+      showSingleStudyPlaceEnforcement = false,
+      siirtohaku = false,
+      checkBaseEducationConflict = false,
+      usePriority = false,
+      jarjestelmanHakulomake = false,
+      toisenasteenhaku = false)
+  }
+
 }
 
 case class Hakuaika(id: String, start: Long, end: Long) {

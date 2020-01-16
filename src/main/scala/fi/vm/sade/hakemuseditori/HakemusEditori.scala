@@ -14,6 +14,7 @@ import fi.vm.sade.hakemuseditori.lomake.LomakeRepositoryComponent
 import fi.vm.sade.hakemuseditori.ohjausparametrit.OhjausparametritComponent
 import fi.vm.sade.hakemuseditori.oppijanumerorekisteri.OppijanumerorekisteriComponent
 import fi.vm.sade.hakemuseditori.tarjonta.TarjontaComponent
+import fi.vm.sade.hakemuseditori.tarjonta.kouta.RemoteKoutaComponent
 import fi.vm.sade.hakemuseditori.tarjonta.vanha.RemoteTarjontaComponent
 import fi.vm.sade.hakemuseditori.user.User
 import fi.vm.sade.hakemuseditori.valintatulokset.{NoOpValintatulosService, ValintatulosService, ValintatulosServiceComponent}
@@ -34,6 +35,7 @@ trait HakemusEditoriComponent extends ApplicationValidatorComponent
   with AtaruServiceComponent
   with OppijanumerorekisteriComponent
   with RemoteTarjontaComponent
+  with RemoteKoutaComponent
   with TarjontaComponent
   with OhjausparametritComponent
   with LomakeRepositoryComponent
