@@ -3,10 +3,10 @@ package fi.vm.sade.hakemuseditori.tarjonta.kouta
 import java.util.concurrent.TimeUnit
 
 import fi.vm.sade.hakemuseditori.domain.Language
+import fi.vm.sade.hakemuseditori.domain.Language.Language
 import fi.vm.sade.hakemuseditori.ohjausparametrit.OhjausparametritComponent
 import fi.vm.sade.hakemuseditori.tarjonta.TarjontaService
 import fi.vm.sade.hakemuseditori.tarjonta.domain.{Haku, Hakukohde, KoutaHaku}
-import fi.vm.sade.hakemuseditori.tarjonta.vanha.TarjontaParser
 import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
@@ -14,7 +14,7 @@ import fi.vm.sade.utils.cas.{CasAuthenticatingClient, CasClient, CasParams}
 import fi.vm.sade.utils.slf4j.Logging
 import org.http4s.Method.GET
 import org.http4s.client.blaze
-import org.http4s.{Request, Uri}
+import org.http4s.{Request, Response, Uri}
 import org.json4s.DefaultFormats
 import org.json4s.jackson.JsonMethods
 import scalaz.concurrent.Task
@@ -47,21 +47,25 @@ trait RemoteKoutaComponent {
       Uri.fromString(OphUrlProperties.url("kouta-internal.haku", oid))
         .fold(Task.fail, uri => {
           logger.info(s"Get haku $oid from Kouta: uri $uri")
-          httpClient.fetch(Request(method = GET, uri = uri)) {
-            case r if r.status.code == 200 =>
-              r.as[String]
-                .map(s => JsonMethods.parse(s).extract[KoutaHaku])
-                .map({ koutaHaku =>
-                  Some(Haku.fromKoutaHaku(koutaHaku, lang))
-                })
-            case r if r.status.code == 404 =>
-              Task.now(None)
-            case r =>
-              Task.fail(new RuntimeException(s"Failed to get haku for $oid: ${r.toString()}"))
-          }
+          httpClient.fetch(Request(method = GET, uri = uri)) { r => handleHakuResponse(r, lang) }
         })
         .unsafePerformSyncAttemptFor(Duration(10, TimeUnit.SECONDS))
         .fold(throw _, x => x)
+    }
+
+    private def handleHakuResponse(response: Response, lang: Language): Task[Option[Haku]] = {
+      response match {
+        case r if r.status.code == 200 =>
+          r.as[String]
+            .map(s => JsonMethods.parse(s).extract[KoutaHaku])
+            .map({ koutaHaku =>
+              Some(Haku.fromKoutaHaku(koutaHaku, lang))
+            })
+        case r if r.status.code == 404 =>
+          Task.now(None)
+        case r =>
+          Task.fail(new RuntimeException(s"Failed to get haku: ${r.toString()}"))
+      }
     }
 
     override def hakukohde(oid: String): Option[Hakukohde] = {
