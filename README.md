@@ -10,7 +10,7 @@ Oppijan henkilökohtainen palvelu
 
 ### JDK
 
-- Käytetään kehityksessä ja sovelluksen ajamiseen JDK8:a, mutta target version yhä 1.7
+- Käytetään kehityksessä ja sovelluksen ajamiseen JDK8:a, mutta scala-maven-pluginin target version on yhä 1.7
    - odotetaan scala 2.12:sta ja spring 4 upgradea ennen target version vaihtoa
 - JCE (Java Cryptography Extension)
    - Ilman laajennosta tulee virhe: "java.security.InvalidKeyException: Illegal key size"
