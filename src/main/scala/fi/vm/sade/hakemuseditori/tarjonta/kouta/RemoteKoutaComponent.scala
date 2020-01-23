@@ -69,7 +69,26 @@ trait RemoteKoutaComponent {
     }
 
     override def hakukohde(oid: String): Option[Hakukohde] = {
-      None
+      Uri.fromString(OphUrlProperties.url("kouta-internal.hakukohde", oid))
+        .fold(Task.fail, uri => {
+          logger.info(s"Get hakukohde $oid from Kouta: uri $uri")
+          httpClient.fetch(Request(method = GET, uri = uri)) { r => handleHakukohdeResponse(r) }
+        })
+        .unsafePerformSyncAttemptFor(Duration(10, TimeUnit.SECONDS))
+        .fold(throw _, x => x)
+    }
+
+    private def handleHakukohdeResponse(response: Response): Task[Option[Hakukohde]] = {
+      response match {
+        case r if r.status.code == 200 =>
+          r.as[String]
+            .map( s => JsonMethods.parse(s).extract[KoutaHakukohde] )
+            .map( koutaHakukohde => Some(KoutaHakukohde.toHakukohde(koutaHakukohde)) )
+        case r if r.status.code == 404 =>
+          Task.now(None)
+        case r =>
+          Task.fail(new RuntimeException(s"Failed to get hakukohde: ${r.toString()}"))
+      }
     }
   }
 
