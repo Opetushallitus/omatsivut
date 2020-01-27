@@ -12,7 +12,7 @@ case class Haku(oid: String, tila: String, name: String, applicationPeriods: Lis
                 korkeakouluhaku: Boolean, showSingleStudyPlaceEnforcement: Boolean, siirtohaku: Boolean,
                 checkBaseEducationConflict: Boolean, usePriority: Boolean, jarjestelmanHakulomake: Boolean,
                 toisenasteenhaku: Boolean, aikataulu: Option[HaunAikataulu] = None) {
-  def active: Boolean = new Interval(applicationPeriods.head.start, applicationPeriods.last.end).containsNow()
+  def active: Boolean = if (applicationPeriods.isEmpty) false else new Interval(applicationPeriods.head.start, applicationPeriods.last.end).containsNow()
   def published: Boolean = TarjontaTila.JULKAISTU.toString.equals(tila)
   def hakukierrosvoimassa: Boolean = new LocalDateTime().isBefore(aikataulu.flatMap(_.hakukierrosPaattyy).map(new LocalDateTime(_: Long)).getOrElse(new LocalDateTime().minusYears(100)))
 }
