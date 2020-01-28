@@ -1,6 +1,7 @@
 package fi.vm.sade.hakemuseditori.tarjonta.domain
 
-import fi.vm.sade.hakemuseditori.domain.Language._
+import fi.vm.sade.hakemuseditori.domain.Language.Language
+import fi.vm.sade.hakemuseditori.tarjonta.domain.HakuTyyppi.{Erillishaku, JatkuvaHaku, Lisahaku, Yhteishaku}
 
 sealed case class TarjontaHaku(oid: String, hakuaikas: List[TarjontaHakuaika], hakutapaUri: String, hakutyyppiUri: String,
                                kohdejoukkoUri: String, kohdejoukonTarkenne: Option[String], usePriority: Boolean,
@@ -9,13 +10,29 @@ sealed case class TarjontaHaku(oid: String, hakuaikas: List[TarjontaHakuaika], h
   def getLocalizedName(lang: Language): String = {
     nimi.get("kieli_" + lang.toString).orElse(nimi.get("kieli_fi")).getOrElse("?")
   }
+
+  def getHakutyyppi() = {
+    if (hakutyyppiUri.contains("hakutyyppi_03")) {
+      Lisahaku
+    } else {
+      if (hakutapaUri.contains("hakutapa_01")) {
+        Yhteishaku
+      } else if (hakutapaUri.contains("hakutapa_02")) {
+        Erillishaku
+      } else if (hakutapaUri.contains("hakutapa_03")) {
+        JatkuvaHaku
+      } else {
+        throw new IllegalArgumentException("Unsupported type for haku: " + oid + " - " + hakutyyppiUri + "," + hakutapaUri)
+      }
+    }
+  }
 }
 
 object TarjontaHaku {
 
   def toHaku(tarjontaHaku: TarjontaHaku, lang: Language): Haku = {
     Haku(tarjontaHaku.oid, tarjontaHaku.tila, tarjontaHaku.getLocalizedName(lang), tarjontaHaku.hakuaikas.sortBy(_.alkuPvm).map(h => Hakuaika(h)),
-      HakuTyyppi(tarjontaHaku).toString, isKorkeakouluhaku(tarjontaHaku), tarjontaHaku.yhdenPaikanSaanto.voimassa,
+      tarjontaHaku.getHakutyyppi().toString(), isKorkeakouluhaku(tarjontaHaku), tarjontaHaku.yhdenPaikanSaanto.voimassa,
       tarjontaHaku.kohdejoukonTarkenne.exists(_.contains("haunkohdejoukontarkenne_1#")),
       checkeBaseEducationConflict(tarjontaHaku), tarjontaHaku.usePriority, tarjontaHaku.jarjestelmanHakulomake,
       isToisenasteenhaku(tarjontaHaku)
