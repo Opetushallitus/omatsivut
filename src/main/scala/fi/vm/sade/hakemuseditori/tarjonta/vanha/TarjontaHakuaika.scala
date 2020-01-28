@@ -1,4 +1,6 @@
-package fi.vm.sade.hakemuseditori.tarjonta.domain
+package fi.vm.sade.hakemuseditori.tarjonta.vanha
+
+import fi.vm.sade.hakemuseditori.tarjonta.domain.Hakuaika
 
 sealed case class TarjontaHakuaika(hakuaikaId: String, alkuPvm: Long, loppuPvm: Long)
 
