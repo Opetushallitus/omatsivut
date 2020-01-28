@@ -121,9 +121,9 @@ trait TarjontaComponent {
 
   }
 
-  object CachedRemoteTarjontaService {
-    def apply(): TarjontaService = {
-      val service = new RemoteTarjontaService()
+  object CachedRemoteTarjontaService extends Logging {
+    def apply(appConfig: AppConfig): TarjontaService = {
+      val service = new UnionTarjontaService(new RemoteTarjontaService(), new RemoteKoutaService(appConfig))
       val hakuMemo = TTLOptionalMemoize.memoize(service.haku _, "tarjonta haku", 4 * 60 * 60, 128)
       val hakukohdeMemo = TTLOptionalMemoize.memoize(service.hakukohde _, "tarjonta hakukohde", 4 * 60 * 60, 1024)
 
