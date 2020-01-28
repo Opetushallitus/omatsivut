@@ -32,7 +32,7 @@ sealed case class TarjontaHaku(oid: String, hakuaikas: List[TarjontaHakuaika], h
 object TarjontaHaku {
 
   def toHaku(tarjontaHaku: TarjontaHaku, lang: Language): Haku = {
-    Haku(tarjontaHaku.oid, tarjontaHaku.tila, tarjontaHaku.getLocalizedName(lang), tarjontaHaku.hakuaikas.sortBy(_.alkuPvm).map(h => Hakuaika(h)),
+    Haku(tarjontaHaku.oid, tarjontaHaku.tila, tarjontaHaku.getLocalizedName(lang), tarjontaHaku.hakuaikas.sortBy(_.alkuPvm).map(h => TarjontaHakuaika.toHakuaika(h)),
       tarjontaHaku.getHakutyyppi().toString(), isKorkeakouluhaku(tarjontaHaku), tarjontaHaku.yhdenPaikanSaanto.voimassa,
       tarjontaHaku.kohdejoukonTarkenne.exists(_.contains("haunkohdejoukontarkenne_1#")),
       checkeBaseEducationConflict(tarjontaHaku), tarjontaHaku.usePriority, tarjontaHaku.jarjestelmanHakulomake,
