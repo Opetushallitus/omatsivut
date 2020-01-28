@@ -1,7 +1,7 @@
 package fi.vm.sade.hakemuseditori.tarjonta.vanha
 
 import fi.vm.sade.hakemuseditori.json.JsonFormats
-import fi.vm.sade.hakemuseditori.tarjonta.domain.{Hakukohde, KohteenHakuaika, KoulutuksenAlkaminen, TarjontaHaku}
+import fi.vm.sade.hakemuseditori.tarjonta.domain.{Hakukohde, KohteenHakuaika, KoulutuksenAlkaminen}
 import fi.vm.sade.utils.slf4j.Logging
 import org.json4s.JValue
 

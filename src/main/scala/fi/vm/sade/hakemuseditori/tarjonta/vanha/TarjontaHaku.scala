@@ -1,7 +1,8 @@
-package fi.vm.sade.hakemuseditori.tarjonta.domain
+package fi.vm.sade.hakemuseditori.tarjonta.vanha
 
 import fi.vm.sade.hakemuseditori.domain.Language.Language
 import fi.vm.sade.hakemuseditori.tarjonta.domain.HakuTyyppi.{Erillishaku, JatkuvaHaku, Lisahaku, Yhteishaku}
+import fi.vm.sade.hakemuseditori.tarjonta.domain.{Haku, Hakuaika, TarjontaHakuaika}
 
 sealed case class TarjontaHaku(oid: String, hakuaikas: List[TarjontaHakuaika], hakutapaUri: String, hakutyyppiUri: String,
                                kohdejoukkoUri: String, kohdejoukonTarkenne: Option[String], usePriority: Boolean,
