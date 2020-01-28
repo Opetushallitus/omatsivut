@@ -6,7 +6,7 @@ import fi.vm.sade.hakemuseditori.domain.Language
 import fi.vm.sade.hakemuseditori.domain.Language.Language
 import fi.vm.sade.hakemuseditori.ohjausparametrit.OhjausparametritComponent
 import fi.vm.sade.hakemuseditori.tarjonta.TarjontaService
-import fi.vm.sade.hakemuseditori.tarjonta.domain.{Haku, Hakukohde, KoutaHaku}
+import fi.vm.sade.hakemuseditori.tarjonta.domain.{Haku, Hakukohde}
 import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
@@ -59,7 +59,7 @@ trait RemoteKoutaComponent {
           r.as[String]
             .map(s => JsonMethods.parse(s).extract[KoutaHaku])
             .map({ koutaHaku =>
-              Some(Haku.fromKoutaHaku(koutaHaku, lang))
+              Some(KoutaHaku.toHaku(koutaHaku, lang))
             })
         case r if r.status.code == 404 =>
           Task.now(None)
