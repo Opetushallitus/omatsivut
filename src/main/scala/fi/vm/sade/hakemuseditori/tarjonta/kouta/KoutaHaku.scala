@@ -3,7 +3,7 @@ package fi.vm.sade.hakemuseditori.tarjonta.kouta
 import fi.vm.sade.hakemuseditori.domain.Language.Language
 import fi.vm.sade.hakemuseditori.tarjonta.domain.Haku
 
-sealed case class KoutaHaku(oid: String, nimi: Map[String, String], tila: String) {
+sealed case class KoutaHaku(hakuajat: List[KoutaHakuaika], nimi: Map[String, String], oid: String, tila: String) {
   def getLocalizedName(lang: Language): String = {
     nimi.get(lang.toString).orElse(nimi.get("fi")).getOrElse("?")
   }
@@ -11,7 +11,7 @@ sealed case class KoutaHaku(oid: String, nimi: Map[String, String], tila: String
 
 object KoutaHaku {
   def toHaku(koutaHaku: KoutaHaku, lang: Language): Haku = {
-    Haku(applicationPeriods = List.empty,
+    Haku(applicationPeriods = koutaHaku.hakuajat map { _.toHakuaika },
       checkBaseEducationConflict = false,
       jarjestelmanHakulomake = false,
       korkeakouluhaku = false,
