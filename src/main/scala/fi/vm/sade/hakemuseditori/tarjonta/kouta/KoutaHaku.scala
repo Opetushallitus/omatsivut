@@ -11,17 +11,17 @@ sealed case class KoutaHaku(oid: String, nimi: Map[String, String], tila: String
 
 object KoutaHaku {
   def toHaku(koutaHaku: KoutaHaku, lang: Language): Haku = {
-    Haku(oid = koutaHaku.oid,
-      tila = koutaHaku.tila,
-      name = koutaHaku.getLocalizedName(lang),
-      applicationPeriods = List.empty,
-      tyyppi = "",
+    Haku(applicationPeriods = List.empty,
+      checkBaseEducationConflict = false,
+      jarjestelmanHakulomake = false,
       korkeakouluhaku = false,
+      name = koutaHaku.getLocalizedName(lang),
+      oid = koutaHaku.oid,
       showSingleStudyPlaceEnforcement = false,
       siirtohaku = false,
-      checkBaseEducationConflict = false,
-      usePriority = false,
-      jarjestelmanHakulomake = false,
-      toisenasteenhaku = false)
+      tila = koutaHaku.tila,
+      toisenasteenhaku = false,
+      tyyppi = "",
+      usePriority = false)
   }
 }
