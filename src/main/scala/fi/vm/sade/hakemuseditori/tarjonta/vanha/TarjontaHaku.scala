@@ -32,12 +32,18 @@ sealed case class TarjontaHaku(oid: String, hakuaikas: List[TarjontaHakuaika], h
 object TarjontaHaku {
 
   def toHaku(tarjontaHaku: TarjontaHaku, lang: Language): Haku = {
-    Haku(tarjontaHaku.oid, tarjontaHaku.tila, tarjontaHaku.getLocalizedName(lang), tarjontaHaku.hakuaikas.sortBy(_.alkuPvm).map(h => TarjontaHakuaika.toHakuaika(h)),
-      tarjontaHaku.getHakutyyppi().toString(), isKorkeakouluhaku(tarjontaHaku), tarjontaHaku.yhdenPaikanSaanto.voimassa,
-      tarjontaHaku.kohdejoukonTarkenne.exists(_.contains("haunkohdejoukontarkenne_1#")),
-      checkeBaseEducationConflict(tarjontaHaku), tarjontaHaku.usePriority, tarjontaHaku.jarjestelmanHakulomake,
-      isToisenasteenhaku(tarjontaHaku)
-    )
+    Haku(applicationPeriods = tarjontaHaku.hakuaikas.sortBy(_.alkuPvm).map(h => TarjontaHakuaika.toHakuaika(h)),
+      checkBaseEducationConflict = checkeBaseEducationConflict(tarjontaHaku),
+      jarjestelmanHakulomake = tarjontaHaku.jarjestelmanHakulomake,
+      korkeakouluhaku = isKorkeakouluhaku(tarjontaHaku),
+      name = tarjontaHaku.getLocalizedName(lang),
+      oid = tarjontaHaku.oid,
+      showSingleStudyPlaceEnforcement = tarjontaHaku.yhdenPaikanSaanto.voimassa,
+      siirtohaku = tarjontaHaku.kohdejoukonTarkenne.exists(_.contains("haunkohdejoukontarkenne_1#")),
+      tila = tarjontaHaku.tila,
+      toisenasteenhaku = isToisenasteenhaku(tarjontaHaku),
+      tyyppi = tarjontaHaku.getHakutyyppi().toString(),
+      usePriority = tarjontaHaku.usePriority)
   }
 
   private def isKorkeakouluhaku(tarjontaHaku: TarjontaHaku) = {
