@@ -151,8 +151,7 @@ class ComponentRegistry(val config: AppConfig)
   val ataruService: AtaruService = configureAtaruService
   val oppijanumerorekisteriService: OppijanumerorekisteriService = configureOppijanumerorekisteriService
   val omatsivutDb = new OmatsivutDb(config.settings.omatsivutDbConfig,
-                                         config.isInstanceOf[IT],
-                                         config.settings.sessionTimeoutSeconds.getOrElse(3600))
+    config.settings.sessionTimeoutSeconds.getOrElse(3600))
   implicit val sessionService = new SessionService(omatsivutDb)
   lazy val authenticationInfoService = configureAuthenticationInfoService
 

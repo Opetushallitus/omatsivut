@@ -1,3 +1,7 @@
 CREATE ROLE oph;
 ALTER ROLE oph WITH login;
 GRANT ALL ON SCHEMA public TO oph;
+
+CREATE ROLE app;
+ALTER ROLE app WITH login;
+GRANT ALL ON SCHEMA public TO app;

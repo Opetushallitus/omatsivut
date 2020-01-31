@@ -36,7 +36,7 @@ omatsivut_haku_app_password: ""
 omatsivut_authentication_service_username: ""
 omatsivut_authentication_service_password: ""
 omatsivut_vetuma_url: "fakevetuma"
-postgres_app_user: "oph"
+postgres_app_user: "app"
 omatsivut_db_host: "localhost"
 omatsivut_db_port: 5432
 omatsivut_db_name: "omatsivutdb"
