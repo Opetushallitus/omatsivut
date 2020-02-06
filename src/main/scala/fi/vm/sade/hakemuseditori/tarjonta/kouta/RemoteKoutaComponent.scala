@@ -44,6 +44,11 @@ trait RemoteKoutaComponent {
     implicit private val formats = DefaultFormats
 
     override def haku(oid: String, lang: Language.Language) : Option[Haku] = {
+      fetchHakuFromKouta(oid, lang)
+        .map({ haku => addAikatauluFromOhjausparametrit(haku) })
+    }
+
+    private def fetchHakuFromKouta(oid: String, lang: Language.Language) : Option[Haku] = {
       Uri.fromString(OphUrlProperties.url("kouta-internal.haku", oid))
         .fold(Task.fail, uri => {
           logger.info(s"Get haku $oid from Kouta: uri $uri")
@@ -66,6 +71,11 @@ trait RemoteKoutaComponent {
         case r =>
           Task.fail(new RuntimeException(s"Failed to get haku: ${r.toString()}"))
       }
+    }
+
+    private def addAikatauluFromOhjausparametrit(haku: Haku) : Haku = {
+      val haunAikataulu = ohjausparametritService.haunAikataulu(haku.oid)
+      haku.copy(aikataulu = haunAikataulu)
     }
 
     override def hakukohde(oid: String): Option[Hakukohde] = {
