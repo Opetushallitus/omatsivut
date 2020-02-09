@@ -93,7 +93,9 @@ trait RemoteKoutaComponent {
         case r if r.status.code == 200 =>
           r.as[String]
             .map( s => JsonMethods.parse(s).extract[KoutaHakukohde] )
-            .map( koutaHakukohde => Some(KoutaHakukohde.toHakukohde(koutaHakukohde)) )
+            .map( koutaHakukohde => KoutaHakukohde.toHakukohde(koutaHakukohde) )
+            .ensure( new RuntimeException(s"Failed to parse hakukohde: ${r.toString()}") ) ( _.isSuccess )
+            .map( _.toOption )
         case r if r.status.code == 404 =>
           Task.now(None)
         case r =>
