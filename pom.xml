@@ -388,6 +388,7 @@
                     <args>
                         <arg>-target:jvm-1.7</arg>
                     </args>
+                    <recompileMode>incremental</recompileMode>
                 </configuration>
                 <executions>
                     <execution>
@@ -501,7 +502,25 @@
                 <enabled>true</enabled>
             </releases>
         </repository>
+        <repository>
+            <id>central</id>
+            <name>Maven Central</name>
+            <url>https://repo.maven.apache.org/maven2</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
     </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>central</id>
+            <name>Maven Central</name>
+            <url>https://repo.maven.apache.org/maven2</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
     <distributionManagement>
         <repository>
             <id>oph-sade-artifactory</id>
@@ -514,4 +533,32 @@
             <url>https://artifactory.opintopolku.fi/artifactory/oph-sade-snapshot-local</url>
         </snapshotRepository>
     </distributionManagement>
+    <profiles>
+        <profile>
+            <id>opintopolku-local</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.github.eirslett</groupId>
+                        <artifactId>frontend-maven-plugin</artifactId>
+                        <version>1.6</version>
+                        <executions>
+                            <execution>
+                                <id>install node and npm</id>
+                                <phase />
+                            </execution>
+                            <execution>
+                                <id>npm version</id>
+                                <phase />
+                            </execution>
+                            <execution>
+                                <id>npm install</id>
+                                <phase />
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
