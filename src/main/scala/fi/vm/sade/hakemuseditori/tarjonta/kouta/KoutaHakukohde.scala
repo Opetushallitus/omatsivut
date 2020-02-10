@@ -21,8 +21,9 @@ object KoutaHakukohde {
   }
 
   private def extractKohteenHakuaika(koutaHakukohde: KoutaHakukohde) : Try[Option[KohteenHakuaika]] = Try {
-    koutaHakukohde.hakuajat.headOption map {
-      _.toKohteenHakuaika
-    }
+    if (koutaHakukohde.kaytetaanHaunAikataulua.getOrElse(false))
+      None
+    else
+      koutaHakukohde.hakuajat.headOption map ( _.toKohteenHakuaika )
   }
 }
