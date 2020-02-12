@@ -49,7 +49,7 @@ export default ["restResources", function(restResources) {
         return false;
       }
 
-      $scope.valintatulosText = function(valintatulos, valintatulokset) {
+      $scope.hakutoiveenValintatulosText = function(valintatulos, valintatulokset) {
         var isHyvaksyttyKesken = $scope.isHyvaksyttyKesken(valintatulos, valintatulokset);
         var key = isHyvaksyttyKesken ? "HyvaksyttyKesken" : underscoreToCamelCase(valintatulos.valintatila);
         var ehdollisenHyvaksymisenKenttaEhto = localize("label.resultState.EhdollisenHyvaksymisenEhdonKentanNimi");
@@ -86,6 +86,10 @@ export default ["restResources", function(restResources) {
           })
         }
       };
+
+      $scope.capitalize = function(str) {
+        return str ? `${str.charAt(0).toUpperCase()}${str.slice(1).toLowerCase()}` : ''
+      }
 
       $scope.vastaanotaSitovasti = function(application, hakukohde) {
         var email = ''
@@ -126,9 +130,41 @@ export default ["restResources", function(restResources) {
         }
       }
 
-      $scope.valintatulosStyle = function(valintatulos) {
-        if (hyvaksytty(valintatulos))
-          return "accepted"
+      $scope.toggleJonokohtaisetTulostiedotVisibility = function(hakutoive) {
+        if (!$scope.jonokohtaisetTulostiedotVisibility) {
+          $scope.jonokohtaisetTulostiedotVisibility = {
+            [hakutoive.hakukohdeOid]: true
+          }
+          return
+        }
+        $scope.jonokohtaisetTulostiedotVisibility[hakutoive.hakukohdeOid] = !$scope.jonokohtaisetTulostiedotVisibility[hakutoive.hakukohdeOid]
+      }
+
+      $scope.isJonokohtaisetTulostiedotVisible = function(hakutoive) {
+        return $scope.jonokohtaisetTulostiedotVisibility
+          && $scope.jonokohtaisetTulostiedotVisibility[hakutoive.hakukohdeOid]
+          && $scope.hasJonokohtaisetTulostiedot(hakutoive)
+      }
+
+      $scope.hasJonokohtaisetTulostiedot = function(hakutoive) {
+        return hakutoive.jonokohtaisetTulostiedot && hakutoive.jonokohtaisetTulostiedot.length !== 0
+      }
+
+      $scope.sortJonokohtaisetTulostiedot = function(jonokohtaisetTulostiedot) {
+        return jonokohtaisetTulostiedot
+          .map(x => x)
+          .sort((a, b) => {
+            if (!a.hasOwnProperty('valintatapajonoPrioriteetti') || !b.hasOwnProperty('valintatapajonoPrioriteetti')) {
+              return 0
+            }
+            return a.valintatapajonoPrioriteetti - b.valintatapajonoPrioriteetti
+          })
+      }
+
+      $scope.hakutoiveValintatilaStateClass = function(hakutoive) {
+        return hakutoive.valintatila === 'HYVAKSYTTY'
+          ? 'hakutoive--hyvaksytty'
+          : 'hakutoive--ei-hyvaksytty'
       }
 
       function hyvaksytty(valintatulos) {

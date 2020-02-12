@@ -48,7 +48,7 @@
     "postalCode": "Postnummer",
     "acceptConditionallyAccepted": "Jag avstår från att köa och tar emot denna plats bindande",
     "cannotUndoChanges": "Obs! Ändringen går inte att annullera",
-
+    "moreInformation": "Mera information",
     "resultState": {
       "EhdollinenPostfix": " (villkorlig)",
       "EhdollisenHyvaksymisenEhdonKentanNimi": "ehdollisenHyvaksymisenEhtoSV",

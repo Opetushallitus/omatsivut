@@ -479,7 +479,7 @@
 
         it("hakuaikatieto näkyy", function() {
           hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal(hakuaikatieto)
-          hakemusYhteishakuKevat2013WithForeignBaseEducation.resultTableTitle().should.equal("Valintatilanne Kesken")
+          hakemusYhteishakuKevat2013WithForeignBaseEducation.resultTableTitle().should.equal("Valintatilanne (Kesken)")
         })
 
         it("valintatulokset näytetään", function () {
@@ -541,7 +541,7 @@
 
         it("hakuaikatieto näkyy", function() {
           hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal(hakuaikatieto)
-          hakemusYhteishakuKevat2013WithForeignBaseEducation.resultTableTitle().should.equal("Valintatilanne Kesken")
+          hakemusYhteishakuKevat2013WithForeignBaseEducation.resultTableTitle().should.equal("Valintatilanne (Kesken)")
         })
 
         it("valintatulokset näytetään", function () {
@@ -559,7 +559,7 @@
 
         it("hakuaikatieto näkyy", function() {
           hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal(hakuaikatieto)
-          hakemusYhteishakuKevat2013WithForeignBaseEducation.resultTableTitle().should.equal("Valintatilanne Kesken")
+          hakemusYhteishakuKevat2013WithForeignBaseEducation.resultTableTitle().should.equal("Valintatilanne (Kesken)")
         })
 
         it("valintatulokset näytetään", function () {
@@ -577,7 +577,7 @@
 
         it("hakuaikatieto näkyy", function() {
           hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal(hakuaikatieto)
-          hakemusYhteishakuKevat2013WithForeignBaseEducation.resultTableTitle().should.equal("Valintatilanne Kesken")
+          hakemusYhteishakuKevat2013WithForeignBaseEducation.resultTableTitle().should.equal("Valintatilanne (Kesken)")
         })
 
         it("valintatulokset näytetään", function () {
@@ -629,7 +629,7 @@
           it("tuloslistaus on näkyvissä", function() {
             expect(hakemusErityisopetuksena.valintatulokset()[0].tila).to.equal('Opiskelijavalinta kesken')
             expect(hakemusErityisopetuksena.valintatulokset()[1].tila).to.equal('Hyväksytty')
-            hakemusErityisopetuksena.resultTableTitle().should.equal("Valintatilanne Kesken")
+            hakemusErityisopetuksena.resultTableTitle().should.equal("Valintatilanne (Kesken)")
           })
 
           it("paikka on vastaanotettavissa", function() {

@@ -48,7 +48,7 @@
     "postalCode": "Postinumero",
     "acceptConditionallyAccepted": "Luovun jonotuksesta ja muutan vastaanoton sitovaksi",
     "cannotUndoChanges": "Huom! Muutosta ei voi perua",
-
+    "moreInformation": "Lisätiedot",
     "resultState": {
       "EhdollinenPostfix": " (ehdollinen)",
       "EhdollisenHyvaksymisenEhdonKentanNimi": "ehdollisenHyvaksymisenEhtoFI",

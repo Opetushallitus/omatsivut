@@ -48,7 +48,7 @@
     "postalCode": "Postal code",
     "acceptConditionallyAccepted": "I want to be removed from the waiting list and confirm this study place",
     "cannotUndoChanges": "NB: You cannot change your choice later",
-
+    "moreInformation": "More information",
     "resultState": {
       "EhdollinenPostfix": " (conditional)",
       "EhdollisenHyvaksymisenEhdonKentanNimi": "ehdollisenHyvaksymisenEhtoEN",
