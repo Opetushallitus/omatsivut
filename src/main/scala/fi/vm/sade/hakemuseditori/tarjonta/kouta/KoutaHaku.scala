@@ -4,7 +4,7 @@ import fi.vm.sade.hakemuseditori.domain.Language.Language
 import fi.vm.sade.hakemuseditori.tarjonta.domain.{Haku, Hakuaika}
 import fi.vm.sade.hakemuseditori.tarjonta.domain.HakuTyyppi.{Erillishaku, JatkuvaHaku, Yhteishaku}
 
-import scala.util.Try
+import scala.util.{Failure, Try}
 
 sealed case class KoutaHaku(hakuajat: List[KoutaHakuaika],
                             hakutapaKoodiUri: Option[String],
@@ -49,7 +49,11 @@ object KoutaHaku {
   }
 
   private def extractApplicationPeriods(koutaHaku: KoutaHaku): Try[List[Hakuaika]] = {
-    Try(koutaHaku.hakuajat map { _.toHakuaika } map { _.get })
+    Try {
+      koutaHaku.hakuajat map { _.toHakuaika } map { _.get }
+    } recoverWith {
+      case exception: Throwable => Failure(new RuntimeException("Failed to form hakuajat for haku", exception))
+    }
   }
 
   private def isKorkeakouluhaku(koutaHaku: KoutaHaku) = {

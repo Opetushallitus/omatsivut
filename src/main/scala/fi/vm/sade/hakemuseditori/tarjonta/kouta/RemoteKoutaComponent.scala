@@ -20,6 +20,7 @@ import org.json4s.jackson.JsonMethods
 import scalaz.concurrent.Task
 
 import scala.concurrent.duration.Duration
+import scala.util.{Failure, Success}
 
 trait RemoteKoutaComponent {
   this: OhjausparametritComponent =>
@@ -52,20 +53,22 @@ trait RemoteKoutaComponent {
       Uri.fromString(OphUrlProperties.url("kouta-internal.haku", oid))
         .fold(Task.fail, uri => {
           logger.info(s"Get haku $oid from Kouta: uri $uri")
-          httpClient.fetch(Request(method = GET, uri = uri)) { r => handleHakuResponse(r, lang) }
+          httpClient.fetch(Request(method = GET, uri = uri)) { r => handleHakuResponse(r, lang, oid) }
         })
         .unsafePerformSyncAttemptFor(Duration(10, TimeUnit.SECONDS))
         .fold(throw _, x => x)
     }
 
-    private def handleHakuResponse(response: Response, lang: Language): Task[Option[Haku]] = {
+    private def handleHakuResponse(response: Response, lang: Language, oid: String): Task[Option[Haku]] = {
       response match {
         case r if r.status.code == 200 =>
           r.as[String]
             .map(s => JsonMethods.parse(s).extract[KoutaHaku])
             .map({ koutaHaku => KoutaHaku.toHaku(koutaHaku, lang) })
-            .ensure(new RuntimeException(s"Failed to parse haku: ${r.toString()}")) (_.isSuccess)
-            .map(_.toOption)
+            .flatMap({
+              case Success(haku) => Task.now(Some(haku))
+              case Failure(exception) => Task.fail(new RuntimeException(s"Failed to parse haku: oid ${oid}", exception))
+            })
         case r if r.status.code == 404 =>
           Task.now(None)
         case r =>
