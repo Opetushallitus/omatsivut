@@ -2,7 +2,7 @@ package fi.vm.sade.hakemuseditori.tarjonta.kouta
 
 import fi.vm.sade.hakemuseditori.tarjonta.domain.{Hakukohde, KohteenHakuaika, KoulutuksenAlkaminen}
 
-import scala.util.{Success, Try}
+import scala.util.{Failure, Success, Try}
 
 sealed case class KoutaHakukohde(alkamiskausiKoodiUri: Option[String],
                                  alkamisvuosi: Option[String],
@@ -29,8 +29,15 @@ object KoutaHakukohde {
       Success(None)
     else
       koutaHakukohde.hakuajat.headOption match {
-        case Some(koutaHakuaika) => koutaHakuaika.toKohteenHakuaika map ( x => Some(x) )
+        case Some(koutaHakuaika) => toKohteenHakuaika(koutaHakuaika) map (x => Some(x))
         case None => Success(None)
+      }
+  }
+
+  private def toKohteenHakuaika(koutaHakuaika: KoutaHakuaika): Try[KohteenHakuaika] = {
+    koutaHakuaika.toKohteenHakuaika
+      .recoverWith {
+        case exception: Throwable => Failure(new RuntimeException("Failed to form kohteenHakuaika", exception))
       }
   }
 
@@ -38,14 +45,21 @@ object KoutaHakukohde {
     if (koutaHakukohde.kaytetaanHaunAlkamiskautta.getOrElse(false))
       Success(None)
     else
-      createKoulutuksenAlkaminen(koutaHakukohde.alkamiskausiKoodiUri, koutaHakukohde.alkamisvuosi)
+      createKoulutuksenAlkaminen(koutaHakukohde)
   }
 
-  private def createKoulutuksenAlkaminen(alkamiskausiKoodiUri: Option[String],
-                                         alkamisvuosi: Option[String]) = Try {
-    for {
+  private def createKoulutuksenAlkaminen(koutaHakukohde: KoutaHakukohde): Try[Option[KoulutuksenAlkaminen]] = {
+    tryToCreateKoulutuksenAlkaminen(koutaHakukohde.alkamiskausiKoodiUri, koutaHakukohde.alkamisvuosi)
+      .recoverWith {
+        case exception: Throwable => Failure(new RuntimeException("Failed to form koulutuksenAlkaminen", exception))
+      }
+  }
+
+  private def tryToCreateKoulutuksenAlkaminen(alkamiskausiKoodiUri: Option[String],
+                                              alkamisvuosi: Option[String]): Try[Option[KoulutuksenAlkaminen]] = {
+    Try(for {
       alkamiskausiKoodiUri <- alkamiskausiKoodiUri
       alkamisvuosi <- alkamisvuosi map ( _.toInt )
-    } yield KoulutuksenAlkaminen(alkamisvuosi, alkamiskausiKoodiUri)
+    } yield KoulutuksenAlkaminen(alkamisvuosi, alkamiskausiKoodiUri))
   }
 }

@@ -85,20 +85,22 @@ trait RemoteKoutaComponent {
       Uri.fromString(OphUrlProperties.url("kouta-internal.hakukohde", oid))
         .fold(Task.fail, uri => {
           logger.info(s"Get hakukohde $oid from Kouta: uri $uri")
-          httpClient.fetch(Request(method = GET, uri = uri)) { r => handleHakukohdeResponse(r) }
+          httpClient.fetch(Request(method = GET, uri = uri)) { r => handleHakukohdeResponse(r, oid) }
         })
         .unsafePerformSyncAttemptFor(Duration(10, TimeUnit.SECONDS))
         .fold(throw _, x => x)
     }
 
-    private def handleHakukohdeResponse(response: Response): Task[Option[Hakukohde]] = {
+    private def handleHakukohdeResponse(response: Response, oid: String): Task[Option[Hakukohde]] = {
       response match {
         case r if r.status.code == 200 =>
           r.as[String]
             .map( s => JsonMethods.parse(s).extract[KoutaHakukohde] )
             .map( koutaHakukohde => KoutaHakukohde.toHakukohde(koutaHakukohde) )
-            .ensure( new RuntimeException(s"Failed to parse hakukohde: ${r.toString()}") ) ( _.isSuccess )
-            .map( _.toOption )
+            .flatMap({
+              case Success(hakukohde) => Task.now(Some(hakukohde))
+              case Failure(exception) => Task.fail(new RuntimeException(s"Failed to parse hakukohde: oid ${oid}", exception))
+            })
         case r if r.status.code == 404 =>
           Task.now(None)
         case r =>
