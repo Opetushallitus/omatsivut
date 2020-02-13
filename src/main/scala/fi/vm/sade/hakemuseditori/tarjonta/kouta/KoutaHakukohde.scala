@@ -24,11 +24,14 @@ object KoutaHakukohde {
       oid = koutaHakukohde.oid)
   }
 
-  private def extractKohteenHakuaika(koutaHakukohde: KoutaHakukohde) : Try[Option[KohteenHakuaika]] = Try {
+  private def extractKohteenHakuaika(koutaHakukohde: KoutaHakukohde) : Try[Option[KohteenHakuaika]] = {
     if (koutaHakukohde.kaytetaanHaunAikataulua.getOrElse(false))
-      None
+      Success(None)
     else
-      koutaHakukohde.hakuajat.headOption map ( _.toKohteenHakuaika )
+      koutaHakukohde.hakuajat.headOption match {
+        case Some(koutaHakuaika) => koutaHakuaika.toKohteenHakuaika map ( x => Some(x) )
+        case None => Success(None)
+      }
   }
 
   private def extractKoulutuksenAlkaminen(koutaHakukohde: KoutaHakukohde): Try[Option[KoulutuksenAlkaminen]] = {

@@ -1,8 +1,10 @@
 package fi.vm.sade.hakemuseditori.tarjonta.kouta
 
 import fi.vm.sade.hakemuseditori.domain.Language.Language
-import fi.vm.sade.hakemuseditori.tarjonta.domain.Haku
+import fi.vm.sade.hakemuseditori.tarjonta.domain.{Haku, Hakuaika}
 import fi.vm.sade.hakemuseditori.tarjonta.domain.HakuTyyppi.{Erillishaku, JatkuvaHaku, Yhteishaku}
+
+import scala.util.Try
 
 sealed case class KoutaHaku(hakuajat: List[KoutaHakuaika],
                             hakutapaKoodiUri: Option[String],
@@ -29,8 +31,10 @@ sealed case class KoutaHaku(hakuajat: List[KoutaHakuaika],
 }
 
 object KoutaHaku {
-  def toHaku(koutaHaku: KoutaHaku, lang: Language): Haku = {
-    Haku(applicationPeriods = koutaHaku.hakuajat map { _.toHakuaika },
+  def toHaku(koutaHaku: KoutaHaku, lang: Language): Try[Haku] = {
+    for {
+      applicationPeriods <- extractApplicationPeriods(koutaHaku)
+    } yield Haku(applicationPeriods = applicationPeriods,
       checkBaseEducationConflict = checkBaseEducationConflict(koutaHaku),
       jarjestelmanHakulomake = false,
       korkeakouluhaku = isKorkeakouluhaku(koutaHaku),
@@ -42,6 +46,10 @@ object KoutaHaku {
       toisenasteenhaku = isToisenasteenhaku(koutaHaku),
       tyyppi = koutaHaku.getHakutyyppi().toString,
       usePriority = false) // FIXME
+  }
+
+  private def extractApplicationPeriods(koutaHaku: KoutaHaku): Try[List[Hakuaika]] = {
+    Try(koutaHaku.hakuajat map { _.toHakuaika } map { _.get })
   }
 
   private def isKorkeakouluhaku(koutaHaku: KoutaHaku) = {

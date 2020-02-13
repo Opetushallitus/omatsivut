@@ -12,9 +12,9 @@ import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.utils.cas.{CasAuthenticatingClient, CasClient, CasParams}
 import fi.vm.sade.utils.slf4j.Logging
+import org.http4s.{Request, Response, Uri}
 import org.http4s.Method.GET
 import org.http4s.client.blaze
-import org.http4s.{Request, Response, Uri}
 import org.json4s.DefaultFormats
 import org.json4s.jackson.JsonMethods
 import scalaz.concurrent.Task
@@ -63,9 +63,9 @@ trait RemoteKoutaComponent {
         case r if r.status.code == 200 =>
           r.as[String]
             .map(s => JsonMethods.parse(s).extract[KoutaHaku])
-            .map({ koutaHaku =>
-              Some(KoutaHaku.toHaku(koutaHaku, lang))
-            })
+            .map({ koutaHaku => KoutaHaku.toHaku(koutaHaku, lang) })
+            .ensure(new RuntimeException(s"Failed to parse haku: ${r.toString()}")) (_.isSuccess)
+            .map(_.toOption)
         case r if r.status.code == 404 =>
           Task.now(None)
         case r =>
