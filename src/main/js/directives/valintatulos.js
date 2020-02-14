@@ -76,7 +76,9 @@ export default ["restResources", function(restResources) {
             varasijaPvm: $scope.formatDate(valintatulos.varasijojaTaytetaanAsti)
           })
         } else if(hyvaksytty(valintatulos) && valintatulos.ehdollisestiHyvaksyttavissa) {
-          if (valintatulos.ehdollisenHyvaksymisenEhtoKoodi !== undefined && valintatulos.ehdollisenHyvaksymisenEhtoKoodi != null) {
+          if (valintatulos.ehdollisenHyvaksymisenEhtoKoodi !== undefined
+            && valintatulos.ehdollisenHyvaksymisenEhtoKoodi != null
+            && valintatulos.ehdollisenHyvaksymisenEhtoKoodi !== '') {
             return localize("label.resultState." + key) + ' (' + valintatulos[ehdollisenHyvaksymisenKenttaEhto] + ')';
           }
           return localize("label.resultState." + key) + localize("label.resultState.EhdollinenPostfix")
