@@ -14,7 +14,7 @@ object OmatsivutServer {
     logger.info("About to start OmatsivutServer")
     new OmatsivutServer().start(
       "/omatsivut",
-      Integer.valueOf(System.getProperty("omatsivut.port", "7667")),
+      Integer.valueOf(System.getProperty("omatsivut.port", "8080")),
       5,
       10,
       Duration.ofMinutes(1)
