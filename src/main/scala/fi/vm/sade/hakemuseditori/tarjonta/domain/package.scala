@@ -4,15 +4,13 @@ import java.util.Date
 
 import fi.vm.sade.hakemuseditori.ohjausparametrit.domain.HaunAikataulu
 import fi.vm.sade.haku.oppija.lomake.domain.ApplicationPeriod
-import fi.vm.sade.tarjonta.shared.types.TarjontaTila
 import org.joda.time.{Interval, LocalDateTime}
 
-case class Haku(oid: String, tila: String, name: String, applicationPeriods: List[Hakuaika], tyyppi: String,
+case class Haku(oid: String, published: Boolean, name: String, applicationPeriods: List[Hakuaika], tyyppi: String,
                 korkeakouluhaku: Boolean, showSingleStudyPlaceEnforcement: Boolean, siirtohaku: Boolean,
                 checkBaseEducationConflict: Boolean, usePriority: Boolean, jarjestelmanHakulomake: Boolean,
                 toisenasteenhaku: Boolean, aikataulu: Option[HaunAikataulu] = None) {
   def active: Boolean = if (applicationPeriods.isEmpty) false else new Interval(applicationPeriods.head.start, applicationPeriods.last.end).containsNow()
-  def published: Boolean = TarjontaTila.JULKAISTU.toString.equals(tila)
   def hakukierrosvoimassa: Boolean = new LocalDateTime().isBefore(aikataulu.flatMap(_.hakukierrosPaattyy).map(new LocalDateTime(_: Long)).getOrElse(new LocalDateTime().minusYears(100)))
 }
 

@@ -31,6 +31,11 @@ sealed case class KoutaHaku(hakuajat: List[KoutaHakuaika],
 }
 
 object KoutaHaku {
+  object Julkaisutila extends Enumeration {
+    type Julkaisutila = Value
+    val Julkaistu = Value("julkaistu")
+  }
+
   def toHaku(koutaHaku: KoutaHaku, lang: Language): Try[Haku] = {
     for {
       applicationPeriods <- extractApplicationPeriods(koutaHaku)
@@ -40,9 +45,9 @@ object KoutaHaku {
       korkeakouluhaku = isKorkeakouluhaku(koutaHaku),
       name = koutaHaku.getLocalizedName(lang),
       oid = koutaHaku.oid,
+      published = isPublished(koutaHaku),
       showSingleStudyPlaceEnforcement = false, // FIXME
       siirtohaku = isSiirtohaku(koutaHaku),
-      tila = koutaHaku.tila,
       toisenasteenhaku = isToisenasteenhaku(koutaHaku),
       tyyppi = koutaHaku.getHakutyyppi().toString,
       usePriority = false) // FIXME
@@ -67,6 +72,10 @@ object KoutaHaku {
 
   private def checkBaseEducationConflict(koutaHaku: KoutaHaku): Boolean = {
     isKorkeakouluhaku(koutaHaku) && koutaHaku.kohdejoukonTarkenneKoodiUri.getOrElse("").trim.isEmpty
+  }
+
+  private def isPublished(koutaHaku: KoutaHaku): Boolean = {
+    Julkaisutila.Julkaistu.toString.equals(koutaHaku.tila)
   }
 
   private def isSiirtohaku(koutaHaku: KoutaHaku) = {

@@ -1,8 +1,9 @@
 package fi.vm.sade.hakemuseditori.tarjonta.vanha
 
 import fi.vm.sade.hakemuseditori.domain.Language.Language
+import fi.vm.sade.hakemuseditori.tarjonta.domain.Haku
 import fi.vm.sade.hakemuseditori.tarjonta.domain.HakuTyyppi.{Erillishaku, JatkuvaHaku, Lisahaku, Yhteishaku}
-import fi.vm.sade.hakemuseditori.tarjonta.domain.{Haku, Hakuaika}
+import fi.vm.sade.tarjonta.shared.types.TarjontaTila
 
 sealed case class TarjontaHaku(oid: String, hakuaikas: List[TarjontaHakuaika], hakutapaUri: String, hakutyyppiUri: String,
                                kohdejoukkoUri: String, kohdejoukonTarkenne: Option[String], usePriority: Boolean,
@@ -38,9 +39,9 @@ object TarjontaHaku {
       korkeakouluhaku = isKorkeakouluhaku(tarjontaHaku),
       name = tarjontaHaku.getLocalizedName(lang),
       oid = tarjontaHaku.oid,
+      published = isPublished(tarjontaHaku),
       showSingleStudyPlaceEnforcement = tarjontaHaku.yhdenPaikanSaanto.voimassa,
       siirtohaku = tarjontaHaku.kohdejoukonTarkenne.exists(_.contains("haunkohdejoukontarkenne_1#")),
-      tila = tarjontaHaku.tila,
       toisenasteenhaku = isToisenasteenhaku(tarjontaHaku),
       tyyppi = tarjontaHaku.getHakutyyppi().toString(),
       usePriority = tarjontaHaku.usePriority)
@@ -48,6 +49,10 @@ object TarjontaHaku {
 
   private def isKorkeakouluhaku(tarjontaHaku: TarjontaHaku) = {
     tarjontaHaku.kohdejoukkoUri.contains("haunkohdejoukko_12")
+  }
+
+  private def isPublished(tarjontaHaku: TarjontaHaku): Boolean = {
+    TarjontaTila.JULKAISTU.toString.equals(tarjontaHaku.tila)
   }
 
   private def isToisenasteenhaku(tarjontaHaku: TarjontaHaku) = {
