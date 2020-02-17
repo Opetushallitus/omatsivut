@@ -40,7 +40,7 @@ object KoutaHaku {
     for {
       applicationPeriods <- extractApplicationPeriods(koutaHaku)
     } yield Haku(applicationPeriods = applicationPeriods,
-      checkBaseEducationConflict = checkBaseEducationConflict(koutaHaku),
+      checkBaseEducationConflict = false,
       jarjestelmanHakulomake = false,
       korkeakouluhaku = isKorkeakouluhaku(koutaHaku),
       name = koutaHaku.getLocalizedName(lang),
@@ -68,10 +68,6 @@ object KoutaHaku {
   private def isToisenasteenhaku(koutaHaku: KoutaHaku) = {
     val kohdejoukot = List("haunkohdejoukko_11","haunkohdejoukko_17","haunkohdejoukko_20")
     kohdejoukot.exists(koutaHaku.kohdejoukkoKoodiUri.contains(_))
-  }
-
-  private def checkBaseEducationConflict(koutaHaku: KoutaHaku): Boolean = {
-    isKorkeakouluhaku(koutaHaku) && koutaHaku.kohdejoukonTarkenneKoodiUri.getOrElse("").trim.isEmpty
   }
 
   private def isPublished(koutaHaku: KoutaHaku): Boolean = {
