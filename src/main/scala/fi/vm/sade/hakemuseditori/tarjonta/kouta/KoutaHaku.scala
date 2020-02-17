@@ -55,7 +55,7 @@ object KoutaHaku {
 
   private def extractApplicationPeriods(koutaHaku: KoutaHaku): Try[List[Hakuaika]] = {
     Try {
-      koutaHaku.hakuajat map { _.toHakuaika } map { _.get }
+      koutaHaku.hakuajat map { _.toHakuaika } map { _.get } sortBy { _.start }
     } recoverWith {
       case exception: Throwable => Failure(new RuntimeException("Failed to form hakuajat for haku", exception))
     }
