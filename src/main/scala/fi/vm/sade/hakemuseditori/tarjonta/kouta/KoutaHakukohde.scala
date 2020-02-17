@@ -20,7 +20,7 @@ object KoutaHakukohde {
     } yield Hakukohde(hakuaikaId = Some("kouta-hakuaika-id"), // FIXME
       koulutuksenAlkaminen = koulutuksenAlkaminen,
       kohteenHakuaika = kohteenHakuaika, // FIXME: tuki useammalle hakuajalle
-      ohjeetUudelleOpiskelijalle = None,
+      ohjeetUudelleOpiskelijalle = None, // FIXME
       oid = koutaHakukohde.oid)
   }
 
