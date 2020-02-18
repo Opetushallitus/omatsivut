@@ -15,7 +15,8 @@ sealed case class KoutaHaku(hakuajat: List[KoutaHakuaika],
                             oid: String,
                             tila: String) {
   def getLocalizedName(lang: Language): String = {
-    nimi.get(lang.toString).orElse(nimi.get("fi")).getOrElse("?")
+    val desiredLanguage = List(lang.toString, "fi", "sv", "en") find { k => nimi.get(k).exists(_.nonEmpty) }
+    desiredLanguage flatMap { s => nimi.get(s) } getOrElse("?")
   }
 
   def getHakutyyppi() = {
