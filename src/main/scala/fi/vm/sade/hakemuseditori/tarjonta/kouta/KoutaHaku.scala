@@ -1,6 +1,7 @@
 package fi.vm.sade.hakemuseditori.tarjonta.kouta
 
 import fi.vm.sade.hakemuseditori.domain.Language.Language
+import fi.vm.sade.hakemuseditori.ohjausparametrit.domain.HaunAikataulu
 import fi.vm.sade.hakemuseditori.tarjonta.domain.{Haku, Hakuaika}
 import fi.vm.sade.hakemuseditori.tarjonta.domain.HakuTyyppi.{Erillishaku, JatkuvaHaku, Yhteishaku}
 
@@ -36,10 +37,12 @@ object KoutaHaku {
     val Julkaistu = Value("julkaistu")
   }
 
-  def toHaku(koutaHaku: KoutaHaku, lang: Language): Try[Haku] = {
+  def toHaku(koutaHaku: KoutaHaku, lang: Language, haunAikataulu: Option[HaunAikataulu]): Try[Haku] = {
     for {
       applicationPeriods <- extractApplicationPeriods(koutaHaku)
-    } yield Haku(applicationPeriods = applicationPeriods,
+    } yield Haku(
+      aikataulu = haunAikataulu,
+      applicationPeriods = applicationPeriods,
       checkBaseEducationConflict = false,
       jarjestelmanHakulomake = false,
       korkeakouluhaku = isKorkeakouluhaku(koutaHaku),

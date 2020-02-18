@@ -29,7 +29,7 @@ trait TarjontaComponent {
     private val priorities = mutable.Set[String]()
 
     private def parseHaku(oid: String, lang: Language.Language) = {
-      JsonFixtureMaps.findByKey[JValue]("/hakemuseditorimockdata/haut.json", oid).flatMap(TarjontaParser.parseHaku).map {h => TarjontaHaku.toHaku(h, lang)}
+      JsonFixtureMaps.findByKey[JValue]("/hakemuseditorimockdata/haut.json", oid).flatMap(TarjontaParser.parseHaku).map {h => TarjontaHaku.toHaku(h, lang, None)}
     }
 
     override def haku(oid: String, lang: Language.Language) = {

@@ -3,8 +3,8 @@ package fi.vm.sade.hakemuseditori.tarjonta.kouta
 import java.util.concurrent.TimeUnit
 
 import fi.vm.sade.hakemuseditori.domain.Language
-import fi.vm.sade.hakemuseditori.domain.Language.Language
 import fi.vm.sade.hakemuseditori.ohjausparametrit.OhjausparametritComponent
+import fi.vm.sade.hakemuseditori.ohjausparametrit.domain.HaunAikataulu
 import fi.vm.sade.hakemuseditori.tarjonta.TarjontaService
 import fi.vm.sade.hakemuseditori.tarjonta.domain.{Haku, Hakukohde}
 import fi.vm.sade.omatsivut.OphUrlProperties
@@ -45,30 +45,26 @@ trait RemoteKoutaComponent {
     implicit private val formats = DefaultFormats
 
     override def haku(oid: String, lang: Language.Language) : Option[Haku] = {
-      fetchHakuFromKouta(oid, lang)
-        .map({ haku => addAikatauluFromOhjausparametrit(haku) })
+      val haunAikataulu = ohjausparametritService.haunAikataulu(oid)
+      fetchKoutaHaku(oid)
+        .flatMap { koutaHaku: KoutaHaku => toHaku(koutaHaku, lang, haunAikataulu) }
     }
 
-    private def fetchHakuFromKouta(oid: String, lang: Language.Language) : Option[Haku] = {
+    private def fetchKoutaHaku(oid: String) = {
       Uri.fromString(OphUrlProperties.url("kouta-internal.haku", oid))
         .fold(Task.fail, uri => {
           logger.info(s"Get haku $oid from Kouta: uri $uri")
-          httpClient.fetch(Request(method = GET, uri = uri)) { r => handleHakuResponse(r, lang, oid) }
+          httpClient.fetch(Request(method = GET, uri = uri)) { r => handleHakuResponse(r) }
         })
         .unsafePerformSyncAttemptFor(Duration(10, TimeUnit.SECONDS))
         .fold(throw _, x => x)
     }
 
-    private def handleHakuResponse(response: Response, lang: Language, oid: String): Task[Option[Haku]] = {
+    private def handleHakuResponse(response: Response) = {
       response match {
         case r if r.status.code == 200 =>
           r.as[String]
-            .map(s => JsonMethods.parse(s).extract[KoutaHaku])
-            .map({ koutaHaku => KoutaHaku.toHaku(koutaHaku, lang) })
-            .flatMap({
-              case Success(haku) => Task.now(Some(haku))
-              case Failure(exception) => Task.fail(new RuntimeException(s"Failed to parse haku: oid ${oid}", exception))
-            })
+            .map(s => Some(JsonMethods.parse(s).extract[KoutaHaku]))
         case r if r.status.code == 404 =>
           Task.now(None)
         case r =>
@@ -76,9 +72,16 @@ trait RemoteKoutaComponent {
       }
     }
 
-    private def addAikatauluFromOhjausparametrit(haku: Haku) : Haku = {
-      val haunAikataulu = ohjausparametritService.haunAikataulu(haku.oid)
-      haku.copy(aikataulu = haunAikataulu)
+    private def toHaku(
+      koutaHaku: KoutaHaku,
+      lang: Language.Language,
+      haunAikataulu: Option[HaunAikataulu]) : Option[Haku] = {
+
+      KoutaHaku.toHaku(koutaHaku, lang, haunAikataulu) match {
+        case Success(haku) => Some(haku)
+        case Failure(exception) =>
+          throw new RuntimeException(s"Failed to convert KoutaHaku: oid ${koutaHaku.oid}", exception)
+      }
     }
 
     override def hakukohde(oid: String): Option[Hakukohde] = {

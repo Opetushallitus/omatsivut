@@ -14,7 +14,7 @@ trait RemoteTarjontaComponent {
     override def haku(oid: String, lang: Language.Language) : Option[Haku] = {
       withHttpGet("Tarjonta fetch haku", OphUrlProperties.url("tarjonta-service.haku", oid), {_.flatMap(TarjontaParser.parseHaku).map({ tarjontaHaku =>
         val haunAikataulu = ohjausparametritService.haunAikataulu(oid)
-        TarjontaHaku.toHaku(tarjontaHaku, lang).copy(aikataulu = haunAikataulu)
+        TarjontaHaku.toHaku(tarjontaHaku, lang, haunAikataulu)
       })}
       )
     }

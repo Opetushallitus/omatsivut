@@ -1,6 +1,7 @@
 package fi.vm.sade.hakemuseditori.tarjonta.vanha
 
 import fi.vm.sade.hakemuseditori.domain.Language.Language
+import fi.vm.sade.hakemuseditori.ohjausparametrit.domain.HaunAikataulu
 import fi.vm.sade.hakemuseditori.tarjonta.domain.Haku
 import fi.vm.sade.hakemuseditori.tarjonta.domain.HakuTyyppi.{Erillishaku, JatkuvaHaku, Lisahaku, Yhteishaku}
 import fi.vm.sade.tarjonta.shared.types.TarjontaTila
@@ -32,8 +33,10 @@ sealed case class TarjontaHaku(oid: String, hakuaikas: List[TarjontaHakuaika], h
 
 object TarjontaHaku {
 
-  def toHaku(tarjontaHaku: TarjontaHaku, lang: Language): Haku = {
-    Haku(applicationPeriods = tarjontaHaku.hakuaikas.sortBy(_.alkuPvm).map(h => TarjontaHakuaika.toHakuaika(h)),
+  def toHaku(tarjontaHaku: TarjontaHaku, lang: Language, haunAikataulu: Option[HaunAikataulu]): Haku = {
+    Haku(
+      aikataulu = haunAikataulu,
+      applicationPeriods = tarjontaHaku.hakuaikas.sortBy(_.alkuPvm).map(h => TarjontaHakuaika.toHakuaika(h)),
       checkBaseEducationConflict = checkeBaseEducationConflict(tarjontaHaku),
       jarjestelmanHakulomake = tarjontaHaku.jarjestelmanHakulomake,
       korkeakouluhaku = isKorkeakouluhaku(tarjontaHaku),
