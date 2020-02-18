@@ -109,3 +109,5 @@ target
 !/gradle/wrapper/gradle-wrapper.jar
 
 .gitconfig
+
+/.opintopolku-local
