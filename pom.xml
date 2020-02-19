@@ -560,5 +560,27 @@
                 </plugins>
             </build>
         </profile>
+        <profile>
+            <id>opintopolku-local-frontend-compilation</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>net.alchim31.maven</groupId>
+                        <artifactId>scala-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>scala-compile-first</id>
+                                <phase />
+                            </execution>
+                            <execution>
+                                <id>scala-test-compile</id>
+                                <phase />
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 </project>
