@@ -66,6 +66,18 @@
       "Hylatty": "Et_saanut_opiskelupaikkaa.",
       "EhdollisestiVastaanottanut": "Ottanut_paikan_vastaan_ja_jonottaa_ylempään",
       "EiVastaanotettuMaaraAikana": "Et_ottanut_opiskelupaikkaa_vastaan määräaikaan mennessä"
+    },
+    "jonokohtaisetTulostiedot": {
+      "valintatilat": {
+        "HARKINNANVARAISESTI_HYVAKSYTTY": "Harkinnavaraisesti hyväksytty",
+        "HYLATTY": "Hylätty",
+        "HYVAKSYTTY": "Hyväksytty",
+        "PERUNUT": "Perunut",
+        "PERUUNTUNUT": "Peruuntunut",
+        "PERUUTETTU": "Peruutettu",
+        "VARALLA": "Varalla",
+        "VARASIJALTA_HYVAKSYTTY": "Varasijalta hyväksytty"
+      }
     }
   },
 
