@@ -66,6 +66,18 @@
       "Hylatty": "You_have_not_received a study place.",
       "EhdollisestiVastaanottanut": "You_have_confirmed_the_study_place_and_are_on_a_waiting_list_for_a_higher_preference_study_place",
       "EiVastaanotettuMaaraAikana": "You_have_not_confirmed_the study place within the set time"
+    },
+    "jonokohtaisetTulostiedot": {
+      "valintatilat": {
+        "HARKINNANVARAISESTI_HYVAKSYTTY": "Harkinnavaraisesti hyväksytty",
+        "HYLATTY": "Hylätty",
+        "HYVAKSYTTY": "Hyväksytty",
+        "PERUNUT": "Perunut",
+        "PERUUNTUNUT": "Peruuntunut",
+        "PERUUTETTU": "Peruutettu",
+        "VARALLA": "Varalla",
+        "VARASIJALTA_HYVAKSYTTY": "Varasijalta hyväksytty"
+      }
     }
   },
 

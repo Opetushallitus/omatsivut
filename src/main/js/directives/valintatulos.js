@@ -163,6 +163,14 @@ export default ["restResources", function(restResources) {
           })
       }
 
+      $scope.getValintatilanKuvaus = function(valintatilanKuvaukset) {
+        const language = getLanguage().toUpperCase()
+        return valintatilanKuvaukset[language] ||
+          valintatilanKuvaukset['FI'] ||
+          valintatilanKuvaukset['EN'] ||
+          valintatilanKuvaukset['SV']
+      }
+
       $scope.hakutoiveValintatilaStateClass = function(hakutoive) {
         return hakutoive.valintatila === 'HYVAKSYTTY'
           ? 'hakutoive--hyvaksytty'

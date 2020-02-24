@@ -66,6 +66,18 @@
       "Hylatty": "Du_har_inte_fått_en_studieplats.",
       "EhdollisestiVastaanottanut": "Du_har_tagit_emot_studieplatsen_och_köar_för_en_högre_studieplats",
       "EiVastaanotettuMaaraAikana": "Du_har_inte_tagit_emot studieplatsen inom utsatt tid"
+    },
+    "jonokohtaisetTulostiedot": {
+      "valintatilat": {
+        "HARKINNANVARAISESTI_HYVAKSYTTY": "Harkinnavaraisesti hyväksytty",
+        "HYLATTY": "Hylätty",
+        "HYVAKSYTTY": "Hyväksytty",
+        "PERUNUT": "Perunut",
+        "PERUUNTUNUT": "Peruuntunut",
+        "PERUUTETTU": "Peruutettu",
+        "VARALLA": "Varalla",
+        "VARASIJALTA_HYVAKSYTTY": "Varasijalta hyväksytty"
+      }
     }
   },
 
