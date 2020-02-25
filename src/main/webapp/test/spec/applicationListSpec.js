@@ -1105,7 +1105,7 @@
 
         describe("Ennen vastaanottoa", function () {
           it("Näkyy ehdollisesti hyväksyttynä", function() {
-            expect(hakemusKorkeakouluJatkoHaku.valintatulokset()[0].tila).to.equal('Hyväksytty (ehdollinen)')
+            expect(hakemusKorkeakouluJatkoHaku.valintatulokset()[0].tila).to.equal('Hyväksytty, ehdollinen')
           })
           it("Oili-ilmoittautumislinkki piilotetaan", function() {
             expect(hakemusKorkeakouluJatkoHaku.ilmoittautuminen(0).visible).to.equal(false)
@@ -1137,7 +1137,8 @@
 
             describe("Ennen vastaanottoa suomi", function () {
               it("Näkyy ehdollisesti hyväksyttynä", function () {
-                expect(hakemusKorkeakouluJatkoHaku.valintatulokset()[0].tila).to.equal('Hyväksytty (ehto suomi)')
+                expect(hakemusKorkeakouluJatkoHaku.valintatulokset()[0].tila).to.equal('Hyväksytty, ehdollinen')
+                expect(hakemusKorkeakouluJatkoHaku.valintatulokset()[0].hyvaksynnanEhto).to.equal('ehto suomi')
               })
             })
         })

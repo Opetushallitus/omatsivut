@@ -50,22 +50,22 @@
     "cannotUndoChanges": "NB: You cannot change your choice later",
     "moreInformation": "More information",
     "resultState": {
-      "EhdollinenPostfix": " (conditional)",
+      "EhdollinenPostfix": ", conditional",
       "EhdollisenHyvaksymisenEhdonKentanNimi": "ehdollisenHyvaksymisenEhtoEN",
       "Hyvaksytty": "Accepted",
-      "HyvaksyttyKesken": "Accepted_(awaiting_results_from_your_higher_preferences)",
-      "Kesken": "Student_admission_process_unfinished",
-      "HarkinnanvaraisestiHyvaksytty": "Discretionary_admission",
+      "HyvaksyttyKesken": "Accepted (awaiting results from your higher preferences)",
+      "Kesken": "Student admission process unfinished",
+      "HarkinnanvaraisestiHyvaksytty": "Discretionary admission",
       "Varalla": "Number___varasija___on the waiting list",
       "VarallaPvm": "Number___varasija___on the waiting list Reserve places are filled until __varasijaPvm__.",
       "Peruutettu": "Cancelled",
-      "Perunut": "You_have_cancelled_the study place",
-      "Peruuntunut": "Cancelled_automatically",
-      "VarasijaltaHyvaksytty": "Accepted_from_a_waiting_list",
-      "VastaanottanutSitovasti": "You_have_confirmed_the study place",
-      "Hylatty": "You_have_not_received a study place.",
-      "EhdollisestiVastaanottanut": "You_have_confirmed_the_study_place_and_are_on_a_waiting_list_for_a_higher_preference_study_place",
-      "EiVastaanotettuMaaraAikana": "You_have_not_confirmed_the study place within the set time"
+      "Perunut": "You have cancelled the study place",
+      "Peruuntunut": "Cancelled automatically",
+      "VarasijaltaHyvaksytty": "Accepted from a waiting list",
+      "VastaanottanutSitovasti": "You have confirmed the study place",
+      "Hylatty": "You have not received a study place.",
+      "EhdollisestiVastaanottanut": "You have confirmed the study place and are on a waiting list for a higher preference study place",
+      "EiVastaanotettuMaaraAikana": "You have not confirmed the study place within the set time"
     },
     "jonokohtaisetTulostiedot": {
       "valintatilat": {

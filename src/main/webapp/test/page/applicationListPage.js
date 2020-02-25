@@ -222,7 +222,8 @@ function ApplicationListPage() {
             var el = $(this)
             return {
               hakukohde: el.find(".hakutoive-grid__kuvaus--tarjoaja-nimi").text() + " " + el.find(".hakutoive-grid__kuvaus--hakukohde-nimi").text(),
-              tila: el.find(".valintatila__header").text().trim().replace(nbsp, " ")
+              tila: el.find(".valintatila__header").text().trim().replace(nbsp, " "),
+              hyvaksynnanEhto: el.find('.valintatila__tilan-kuvaus').text().trim().replace(nbsp, ' ')
             }
           }).toArray()
       },

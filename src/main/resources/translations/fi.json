@@ -50,10 +50,10 @@
     "cannotUndoChanges": "Huom! Muutosta ei voi perua",
     "moreInformation": "Lisätiedot",
     "resultState": {
-      "EhdollinenPostfix": " (ehdollinen)",
+      "EhdollinenPostfix": ", ehdollinen",
       "EhdollisenHyvaksymisenEhdonKentanNimi": "ehdollisenHyvaksymisenEhtoFI",
       "Hyvaksytty": "Hyväksytty",
-      "HyvaksyttyKesken": "Hyväksytty_(odottaa_ylempien_hakukohteiden_tuloksia)",
+      "HyvaksyttyKesken": "Hyväksytty (odottaa ylempien hakukohteiden tuloksia)",
       "Kesken": "Opiskelijavalinta_kesken",
       "HarkinnanvaraisestiHyvaksytty": "Hyväksytty",
       "Varalla": "__varasija__ varasijalla",
@@ -61,11 +61,11 @@
       "Peruutettu": "Peruutettu",
       "Perunut": "Peruit_opiskelupaikan",
       "Peruuntunut": "Peruuntunut",
-      "VarasijaltaHyvaksytty": "Hyväksytty_varasijalta",
-      "VastaanottanutSitovasti": "Opiskelupaikka_vastaanotettu",
-      "Hylatty": "Et_saanut_opiskelupaikkaa.",
-      "EhdollisestiVastaanottanut": "Ottanut_paikan_vastaan_ja_jonottaa_ylempään",
-      "EiVastaanotettuMaaraAikana": "Et_ottanut_opiskelupaikkaa_vastaan määräaikaan mennessä"
+      "VarasijaltaHyvaksytty": "Hyväksytty varasijalta",
+      "VastaanottanutSitovasti": "Opiskelupaikka vastaanotettu",
+      "Hylatty": "Et saanut opiskelupaikkaa.",
+      "EhdollisestiVastaanottanut": "Ottanut paikan vastaan ja jonottaa ylempään",
+      "EiVastaanotettuMaaraAikana": "Et ottanut opiskelupaikkaa vastaan määräaikaan mennessä"
     },
     "jonokohtaisetTulostiedot": {
       "valintatilat": {

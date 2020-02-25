@@ -106,10 +106,21 @@
   text-transform: uppercase;
 }
 
+.valintatila__tilan-kuvaus {
+  color: #666666;
+  font-style: italic;
+  grid-column-start: 1;
+  text-transform: capitalize;
+}
+
 .valintatila__lisatiedot {
+  align-items: center;
   color: #0284AF;
   cursor: pointer;
+  display: flex;
   grid-column-start: 2;
+  grid-row-end: span 2;
+  grid-row-start: 1;
   text-decoration: none;
   user-select: none;
 }
@@ -246,6 +257,7 @@
 
 .hakutoive-grid .hakutoive-grid__valintatapajono-grid-item:nth-child(-n+6) {
   border-top: 1px solid #8B99A0;
+  margin-top: 10px;
 }
 
 .hakutoive-grid .hakutoive-grid__valintatapajono-grid-item:nth-last-child(-n+4) {

@@ -52,7 +52,6 @@ export default ["restResources", function(restResources) {
       $scope.hakutoiveenValintatulosText = function(valintatulos, valintatulokset) {
         var isHyvaksyttyKesken = $scope.isHyvaksyttyKesken(valintatulos, valintatulokset);
         var key = isHyvaksyttyKesken ? "HyvaksyttyKesken" : underscoreToCamelCase(valintatulos.valintatila);
-        var ehdollisenHyvaksymisenKenttaEhto = localize("label.resultState.EhdollisenHyvaksymisenEhdonKentanNimi");
 
         if ([VASTAANOTTOTILA.VASTAANOTTANUT_SITOVASTI, VASTAANOTTOTILA.EI_VASTAANOTETTU_MAARA_AIKANA, VASTAANOTTOTILA.EHDOLLISESTI_VASTAANOTTANUT].indexOf(valintatulos.vastaanottotila) >= 0) {
           key = underscoreToCamelCase(valintatulos.vastaanottotila);
@@ -63,9 +62,6 @@ export default ["restResources", function(restResources) {
           } else if(valintatulos.valintatila === "HYLATTY"){
             return localize("label.resultState." + key) + " " + tilanKuvaus(valintatulos)
           } else if(hyvaksytty(valintatulos) && valintatulos.ehdollisestiHyvaksyttavissa) {
-            if (valintatulos.ehdollisenHyvaksymisenEhtoKoodi !== undefined && valintatulos.ehdollisenHyvaksymisenEhtoKoodi != null) {
-                return localize("label.resultState." + key) + ' (' + valintatulos[ehdollisenHyvaksymisenKenttaEhto] + ')';
-            }
             return localize("label.resultState." + key) + localize("label.resultState.EhdollinenPostfix")
           } else {
             return tilanKuvaus(valintatulos)
@@ -76,11 +72,6 @@ export default ["restResources", function(restResources) {
             varasijaPvm: $scope.formatDate(valintatulos.varasijojaTaytetaanAsti)
           })
         } else if(hyvaksytty(valintatulos) && valintatulos.ehdollisestiHyvaksyttavissa) {
-          if (valintatulos.ehdollisenHyvaksymisenEhtoKoodi !== undefined
-            && valintatulos.ehdollisenHyvaksymisenEhtoKoodi != null
-            && valintatulos.ehdollisenHyvaksymisenEhtoKoodi !== '') {
-            return localize("label.resultState." + key) + ' (' + valintatulos[ehdollisenHyvaksymisenKenttaEhto] + ')';
-          }
           return localize("label.resultState." + key) + localize("label.resultState.EhdollinenPostfix")
         } else {
           return localize("label.resultState." + key, {
@@ -88,6 +79,28 @@ export default ["restResources", function(restResources) {
           })
         }
       };
+
+      $scope.hakutoiveenValintatilanKuvaus = function(valintatulos) {
+        if (
+          [
+            VASTAANOTTOTILA.VASTAANOTTANUT_SITOVASTI,
+            VASTAANOTTOTILA.EI_VASTAANOTETTU_MAARA_AIKANA,
+            VASTAANOTTOTILA.EHDOLLISESTI_VASTAANOTTANUT,
+          ].indexOf(valintatulos.vastaanottotila) === -1
+        ) {
+          if (
+            hyvaksytty(valintatulos) &&
+            valintatulos.ehdollisestiHyvaksyttavissa
+          ) {
+            return valintatulos[
+              localize(
+                'label.resultState.EhdollisenHyvaksymisenEhdonKentanNimi'
+              )
+            ]
+          }
+          return tilanKuvaus(valintatulos)
+        }
+      }
 
       $scope.capitalize = function(str) {
         return str ? `${str.charAt(0).toUpperCase()}${str.slice(1).toLowerCase()}` : ''

@@ -17,8 +17,11 @@
             </div>
             <div class="hakutoive-grid__valintatila hakutoive-grid__hakutoive-grid-item">
                 <div class="valintatila">
-                    <span class="valintatila__header"
-                          ng-bind="hakutoiveenValintatulosText(hakutoive, valintatulos().hakutoiveet)">
+                    <span class="valintatila__header">
+                        {{ hakutoiveenValintatulosText(hakutoive, valintatulos().hakutoiveet) }}
+                    </span>
+                    <span class="valintatila__tilan-kuvaus">
+                        {{ hakutoiveenValintatilanKuvaus(hakutoive) }}
                     </span>
                     <a class="valintatila__lisatiedot"
                        ng-if="hasJonokohtaisetTulostiedot(hakutoive)"
