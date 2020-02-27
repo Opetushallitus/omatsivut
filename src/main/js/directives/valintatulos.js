@@ -60,11 +60,9 @@ export default ["restResources", function(restResources) {
           if(valintatulos.valintatila === "PERUNUT"){
             return localize("label.resultState." + key)
           } else if(valintatulos.valintatila === "HYLATTY"){
-            return localize("label.resultState." + key) + " " + tilanKuvaus(valintatulos)
+            return localize("label.resultState." + key)
           } else if(hyvaksytty(valintatulos) && valintatulos.ehdollisestiHyvaksyttavissa) {
             return localize("label.resultState." + key) + localize("label.resultState.EhdollinenPostfix")
-          } else {
-            return tilanKuvaus(valintatulos)
           }
         } else if (valintatulos.valintatila === "VARALLA" && valintatulos.varasijojaTaytetaanAsti != null) {
           return localize("label.resultState.VarallaPvm", {
