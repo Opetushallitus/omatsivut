@@ -3,6 +3,8 @@ import { getBearerToken, removeBearerToken } from '../util';
 import Hakemus from '../models/hakemus';
 
 export default ['$scope', '$location', '$http', function($scope, $location, $http) {
+
+  const csrfValue = 'CSRF';
   const decodedUrl = decodeURIComponent($location.url());
   const matches = decodedUrl.match(/token\/(.+)/);
   const token = matches && matches[1];
@@ -27,7 +29,15 @@ export default ['$scope', '$location', '$http', function($scope, $location, $htt
       $scope.loading = true;
       $location.hash('/').replace();
       const suffix = token ? 'token/' + token : 'session';
-      $http.get(baseUrl + suffix).then(
+      const request = {
+        method: 'GET',
+        url: baseUrl + suffix,
+        headers: {
+          'CSRF': csrfValue,
+          'Cookie': 'CSRF=' + csrfValue
+        }
+      };
+      $http(request).then(
         function (response) {
           $scope.loading = false;
           $scope.application = new Hakemus(response.data);
