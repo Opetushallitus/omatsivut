@@ -107,7 +107,17 @@
 
 .valintatila__tilan-kuvaus {
   color: #666666;
+  display: flex;
+  flex-flow: column nowrap;
   grid-column-start: 1;
+}
+
+.valintatila__tilan-kuvaus--item:not(:first-child) {
+  margin-top: 10px;
+}
+
+.valintatila__tilan-kuvaus--list-item {
+  margin-left: 20px;
 }
 
 .valintatila__lisatiedot {

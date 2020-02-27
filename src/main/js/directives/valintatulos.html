@@ -17,12 +17,25 @@
             </div>
             <div class="hakutoive-grid__valintatila hakutoive-grid__hakutoive-grid-item">
                 <div class="valintatila">
-                    <span class="valintatila__header">
+                    <span class="valintatila__header"
+                          ng-if="hakutoiveenValintatulosText(hakutoive, valintatulos().hakutoiveet)">
                         {{ hakutoiveenValintatulosText(hakutoive, valintatulos().hakutoiveet) }}
                     </span>
-                    <span class="valintatila__tilan-kuvaus">
-                        {{ hakutoiveenValintatilanKuvaus(hakutoive) }}
-                    </span>
+                    <div class="valintatila__tilan-kuvaus">
+                        <span class="valintatila__tilan-kuvaus--item"
+                              ng-if="isHyvaksyttyKesken(hakutoive, valintatulos().hakutoiveet)">{{ localization('label.acceptedUnfinished.text') }}</span>
+                        <ol class="valintatila__tilan-kuvaus--item"
+                            ng-if="isHyvaksyttyKesken(hakutoive, valintatulos().hakutoiveet)">
+                            <li class="valintatila__tilan-kuvaus--item valintatila__tilan-kuvaus--list-item">{{ localization('label.acceptedUnfinished.rules.1') }}</li>
+                            <li class="valintatila__tilan-kuvaus--item valintatila__tilan-kuvaus--list-item">{{ localization('label.acceptedUnfinished.rules.2') }}</li>
+                        </ol>
+                        <a class="valintatila__tilan-kuvaus--item"
+                           target="_blank"
+                           ng-if="isHyvaksyttyKesken(hakutoive, valintatulos().hakutoiveet)"
+                           href="{{ localization('label.acceptedUnfinished.href') }}">
+                            {{ localization('label.acceptedUnfinished.link') }}
+                        </a>
+                    </div>
                     <a class="valintatila__lisatiedot"
                        ng-if="hasJonokohtaisetTulostiedot(hakutoive)"
                        ng-click="toggleJonokohtaisetTulostiedotVisibility(hakutoive)">
