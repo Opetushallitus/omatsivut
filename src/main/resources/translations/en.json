@@ -69,14 +69,15 @@
     },
     "jonokohtaisetTulostiedot": {
       "valintatilat": {
-        "HARKINNANVARAISESTI_HYVAKSYTTY": "Harkinnavaraisesti hyväksytty",
-        "HYLATTY": "Hylätty",
-        "HYVAKSYTTY": "Hyväksytty",
-        "PERUNUT": "Perunut",
-        "PERUUNTUNUT": "Peruuntunut",
-        "PERUUTETTU": "Peruutettu",
-        "VARALLA": "Varalla",
-        "VARASIJALTA_HYVAKSYTTY": "Varasijalta hyväksytty"
+        "HARKINNANVARAISESTI_HYVAKSYTTY": "Accepted",
+        "HYLATTY": "You have not received a study place",
+        "HYVAKSYTTY": "Accepted",
+        "KESKEN": "Student selection process unfinished",
+        "PERUNUT": "You have cancelled the study place",
+        "PERUUNTUNUT": "Cancelled",
+        "PERUUTETTU": "Cancelled",
+        "VARALLA": "On the waiting list",
+        "VARASIJALTA_HYVAKSYTTY": "Accepted from the waiting list"
       }
     }
   },

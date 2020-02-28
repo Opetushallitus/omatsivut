@@ -70,12 +70,13 @@
     "jonokohtaisetTulostiedot": {
       "valintatilat": {
         "HARKINNANVARAISESTI_HYVAKSYTTY": "Harkinnavaraisesti hyväksytty",
-        "HYLATTY": "Hylätty",
+        "HYLATTY": "Et saanut opiskelupaikkaa",
         "HYVAKSYTTY": "Hyväksytty",
-        "PERUNUT": "Perunut",
+        "KESKEN": "Opiskelijavalinta kesken",
+        "PERUNUT": "Peruit opiskelupaikan",
         "PERUUNTUNUT": "Peruuntunut",
         "PERUUTETTU": "Peruutettu",
-        "VARALLA": "Varalla",
+        "VARALLA": "Varasijalla",
         "VARASIJALTA_HYVAKSYTTY": "Varasijalta hyväksytty"
       }
     }

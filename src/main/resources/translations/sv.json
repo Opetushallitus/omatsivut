@@ -69,14 +69,15 @@
     },
     "jonokohtaisetTulostiedot": {
       "valintatilat": {
-        "HARKINNANVARAISESTI_HYVAKSYTTY": "Harkinnavaraisesti hyväksytty",
-        "HYLATTY": "Hylätty",
-        "HYVAKSYTTY": "Hyväksytty",
-        "PERUNUT": "Perunut",
-        "PERUUNTUNUT": "Peruuntunut",
-        "PERUUTETTU": "Peruutettu",
-        "VARALLA": "Varalla",
-        "VARASIJALTA_HYVAKSYTTY": "Varasijalta hyväksytty"
+        "HARKINNANVARAISESTI_HYVAKSYTTY": "Godkänd",
+        "HYLATTY": "Du har inte fått en studieplats",
+        "HYVAKSYTTY": "Godkänd",
+        "KESKEN": "Studerandeantagningen oavslutad",
+        "PERUNUT": "Du har annulerat studieplatsen",
+        "PERUUNTUNUT": "Annulerad",
+        "PERUUTETTU": "Annullerats",
+        "VARALLA": "På reservplats",
+        "VARASIJALTA_HYVAKSYTTY": "Godkänd från reservplats"
       }
     }
   },
