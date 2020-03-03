@@ -1,4 +1,4 @@
-export default ["$resource", "$http", function($resource, $http) {
+export default ["$resource", "$http", "$cookies", function($resource, $http, $cookies) {
   return {
     applications: $resource(window.url("omatsivut.applications"), null, {
       get: {
@@ -7,7 +7,10 @@ export default ["$resource", "$http", function($resource, $http) {
       },
       "update": {
         method: "PUT",
-        url: window.url("omatsivut.applications.update")
+        url: window.url("omatsivut.applications.update"),
+        headers: {
+          'CSRF': $cookies['CSRF']
+        },
       }
     }),
 
