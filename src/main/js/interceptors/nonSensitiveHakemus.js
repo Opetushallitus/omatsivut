@@ -10,10 +10,9 @@ function shouldAuthenticate(config) {
   return config.url.includes('insecure/')
 }
 
-export default function HakemusInterceptor($cookies) {
+export default function HakemusInterceptor() {
   return {
     request: function(config) {
-      config.headers.CSRF = $cookies['CSRF'];
       if (shouldRerouteRequest(config)) {
         config.url = config.url.replace(/\/secure\//, '/insecure/')
       }
