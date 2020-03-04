@@ -12,11 +12,12 @@ export default ["$resource", "$http", '$cookies', function($resource, $http, $co
     }),
 
     validate: function(application) {
+      println('setting header?');
       const request = {
         method: 'POST',
         url: window.url("omatsivut.applications.validate", application.oid),
         headers: {
-          'CSRF': $cookies['CSRF']
+          'CSRF': 'foobar'
         },
         data: application.toJson()
       };
