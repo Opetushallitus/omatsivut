@@ -12,6 +12,7 @@ export default ["$resource", "$http", '$cookies', function($resource, $http, $co
     }),
 
     validate: function(application) {
+      console.log('setting cookie: ' + $cookies['CSRF']);
       const request = {
         method: 'POST',
         url: window.url("omatsivut.applications.validate", application.oid),
