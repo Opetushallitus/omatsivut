@@ -3,8 +3,8 @@ import Hakutoive from '../models/hakutoive';
 import Question from '../models/question';
 const _ = require('underscore');
 
-export default ["restResources", "applicationValidator", "settings", "debounce", "$timeout", "$cookies",
-    function (restResources, applicationValidator, settings, debounce, $timeout, $cookies) {
+export default ["restResources", "applicationValidator", "settings", "debounce", "$timeout",
+    function (restResources, applicationValidator, settings, debounce, $timeout) {
   return {
     restrict: 'E',
     scope: {
@@ -156,7 +156,7 @@ export default ["restResources", "applicationValidator", "settings", "debounce",
       }, settings.uiIndicatorDebounce)
 
       $scope.saveApplication = function() {
-        restResources.applications.update({id: $scope.application.oid, csrf: $cookies['CSRF'] }, $scope.application.toJson(), onSuccess, onError)
+        restResources.applications.update({id: $scope.application.oid }, $scope.application.toJson(), onSuccess, onError)
         setStatusMessage("", "pending")
 
         function onSuccess(savedApplication) {

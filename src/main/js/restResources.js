@@ -7,14 +7,14 @@ export default ["$resource", "$http", '$cookies', function($resource, $http, $co
       },
       "update": {
         method: "PUT",
-        url: window.url("omatsivut.applications.update"),
+        url: window.url("omatsivut.applications.update")
       }
     }),
 
     validate: function(application) {
       const request = {
         method: 'POST',
-        url: window.url("omatsivut.applications.validate"),
+        url: window.url("omatsivut.applications.validate", application.oid),
         headers: {
           'CSRF': $cookies['CSRF']
         },
