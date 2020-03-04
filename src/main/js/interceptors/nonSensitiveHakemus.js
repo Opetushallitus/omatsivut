@@ -10,7 +10,7 @@ function shouldAuthenticate(config) {
   return config.url.includes('insecure/')
 }
 
-export default function HakemusInterceptor() {
+export default ['$injector', function HakemusInterceptor($injector) {
   return {
     request: function(config) {
       if (shouldRerouteRequest(config)) {
@@ -18,8 +18,8 @@ export default function HakemusInterceptor() {
       }
       if (shouldAuthenticate(config) && getBearerToken()) {
         config.headers.Authorization = 'Bearer ' + getBearerToken()
-        config.headers.CSRF = 'jee';
       }
+      config.headers.CSRF = $injector.get('$cookies')['CSRF'];
       return config
     },
 
@@ -32,4 +32,4 @@ export default function HakemusInterceptor() {
       return response
     }
   };
-}
+}]
