@@ -28,11 +28,7 @@ export default ['$scope', '$location', '$http', function($scope, $location, $htt
       $scope.loading = true;
       $location.hash('/').replace();
       const suffix = token ? 'token/' + token : 'session';
-      const request = {
-        method: 'GET',
-        url: baseUrl + suffix,
-      };
-      $http(request).then(
+      $http.get(baseUrl + suffix).then(
         function (response) {
           $scope.loading = false;
           $scope.application = new Hakemus(response.data);
