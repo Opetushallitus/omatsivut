@@ -1,4 +1,4 @@
-export default ["$resource", "$http", '$cookies', function($resource, $http, $cookies) {
+export default ["$resource", "$http", '$injector', function($resource, $http, $injector) {
   return {
     applications: $resource(window.url("omatsivut.applications"), null, {
       get: {
@@ -12,12 +12,12 @@ export default ["$resource", "$http", '$cookies', function($resource, $http, $co
     }),
 
     validate: function(application) {
-      console.log('setting cookie: ' + $cookies['CSRF']);
+      console.log('setting cookie: ' + $injector.get('$cookies')['CSRF']);
       const request = {
         method: 'POST',
         url: window.url("omatsivut.applications.validate", application.oid),
         headers: {
-          'CSRF': $cookies['CSRF']
+          'CSRF': $injector.get('$cookies')['CSRF']
         },
         data: application.toJson()
       };
