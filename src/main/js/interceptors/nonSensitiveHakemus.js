@@ -13,6 +13,7 @@ function shouldAuthenticate(config) {
 export default ['$injector', function HakemusInterceptor($injector) {
   return {
     request: function(config) {
+      console.log('$injector.get($cookies)[CSRF]: ' + $injector.get('$cookies')['CSRF']);
       if (shouldRerouteRequest(config)) {
         config.url = config.url.replace(/\/secure\//, '/insecure/')
       }
