@@ -1,4 +1,4 @@
-export default ["$resource", "$http", function($resource, $http) {
+export default ["$resource", "$http", '$cookies', function($resource, $http, $cookies) {
   return {
     applications: $resource(window.url("omatsivut.applications"), null, {
       get: {
@@ -12,7 +12,13 @@ export default ["$resource", "$http", function($resource, $http) {
     }),
 
     validate: function(application) {
-      return $http.post(window.url( "omatsivut.applications.validate", application.oid), application.toJson())
+      return $http.post(window.url( "omatsivut.applications.validate", application.oid),
+        {
+          data: application.toJson(),
+          headers: {
+            'CSRF': $cookies['CSRF']
+          }
+        })
     },
 
     vastaanota: $resource(window.url("omatsivut.applications.vastaanota"), null, {

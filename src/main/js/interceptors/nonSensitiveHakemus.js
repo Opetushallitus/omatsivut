@@ -10,7 +10,7 @@ function shouldAuthenticate(config) {
   return config.url.includes('insecure/')
 }
 
-export default ["$injector", function HakemusInterceptor($injector) {
+export default function HakemusInterceptor() {
   return {
     request: function(config) {
       config.headers.CSRF = $injector.get('$cookies')['CSRF'];
@@ -32,4 +32,4 @@ export default ["$injector", function HakemusInterceptor($injector) {
       return response
     }
   };
-}]
+}
