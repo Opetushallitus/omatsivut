@@ -18,6 +18,7 @@ export default function HakemusInterceptor() {
       }
       if (shouldAuthenticate(config) && getBearerToken()) {
         config.headers.Authorization = 'Bearer ' + getBearerToken()
+        config.headers.CSRF = 'jee';
       }
       return config
     },
