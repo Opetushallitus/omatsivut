@@ -12,7 +12,7 @@ export default ["$resource", "$http", '$cookies', function($resource, $http, $co
     }),
 
     validate: function(application) {
-      println('setting header?');
+      console.log('setting hader?');
       const request = {
         method: 'POST',
         url: window.url("omatsivut.applications.validate", application.oid),
