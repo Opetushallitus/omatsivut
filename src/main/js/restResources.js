@@ -12,13 +12,15 @@ export default ["$resource", "$http", '$cookies', function($resource, $http, $co
     }),
 
     validate: function(application) {
-      return $http.post(window.url( "omatsivut.applications.validate", application.oid),
-        {
-          data: application.toJson(),
-          headers: {
-            'CSRF': $cookies['CSRF']
-          }
-        })
+      const request = {
+        method: 'POST',
+        url: window.url("omatsivut.applications.validate"),
+        headers: {
+          'CSRF': $cookies['CSRF']
+        },
+        data: application.toJson()
+      };
+      return $http(request);
     },
 
     vastaanota: $resource(window.url("omatsivut.applications.vastaanota"), null, {
