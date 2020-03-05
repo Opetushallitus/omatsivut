@@ -111,7 +111,9 @@
                  ng-if="isJonokohtaisetTulostiedotVisible(hakutoive)"
                  ng-repeat-end>
                 <span class="hakutoive-grid__valintatapajono-grid-text">
-                    {{ localization('label.jonokohtaisetTulostiedot.valintatilat.' + jonokohtainenTulostieto.valintatila) }}
+                    <span>{{ localization('label.jonokohtaisetTulostiedot.valintatilat.' + jonokohtainenTulostieto.valintatila) }}</span>
+                    <span ng-if="jonokohtainenTulostieto.varasijanumero"
+                          class="hakutoive-grid__valintatapajono-grid-text--grayed-out"> | {{ localization('label.varasijalla') }}: {{ jonokohtainenTulostieto.varasijanumero }}</span>
                 </span>
                 <span class="hakutoive-grid__valintatapajono-grid-text hakutoive-grid__valintatapajono-grid-text--grayed-out"
                       ng-if="getValintatilanKuvaus(jonokohtainenTulostieto.tilanKuvaukset)">

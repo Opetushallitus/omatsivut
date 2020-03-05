@@ -79,7 +79,8 @@
         "VARALLA": "On the waiting list",
         "VARASIJALTA_HYVAKSYTTY": "Accepted from the waiting list"
       }
-    }
+    },
+    "varasijalla": "on the waiting list"
   },
 
   "button": {
