@@ -12,16 +12,7 @@ export default ["$resource", "$http", '$injector', function($resource, $http, $i
     }),
 
     validate: function(application) {
-      console.log('setting cookie: ' + $injector.get('$cookies').get('CSRF'));
-      const request = {
-        method: 'POST',
-        url: window.url("omatsivut.applications.validate", application.oid),
-        headers: {
-          'CSRF': $injector.get('$cookies').get('CSRF')
-        },
-        data: application.toJson()
-      };
-      return $http(request);
+      return $http.post(window.url( "omatsivut.applications.validate", application.oid), application.toJson())
     },
 
     vastaanota: $resource(window.url("omatsivut.applications.vastaanota"), null, {
