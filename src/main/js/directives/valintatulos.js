@@ -38,7 +38,7 @@ export default ["restResources", function(restResources) {
         }
       }
       $scope.isHyvaksyttyKesken = function(valintatulos, valintatulokset) {
-        if(valintatulos.valintatila === "HYVAKSYTTY") {
+        if(valintatulos && valintatulos.valintatila === "HYVAKSYTTY") {
           var firstKeskenIndex = _.findIndex(valintatulokset, function(v) { return v.valintatila === "KESKEN" || v.valintatila === "VARALLA"})
           if(firstKeskenIndex != -1) {
             var valintatulosIndex = _.findIndex(valintatulokset, function(v) { return v.hakukohdeOid === valintatulos.hakukohdeOid})
