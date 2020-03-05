@@ -1,4 +1,4 @@
-export default ["$resource", "$http", '$injector', function($resource, $http, $injector) {
+export default ["$resource", "$http", function($resource, $http) {
   return {
     applications: $resource(window.url("omatsivut.applications"), null, {
       get: {
