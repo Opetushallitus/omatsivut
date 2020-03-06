@@ -21,11 +21,6 @@ module.exports = {
           name: 'vendor',
           enforce: true
         },
-        default: {
-          minChunks: 2,
-          priority: -20,
-          reuseExistingChunk: true
-        }
       }
     }
   },
@@ -38,41 +33,18 @@ module.exports = {
         }
       },
       {
-        test: /\.less$/,
+        test: /\.css$/,
         use: [
+          { loader: 'style-loader'},
           {
-            loader: "file-loader",
+            loader: 'css-loader',
             options: {
-              name: "css/[name].css",
-            },
-          },
-          {
-            loader: "extract-loader",
-          },
-          {
-            loader: "css-loader",
-            options: {
-              sourceMap: true,
-              modules: false
+              localIdentName: '[name]__[local]___[hash:base64:5]',
+              sourceMap: true
             }
-          },
-          {
-            loader: "less-loader"
           }
         ]
       },
-      {
-        test: /\.css$/,
-        use: [
-          "css-loader"
-        ]
-      },
-      {
-        test: /\.(png|jp(e*)g|svg|gif)$/,
-        use: [{
-          loader: 'url-loader',
-        }]
-      }
     ]
   },
   plugins: [
@@ -81,4 +53,52 @@ module.exports = {
       /fi|sv|en-gb/
     ),
   ]
-}
+  /*
+  module: {
+    rules: [
+      {
+        test: /\.(js)$/,
+        use: [ 'babel-loader' ],
+        include: [resolve('src'), resolve('test'), resolve('node_modules/webpack-dev-server/client')]
+      },
+      {
+        test: /\.css$/,
+        use: [
+          { loader: process.env.NODE_ENV !== 'production' ? 'style-loader' : MiniCssExtractPlugin.loader },
+          {
+            loader: 'css-loader',
+            options: {
+              localIdentName: '[name]__[local]___[hash:base64:5]',
+              sourceMap: true
+            }
+          }
+        ]
+      },
+      {
+        test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+        loader: 'url-loader',
+        options: {
+          limit: 10000,
+          name: utils.assetsPath('img/[name].[hash:7].[ext]')
+        }
+      },
+      {
+        test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,
+        loader: 'url-loader',
+        options: {
+          limit: 10000,
+          name: utils.assetsPath('media/[name].[hash:7].[ext]')
+        }
+      },
+      {
+        test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
+        loader: 'url-loader',
+        options: {
+          limit: 10000,
+          name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
+        }
+      }
+    ]
+  }
+  */
+};
