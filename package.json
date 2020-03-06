@@ -3,8 +3,8 @@
   "description": "OHP Mocha tests",
   "version": "0.0.1",
   "scripts": {
-    "watch": "webpack --config config/webpack.prod.config.js --watch -d",
-    "dev": "webpack --config config/webpack.prod.config.js -d",
+    "watch": "webpack --config config/webpack.config.js --watch -d",
+    "dev": "webpack --config config/webpack.config.js -d",
     "build": "webpack --config config/webpack.prod.config.js --bail -p",
     "tests": "webpack --config config/webpack.tests.config.js"
   },
@@ -38,14 +38,14 @@
     "postcss-loader": "^2.1.5",
     "raw-loader": "^0.5.1",
     "style-loader": "^0.21.0",
-    "uglifyjs-webpack-plugin": "^1.2.7",
+    "uglifyjs-webpack-plugin": "^2.2.0",
     "underscore": "^1.9.0",
     "url-loader": "^1.1.1",
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0",
     "watchify": "^3.11.0",
-    "webpack": "^4.11.1",
-    "webpack-command": "^0.2.0",
-    "webpack-dev-server": "^3.1.4"
+    "webpack": "^4.42.0",
+    "webpack-command": "^0.5.0",
+    "webpack-dev-server": "^3.10.3"
   }
 }
