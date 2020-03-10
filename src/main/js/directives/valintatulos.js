@@ -71,11 +71,10 @@ export default ["restResources", function(restResources) {
           })
         } else if(hyvaksytty(valintatulos) && valintatulos.ehdollisestiHyvaksyttavissa) {
           return localize("label.resultState." + key) + localize("label.resultState.EhdollinenPostfix")
-        } else {
-          return localize("label.resultState." + key, {
-            varasija: valintatulos.varasijanumero ? valintatulos.varasijanumero + "." : ""
-          })
         }
+        return localize("label.resultState." + key, {
+          varasija: valintatulos.varasijanumero ? valintatulos.varasijanumero + "." : ""
+        })
       };
 
       $scope.hakutoiveenValintatilanKuvaus = function(valintatulos) {
