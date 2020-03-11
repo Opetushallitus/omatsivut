@@ -10,7 +10,7 @@ function shouldAuthenticate(config) {
   return config.url.includes('insecure/')
 }
 
-export default function HakemusInterceptor() {
+export default ['$cookies', function HakemusInterceptor($cookies) {
   return {
     request: function(config) {
       if (shouldRerouteRequest(config)) {
@@ -19,6 +19,7 @@ export default function HakemusInterceptor() {
       if (shouldAuthenticate(config) && getBearerToken()) {
         config.headers.Authorization = 'Bearer ' + getBearerToken()
       }
+      config.headers.CSRF = $cookies.get('CSRF');
       return config
     },
 
@@ -31,4 +32,4 @@ export default function HakemusInterceptor() {
       return response
     }
   };
-}
+}]
