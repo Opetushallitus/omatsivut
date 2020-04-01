@@ -14,16 +14,26 @@ Oppijan henkilökohtainen palvelu
    - odotetaan scala 2.12:sta ja spring 4 upgradea ennen target version vaihtoa
 - JCE (Java Cryptography Extension)
    - Ilman laajennosta tulee virhe: "java.security.InvalidKeyException: Illegal key size"
-   - Lataa Oraclen sivuilta ja kopioi tiedostot $JAVA_HOME/jre/lib/security
+   - Lataa Oraclen sivuilta ja kopioi tiedostot `$JAVA_HOME/jre/lib/security`
 
     http://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html
 - Java-versio vähintään 1.8 update 40 (aiemmilla tarvitaan flägi `-XX:-EliminateAutoBox`)
 
 Lisää JAVA_HOME ympäristömuuttujat polkuun:
-	
-    export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
 
-### IDE
+```sh
+export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
+```
+
+## Tarvittavat build-työkalut
+
+Asenna NodeJS haluamallasi tavalla. Asenna sen avulla projektin kehitystyökalut komennolla:
+
+```sh
+npm install
+```
+
+## IDE-buildi
 
 Importoi IDEA:ssa projektin maven projektina.
 
@@ -31,8 +41,11 @@ Jos testeistä tulee IDE:llä yllättäviä `StackOverflow`-exceptioneita, anna 
 
 ### Käynnistä sovellus IDEAsta
 
-    mvn clean install
-    
+```sh
+npm install
+mvn clean install
+```
+
 Tämä luo ./target-kansion alle valinta-tulos-service.war -tiedoston
 
 Aja JettyLauncher-luokka.
@@ -40,7 +53,7 @@ Aja JettyLauncher-luokka.
 - jotta impersonointi/autentikoinnin ohitus onnistuu, anna parametri `-Domatsivut.profile=it`.
 - lisäksi `-Xss2M`, ettei stäkki lopu fikstuuridatalla, jossa on erittäin syviä rakenteita
 
-#### Ajo oikealla Jettyllä
+### Ajo oikealla Jettyllä
 
 Valmistele ensin sopiva, ympäristökohtainen common.properties. Valitse, käytätkö tietokantoja omalta koneeltasi vai palvelinympäristöltä.
 
@@ -74,7 +87,7 @@ Huomaa, että `oph-configuration` -hakemiston tulee olla `user.home`-hakemiston 
 
 Sisäänkirjautumisen saa feikattua tekemällä URLiin http://localhost:8080/omatsivut/initsession pyyntö, jossa `hetu`-headeriin annetaan halutun käyttäjän henkilötunnus.
 
-##### Offline-käyttö (skipRaamit) ja käyttö IE9:llä
+#### Offline-käyttö (skipRaamit) ja käyttö IE9:llä
 
 Kun sovellusta ajetaan `-Domatsivut.profile=it`-parametrillä, toimii se ilman verkkoyhteyttä vaikkapa junassa.
 Selaimessa sovellus kuitenkin lataa "oppija-raamit" testiympäristön serveriltä, johon sinulla ei välttämättä ole pääsyä.
@@ -89,27 +102,39 @@ Myös IE9:llä pitää paikallisessa ympäristössä CORS:n takia käyttää ski
 
 Näin ajat testit komentoriviltä.
 
-`mvn test`
+```sh
+npm install
+mvn test
+```
 
 Komento ajaa kaikki testit, mukaan lukien yksikkötestit, REST-palvelujen testit, mocha-selaintestit.
 
 ### Fatjar-paketointi
 
-`mvn package`
+```sh
+./webbuild.sh
+mvn package
+```
 
 ## Fronttidevaus
 
 Kehitystä varten oleva buildi (ei minimointia):
 
-    npm run dev
+```sh
+npm run dev
+```
 
 Jatkuva fronttikäännös käyntiin näin (ei minimointia):
 
-    npm run watch
+```sh
+npm run watch
+```
 
 Tuotantoa vastaava buildi
 
-    npm run build
+```sh
+npm run build
+```
 
 Fronttikoodit sijaitsevat `src/main` kansion alla hieman sekalaisessa järjestyksessä.
 Tyyleissä on käytetty lessiä. Niiden perusteella generoidaan css-tiedostot kansioon `src/main/webapp/css`.
@@ -122,12 +147,6 @@ Jos applikaatiota ajetaan "testimoodissa" eli esim. `-Domatsivut.profile=dev`, n
 
 ## mocha-phantomjs -testit
 
-### Asenna node package manager
-
-```sh
-brew install npm
-npm install
-```
 ### Testien ajaminen selaimessa
 
 Palvelin käyntiin (ks yllä) ja sitten [http://localhost:7337/omatsivut/test/runner.html](http://localhost:7337/omatsivut/test/runner.html)
@@ -171,7 +190,9 @@ Tällä profiililla käytetään paikallista mongo-kantaa ja mockattuja ulkoisia
 
 Paikallisen mongon käynnistys:
 
-`mongod --fork --config /usr/local/etc/mongod.conf`
+```sh
+mongod --fork --config /usr/local/etc/mongod.conf
+```
 
 ### templated-profiili
 
