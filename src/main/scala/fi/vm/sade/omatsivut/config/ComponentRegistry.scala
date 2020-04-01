@@ -12,6 +12,7 @@ import fi.vm.sade.hakemuseditori.localization.TranslationsComponent
 import fi.vm.sade.hakemuseditori.lomake.{LomakeRepository, LomakeRepositoryComponent}
 import fi.vm.sade.hakemuseditori.ohjausparametrit.{OhjausparametritComponent, OhjausparametritService}
 import fi.vm.sade.hakemuseditori.oppijanumerorekisteri.{OppijanumerorekisteriComponent, OppijanumerorekisteriService}
+import fi.vm.sade.hakemuseditori.tarjonta.vanha.RemoteTarjontaComponent
 import fi.vm.sade.hakemuseditori.tarjonta.{TarjontaComponent, TarjontaService}
 import fi.vm.sade.hakemuseditori.valintatulokset._
 import fi.vm.sade.hakemuseditori.viestintapalvelu.{TuloskirjeComponent, TuloskirjeService}
@@ -57,6 +58,7 @@ class ComponentRegistry(val config: AppConfig)
           LogoutServletContainer with
           FixtureServletContainer with
           KoodistoServletContainer with
+          RemoteTarjontaComponent with
           TarjontaComponent with
           TuloskirjeComponent with
           KoodistoComponent with
@@ -87,7 +89,7 @@ class ComponentRegistry(val config: AppConfig)
 
   private def configureTarjontaService: TarjontaService = config match {
     case _: StubbedExternalDeps => new StubbedTarjontaService()
-    case _ => CachedRemoteTarjontaService()
+    case _ => CachedRemoteTarjontaService(config)
   }
 
   private def configureTuloskirjeService: TuloskirjeService = config match {
