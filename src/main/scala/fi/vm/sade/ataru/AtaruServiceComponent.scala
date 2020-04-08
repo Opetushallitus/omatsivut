@@ -3,10 +3,9 @@ package fi.vm.sade.ataru
 import java.util.concurrent.TimeUnit
 
 import fi.vm.sade.hakemuseditori.auditlog.{Audit, ShowHakemus}
-import fi.vm.sade.hakemuseditori.domain.Language
 import fi.vm.sade.hakemuseditori.domain.Language.Language
-import fi.vm.sade.hakemuseditori.hakemus.domain.{Active, EducationBackground, HakemuksenTila, Hakemus, HakukausiPaattynyt, HakukierrosPaattynyt}
 import fi.vm.sade.hakemuseditori.hakemus.{HakemusInfo, ValintatulosFetchStrategy}
+import fi.vm.sade.hakemuseditori.hakemus.domain.{Active, EducationBackground, HakemuksenTila, Hakemus, HakukausiPaattynyt, HakukierrosPaattynyt, Hakutoive}
 import fi.vm.sade.hakemuseditori.lomake.LomakeRepositoryComponent
 import fi.vm.sade.hakemuseditori.oppijanumerorekisteri.OppijanumerorekisteriComponent
 import fi.vm.sade.hakemuseditori.tarjonta.TarjontaComponent
@@ -18,9 +17,9 @@ import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.utils.cas.{CasAuthenticatingClient, CasClient, CasParams}
 import javax.servlet.http.HttpServletRequest
+import org.http4s.{Request, Uri}
 import org.http4s.Method.GET
 import org.http4s.client.blaze
-import org.http4s.{Request, Uri}
 import org.joda.time.LocalDateTime
 import org.json4s.DefaultFormats
 import org.json4s.jackson.JsonMethods
@@ -73,6 +72,7 @@ trait AtaruServiceComponent  {
               .filter(h => !h.ohjeetUudelleOpiskelijalle.isEmpty)
               .map(h => h.oid -> h.ohjeetUudelleOpiskelijalle.get)
               .toMap
+            val hakutoiveet = hakukohteet.map(toHakutoive)
             val hakemus = Hakemus(
               oid = a.oid,
               personOid = personOid,
@@ -81,7 +81,7 @@ trait AtaruServiceComponent  {
               state = state(now, haku, hakukohteet, a, valintatulos.getOrElse(None)),
               tuloskirje = tuloskirje,
               ohjeetUudelleOpiskelijalle = ohjeetUudelleOpiskelijalleMap,
-              hakutoiveet = List(),
+              hakutoiveet = hakutoiveet,
               haku = haku,
               educationBackground = EducationBackground("base_education", false),
               answers = Map(),
@@ -135,6 +135,15 @@ trait AtaruServiceComponent  {
         case _ => None
       }
       go(oids, Nil)
+    }
+
+    private def toHakutoive(hakukohde: Hakukohde): Hakutoive = {
+      Hakutoive(
+        Some(Map("Koulutus-id" -> hakukohde.oid)),
+        hakukohde.koulutuksenAlkaminen,
+        hakukohde.hakuaikaId,
+        hakukohde.kohteenHakuaika
+      )
     }
   }
 
