@@ -3,21 +3,23 @@ package fi.vm.sade.hakemuseditori.tarjonta
 import fi.vm.sade.hakemuseditori.domain.Language
 import fi.vm.sade.hakemuseditori.domain.Language.Language
 import fi.vm.sade.hakemuseditori.fixtures.JsonFixtureMaps
-import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus
-import fi.vm.sade.hakemuseditori.http.HttpCall
 import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.hakemuseditori.memoize.TTLOptionalMemoize
 import fi.vm.sade.hakemuseditori.ohjausparametrit.OhjausparametritComponent
 import fi.vm.sade.hakemuseditori.ohjausparametrit.domain.HaunAikataulu
 import fi.vm.sade.hakemuseditori.tarjonta.domain.{Haku, Hakukohde, KohteenHakuaika}
-import fi.vm.sade.omatsivut.OphUrlProperties
+import fi.vm.sade.hakemuseditori.tarjonta.kouta.RemoteKoutaComponent
+import fi.vm.sade.hakemuseditori.tarjonta.vanha.{RemoteTarjontaComponent, TarjontaHaku, TarjontaParser}
+import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.utils.slf4j.Logging
 import org.json4s.JsonAST.JValue
 
 import scala.collection.mutable
 
 trait TarjontaComponent {
-  this: OhjausparametritComponent =>
+  this: OhjausparametritComponent
+    with RemoteTarjontaComponent
+    with RemoteKoutaComponent =>
 
   val tarjontaService: TarjontaService
 
@@ -27,7 +29,7 @@ trait TarjontaComponent {
     private val priorities = mutable.Set[String]()
 
     private def parseHaku(oid: String, lang: Language.Language) = {
-      JsonFixtureMaps.findByKey[JValue]("/hakemuseditorimockdata/haut.json", oid).flatMap(TarjontaParser.parseHaku).map {h => Haku(h, lang)}
+      JsonFixtureMaps.findByKey[JValue]("/hakemuseditorimockdata/haut.json", oid).flatMap(TarjontaParser.parseHaku).map {h => TarjontaHaku.toHaku(h, lang, None)}
     }
 
     override def haku(oid: String, lang: Language.Language) = {
@@ -119,9 +121,9 @@ trait TarjontaComponent {
 
   }
 
-  object CachedRemoteTarjontaService {
-    def apply(): TarjontaService = {
-      val service = new RemoteTarjontaService()
+  object CachedRemoteTarjontaService extends Logging {
+    def apply(appConfig: AppConfig): TarjontaService = {
+      val service = new UnionTarjontaService(new RemoteTarjontaService(), new RemoteKoutaService(appConfig))
       val hakuMemo = TTLOptionalMemoize.memoize(service.haku _, "tarjonta haku", 4 * 60 * 60, 128)
       val hakukohdeMemo = TTLOptionalMemoize.memoize(service.hakukohde _, "tarjonta hakukohde", 4 * 60 * 60, 1024)
 
@@ -131,47 +133,6 @@ trait TarjontaComponent {
       }
     }
   }
-
-  class RemoteTarjontaService() extends TarjontaService with HttpCall {
-    override def haku(oid: String, lang: Language.Language) : Option[Haku] = {
-      withHttpGet("Tarjonta fetch haku", OphUrlProperties.url("tarjonta-service.haku", oid), {_.flatMap(TarjontaParser.parseHaku).map({ tarjontaHaku =>
-          val haunAikataulu = ohjausparametritService.haunAikataulu(oid)
-          Haku(tarjontaHaku, lang).copy(aikataulu = haunAikataulu)
-        })}
-      )
-    }
-
-    override def hakukohde(oid: String): Option[Hakukohde] = {
-      if (oid != "") {
-        withHttpGet( "Tarjonta fetch hakukohde", OphUrlProperties.url("tarjonta-service.hakukohde", oid), {_.flatMap(TarjontaParser.parseHakukohde)})
-      } else {
-        None
-      }
-    }
-  }
 }
 
-trait TarjontaService {
-  def haku(oid: String, lang: Language.Language) : Option[Haku]
-  def hakukohde(oid: String) : Option[Hakukohde]
 
-  def filterHakutoiveOidsByActivity(activity: Boolean, hakutoiveet: List[Hakemus.HakutoiveData], haku: Haku): List[String] = {
-    val hakukohteet = hakutoiveet.flatMap(entry => entry.get("Koulutus-id").map(oid => {
-      hakukohde(oid).getOrElse(Hakukohde(oid, None, None, Some(KohteenHakuaika(0L, 0L)), None))
-    }))
-    hakukohteet.filter(hakukohde => hakukohde.kohteenHakuaika match {
-      case Some(aika) => aika.active == activity
-      case _ => hakukohde.hakuaikaId.map((hakuaikaId: String) => haku.applicationPeriods.find(_.id == hakuaikaId).exists(_.active == activity)).getOrElse(haku.active == activity)
-    }).map(_.oid)
-  }
-
-  def getOhjeetUudelleOpiskelijalle(hakukohdeOid: Option[String]): Option[String] = {
-    for {
-      oid <- hakukohdeOid
-      tarjonnanHakukohde <- hakukohde(oid)
-      linkki <- tarjonnanHakukohde.ohjeetUudelleOpiskelijalle
-    } yield {
-      linkki
-    }
-  }
-}

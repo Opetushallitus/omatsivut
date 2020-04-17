@@ -38,13 +38,13 @@ install:
   - git clone https://github.com/Opetushallitus/ci-tools.git
   - source ci-tools/common/setup-tools.sh
   - sudo sh -c "printf '\n%s penaali.hard.ware.fi\n' $(dig +short artifactory.opintopolku.fi|head -n1) >> /etc/hosts"
-  - nvm install 6
+  - nvm install 8
 
 script:
   - export ARTIFACT_NAME=omatsivut
   # This is needed for the maven-dependency-plugin to work to get valinta-tulos-service.war
   - sudo chown -R travis:travis $HOME/.m2
-  - ./cibuild.bash
+  - nvm use 8 && ./cibuild.bash
   - export BASE_IMAGE="baseimage-fatjar:master"
   - ./ci-tools/common/pull-image.sh
   - ./ci-tools/build/build-fatjar.sh $ARTIFACT_NAME
