@@ -68,6 +68,10 @@
       "EiVastaanotettuMaaraAikana": "You have not confirmed the study place within the set time"
     },
     "jonokohtaisetTulostiedot": {
+      "valintatapa": "Selection method",
+      "pisteesi": "Your score",
+      "alimmatHyvaksytytPisteet": "The lowest accepted score",
+      "valinnanTulos": "Admission result",
       "valintatilat": {
         "HARKINNANVARAISESTI_HYVAKSYTTY": "Accepted",
         "HYLATTY": "You have not received a study place",

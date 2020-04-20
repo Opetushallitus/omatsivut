@@ -68,6 +68,10 @@
       "EiVastaanotettuMaaraAikana": "Et ottanut opiskelupaikkaa vastaan määräaikaan mennessä"
     },
     "jonokohtaisetTulostiedot": {
+      "valintatapa": "Valintatapa",
+      "pisteesi": "Pisteesi",
+      "alimmatHyvaksytytPisteet": "Alimmat hyväksytyt pisteet",
+      "valinnanTulos": "Valinnan tulos",
       "valintatilat": {
         "HARKINNANVARAISESTI_HYVAKSYTTY": "Harkinnavaraisesti hyväksytty",
         "HYLATTY": "Et saanut opiskelupaikkaa",

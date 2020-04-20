@@ -68,6 +68,10 @@
       "EiVastaanotettuMaaraAikana": "Du har inte tagit emot studieplatsen inom utsatt tid"
     },
     "jonokohtaisetTulostiedot": {
+      "valintatapa": "Antagningssätt",
+      "pisteesi": "Dina poäng",
+      "alimmatHyvaksytytPisteet": "Lägsta godkänd poäng",
+      "valinnanTulos": "Antagningsresultat",
       "valintatilat": {
         "HARKINNANVARAISESTI_HYVAKSYTTY": "Godkänd",
         "HYLATTY": "Du har inte fått en studieplats",
