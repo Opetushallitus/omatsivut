@@ -173,12 +173,14 @@ export default ["restResources", function(restResources) {
           })
       }
 
-      $scope.getValintatilanKuvaus = function(valintatilanKuvaukset) {
+      $scope.getValintatilanKuvaus = function(valintatilanKuvaukset, valintatila) {
         const language = getLanguage().toUpperCase()
-        return valintatilanKuvaukset[language] ||
+        const valintatilanKuvaus = valintatilanKuvaukset[language] ||
           valintatilanKuvaukset['FI'] ||
           valintatilanKuvaukset['EN'] ||
           valintatilanKuvaukset['SV']
+        const localizedValintatila = localize('label.jonokohtaisetTulostiedot.valintatilat.' + valintatila)
+        return valintatilanKuvaus !== localizedValintatila ? valintatilanKuvaus : undefined
       }
 
       $scope.hakutoiveValintatilaStateClass = function(hakutoive) {
