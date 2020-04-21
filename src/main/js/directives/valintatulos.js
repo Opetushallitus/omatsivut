@@ -182,7 +182,7 @@ export default ["restResources", function(restResources) {
       }
 
       $scope.hakutoiveValintatilaStateClass = function(hakutoive) {
-        return hakutoive.valintatila === 'HYVAKSYTTY'
+        return hakutoive.valintatila === 'HYVAKSYTTY' || hakutoive.valintatila === 'VARASIJALTA_HYVAKSYTTY'
           ? 'hakutoive--hyvaksytty'
           : 'hakutoive--ei-hyvaksytty'
       }
