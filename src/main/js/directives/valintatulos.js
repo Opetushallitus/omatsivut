@@ -173,15 +173,28 @@ export default ["restResources", function(restResources) {
           })
       }
 
-      $scope.getValintatilanKuvaus = function(valintatilanKuvaukset, valintatila) {
-        const language = getLanguage().toUpperCase()
-        const valintatilanKuvaus = valintatilanKuvaukset[language] ||
-          valintatilanKuvaukset['FI'] ||
-          valintatilanKuvaukset['EN'] ||
-          valintatilanKuvaukset['SV']
-        const localizedValintatila = localize('label.jonokohtaisetTulostiedot.valintatilat.' + valintatila)
-        return valintatilanKuvaus !== localizedValintatila ? valintatilanKuvaus : undefined
-      }
+      $scope.getValintatilanKuvaus = function(
+        valintatilanKuvaukset,
+        valintatila
+      ) {
+          const language = getLanguage().toUpperCase()
+          const valintatilanKuvaus = valintatilanKuvaukset
+            ? valintatilanKuvaukset[language] ||
+              valintatilanKuvaukset['FI'] ||
+              valintatilanKuvaukset['EN'] ||
+              valintatilanKuvaukset['SV']
+            : undefined
+          const localizedValintatila = valintatila
+            ? localize(
+                'label.jonokohtaisetTulostiedot.valintatilat.' + valintatila
+              )
+            : undefined
+          return valintatilanKuvaus &&
+            (!localizedValintatila ||
+              valintatilanKuvaus !== localizedValintatila)
+            ? valintatilanKuvaus
+            : undefined
+        }
 
       $scope.hakutoiveValintatilaStateClass = function(hakutoive) {
         return hakutoive.valintatila === 'HYVAKSYTTY' || hakutoive.valintatila === 'VARASIJALTA_HYVAKSYTTY'
