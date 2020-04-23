@@ -202,6 +202,15 @@ export default ["restResources", function(restResources) {
           : 'hakutoive--ei-hyvaksytty'
       }
 
+      $scope.getVarasijaDisclaimer = function(jonokohtainenTulostieto) {
+        return jonokohtainenTulostieto.valintatila === 'VARALLA' &&
+          (jonokohtainenTulostieto.eiVarasijatayttoa ||
+            (jonokohtainenTulostieto.varasijat &&
+              parseInt(jonokohtainenTulostieto.varasijat, 10) > 0))
+          ? localize('label.varasijaDisclaimer')
+          : undefined
+      }
+
       function hyvaksytty(valintatulos) {
         return valintatulos.valintatila == "HYVAKSYTTY" || valintatulos.valintatila == "HARKINNANVARAISESTI_HYVAKSYTTY" || valintatulos.valintatila == "VARASIJALTA_HYVAKSYTTY"
       }

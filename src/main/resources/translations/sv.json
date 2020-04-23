@@ -83,7 +83,8 @@
         "VARALLA": "På reservplats",
         "VARASIJALTA_HYVAKSYTTY": "Godkänd från reservplats"
       }
-    }
+    },
+    "varasijaDisclaimer": "Begränsat antal reservplatser enligt antagningssätt eller inga reservplatser. Kontrollera eventuella begränsningar i reservplatserna i antagningsgrunderna. Begränsningarna tas ibruk senast då samtliga antagningsresultat är klara."
   },
 
   "button": {

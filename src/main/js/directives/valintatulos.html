@@ -129,6 +129,10 @@
                       ng-if="getValintatilanKuvaus(jonokohtainenTulostieto.ehdollisenHyvaksymisenEhto, jonokohtainenTulostieto.valintatila)">
                     {{ getValintatilanKuvaus(jonokohtainenTulostieto.ehdollisenHyvaksymisenEhto, jonokohtainenTulostieto.valintatila) }}
                 </span>
+                <span class="hakutoive-grid__valintatapajono-grid-text hakutoive-grid__valintatapajono-grid-text--grayed-out"
+                      ng-if="getVarasijaDisclaimer(jonokohtainenTulostieto)">
+                    {{ getVarasijaDisclaimer(jonokohtainenTulostieto) }}
+                </span>
             </div>
         </div>
     </div>
