@@ -122,12 +122,12 @@
                     {{ localization('label.jonokohtaisetTulostiedot.valintatilat.' + jonokohtainenTulostieto.valintatila) + (jonokohtainenTulostieto.varasijanumero >= 0 ? ': ' + jonokohtainenTulostieto.varasijanumero : '') }}
                 </span>
                 <span class="hakutoive-grid__valintatapajono-grid-text hakutoive-grid__valintatapajono-grid-text--grayed-out"
-                      ng-if="getValintatilanKuvaus(jonokohtainenTulostieto.tilanKuvaukset, jonokohtainenTulostieto.valintatila)">
-                    {{ getValintatilanKuvaus(jonokohtainenTulostieto.tilanKuvaukset, jonokohtainenTulostieto.valintatila) }}
+                      ng-if="getValintatilanKuvaus(jonokohtainenTulostieto)">
+                    {{ getValintatilanKuvaus(jonokohtainenTulostieto) }}
                 </span>
                 <span class="hakutoive-grid__valintatapajono-grid-text hakutoive-grid__valintatapajono-grid-text--grayed-out"
-                      ng-if="getValintatilanKuvaus(jonokohtainenTulostieto.ehdollisenHyvaksymisenEhto, jonokohtainenTulostieto.valintatila)">
-                    {{ getValintatilanKuvaus(jonokohtainenTulostieto.ehdollisenHyvaksymisenEhto, jonokohtainenTulostieto.valintatila) }}
+                      ng-if="getEhdollisenHyvaksymisenEhto(jonokohtainenTulostieto)">
+                    {{ getEhdollisenHyvaksymisenEhto(jonokohtainenTulostieto) }}
                 </span>
             </div>
         </div>

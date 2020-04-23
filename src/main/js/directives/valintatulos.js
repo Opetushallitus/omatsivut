@@ -173,33 +173,43 @@ export default ["restResources", function(restResources) {
           })
       }
 
-      $scope.getValintatilanKuvaus = function(
-        valintatilanKuvaukset,
-        valintatila
-      ) {
-          const language = getLanguage().toUpperCase()
-          const valintatilanKuvaus = valintatilanKuvaukset
-            ? valintatilanKuvaukset[language] ||
-              valintatilanKuvaukset['FI'] ||
-              valintatilanKuvaukset['EN'] ||
-              valintatilanKuvaukset['SV']
-            : undefined
-          const localizedValintatila = valintatila
-            ? localize(
-                'label.jonokohtaisetTulostiedot.valintatilat.' + valintatila
-              )
-            : undefined
-          return valintatilanKuvaus &&
-            (!localizedValintatila ||
-              valintatilanKuvaus !== localizedValintatila)
-            ? valintatilanKuvaus
-            : undefined
-        }
+      $scope.getValintatilanKuvaus = function(jonokohtainenTulostieto) {
+        const { tilanKuvaukset, valintatila } = jonokohtainenTulostieto
+        return getLocalizedDisclaimer(tilanKuvaukset, valintatila)
+      }
+
+      $scope.getEhdollisenHyvaksymisenEhto = function(jonokohtainenTulostieto) {
+        const {
+          ehdollisenHyvaksymisenEhto,
+          valintatila,
+        } = jonokohtainenTulostieto
+        return getLocalizedDisclaimer(ehdollisenHyvaksymisenEhto, valintatila)
+      }
 
       $scope.hakutoiveValintatilaStateClass = function(hakutoive) {
         return hakutoive.valintatila === 'HYVAKSYTTY' || hakutoive.valintatila === 'VARASIJALTA_HYVAKSYTTY'
           ? 'hakutoive--hyvaksytty'
           : 'hakutoive--ei-hyvaksytty'
+      }
+
+      function getLocalizedDisclaimer(disclaimer, valintatila) {
+        const language = getLanguage().toUpperCase()
+        const localizedDisclaimer = disclaimer
+          ? disclaimer[language] ||
+            disclaimer['FI'] ||
+            disclaimer['EN'] ||
+            disclaimer['SV']
+          : undefined
+        const localizedValintatila = valintatila
+          ? localize(
+              'label.jonokohtaisetTulostiedot.valintatilat.' + valintatila
+            )
+          : undefined
+        return localizedDisclaimer &&
+          (!localizedValintatila ||
+            localizedDisclaimer !== localizedValintatila)
+          ? localizedDisclaimer
+          : undefined
       }
 
       function hyvaksytty(valintatulos) {
