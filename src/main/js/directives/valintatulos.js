@@ -220,7 +220,7 @@ export default ["restResources", function(restResources) {
             parseInt(jonokohtainenTulostieto.varasijat, 10) > 0
           ) {
             disclaimer = localize('label.varasijojenMaaraRajattu', {
-              varasijamaara: jonokohtainenTulostieto.varasijamaara,
+              varasijamaara: jonokohtainenTulostieto.varasijat,
             })
           } else if (jonokohtainenTulostieto.eiVarasijatayttoa) {
             disclaimer = localize('label.eiVarasijatayttoa')
