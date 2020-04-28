@@ -6,6 +6,7 @@ import fi.vm.sade.hakemuseditori.hakemus.domain.HakemusMuutos
 import fi.vm.sade.hakemuseditori.hakemus.{FetchIfNoHetuOrToinenAste, HakemusInfo, HakemusRepositoryComponent}
 import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.hakemuseditori.lomake.domain.AnswerId
+import fi.vm.sade.hakemuseditori.oppijanumerorekisteri.OppijanumerorekisteriComponent
 import fi.vm.sade.hakemuseditori.tarjonta.TarjontaComponent
 import fi.vm.sade.hakemuseditori.user.Oppija
 import fi.vm.sade.hakemuseditori.valintatulokset.domain.Ilmoittautuminen
@@ -35,6 +36,7 @@ trait NonSensitiveApplicationServletContainer {
     HakemusEditoriComponent with
     VastaanottoComponent with
     OppijanTunnistusComponent with
+    OppijanumerorekisteriComponent with
     TarjontaComponent =>
 
   class NonSensitiveApplicationServlet(val appConfig: AppConfig) extends OmatSivutServletBase with JsonFormats with JacksonJsonSupport with HakemusEditori with HakemusEditoriUserContext {
@@ -147,7 +149,7 @@ trait NonSensitiveApplicationServletContainer {
         Ok(InsecureHakemusInfo(
           jwt.encode(token),
           new NonSensitiveHakemusInfo(hakemus, token.answersFromThisSession),
-          oiliJwt = jwt.createOiliJwt(token.personOid)
+          oiliJwt = jwt.createOiliJwt(oppijanumerorekisteriService.fetchMasterHenkiloOidByHenkiloOid(token.personOid))
         ))
       }).get
     }
@@ -181,7 +183,8 @@ trait NonSensitiveApplicationServletContainer {
         Ok(InsecureHakemusInfo(
           jwt.encode(HakemusJWT(metadata.hakemusOid, Set(), hakemus.hakemus.personOid)),
           new NonSensitiveHakemusInfo(hakemus, Set()),
-          oiliJwt = jwt.createOiliJwt(hakemus.hakemus.personOid)
+          oiliJwt = jwt.createOiliJwt(
+              oppijanumerorekisteriService.fetchMasterHenkiloOidByHenkiloOid(hakemus.hakemus.personOid))
         ))
       }).get
     }
