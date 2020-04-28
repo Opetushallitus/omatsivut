@@ -84,7 +84,8 @@
         "VARASIJALTA_HYVAKSYTTY": "Godkänd från reservplats"
       }
     },
-    "varasijaDisclaimer": "Begränsat antal reservplatser enligt antagningssätt eller inga reservplatser. Kontrollera eventuella begränsningar i reservplatserna i antagningsgrunderna. Begränsningarna tas ibruk senast då samtliga antagningsresultat är klara."
+    "varasijojenMaaraRajattu": "Begränsat antal reservplatser enligt antagningssätt: __varasijamaara__. Begränsningarna tas ibruk senast då samtliga antagningsresultat är klara.",
+    "eiVarasijatayttoa": "Inga reservplatser i bruk inom detta antagningssätt. Dessa begränsningarna tas ibruk senast då samtliga antagningsresultat är klara."
   },
 
   "button": {

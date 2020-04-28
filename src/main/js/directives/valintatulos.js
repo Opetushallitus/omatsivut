@@ -213,12 +213,20 @@ export default ["restResources", function(restResources) {
       }
 
       $scope.getVarasijaDisclaimer = function(jonokohtainenTulostieto) {
-        return jonokohtainenTulostieto.valintatila === 'VARALLA' &&
-          (jonokohtainenTulostieto.eiVarasijatayttoa ||
-            (jonokohtainenTulostieto.varasijat &&
-              parseInt(jonokohtainenTulostieto.varasijat, 10) > 0))
-          ? localize('label.varasijaDisclaimer')
-          : undefined
+        let disclaimer
+        if (jonokohtainenTulostieto.valintatila === 'VARALLA') {
+          if (
+            jonokohtainenTulostieto.varasijat &&
+            parseInt(jonokohtainenTulostieto.varasijat, 10) > 0
+          ) {
+            disclaimer = localize('label.varasijojenMaaraRajattu', {
+              varasijamaara: jonokohtainenTulostieto.varasijamaara,
+            })
+          } else if (jonokohtainenTulostieto.eiVarasijatayttoa) {
+            disclaimer = localize('label.eiVarasijatayttoa')
+          }
+        }
+        return disclaimer
       }
 
       function hyvaksytty(valintatulos) {

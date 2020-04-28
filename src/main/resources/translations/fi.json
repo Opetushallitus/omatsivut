@@ -84,7 +84,8 @@
         "VARASIJALTA_HYVAKSYTTY": "Varasijalta hyväksytty"
       }
     },
-    "varasijaDisclaimer": "Valintatavalla rajattu määrä varasijoja käytössä tai ei ollenkaan varasijoja. Tarkista mahdolliset varasijarajoitukset hakukohteen valintaperusteista. Rajoitukset astuvat voimaan viimeistään kun kaikki haun tulokset ovat julkaistu."
+    "varasijojenMaaraRajattu": "Valintatavalla on rajattu määrä varasijoja käytössä: __varasijamaara__. Nämä rajoitukset varasijoihin astuvat voimaan viimeistään kun kaikki haun tulokset ovat julkaistu.",
+    "eiVarasijatayttoa": "Valintatavalla ei varasijoja käytössä. Nämä rajoitukset varasijoihin astuvat voimaan viimeistään kun kaikki haun tulokset ovat julkaistu."
   },
 
   "button": {

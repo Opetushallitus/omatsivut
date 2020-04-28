@@ -84,7 +84,8 @@
         "VARASIJALTA_HYVAKSYTTY": "Accepted from the waiting list"
       }
     },
-    "varasijaDisclaimer": "Selection method has limited number of waiting list places or no waiting list in use. Check any restrictions on the number of waiting list places in the admission requirements. The restrictions come in to effect at the latest when all the admission results are published."
+    "varasijojenMaaraRajattu": "Selection method has limited number of waiting list places in use: __varasijamaara__. These restrictions come in to effect at the latest when all the admission results are published.",
+    "eiVarasijatayttoa": "Selection method has no waiting list in use. These restrictions come in to effect at the latest when all the admission results are published."
   },
 
   "button": {
