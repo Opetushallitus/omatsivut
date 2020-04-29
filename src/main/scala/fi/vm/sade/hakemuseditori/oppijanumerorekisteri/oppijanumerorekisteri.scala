@@ -47,7 +47,6 @@ object Henkilo {
 trait OppijanumerorekisteriService {
   def henkilo(personOid: String): Henkilo
   def fetchAllDuplicateOids(oppijanumero: String): Set[String]
-  def fetchMasterHenkiloOidByHenkiloOid(henkiloOid: String): String
 }
 
 trait OppijanumerorekisteriComponent {
@@ -59,7 +58,6 @@ trait OppijanumerorekisteriComponent {
     }
 
     override def fetchAllDuplicateOids(oppijanumero: String): Set[String] = Set(oppijanumero)
-    override def fetchMasterHenkiloOidByHenkiloOid(henkiloOid: String): String = henkiloOid
   }
 
   class RemoteOppijanumerorekisteriService(config: AppConfig) extends OppijanumerorekisteriService with JsonFormats with Logging {
@@ -140,26 +138,6 @@ trait OppijanumerorekisteriComponent {
           logger.error(s"Problem when parsing Henkilo map for $henkiloOid from response '$responseBody'", e)
           throw e
       }
-    }
-
-    override def fetchMasterHenkiloOidByHenkiloOid(henkiloOid: String): String = {
-      val timeout = Duration(30, TimeUnit.SECONDS)
-
-      val body: json4s.JValue = Extraction.decompose(List(henkiloOid))
-      val masterHenkilosRequest = Request(
-        method = Method.POST,
-        uri = uriFromString(OphUrlProperties.url("oppijanumerorekisteri-service.henkilotByOids")),
-        headers = Headers(callerIdHeader, `Accept`(`application/json`))
-      ).withBody(body)(Json4sHttp4s.json4sEncoderOf)
-
-      val henkilos: Iterable[(String, Henkilo)] = httpClient.fetch(masterHenkilosRequest)((response: Response) =>
-        if (response.status == Status.Ok) {
-          response.as[String].map(parseHenkilosResponse(_, henkiloOid))
-        } else {
-          logger.error("Failed to fetch master henkilo data for user oid {}, response was {}, {}", henkiloOid, response.status, response.body)
-          Task.now(Nil)
-        }).runFor(timeout)
-      henkilos.head._2.oid
     }
   }
 }
