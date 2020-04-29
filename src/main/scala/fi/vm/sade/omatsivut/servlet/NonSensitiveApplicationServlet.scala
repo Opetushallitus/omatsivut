@@ -149,7 +149,7 @@ trait NonSensitiveApplicationServletContainer {
         Ok(InsecureHakemusInfo(
           jwt.encode(token),
           new NonSensitiveHakemusInfo(hakemus, token.answersFromThisSession),
-          oiliJwt = jwt.createOiliJwt(oppijanumerorekisteriService.fetchMasterHenkiloOidByHenkiloOid(token.personOid))
+          oiliJwt = jwt.createOiliJwt(oppijanumerorekisteriService.henkilo(token.personOid).oid)
         ))
       }).get
     }
@@ -184,7 +184,7 @@ trait NonSensitiveApplicationServletContainer {
           jwt.encode(HakemusJWT(metadata.hakemusOid, Set(), hakemus.hakemus.personOid)),
           new NonSensitiveHakemusInfo(hakemus, Set()),
           oiliJwt = jwt.createOiliJwt(
-              oppijanumerorekisteriService.fetchMasterHenkiloOidByHenkiloOid(hakemus.hakemus.personOid))
+              oppijanumerorekisteriService.henkilo(hakemus.hakemus.personOid).oid)
         ))
       }).get
     }

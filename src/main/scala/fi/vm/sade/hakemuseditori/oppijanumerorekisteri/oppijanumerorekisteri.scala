@@ -54,7 +54,7 @@ trait OppijanumerorekisteriComponent {
 
   class StubbedOppijanumerorekisteriService extends OppijanumerorekisteriService {
     override def henkilo(personOid: String): Henkilo = {
-      Henkilo("bla bla", Some("kva kva"))
+      Henkilo(personOid, Some("kva kva"))
     }
 
     override def fetchAllDuplicateOids(oppijanumero: String): Set[String] = Set(oppijanumero)
