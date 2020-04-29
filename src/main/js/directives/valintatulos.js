@@ -38,7 +38,7 @@ export default ["restResources", function(restResources) {
         }
       }
       $scope.isHyvaksyttyKesken = function(valintatulos, valintatulokset) {
-        if(valintatulos.valintatila === "HYVAKSYTTY") {
+        if(valintatulos && valintatulos.valintatila === "HYVAKSYTTY") {
           var firstKeskenIndex = _.findIndex(valintatulokset, function(v) { return v.valintatila === "KESKEN" || v.valintatila === "VARALLA"})
           if(firstKeskenIndex != -1) {
             var valintatulosIndex = _.findIndex(valintatulokset, function(v) { return v.hakukohdeOid === valintatulos.hakukohdeOid})
@@ -49,10 +49,9 @@ export default ["restResources", function(restResources) {
         return false;
       }
 
-      $scope.valintatulosText = function(valintatulos, valintatulokset) {
+      $scope.hakutoiveenValintatulosText = function(valintatulos, valintatulokset) {
         var isHyvaksyttyKesken = $scope.isHyvaksyttyKesken(valintatulos, valintatulokset);
         var key = isHyvaksyttyKesken ? "HyvaksyttyKesken" : underscoreToCamelCase(valintatulos.valintatila);
-        var ehdollisenHyvaksymisenKenttaEhto = localize("label.resultState.EhdollisenHyvaksymisenEhdonKentanNimi");
 
         if ([VASTAANOTTOTILA.VASTAANOTTANUT_SITOVASTI, VASTAANOTTOTILA.EI_VASTAANOTETTU_MAARA_AIKANA, VASTAANOTTOTILA.EHDOLLISESTI_VASTAANOTTANUT].indexOf(valintatulos.vastaanottotila) >= 0) {
           key = underscoreToCamelCase(valintatulos.vastaanottotila);
@@ -61,14 +60,9 @@ export default ["restResources", function(restResources) {
           if(valintatulos.valintatila === "PERUNUT"){
             return localize("label.resultState." + key)
           } else if(valintatulos.valintatila === "HYLATTY"){
-            return localize("label.resultState." + key) + " " + tilanKuvaus(valintatulos)
+            return localize("label.resultState." + key)
           } else if(hyvaksytty(valintatulos) && valintatulos.ehdollisestiHyvaksyttavissa) {
-            if (valintatulos.ehdollisenHyvaksymisenEhtoKoodi !== undefined && valintatulos.ehdollisenHyvaksymisenEhtoKoodi != null) {
-                return localize("label.resultState." + key) + ' (' + valintatulos[ehdollisenHyvaksymisenKenttaEhto] + ')';
-            }
             return localize("label.resultState." + key) + localize("label.resultState.EhdollinenPostfix")
-          } else {
-            return tilanKuvaus(valintatulos)
           }
         } else if (valintatulos.valintatila === "VARALLA" && valintatulos.varasijojaTaytetaanAsti != null) {
           return localize("label.resultState.VarallaPvm", {
@@ -76,16 +70,38 @@ export default ["restResources", function(restResources) {
             varasijaPvm: $scope.formatDate(valintatulos.varasijojaTaytetaanAsti)
           })
         } else if(hyvaksytty(valintatulos) && valintatulos.ehdollisestiHyvaksyttavissa) {
-          if (valintatulos.ehdollisenHyvaksymisenEhtoKoodi !== undefined && valintatulos.ehdollisenHyvaksymisenEhtoKoodi != null) {
-            return localize("label.resultState." + key) + ' (' + valintatulos[ehdollisenHyvaksymisenKenttaEhto] + ')';
-          }
           return localize("label.resultState." + key) + localize("label.resultState.EhdollinenPostfix")
-        } else {
-          return localize("label.resultState." + key, {
-            varasija: valintatulos.varasijanumero ? valintatulos.varasijanumero + "." : ""
-          })
         }
+        return localize("label.resultState." + key, {
+          varasija: valintatulos.varasijanumero ? valintatulos.varasijanumero + "." : ""
+        })
       };
+
+      $scope.hakutoiveenValintatilanKuvaus = function(valintatulos) {
+        if (
+          [
+            VASTAANOTTOTILA.VASTAANOTTANUT_SITOVASTI,
+            VASTAANOTTOTILA.EI_VASTAANOTETTU_MAARA_AIKANA,
+            VASTAANOTTOTILA.EHDOLLISESTI_VASTAANOTTANUT,
+          ].indexOf(valintatulos.vastaanottotila) === -1
+        ) {
+          if (
+            hyvaksytty(valintatulos) &&
+            valintatulos.ehdollisestiHyvaksyttavissa
+          ) {
+            return valintatulos[
+              localize(
+                'label.resultState.EhdollisenHyvaksymisenEhdonKentanNimi'
+              )
+            ]
+          }
+          return tilanKuvaus(valintatulos)
+        }
+      }
+
+      $scope.capitalize = function(str) {
+        return str ? `${str.charAt(0).toUpperCase()}${str.slice(1).toLowerCase()}` : ''
+      }
 
       $scope.vastaanotaSitovasti = function(application, hakukohde) {
         var email = ''
@@ -126,9 +142,91 @@ export default ["restResources", function(restResources) {
         }
       }
 
-      $scope.valintatulosStyle = function(valintatulos) {
-        if (hyvaksytty(valintatulos))
-          return "accepted"
+      $scope.toggleJonokohtaisetTulostiedotVisibility = function(hakutoive) {
+        if (!$scope.jonokohtaisetTulostiedotVisibility) {
+          $scope.jonokohtaisetTulostiedotVisibility = {
+            [hakutoive.hakukohdeOid]: true
+          }
+          return
+        }
+        $scope.jonokohtaisetTulostiedotVisibility[hakutoive.hakukohdeOid] = !$scope.jonokohtaisetTulostiedotVisibility[hakutoive.hakukohdeOid]
+      }
+
+      $scope.isJonokohtaisetTulostiedotVisible = function(hakutoive) {
+        return $scope.jonokohtaisetTulostiedotVisibility
+          && $scope.jonokohtaisetTulostiedotVisibility[hakutoive.hakukohdeOid]
+          && $scope.hasJonokohtaisetTulostiedot(hakutoive)
+      }
+
+      $scope.hasJonokohtaisetTulostiedot = function(hakutoive) {
+        return hakutoive.jonokohtaisetTulostiedot && hakutoive.jonokohtaisetTulostiedot.length !== 0
+      }
+
+      $scope.sortJonokohtaisetTulostiedot = function(jonokohtaisetTulostiedot) {
+        return jonokohtaisetTulostiedot
+          .map(x => x)
+          .sort((a, b) => {
+            if (!a.hasOwnProperty('valintatapajonoPrioriteetti') || !b.hasOwnProperty('valintatapajonoPrioriteetti')) {
+              return 0
+            }
+            return a.valintatapajonoPrioriteetti - b.valintatapajonoPrioriteetti
+          })
+      }
+
+      $scope.getValintatilanKuvaus = function(jonokohtainenTulostieto) {
+        const { tilanKuvaukset, valintatila } = jonokohtainenTulostieto
+        return getLocalizedDisclaimer(tilanKuvaukset, valintatila)
+      }
+
+      $scope.getEhdollisenHyvaksymisenEhto = function(jonokohtainenTulostieto) {
+        const {
+          ehdollisenHyvaksymisenEhto,
+          valintatila,
+        } = jonokohtainenTulostieto
+        return getLocalizedDisclaimer(ehdollisenHyvaksymisenEhto, valintatila)
+      }
+
+      $scope.hakutoiveValintatilaStateClass = function(hakutoive) {
+        return hakutoive.valintatila === 'HYVAKSYTTY' || hakutoive.valintatila === 'VARASIJALTA_HYVAKSYTTY'
+          ? 'hakutoive--hyvaksytty'
+          : 'hakutoive--ei-hyvaksytty'
+      }
+
+      function getLocalizedDisclaimer(disclaimer, valintatila) {
+        const language = getLanguage().toUpperCase()
+        const localizedDisclaimer = disclaimer
+          ? disclaimer[language] ||
+            disclaimer['FI'] ||
+            disclaimer['EN'] ||
+            disclaimer['SV']
+          : undefined
+        const localizedValintatila = valintatila
+          ? localize(
+              'label.jonokohtaisetTulostiedot.valintatilat.' + valintatila
+            )
+          : undefined
+        return localizedDisclaimer &&
+          (!localizedValintatila ||
+            localizedDisclaimer !== localizedValintatila)
+          ? localizedDisclaimer
+          : undefined
+      }
+
+      $scope.getVarasijaDisclaimer = function(jonokohtainenTulostieto) {
+        let disclaimer
+        if (jonokohtainenTulostieto.valintatila === 'VARALLA') {
+          if (
+            jonokohtainenTulostieto.varasijat &&
+            parseInt(jonokohtainenTulostieto.varasijat, 10) > 0
+          ) {
+            disclaimer = localize('label.varasijojenMaaraRajattu', {
+              varasijamaara: jonokohtainenTulostieto.varasijat,
+            })
+          } else if (jonokohtainenTulostieto.eiVarasijatayttoa) {
+            disclaimer = localize('label.eiVarasijatayttoa')
+          }
+        }
+        return disclaimer
       }
 
       function hyvaksytty(valintatulos) {

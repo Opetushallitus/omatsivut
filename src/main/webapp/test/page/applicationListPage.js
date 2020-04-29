@@ -217,12 +217,13 @@ function ApplicationListPage() {
       valintatulokset: function () {
         var application = getApplicationElement(applicationIndex);
         var nbsp = /\u00A0/g;
-        return application.find(".result-list-wrap.ng-scope")
+        return application.find(".hakutoive")
           .map(function () {
             var el = $(this)
             return {
-              hakukohde: el.find("[ng-bind='tulos.tarjoajaNimi']").text() + " " + el.find("[ng-bind='tulos.hakukohdeNimi']").text(),
-              tila: el.find("span.valintatulos-otsake").text().trim().replace(nbsp, " ")
+              hakukohde: el.find(".hakutoive-grid__kuvaus--tarjoaja-nimi").text() + " " + el.find(".hakutoive-grid__kuvaus--hakukohde-nimi").text(),
+              tila: el.find(".valintatila__header").text().trim().replace(nbsp, " "),
+              hyvaksynnanEhto: el.find('.valintatila__tilan-kuvaus').text().trim().replace(nbsp, ' ')
             }
           }).toArray()
       },
@@ -386,7 +387,7 @@ function ApplicationListPage() {
       },
 
       resultTableTitle: function() {
-        return getApplicationElement().find(".result-list-header span.ng-binding").text().trim()
+        return getApplicationElement().find(".hakukohteet__header .hakukohteet__header-text").text().trim()
       },
 
       labels: function() {

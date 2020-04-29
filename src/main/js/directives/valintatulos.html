@@ -1,46 +1,138 @@
-<div class="result-list">
-    <div class="result-list-header">
-        <span>{{ localization('label.resultsCaption') }}</span>
-        <span class="result-list-status"> {{ status }}</span>
+<div class="hakukohteet">
+    <div class="hakukohteet__header">
+        <span class="hakukohteet__header-text">{{ localization('label.resultsCaption') }}</span>
     </div>
-    <div class="result-list-wrap" ng-repeat="tulos in valintatulos().hakutoiveet" ng-class="valintatulosStyle(tulos)">
-        <div class="result-list-cell flex-40">
-            <span class="row-number">{{$index+1}}.</span>
-            <span ng-bind="tulos.tarjoajaNimi"></span>
-            <span ng-bind="tulos.hakukohdeNimi"></span>
-            <span class="hyvaksytty-kesken" ng-show="isHyvaksyttyKesken(tulos, valintatulos().hakutoiveet)">
-                <span>{{ localization('label.acceptedUnfinished.text') }}</span>
-                <ol>
-                    <li>{{ localization('label.acceptedUnfinished.rules.1') }}</li>
-                    <li>{{ localization('label.acceptedUnfinished.rules.2') }}</li>
-                </ol>
-                <a href="{{ localization('label.acceptedUnfinished.href') }}">{{ localization('label.acceptedUnfinished.link') }}</a>
-            </span>
+    <div class="hakutoive"
+         ng-repeat="hakutoive in valintatulos().hakutoiveet"
+         ng-class="hakutoiveValintatilaStateClass(hakutoive)">
+        <div class="hakutoive__prioriteetti">
+            <div class="hakutoive__prioriteetti--sticky-container">
+                {{ $index + 1 }}
+            </div>
         </div>
-        <div class="result-list-cell flex-60">
-            <div>
-                <div>
-                    <span ng-bind="valintatulosText(tulos, valintatulos().hakutoiveet)" class="valintatulos-otsake"></span>
-                </div>
-                <div class="update-vastaanottotieto" ng-show="tulos.vastaanottotila == 'EHDOLLISESTI_VASTAANOTTANUT'">
-                    <span class="ajax-spinner" ng-show="ajaxPending"></span>
-                    <div ng-hide="ajaxPending">
-                        <div>
-                            <label>
-                                <input type="checkbox" ng-model="enableConfirmation" ignore-dirty/>
-                                {{ localization('label.acceptConditionallyAccepted') }}
-                            </label>
+        <div class="hakutoive-grid">
+            <div class="hakutoive-grid__kuvaus hakutoive-grid__hakutoive-grid-item">
+                <span class="hakutoive-grid__kuvaus--tarjoaja-nimi">{{ hakutoive.tarjoajaNimi }}</span>
+                <span class="hakutoive-grid__kuvaus--hakukohde-nimi">{{ hakutoive.hakukohdeNimi }}</span>
+            </div>
+            <div class="hakutoive-grid__valintatila hakutoive-grid__hakutoive-grid-item">
+                <div class="valintatila">
+                    <span class="valintatila__header"
+                          ng-if="hakutoiveenValintatulosText(hakutoive, valintatulos().hakutoiveet)">
+                        {{ hakutoiveenValintatulosText(hakutoive, valintatulos().hakutoiveet) }}
+                    </span>
+                    <div class="valintatila__tilan-kuvaus">
+                        <span class="valintatila__tilan-kuvaus--item"
+                              ng-if="isHyvaksyttyKesken(hakutoive, valintatulos().hakutoiveet)">{{ localization('label.acceptedUnfinished.text') }}</span>
+                        <ol class="valintatila__tilan-kuvaus--item"
+                            ng-if="isHyvaksyttyKesken(hakutoive, valintatulos().hakutoiveet)">
+                            <li class="valintatila__tilan-kuvaus--item valintatila__tilan-kuvaus--list-item">{{ localization('label.acceptedUnfinished.rules.1') }}</li>
+                            <li class="valintatila__tilan-kuvaus--item valintatila__tilan-kuvaus--list-item">{{ localization('label.acceptedUnfinished.rules.2') }}</li>
+                        </ol>
+                        <a class="valintatila__tilan-kuvaus--item"
+                           target="_blank"
+                           ng-if="isHyvaksyttyKesken(hakutoive, valintatulos().hakutoiveet)"
+                           href="{{ localization('label.acceptedUnfinished.href') }}">
+                            {{ localization('label.acceptedUnfinished.link') }}
+                        </a>
+                    </div>
+                    <a class="valintatila__lisatiedot"
+                       ng-if="hasJonokohtaisetTulostiedot(hakutoive)"
+                       ng-click="toggleJonokohtaisetTulostiedotVisibility(hakutoive)">
+                        <span class="valintatila__lisatiedot-text">{{ localization('label.moreInformation') }}</span>
+                        <i class="zmdi"
+                           ng-class="isJonokohtaisetTulostiedotVisible(hakutoive) ? 'zmdi-chevron-up' : 'zmdi-chevron-down'"></i>
+                    </a>
+                    <div class="valintatila__sitova-vastaanotto-checkbox"
+                         ng-if="hakutoive.vastaanottotila == 'EHDOLLISESTI_VASTAANOTTANUT'">
+                        <input id="{{ 'valintatila__sitova-vastaanotto-checkbox-' + $index }}"
+                               type="checkbox"
+                               ng-model="hakutoive.isSitovaVastaanottoChecked"
+                               class="valintatila__sitova-vastaanotto-checkbox-input"
+                               ng-disabled="vastaanottoSentSuccessfully"
+                               ignore-dirty>
+                        <label for="{{ 'valintatila__sitova-vastaanotto-checkbox-' + $index }}"
+                               class="valintatila__sitova-vastaanotto-checkbox-label">
+                            {{ localization('label.acceptConditionallyAccepted') }}
+                        </label>
+                    </div>
+                    <div class="valintatila__sitova-vastaanotto-button"
+                         ng-if="hakutoive.vastaanottotila == 'EHDOLLISESTI_VASTAANOTTANUT'">
+                        <input type="button"
+                               class="valintatila__sitova-vastaanotto-button-input"
+                               ng-disabled="!hakutoive.isSitovaVastaanottoChecked || ajaxPending || vastaanottoSentSuccessfully"
+                               ng-click="vastaanotaSitovasti(application, hakutoive)"
+                               value="{{ localization('button.confirmChange') }}">
+                        <div class="lds-ellipsis"
+                             ng-if="ajaxPending">
+                            <div></div><div></div><div></div><div></div>
                         </div>
-                        <div class="confirm-update-vastaanottotieto">
-                            <button id="confirmChangeButton"
-                                    ng-disabled="!enableConfirmation"
-                                    ng-click="vastaanotaSitovasti(application, tulos)"
-                                    ng-init="enableConfirmation=false">{{ localization('button.confirmChange') }}</button>
-                            <i>{{ localization('label.cannotUndoChanges') }}</i>
-                        </div>
-                        <span class="status-message error" ng-show="error">{{ getError() }}</span>
+                        <span class="valintatila__sitova-vastaanotto-button-error animated fadein"
+                              ng-if="error">
+                            {{ getError() }}
+                        </span>
+                        <span class="valintatila__sitova-vastaanotto-button-warning animated fadeIn"
+                              ng-if="hakutoive.isSitovaVastaanottoChecked">
+                            {{ localization('label.cannotUndoChanges') }}
+                        </span>
                     </div>
                 </div>
+            </div>
+            <div class="hakutoive-grid__valintatapajonon-valintatapa hakutoive-grid__valintatapajono-grid-item hakutoive-grid__valintatapajono-header"
+                 ng-if="isJonokohtaisetTulostiedotVisible(hakutoive)">
+                <span class="hakutoive-grid__valintatapajono-grid-text">
+                    {{ localization('label.jonokohtaisetTulostiedot.valintatapa') }}
+                </span>
+            </div>
+            <div class="hakutoive-grid__valintatapajonon-pisteet hakutoive-grid__valintatapajono-grid-item hakutoive-grid__valintatapajono-header"
+                 ng-if="isJonokohtaisetTulostiedotVisible(hakutoive)">
+                <span class="hakutoive-grid__valintatapajono-grid-text">
+                    {{ localization('label.jonokohtaisetTulostiedot.pisteesi') }}
+                </span>
+            </div>
+            <div class="hakutoive-grid__valintatapajonon-alimmat-hyvaksytyt-pisteet hakutoive-grid__valintatapajono-grid-item hakutoive-grid__valintatapajono-header"
+                 ng-if="isJonokohtaisetTulostiedotVisible(hakutoive)">
+                <span class="hakutoive-grid__valintatapajono-grid-text">
+                    {{ localization('label.jonokohtaisetTulostiedot.alimmatHyvaksytytPisteet') }}
+                </span>
+            </div>
+            <div class="hakutoive-grid__valintatapajonon-valinnan-tulos hakutoive-grid__valintatapajono-grid-item hakutoive-grid__valintatapajono-header"
+                 ng-if="isJonokohtaisetTulostiedotVisible(hakutoive)">
+                <span class="hakutoive-grid__valintatapajono-grid-text">
+                    {{ localization('label.jonokohtaisetTulostiedot.valinnanTulos') }}
+                </span>
+            </div>
+            <div class="hakutoive-grid__valintatapajonon-valintatapa hakutoive-grid__valintatapajono-grid-item"
+                 ng-if="isJonokohtaisetTulostiedotVisible(hakutoive)"
+                 ng-repeat-start="jonokohtainenTulostieto in sortJonokohtaisetTulostiedot(hakutoive.jonokohtaisetTulostiedot)">
+                <span class="hakutoive-grid__valintatapajono-grid-text">{{ jonokohtainenTulostieto.nimi }}</span>
+            </div>
+            <div class="hakutoive-grid__valintatapajonon-pisteet hakutoive-grid__valintatapajono-grid-item"
+                 ng-if="isJonokohtaisetTulostiedotVisible(hakutoive)">
+                <span class="hakutoive-grid__valintatapajono-grid-text">{{ jonokohtainenTulostieto.pisteet >= 0 ? jonokohtainenTulostieto.pisteet : '-' }}</span>
+            </div>
+            <div class="hakutoive-grid__valintatapajonon-alimmat-hyvaksytyt-pisteet hakutoive-grid__valintatapajono-grid-item"
+                 ng-if="isJonokohtaisetTulostiedotVisible(hakutoive)">
+                <span class="hakutoive-grid__valintatapajono-grid-text">{{ jonokohtainenTulostieto.alinHyvaksyttyPistemaara >= 0 ? jonokohtainenTulostieto.alinHyvaksyttyPistemaara : '-' }}</span>
+            </div>
+            <div class="hakutoive-grid__valintatapajonon-valinnan-tulos hakutoive-grid__valintatapajono-grid-item"
+                 ng-if="isJonokohtaisetTulostiedotVisible(hakutoive)"
+                 ng-repeat-end>
+                <span class="hakutoive-grid__valintatapajono-grid-text">
+                    {{ localization('label.jonokohtaisetTulostiedot.valintatilat.' + jonokohtainenTulostieto.valintatila) + (jonokohtainenTulostieto.varasijanumero >= 0 ? ': ' + jonokohtainenTulostieto.varasijanumero : '') }}
+                </span>
+                <span class="hakutoive-grid__valintatapajono-grid-text hakutoive-grid__valintatapajono-grid-text--grayed-out"
+                      ng-if="getValintatilanKuvaus(jonokohtainenTulostieto)">
+                    {{ getValintatilanKuvaus(jonokohtainenTulostieto) }}
+                </span>
+                <span class="hakutoive-grid__valintatapajono-grid-text hakutoive-grid__valintatapajono-grid-text--grayed-out"
+                      ng-if="getEhdollisenHyvaksymisenEhto(jonokohtainenTulostieto)">
+                    {{ getEhdollisenHyvaksymisenEhto(jonokohtainenTulostieto) }}
+                </span>
+                <span class="hakutoive-grid__valintatapajono-grid-text hakutoive-grid__valintatapajono-grid-text--grayed-out"
+                      ng-if="getVarasijaDisclaimer(jonokohtainenTulostieto)">
+                    {{ getVarasijaDisclaimer(jonokohtainenTulostieto) }}
+                </span>
             </div>
         </div>
     </div>

@@ -1,109 +1,332 @@
 @import "../common.less";
 
-.result-list {
-  border-collapse: collapse;
-  width: 100%;
-  line-height: 125%;
+.hakukohteet {
+  display: flex;
+  flex-flow: column nowrap;
   font-size: 14px;
+  line-height: 1.4;
+  word-break: break-word;
+}
 
-  .result-list-header {
-    .section-heading-font(@font-color);
-    font-weight: normal;
-    font-size: 15px;
-    padding-bottom: 8px;
-    line-height: 20px;
+.hakukohteet__header {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
 
-    .result-list-status {
-      text-transform: none;
-      color: @font-color-light;
-    }
+.hakutoive {
+  display: flex;
+  flex-flow: row wrap;
+  min-height: 120px;
+  min-width: 860px;
+}
+
+.hakutoive:not(:last-of-type) {
+  margin-bottom: 20px;
+}
+
+.hakutoive.hakutoive--hyvaksytty {
+  background-color: #DDF5FF;
+}
+
+.hakutoive.hakutoive--ei-hyvaksytty {
+  background-color: #F5F5F5;
+}
+
+.hakutoive__prioriteetti {
+  align-items: flex-start;
+  display: flex;
+  flex-basis: 120px;
+  flex-grow: 1;
+  flex-shrink: 0;
+  font-size: 32px;
+  justify-content: center;
+}
+
+.hakutoive.hakutoive--hyvaksytty .hakutoive__prioriteetti {
+  background-color: #0284AF;
+  color: #FFF;
+}
+
+.hakutoive.hakutoive--ei-hyvaksytty .hakutoive__prioriteetti {
+  background-color: #DDDDDD;
+  color: #777777;
+}
+
+.hakutoive__prioriteetti--sticky-container {
+  align-items: center;
+  height: 140px;
+  display: flex;
+}
+
+.hakutoive-grid {
+  display: grid;
+  flex-basis: 1040px;
+  flex-grow: 1;
+  font-weight: 300;
+  grid-template-columns: auto 150px 150px 415px;
+  padding: 10px 35px;
+  width: 100%;
+}
+
+.hakutoive-grid__hakutoive-grid-item {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  min-height: 120px;
+}
+
+.hakutoive-grid__kuvaus {
+  grid-column-start: 1;
+  grid-column-end: span 3;
+  padding-right: 20px;
+}
+
+.hakutoive-grid__kuvaus--tarjoaja-nimi {
+  font-weight: 600;
+}
+
+.hakutoive-grid__kuvaus--hakukohde-nimi {
+  font-size: 18px;
+  font-weight: 300;
+}
+
+.hakutoive-grid__valintatila {
+  grid-column-start: 4;
+}
+
+.valintatila {
+  display: grid;
+  grid-gap: 7px 10px;
+  grid-template-columns: 300px 115px;
+}
+
+.valintatila__header {
+  font-weight: 600;
+  grid-column-start: 1;
+}
+
+.valintatila__tilan-kuvaus {
+  color: #666666;
+  display: flex;
+  flex-flow: column nowrap;
+  grid-column-start: 1;
+}
+
+.valintatila__tilan-kuvaus--item:not(:first-child) {
+  margin-top: 10px;
+}
+
+.valintatila__tilan-kuvaus--list-item {
+  margin-left: 20px;
+}
+
+.valintatila__lisatiedot {
+  align-items: center;
+  color: #0284AF;
+  cursor: pointer;
+  display: flex;
+  grid-column-start: 2;
+  grid-row-end: span 2;
+  grid-row-start: 1;
+  text-decoration: none;
+  user-select: none;
+}
+
+.valintatila__lisatiedot-text {
+  text-decoration: underline;
+}
+
+.valintatila__lisatiedot .zmdi-chevron-up, .zmdi-chevron-down {
+  margin-left: 5px;
+}
+
+.valintatila__sitova-vastaanotto-checkbox {
+  align-items: center;
+  display: flex;
+}
+
+.valintatila__sitova-vastaanotto-checkbox-input {
+  margin-right: 5px;
+}
+
+.valintatila__sitova-vastaanotto-checkbox,
+.valintatila__sitova-vastaanotto-checkbox-input,
+.valintatila__sitova-vastaanotto-checkbox-label {
+  cursor: pointer;
+  user-select: none;
+}
+
+.valintatila__sitova-vastaanotto-button {
+  align-items: center;
+  display: flex;
+  position: relative;
+}
+
+.valintatila__sitova-vastaanotto-button-input {
+  background-color: #0284AF;
+  border: 0;
+  border-radius: 3px;
+  color: #fff;
+  cursor: pointer;
+  flex-shrink: 0;
+  font-size: 16px;
+  font-weight: 300;
+  height: 40px;
+  width: 160px;
+}
+
+.valintatila__sitova-vastaanotto-button-input:disabled {
+  background-color: #B2B2B2;
+  cursor: default;
+  font-size: 15px;
+  position: relative;
+}
+
+.valintatila__sitova-vastaanotto-button-input:hover:not(:disabled) {
+  background-color: #015b79;
+  color: #FFF;
+}
+
+.valintatila__sitova-vastaanotto-button-warning {
+  align-items: center;
+  background-color: #fff;
+  border-radius: 3px;
+  color: #000;
+  display: flex;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.4));
+  left: 17px;
+  height: 35px;
+  padding: 12px;
+  position: absolute;
+  top: 52px;
+}
+
+.valintatila__sitova-vastaanotto-button-warning::before {
+  border-bottom: 10px solid #fff;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  content: '';
+  height: 0;
+  left: 28px;
+  position: absolute;
+  top: -10px;
+  width: 0;
+}
+
+.valintatila__sitova-vastaanotto-button-input:disabled ~ .valintatila__sitova-vastaanotto-button-warning {
+  display: none;
+}
+
+.valintatila__sitova-vastaanotto-button-error {
+  color: @error-color;
+  font-size: 13px;
+  margin-left: 10px;
+}
+
+.valintatila__sitova-vastaanotto-checkbox,
+.valintatila__sitova-vastaanotto-button {
+  grid-column-start: 1;
+  grid-column-end: span 2;
+}
+
+.hakutoive-grid__valintatapajono-grid-item {
+  border-bottom: 1px solid #CAE0E9;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  padding: 13px 0;
+}
+
+.hakutoive-grid__valintatapajono-grid-text:not(:first-child) {
+  margin-top: 5px;
+}
+
+.hakutoive-grid__valintatapajono-grid-text--grayed-out {
+  color: #666666;
+}
+
+.hakutoive-grid__valintatapajono-header {
+  font-weight: 600;
+}
+
+.hakutoive-grid__valintatapajonon-valintatapa {
+  grid-column-start: 1;
+}
+
+.hakutoive-grid__valintatapajonon-pisteet {
+  grid-column-start: 2;
+}
+
+.hakutoive-grid__valintatapajonon-alimmat-hyvaksytyt-pisteet {
+  grid-column-start: 3;
+}
+
+.hakutoive-grid__valintatapajonon-valinnan-tulos {
+  grid-column-start: 4;
+}
+
+.hakutoive-grid .hakutoive-grid__valintatapajono-grid-item:nth-child(-n+6) {
+  border-top: 1px solid #8B99A0;
+  margin-top: 10px;
+}
+
+.hakutoive-grid .hakutoive-grid__valintatapajono-grid-item:nth-last-child(-n+4) {
+  margin-bottom: 25px;
+}
+
+.lds-ellipsis {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 40px;
+  margin-left: 10px;
+}
+.lds-ellipsis div {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #0284AF;
+  animation-timing-function: cubic-bezier(0, 1, 1, 0);
+  top: 15px;
+}
+.lds-ellipsis div:nth-child(1) {
+  left: 8px;
+  animation: lds-ellipsis1 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(2) {
+  left: 8px;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(3) {
+  left: 28px;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(4) {
+  left: 48px;
+  animation: lds-ellipsis3 0.6s infinite;
+}
+@keyframes lds-ellipsis1 {
+  0% {
+    transform: scale(0);
   }
-  .result-list-wrap {
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
-    width: 100%;
-    border-top: 3px solid white;
-    background: #F7F7F7;
-
-    .result-list-cell {
-      padding: 10px;
-      vertical-align: top;
-      margin-bottom: 1px;
-      width: 40%;
-
-      .hyvaksytty-kesken {
-        margin-top: 15px;
-        display: block;
-        ol {
-          list-style-position: outside;
-          li {
-            margin-left: 15px;
-          }
-        }
-      }
-
-      .update-vastaanottotieto {
-        text-transform: none;
-        font-weight: 100;
-        div {
-          padding-top: 4px;
-          padding-bottom: 4px;
-          .confirm-update-vastaanottotieto {
-            padding: 0.5em 0 0.1em 1.2em;
-            i {
-              font-size: 0.9em;
-              padding-left: 1em;
-            }
-          }
-        }
-        button {
-          background: #159ECB;
-          border-radius: 2px;
-          height: 35px;
-          font-family: 'Helvetica Neue', helvetica, arial, sans-serif;;
-          font-size: 15px;
-          color: #FFFFFF;
-        }
-        button:hover {
-          background: #00B5EF;
-        }
-        button:disabled {
-          background: #CCCCCC;
-        }
-      }
-
-    }
-
-    &:extend(.accepted);
-  }
-
-  .accepted {
-    background: inherit;
-    .valintatulos-otsake {
-      font-weight: bold;
-    }
-    .flex-40, .flex-60 {
-      background: #EBF8FB;
-    }
+  100% {
+    transform: scale(1);
   }
 }
-
-.flex-40 {
-  flex-basis: 40%;
+@keyframes lds-ellipsis3 {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0);
+  }
 }
-
-.flex-60 {
-  flex-basis: 60%;
-}
-
-.flex-100 {
-  border: 1px solid #f8f5f5;
-  margin-top: 1px;
-  flex-basis: 100%;
-  background: #fffdfd;
-}
-
-.result-status {
-  font-style: italic;
+@keyframes lds-ellipsis2 {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(20px, 0);
+  }
 }
