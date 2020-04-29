@@ -129,16 +129,6 @@ trait OppijanumerorekisteriComponent {
           throw e
       }
     }
-
-    private def parseHenkilosResponse(responseBody: String, henkiloOid: String): Map[String, Henkilo] = {
-      try {
-        JsonMethods.parse(responseBody).extract[Map[String, Henkilo]]
-      } catch {
-        case e: Exception =>
-          logger.error(s"Problem when parsing Henkilo map for $henkiloOid from response '$responseBody'", e)
-          throw e
-      }
-    }
   }
 }
 
