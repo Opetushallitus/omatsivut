@@ -38,12 +38,12 @@ switch (siteDomain) {
     case "virkailija.opintopolku.fi":
         matomoSiteId = 3;
         break;
-    case "testi.opintopolku.fi":
-    case "testi.studieinfo.fi":
-    case "testi.studyinfo.fi":
+    case "testiopintopolku.fi":
+    case "testistudieinfo.fi":
+    case "testistudyinfo.fi":
         matomoSiteId = 1;
         break;
-    case "testi.virkailija.opintopolku.fi":
+    case "virkailija.testiopintopolku.fi":
         matomoSiteId = 5;
         break;
     case "demo-opintopolku.fi":
