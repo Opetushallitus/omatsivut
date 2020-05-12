@@ -12,16 +12,7 @@ class PiwikServlet(val appConfig: AppConfig) extends OmatSivutServletBase {
     contentType = "application/javascript"
   }
 
-  private def onlyOnProductionAndQA(f: => String) = {
-    if (appConfig.settings.environment.isQA || appConfig.settings.environment.isProduction) {
-      f
-    } else {
-      "/*" + f + "*/"
-    }
-  }
-
   get("/*") {
-    onlyOnProductionAndQA {
 """
 var siteDomain = document.domain;
 var matomoSiteId;
@@ -68,6 +59,5 @@ _paq.push(['enableLinkTracking']);
   g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
 })();
 """
-    }
   }
 }
