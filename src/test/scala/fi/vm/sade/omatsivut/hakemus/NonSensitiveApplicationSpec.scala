@@ -85,7 +85,7 @@ class NonSensitiveApplicationSpec extends HakemusApiSpecification {
     }
 
     "has only nonsensitive contact info from ataru, and it contains also the link to instructions for new students" in {
-      val hakemusOidFromAtaru = "1.2.246.562.11.WillNotBeFoundInTarjonta"
+      val hakemusOidFromAtaru = "1.2.246.562.11.WillNotBeFoundInTarjonta2"
       val personOidWithAtaru = "1.2.246.562.24.14229104473"
       get("insecure/applications/application/session", headers = jwtAuthHeader(hakemusOidFromAtaru, Set(), personOidWithAtaru)) {
         status must beEqualTo(200)
