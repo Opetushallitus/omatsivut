@@ -214,7 +214,10 @@ export default ["restResources", function(restResources) {
 
       $scope.getVarasijaDisclaimer = function(jonokohtainenTulostieto) {
         let disclaimer
-        if (jonokohtainenTulostieto.valintatila === 'VARALLA') {
+        if (
+          jonokohtainenTulostieto.valintatila === 'VARALLA' &&
+          !jonokohtainenTulostieto.varasijasaannotKaytossa
+        ) {
           if (
             jonokohtainenTulostieto.varasijat &&
             parseInt(jonokohtainenTulostieto.varasijat, 10) > 0
