@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequest
 import org.http4s.{Request, Uri}
 import org.http4s.Method.GET
 import org.http4s.client.blaze
+import java.time.Instant
 import org.joda.time.LocalDateTime
 import org.json4s.DefaultFormats
 import org.json4s.jackson.JsonMethods
@@ -34,7 +35,7 @@ case class AtaruApplication(oid: String,
                             email: String,
                             haku: String,
                             hakukohteet: List[String],
-                            submitted: LocalDateTime)
+                            submitted: String)
 
 trait AtaruServiceComponent  {
   this: LomakeRepositoryComponent
@@ -56,7 +57,7 @@ trait AtaruServiceComponent  {
       val henkilo = oppijanumerorekisteriService.henkilo(personOid)
 
       getApplications(personOid)
-        .sortBy(a => a.submitted.toDate.toInstant.toEpochMilli).reverse
+        .sortBy(a => Instant.parse(a.submitted).toEpochMilli).reverse
         .map(a => (
           a,
           tarjontaService.haku(a.haku, language),
