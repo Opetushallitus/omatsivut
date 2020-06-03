@@ -22,11 +22,11 @@ class GetApplicationsSpec extends HakemusApiSpecification with FixturePerson wit
       }
     }
 
-    "return person's applications from ataru" in {
+    "return person's applications from ataru sorted by newest application" in {
       withApplicationsResponse { resp =>
-        resp.applications(0).hakemus.oid must_== "1.2.246.562.11.WillNotBeFoundInTarjonta"
-        resp.applications(0).hakemusSource must_== "Ataru"
-        resp.applications(0).hakemus.ohjeetUudelleOpiskelijalle("1.2.246.562.20.14660127086") must_== "https://www.helsinki.fi/fi/opiskelu/ohjeita-hakemuksen-jattaneille-yhteishaku"
+        resp.applications.head.hakemus.oid must_== "1.2.246.562.11.WillNotBeFoundInTarjonta2"
+        resp.applications.head.hakemusSource must_== "Ataru"
+        resp.applications.head.hakemus.ohjeetUudelleOpiskelijalle("1.2.246.562.20.14660127086") must_== "https://www.helsinki.fi/fi/opiskelu/ohjeita-hakemuksen-jattaneille-yhteishaku"
       }(PersonOid(personOidWithAtaru))
     }
 

@@ -56,7 +56,7 @@ trait AtaruServiceComponent  {
       val henkilo = oppijanumerorekisteriService.henkilo(personOid)
 
       getApplications(personOid)
-        .sortBy(a => a.submitted.toDate.toInstant.toEpochMilli)
+        .sortBy(a => a.submitted.toDate.toInstant.toEpochMilli).reverse
         .map(a => (
           a,
           tarjontaService.haku(a.haku, language),
