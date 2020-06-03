@@ -1,7 +1,7 @@
 [
   {
-    "oid": "1.2.246.562.11.WillNotBeFoundInTarjonta",
-    "key": "1.2.246.562.11.WillNotBeFoundInTarjonta",
+    "oid": "1.2.246.562.11.WillNotBeFoundInTarjontaOlder",
+    "key": "1.2.246.562.11.WillNotBeFoundInTarjontaOlder",
     "state": "active",
     "secret": "f8DhYH3fPdbN9bgihio--uk2x0Enp_YPlR5PTA3P4WZqgQ",
     "haku": "1.2.246.562.29.95390561488",
@@ -13,8 +13,8 @@
     "submitted": "2000-01-01:T00:00:00.000Z"
   },
   {
-    "oid": "1.2.246.562.11.WillNotBeFoundInTarjonta2",
-    "key": "1.2.246.562.11.WillNotBeFoundInTarjonta2",
+    "oid": "1.2.246.562.11.WillNotBeFoundInTarjonta",
+    "key": "1.2.246.562.11.WillNotBeFoundInTarjonta",
     "state": "active",
     "secret": "f8DhYH3fPdbN9bgihio--uk2x0Enp_YPlR5PTA3P4WZqgQ",
     "haku": "1.2.246.562.29.95390561488",
