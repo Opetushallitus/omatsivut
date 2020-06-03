@@ -50,6 +50,7 @@ trait HakemusApiSpecification extends ScalatraTestSupport with Logging {
       val resp: ApplicationsResponse = Serialization.read[ApplicationsResponse](b)
       f(resp)
     }
+
   }
 
   def saveHakemus[T](hakemus: Hakemus)(f: => T)(implicit personOid: PersonOid): T = {

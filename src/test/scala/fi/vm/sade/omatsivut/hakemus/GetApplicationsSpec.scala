@@ -22,7 +22,7 @@ class GetApplicationsSpec extends HakemusApiSpecification with FixturePerson wit
       }
     }
 
-    "return person's applications from ataru" in {
+    "return person's applications from ataru sorted by newest application" in {
       withApplicationsResponse { resp =>
         resp.applications(0).hakemus.oid must_== "1.2.246.562.11.WillNotBeFoundInTarjonta"
         resp.applications(0).hakemusSource must_== "Ataru"
