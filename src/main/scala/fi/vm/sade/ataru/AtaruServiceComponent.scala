@@ -33,7 +33,8 @@ case class AtaruApplication(oid: String,
                             secret: String,
                             email: String,
                             haku: String,
-                            hakukohteet: List[String])
+                            hakukohteet: List[String],
+                            submitted: LocalDateTime)
 
 trait AtaruServiceComponent  {
   this: LomakeRepositoryComponent
@@ -55,6 +56,7 @@ trait AtaruServiceComponent  {
       val henkilo = oppijanumerorekisteriService.henkilo(personOid)
 
       getApplications(personOid)
+        .sortBy(a => a.submitted.toDate.toInstant.toEpochMilli)
         .map(a => (
           a,
           tarjontaService.haku(a.haku, language),
