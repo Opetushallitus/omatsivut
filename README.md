@@ -164,7 +164,7 @@ Testejä kehittäessä fixture-dataa voi omalla päivittää asentamalla "mvn in
 
 * valinta-tulos-service: [valinta-tulos-service/src/main/resources/fixtures/](https://github.com/Opetushallitus/valinta-tulos-service/tree/master/src/main/resources/fixtures)
 * hakemuseditori: Testit käyttävät myös mokattuja ulkoisten palvelujen rajapintoja. Näiden
-mokkien data löytyy pääsääntöisesti [hakemuseditori/src/main/resources/hakemuseditorimockdata/](https://github.com/Opetushallitus/hakemuseditori/tree/master/src/main/resources/hakemuseditorimockdata) kansiosta.
+mokkien data löytyy pääsääntöisesti [omatsivut/src/main/resources/hakemuseditorimockdata/](https://github.com/Opetushallitus/omatsivut/tree/master/src/main/resources/hakemuseditorimockdata) kansiosta.
 * haku: [haku/hakemus-api/src/main/resources/mongofixtures](https://github.com/Opetushallitus/haku/tree/master/hakemus-api/src/main/resources/mongofixtures) kansio ladataan testipalvelimen käynnistyessä. Kyseisessä
 datassa on hakemusten personOid kentät muutettu vastaamaan testien käyttämää
 henkilöä. Fixtuurien lisäämistä varten löytyy scripti [haku/testfixtures](https://github.com/Opetushallitus/haku/tree/master/testfixtures)
