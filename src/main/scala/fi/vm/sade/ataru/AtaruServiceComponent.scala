@@ -1,5 +1,6 @@
 package fi.vm.sade.ataru
 
+import java.time.Instant
 import java.util.concurrent.TimeUnit
 
 import fi.vm.sade.hakemuseditori.auditlog.{Audit, ShowHakemus}
@@ -20,7 +21,6 @@ import javax.servlet.http.HttpServletRequest
 import org.http4s.{Request, Uri}
 import org.http4s.Method.GET
 import org.http4s.client.blaze
-import java.time.Instant
 import org.joda.time.LocalDateTime
 import org.json4s.DefaultFormats
 import org.json4s.jackson.JsonMethods
@@ -57,7 +57,6 @@ trait AtaruServiceComponent  {
       val henkilo = oppijanumerorekisteriService.henkilo(personOid)
 
       getApplications(personOid)
-        .sortBy(a => Instant.parse(a.submitted).toEpochMilli).reverse
         .map(a => (
           a,
           tarjontaService.haku(a.haku, language),
@@ -85,6 +84,7 @@ trait AtaruServiceComponent  {
               tuloskirje = tuloskirje,
               ohjeetUudelleOpiskelijalle = ohjeetUudelleOpiskelijalleMap,
               hakutoiveet = hakutoiveet,
+              submitted = Option.apply(Instant.parse(a.submitted).toEpochMilli),
               haku = haku,
               educationBackground = EducationBackground("base_education", false),
               answers = Map(),
