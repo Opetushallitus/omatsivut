@@ -27,10 +27,15 @@ trait VastaanottoComponent {
     def vastaanota(request: HttpServletRequest, hakemusOid: String, hakukohdeOid: String, henkiloOid: String, vastaanotto: Vastaanotto, hakemus: HakemusInfo): ActionResult = {
       val hakuOid: String = hakemus.hakemus.haku.oid
       val email: Option[String] = hakemus.hakemus.email
+      val henkiloOidHakemukselta = hakemus.hakemus.personOid
+      if (!henkiloOid.equals(henkiloOidHakemukselta)) {
+        logger.info(s"Tallennetaan vastaanotto hakemukselle $hakemusOid, henkilön masterOid ($henkiloOid) " +
+          s"on eri kuin hakemuksella oleva oid ($henkiloOidHakemukselta). Tehdään tallennus hakemuksen oidille.")
+      }
 
-      Try(valintatulosService.vastaanota(henkiloOid, hakemusOid, hakukohdeOid, vastaanotto.vastaanottoAction)) match {
+      Try(valintatulosService.vastaanota(henkiloOidHakemukselta, hakemusOid, hakukohdeOid, vastaanotto.vastaanottoAction)) match {
         case Success(result) => {
-          Audit.oppija.log(SaveVastaanotto(request, henkiloOid, hakemusOid, hakukohdeOid, hakuOid, vastaanotto.vastaanottoAction))
+          Audit.oppija.log(SaveVastaanotto(request, henkiloOidHakemukselta, hakemusOid, hakukohdeOid, hakuOid, vastaanotto.vastaanottoAction))
           if (result) {
             email match {
               case None => logger.error(s"""Vastaanottosähköpostia ei voitu lähettää, koska sähköpostiosoitetta ei löytynyt. HakemusOid: $hakemusOid""")
