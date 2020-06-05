@@ -155,12 +155,9 @@
       })
 
       it('ensimmäisenä on uusin hakemus', function () {
-        for (application in ApplicationListPage().applications()) {
-          console.log('application: ', application);
-        }
-        /*expect(ApplicationListPage().applications()[0]).to.deep.equal(
+        expect(ApplicationListPage().applications()[0]).to.deep.equal(
           { applicationSystemName: 'Yhteishaku ammatilliseen ja lukioon, kevät 2016' }
-        )*/
+        )
       })
 
       it("henkilön 010100A939R hakutoiveet ovat näkyvissä", function () {
