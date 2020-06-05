@@ -82,7 +82,6 @@ trait HakemusConverterComponent {
         tuloskirje,
         ohjeetUudelleOpiskelijalleMap,
         hakutoiveet,
-        Option.empty,
         haku,
         EducationBackground(koulutusTaustaAnswers.get(baseEducationKey), !Try {koulutusTaustaAnswers.get("ammatillinenTutkintoSuoritettu").toBoolean}.getOrElse(false)),
         answers,

@@ -38,7 +38,6 @@ case class Hakemus(oid: String,
                    tuloskirje: Option[Tuloskirje] = None,
                    ohjeetUudelleOpiskelijalle: Map[String, String], // hakukohdeOid -> linkki
                    hakutoiveet: List[Hakutoive] = Nil,
-                   submitted: Option[Long],
                    haku: Haku,
                    educationBackground: EducationBackground,
                    answers: Answers,
