@@ -1,5 +1,6 @@
 package fi.vm.sade.ataru
 
+import java.time.Instant
 import java.util.concurrent.TimeUnit
 
 import fi.vm.sade.hakemuseditori.auditlog.{Audit, ShowHakemus}
@@ -33,7 +34,8 @@ case class AtaruApplication(oid: String,
                             secret: String,
                             email: String,
                             haku: String,
-                            hakukohteet: List[String])
+                            hakukohteet: List[String],
+                            submitted: String)
 
 trait AtaruServiceComponent  {
   this: LomakeRepositoryComponent
@@ -82,6 +84,7 @@ trait AtaruServiceComponent  {
               tuloskirje = tuloskirje,
               ohjeetUudelleOpiskelijalle = ohjeetUudelleOpiskelijalleMap,
               hakutoiveet = hakutoiveet,
+              submitted = Option.apply(Instant.parse(a.submitted).toEpochMilli),
               haku = haku,
               educationBackground = EducationBackground("base_education", false),
               answers = Map(),

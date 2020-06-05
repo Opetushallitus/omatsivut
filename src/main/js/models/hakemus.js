@@ -15,6 +15,7 @@ export default class Hakemus {
     this.notifications = json.hakemus.notifications;
     this.ohjeetUudelleOpiskelijalle = json.hakemus.ohjeetUudelleOpiskelijalle;
     this.hakutoiveet = convertHakutoiveet(json.hakemus.hakutoiveet);
+    this.submitted = json.hakemus.submitted;
     this.henkilotiedot = convertHenkilotiedot(json.hakemus.answers.henkilotiedot);
     this.henkiloNimi = parseName(json.hakemus.answers.henkilotiedot);
     this.persistedAnswers = json.hakemus.answers;

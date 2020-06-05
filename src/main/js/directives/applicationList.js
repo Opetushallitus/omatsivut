@@ -26,6 +26,8 @@ export default ["restResources", function (restResources) {
           var application = new Hakemus(json);
           application.isHakutoiveidenMuokkaus = false;
           return application;
+        }).sort(function(a,b){
+          return b.submitted - a.submitted;
         });
         if($scope.applications.length > 0) {
           $scope.applicationStatusMessage = "";
