@@ -12,6 +12,8 @@ case class HakemusInfo(hakemus: Hakemus,
                        hakemusSource: String,
                        previewUrl: Option[String]) {
   def withoutKelaUrl: HakemusInfo = copy(hakemus = hakemus.withoutKelaUrl)
+
+  def withoutTuloskirje: HakemusInfo = copy(hakemus = hakemus.withoutTuloskirje)
 }
 
 object HakemusInfo {
