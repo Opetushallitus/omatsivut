@@ -29,8 +29,8 @@ trait VastaanottoComponent {
       val email: Option[String] = hakemus.hakemus.email
       val henkiloOidHakemukselta = hakemus.hakemus.personOid
       if (!henkiloOid.equals(henkiloOidHakemukselta)) {
-        logger.info(s"Tallennetaan vastaanotto hakemukselle $hakemusOid, henkilön masterOid ($henkiloOid) " +
-          s"on eri kuin hakemuksella oleva oid ($henkiloOidHakemukselta). Tehdään tallennus hakemuksen oidille.")
+        logger.info(s"Tallennetaan vastaanotto hakemukselle $hakemusOid, henkilön session mukana kulkeva oid ($henkiloOid) " +
+          s"on eri kuin hakemuksella oleva oid ($henkiloOidHakemukselta). Tehdään vastaanoton tallennus hakemuksen oidille.")
       }
 
       Try(valintatulosService.vastaanota(henkiloOidHakemukselta, hakemusOid, hakukohdeOid, vastaanotto.vastaanottoAction)) match {
