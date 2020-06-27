@@ -53,8 +53,6 @@ case class Hakemus(oid: String,
 
   def withoutKelaUrl: Hakemus = copy(state = state.withoutKelaUrl)
 
-  def withoutTuloskirje: Hakemus = copy(tuloskirje = None)
-
   def omatsivutPreviewUrl: Option[String] = if (hasForm) {
     Some(OphUrlProperties.url("omatsivut.applications.preview", oid))
   } else {
