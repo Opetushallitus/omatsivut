@@ -17,7 +17,7 @@
                     luotu: application.tuloskirje.createdDate
                     }) }}
                 </a>
-                <a class="tuloskirje" ng-if="application.token" ng-href="{{url('omatsivut.applications.tuloskirje.token',application.token)}}" ng-show="application.hasForm" ng-class="{disabled: applicationForm.$dirty|| statusMessageType=='pending' || isValidating}" target="_blank">
+                <a class="tuloskirje" ng-if="application.token" ng-href="{{url('omatsivut.applications.tuloskirje.token',application.token,application.haku.oid)}}" ng-show="application.hasForm" ng-class="{disabled: applicationForm.$dirty|| statusMessageType=='pending' || isValidating}" target="_blank">
                     {{ localization('button.downloadLetter', {
                     luotu: application.tuloskirje.createdDate
                     }) }}
