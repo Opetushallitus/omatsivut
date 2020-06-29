@@ -9,7 +9,7 @@ window.urls.addProperties({
   "omatsivut.opetuspisteet": "/omatsivut/koulutusinformaatio/opetuspisteet/:query",
   "omatsivut.translations": "/omatsivut/translations",
   "omatsivut.login": "/omatsivut/login",
-  "omatsivut.applications.tuloskirje": "/omatsivut/secure/applications/tuloskirje/$1",
+  "omatsivut.applications.tuloskirje": "/omatsivut/tuloskirjeet/$1/tuloskirje.html",
   "omatsivut.lasnaoloilmoittautuminen": "/omatsivut/secure/ilmoittaudu",
   "omatsivut.errorlogtobackend": "/omatsivut/errorlogtobackend"
 });
