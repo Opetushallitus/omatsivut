@@ -1,5 +1,7 @@
 package fi.vm.sade.omatsivut.servlet
 
+import java.lang.RuntimeException
+
 import fi.vm.sade.hakemuseditori._
 import fi.vm.sade.hakemuseditori.hakemus.{FetchIfNoHetuOrToinenAste, HakemusInfo, HakemusRepositoryComponent}
 import fi.vm.sade.hakemuseditori.user.Oppija
@@ -45,11 +47,14 @@ trait TuloskirjeetServletContainer {
 
     get("/:token/tuloskirje.pdf") {
       val token = params("token")
+      val hakuOid = params("hakuOid")
       (for {
         metadata <- oppijanTunnistusService.validateToken(token)
         tuloskirje <- Try(tuloskirjeService.fetchTuloskirje(
           request,
-          metadata.hakuOid.getOrElse(throw new RuntimeException(s"Haku OID not part of metadata for token ${token}")),
+          metadata.hakuOid.getOrElse(
+            if (hakuOid.nonEmpty) hakuOid
+            else throw new RuntimeException(s"Haku OID not part of metadata for token ${token} nor given as parameter")),
           metadata.hakemusOid,
           Pdf))
       } yield {
@@ -64,11 +69,14 @@ trait TuloskirjeetServletContainer {
 
     get("/:token/tuloskirje.html") {
       val token = params("token")
+      val hakuOid = params("hakuOid")
       (for {
         metadata <- oppijanTunnistusService.validateToken(token)
         tuloskirje <- Try(tuloskirjeService.fetchTuloskirje(
           request,
-          metadata.hakuOid.getOrElse(throw new RuntimeException(s"Haku OID not part of metadata for token ${token}")),
+          metadata.hakuOid.getOrElse(
+            if (hakuOid.nonEmpty) hakuOid
+            else throw new RuntimeException(s"Haku OID not part of metadata for token ${token} nor given as parameter")),
           metadata.hakemusOid,
           AccessibleHtml))
       } yield {

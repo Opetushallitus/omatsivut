@@ -88,7 +88,7 @@ trait NonSensitiveApplicationServletContainer {
     private def fetchHakemus(hakemusOid: String, personOid: Option[String]): Try[HakemusInfo] = {
       personOid.map(hakemusEditori.fetchByHakemusOid(request, _, hakemusOid, FetchIfNoHetuOrToinenAste))
         .getOrElse(hakemusRepository.getHakemus(request, hakemusOid, FetchIfNoHetuOrToinenAste))
-        .fold[Try[HakemusInfo]](Failure(new NoSuchElementException(s"Hakemus $hakemusOid not found")))(h =>Success(h.withoutKelaUrl.withoutTuloskirje))
+        .fold[Try[HakemusInfo]](Failure(new NoSuchElementException(s"Hakemus $hakemusOid not found")))(h => Success(h.withoutKelaUrl))
     }
 
     before() {

@@ -12,7 +12,9 @@
                target="_blank">{{ localization('button.showApplication') }}</a>
             <span ng-if="application.tuloskirje && application.tuloskirje.createdDate">
                 <span class="delimiter"> | </span>
-                <a class="tuloskirje" ng-href="{{url('omatsivut.applications.tuloskirje',application.haku.oid)}}" ng-show="application.hasForm" ng-class="{disabled: applicationForm.$dirty|| statusMessageType=='pending' || isValidating}" target="_blank">
+                <a class="tuloskirje"
+                   ng-href="{{ application.token ? url('omatsivut.applications.tuloskirje.token',application.token,application.haku.oid) : url('omatsivut.applications.tuloskirje',application.haku.oid) }}"
+                   ng-show="application.hasForm" ng-class="{disabled: applicationForm.$dirty|| statusMessageType=='pending' || isValidating}" target="_blank">
                     {{ localization('button.downloadLetter', {
                     luotu: application.tuloskirje.createdDate
                     }) }}
