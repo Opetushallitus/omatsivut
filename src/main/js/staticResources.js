@@ -32,7 +32,14 @@ export function getTranslations() {
 
 function loadTranslations(language) {
   const url = urls["omatsivut.translations"] + '?lang=' + language;
-  return fetch(url)
+  const headers = new Headers({
+    'Caller-Id': '1.2.246.562.10.00000000001.omatsivut.frontend'
+  });
+  const request = new Request(url, {
+    method: 'GET',
+    headers: headers
+  });
+  return fetch(request)
     .then(response => {
       if (response.status === 200) {
         return response.json();

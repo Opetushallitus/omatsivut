@@ -61,10 +61,17 @@ window.Service = {
     document.location.href = "/omatsivut/logout";
   },
   getUser: function() {
+    const url = '/omatsivut/session';
+    const headers = new Headers({
+      'Caller-Id': '1.2.246.562.10.00000000001.omatsivut.frontend'
+    });
+    const request = new Request(url, {
+      method: 'GET',
+      headers: headers,
+      credentials: 'same-origin'
+    });
     return new Promise((resolve, reject) => {
-      fetch('/omatsivut/session', {
-        credentials: 'same-origin'
-      })
+      fetch(request)
       .then((response) => {
         if (response.status === 200) {
           response.json().then((user) => {
