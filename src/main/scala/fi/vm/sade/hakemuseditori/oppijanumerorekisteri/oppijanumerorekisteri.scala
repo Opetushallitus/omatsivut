@@ -62,7 +62,11 @@ trait OppijanumerorekisteriComponent {
 
   class RemoteOppijanumerorekisteriService(config: AppConfig) extends OppijanumerorekisteriService with JsonFormats with Logging {
     private val blazeHttpClient = blaze.defaultClient
-    private val casClient = new CasClient(config.settings.securitySettings.casUrl, blazeHttpClient)
+    private val casClient = new CasClient(
+      config.settings.securitySettings.casUrl,
+      blazeHttpClient,
+      AppConfig.callerId
+    )
     private val casParams = CasParams(
       OphUrlProperties.url("url-oppijanumerorekisteri-service"),
       config.settings.securitySettings.casUsername,

@@ -27,7 +27,11 @@ trait RemoteKoutaComponent {
 
   class RemoteKoutaService(config: AppConfig) extends TarjontaService with Logging {
     private val blazeHttpClient = blaze.defaultClient
-    private val casClient = new CasClient(config.settings.securitySettings.casUrl, blazeHttpClient)
+    private val casClient = new CasClient(
+      config.settings.securitySettings.casUrl,
+      blazeHttpClient,
+      AppConfig.callerId
+    )
     private val casParams = CasParams(
       OphUrlProperties.url("kouta-internal.service"),
       "auth/login",
