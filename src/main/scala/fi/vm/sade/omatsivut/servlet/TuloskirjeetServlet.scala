@@ -47,13 +47,13 @@ trait TuloskirjeetServletContainer {
 
     get("/:token/tuloskirje.pdf") {
       val token = params("token")
-      val hakuOid = params("hakuOid")
+      val hakuOid: Option[String] = params.get("hakuOid")
       (for {
         metadata <- oppijanTunnistusService.validateToken(token)
         tuloskirje <- Try(tuloskirjeService.fetchTuloskirje(
           request,
           metadata.hakuOid.getOrElse(
-            if (hakuOid.nonEmpty) hakuOid
+            if (hakuOid.isDefined) hakuOid.get
             else throw new RuntimeException(s"Haku OID not part of metadata for token ${token} nor given as parameter")),
           metadata.hakemusOid,
           Pdf))
@@ -69,13 +69,13 @@ trait TuloskirjeetServletContainer {
 
     get("/:token/tuloskirje.html") {
       val token = params("token")
-      val hakuOid = params("hakuOid")
+      val hakuOid: Option[String] = params.get("hakuOid")
       (for {
         metadata <- oppijanTunnistusService.validateToken(token)
         tuloskirje <- Try(tuloskirjeService.fetchTuloskirje(
           request,
           metadata.hakuOid.getOrElse(
-            if (hakuOid.nonEmpty) hakuOid
+            if (hakuOid.isDefined) hakuOid.get
             else throw new RuntimeException(s"Haku OID not part of metadata for token ${token} nor given as parameter")),
           metadata.hakemusOid,
           AccessibleHtml))
