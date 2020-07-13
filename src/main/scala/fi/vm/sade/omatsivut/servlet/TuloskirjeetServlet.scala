@@ -52,9 +52,9 @@ trait TuloskirjeetServletContainer {
         metadata <- oppijanTunnistusService.validateToken(token)
         tuloskirje <- Try(tuloskirjeService.fetchTuloskirje(
           request,
-          metadata.hakuOid.getOrElse(
-            if (hakuOid.isDefined) hakuOid.get
-            else throw new RuntimeException(s"Haku OID not part of metadata for token ${token} nor given as parameter")),
+          metadata.hakuOid.orElse(hakuOid).orElse(
+            throw new RuntimeException(s"Haku OID not part of metadata for token ${token} nor given as parameter")
+          ).get,
           metadata.hakemusOid,
           Pdf))
       } yield {
@@ -74,9 +74,9 @@ trait TuloskirjeetServletContainer {
         metadata <- oppijanTunnistusService.validateToken(token)
         tuloskirje <- Try(tuloskirjeService.fetchTuloskirje(
           request,
-          metadata.hakuOid.getOrElse(
-            if (hakuOid.isDefined) hakuOid.get
-            else throw new RuntimeException(s"Haku OID not part of metadata for token ${token} nor given as parameter")),
+          metadata.hakuOid.orElse(hakuOid).orElse(
+            throw new RuntimeException(s"Haku OID not part of metadata for token ${token} nor given as parameter")
+          ).get,
           metadata.hakemusOid,
           AccessibleHtml))
       } yield {
