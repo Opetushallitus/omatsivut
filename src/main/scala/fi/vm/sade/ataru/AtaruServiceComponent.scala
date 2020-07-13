@@ -168,7 +168,11 @@ trait AtaruServiceComponent  {
 
   class RemoteAtaruService(config: AppConfig) extends AtaruServiceCommons {
     private val blazeHttpClient = blaze.defaultClient
-    private val casClient = new CasClient(config.settings.securitySettings.casUrl, blazeHttpClient)
+    private val casClient = new CasClient(
+      config.settings.securitySettings.casUrl,
+      blazeHttpClient,
+      AppConfig.callerId
+    )
     private val casParams = CasParams(
       OphUrlProperties.url("url-ataru-service"),
       "auth/cas",

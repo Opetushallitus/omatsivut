@@ -13,7 +13,7 @@ trait HttpCall extends JsonFormats with Logging {
   def withHttpGet[T](timedDesc: String, url: String, block: Option[JValue] => Option[T]): Option[T] = {
     timed(timedDesc, 1000) {
       val (responseCode, _, resultString) =
-        DefaultHttpClient.httpGet(url).header("Caller-Id", AppConfig.callerId).responseWithHeaders()
+        DefaultHttpClient.httpGet(url)(AppConfig.callerId).header("Caller-Id", AppConfig.callerId).responseWithHeaders()
       responseCode match {
         case 200 =>
           val parsed = parse(resultString, useBigDecimalForDouble = false).extractOpt[JValue]
