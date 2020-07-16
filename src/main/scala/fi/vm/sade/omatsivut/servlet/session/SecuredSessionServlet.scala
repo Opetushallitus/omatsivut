@@ -8,11 +8,18 @@ import fi.vm.sade.omatsivut.security._
 import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
 import fi.vm.sade.utils.slf4j.Logging
 import org.scalatra.{BadRequest, Cookie, CookieOptions}
+import fi.vm.sade.utils.cas.{CasAuthenticatingClient, CasClient, CasParams}
+import org.http4s.client.blaze
+import scalaz.concurrent.Task
+
+import scala.concurrent.duration.Duration
+import scala.util.control.NonFatal
 
 trait SecuredSessionServletContainer {
   class SecuredSessionServlet(val authenticationInfoService: AuthenticationInfoService,
                               implicit val sessionService: SessionService,
-                              val sessionTimeout: Option[Int] = None)
+                              val sessionTimeout: Option[Int] = None,
+                              val casOppijaClient: CasClient)
     extends OmatSivutServletBase with AttributeNames with OmatsivutPaths with Logging {
 
     get("/") {
