@@ -23,9 +23,9 @@ class StubbedAuthenticationInfoService() extends AuthenticationInfoService {
 
 class RemoteAuthenticationInfoService(val remoteAppConfig: RemoteApplicationConfig, val securitySettings: SecuritySettings) extends AuthenticationInfoService with Logging {
   private val blazeHttpClient = blaze.defaultClient
-  private val casClient = new CasClient(securitySettings.casUrl, blazeHttpClient, AppConfig.callerId)
+  private val casClient = new CasClient(securitySettings.casVirkailijaUrl, blazeHttpClient, AppConfig.callerId)
   private val serviceUrl = remoteAppConfig.url + "/"
-  private val casParams = CasParams(serviceUrl, securitySettings.casUsername, securitySettings.casPassword)
+  private val casParams = CasParams(serviceUrl, securitySettings.casVirkailijaUsername, securitySettings.casVirkailijaPassword)
   private val httpClient = CasAuthenticatingClient(casClient, casParams, blazeHttpClient, AppConfig.callerId, "JSESSIONID")
   private val callerIdHeader = Header("Caller-Id", AppConfig.callerId)
 

@@ -60,22 +60,16 @@ trait OppijanumerorekisteriComponent {
     override def fetchAllDuplicateOids(oppijanumero: String): Set[String] = Set(oppijanumero)
   }
 
-  class RemoteOppijanumerorekisteriService(config: AppConfig) extends OppijanumerorekisteriService with JsonFormats with Logging {
-    private val blazeHttpClient = blaze.defaultClient
-    private val casClient = new CasClient(
-      config.settings.securitySettings.casUrl,
-      blazeHttpClient,
-      AppConfig.callerId
-    )
+  class RemoteOppijanumerorekisteriService(config: AppConfig, casVirkailijaClient: CasClient) extends OppijanumerorekisteriService with JsonFormats with Logging {
     private val casParams = CasParams(
       OphUrlProperties.url("url-oppijanumerorekisteri-service"),
-      config.settings.securitySettings.casUsername,
-      config.settings.securitySettings.casPassword
+      config.settings.securitySettings.casVirkailijaUsername,
+      config.settings.securitySettings.casVirkailijaPassword
     )
     private val httpClient = CasAuthenticatingClient(
-      casClient,
+      casVirkailijaClient,
       casParams,
-      blazeHttpClient,
+      blaze.defaultClient,
       AppConfig.callerId,
       "JSESSIONID"
     )
