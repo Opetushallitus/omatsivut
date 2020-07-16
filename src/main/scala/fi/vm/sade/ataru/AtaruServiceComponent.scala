@@ -166,23 +166,17 @@ trait AtaruServiceComponent  {
     }
   }
 
-  class RemoteAtaruService(config: AppConfig) extends AtaruServiceCommons {
-    private val blazeHttpClient = blaze.defaultClient
-    private val casClient = new CasClient(
-      config.settings.securitySettings.casUrl,
-      blazeHttpClient,
-      AppConfig.callerId
-    )
+  class RemoteAtaruService(config: AppConfig, casVirkailijaClient: CasClient) extends AtaruServiceCommons {
     private val casParams = CasParams(
       OphUrlProperties.url("url-ataru-service"),
       "auth/cas",
-      config.settings.securitySettings.casUsername,
-      config.settings.securitySettings.casPassword
+      config.settings.securitySettings.casVirkailijaUsername,
+      config.settings.securitySettings.casVirkailijaPassword
     )
     private val httpClient = CasAuthenticatingClient(
-      casClient,
+      casVirkailijaClient,
       casParams,
-      blazeHttpClient,
+      blaze.defaultClient,
       AppConfig.callerId,
       "ring-session"
     )

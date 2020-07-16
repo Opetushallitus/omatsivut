@@ -30,6 +30,8 @@ import fi.vm.sade.omatsivut.servlet._
 import fi.vm.sade.omatsivut.servlet.session.{LogoutServletContainer, SecuredSessionServletContainer, SessionServlet}
 import fi.vm.sade.omatsivut.vastaanotto.VastaanottoComponent
 import fi.vm.sade.utils.captcha.CaptchaServiceComponent
+import fi.vm.sade.utils.cas.CasClient
+import org.http4s.client.blaze
 
 import scala.collection.JavaConverters._
 
@@ -89,7 +91,7 @@ class ComponentRegistry(val config: AppConfig)
 
   private def configureTarjontaService: TarjontaService = config match {
     case _: StubbedExternalDeps => new StubbedTarjontaService()
-    case _ => CachedRemoteTarjontaService(config)
+    case _ => CachedRemoteTarjontaService(config, casVirkailijaClient)
   }
 
   private def configureTuloskirjeService: TuloskirjeService = config match {
@@ -120,17 +122,32 @@ class ComponentRegistry(val config: AppConfig)
 
   private def configureAtaruService: AtaruService = config match {
     case _: StubbedExternalDeps => new StubbedAtaruService
-    case _ => new RemoteAtaruService(config)
+    case _ => new RemoteAtaruService(config, casVirkailijaClient)
   }
 
   private def configureOppijanumerorekisteriService: OppijanumerorekisteriService = config match {
     case _: StubbedExternalDeps => new StubbedOppijanumerorekisteriService
-    case _ => new RemoteOppijanumerorekisteriService(config)
+    case _ => new RemoteOppijanumerorekisteriService(config, casVirkailijaClient)
   }
 
   private def configureAuthenticationInfoService: AuthenticationInfoService = config match {
     case _: StubbedExternalDeps => new StubbedAuthenticationInfoService
-    case _ => new RemoteAuthenticationInfoService(config.settings.authenticationServiceConfig, config.settings.securitySettings)
+    case _ => new RemoteAuthenticationInfoService(config.settings.authenticationServiceConfig,
+                                                  config.settings.securitySettings)
+  }
+
+  private def configureCASVirkailijaClient: CasClient = config match {
+    //case _: StubbedExternalDeps => null
+    case _ => new CasClient(config.settings.securitySettings.casVirkailijaUrl,
+                            blaze.defaultClient,
+                            AppConfig.callerId)
+  }
+
+  private def configureCASOppijaClient: CasClient = config match {
+    //case _: StubbedExternalDeps => null
+    case _ => new CasClient(config.settings.securitySettings.casOppijaUrl,
+                            blaze.defaultClient,
+                            AppConfig.callerId)
   }
 
   lazy val springContext = new HakemusSpringContext(OmatSivutSpringContext.createApplicationContext(config))
@@ -156,6 +173,9 @@ class ComponentRegistry(val config: AppConfig)
     config.settings.sessionTimeoutSeconds.getOrElse(3600))
   implicit val sessionService = new SessionService(omatsivutDb)
   lazy val authenticationInfoService = configureAuthenticationInfoService
+
+  val casVirkailijaClient = configureCASVirkailijaClient
+  val casOppijaClient = configureCASOppijaClient
 
   private def configureScheduler() = {
     val numberOfThreads: Int = 1
