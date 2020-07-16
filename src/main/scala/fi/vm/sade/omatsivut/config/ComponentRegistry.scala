@@ -133,6 +133,7 @@ class ComponentRegistry(val config: AppConfig)
   private def configureAuthenticationInfoService: AuthenticationInfoService = config match {
     case _: StubbedExternalDeps => new StubbedAuthenticationInfoService
     case _ => new RemoteAuthenticationInfoService(config.settings.authenticationServiceConfig,
+                                                  casOppijaClient,
                                                   config.settings.securitySettings)
   }
 
@@ -199,7 +200,8 @@ class ComponentRegistry(val config: AppConfig)
   def newValintatulosServlet = new ValintatulosServlet(config, sessionService)
   def newSecuredSessionServlet = new SecuredSessionServlet(authenticationInfoService,
                                                            sessionService,
-                                                           config.settings.sessionTimeoutSeconds)
+                                                           config.settings.sessionTimeoutSeconds,
+                                                           casOppijaClient)
   def newSessionServlet = new SessionServlet()
   def newLogoutServlet = new LogoutServlet()
   def newFixtureServlet = new FixtureServlet(config)

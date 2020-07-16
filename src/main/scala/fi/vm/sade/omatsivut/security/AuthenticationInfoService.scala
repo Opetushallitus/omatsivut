@@ -21,12 +21,10 @@ class StubbedAuthenticationInfoService() extends AuthenticationInfoService {
   }
 }
 
-class RemoteAuthenticationInfoService(val remoteAppConfig: RemoteApplicationConfig, val securitySettings: SecuritySettings) extends AuthenticationInfoService with Logging {
-  private val blazeHttpClient = blaze.defaultClient
-  private val casClient = new CasClient(securitySettings.casVirkailijaUrl, blazeHttpClient, AppConfig.callerId)
+class RemoteAuthenticationInfoService(val remoteAppConfig: RemoteApplicationConfig, val casOppijaClient: CasClient, val securitySettings: SecuritySettings) extends AuthenticationInfoService with Logging {
   private val serviceUrl = remoteAppConfig.url + "/"
   private val casParams = CasParams(serviceUrl, securitySettings.casVirkailijaUsername, securitySettings.casVirkailijaPassword)
-  private val httpClient = CasAuthenticatingClient(casClient, casParams, blazeHttpClient, AppConfig.callerId, "JSESSIONID")
+  private val httpClient = CasAuthenticatingClient(casOppijaClient, casParams, blaze.defaultClient, AppConfig.callerId, "JSESSIONID")
   private val callerIdHeader = Header("Caller-Id", AppConfig.callerId)
 
   private def uriFromString(url: String): Uri = {
