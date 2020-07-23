@@ -4,8 +4,9 @@ import java.net.URLEncoder
 
 import fi.vm.sade.hakemuseditori.domain.Language
 import fi.vm.sade.omatsivut.OphUrlProperties
+import fi.vm.sade.utils.slf4j.Logging
 
-trait OmatsivutPaths {
+trait OmatsivutPaths extends Logging {
   private def urlEncode(str: String): String = URLEncoder.encode(str, "UTF-8")
 
   private def getContextPath(contextPathFromRequest: String): String = {
@@ -27,10 +28,17 @@ trait OmatsivutPaths {
     protocol + host
   }
 
-  // magically it will go through shibboleth
+  def initsessionPath(): String = {
+    OphUrlProperties.url("omatsivut.initsession")
+  }
+
   def loginPath(contextPath: String)(implicit lang: Language.Language): String = {
     val realContextPath = getContextPath(contextPath)
-    urlPrefix(lang.toString.toLowerCase) + realContextPath + "/initsession/"
+    val urlRoot = urlPrefix(lang.toString.toLowerCase())
+    val fullUrl = urlRoot + realContextPath + "/initsession"
+    val x = OphUrlProperties.url("cas.oppija.login", fullUrl)
+    logger.warn(s"THIS BE >> $x")
+    x
   }
 
   def omatsivutPath(contextPath: String)(implicit lang: Language.Language): String = {

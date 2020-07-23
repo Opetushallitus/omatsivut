@@ -21,6 +21,10 @@ host.oppija={{host_oppija}}
 omatsivut.crypto.aes.key={{omatsivut_crypto_aes_key}}
 omatsivut.crypto.hmac.key={{omatsivut_crypto_hmac_key}}
 
+cas.url=https://{{host_virkailija}}/cas
+cas.username={{omatsivut_haku_app_username}}
+cas.password={{omatsivut_haku_app_password}}
+
 cas.virkailija.url=https://{{host_virkailija}}/cas
 cas.virkailija.username={{omatsivut_haku_app_username}}
 cas.virkailija.password={{omatsivut_haku_app_password}}

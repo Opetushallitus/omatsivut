@@ -1,11 +1,15 @@
 package fi.vm.sade.omatsivut.servlet.session
 
 import java.nio.charset.Charset
+import java.util.concurrent.TimeUnit
 
 import fi.vm.sade.hakemuseditori.auditlog.Audit
 import fi.vm.sade.omatsivut.auditlog.Login
+import fi.vm.sade.omatsivut.config.AppConfig
+import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.security._
 import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
+import fi.vm.sade.utils.cas.CasClient.Username
 import fi.vm.sade.utils.slf4j.Logging
 import org.scalatra.{BadRequest, Cookie, CookieOptions}
 import fi.vm.sade.utils.cas.{CasAuthenticatingClient, CasClient, CasParams}
@@ -16,28 +20,40 @@ import scala.concurrent.duration.Duration
 import scala.util.control.NonFatal
 
 trait SecuredSessionServletContainer {
-  class SecuredSessionServlet(val authenticationInfoService: AuthenticationInfoService,
+  class SecuredSessionServlet(val appConfig: AppConfig,
+                              val authenticationInfoService: AuthenticationInfoService,
                               implicit val sessionService: SessionService,
                               val sessionTimeout: Option[Int] = None,
                               val casOppijaClient: CasClient)
     extends OmatSivutServletBase with AttributeNames with OmatsivutPaths with Logging {
 
     get("/") {
-      logger.debug("initsession request received")
-      val hetu = request.header("hetu")
-      val firstName: Option[String] = Option(request.getHeader("firstname"))
-      val lastName: Option[String] = Option(request.getHeader("sn"))
-      val displayName = parseDisplayName(firstName, lastName)
+      logger.debug("initsession CAS request received")
 
-      hetu match {
-        case Some(hetu) => {
-          authenticationInfoService.getHenkiloOID(hetu) match {
-            case Some(henkiloOid) => initializeSessionAndRedirect(hetu, henkiloOid, displayName)
-            case _ => initializeSessionAndRedirect(hetu, "", displayName)
+      val ticket: Option[CasClient.ServiceTicket] = Option(request.getParameter("ticket"))
+
+      ticket match {
+        case None => BadRequest("No ticket found from CAS request" + clientAddress);
+        case Some(ticket) => {
+          val hetu: Either[Throwable, String] = casOppijaClient.validateServiceTicket(initsessionPath())(ticket).handleWith {
+            case NonFatal(t) => Task.fail(new AuthenticationFailedException(s"Failed to validate service ticket $ticket", t))
+          }.attemptRunFor(10000).toEither
+
+          hetu match {
+            case Right(hetu) => {
+              authenticationInfoService.getOnrHenkilo(hetu) match {
+                case Some(onrHenkilo) => initializeSessionAndRedirect(onrHenkilo.hetu,
+                  onrHenkilo.oidHenkilo,
+                  onrHenkilo.etunimet + " " + onrHenkilo.sukunimi)
+                case None => initializeSessionAndRedirect(hetu, "", "")  // TODO: virhe?
+              }
+            }
+            case Left(t) => {
+              logger.warn("Unable to process CAS Oppija login request, hetu cannot be resolved from ticket", t)
+              BadRequest(t.getMessage)
+            }
           }
         }
-        case None =>
-          BadRequest("No hetu found in request from shibboleth " + clientAddress)
       }
     }
 
@@ -52,7 +68,7 @@ trait SecuredSessionServletContainer {
           Audit.oppija.log(Login(request))
           redirect(redirectUri)
         case Left(e) =>
-          logger.error("Unable to create session. (" + e + ")")
+          logger.error("Unable to create session. (" + e + ")", e)
           halt(500, "unable to create session, exception = " + e)
       }
     }
