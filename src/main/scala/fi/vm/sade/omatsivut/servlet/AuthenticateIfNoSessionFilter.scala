@@ -21,6 +21,7 @@ class AuthenticateIfNoSessionFilter(val sessionService: SessionService)
       sessionCookie.map(UUID.fromString)
     } catch {
       case e: Throwable =>
+        logger.warn(s"Failed to verify session with id=$sessionCookie", e)
         halt(BadRequest(s"Problem verifying the session with id=$sessionCookie ($e)"))
     }
     val sessionId: Option[SessionId] = sessionUUID.map(SessionId)

@@ -3,7 +3,7 @@ package fi.vm.sade.omatsivut.servlet
 import javax.servlet.http.HttpServletRequest
 import org.scalatra.{RouteTransformer, ScalatraFilter}
 
-trait ScalatraFilterWithWhitelist extends ScalatraFilter {
+trait ScalatraFilterWithWhitelist extends OmatSivutFilterBase {
 
   val whitelistedServletPaths: Seq[String]
 
