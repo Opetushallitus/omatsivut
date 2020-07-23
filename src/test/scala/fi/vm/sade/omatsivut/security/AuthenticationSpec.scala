@@ -32,11 +32,14 @@ class AuthenticationSpec extends ScalatraTestSupport {
 
   "GET / (UI)" should {
 
-    "return 302 and redirect to shibboleh if not authenticated" in {
+    "return 302 and redirect to CAS Oppija if not authenticated" in {
       get("") {
+        println("AAAAAA _____ AA_ A_A __AA_")
+        println(response.body)
+        println("AAAAAA _____ AA_ A_A __AA_")
         status must_== 302
         val location = response.headers("Location")(0)
-        location must beMatching(".*omatsivut.*initsession.*")
+        location must beMatching(".*cas-oppija.*login.*")
       }
     }
 

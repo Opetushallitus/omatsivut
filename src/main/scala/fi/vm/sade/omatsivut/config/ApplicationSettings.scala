@@ -71,6 +71,9 @@ object ApplicationSettingsParser extends fi.vm.sade.utils.config.ApplicationSett
 }
 
 class SecuritySettings(c: Config) {
+  val casUrl : String = OphUrlProperties.url("cas.url")
+  val casUsername : String = c.getString("cas.username")
+  val casPassword : String = c.getString("cas.password")
   val casVirkailijaUrl : String = OphUrlProperties.url("cas.virkailija.url")
   val casVirkailijaUsername : String = c.getString("cas.virkailija.username")
   val casVirkailijaPassword : String = c.getString("cas.virkailija.password")

@@ -9,19 +9,21 @@ import org.specs2.runner.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
 class SecuredSessionServletSpec extends ScalatraTestSupport with AttributeNames with ScalatraTestCookiesSupport {
-  val urlUsedByShibboleth = "initsession"
+  val urlUsedByCAS = "initsession"
   private val logger = LoggerFactory.getLogger(getClass)
 
   "GET /initsession" should {
-    "fails with bad request (400) if request does not contain henkilötunnus" in {
-      get(urlUsedByShibboleth) {
+    "fails with bad request (400) if request does not contain ticket" in {
+      get(urlUsedByCAS) {
         status must_== 400
-        body must contain("No hetu found in request from shibboleth")
+        body must contain("No ticket found from CAS request")
       }
     }
 
     "create a session in repository and forwards to root if the request contains hetu header" in {
-      get(urlUsedByShibboleth, headers = Map("hetu" -> TestFixture.testHetu)) {
+      get(urlUsedByCAS, params = Map("ticket" -> TestFixture.testCASticket)) {
+        println("ASDASSDASD")
+        println(response.body)
         status must_== 302
         val location = response.headers("Location").head
         location must endWith("omatsivut/index.html")
@@ -41,7 +43,9 @@ class SecuredSessionServletSpec extends ScalatraTestSupport with AttributeNames 
     }
 
     "create a session with no oid if hetu does not have the corresponding oid" in {
-      get(urlUsedByShibboleth, headers = Map("hetu" -> TestFixture.testHetuWithNoPersonOid)) {
+      get(urlUsedByCAS, params = Map("ticket" -> TestFixture.testCASticketWithNoPersonOid)) {
+        println("ASDASSDASD")
+        println(response.body)
         status must_== 302
         val location = response.headers("Location").head
         location must endWith("omatsivut/index.html")
@@ -59,7 +63,9 @@ class SecuredSessionServletSpec extends ScalatraTestSupport with AttributeNames 
     "create a session in repository, and it will contain also the display name of the user" in {
       val firstName = "Wolfgang"
       val secondName = "Mozart"
-      get(urlUsedByShibboleth, headers = Map("hetu" -> TestFixture.testHetu, "firstname" -> firstName, "sn" -> secondName)) {
+      get(urlUsedByCAS, params = Map("ticket" -> TestFixture.testCASticket, "firstname" -> firstName, "sn" -> secondName)) {  // TODO: firstname ja sn eivät taatusti toimi tässä
+        println("ASDASSDASD")
+        println(response.body)
         status must_== 302
         val sessionId = cookieGetValue(response, sessionCookieName).getOrElse("not found session cookie")
         val displayName = getDisplayNameFromSession(sessionId).getOrElse("not found in repository")

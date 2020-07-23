@@ -198,7 +198,8 @@ class ComponentRegistry(val config: AppConfig)
   def newApplicationsServlet = new ApplicationsServlet(config, sessionService)
   def newKoulutusServlet = new KoulutusServlet
   def newValintatulosServlet = new ValintatulosServlet(config, sessionService)
-  def newSecuredSessionServlet = new SecuredSessionServlet(authenticationInfoService,
+  def newSecuredSessionServlet = new SecuredSessionServlet(config,
+                                                           authenticationInfoService,
                                                            sessionService,
                                                            config.settings.sessionTimeoutSeconds,
                                                            casOppijaClient)
