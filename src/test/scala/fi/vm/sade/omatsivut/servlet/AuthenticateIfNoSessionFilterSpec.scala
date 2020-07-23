@@ -40,7 +40,8 @@ class AuthenticateIfNoSessionFilterSpec extends MutableScalatraSpec with Mockito
       get("omatsivut" + originalUrl) {
         status must_== 302
         val location = response.headers("Location")(0)
-        location must find("""/omatsivut/initsession/$""")
+        // this regex reads as "full URL to CAS-Oppija login endpoint with full URL of service as return URL"
+        location must find("""^http://.*/cas-oppija/login\?service=http(s)?%3A%2F%2F.*%2Fomatsivut%2Finitsession$""")
       }
     }
 
