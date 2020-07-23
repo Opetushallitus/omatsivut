@@ -4,7 +4,7 @@ import javax.servlet.http.HttpServletResponse
 
 import org.scalatra.ScalatraFilter
 
-class CacheControlFilter extends ScalatraFilter {
+class CacheControlFilter extends OmatSivutFilterBase {
   before() {
     doNotCache(response)
   }
