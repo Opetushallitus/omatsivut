@@ -36,7 +36,7 @@ trait SecuredSessionServletContainer {
       ticket match {
         case None => BadRequest("No ticket found from CAS request" + clientAddress);
         case Some(ticket) => {
-          val hetu: Either[Throwable, String] = casOppijaClient.validateServiceTicket(OphUrlProperties.url("cas.service.omatsivut"))(ticket).handleWith {
+          val hetu: Either[Throwable, String] = casOppijaClient.validateServiceTicket(initsessionPath())(ticket).handleWith {
             case NonFatal(t) => Task.fail(new AuthenticationFailedException(s"Failed to validate service ticket $ticket", t))
           }.attemptRunFor(10000).toEither
 
