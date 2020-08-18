@@ -134,7 +134,7 @@ cas.service.ryhmasahkoposti=https://${host.virkailija}/ryhmasahkoposti-service
 cas.service.authentication-service=https\://{{host_virkailija}}/authentication-service
 cas.service.organisaatio-service=https\://{{host_virkailija}}/organisaatio-service
 cas.service.suoritusrekisteri=https://${host.virkailija}/suoritusrekisteri
-# TODO yllä on service-nimiä, varmaan pitäisi uudelleenkäyttää?
+cas.service.omatsivut=https://${host.oppija}/omatsivut
 cas.user-search-base=ou\=people
 cas.user-search-filter=(|(mail\={0})(uid\={0}))
 customAttribute.webservice.url.backend=https://{{host_virkailija}}/authentication-service/services/customAttributeService

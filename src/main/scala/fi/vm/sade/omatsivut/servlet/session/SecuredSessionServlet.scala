@@ -4,6 +4,7 @@ import java.nio.charset.Charset
 import java.util.concurrent.TimeUnit
 
 import fi.vm.sade.hakemuseditori.auditlog.Audit
+import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.omatsivut.auditlog.Login
 import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
@@ -35,10 +36,11 @@ trait SecuredSessionServletContainer {
       ticket match {
         case None => BadRequest("No ticket found from CAS request" + clientAddress);
         case Some(ticket) => {
-          val hetu: Either[Throwable, String] = casOppijaClient.validateServiceTicket(initsessionPath())(ticket).handleWith {
+          val hetu: Either[Throwable, String] = casOppijaClient.validateServiceTicket(OphUrlProperties.url("cas.service.omatsivut"))(ticket).handleWith {
             case NonFatal(t) => Task.fail(new AuthenticationFailedException(s"Failed to validate service ticket $ticket", t))
           }.attemptRunFor(10000).toEither
 
+          logger.info(s"hetu response: $hetu")
           hetu match {
             case Right(hetu) => {
               authenticationInfoService.getOnrHenkilo(hetu) match {
