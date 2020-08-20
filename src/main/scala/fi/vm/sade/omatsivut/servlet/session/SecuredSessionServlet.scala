@@ -10,15 +10,18 @@ import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.security._
 import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
-import fi.vm.sade.utils.cas.CasClient.Username
+import fi.vm.sade.utils.cas.CasClient.{OppijaAttributes, Username, textOrXmlDecoder}
 import fi.vm.sade.utils.slf4j.Logging
 import org.scalatra.{BadRequest, Cookie, CookieOptions}
-import fi.vm.sade.utils.cas.{CasAuthenticatingClient, CasClient, CasParams}
+import fi.vm.sade.utils.cas.{CasAuthenticatingClient, CasClient, CasClientException, CasParams, FetchHelper}
+import org.http4s.{DecodeResult, InvalidMessageBodyFailure, Response, Uri}
 import org.http4s.client.blaze
+import org.http4s.dsl.GET
 import scalaz.concurrent.Task
 
 import scala.concurrent.duration.Duration
 import scala.util.control.NonFatal
+import scala.xml.{NodeSeq, Utility}
 
 trait SecuredSessionServletContainer {
   class SecuredSessionServlet(val appConfig: AppConfig,
@@ -27,7 +30,36 @@ trait SecuredSessionServletContainer {
                               val sessionTimeout: Option[Int] = None,
                               val casOppijaClient: CasClient)
     extends OmatSivutServletBase with AttributeNames with OmatsivutPaths with Logging {
-
+/*
+<?xml version="1.0" encoding="UTF-8"?>
+<cas:serviceResponse xmlns:cas="http://www.yale.edu/tp/cas">
+   <cas:authenticationSuccess>
+      <cas:user>suomi.fi#070770-905D</cas:user>
+      <cas:attributes>
+         <cas:isFromNewLogin>true</cas:isFromNewLogin>
+         <cas:mail>antero.asiakas@suomi.fi</cas:mail>
+         <cas:authenticationDate>2020-08-18T11:35:38.453760Z[UTC]</cas:authenticationDate>
+         <cas:clientName>suomi.fi</cas:clientName>
+         <cas:displayName>Antero Asiakas</cas:displayName>
+         <cas:givenName>Antero</cas:givenName>
+         <cas:VakinainenKotimainenLahiosoiteS>Sepänkatu 11 A 5</cas:VakinainenKotimainenLahiosoiteS>
+         <cas:VakinainenKotimainenLahiosoitePostitoimipaikkaS>KUOPIO</cas:VakinainenKotimainenLahiosoitePostitoimipaikkaS>
+         <cas:cn>Asiakas Antero OP</cas:cn>
+         <cas:notBefore>2020-08-18T11:35:35.788Z</cas:notBefore>
+         <cas:personOid>1.2.246.562.24.66085201211</cas:personOid>
+         <cas:personName>Asiakas Antero OP</cas:personName>
+         <cas:firstName>Antero OP</cas:firstName>
+         <cas:VakinainenKotimainenLahiosoitePostinumero>70100</cas:VakinainenKotimainenLahiosoitePostinumero>
+         <cas:KotikuntaKuntanumero>297</cas:KotikuntaKuntanumero>
+         <cas:KotikuntaKuntaS>Kuopio</cas:KotikuntaKuntaS>
+         <cas:notOnOrAfter>2020-08-18T11:40:35.788Z</cas:notOnOrAfter>
+         <cas:longTermAuthenticationRequestTokenUsed>false</cas:longTermAuthenticationRequestTokenUsed>
+         <cas:sn>Asiakas</cas:sn>
+         <cas:nationalIdentificationNumber>070770-905D</cas:nationalIdentificationNumber>
+      </cas:attributes>
+   </cas:authenticationSuccess>
+</cas:serviceResponse>
+       */
     get("/") {
       logger.debug("initsession CAS request received")
 
@@ -36,19 +68,18 @@ trait SecuredSessionServletContainer {
       ticket match {
         case None => BadRequest("No ticket found from CAS request" + clientAddress);
         case Some(ticket) => {
-          val hetu: Either[Throwable, String] = casOppijaClient.validateServiceTicket(initsessionPath())(ticket).handleWith {
+          val attrs: Either[Throwable, OppijaAttributes] = casOppijaClient.validateServiceTicket(initsessionPath())(ticket, casOppijaClient.decodeOppijaAttributes).handleWith {
             case NonFatal(t) => Task.fail(new AuthenticationFailedException(s"Failed to validate service ticket $ticket", t))
           }.attemptRunFor(10000).toEither
 
-          logger.info(s"hetu response: $hetu")
-          hetu match {
-            case Right(hetu) => {
-              authenticationInfoService.getOnrHenkilo(hetu) match {
-                case Some(onrHenkilo) => initializeSessionAndRedirect(onrHenkilo.hetu,
-                  onrHenkilo.oidHenkilo,
-                  onrHenkilo.etunimet + " " + onrHenkilo.sukunimi)
-                case None => initializeSessionAndRedirect(hetu, "", "")  // TODO: virhe?
-              }
+          logger.info(s"attrs response: $attrs")
+          attrs match {
+            case Right(attrs) => {
+              val hetu = attrs("nationalIdentificationNumber")
+              val personOid = attrs.getOrElse("personOid", "")
+              val displayName = attrs.getOrElse("displayName", "")
+              // TODO: jotain linkitysten selvittelyä?
+              initializeSessionAndRedirect(hetu, personOid, displayName)
             }
             case Left(t) => {
               logger.warn("Unable to process CAS Oppija login request, hetu cannot be resolved from ticket", t)
