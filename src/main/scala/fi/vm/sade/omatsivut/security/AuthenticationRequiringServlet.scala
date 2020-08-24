@@ -13,7 +13,11 @@ trait AuthenticationRequiringServlet extends OmatSivutServletBase with Logging {
   implicit def sessionService: SessionService
   val returnNotFoundIfNoOid = true
 
-  def personOid(): String = getOppijaNumero(request).getOrElse(sys.error("Unauthenticated account"))
+  def personOid(): String = getOppijaNumero(request).getOrElse({
+    val msg = "Unauthenticated account, personOid not available in request"
+    logger.error(msg)
+    msg
+  })
 
   before() {
     val sessionCookie: Option[String] = cookies.get(sessionCookieName)
