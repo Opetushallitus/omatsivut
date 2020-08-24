@@ -155,6 +155,10 @@ class ComponentRegistry(val config: AppConfig)
   if (config.isInstanceOf[IT]) {
     new ApplicationFixtureImporter(springContext).applyFixtures()
   }
+
+  val casVirkailijaClient = configureCASVirkailijaClient
+  val casOppijaClient = configureCASOppijaClient
+
   val hakumaksuService: HakumaksuServiceWrapper = configureHakumaksuService
   val sendMailService: SendMailServiceWrapper = configureSendMailService
   val koulutusInformaatioService: KoulutusInformaatioService = configureKoulutusInformaatioService
@@ -174,9 +178,6 @@ class ComponentRegistry(val config: AppConfig)
     config.settings.sessionTimeoutSeconds.getOrElse(3600))
   implicit val sessionService = new SessionService(omatsivutDb)
   lazy val authenticationInfoService = configureAuthenticationInfoService
-
-  val casVirkailijaClient = configureCASVirkailijaClient
-  val casOppijaClient = configureCASOppijaClient
 
   private def configureScheduler() = {
     val numberOfThreads: Int = 1
