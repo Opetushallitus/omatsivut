@@ -75,6 +75,7 @@ trait HakemusEditoriComponent extends ApplicationValidatorComponent
     def fetchByPersonOid(request: HttpServletRequest,
                          personOid: String,
                          valintatulosFetchStrategy: ValintatulosFetchStrategy): HakemusResult = {
+      logger.debug(s"Fetching hakemus by person oid $personOid")
       val ataruHakemukset = Try(ataruService.findApplications(request, personOid, valintatulosFetchStrategy, language))
       val hakuAppHakemukset = oppijanumerorekisteriService.fetchAllDuplicateOids(personOid).toList
         .map(oid => Try(hakemusRepository.fetchHakemukset(request, oid, valintatulosFetchStrategy)))

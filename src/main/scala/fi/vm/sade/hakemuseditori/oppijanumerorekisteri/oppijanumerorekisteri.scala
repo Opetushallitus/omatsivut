@@ -95,6 +95,7 @@ trait OppijanumerorekisteriComponent {
     }
 
     override def fetchAllDuplicateOids(oppijanumero: String): Set[String] = {
+      logger.debug(s"Fetching duplicate oids for oppijanumero $oppijanumero")
       val timeout = Duration(30, TimeUnit.SECONDS)
 
       val body: json4s.JValue = Extraction.decompose(Map("henkiloOids" -> List(oppijanumero)))
