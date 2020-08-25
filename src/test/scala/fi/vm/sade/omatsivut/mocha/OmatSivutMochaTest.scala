@@ -14,7 +14,7 @@ import scala.concurrent.duration.Duration
 class OmatSivutMochaTest extends Specification {
   private val totalMochaTestsMaxDuration: Duration = Duration(10, MINUTES)
   import scala.sys.process._
-/*
+
   step {
     SharedJetty.start
   }
@@ -40,5 +40,4 @@ class OmatSivutMochaTest extends Specification {
       success
     }
   }
- */
 }
