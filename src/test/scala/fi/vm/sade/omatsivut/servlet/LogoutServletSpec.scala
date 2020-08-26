@@ -16,7 +16,8 @@ class LogoutServletSpec extends ScalatraTestSupport with AttributeNames with Sca
       authGetAndReturnSession("logout?koski=true") { sessionId =>
         status must_== 302
         val location = response.headers("Location")(0)
-        location must endWith("Shibboleth.sso/Logout?return=%2Foma-opintopolku")
+        // this regex reads as "full URL to CAS-Oppija logout endpoint with full URL of oma-opintopolku as return URL"
+        location must find("""^http://.*/cas-oppija/logout\?service=http(s)?%3A%2F%2F.*%2Foma-opintopolku$""")
         getPersonFromSession(sessionId) must beNone
         cookieGetValue(response, sessionCookieName) must beNone
       }
@@ -26,7 +27,8 @@ class LogoutServletSpec extends ScalatraTestSupport with AttributeNames with Sca
       authGetAndReturnSession("logout") { sessionId =>
         status must_== 302
         val location = response.headers("Location")(0)
-        location must endWith("Shibboleth.sso/Logout?return=%2Fkoski%2Fuser%2Flogout")
+        // this regex reads as "full URL to CAS-Oppija logout endpoint with full URL of koski as return URL"
+        location must find("""^http://.*/cas-oppija/logout\?service=http(s)?%3A%2F%2F.*%2Fkoski%2Fuser%2Flogout$""")
         getPersonFromSession(sessionId) must beNone
         cookieGetValue(response, sessionCookieName) must beNone
       }

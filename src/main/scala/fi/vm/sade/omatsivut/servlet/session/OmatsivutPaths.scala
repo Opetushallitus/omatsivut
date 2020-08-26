@@ -39,6 +39,12 @@ trait OmatsivutPaths extends Logging {
     OphUrlProperties.url("cas.oppija.login", fullUrl)
   }
 
+  def logoutPath(servicePath: String)(implicit lang: Language.Language): String = {
+    val urlRoot = urlPrefix(lang.toString.toLowerCase())
+    val fullUrl = urlRoot + servicePath
+    OphUrlProperties.url("cas.oppija.logout", fullUrl)
+  }
+
   def omatsivutPath(contextPath: String)(implicit lang: Language.Language): String = {
     val realContextPath = getContextPath(contextPath)
     urlPrefix(lang.toString.toLowerCase) + realContextPath
