@@ -30,10 +30,17 @@ import fi.vm.sade.omatsivut.servlet._
 import fi.vm.sade.omatsivut.servlet.session.{LogoutServletContainer, SecuredSessionServletContainer, SessionServlet}
 import fi.vm.sade.omatsivut.vastaanotto.VastaanottoComponent
 import fi.vm.sade.utils.captcha.CaptchaServiceComponent
-import fi.vm.sade.utils.cas.CasClient
+import fi.vm.sade.utils.cas.{CasClient, CasParams}
+import fi.vm.sade.utils.cas.CasClient.{OppijaAttributes, ServiceTicket, SessionCookie, Username}
+import org.http4s.Response
 import org.http4s.client.blaze
+import org.http4s.dsl._
+import org.http4s._
+import scalaz.concurrent.Task
 
 import scala.collection.JavaConverters._
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 class ComponentRegistry(val config: AppConfig)
   extends SpringContextComponent with
@@ -138,15 +145,28 @@ class ComponentRegistry(val config: AppConfig)
   }
 
   private def configureCASVirkailijaClient: CasClient = config match {
-    //case _: StubbedExternalDeps => null
     case _ => new CasClient(config.settings.securitySettings.casVirkailijaUrl,
                             blaze.defaultClient,
                             AppConfig.callerId)
   }
 
   private def configureCASOppijaClient: CasClient = config match {
-    //case _: StubbedExternalDeps => null
-    case _ => new CasClient(config.settings.securitySettings.casOppijaUrl,
+    case _: StubbedExternalDeps =>
+      new CasClient(config.settings.securitySettings.casOppijaUrl,
+                                blaze.defaultClient,
+                                AppConfig.callerId) {
+      override def validateServiceTicket[R](service: String)(serviceTicket: ServiceTicket, responseHandler: Response => Task[R]): Task[R] =
+        responseHandler(Ok("Tämä olis OK-ticketvalidointivastaus").unsafePerformSync)
+
+      override def fetchCasSession(params: CasParams, sessionCookieName: String): Task[SessionCookie] = Task.now("keksi")
+
+      override def decodeOppijaAttributes: Response => Task[OppijaAttributes] = response => Task.now(Map("nationalIdentificationNumber" -> "010100A939R"))
+
+      override def decodeVirkailijaUsername: Response => Task[Username] = response => Task.now("frank-virkailija")
+    }
+
+    case _ =>
+      new CasClient(config.settings.securitySettings.casOppijaUrl,
                             blaze.defaultClient,
                             AppConfig.callerId)
   }
@@ -156,8 +176,8 @@ class ComponentRegistry(val config: AppConfig)
     new ApplicationFixtureImporter(springContext).applyFixtures()
   }
 
-  val casVirkailijaClient = configureCASVirkailijaClient
-  val casOppijaClient = configureCASOppijaClient
+  val casVirkailijaClient: CasClient = configureCASVirkailijaClient
+  val casOppijaClient: CasClient = configureCASOppijaClient
 
   val hakumaksuService: HakumaksuServiceWrapper = configureHakumaksuService
   val sendMailService: SendMailServiceWrapper = configureSendMailService

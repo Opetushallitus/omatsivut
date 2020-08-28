@@ -13,11 +13,6 @@ class SecuredSessionServletSpec extends ScalatraTestSupport with AttributeNames 
   val urlUsedByCAS = "initsession"
   private val logger = LoggerFactory.getLogger(getClass)
 
-  def getTGT = {
-    val casParams = CasParams("localhost:8080/omatsivut", "suffix", "user", "pass")
-    SharedAppConfig.componentRegistry.casOppijaClient.fetchCasSession(casParams, "someCookieName").unsafePerformSync
-  }
-
   "GET /initsession" should {
     "fails with bad request (400) if request does not contain ticket" in {
       get(urlUsedByCAS) {
@@ -26,9 +21,8 @@ class SecuredSessionServletSpec extends ScalatraTestSupport with AttributeNames 
       }
     }
 
-
     "create a session in repository and forwards to root if the request contains hetu header" in {
-      get(urlUsedByCAS, Map("ticket" -> getTGT)) {
+      get(urlUsedByCAS, Map("ticket" -> "ST-something-or-other")) {
         println("ASDASSDASD ")
         println(response.body)
         status must_== 302
