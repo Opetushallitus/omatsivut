@@ -12,7 +12,6 @@ import scala.concurrent.duration.Duration
 
 @RunWith(classOf[JUnitRunner])
 class OmatSivutMochaTest extends Specification {
-  /*
   private val totalMochaTestsMaxDuration: Duration = Duration(10, MINUTES)
   import scala.sys.process._
 
@@ -41,5 +40,4 @@ class OmatSivutMochaTest extends Specification {
       success
     }
   }
-  */
 }

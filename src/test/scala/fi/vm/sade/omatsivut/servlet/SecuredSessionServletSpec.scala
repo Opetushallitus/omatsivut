@@ -12,7 +12,7 @@ import org.specs2.runner.JUnitRunner
 class SecuredSessionServletSpec extends ScalatraTestSupport with AttributeNames with ScalatraTestCookiesSupport {
   val urlUsedByCAS = "initsession"
   private val logger = LoggerFactory.getLogger(getClass)
-/*
+
   def getTGT = {
     val casParams = CasParams("localhost:8080/omatsivut", "suffix", "user", "pass")
     SharedAppConfig.componentRegistry.casOppijaClient.fetchCasSession(casParams, "someCookieName").unsafePerformSync
@@ -85,5 +85,4 @@ class SecuredSessionServletSpec extends ScalatraTestSupport with AttributeNames 
       }
     }
   }
- */
 }
