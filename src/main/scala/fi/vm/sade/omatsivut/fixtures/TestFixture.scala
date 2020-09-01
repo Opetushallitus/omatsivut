@@ -23,6 +23,7 @@ object TestFixture {
   val applicationSystemKorkeakouluSyksy2014Oid = "1.2.246.562.29.173465377510"
   val testHetu =  "010100A939R"
   val testCASticket = "ST-1594876-vedmFL1ZxqTCUDclMRyk"
+  val displayName = "Erkki Esimerkki"
   val personOid =   "1.2.246.562.24.14229104472"
   val onrPerson = OnrHenkilo(
     123,
@@ -57,9 +58,24 @@ object TestFixture {
     "1.2.246.562.24.79213463339",
     "234")
   val testHetuWithNoPersonOid = "091094-970D"
+  val onrPersonNoPersonOid = OnrHenkilo(
+    234,
+    System.currentTimeMillis(),
+    false,
+    true,
+    Kieli(100, "fi", ""),
+    Kieli(200, "sv", ""),
+    "Pena Persoona",
+    "Pena",
+    "Persoona",
+    testHetuWithNoPersonOid,
+    List(),
+    "OPPIJA",
+    "",
+    "234")
 
   val persons: Map[String, OnrHenkilo] = Map((testHetu, onrPerson),
-                                             (testHetuWithNoApplications, onrPersonNoApplications))
+                                             (testHetuWithNoApplications, onrPersonNoApplications), (testHetuWithNoPersonOid, onrPersonNoPersonOid))
 
   lazy val ammattistartti: HakutoiveData = JsonFixtureMaps.findByKey[HakutoiveData]("/hakemuseditorimockdata/hakutoiveet.json", "1.2.246.562.14.2014030415375012208392").get
   lazy val ammattistarttiAhlman: HakutoiveData = JsonFixtureMaps.findByKey[HakutoiveData]("/hakemuseditorimockdata/hakutoiveet.json", "1.2.246.562.14.2014040912353139913320").get

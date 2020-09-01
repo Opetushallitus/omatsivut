@@ -1,5 +1,6 @@
 package fi.vm.sade.omatsivut.config
 
+import fi.vm.sade.omatsivut.OphUrlProperties
 import com.github.kagkarlsson.scheduler.Scheduler
 import fi.vm.sade.ataru.{AtaruService, AtaruServiceComponent}
 import fi.vm.sade.groupemailer.{GroupEmailComponent, GroupEmailService}
@@ -17,7 +18,6 @@ import fi.vm.sade.hakemuseditori.tarjonta.{TarjontaComponent, TarjontaService}
 import fi.vm.sade.hakemuseditori.valintatulokset._
 import fi.vm.sade.hakemuseditori.viestintapalvelu.{TuloskirjeComponent, TuloskirjeService}
 import fi.vm.sade.hakemuseditori.{HakemusEditoriComponent, RemoteSendMailServiceWrapper, SendMailServiceWrapper, StubbedSendMailServiceWrapper}
-import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.omatsivut.config.AppConfig._
 import fi.vm.sade.omatsivut.db.impl.OmatsivutDb
 import fi.vm.sade.omatsivut.fixtures.hakemus.ApplicationFixtureImporter
@@ -26,21 +26,15 @@ import fi.vm.sade.omatsivut.localization.OmatSivutTranslations
 import fi.vm.sade.omatsivut.muistilista.MuistilistaServiceComponent
 import fi.vm.sade.omatsivut.oppijantunnistus.{OppijanTunnistusComponent, OppijanTunnistusService, RemoteOppijanTunnistusService, StubbedOppijanTunnistusService}
 import fi.vm.sade.omatsivut.security._
+import fi.vm.sade.omatsivut.security.fake.{FakeCasClient, FakeSecuredSessionServletContainer}
 import fi.vm.sade.omatsivut.servlet._
 import fi.vm.sade.omatsivut.servlet.session.{LogoutServletContainer, SecuredSessionServletContainer, SessionServlet}
 import fi.vm.sade.omatsivut.vastaanotto.VastaanottoComponent
 import fi.vm.sade.utils.captcha.CaptchaServiceComponent
-import fi.vm.sade.utils.cas.{CasClient, CasParams}
-import fi.vm.sade.utils.cas.CasClient.{OppijaAttributes, ServiceTicket, SessionCookie, Username}
-import org.http4s.Response
+import fi.vm.sade.utils.cas.CasClient
 import org.http4s.client.blaze
-import org.http4s.dsl._
-import org.http4s._
-import scalaz.concurrent.Task
 
 import scala.collection.JavaConverters._
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
 
 class ComponentRegistry(val config: AppConfig)
   extends SpringContextComponent with
@@ -64,6 +58,7 @@ class ComponentRegistry(val config: AppConfig)
           CaptchaServiceComponent with
           KoulutusServletContainer with
           SecuredSessionServletContainer with
+          FakeSecuredSessionServletContainer with
           LogoutServletContainer with
           FixtureServletContainer with
           KoodistoServletContainer with
@@ -151,24 +146,18 @@ class ComponentRegistry(val config: AppConfig)
   }
 
   private def configureCASOppijaClient: CasClient = config match {
-    case _: StubbedExternalDeps =>
-      new CasClient(config.settings.securitySettings.casOppijaUrl,
-                                blaze.defaultClient,
-                                AppConfig.callerId) {
-      override def validateServiceTicket[R](service: String)(serviceTicket: ServiceTicket, responseHandler: Response => Task[R]): Task[R] =
-        responseHandler(Ok("Tämä olis OK-ticketvalidointivastaus").unsafePerformSync)
-
-      override def fetchCasSession(params: CasParams, sessionCookieName: String): Task[SessionCookie] = Task.now("keksi")
-
-      override def decodeOppijaAttributes: Response => Task[OppijaAttributes] = response => Task.now(Map("nationalIdentificationNumber" -> "010100A939R"))
-
-      override def decodeVirkailijaUsername: Response => Task[Username] = response => Task.now("frank-virkailija")
-    }
-
-    case _ =>
-      new CasClient(config.settings.securitySettings.casOppijaUrl,
+    case _ => new CasClient(config.settings.securitySettings.casOppijaUrl,
                             blaze.defaultClient,
                             AppConfig.callerId)
+  }
+
+  private def configureFakeCasOppijaClient: FakeCasClient = config match {
+    case _ =>
+      new FakeCasClient(config.settings.securitySettings.casOppijaUrl,
+        blaze.defaultClient,
+        AppConfig.callerId,
+        authenticationInfoService
+      )
   }
 
   lazy val springContext = new HakemusSpringContext(OmatSivutSpringContext.createApplicationContext(config))
@@ -177,7 +166,8 @@ class ComponentRegistry(val config: AppConfig)
   }
 
   val casVirkailijaClient: CasClient = configureCASVirkailijaClient
-  val casOppijaClient: CasClient = configureCASOppijaClient
+  val casOppijaClient = configureCASOppijaClient
+  val fakeCasOppijaClient = configureFakeCasOppijaClient
 
   val hakumaksuService: HakumaksuServiceWrapper = configureHakumaksuService
   val sendMailService: SendMailServiceWrapper = configureSendMailService
@@ -219,11 +209,18 @@ class ComponentRegistry(val config: AppConfig)
   def newApplicationsServlet = new ApplicationsServlet(config, sessionService)
   def newKoulutusServlet = new KoulutusServlet
   def newValintatulosServlet = new ValintatulosServlet(config, sessionService)
-  def newSecuredSessionServlet = new SecuredSessionServlet(config,
-                                                           authenticationInfoService,
-                                                           sessionService,
-                                                           config.settings.sessionTimeoutSeconds,
-                                                           casOppijaClient)
+  def newSecuredSessionServlet = config match {
+    case _: StubbedExternalDeps => new FakeSecuredSessionServlet(config,
+      authenticationInfoService,
+      sessionService,
+      config.settings.sessionTimeoutSeconds,
+      fakeCasOppijaClient)
+    case _ => new SecuredSessionServlet(config,
+      authenticationInfoService,
+      sessionService,
+      config.settings.sessionTimeoutSeconds,
+      casOppijaClient)
+  }
   def newSessionServlet = new SessionServlet()
   def newLogoutServlet = new LogoutServlet()
   def newFixtureServlet = new FixtureServlet(config)
