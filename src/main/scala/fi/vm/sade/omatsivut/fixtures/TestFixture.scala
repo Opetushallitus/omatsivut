@@ -23,6 +23,7 @@ object TestFixture {
   val applicationSystemKorkeakouluSyksy2014Oid = "1.2.246.562.29.173465377510"
   val testHetu =  "010100A939R"
   val testCASticket = "ST-1594876-vedmFL1ZxqTCUDclMRyk"
+  val displayName = "Erkki Esimerkki"
   val personOid =   "1.2.246.562.24.14229104472"
   val onrPerson = OnrHenkilo(
     123,

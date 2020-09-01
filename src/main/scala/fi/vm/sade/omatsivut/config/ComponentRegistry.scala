@@ -20,6 +20,7 @@ import fi.vm.sade.hakemuseditori.{HakemusEditoriComponent, RemoteSendMailService
 import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.omatsivut.config.AppConfig._
 import fi.vm.sade.omatsivut.db.impl.OmatsivutDb
+import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.omatsivut.fixtures.hakemus.ApplicationFixtureImporter
 import fi.vm.sade.omatsivut.hakemuspreview.HakemusPreviewGeneratorComponent
 import fi.vm.sade.omatsivut.localization.OmatSivutTranslations
@@ -160,7 +161,10 @@ class ComponentRegistry(val config: AppConfig)
 
       override def fetchCasSession(params: CasParams, sessionCookieName: String): Task[SessionCookie] = Task.now("keksi")
 
-      override def decodeOppijaAttributes: Response => Task[OppijaAttributes] = response => Task.now(Map("nationalIdentificationNumber" -> "010100A939R"))
+      override def decodeOppijaAttributes: Response => Task[OppijaAttributes] = response => Task.now(
+        Map("nationalIdentificationNumber" -> TestFixture.testHetu,
+            "personOid" -> TestFixture.personOid,
+            "displayName" -> TestFixture.displayName))
 
       override def decodeVirkailijaUsername: Response => Task[Username] = response => Task.now("frank-virkailija")
     }
