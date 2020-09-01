@@ -31,6 +31,14 @@ trait OmatsivutDbTools extends Specification {
     ).transactionally, Duration(20, TimeUnit.SECONDS))
   }
 
+  def setPersonIdToEmptyBySessionId(sessionIdString: String): Unit = {
+    singleConnectionOmatsivutDb.runBlocking(DBIO.seq(
+      sqlu"""update sessions
+                        set oppija_numero = ''
+                        where id = ${sessionIdString}::uuid"""
+    ).transactionally, Duration(20, TimeUnit.SECONDS))
+  }
+
   def getPersonFromSession(sessionId: String): Option[String] = getPersonFromSession(SessionId(UUID.fromString(sessionId)))
 
   def getPersonFromSession(sessionId: SessionId): Option[String] = {
