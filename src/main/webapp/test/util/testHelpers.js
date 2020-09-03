@@ -73,7 +73,7 @@ session = {
       if (lang) {
         langParam = "lang=" + lang
       }
-      var url = "/omatsivut/initsession?" + langParam;
+      var url = "/omatsivut/initsession?" + langParam + "&ticket=testiketti";
       var response = Q.defer();
       var request = new XMLHttpRequest();
       request.open('GET', url);

@@ -39,6 +39,7 @@ trait SecuredSessionServletContainer {
       ticket match {
         case None => BadRequest("No ticket found from CAS request" + clientAddress);
         case Some(ticket) => {
+          logger.debug("GOT TICKET FROM CAS")
           val attrs: Either[Throwable, OppijaAttributes] = casOppijaClient.validateServiceTicket(initsessionPath())(ticket, casOppijaClient.decodeOppijaAttributes).handleWith {
             case NonFatal(t) => Task.fail(new AuthenticationFailedException(s"Failed to validate service ticket $ticket", t))
           }.attemptRunFor(10000).toEither
@@ -48,6 +49,7 @@ trait SecuredSessionServletContainer {
               val hetu = attrs("nationalIdentificationNumber")
               val personOid = attrs.getOrElse("personOid", "")
               val displayName = attrs.getOrElse("displayName", "")
+              logger.debug("ATTRIBUTES:")
               initializeSessionAndRedirect(hetu, personOid, displayName)
             }
             case Left(t) => {

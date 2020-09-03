@@ -1,5 +1,6 @@
 package fi.vm.sade.omatsivut.config
 
+import fi.vm.sade.omatsivut.{OphUrlProperties, SessionFailure}
 import com.github.kagkarlsson.scheduler.Scheduler
 import fi.vm.sade.ataru.{AtaruService, AtaruServiceComponent}
 import fi.vm.sade.groupemailer.{GroupEmailComponent, GroupEmailService}
@@ -17,7 +18,6 @@ import fi.vm.sade.hakemuseditori.tarjonta.{TarjontaComponent, TarjontaService}
 import fi.vm.sade.hakemuseditori.valintatulokset._
 import fi.vm.sade.hakemuseditori.viestintapalvelu.{TuloskirjeComponent, TuloskirjeService}
 import fi.vm.sade.hakemuseditori.{HakemusEditoriComponent, RemoteSendMailServiceWrapper, SendMailServiceWrapper, StubbedSendMailServiceWrapper}
-import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.omatsivut.config.AppConfig._
 import fi.vm.sade.omatsivut.db.impl.OmatsivutDb
 import fi.vm.sade.omatsivut.fixtures.TestFixture
@@ -27,6 +27,7 @@ import fi.vm.sade.omatsivut.localization.OmatSivutTranslations
 import fi.vm.sade.omatsivut.muistilista.MuistilistaServiceComponent
 import fi.vm.sade.omatsivut.oppijantunnistus.{OppijanTunnistusComponent, OppijanTunnistusService, RemoteOppijanTunnistusService, StubbedOppijanTunnistusService}
 import fi.vm.sade.omatsivut.security._
+import fi.vm.sade.omatsivut.security.fake.FakeCasClient
 import fi.vm.sade.omatsivut.servlet._
 import fi.vm.sade.omatsivut.servlet.session.{LogoutServletContainer, SecuredSessionServletContainer, SessionServlet}
 import fi.vm.sade.omatsivut.vastaanotto.VastaanottoComponent
@@ -153,21 +154,9 @@ class ComponentRegistry(val config: AppConfig)
 
   private def configureCASOppijaClient: CasClient = config match {
     case _: StubbedExternalDeps =>
-      new CasClient(config.settings.securitySettings.casOppijaUrl,
-                                blaze.defaultClient,
-                                AppConfig.callerId) {
-      override def validateServiceTicket[R](service: String)(serviceTicket: ServiceTicket, responseHandler: Response => Task[R]): Task[R] =
-        responseHandler(Ok("Tämä olis OK-ticketvalidointivastaus").unsafePerformSync)
-
-      override def fetchCasSession(params: CasParams, sessionCookieName: String): Task[SessionCookie] = Task.now("keksi")
-
-      override def decodeOppijaAttributes: Response => Task[OppijaAttributes] = response => Task.now(
-        Map("nationalIdentificationNumber" -> TestFixture.testHetu,
-            "personOid" -> TestFixture.personOid,
-            "displayName" -> TestFixture.displayName))
-
-      override def decodeVirkailijaUsername: Response => Task[Username] = response => Task.now("frank-virkailija")
-    }
+      new FakeCasClient(config.settings.securitySettings.casOppijaUrl,
+        blaze.defaultClient,
+        AppConfig.callerId)
 
     case _ =>
       new CasClient(config.settings.securitySettings.casOppijaUrl,

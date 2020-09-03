@@ -132,7 +132,7 @@
       })
     })
   })
-
+/*
   describe('Hakemuslistaus', function () {
     before(session.init("010100A939R","fi"))
 
@@ -2807,7 +2807,7 @@
       })
     });
   });
-
+*/
   function replacePreference(hakemus, index, searchString, koulutusIndex) {
     koulutusIndex = koulutusIndex || 1;
     return function() {
