@@ -21,6 +21,8 @@ class OmatSivutMochaTest extends Specification {
 
   "Mocha tests" in {
     val pb: Seq[String] = Seq("node_modules/mocha-headless-chrome/bin/start",
+      "-v",
+      "visible-true",
       "-a",
       "window-size=2560,1440",
       "-a",

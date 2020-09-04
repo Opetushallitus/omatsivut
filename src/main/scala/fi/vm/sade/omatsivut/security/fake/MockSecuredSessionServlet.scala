@@ -1,47 +1,37 @@
-package fi.vm.sade.omatsivut.servlet.session
-
-import java.nio.charset.Charset
-import java.util.concurrent.TimeUnit
+package fi.vm.sade.omatsivut.security.fake
 
 import fi.vm.sade.hakemuseditori.auditlog.Audit
-import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.omatsivut.auditlog.Login
-import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
-import fi.vm.sade.omatsivut.security._
+import fi.vm.sade.omatsivut.security.{AttributeNames, AuthenticationFailedException, AuthenticationInfoService, Hetu, OppijaNumero, SessionService}
 import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
-import fi.vm.sade.utils.cas.CasClient.{OppijaAttributes, Username, textOrXmlDecoder}
+import fi.vm.sade.omatsivut.servlet.session.OmatsivutPaths
+import fi.vm.sade.utils.cas.CasClient
+import fi.vm.sade.utils.cas.CasClient.OppijaAttributes
 import fi.vm.sade.utils.slf4j.Logging
 import org.scalatra.{BadRequest, Cookie, CookieOptions}
-import fi.vm.sade.utils.cas.{CasAuthenticatingClient, CasClient, CasClientException, CasParams, FetchHelper}
-import org.http4s.{DecodeResult, InvalidMessageBodyFailure, Response, Uri}
-import org.http4s.client.blaze
-import org.http4s.dsl.GET
 import scalaz.concurrent.Task
 
-import scala.concurrent.duration.Duration
 import scala.util.control.NonFatal
-import scala.xml.{NodeSeq, Utility}
 
-trait SecuredSessionServletContainer {
-  class SecuredSessionServlet(val appConfig: AppConfig,
-                              val authenticationInfoService: AuthenticationInfoService,
-                              implicit val sessionService: SessionService,
-                              val sessionTimeout: Option[Int] = None,
-                              val casOppijaClient: CasClient)
+trait MockSecuredSessionServletContainer {
+  class MockSecuredSessionServlet(val appConfig: AppConfig,
+                                  val authenticationInfoService: AuthenticationInfoService,
+                                  implicit val sessionService: SessionService,
+                                  val sessionTimeout: Option[Int] = None,
+                                  val fakeCasOppijaClient: FakeCasClient)
     extends OmatSivutServletBase with AttributeNames with OmatsivutPaths with Logging {
 
     get("/") {
       logger.debug("initsession CAS request received")
       logger.debug("hetuHeader:" + request.getHeader("hetu"))
-
+val hetu: String = request.getHeader("hetu")
       val ticket: Option[CasClient.ServiceTicket] = Option(request.getParameter("ticket"))
-
       ticket match {
         case None => BadRequest("No ticket found from CAS request" + clientAddress);
         case Some(ticket) => {
           logger.debug("GOT TICKET FROM CAS")
-          val attrs: Either[Throwable, OppijaAttributes] = casOppijaClient.validateServiceTicket(initsessionPath())(ticket, casOppijaClient.decodeOppijaAttributes).handleWith {
+          val attrs: Either[Throwable, OppijaAttributes] = fakeCasOppijaClient.validateServiceTicket(initsessionPath())(ticket, fakeCasOppijaClient.decodeOppijaAttributes(hetu)).handleWith {
             case NonFatal(t) => Task.fail(new AuthenticationFailedException(s"Failed to validate service ticket $ticket", t))
           }.attemptRunFor(10000).toEither
           logger.debug(s"attrs response: $attrs")
@@ -79,11 +69,11 @@ trait SecuredSessionServletContainer {
     }
 
     private def clientAddress = " [" + request.getRemoteAddr + "]"
-
     private def redirectUri: String = {
       val link = omatsivutPath(request.getContextPath) + paramOption("redirect").getOrElse("/index.html")
       logger.debug("Link to forward to, after a session is established: " + link)
       link
     }
   }
+
 }
