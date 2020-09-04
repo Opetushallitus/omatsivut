@@ -20,14 +20,13 @@ import fi.vm.sade.hakemuseditori.viestintapalvelu.{TuloskirjeComponent, Tuloskir
 import fi.vm.sade.hakemuseditori.{HakemusEditoriComponent, RemoteSendMailServiceWrapper, SendMailServiceWrapper, StubbedSendMailServiceWrapper}
 import fi.vm.sade.omatsivut.config.AppConfig._
 import fi.vm.sade.omatsivut.db.impl.OmatsivutDb
-import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.omatsivut.fixtures.hakemus.ApplicationFixtureImporter
 import fi.vm.sade.omatsivut.hakemuspreview.HakemusPreviewGeneratorComponent
 import fi.vm.sade.omatsivut.localization.OmatSivutTranslations
 import fi.vm.sade.omatsivut.muistilista.MuistilistaServiceComponent
 import fi.vm.sade.omatsivut.oppijantunnistus.{OppijanTunnistusComponent, OppijanTunnistusService, RemoteOppijanTunnistusService, StubbedOppijanTunnistusService}
 import fi.vm.sade.omatsivut.security._
-import fi.vm.sade.omatsivut.security.fake.FakeCasClient
+import fi.vm.sade.omatsivut.security.fake.{FakeCasClient, MockSecuredSessionServletContainer}
 import fi.vm.sade.omatsivut.servlet._
 import fi.vm.sade.omatsivut.servlet.session.{LogoutServletContainer, SecuredSessionServletContainer, SessionServlet}
 import fi.vm.sade.omatsivut.vastaanotto.VastaanottoComponent
@@ -66,6 +65,7 @@ class ComponentRegistry(val config: AppConfig)
           CaptchaServiceComponent with
           KoulutusServletContainer with
           SecuredSessionServletContainer with
+          MockSecuredSessionServletContainer with
           LogoutServletContainer with
           FixtureServletContainer with
           KoodistoServletContainer with
@@ -153,15 +153,20 @@ class ComponentRegistry(val config: AppConfig)
   }
 
   private def configureCASOppijaClient: CasClient = config match {
-    case _: StubbedExternalDeps =>
-      new FakeCasClient(config.settings.securitySettings.casOppijaUrl,
-        blaze.defaultClient,
-        AppConfig.callerId)
-
     case _ =>
       new CasClient(config.settings.securitySettings.casOppijaUrl,
                             blaze.defaultClient,
                             AppConfig.callerId)
+  }
+
+  private def configureFakeCasOppijaClient: FakeCasClient = config match {
+    //case _: StubbedExternalDeps =>
+    case _ =>
+      new FakeCasClient(config.settings.securitySettings.casOppijaUrl,
+        blaze.defaultClient,
+        AppConfig.callerId,
+        authenticationInfoService
+      )
   }
 
   lazy val springContext = new HakemusSpringContext(OmatSivutSpringContext.createApplicationContext(config))
@@ -170,7 +175,8 @@ class ComponentRegistry(val config: AppConfig)
   }
 
   val casVirkailijaClient: CasClient = configureCASVirkailijaClient
-  val casOppijaClient: CasClient = configureCASOppijaClient
+  val casOppijaClient = configureCASOppijaClient
+  val fakeCasOppijaClient = configureFakeCasOppijaClient
 
   val hakumaksuService: HakumaksuServiceWrapper = configureHakumaksuService
   val sendMailService: SendMailServiceWrapper = configureSendMailService
@@ -212,11 +218,24 @@ class ComponentRegistry(val config: AppConfig)
   def newApplicationsServlet = new ApplicationsServlet(config, sessionService)
   def newKoulutusServlet = new KoulutusServlet
   def newValintatulosServlet = new ValintatulosServlet(config, sessionService)
-  def newSecuredSessionServlet = new SecuredSessionServlet(config,
-                                                           authenticationInfoService,
-                                                           sessionService,
-                                                           config.settings.sessionTimeoutSeconds,
-                                                           casOppijaClient)
+//  def newSecuredSessionServlet = new SecuredSessionServlet(config,
+//                                                           authenticationInfoService,
+//                                                           sessionService,
+//                                                           config.settings.sessionTimeoutSeconds,
+//                                                           casOppijaClient)
+
+  def newSecuredSessionServlet = config match {
+    case _: StubbedExternalDeps => new MockSecuredSessionServlet(config,
+      authenticationInfoService,
+      sessionService,
+      config.settings.sessionTimeoutSeconds,
+      fakeCasOppijaClient)
+    case _ => new SecuredSessionServlet(config,
+      authenticationInfoService,
+      sessionService,
+      config.settings.sessionTimeoutSeconds,
+      casOppijaClient)
+  }
   def newSessionServlet = new SessionServlet()
   def newLogoutServlet = new LogoutServlet()
   def newFixtureServlet = new FixtureServlet(config)
