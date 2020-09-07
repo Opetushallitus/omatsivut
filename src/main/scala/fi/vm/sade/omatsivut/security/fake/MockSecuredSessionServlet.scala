@@ -24,8 +24,7 @@ trait MockSecuredSessionServletContainer {
 
     get("/") {
       logger.debug("initsession CAS request received")
-      logger.debug("hetuHeader:" + request.getHeader("hetu"))
-val hetu: String = request.getHeader("hetu")
+      val hetu: String = request.getHeader("hetu")
       val ticket: Option[CasClient.ServiceTicket] = Option(request.getParameter("ticket"))
       ticket match {
         case None => BadRequest("No ticket found from CAS request" + clientAddress);
@@ -34,7 +33,6 @@ val hetu: String = request.getHeader("hetu")
           val attrs: Either[Throwable, OppijaAttributes] = fakeCasOppijaClient.validateServiceTicket(initsessionPath())(ticket, fakeCasOppijaClient.decodeOppijaAttributes(hetu)).handleWith {
             case NonFatal(t) => Task.fail(new AuthenticationFailedException(s"Failed to validate service ticket $ticket", t))
           }.attemptRunFor(10000).toEither
-          logger.debug(s"attrs response: $attrs")
           attrs match {
             case Right(attrs) => {
               val hetu = attrs("nationalIdentificationNumber")
@@ -75,5 +73,4 @@ val hetu: String = request.getHeader("hetu")
       link
     }
   }
-
 }
