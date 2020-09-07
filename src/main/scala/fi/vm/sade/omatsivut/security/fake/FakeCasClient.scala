@@ -15,30 +15,22 @@ class FakeCasClient(casBaseUrl: String, client: Client, callerId: String, authen
     responseHandler(Ok("Tämä olis OK-ticketvalidointivastaus").unsafePerformSync)
 
   override def fetchCasSession(params: CasParams, sessionCookieName: String): Task[SessionCookie] = {
-    //logger.debug(params)
-
     Task.now("keksi")
   }
 
   def decodeOppijaAttributes(hetu: String): Response => Task[OppijaAttributes] = response => Task.now {
-
     val oidPerson = authenticationInfoService.getOnrHenkilo(hetu)
     oidPerson match {
-      case None => {
-        throw new RuntimeException
-        Map()
-      }
-      case Some(x) => {
-
+      case Some(x) =>
         Map("nationalIdentificationNumber" -> oidPerson.get.hetu,
           "personOid" -> oidPerson.get.oidHenkilo,
           "displayName" -> (oidPerson.get.kutsumanimi + " " + oidPerson.get.sukunimi))
-      }
-
+      case None =>
+        Map("nationalIdentificationNumber" -> TestFixture.testHetu,
+          "personOid" -> TestFixture.personOid,
+          "displayName" -> TestFixture.displayName)
     }
   }
 
   override def decodeVirkailijaUsername: Response => Task[Username] = response => Task.now("frank-virkailija")
 }
-
-

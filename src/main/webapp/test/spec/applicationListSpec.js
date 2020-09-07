@@ -55,7 +55,6 @@
       })
     })
   })
-  /*
     describe('Kun käyttäjän oid puuttuu', function () {
       function infoBoxIsVisible() {
         return S(".info").is(":visible")
@@ -2807,7 +2806,7 @@
         })
       });
     });
-  */
+
   function replacePreference(hakemus, index, searchString, koulutusIndex) {
     koulutusIndex = koulutusIndex || 1;
     return function() {

@@ -10,7 +10,7 @@
       takeScreenshot()
     }
   })
-/*
+
   describe("Hakutoiveiden muokkaus väärällä tokenilla", function() {
     before(
       page.openPage("väärä")
@@ -222,5 +222,4 @@
       })
     })
   })
-  */
 })()
