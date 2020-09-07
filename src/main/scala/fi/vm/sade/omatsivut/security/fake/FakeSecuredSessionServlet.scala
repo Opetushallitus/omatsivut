@@ -14,8 +14,8 @@ import scalaz.concurrent.Task
 
 import scala.util.control.NonFatal
 
-trait MockSecuredSessionServletContainer {
-  class MockSecuredSessionServlet(val appConfig: AppConfig,
+trait FakeSecuredSessionServletContainer {
+  class FakeSecuredSessionServlet(val appConfig: AppConfig,
                                   val authenticationInfoService: AuthenticationInfoService,
                                   implicit val sessionService: SessionService,
                                   val sessionTimeout: Option[Int] = None,

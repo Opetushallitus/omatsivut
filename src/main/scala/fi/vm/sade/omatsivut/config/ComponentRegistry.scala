@@ -26,7 +26,7 @@ import fi.vm.sade.omatsivut.localization.OmatSivutTranslations
 import fi.vm.sade.omatsivut.muistilista.MuistilistaServiceComponent
 import fi.vm.sade.omatsivut.oppijantunnistus.{OppijanTunnistusComponent, OppijanTunnistusService, RemoteOppijanTunnistusService, StubbedOppijanTunnistusService}
 import fi.vm.sade.omatsivut.security._
-import fi.vm.sade.omatsivut.security.fake.{FakeCasClient, MockSecuredSessionServletContainer}
+import fi.vm.sade.omatsivut.security.fake.{FakeCasClient, FakeSecuredSessionServletContainer}
 import fi.vm.sade.omatsivut.servlet._
 import fi.vm.sade.omatsivut.servlet.session.{LogoutServletContainer, SecuredSessionServletContainer, SessionServlet}
 import fi.vm.sade.omatsivut.vastaanotto.VastaanottoComponent
@@ -65,7 +65,7 @@ class ComponentRegistry(val config: AppConfig)
           CaptchaServiceComponent with
           KoulutusServletContainer with
           SecuredSessionServletContainer with
-          MockSecuredSessionServletContainer with
+          FakeSecuredSessionServletContainer with
           LogoutServletContainer with
           FixtureServletContainer with
           KoodistoServletContainer with
@@ -160,7 +160,6 @@ class ComponentRegistry(val config: AppConfig)
   }
 
   private def configureFakeCasOppijaClient: FakeCasClient = config match {
-    //case _: StubbedExternalDeps =>
     case _ =>
       new FakeCasClient(config.settings.securitySettings.casOppijaUrl,
         blaze.defaultClient,
@@ -218,14 +217,9 @@ class ComponentRegistry(val config: AppConfig)
   def newApplicationsServlet = new ApplicationsServlet(config, sessionService)
   def newKoulutusServlet = new KoulutusServlet
   def newValintatulosServlet = new ValintatulosServlet(config, sessionService)
-//  def newSecuredSessionServlet = new SecuredSessionServlet(config,
-//                                                           authenticationInfoService,
-//                                                           sessionService,
-//                                                           config.settings.sessionTimeoutSeconds,
-//                                                           casOppijaClient)
 
   def newSecuredSessionServlet = config match {
-    case _: StubbedExternalDeps => new MockSecuredSessionServlet(config,
+    case _: StubbedExternalDeps => new FakeSecuredSessionServlet(config,
       authenticationInfoService,
       sessionService,
       config.settings.sessionTimeoutSeconds,
