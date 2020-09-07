@@ -1,27 +1,17 @@
 package fi.vm.sade.omatsivut.servlet.session
 
-import java.nio.charset.Charset
-import java.util.concurrent.TimeUnit
-
 import fi.vm.sade.hakemuseditori.auditlog.Audit
-import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.omatsivut.auditlog.Login
-import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.security._
 import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
-import fi.vm.sade.utils.cas.CasClient.{OppijaAttributes, Username, textOrXmlDecoder}
+import fi.vm.sade.utils.cas.CasClient.OppijaAttributes
 import fi.vm.sade.utils.slf4j.Logging
 import org.scalatra.{BadRequest, Cookie, CookieOptions}
-import fi.vm.sade.utils.cas.{CasAuthenticatingClient, CasClient, CasClientException, CasParams, FetchHelper}
-import org.http4s.{DecodeResult, InvalidMessageBodyFailure, Response, Uri}
-import org.http4s.client.blaze
-import org.http4s.dsl.GET
+import fi.vm.sade.utils.cas.CasClient
 import scalaz.concurrent.Task
 
-import scala.concurrent.duration.Duration
 import scala.util.control.NonFatal
-import scala.xml.{NodeSeq, Utility}
 
 trait SecuredSessionServletContainer {
   class SecuredSessionServlet(val appConfig: AppConfig,
@@ -33,14 +23,12 @@ trait SecuredSessionServletContainer {
 
     get("/") {
       logger.debug("initsession CAS request received")
-      logger.debug("hetuHeader:" + request.getHeader("hetu"))
 
       val ticket: Option[CasClient.ServiceTicket] = Option(request.getParameter("ticket"))
 
       ticket match {
         case None => BadRequest("No ticket found from CAS request" + clientAddress);
         case Some(ticket) => {
-          logger.debug("GOT TICKET FROM CAS")
           val attrs: Either[Throwable, OppijaAttributes] = casOppijaClient.validateServiceTicket(initsessionPath())(ticket, casOppijaClient.decodeOppijaAttributes).handleWith {
             case NonFatal(t) => Task.fail(new AuthenticationFailedException(s"Failed to validate service ticket $ticket", t))
           }.attemptRunFor(10000).toEither
@@ -50,7 +38,6 @@ trait SecuredSessionServletContainer {
               val hetu = attrs("nationalIdentificationNumber")
               val personOid = attrs.getOrElse("personOid", "")
               val displayName = attrs.getOrElse("displayName", "")
-              logger.debug("ATTRIBUTES:")
               initializeSessionAndRedirect(hetu, personOid, displayName)
             }
             case Left(t) => {
