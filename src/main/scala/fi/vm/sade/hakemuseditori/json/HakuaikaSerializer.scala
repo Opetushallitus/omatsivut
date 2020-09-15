@@ -19,7 +19,7 @@ class HakuSerializer extends CustomSerializer[Haku](format => (
   },
   {
     case x: Haku =>
-      JsonProcessor.serializeWithField(x, JField("active", JBool(x.active)))
+      Extraction.decompose(x)(DefaultFormats ++ List(new HakuaikaSerializer))
   }
 ))
 
