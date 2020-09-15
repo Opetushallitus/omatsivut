@@ -45,7 +45,7 @@
             {{ localization('label.applicationRoundEnded') }}
         </div>
 
-        <div class="application-status-item" ng-if="application.haku.active && (application.state.id == 'POSTPROCESSING' || application.state.id == 'SUBMITTED')">
+        <div class="application-status-item" ng-if="application.state.id == 'POSTPROCESSING' || application.state.id == 'SUBMITTED'">
             {{ localization("message.applicationIsInPostProcessing") }}
         </div>
 
