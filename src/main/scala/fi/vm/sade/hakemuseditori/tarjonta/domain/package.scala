@@ -2,6 +2,7 @@ package fi.vm.sade.hakemuseditori.tarjonta.domain
 
 import java.util.Date
 
+import fi.vm.sade.hakemuseditori.hakemus.domain.Hakutoive
 import fi.vm.sade.hakemuseditori.ohjausparametrit.domain.HaunAikataulu
 import fi.vm.sade.haku.oppija.lomake.domain.ApplicationPeriod
 import org.joda.time.{Interval, LocalDateTime}
@@ -23,12 +24,6 @@ case class Hakuaika(id: String, start: Long, end: Long) {
   }
 }
 
-object Hakuaika {
-  def anyApplicationPeriodEnded(haku: Haku, hakukohdekohtaisetHakuajat: List[Option[KohteenHakuaika]], now: Long): Boolean = {
-    haku.applicationPeriods.exists(_.end < now) || hakukohdekohtaisetHakuajat.exists(_.exists(_.end < now))
-  }
-}
-
 case class Hakukohde(oid: String, hakuaikaId: Option[String], koulutuksenAlkaminen: Option[KoulutuksenAlkaminen],
                      kohteenHakuaika: Option[KohteenHakuaika], ohjeetUudelleOpiskelijalle: Option[String])
 
@@ -39,6 +34,16 @@ case class KohteenHakuaika(start: Long, end: Long) {
 }
 
 object KohteenHakuaika {
+  def hakuaikaEnded(haku: Haku, hakukohde: Hakukohde, now: Long): Boolean = {
+    hakukohde.hakuaikaId
+      .map(id => haku.applicationPeriods.exists(hakuaika => hakuaika.id == id && hakuaika.ended(now)))
+      .getOrElse(hakukohde.kohteenHakuaika.exists(_.ended(now)))
+  }
+  def hakuaikaEnded(haku: Haku, hakutoive: Hakutoive, now: Long): Boolean = {
+    hakutoive.hakuaikaId
+      .map(id => haku.applicationPeriods.exists(hakuaika => hakuaika.id == id && hakuaika.ended(now)))
+      .getOrElse(hakutoive.kohdekohtainenHakuaika.exists(_.ended(now)))
+  }
   def active(haku: Haku, hakukohde: Hakukohde, now: Long): Boolean = {
     hakukohde.hakuaikaId
       .map(id => haku.applicationPeriods.exists(hakuaika => hakuaika.id == id && hakuaika.active(now)))

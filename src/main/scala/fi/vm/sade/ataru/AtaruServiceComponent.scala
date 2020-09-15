@@ -10,7 +10,7 @@ import fi.vm.sade.hakemuseditori.hakemus.domain.{Active, EducationBackground, Ha
 import fi.vm.sade.hakemuseditori.lomake.LomakeRepositoryComponent
 import fi.vm.sade.hakemuseditori.oppijanumerorekisteri.OppijanumerorekisteriComponent
 import fi.vm.sade.hakemuseditori.tarjonta.TarjontaComponent
-import fi.vm.sade.hakemuseditori.tarjonta.domain.{Haku, Hakuaika, Hakukohde}
+import fi.vm.sade.hakemuseditori.tarjonta.domain.{Haku, Hakukohde, KohteenHakuaika}
 import fi.vm.sade.hakemuseditori.valintatulokset.ValintatulosServiceComponent
 import fi.vm.sade.hakemuseditori.viestintapalvelu.{Pdf, TuloskirjeComponent}
 import fi.vm.sade.omatsivut.OphUrlProperties
@@ -112,10 +112,10 @@ trait AtaruServiceComponent  {
                       hakukohteet: List[Hakukohde],
                       application: AtaruApplication,
                       valintatulos: Option[Hakemus.Valintatulos]): HakemuksenTila = {
-      if (Hakuaika.anyApplicationPeriodEnded(haku, hakukohteet.map(_.kohteenHakuaika), now)) {
+      if (hakukohteet.exists(KohteenHakuaika.hakuaikaEnded(haku, _, now))) {
         if (haku.aikataulu.exists(_.hakukierrosPaattyy.exists(_ < now))) {
           HakukierrosPaattynyt(valintatulos = valintatulos)
-        } else if (!haku.active) {
+        } else if (hakukohteet.forall(KohteenHakuaika.hakuaikaEnded(haku, _, now))) {
           HakukausiPaattynyt(valintatulos = valintatulos)
         } else {
           Active(valintatulos = valintatulos)
