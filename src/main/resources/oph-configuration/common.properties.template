@@ -161,6 +161,7 @@ ryhmasahkoposti.rest.url=https://{{host_virkailija}}/ryhmasahkoposti-service/ema
 muistilista.url=https://{{host_oppija}}/app/#!/muistilista
 recaptcha.verify.url={{recaptcha_verify_url}}
 recaptcha.secret={{recaptcha_secret}}
+recaptcha.caller.id=omatsivut
 
 # VETUMA
 omatsivut.vetuma.url={{omatsivut_vetuma_url}}
