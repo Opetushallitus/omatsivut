@@ -69,7 +69,7 @@ trait TarjontaComponent {
 
     private def changeKohteenHakuaika(haku: Option[Haku], aika: KohteenHakuaika): KohteenHakuaika = {
       haku match {
-        case Some(h) => KohteenHakuaika(changeTimestamp(h, aika.start), changeTimestamp(h, aika.end))
+        case Some(h) => KohteenHakuaika(changeTimestamp(h, aika.start), aika.end.map(changeTimestamp(h, _)))
         case _ => aika
       }
     }
@@ -101,7 +101,7 @@ trait TarjontaComponent {
 
     private def changeHakuajat(haku: Haku) = {
       haku.applicationPeriods.map { aika =>
-        aika.copy(start = changeTimestamp(haku, aika.start), end = changeTimestamp(haku, aika.end))
+        aika.copy(start = changeTimestamp(haku, aika.start), end = aika.end.map(changeTimestamp(haku, _)))
       }
     }
 

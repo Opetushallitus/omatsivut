@@ -2,7 +2,7 @@ package fi.vm.sade.hakemuseditori.tarjonta.vanha
 
 import fi.vm.sade.hakemuseditori.tarjonta.domain.Hakuaika
 
-sealed case class TarjontaHakuaika(hakuaikaId: String, alkuPvm: Long, loppuPvm: Long)
+sealed case class TarjontaHakuaika(hakuaikaId: String, alkuPvm: Long, loppuPvm: Option[Long])
 
 object TarjontaHakuaika {
   def toHakuaika(tarjontaHakuaika: TarjontaHakuaika): Hakuaika = {

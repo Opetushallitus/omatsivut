@@ -14,20 +14,20 @@ case class Haku(oid: String, published: Boolean, name: String, applicationPeriod
   def hakukierrosvoimassa: Boolean = new LocalDateTime().isBefore(aikataulu.flatMap(_.hakukierrosPaattyy).map(new LocalDateTime(_: Long)).getOrElse(new LocalDateTime().minusYears(100)))
 }
 
-case class Hakuaika(id: String, start: Long, end: Long) {
-  def ended(now: Long): Boolean = end <= now
+case class Hakuaika(id: String, start: Long, end: Option[Long]) {
+  def ended(now: Long): Boolean = end.exists(_ <= now)
   def active(now: Long): Boolean = start <= now && !ended(now)
   def active: Boolean = active(LocalDateTime.now().toDate.getTime)
   def toApplicationPeriod: ApplicationPeriod = {
-    new ApplicationPeriod(new Date(start), new Date(end))
+    new ApplicationPeriod(new Date(start), end.map(new Date(_)).orNull)
   }
 }
 
 case class Hakukohde(oid: String, hakuaikaId: Option[String], koulutuksenAlkaminen: Option[KoulutuksenAlkaminen],
                      kohteenHakuaika: Option[KohteenHakuaika], ohjeetUudelleOpiskelijalle: Option[String])
 
-case class KohteenHakuaika(start: Long, end: Long) {
-  def ended(now: Long): Boolean = end <= now
+case class KohteenHakuaika(start: Long, end: Option[Long]) {
+  def ended(now: Long): Boolean = end.exists(_ <= now)
   def active(now: Long): Boolean = start <= now && !ended(now)
   def active: Boolean = active(LocalDateTime.now().toDate.getTime)
 }

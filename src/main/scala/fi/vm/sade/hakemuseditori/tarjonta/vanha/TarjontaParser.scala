@@ -30,7 +30,7 @@ object TarjontaParser extends JsonFormats with Logging {
 
   private def createHakuaika(hakuaikaAlkuPvm: Option[Long], hakuaikaLoppuPvm: Option[Long]) : Option[KohteenHakuaika] = {
     (hakuaikaAlkuPvm, hakuaikaLoppuPvm) match {
-      case (Some(a), Some(l)) => Some(KohteenHakuaika(a, l))
+      case (Some(a), l) => Some(KohteenHakuaika(a, l))
       case _ => None
     }
   }
