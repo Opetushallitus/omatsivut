@@ -43,6 +43,9 @@ class KohteenHakuaikaSerializer extends CustomSerializer[KohteenHakuaika](format
   },
   {
     case x: KohteenHakuaika =>
-      JsonProcessor.serializeWithField(x, JField("active", JBool(x.active)))
+      JObject(
+        JField("start", JInt(BigInt(x.start))),
+        JField("end", JInt(BigInt(x.end))),
+        JField("active", JBool(x.active)))
   }
 ))

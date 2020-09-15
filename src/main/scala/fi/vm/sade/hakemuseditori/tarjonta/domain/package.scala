@@ -15,7 +15,9 @@ case class Haku(oid: String, published: Boolean, name: String, applicationPeriod
 }
 
 case class Hakuaika(id: String, start: Long, end: Long) {
-  def active = new Interval(start, end).containsNow()
+  def ended(now: Long): Boolean = end <= now
+  def active(now: Long): Boolean = start <= now && !ended(now)
+  def active: Boolean = active(LocalDateTime.now().toDate.getTime)
   def toApplicationPeriod: ApplicationPeriod = {
     new ApplicationPeriod(new Date(start), new Date(end))
   }
@@ -31,7 +33,17 @@ case class Hakukohde(oid: String, hakuaikaId: Option[String], koulutuksenAlkamin
                      kohteenHakuaika: Option[KohteenHakuaika], ohjeetUudelleOpiskelijalle: Option[String])
 
 case class KohteenHakuaika(start: Long, end: Long) {
-  def active = new Interval(start, end).containsNow()
+  def ended(now: Long): Boolean = end <= now
+  def active(now: Long): Boolean = start <= now && !ended(now)
+  def active: Boolean = active(LocalDateTime.now().toDate.getTime)
+}
+
+object KohteenHakuaika {
+  def active(haku: Haku, hakukohde: Hakukohde, now: Long): Boolean = {
+    hakukohde.hakuaikaId
+      .map(id => haku.applicationPeriods.exists(hakuaika => hakuaika.id == id && hakuaika.active(now)))
+      .getOrElse(hakukohde.kohteenHakuaika.exists(_.active(now)))
+  }
 }
 
 case class KoulutuksenAlkaminen(vuosi: Long, kausiUri: String)
