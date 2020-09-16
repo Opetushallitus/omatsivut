@@ -192,7 +192,7 @@
       },
       "tarjoajaOids": ["1.2.246.562.10.22242122111"],
       "hakuOid": "1.2.246.562.5.2014020613412490531399",
-      "hakuaikaId": "5474",
+      "hakuaikaId": null,
       "hakukelpoisuusvaatimusUris": ["hakukelpoisuusvaatimusta_1#1"],
       "hakukohdeKoulutusOids": ["1.2.246.562.17.774678456310"],
       "hakuaikaAlkuPvm": 1404290831839,
@@ -223,7 +223,7 @@
       },
       "kaytetaanJarjestelmanValintaPalvelua": false,
       "kaytetaanHaunPaattymisenAikaa": false,
-      "kaytetaanHakukohdekohtaistaHakuaikaa": false,
+      "kaytetaanHakukohdekohtaistaHakuaikaa": true,
       "hakukohteenLiitteet": [
         {
           "oid": "203334",
@@ -1803,7 +1803,7 @@
       },
       "tarjoajaOids": ["1.2.246.562.10.81044480515"],
       "hakuOid": "1.2.246.562.5.2013112910452702965370",
-      "hakuaikaId": "164630",
+      "hakuaikaId": null,
       "hakukelpoisuusvaatimusUris": [],
       "hakukohdeKoulutusOids": ["1.2.246.562.5.2014022408400819838751"],
       "hakuaikaAlkuPvm": 1392360165561,
@@ -1830,7 +1830,7 @@
       "aloituspaikatKuvaukset": {},
       "kaytetaanJarjestelmanValintaPalvelua": false,
       "kaytetaanHaunPaattymisenAikaa": false,
-      "kaytetaanHakukohdekohtaistaHakuaikaa": false,
+      "kaytetaanHakukohdekohtaistaHakuaikaa": true,
       "hakukohteenLiitteet": [],
       "liitteidenToimitusOsoite": {
         "version": 0,
@@ -1864,7 +1864,7 @@
       },
       "tarjoajaOids": ["1.2.246.562.10.36082741939"],
       "hakuOid": "1.2.246.562.5.2013112910452702965370",
-      "hakuaikaId": "164630",
+      "hakuaikaId": null,
       "hakukelpoisuusvaatimusUris": [],
       "hakukohdeKoulutusOids": ["1.2.246.562.5.2013091113203335212546"],
       "hakuaikaAlkuPvm": 1389564000000,
@@ -1891,7 +1891,7 @@
       "aloituspaikatKuvaukset": {},
       "kaytetaanJarjestelmanValintaPalvelua": false,
       "kaytetaanHaunPaattymisenAikaa": false,
-      "kaytetaanHakukohdekohtaistaHakuaikaa": false,
+      "kaytetaanHakukohdekohtaistaHakuaikaa": true,
       "hakukohteenLiitteet": [
         {
           "oid": "188678",
@@ -2021,7 +2021,7 @@
       },
       "tarjoajaOids": ["1.2.246.562.10.19001332592"],
       "hakuOid": "1.2.246.562.5.2013112910452702965370",
-      "hakuaikaId": "164630",
+      "hakuaikaId": null,
       "hakukelpoisuusvaatimusUris": [],
       "hakukohdeKoulutusOids": ["1.2.246.562.5.2013091114430026659428"],
       "hakuaikaAlkuPvm": 1389564000000,
@@ -2052,7 +2052,7 @@
       "aloituspaikatKuvaukset": {},
       "kaytetaanJarjestelmanValintaPalvelua": false,
       "kaytetaanHaunPaattymisenAikaa": false,
-      "kaytetaanHakukohdekohtaistaHakuaikaa": false,
+      "kaytetaanHakukohdekohtaistaHakuaikaa": true,
       "hakukohteenLiitteet": [
         {
           "oid": "188858",
