@@ -864,6 +864,7 @@
       },
       "tarjoajaOids": ["1.2.246.562.10.2014050812360137079853"],
       "hakuOid": "1.2.246.562.29.173465377510",
+      "hakuaikaId": "5474",
       "hakukelpoisuusvaatimusUris": ["pohjakoulutusvaatimuskorkeakoulut_100"],
       "hakukohdeKoulutusOids": ["1.2.246.562.17.74724084582"],
       "alinHyvaksyttavaKeskiarvo": 0.0,
@@ -999,6 +1000,7 @@
       },
       "tarjoajaOids": ["1.2.246.562.10.94639300915"],
       "hakuOid": "1.2.246.562.29.173465377510",
+      "hakuaikaId": "5474",
       "hakukelpoisuusvaatimusUris": [
         "pohjakoulutusvaatimuskorkeakoulut_109",
         "pohjakoulutusvaatimuskorkeakoulut_110",
@@ -1165,6 +1167,7 @@
       },
       "tarjoajaOids": ["1.2.246.562.10.14842710486"],
       "hakuOid": "1.2.246.562.29.173465377510",
+      "hakuaikaId": "5474",
       "hakukelpoisuusvaatimusUris": ["pohjakoulutusvaatimuskorkeakoulut_100"],
       "hakukohdeKoulutusOids": ["1.2.246.562.17.47868438855"],
       "alinHyvaksyttavaKeskiarvo": 0.0,
