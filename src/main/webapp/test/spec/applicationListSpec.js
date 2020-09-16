@@ -617,7 +617,7 @@
 
       describe("monta hakuaikaa", function() {
         before(
-          page.applyFixtureAndOpen({applicationOid: hakemusErityisopetuksenaId, overrideStart: daysFromNow(-90)}),
+          page.applyFixtureAndOpen({applicationOid: hakemusErityisopetuksenaId, overrideStart: daysFromNow(-73)}),
           page.applyValintatulosFixtureAndOpen("erillishaku-toinen-valmis", {"haku": "toinen-aste-erillishaku"})
         )
 
