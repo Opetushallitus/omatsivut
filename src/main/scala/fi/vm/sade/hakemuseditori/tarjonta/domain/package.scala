@@ -23,8 +23,11 @@ case class Hakuaika(id: String, start: Long, end: Option[Long]) {
   }
 }
 
-case class Hakukohde(oid: String, hakuaikaId: Option[String], koulutuksenAlkaminen: Option[KoulutuksenAlkaminen],
-                     kohteenHakuaika: Option[KohteenHakuaika], ohjeetUudelleOpiskelijalle: Option[String])
+case class Hakukohde(oid: String,
+                     hakuaikaId: Option[String],
+                     koulutuksenAlkaminen: Option[KoulutuksenAlkaminen],
+                     hakukohdekohtaisetHakuajat: Option[List[KohteenHakuaika]],
+                     ohjeetUudelleOpiskelijalle: Option[String])
 
 case class KohteenHakuaika(start: Long, end: Option[Long]) {
   def ended(now: Long): Boolean = end.exists(_ <= now)
@@ -36,17 +39,17 @@ object KohteenHakuaika {
   def hakuaikaEnded(haku: Haku, hakukohde: Hakukohde, now: Long): Boolean = {
     hakukohde.hakuaikaId
       .map(id => haku.applicationPeriods.exists(hakuaika => hakuaika.id == id && hakuaika.ended(now)))
-      .getOrElse(hakukohde.kohteenHakuaika.exists(_.ended(now)))
+      .getOrElse(hakukohde.hakukohdekohtaisetHakuajat.exists(_.exists(_.ended(now))))
   }
   def hakuaikaEnded(haku: Haku, hakutoive: Hakutoive, now: Long): Boolean = {
     hakutoive.hakuaikaId
       .map(id => haku.applicationPeriods.exists(hakuaika => hakuaika.id == id && hakuaika.ended(now)))
-      .getOrElse(hakutoive.kohdekohtainenHakuaika.exists(_.ended(now)))
+      .getOrElse(hakutoive.hakukohdekohtaisetHakuajat.exists(_.exists(_.ended(now))))
   }
   def active(haku: Haku, hakukohde: Hakukohde, now: Long): Boolean = {
     hakukohde.hakuaikaId
       .map(id => haku.applicationPeriods.exists(hakuaika => hakuaika.id == id && hakuaika.active(now)))
-      .getOrElse(hakukohde.kohteenHakuaika.exists(_.active(now)))
+      .getOrElse(hakukohde.hakukohdekohtaisetHakuajat.exists(_.exists(_.active(now))))
   }
 }
 

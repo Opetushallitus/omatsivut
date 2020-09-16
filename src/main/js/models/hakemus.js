@@ -80,10 +80,10 @@ export default class Hakemus {
 
     if (hakutoive.addedDuringCurrentSession) {
       return false
-    } else if (!_.isEmpty(hakutoive.kohdekohtainenHakuaika)) {
-      return !hakutoive.kohdekohtainenHakuaika.active
-    } else {
+    } else if (hakuaikaId != null) {
       return !isPeriodActive(hakuaikaId)
+    } else {
+      return !_(hakutoive.hakukohdekohtaisetHakuajat).some(function(period) { return period.active })
     }
   }
 
@@ -226,7 +226,7 @@ export default class Hakemus {
   importHakuajat(hakukohteet) {
     if (hakukohteet != null) {
       for (var i = 0; i < this.hakutoiveet.length && i < hakukohteet.length; i++) {
-        this.hakutoiveet[i].kohdekohtainenHakuaika = hakukohteet[i].kohdekohtainenHakuaika
+        this.hakutoiveet[i].hakukohdekohtaisetHakuajat = hakukohteet[i].hakukohdekohtaisetHakuajat
       }
     }
   }

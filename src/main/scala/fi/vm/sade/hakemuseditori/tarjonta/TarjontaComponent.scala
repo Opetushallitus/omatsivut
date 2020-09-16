@@ -57,10 +57,10 @@ trait TarjontaComponent {
           case _ => ""
         }
         if(timeOverrides.contains(hakuOid)){
-          hakukohde.copy(kohteenHakuaika = hakukohde.kohteenHakuaika.map { aika =>
+          hakukohde.copy(hakukohdekohtaisetHakuajat = hakukohde.hakukohdekohtaisetHakuajat.map(_.map { aika =>
             val haku : Option[Haku] = parseHaku(hakuOid, Language.fi)
             changeKohteenHakuaika(haku, aika)
-          })
+          }))
         } else {
           hakukohde
         }

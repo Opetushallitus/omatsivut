@@ -144,7 +144,7 @@ trait AtaruServiceComponent  {
         Some(Map("Koulutus-id" -> hakukohde.oid)),
         hakukohde.koulutuksenAlkaminen,
         hakukohde.hakuaikaId,
-        hakukohde.kohteenHakuaika
+        hakukohde.hakukohdekohtaisetHakuajat
       )
     }
   }

@@ -44,8 +44,10 @@
                     </div>
                 </div>
 
-                <div class="row hakuaika" ng-if="hakutoive.kohdekohtainenHakuaika != null && hakutoive.kohdekohtainenHakuaika.end != null && !application.preferenceLocked($index)">
-                    {{ localization('label.applicationPeriodEnds') }} <time formatted-time="hakutoive.kohdekohtainenHakuaika.end" format="LLL Z" />
+                <!-- Hakutoivevalitsin on käytössä vain haku-app:ia käyttävissä hauissa, joten hakukohteet on
+                     mallinnettu Tarjonnassa. Näillä hakukohteilla voi olla vain yksi hakuaika. -->
+                <div class="row hakuaika" ng-if="hakutoive.hakukohdekohtaisetHakuajat.length == 1 && hakutoive.hakukohdekohtaisetHakuajat[0].end != null && !application.preferenceLocked($index)">
+                    {{ localization('label.applicationPeriodEnds') }} <time formatted-time="hakutoive.hakukohdekohtaisetHakuajat[0].end" format="LLL Z" />
                 </div>
             </div>
 
