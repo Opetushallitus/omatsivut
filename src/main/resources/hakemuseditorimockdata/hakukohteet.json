@@ -1281,6 +1281,7 @@
       },
       "tarjoajaOids": ["1.2.246.562.10.64213824028"],
       "hakuOid": "1.2.246.562.29.173465377510",
+      "hakuaikaId": "5474",
       "hakukelpoisuusvaatimusUris": ["pohjakoulutusvaatimuskorkeakoulut_100"],
       "hakukohdeKoulutusOids": ["1.2.246.562.17.264750310310"],
       "alinHyvaksyttavaKeskiarvo": 0.0,
@@ -2116,7 +2117,8 @@
     "result": {
       "oid": "1.2.246.562.20.97520172236",
       "hakukohteenNimi": "Sosiaali- ja terveysalan perustutkinto, pk",
-      "hakuOid": "1.2.246.562.29.173465377510"
+      "hakuOid": "1.2.246.562.29.173465377510",
+      "hakuaikaId": "5474"
     }
   },
   "1.2.246.562.5.19132087818": {
