@@ -4,6 +4,7 @@ import fi.vm.sade.hakemuseditori.domain.Language.Language
 import fi.vm.sade.hakemuseditori.ohjausparametrit.domain.HaunAikataulu
 import fi.vm.sade.hakemuseditori.tarjonta.domain.Haku
 import fi.vm.sade.hakemuseditori.tarjonta.domain.HakuTyyppi.{Erillishaku, JatkuvaHaku, Lisahaku, Yhteishaku}
+import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.tarjonta.shared.types.TarjontaTila
 
 sealed case class TarjontaHaku(oid: String, hakuaikas: List[TarjontaHakuaika], hakutapaUri: String, hakutyyppiUri: String,
@@ -33,38 +34,45 @@ sealed case class TarjontaHaku(oid: String, hakuaikas: List[TarjontaHakuaika], h
 
 object TarjontaHaku {
 
-  def toHaku(tarjontaHaku: TarjontaHaku, lang: Language, haunAikataulu: Option[HaunAikataulu]): Haku = {
+  def toHaku(tarjontaHaku: TarjontaHaku,
+             lang: Language,
+             haunAikataulu: Option[HaunAikataulu],
+             config: AppConfig): Haku = {
     Haku(
       aikataulu = haunAikataulu,
       applicationPeriods = tarjontaHaku.hakuaikas.sortBy(_.alkuPvm).map(h => TarjontaHakuaika.toHakuaika(h)),
-      checkBaseEducationConflict = checkeBaseEducationConflict(tarjontaHaku),
+      checkBaseEducationConflict = checkeBaseEducationConflict(tarjontaHaku, config),
       jarjestelmanHakulomake = tarjontaHaku.jarjestelmanHakulomake,
-      korkeakouluhaku = isKorkeakouluhaku(tarjontaHaku),
+      korkeakouluhaku = isKorkeakouluhaku(tarjontaHaku, config),
       name = tarjontaHaku.getLocalizedName(lang),
       oid = tarjontaHaku.oid,
       published = isPublished(tarjontaHaku),
       showSingleStudyPlaceEnforcement = tarjontaHaku.yhdenPaikanSaanto.voimassa,
-      siirtohaku = tarjontaHaku.kohdejoukonTarkenne.exists(_.contains("haunkohdejoukontarkenne_1#")),
-      toisenasteenhaku = isToisenasteenhaku(tarjontaHaku),
-      tyyppi = tarjontaHaku.getHakutyyppi().toString(),
+      siirtohaku = isSiirtohaku(tarjontaHaku, config),
+      toisenasteenhaku = isToisenasteenhaku(tarjontaHaku,config),
+      tyyppi = tarjontaHaku.getHakutyyppi().toString,
       usePriority = tarjontaHaku.usePriority)
-  }
-
-  private def isKorkeakouluhaku(tarjontaHaku: TarjontaHaku) = {
-    tarjontaHaku.kohdejoukkoUri.contains("haunkohdejoukko_12")
   }
 
   private def isPublished(tarjontaHaku: TarjontaHaku): Boolean = {
     TarjontaTila.JULKAISTU.toString.equals(tarjontaHaku.tila)
   }
 
-  private def isToisenasteenhaku(tarjontaHaku: TarjontaHaku) = {
-    val kohdejoukot = List("haunkohdejoukko_11","haunkohdejoukko_17","haunkohdejoukko_20")
-    kohdejoukot.exists(tarjontaHaku.kohdejoukkoUri.contains(_))
+  private def isKorkeakouluhaku(tarjontaHaku: TarjontaHaku, config: AppConfig) = {
+    config.settings.kohdejoukotKorkeakoulu.exists(s => tarjontaHaku.kohdejoukkoUri.startsWith(s + "#"))
   }
 
-  private def checkeBaseEducationConflict(tarjontaHaku: TarjontaHaku): Boolean = {
-    isKorkeakouluhaku(tarjontaHaku) && tarjontaHaku.kohdejoukonTarkenne.getOrElse("").trim.isEmpty
+  private def isToisenasteenhaku(tarjontaHaku: TarjontaHaku, config: AppConfig) = {
+    config.settings.kohdejoukotToinenAste.exists(s => tarjontaHaku.kohdejoukkoUri.startsWith(s + "#"))
+  }
+
+  private def isSiirtohaku(tarjontaHaku: TarjontaHaku, config: AppConfig) = {
+    config.settings.kohdejoukonTarkenteetSiirtohaku.exists(s =>
+      tarjontaHaku.kohdejoukonTarkenne.exists(_.startsWith(s + "#")))
+  }
+
+  private def checkeBaseEducationConflict(tarjontaHaku: TarjontaHaku, config: AppConfig): Boolean = {
+    isKorkeakouluhaku(tarjontaHaku, config) && tarjontaHaku.kohdejoukonTarkenne.getOrElse("").trim.isEmpty
   }
 }
 

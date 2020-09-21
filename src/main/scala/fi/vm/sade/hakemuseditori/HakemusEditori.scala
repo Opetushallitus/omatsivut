@@ -19,6 +19,7 @@ import fi.vm.sade.hakemuseditori.tarjonta.vanha.RemoteTarjontaComponent
 import fi.vm.sade.hakemuseditori.user.User
 import fi.vm.sade.hakemuseditori.valintatulokset.{NoOpValintatulosService, ValintatulosService, ValintatulosServiceComponent}
 import fi.vm.sade.hakemuseditori.viestintapalvelu.{AccessibleHtml, Pdf, TuloskirjeComponent, TuloskirjeKind}
+import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.utils.slf4j.Logging
 import javax.servlet.http.HttpServletRequest
 import org.json4s.jackson.Serialization
@@ -189,11 +190,14 @@ abstract class StandaloneHakemusEditoriComponent(
   override def newApplicationValidator = new ApplicationValidator
 }
 
-class StubbedHakemusEditoriContext(appContext: ApplicationContext, translations: Translations) extends StandaloneHakemusEditoriComponent(translations) {
+class StubbedHakemusEditoriContext(appContext: ApplicationContext,
+                                   translations: Translations,
+                                   config: AppConfig)
+  extends StandaloneHakemusEditoriComponent(translations) {
   override lazy val springContext = new HakemusSpringContext(appContext)
   override lazy val ataruService = new StubbedAtaruService
   override lazy val oppijanumerorekisteriService = new StubbedOppijanumerorekisteriService
-  override lazy val tarjontaService = new StubbedTarjontaService
+  override lazy val tarjontaService = new StubbedTarjontaService(config)
   override lazy val tuloskirjeService = new StubbedTuloskirjeService
   override lazy val koodistoService = new StubbedKoodistoService
   override lazy val ohjausparametritService = new StubbedOhjausparametritService
