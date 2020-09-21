@@ -23,13 +23,13 @@ trait TarjontaComponent {
 
   val tarjontaService: TarjontaService
 
-  class StubbedTarjontaService extends TarjontaService with JsonFormats with Logging {
+  class StubbedTarjontaService(config: AppConfig) extends TarjontaService with JsonFormats with Logging {
     private val timeOverrides = mutable.Map[String, Long]()
     private val hakukierrospaattyyOverrides = mutable.Map[String, Long]()
     private val priorities = mutable.Set[String]()
 
     private def parseHaku(oid: String, lang: Language.Language) = {
-      JsonFixtureMaps.findByKey[JValue]("/hakemuseditorimockdata/haut.json", oid).flatMap(TarjontaParser.parseHaku).map {h => TarjontaHaku.toHaku(h, lang, None)}
+      JsonFixtureMaps.findByKey[JValue]("/hakemuseditorimockdata/haut.json", oid).flatMap(TarjontaParser.parseHaku).map {h => TarjontaHaku.toHaku(h, lang, None, config)}
     }
 
     override def haku(oid: String, lang: Language.Language) = {
@@ -123,7 +123,7 @@ trait TarjontaComponent {
 
   object CachedRemoteTarjontaService extends Logging {
     def apply(appConfig: AppConfig): TarjontaService = {
-      val service = new UnionTarjontaService(new RemoteTarjontaService(), new RemoteKoutaService(appConfig))
+      val service = new UnionTarjontaService(new RemoteTarjontaService(appConfig), new RemoteKoutaService(appConfig))
       val hakuMemo = TTLOptionalMemoize.memoize(service.haku _, "tarjonta haku", 4 * 60 * 60, 128)
       val hakukohdeMemo = TTLOptionalMemoize.memoize(service.hakukohde _, "tarjonta hakukohde", 4 * 60 * 60, 1024)
 
