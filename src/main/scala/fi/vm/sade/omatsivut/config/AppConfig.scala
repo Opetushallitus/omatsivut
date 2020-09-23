@@ -11,6 +11,8 @@ object AppConfig extends Logging {
 
   val callerId = "1.2.246.562.10.00000000001.omatsivut.backend"
 
+  val suomifi_valtuudet_enabled = false
+
   private implicit val settingsParser = ApplicationSettingsParser
   val embeddedMongoPortChooser = new PortFromSystemPropertyOrFindFree("omatsivut.embeddedmongo.port")
 
@@ -83,7 +85,7 @@ object AppConfig extends Logging {
     OphUrlProperties.addOverride("host.haku.sv", "http://localhost:" + AppConfig.embeddedJettyPortChooser.chosenPort.toString)
     OphUrlProperties.addOverride("protocol_ataru_hakija", "http")
     OphUrlProperties.addOverride("host_ataru_hakija", "localhost:8351")
-    OphUrlProperties.addOverride("cas.oppija.login", "/cas-oppija/login?service=$1")
+    OphUrlProperties.addOverride("cas.oppija.login", "/cas-oppija/login?valtuudet=$1&service=$2")
     OphUrlProperties.addOverride("cas.oppija.logout", "/cas-oppija/logout?service=$1")
 
 
