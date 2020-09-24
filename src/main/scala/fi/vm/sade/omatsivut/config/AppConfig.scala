@@ -85,7 +85,7 @@ object AppConfig extends Logging {
     OphUrlProperties.addOverride("host.haku.sv", "http://localhost:" + AppConfig.embeddedJettyPortChooser.chosenPort.toString)
     OphUrlProperties.addOverride("protocol_ataru_hakija", "http")
     OphUrlProperties.addOverride("host_ataru_hakija", "localhost:8351")
-    OphUrlProperties.addOverride("cas.oppija.login", "/cas-oppija/login?valtuudet=$1&service=$2")
+    OphUrlProperties.addOverride("cas.oppija.login", "/cas-oppija/login?locale=$1&valtuudet=$2&service=$3")
     OphUrlProperties.addOverride("cas.oppija.logout", "/cas-oppija/logout?service=$1")
 
 

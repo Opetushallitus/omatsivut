@@ -37,7 +37,7 @@ trait OmatsivutPaths extends Logging {
     val realContextPath = getContextPath(contextPath)
     val urlRoot = urlPrefix(lang.toString.toLowerCase())
     val fullUrl = urlRoot + realContextPath + "/initsession"
-    OphUrlProperties.url("cas.oppija.login", AppConfig.suomifi_valtuudet_enabled.toString, fullUrl)
+    OphUrlProperties.url("cas.oppija.login", lang, AppConfig.suomifi_valtuudet_enabled.toString, fullUrl)
   }
 
   def logoutPath(servicePath: String)(implicit lang: Language.Language): String = {
