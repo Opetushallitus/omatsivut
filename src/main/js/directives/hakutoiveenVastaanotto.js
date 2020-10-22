@@ -25,12 +25,6 @@ class HakutoiveenVastaanottoController {
     this.$timeout = $timeout;
     this.restResources = restResources;
     this.selectedHakukohde = null;
-
-    try {
-      this.email = $scope.$parent.$parent.application.henkilotiedot['Sähköposti'].answer
-    } catch (e) {
-      this.email = '';
-    }
   }
 
   formatTimestamp(dt) {
@@ -79,7 +73,6 @@ class HakutoiveenVastaanottoController {
 
     const data = {
       vastaanottoAction: {action: this.vastaanottoAction[hakutoive.hakukohdeOid]},
-      email: this.email,
       hakukohdeNimi: hakutoive.hakukohdeNimi,
       tarjoajaNimi: hakutoive.tarjoajaNimi
     };
