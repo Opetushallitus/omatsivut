@@ -63,12 +63,7 @@
     </section>
 
     <section class="hakutoiveen-vastaanotto" ng-if="application.vastaanotettavatHakutoiveet().length > 0">
-        <hakutoiveen-vastaanotto
-                application-oid="application.oid"
-                haku="application.haku"
-                hakutoiveet="application.vastaanotettavatHakutoiveet()"
-                callback="hakutoiveVastaanotettu"
-        ></hakutoiveen-vastaanotto>
+        <hakutoiveen-vastaanotto application="application" callback="hakutoiveVastaanotettu"></hakutoiveen-vastaanotto>
     </section>
 
     <section class="ilmoittautuminen">

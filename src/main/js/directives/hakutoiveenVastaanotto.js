@@ -5,9 +5,7 @@ export default class HakutoiveenVastaanotto {
   constructor() {
     this.restrict = 'E';
     this.bindToController = {
-      applicationOid: '&',
-      haku: '&',
-      hakutoiveet: '&',
+      application: '&',
       callback: '='
     };
     this.template = require('./hakutoiveenVastaanotto.html');
@@ -43,7 +41,7 @@ class HakutoiveenVastaanottoController {
     return !(this.vastaanottoAction && this.vastaanottoAction[hakukohdeOid] && this.vastaanottoAction[hakukohdeOid].length !== 0)
       || (this.selectedHakukohde != hakukohdeOid)
       || this.isVastaanottoKesken()
-      || (this.isRejectSelected(hakukohdeOid) && !this.confirmCancelAction && !this.haku().toisenasteenhaku);
+      || (this.isRejectSelected(hakukohdeOid) && !this.confirmCancelAction && !this.application().haku.toisenasteenhaku);
   }
 
   isRejectSelected(hakukohdeOid) {
@@ -63,7 +61,7 @@ class HakutoiveenVastaanottoController {
     this.ajaxPending = true;
 
     const pathParams = {
-      hakemusOid: this.applicationOid(),
+      hakemusOid: this.application().oid,
       hakukohdeOid: hakutoive.hakukohdeOid
     };
 
