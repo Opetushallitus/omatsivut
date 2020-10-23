@@ -16,7 +16,6 @@ export default class Hakemus {
     this.ohjeetUudelleOpiskelijalle = json.hakemus.ohjeetUudelleOpiskelijalle;
     this.hakutoiveet = convertHakutoiveet(json.hakemus.hakutoiveet);
     this.henkilotiedot = convertHenkilotiedot(json.hakemus.answers.henkilotiedot);
-    this.henkiloNimi = parseName(json.hakemus.answers.henkilotiedot);
     this.persistedAnswers = json.hakemus.answers;
     this.additionalQuestions = Question.getQuestions(json.questions, this);
     this.tuloskirje = copy(formatTuloskirje(json.hakemus.tuloskirje));
@@ -381,16 +380,6 @@ function convertHenkilotiedot(json) {
       memo[key] = new Question({id: key}, json[key]);
       return memo
     }, {})
-  }
-}
-
-function parseName(json) {
-  if (!_.isUndefined(json)) {
-    var etunimi = json["Etunimet"];
-    if (!etunimi) {
-      etunimi = json["Kutsumanimi"];
-    }
-    return etunimi + " " + json["Sukunimi"];
   }
 }
 

@@ -4,6 +4,7 @@ import fi.vm.sade.hakemuseditori.domain.Language.Language
 import fi.vm.sade.hakemuseditori.ohjausparametrit.domain.HaunAikataulu
 import fi.vm.sade.hakemuseditori.tarjonta.domain.{Haku, Hakuaika}
 import fi.vm.sade.hakemuseditori.tarjonta.domain.HakuTyyppi.{Erillishaku, JatkuvaHaku, Yhteishaku}
+import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 
 import scala.util.{Failure, Try}
 
@@ -38,7 +39,10 @@ object KoutaHaku {
     val Julkaistu = Value("julkaistu")
   }
 
-  def toHaku(koutaHaku: KoutaHaku, lang: Language, haunAikataulu: Option[HaunAikataulu]): Try[Haku] = {
+  def toHaku(koutaHaku: KoutaHaku,
+             lang: Language,
+             haunAikataulu: Option[HaunAikataulu],
+             config: AppConfig): Try[Haku] = {
     for {
       applicationPeriods <- extractApplicationPeriods(koutaHaku)
     } yield Haku(
@@ -46,12 +50,12 @@ object KoutaHaku {
       applicationPeriods = applicationPeriods,
       checkBaseEducationConflict = false,
       jarjestelmanHakulomake = false,
-      korkeakouluhaku = isKorkeakouluhaku(koutaHaku),
+      korkeakouluhaku = isKorkeakouluhaku(koutaHaku, config),
       name = koutaHaku.getLocalizedName(lang),
       oid = koutaHaku.oid,
       published = isPublished(koutaHaku),
-      siirtohaku = isSiirtohaku(koutaHaku),
-      toisenasteenhaku = isToisenasteenhaku(koutaHaku),
+      siirtohaku = isSiirtohaku(koutaHaku, config),
+      toisenasteenhaku = isToisenasteenhaku(koutaHaku, config),
       tyyppi = koutaHaku.getHakutyyppi().toString,
       usePriority = false) // FIXME
   }
@@ -64,20 +68,20 @@ object KoutaHaku {
     }
   }
 
-  private def isKorkeakouluhaku(koutaHaku: KoutaHaku) = {
-    koutaHaku.kohdejoukkoKoodiUri.contains("haunkohdejoukko_12")
+  private def isKorkeakouluhaku(koutaHaku: KoutaHaku, config: AppConfig) = {
+    config.settings.kohdejoukotKorkeakoulu.exists(s => koutaHaku.kohdejoukkoKoodiUri.startsWith(s + "#"))
   }
 
-  private def isToisenasteenhaku(koutaHaku: KoutaHaku) = {
-    val kohdejoukot = List("haunkohdejoukko_11","haunkohdejoukko_17","haunkohdejoukko_20")
-    kohdejoukot.exists(koutaHaku.kohdejoukkoKoodiUri.contains(_))
+  private def isToisenasteenhaku(koutaHaku: KoutaHaku, config: AppConfig) = {
+    config.settings.kohdejoukotToinenAste.exists(s => koutaHaku.kohdejoukkoKoodiUri.startsWith(s + "#"))
   }
 
   private def isPublished(koutaHaku: KoutaHaku): Boolean = {
     Julkaisutila.Julkaistu.toString.equals(koutaHaku.tila)
   }
 
-  private def isSiirtohaku(koutaHaku: KoutaHaku) = {
-    koutaHaku.kohdejoukonTarkenneKoodiUri.exists(_.contains("haunkohdejoukontarkenne_1#"))
+  private def isSiirtohaku(koutaHaku: KoutaHaku, config: AppConfig) = {
+    config.settings.kohdejoukonTarkenteetSiirtohaku.exists(s =>
+      koutaHaku.kohdejoukonTarkenneKoodiUri.exists(_.startsWith(s + "#")))
   }
 }
