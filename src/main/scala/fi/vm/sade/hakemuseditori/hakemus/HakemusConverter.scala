@@ -163,7 +163,7 @@ trait HakemusConverterComponent {
             val tarjonnanHakukohde = tarjontaService.hakukohde(data("Koulutus-id"))
             val amendedData = amendWithKoulutusInformaatio(lang, data)
 
-            Hakutoive(Some(amendedData), tarjonnanHakukohde.flatMap(_.koulutuksenAlkaminen),
+            Hakutoive(Some(amendedData), tarjonnanHakukohde.exists(_.yhdenPaikanSaanto), tarjonnanHakukohde.flatMap(_.koulutuksenAlkaminen),
                       tarjonnanHakukohde.flatMap(_.hakuaikaId), tarjonnanHakukohde.flatMap(_.kohteenHakuaika))
         }
       }

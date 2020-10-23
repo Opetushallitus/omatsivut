@@ -62,11 +62,14 @@ case class Hakemus(oid: String,
 
 case class Tuloskirje(hakuOid: String, created: Long)
 
-case class Hakutoive(hakemusData: Option[HakutoiveData], koulutuksenAlkaminen: Option[KoulutuksenAlkaminen] = None,
-                     hakuaikaId: Option[String] = None, kohdekohtainenHakuaika: Option[KohteenHakuaika] = None)
+case class Hakutoive(hakemusData: Option[HakutoiveData],
+                     yhdenPaikanSaanto: Boolean,
+                     koulutuksenAlkaminen: Option[KoulutuksenAlkaminen] = None,
+                     hakuaikaId: Option[String] = None,
+                     kohdekohtainenHakuaika: Option[KohteenHakuaika] = None)
 
 object Hakutoive {
-  def empty = Hakutoive(None)
+  def empty = Hakutoive(None, yhdenPaikanSaanto = false)
 }
 
 case class HakemusMuutos(oid: String, hakuOid: String, hakutoiveet: List[HakutoiveData] = Nil, answers: Answers) extends HakemusLike {

@@ -48,6 +48,15 @@ class HakutoiveenVastaanottoController {
     return this.vastaanottoAction && this.vastaanottoAction[hakukohdeOid] === 'Peru';
   }
 
+  isYhdenPaikanSaanto(hakukohdeOid) {
+    for (let hakutoive of this.application().hakutoiveet) {
+      if (hakutoive.data["Koulutus-id"] === hakukohdeOid) {
+        return hakutoive.yhdenPaikanSaanto;
+      }
+    }
+    return false;
+  }
+
   flashSiirtohakuNotification() {
     this.siirtohakuClass = 'siirtohaku-fade-out';
     this.$timeout(() => this.siirtohakuClass = 'siirtohaku-fade-in', 50)

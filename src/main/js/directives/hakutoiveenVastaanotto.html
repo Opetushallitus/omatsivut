@@ -8,7 +8,7 @@
       <div class="hakutoive-vastaanotettavissa" ng-if="hakutoive.vastaanottoDeadline">
            {{ localization('message.acceptEducation.latestAnswer', { aika: ctrl.formatTimestamp(hakutoive.vastaanottoDeadline) }) }}
       </div>
-      <div class="hakutoive-vain-yksi-valittavissa" ng-if="ctrl.application().haku.showSingleStudyPlaceEnforcement">
+      <div class="hakutoive-vain-yksi-valittavissa" ng-if="ctrl.isYhdenPaikanSaanto(hakutoive.hakukohdeOid)">
           {{ localization('message.acceptEducation.onlyOnePossible.1') }}
           <span class="vain-yksi">{{ localization('message.acceptEducation.onlyOnePossible.2') }}</span>
           {{ localization('message.acceptEducation.onlyOnePossible.3') }}

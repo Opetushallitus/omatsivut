@@ -21,6 +21,7 @@ export default class Hakutoive {
     this.hakuaikaId = json.hakuaikaId;
     this.kohdekohtainenHakuaika = json.kohdekohtainenHakuaika;
     this.koulutuksenAlkaminen = json.koulutuksenAlkaminen;
+    this.yhdenPaikanSaanto = json.yhdenPaikanSaanto;
   }
 
   clear() {

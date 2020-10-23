@@ -43,7 +43,6 @@ object TarjontaHaku {
       name = tarjontaHaku.getLocalizedName(lang),
       oid = tarjontaHaku.oid,
       published = isPublished(tarjontaHaku),
-      showSingleStudyPlaceEnforcement = tarjontaHaku.yhdenPaikanSaanto.voimassa,
       siirtohaku = tarjontaHaku.kohdejoukonTarkenne.exists(_.contains("haunkohdejoukontarkenne_1#")),
       toisenasteenhaku = isToisenasteenhaku(tarjontaHaku),
       tyyppi = tarjontaHaku.getHakutyyppi().toString(),

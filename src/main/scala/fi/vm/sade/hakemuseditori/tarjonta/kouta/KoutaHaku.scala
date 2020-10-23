@@ -50,7 +50,6 @@ object KoutaHaku {
       name = koutaHaku.getLocalizedName(lang),
       oid = koutaHaku.oid,
       published = isPublished(koutaHaku),
-      showSingleStudyPlaceEnforcement = false, // FIXME
       siirtohaku = isSiirtohaku(koutaHaku),
       toisenasteenhaku = isToisenasteenhaku(koutaHaku),
       tyyppi = koutaHaku.getHakutyyppi().toString,

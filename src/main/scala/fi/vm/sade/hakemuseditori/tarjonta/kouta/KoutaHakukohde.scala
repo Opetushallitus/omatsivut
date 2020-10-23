@@ -1,6 +1,7 @@
 package fi.vm.sade.hakemuseditori.tarjonta.kouta
 
 import fi.vm.sade.hakemuseditori.tarjonta.domain.{Hakukohde, KohteenHakuaika, KoulutuksenAlkaminen}
+import fi.vm.sade.hakemuseditori.tarjonta.vanha.YhdenPaikanSaanto
 
 import scala.util.{Failure, Success, Try}
 
@@ -9,7 +10,8 @@ sealed case class KoutaHakukohde(alkamiskausiKoodiUri: Option[String],
                                  kaytetaanHaunAikataulua: Option[Boolean],
                                  kaytetaanHaunAlkamiskautta: Option[Boolean],
                                  hakuajat: List[KoutaHakuaika],
-                                 oid: String) {
+                                 oid: String,
+                                 yhdenPaikanSaanto: YhdenPaikanSaanto) {
 }
 
 object KoutaHakukohde {
@@ -21,7 +23,8 @@ object KoutaHakukohde {
       koulutuksenAlkaminen = koulutuksenAlkaminen,
       kohteenHakuaika = kohteenHakuaika, // FIXME: tuki useammalle hakuajalle
       ohjeetUudelleOpiskelijalle = None, // FIXME
-      oid = koutaHakukohde.oid)
+      oid = koutaHakukohde.oid,
+      yhdenPaikanSaanto = koutaHakukohde.yhdenPaikanSaanto.voimassa)
   }
 
   private def extractKohteenHakuaika(koutaHakukohde: KoutaHakukohde) : Try[Option[KohteenHakuaika]] = {

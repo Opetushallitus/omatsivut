@@ -7,7 +7,7 @@ import fi.vm.sade.haku.oppija.lomake.domain.ApplicationPeriod
 import org.joda.time.{Interval, LocalDateTime}
 
 case class Haku(oid: String, published: Boolean, name: String, applicationPeriods: List[Hakuaika], tyyppi: String,
-                korkeakouluhaku: Boolean, showSingleStudyPlaceEnforcement: Boolean, siirtohaku: Boolean,
+                korkeakouluhaku: Boolean, siirtohaku: Boolean,
                 checkBaseEducationConflict: Boolean, usePriority: Boolean, jarjestelmanHakulomake: Boolean,
                 toisenasteenhaku: Boolean, aikataulu: Option[HaunAikataulu]) {
   def active: Boolean = if (applicationPeriods.isEmpty) false else new Interval(applicationPeriods.head.start, applicationPeriods.last.end).containsNow()
@@ -27,8 +27,12 @@ object Hakuaika {
   }
 }
 
-case class Hakukohde(oid: String, hakuaikaId: Option[String], koulutuksenAlkaminen: Option[KoulutuksenAlkaminen],
-                     kohteenHakuaika: Option[KohteenHakuaika], ohjeetUudelleOpiskelijalle: Option[String])
+case class Hakukohde(oid: String,
+                     hakuaikaId: Option[String],
+                     koulutuksenAlkaminen: Option[KoulutuksenAlkaminen],
+                     kohteenHakuaika: Option[KohteenHakuaika],
+                     ohjeetUudelleOpiskelijalle: Option[String],
+                     yhdenPaikanSaanto: Boolean)
 
 case class KohteenHakuaika(start: Long, end: Long) {
   def active = new Interval(start, end).containsNow()
