@@ -64,13 +64,9 @@ case class Tuloskirje(hakuOid: String, created: Long)
 
 case class Hakutoive(hakemusData: Option[HakutoiveData],
                      yhdenPaikanSaanto: Boolean,
-                     koulutuksenAlkaminen: Option[KoulutuksenAlkaminen] = None,
-                     hakuaikaId: Option[String] = None,
-                     kohdekohtainenHakuaika: Option[KohteenHakuaika] = None)
-
-object Hakutoive {
-  def empty = Hakutoive(None, yhdenPaikanSaanto = false)
-}
+                     koulutuksenAlkaminen: Option[KoulutuksenAlkaminen],
+                     hakuaikaId: Option[String],
+                     hakukohdekohtaisetHakuajat: Option[List[KohteenHakuaika]])
 
 case class HakemusMuutos(oid: String, hakuOid: String, hakutoiveet: List[HakutoiveData] = Nil, answers: Answers) extends HakemusLike {
   def preferences = hakutoiveet

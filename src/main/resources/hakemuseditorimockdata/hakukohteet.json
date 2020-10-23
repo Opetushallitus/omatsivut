@@ -192,7 +192,7 @@
       },
       "tarjoajaOids": ["1.2.246.562.10.22242122111"],
       "hakuOid": "1.2.246.562.5.2014020613412490531399",
-      "hakuaikaId": "5474",
+      "hakuaikaId": null,
       "hakukelpoisuusvaatimusUris": ["hakukelpoisuusvaatimusta_1#1"],
       "hakukohdeKoulutusOids": ["1.2.246.562.17.774678456310"],
       "hakuaikaAlkuPvm": 1404290831839,
@@ -223,7 +223,7 @@
       },
       "kaytetaanJarjestelmanValintaPalvelua": false,
       "kaytetaanHaunPaattymisenAikaa": false,
-      "kaytetaanHakukohdekohtaistaHakuaikaa": false,
+      "kaytetaanHakukohdekohtaistaHakuaikaa": true,
       "hakukohteenLiitteet": [
         {
           "oid": "203334",
@@ -864,6 +864,7 @@
       },
       "tarjoajaOids": ["1.2.246.562.10.2014050812360137079853"],
       "hakuOid": "1.2.246.562.29.173465377510",
+      "hakuaikaId": "5474",
       "hakukelpoisuusvaatimusUris": ["pohjakoulutusvaatimuskorkeakoulut_100"],
       "hakukohdeKoulutusOids": ["1.2.246.562.17.74724084582"],
       "alinHyvaksyttavaKeskiarvo": 0.0,
@@ -999,6 +1000,7 @@
       },
       "tarjoajaOids": ["1.2.246.562.10.94639300915"],
       "hakuOid": "1.2.246.562.29.173465377510",
+      "hakuaikaId": "5474",
       "hakukelpoisuusvaatimusUris": [
         "pohjakoulutusvaatimuskorkeakoulut_109",
         "pohjakoulutusvaatimuskorkeakoulut_110",
@@ -1165,6 +1167,7 @@
       },
       "tarjoajaOids": ["1.2.246.562.10.14842710486"],
       "hakuOid": "1.2.246.562.29.173465377510",
+      "hakuaikaId": "5474",
       "hakukelpoisuusvaatimusUris": ["pohjakoulutusvaatimuskorkeakoulut_100"],
       "hakukohdeKoulutusOids": ["1.2.246.562.17.47868438855"],
       "alinHyvaksyttavaKeskiarvo": 0.0,
@@ -1278,6 +1281,7 @@
       },
       "tarjoajaOids": ["1.2.246.562.10.64213824028"],
       "hakuOid": "1.2.246.562.29.173465377510",
+      "hakuaikaId": "5474",
       "hakukelpoisuusvaatimusUris": ["pohjakoulutusvaatimuskorkeakoulut_100"],
       "hakukohdeKoulutusOids": ["1.2.246.562.17.264750310310"],
       "alinHyvaksyttavaKeskiarvo": 0.0,
@@ -1803,7 +1807,7 @@
       },
       "tarjoajaOids": ["1.2.246.562.10.81044480515"],
       "hakuOid": "1.2.246.562.5.2013112910452702965370",
-      "hakuaikaId": "164630",
+      "hakuaikaId": null,
       "hakukelpoisuusvaatimusUris": [],
       "hakukohdeKoulutusOids": ["1.2.246.562.5.2014022408400819838751"],
       "hakuaikaAlkuPvm": 1392360165561,
@@ -1830,7 +1834,7 @@
       "aloituspaikatKuvaukset": {},
       "kaytetaanJarjestelmanValintaPalvelua": false,
       "kaytetaanHaunPaattymisenAikaa": false,
-      "kaytetaanHakukohdekohtaistaHakuaikaa": false,
+      "kaytetaanHakukohdekohtaistaHakuaikaa": true,
       "hakukohteenLiitteet": [],
       "liitteidenToimitusOsoite": {
         "version": 0,
@@ -1864,11 +1868,11 @@
       },
       "tarjoajaOids": ["1.2.246.562.10.36082741939"],
       "hakuOid": "1.2.246.562.5.2013112910452702965370",
-      "hakuaikaId": "164630",
+      "hakuaikaId": null,
       "hakukelpoisuusvaatimusUris": [],
       "hakukohdeKoulutusOids": ["1.2.246.562.5.2013091113203335212546"],
       "hakuaikaAlkuPvm": 1389564000000,
-      "hakuaikaLoppuPvm": 1394806500000,
+      "hakuaikaLoppuPvm": 1394978400000,
       "alinHyvaksyttavaKeskiarvo": 0.0,
       "alinValintaPistemaara": 0,
       "ylinValintapistemaara": 0,
@@ -1891,7 +1895,7 @@
       "aloituspaikatKuvaukset": {},
       "kaytetaanJarjestelmanValintaPalvelua": false,
       "kaytetaanHaunPaattymisenAikaa": false,
-      "kaytetaanHakukohdekohtaistaHakuaikaa": false,
+      "kaytetaanHakukohdekohtaistaHakuaikaa": true,
       "hakukohteenLiitteet": [
         {
           "oid": "188678",
@@ -2021,7 +2025,7 @@
       },
       "tarjoajaOids": ["1.2.246.562.10.19001332592"],
       "hakuOid": "1.2.246.562.5.2013112910452702965370",
-      "hakuaikaId": "164630",
+      "hakuaikaId": null,
       "hakukelpoisuusvaatimusUris": [],
       "hakukohdeKoulutusOids": ["1.2.246.562.5.2013091114430026659428"],
       "hakuaikaAlkuPvm": 1389564000000,
@@ -2052,7 +2056,7 @@
       "aloituspaikatKuvaukset": {},
       "kaytetaanJarjestelmanValintaPalvelua": false,
       "kaytetaanHaunPaattymisenAikaa": false,
-      "kaytetaanHakukohdekohtaistaHakuaikaa": false,
+      "kaytetaanHakukohdekohtaistaHakuaikaa": true,
       "hakukohteenLiitteet": [
         {
           "oid": "188858",
@@ -2105,21 +2109,24 @@
     "result": {
       "oid": "1.2.246.562.20.60377543289",
       "hakukohteenNimi": "Maatalousalan perustutkinto, pk",
-      "hakuOid": "1.2.246.562.5.2013080813081926341927"
+      "hakuOid": "1.2.246.562.5.2013080813081926341927",
+      "hakuaikaId": "5474"
     }
   },
   "1.2.246.562.20.97520172236": {
     "result": {
       "oid": "1.2.246.562.20.97520172236",
       "hakukohteenNimi": "Sosiaali- ja terveysalan perustutkinto, pk",
-      "hakuOid": "1.2.246.562.29.173465377510"
+      "hakuOid": "1.2.246.562.29.173465377510",
+      "hakuaikaId": "5474"
     }
   },
   "1.2.246.562.5.19132087818": {
     "result": {
       "oid": "1.2.246.562.5.19132087818",
       "hakukohteenNimi": "Grundexamen i fiskeri, gr",
-      "hakuOid": "1.2.246.562.5.2014020613412490531399"
+      "hakuOid": "1.2.246.562.5.2014020613412490531399",
+      "hakuaikaId": "5474"
     }
   },
   "1.2.246.562.20.60377543290": {

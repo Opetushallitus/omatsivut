@@ -16,22 +16,22 @@ object TarjontaParser extends JsonFormats with Logging {
     res
   }
 
-  def parseHakukohde(json: JValue) = {
+  def parseHakukohde(json: JValue): Option[Hakukohde] = {
     for {
       obj <- (json \ "result").toOption
       oid = (obj \ "oid").extract[String]
-      hakuaikaId = (obj \ "hakuaikaId").extractOpt[String]
+      kaytetaanHakukohdekohtaistaHakuaikaa = (obj \ "kaytetaanHakukohdekohtaistaHakuaikaa").extractOrElse(false)
+      hakuaikaId <- if (kaytetaanHakukohdekohtaistaHakuaikaa) { Some(None) } else { (obj \ "hakuaikaId").extractOpt[String].map(Some(_)) }
       ohjeetUudelleOpiskelijalle = (obj \ "ohjeetUudelleOpiskelijalle").extractOpt[String]
-      name = (obj \ "name").extractOpt[String].getOrElse("")
-      hakuaika = createHakuaika((obj \ "hakuaikaAlkuPvm").extractOpt[Long], (obj \ "hakuaikaLoppuPvm").extractOpt[Long])
+      hakuaika <- if (kaytetaanHakukohdekohtaistaHakuaikaa) { createHakuaika((obj \ "hakuaikaAlkuPvm").extractOpt[Long], (obj \ "hakuaikaLoppuPvm").extractOpt[Long]) } else { Some(None) }
       koulutuksenAlkaminen = createKoulutuksenAlkaminen((obj \ "koulutuksenAlkamisvuosi").extractOpt[Long], (obj \ "koulutuksenAlkamiskausiUri").extractOpt[String])
       yhdenPaikanSaanto = (obj \ "yhdenPaikanSaanto" \ "voimassa").extract[Boolean]
     } yield Hakukohde(oid, hakuaikaId, koulutuksenAlkaminen, hakuaika, ohjeetUudelleOpiskelijalle, yhdenPaikanSaanto)
   }
 
-  private def createHakuaika(hakuaikaAlkuPvm: Option[Long], hakuaikaLoppuPvm: Option[Long]) : Option[KohteenHakuaika] = {
+  private def createHakuaika(hakuaikaAlkuPvm: Option[Long], hakuaikaLoppuPvm: Option[Long]) : Option[Option[List[KohteenHakuaika]]] = {
     (hakuaikaAlkuPvm, hakuaikaLoppuPvm) match {
-      case (Some(a), Some(l)) => Some(KohteenHakuaika(a, l))
+      case (Some(a), l) => Some(Some(List(KohteenHakuaika(a, l))))
       case _ => None
     }
   }

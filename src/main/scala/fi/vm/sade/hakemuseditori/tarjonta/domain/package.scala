@@ -2,6 +2,7 @@ package fi.vm.sade.hakemuseditori.tarjonta.domain
 
 import java.util.Date
 
+import fi.vm.sade.hakemuseditori.hakemus.domain.Hakutoive
 import fi.vm.sade.hakemuseditori.ohjausparametrit.domain.HaunAikataulu
 import fi.vm.sade.haku.oppija.lomake.domain.ApplicationPeriod
 import org.joda.time.{Interval, LocalDateTime}
@@ -10,32 +11,47 @@ case class Haku(oid: String, published: Boolean, name: String, applicationPeriod
                 korkeakouluhaku: Boolean, siirtohaku: Boolean,
                 checkBaseEducationConflict: Boolean, usePriority: Boolean, jarjestelmanHakulomake: Boolean,
                 toisenasteenhaku: Boolean, aikataulu: Option[HaunAikataulu]) {
-  def active: Boolean = if (applicationPeriods.isEmpty) false else new Interval(applicationPeriods.head.start, applicationPeriods.last.end).containsNow()
   def hakukierrosvoimassa: Boolean = new LocalDateTime().isBefore(aikataulu.flatMap(_.hakukierrosPaattyy).map(new LocalDateTime(_: Long)).getOrElse(new LocalDateTime().minusYears(100)))
 }
 
-case class Hakuaika(id: String, start: Long, end: Long) {
-  def active = new Interval(start, end).containsNow()
+case class Hakuaika(id: String, start: Long, end: Option[Long]) {
+  def ended(now: Long): Boolean = end.exists(_ <= now)
+  def active(now: Long): Boolean = start <= now && !ended(now)
+  def active: Boolean = active(LocalDateTime.now().toDate.getTime)
   def toApplicationPeriod: ApplicationPeriod = {
-    new ApplicationPeriod(new Date(start), new Date(end))
-  }
-}
-
-object Hakuaika {
-  def anyApplicationPeriodEnded(haku: Haku, hakukohdekohtaisetHakuajat: List[Option[KohteenHakuaika]], now: Long): Boolean = {
-    haku.applicationPeriods.exists(_.end < now) || hakukohdekohtaisetHakuajat.exists(_.exists(_.end < now))
+    new ApplicationPeriod(new Date(start), end.map(new Date(_)).orNull)
   }
 }
 
 case class Hakukohde(oid: String,
                      hakuaikaId: Option[String],
                      koulutuksenAlkaminen: Option[KoulutuksenAlkaminen],
-                     kohteenHakuaika: Option[KohteenHakuaika],
+                     hakukohdekohtaisetHakuajat: Option[List[KohteenHakuaika]],
                      ohjeetUudelleOpiskelijalle: Option[String],
                      yhdenPaikanSaanto: Boolean)
 
-case class KohteenHakuaika(start: Long, end: Long) {
-  def active = new Interval(start, end).containsNow()
+case class KohteenHakuaika(start: Long, end: Option[Long]) {
+  def ended(now: Long): Boolean = end.exists(_ <= now)
+  def active(now: Long): Boolean = start <= now && !ended(now)
+  def active: Boolean = active(LocalDateTime.now().toDate.getTime)
+}
+
+object KohteenHakuaika {
+  def hakuaikaEnded(haku: Haku, hakukohde: Hakukohde, now: Long): Boolean = {
+    hakukohde.hakuaikaId
+      .map(id => haku.applicationPeriods.exists(hakuaika => hakuaika.id == id && hakuaika.ended(now)))
+      .getOrElse(hakukohde.hakukohdekohtaisetHakuajat.exists(_.exists(_.ended(now))))
+  }
+  def hakuaikaEnded(haku: Haku, hakutoive: Hakutoive, now: Long): Boolean = {
+    hakutoive.hakuaikaId
+      .map(id => haku.applicationPeriods.exists(hakuaika => hakuaika.id == id && hakuaika.ended(now)))
+      .getOrElse(hakutoive.hakukohdekohtaisetHakuajat.exists(_.exists(_.ended(now))))
+  }
+  def active(haku: Haku, hakukohde: Hakukohde, now: Long): Boolean = {
+    hakukohde.hakuaikaId
+      .map(id => haku.applicationPeriods.exists(hakuaika => hakuaika.id == id && hakuaika.active(now)))
+      .getOrElse(hakukohde.hakukohdekohtaisetHakuajat.exists(_.exists(_.active(now))))
+  }
 }
 
 case class KoulutuksenAlkaminen(vuosi: Long, kausiUri: String)

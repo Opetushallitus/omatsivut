@@ -617,7 +617,7 @@
 
       describe("monta hakuaikaa", function() {
         before(
-          page.applyFixtureAndOpen({applicationOid: hakemusErityisopetuksenaId, overrideStart: daysFromNow(-90)}),
+          page.applyFixtureAndOpen({applicationOid: hakemusErityisopetuksenaId, overrideStart: daysFromNow(-73)}),
           page.applyValintatulosFixtureAndOpen("erillishaku-toinen-valmis", {"haku": "toinen-aste-erillishaku"})
         )
 
@@ -1208,7 +1208,7 @@
         })
 
         it("seliteteksti näkyy oikein", function() {
-          hakemusYhteishakuKevat2014WithForeignBaseEducation.applicationStatus().should.equal("Hakemuksesi on vielä käsiteltävänä. Jos haluat muuttaa hakutoiveitasi, yritä myöhemmin uudelleen.")
+          hakemusYhteishakuKevat2014WithForeignBaseEducation.applicationStatus().should.equal("Opiskelijavalinta on kesken. Hakemuksesi on vielä käsiteltävänä. Jos haluat muuttaa hakutoiveitasi, yritä myöhemmin uudelleen.")
         })
       })
 
@@ -1219,7 +1219,7 @@
         })
 
         it("seliteteksti näkyy oikein", function() {
-          hakemusYhteishakuKevat2014WithForeignBaseEducation.applicationStatus().should.equal("Hakemuksesi on vielä käsiteltävänä. Jos haluat muuttaa hakutoiveitasi, yritä myöhemmin uudelleen.")
+          hakemusYhteishakuKevat2014WithForeignBaseEducation.applicationStatus().should.equal("Opiskelijavalinta on kesken. Hakemuksesi on vielä käsiteltävänä. Jos haluat muuttaa hakutoiveitasi, yritä myöhemmin uudelleen.")
         })
       })
 

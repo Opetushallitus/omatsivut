@@ -34,7 +34,7 @@
     </section>
 
     <section class="application-status" role="presentation">
-        <div class="application-status-item" ng-if="!application.haku.active && application.state.id != 'HAKUKIERROSPAATTYNYT' && !application.allResultsAvailable() && application.vastaanotettavatHakutoiveet().length == 0">
+        <div class="application-status-item" ng-if="application.state.id != 'HAKUKIERROSPAATTYNYT' && !application.allResultsAvailable() && application.vastaanotettavatHakutoiveet().length == 0">
             {{ localization('label.applicationPeriodEnded') }}
             <span ng-if="application.haku.aikataulu.julkistus">
                 {{ localization('label.resultsPublishedDate') }} <time formatted-time="application.haku.aikataulu.julkistus.end" format="LL" />.
@@ -45,7 +45,7 @@
             {{ localization('label.applicationRoundEnded') }}
         </div>
 
-        <div class="application-status-item" ng-if="application.haku.active && (application.state.id == 'POSTPROCESSING' || application.state.id == 'SUBMITTED')">
+        <div class="application-status-item" ng-if="application.state.id == 'POSTPROCESSING' || application.state.id == 'SUBMITTED'">
             {{ localization("message.applicationIsInPostProcessing") }}
         </div>
 

@@ -17,23 +17,23 @@ sealed case class KoutaHakukohde(alkamiskausiKoodiUri: Option[String],
 object KoutaHakukohde {
   def toHakukohde(koutaHakukohde: KoutaHakukohde): Try[Hakukohde] = {
     for {
-      kohteenHakuaika <- extractKohteenHakuaika(koutaHakukohde)
+      kohteenHakuaika <- extractKohteenHakuajat(koutaHakukohde)
       koulutuksenAlkaminen <- extractKoulutuksenAlkaminen(koutaHakukohde)
-    } yield Hakukohde(hakuaikaId = Some("kouta-hakuaika-id"), // FIXME
+    } yield Hakukohde(hakuaikaId = Some("kouta-hakuaika-id"),
       koulutuksenAlkaminen = koulutuksenAlkaminen,
-      kohteenHakuaika = kohteenHakuaika, // FIXME: tuki useammalle hakuajalle
+      hakukohdekohtaisetHakuajat = kohteenHakuaika,
       ohjeetUudelleOpiskelijalle = None, // FIXME
       oid = koutaHakukohde.oid,
       yhdenPaikanSaanto = koutaHakukohde.yhdenPaikanSaanto.voimassa)
   }
 
-  private def extractKohteenHakuaika(koutaHakukohde: KoutaHakukohde) : Try[Option[KohteenHakuaika]] = {
+  private def extractKohteenHakuajat(koutaHakukohde: KoutaHakukohde) : Try[Option[List[KohteenHakuaika]]] = {
     if (koutaHakukohde.kaytetaanHaunAikataulua.getOrElse(false))
       Success(None)
     else
-      koutaHakukohde.hakuajat.headOption match {
-        case Some(koutaHakuaika) => toKohteenHakuaika(koutaHakuaika) map (x => Some(x))
-        case None => Success(None)
+      koutaHakukohde.hakuajat.foldRight[Try[Option[List[KohteenHakuaika]]]](Success(Some(Nil))) {
+        case (koutaHakuaika, Success(Some(hs))) => toKohteenHakuaika(koutaHakuaika).map(aika => Some(aika :: hs))
+        case (_, failure) => failure
       }
   }
 
