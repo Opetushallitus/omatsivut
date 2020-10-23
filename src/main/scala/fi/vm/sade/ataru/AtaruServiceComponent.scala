@@ -142,7 +142,7 @@ trait AtaruServiceComponent  {
     private def toHakutoive(hakukohde: Hakukohde): Hakutoive = {
       Hakutoive(
         Some(Map("Koulutus-id" -> hakukohde.oid)),
-        hakukohde.yhdenPaikanSaanto,
+        Some(hakukohde.yhdenPaikanSaanto),
         hakukohde.koulutuksenAlkaminen,
         hakukohde.hakuaikaId,
         hakukohde.hakukohdekohtaisetHakuajat

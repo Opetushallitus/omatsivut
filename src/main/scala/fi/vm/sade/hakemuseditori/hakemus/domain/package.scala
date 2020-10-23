@@ -63,7 +63,7 @@ case class Hakemus(oid: String,
 case class Tuloskirje(hakuOid: String, created: Long)
 
 case class Hakutoive(hakemusData: Option[HakutoiveData],
-                     yhdenPaikanSaanto: Boolean,
+                     yhdenPaikanSaanto: Option[Boolean],
                      koulutuksenAlkaminen: Option[KoulutuksenAlkaminen],
                      hakuaikaId: Option[String],
                      hakukohdekohtaisetHakuajat: Option[List[KohteenHakuaika]])

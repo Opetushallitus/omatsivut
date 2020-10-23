@@ -155,12 +155,12 @@ trait HakemusConverterComponent {
       def hakutoiveDataToHakutoive(data: HakutoiveData): Hakutoive = {
         data.isEmpty match {
           case true =>
-            Hakutoive(None, false, None, None, None)
+            Hakutoive(None, None, None, None, None)
           case _ =>
             val tarjonnanHakukohde = tarjontaService.hakukohde(data("Koulutus-id"))
             val amendedData = amendWithKoulutusInformaatio(lang, data)
 
-            Hakutoive(Some(amendedData), tarjonnanHakukohde.exists(_.yhdenPaikanSaanto), tarjonnanHakukohde.flatMap(_.koulutuksenAlkaminen),
+            Hakutoive(Some(amendedData), tarjonnanHakukohde.map(_.yhdenPaikanSaanto), tarjonnanHakukohde.flatMap(_.koulutuksenAlkaminen),
                       tarjonnanHakukohde.flatMap(_.hakuaikaId), tarjonnanHakukohde.flatMap(_.hakukohdekohtaisetHakuajat))
         }
       }

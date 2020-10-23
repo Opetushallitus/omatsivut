@@ -2375,6 +2375,7 @@
                   'Koulutus-id': '1.2.246.562.14.2014032812530780195965',
                   'Koulutus-requiredBaseEducations': '',
                   'Koulutus-id-educationcode': 'koulutus_020075' },
+              yhdenPaikanSaanto: false,
               hakuaikaId: "5474"
           }
         dbEnd.hakemus.hakutoiveet.should.deep.equal(dbStart.hakemus.hakutoiveet.slice(0, 2).concat(newOne).concat({}).concat({}))
@@ -2403,6 +2404,7 @@
                   'Koulutus-id': '1.2.246.562.14.2014032812530780195965',
                   'Koulutus-requiredBaseEducations': '',
                   'Koulutus-id-educationcode': 'koulutus_020075' },
+              yhdenPaikanSaanto: false,
               hakuaikaId: "5474"
           }
           dbEnd.hakemus.hakutoiveet.should.deep.equal(dbStart.hakemus.hakutoiveet.slice(0, 2).concat(newOne).concat({}).concat({}))

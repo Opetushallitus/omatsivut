@@ -25,7 +25,7 @@ object TarjontaParser extends JsonFormats with Logging {
       ohjeetUudelleOpiskelijalle = (obj \ "ohjeetUudelleOpiskelijalle").extractOpt[String]
       hakuaika <- if (kaytetaanHakukohdekohtaistaHakuaikaa) { createHakuaika((obj \ "hakuaikaAlkuPvm").extractOpt[Long], (obj \ "hakuaikaLoppuPvm").extractOpt[Long]) } else { Some(None) }
       koulutuksenAlkaminen = createKoulutuksenAlkaminen((obj \ "koulutuksenAlkamisvuosi").extractOpt[Long], (obj \ "koulutuksenAlkamiskausiUri").extractOpt[String])
-      yhdenPaikanSaanto = (obj \ "yhdenPaikanSaanto" \ "voimassa").extract[Boolean]
+      yhdenPaikanSaanto = (obj \ "yhdenPaikanSaanto" \ "voimassa").extractOrElse(false)
     } yield Hakukohde(oid, hakuaikaId, koulutuksenAlkaminen, hakuaika, ohjeetUudelleOpiskelijalle, yhdenPaikanSaanto)
   }
 

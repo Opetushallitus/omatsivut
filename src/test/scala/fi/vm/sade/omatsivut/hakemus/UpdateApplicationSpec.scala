@@ -155,7 +155,7 @@ class UpdateApplicationSpec extends HakemusApiSpecification with FixturePerson w
           "Opetuspiste-id" -> "1.2.246.562.20.60377543290",
           "Koulutus-id-lang" -> "FI",
           "Koulutus-id-aoIdentifier" -> "019")),
-        false,
+        Some(false),
         None,
         None,
         None))) { hakemus =>

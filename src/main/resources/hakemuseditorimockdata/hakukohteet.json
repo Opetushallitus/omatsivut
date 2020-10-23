@@ -1,4 +1,17 @@
 {
+  "1.2.246.562.20.42476855715": {
+    "result": {
+      "oid": "1.2.246.562.20.42476855715",
+      "hakuOid": "1.2.246.562.29.62858726037",
+      "hakuaikaId": "2910558",
+      "koulutuksenAlkamisvuosi": 2016,
+      "koulutuksenAlkamiskausiUri": "kausi_k#1",
+      "yhdenPaikanSaanto": {
+        "voimassa": true,
+        "syy": "Kohdejoukon tarkenne on 'haunkohdejoukontarkenne_3#1'"
+      }
+    }
+  },
   "1.2.246.562.5.72607738902": {
     "result": {
       "modified": 1380626708076,
