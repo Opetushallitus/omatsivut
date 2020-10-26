@@ -30,20 +30,23 @@ trait OmatsivutPaths extends Logging {
   }
 
   def initsessionPath(): String = {
-    OphUrlProperties.url("omatsivut.initsession")
+    val urlCas  = urlPrefix("fi")
+    urlCas + "/omatsivut/initsession"
   }
 
   def loginPath(contextPath: String)(implicit lang: Language.Language): String = {
     val realContextPath = getContextPath(contextPath)
     val urlRoot = urlPrefix(lang.toString.toLowerCase())
+    val urlCas  = urlPrefix("fi")
     val fullUrl = urlRoot + realContextPath + "/initsession"
-    urlRoot + "/cas-oppija/login?locale=" + lang + "&valtuudet=" + AppConfig.suomifi_valtuudet_enabled.toString + "&service=" + URLEncoder.encode(fullUrl)
+    urlCas + "/cas-oppija/login?locale=" + lang + "&valtuudet=" + AppConfig.suomifi_valtuudet_enabled.toString + "&service=" + URLEncoder.encode(fullUrl)
   }
 
   def logoutPath(servicePath: String)(implicit lang: Language.Language): String = {
     val urlRoot = urlPrefix(lang.toString.toLowerCase())
+    val urlCas = urlPrefix("fi")
     val fullUrl = urlRoot + servicePath
-    urlRoot + "/cas-oppija/logout?service=" + URLEncoder.encode(fullUrl)
+    urlCas + "/cas-oppija/logout?service=" + URLEncoder.encode(fullUrl)
   }
 
   def omatsivutPath(contextPath: String)(implicit lang: Language.Language): String = {
