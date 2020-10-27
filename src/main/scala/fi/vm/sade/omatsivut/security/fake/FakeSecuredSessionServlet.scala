@@ -30,7 +30,7 @@ trait FakeSecuredSessionServletContainer {
         case None => BadRequest("No ticket found from CAS request" + clientAddress);
         case Some(ticket) => {
           logger.debug("GOT TICKET FROM CAS")
-          val attrs: Either[Throwable, OppijaAttributes] = fakeCasOppijaClient.validateServiceTicket(initsessionPath())(ticket, fakeCasOppijaClient.decodeOppijaAttributes(hetu)).handleWith {
+          val attrs: Either[Throwable, OppijaAttributes] = fakeCasOppijaClient.validateServiceTicket(initsessionPath(request.getContextPath))(ticket, fakeCasOppijaClient.decodeOppijaAttributes(hetu)).handleWith {
             case NonFatal(t) => Task.fail(new AuthenticationFailedException(s"Failed to validate service ticket $ticket", t))
           }.attemptRunFor(10000).toEither
           attrs match {
