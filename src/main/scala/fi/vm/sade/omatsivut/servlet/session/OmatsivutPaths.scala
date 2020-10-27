@@ -29,9 +29,12 @@ trait OmatsivutPaths extends Logging {
     protocol + host
   }
 
-  def initsessionPath(): String = {
-    val urlCas  = urlPrefix("fi")
-    urlCas + "/omatsivut/initsession"
+  def initsessionPath(contextPath: String)(implicit lang: Language.Language): String = {
+    //OphUrlProperties.url("omatsivut.initsession")
+    val realContextPath = getContextPath(contextPath)
+    val urlRoot = urlPrefix(lang.toString.toLowerCase())
+    urlRoot + realContextPath + "/initsession"
+
   }
 
   def loginPath(contextPath: String)(implicit lang: Language.Language): String = {
