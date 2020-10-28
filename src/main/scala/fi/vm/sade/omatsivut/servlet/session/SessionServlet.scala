@@ -1,15 +1,12 @@
 package fi.vm.sade.omatsivut.servlet.session
 
-import java.nio.charset.Charset
-
 import fi.vm.sade.hakemuseditori.json.JsonFormats
+import fi.vm.sade.omatsivut.security.SessionInfoRetriever.getSessionInfo
+import fi.vm.sade.omatsivut.security.{AttributeNames, AuthenticationRequiringServlet, SessionService}
 import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
 import org.joda.time.LocalDate
 import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
 import org.scalatra.json.JacksonJsonSupport
-import fi.vm.sade.omatsivut.security.{AttributeNames, AuthenticationRequiringServlet, SessionService}
-import fi.vm.sade.omatsivut.security.SessionInfoRetriever.getSessionInfo
-import org.json4s.Formats
 
 class SessionServlet(implicit val sessionService: SessionService)
   extends OmatSivutServletBase

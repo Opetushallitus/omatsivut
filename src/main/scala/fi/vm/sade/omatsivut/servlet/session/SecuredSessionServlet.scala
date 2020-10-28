@@ -8,7 +8,6 @@ import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
 import fi.vm.sade.utils.cas.CasClient
 import fi.vm.sade.utils.cas.CasClient.OppijaAttributes
 import fi.vm.sade.utils.slf4j.Logging
-import org.eclipse.jetty.http.HttpStatus
 import org.scalatra.{BadRequest, Cookie, CookieOptions}
 import scalaz.concurrent.Task
 
@@ -54,7 +53,7 @@ trait SecuredSessionServletContainer {
       params.get("logoutRequest")
         .map(_ => {
          logger.info("Got logout request - redirectiong to logout servlet")
-          redirect("/logout")
+          redirect(initsessionPath(request.getContextPath()))
 
         })
         .orElse(throw new IllegalArgumentException("Not 'logoutRequest' parameter given"))
