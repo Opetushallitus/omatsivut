@@ -7,7 +7,7 @@ import fi.vm.sade.omatsivut.security.{AttributeNames, AuthenticationFailedExcept
 import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
 import fi.vm.sade.omatsivut.servlet.session.OmatsivutPaths
 import fi.vm.sade.utils.cas.CasClient
-import fi.vm.sade.utils.cas.CasClient.OppijaAttributes
+import fi.vm.sade.utils.cas.CasClient.{OppijaAttributes, ServiceTicket}
 import fi.vm.sade.utils.slf4j.Logging
 import org.scalatra.{BadRequest, Cookie, CookieOptions}
 import scalaz.concurrent.Task
@@ -39,7 +39,7 @@ trait FakeSecuredSessionServletContainer {
               val personOid = attrs.getOrElse("personOid", "")
               val displayName = attrs.getOrElse("displayName", "")
               logger.debug("ATTRIBUTES:")
-              initializeSessionAndRedirect(hetu, personOid, displayName)
+              initializeSessionAndRedirect(ticket, hetu, personOid, displayName)
             }
             case Left(t) => {
               logger.warn("Unable to process CAS Oppija login request, hetu cannot be resolved from ticket", t)
@@ -50,8 +50,8 @@ trait FakeSecuredSessionServletContainer {
       }
     }
 
-    private def initializeSessionAndRedirect(hetu: String, personOid: String, displayName: String): Unit = {
-      val newSession = sessionService.storeSession(Hetu(hetu), OppijaNumero(personOid), displayName)
+    private def initializeSessionAndRedirect(ticket: ServiceTicket, hetu: String, personOid: String, displayName: String): Unit = {
+      val newSession = sessionService.storeSession(ticket, Hetu(hetu), OppijaNumero(personOid), displayName)
       newSession match {
         case Right((sessionId, _)) =>
           val cookieOptions = CookieOptions(domain = "", secure = isHttps, path = "/", maxAge = sessionTimeout.getOrElse(3600), httpOnly = true)

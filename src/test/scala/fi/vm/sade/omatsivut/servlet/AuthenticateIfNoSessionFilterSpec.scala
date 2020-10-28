@@ -5,6 +5,7 @@ import java.util.UUID
 import fi.vm.sade.hakemuseditori.domain.Language
 import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.db.SessionRepository
+import fi.vm.sade.omatsivut.fixtures.TestFixture.testCASticket
 import fi.vm.sade.omatsivut.security._
 import fi.vm.sade.omatsivut.{ITSetup, SessionFailure}
 import org.junit.runner.RunWith
@@ -72,7 +73,7 @@ class AuthenticateIfNoSessionFilterSpec extends MutableScalatraSpec with Mockito
     val hetu = Hetu("123456-789A")
     val oppijaNumero = OppijaNumero("1.2.3.4.5.6")
     val oppijaNimi = "John Smith"
-    val testSession = SessionInfo(hetu, oppijaNumero, oppijaNimi)
+    val testSession = SessionInfo(testCASticket, hetu, oppijaNumero, oppijaNimi)
     sessionRepository.get(id) returns Right(testSession)
   }
 }

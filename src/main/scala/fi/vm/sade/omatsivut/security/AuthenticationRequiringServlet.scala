@@ -7,7 +7,7 @@ import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
 import fi.vm.sade.utils.slf4j.Logging
 import org.json4s.JsonDSL._
 import org.json4s.jackson.JsonMethods._
-import org.scalatra.{BadRequest, NotFound, Ok, Unauthorized}
+import org.scalatra.{BadRequest, NotFound, Unauthorized}
 
 trait AuthenticationRequiringServlet extends OmatSivutServletBase with Logging {
   implicit def sessionService: SessionService
@@ -33,7 +33,7 @@ trait AuthenticationRequiringServlet extends OmatSivutServletBase with Logging {
         logger.debug("Found session: " + sessionInfo.oppijaNumero)
         if (returnNotFoundIfNoOid && sessionInfo.oppijaNumero.value.isEmpty) {
           logger.info("Session has no oppijaNumero, should not find anything")
-          halt(NotFound(render("error" -> "no oid was present")))
+          halt(NotFound(render("error" -> "no personOid was present")))
         }
         pass()
       case _ =>

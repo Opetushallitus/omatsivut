@@ -5,15 +5,16 @@ import fi.vm.sade.omatsivut.auditlog.Login
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.security._
 import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
-import fi.vm.sade.utils.cas.CasClient.OppijaAttributes
+import fi.vm.sade.utils.cas.{CasClient, CasLogout}
+import fi.vm.sade.utils.cas.CasClient.{OppijaAttributes, ServiceTicket}
 import fi.vm.sade.utils.slf4j.Logging
 import org.scalatra.{BadRequest, Cookie, CookieOptions}
-import fi.vm.sade.utils.cas.CasClient
 import scalaz.concurrent.Task
 
 import scala.util.control.NonFatal
 
 trait SecuredSessionServletContainer {
+
   class SecuredSessionServlet(val appConfig: AppConfig,
                               val authenticationInfoService: AuthenticationInfoService,
                               implicit val sessionService: SessionService,
@@ -38,7 +39,7 @@ trait SecuredSessionServletContainer {
               val hetu = attrs("nationalIdentificationNumber")
               val personOid = attrs.getOrElse("personOid", "")
               val displayName = attrs.getOrElse("displayName", "")
-              initializeSessionAndRedirect(hetu, personOid, displayName)
+              initializeSessionAndRedirect(ticket, hetu, personOid, displayName)
             }
             case Left(t) => {
               logger.warn("Unable to process CAS Oppija login request, hetu cannot be resolved from ticket", t)
@@ -49,8 +50,20 @@ trait SecuredSessionServletContainer {
       }
     }
 
-    private def initializeSessionAndRedirect(hetu: String, personOid: String, displayName: String): Unit = {
-      val newSession = sessionService.storeSession(Hetu(hetu), OppijaNumero(personOid), displayName)
+    post("/") {
+      params.get("logoutRequest") match {
+        case Some(x) => {
+          CasLogout.parseTicketFromLogoutRequest(x) match {
+            case Some(ticket: ServiceTicket) => sessionService.deleteSessionByServiceTicket(ticket)
+            case None => new RuntimeException(s"Failed to parse CAS logout request $request")
+          }
+        }
+        case None => new IllegalArgumentException("Not 'logoutRequest' parameter given")
+      }
+    }
+
+    private def initializeSessionAndRedirect(ticket: ServiceTicket, hetu: String, personOid: String, displayName: String): Unit = {
+      val newSession = sessionService.storeSession(ticket, Hetu(hetu), OppijaNumero(personOid), displayName)
       newSession match {
         case Right((sessionId, _)) =>
           val cookieOptions = CookieOptions(domain = "", secure = isHttps, path = "/", maxAge = sessionTimeout.getOrElse(3600), httpOnly = true)
@@ -73,4 +86,5 @@ trait SecuredSessionServletContainer {
       link
     }
   }
+
 }

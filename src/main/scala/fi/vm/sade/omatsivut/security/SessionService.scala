@@ -2,6 +2,7 @@ package fi.vm.sade.omatsivut.security
 
 import fi.vm.sade.omatsivut.SessionFailure
 import fi.vm.sade.omatsivut.db.SessionRepository
+import fi.vm.sade.utils.cas.CasClient.ServiceTicket
 import fi.vm.sade.utils.slf4j.Logging
 
 import scala.util.{Failure, Success, Try}
@@ -19,6 +20,14 @@ class SessionService(val sessionRepository: SessionRepository) extends Logging {
     }
   }
 
+  def deleteSessionByServiceTicket(ticket: ServiceTicket): Unit = {
+      Try(sessionRepository.deleteByServiceTicket(ticket)) match {
+        case Success(_) => logger.debug("Session " + ticket + " removed from database")
+        case Failure(t) => logger.error("Failed to remove session " + ticket + " from database", t)
+      }
+
+  }
+
   def deleteAllExpired(): Unit = {
     Try(sessionRepository.deleteExpired()) match {
       case Success(count) => logger.info("Deleted " + count + " expired sessions from database")
@@ -26,8 +35,8 @@ class SessionService(val sessionRepository: SessionRepository) extends Logging {
     }
   }
 
-  def storeSession(hetu: Hetu, oppijaNumero: OppijaNumero, oppijaNimi: String): Either[Throwable, (SessionId, SessionInfo)] = {
-    val session = SessionInfo(hetu, oppijaNumero, oppijaNimi)
+  def storeSession(ticket: ServiceTicket, hetu: Hetu, oppijaNumero: OppijaNumero, oppijaNimi: String): Either[Throwable, (SessionId, SessionInfo)] = {
+    val session = SessionInfo(ticket, hetu, oppijaNumero, oppijaNimi)
     logger.debug("Storing to session: " + session.oppijaNumero)
     Try(sessionRepository.store(session)) match {
       case Success(id) => Right((id, session))
