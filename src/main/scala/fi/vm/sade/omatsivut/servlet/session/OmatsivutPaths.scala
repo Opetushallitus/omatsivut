@@ -30,11 +30,15 @@ trait OmatsivutPaths extends Logging {
   }
 
   def initsessionPath(contextPath: String)(implicit lang: Language.Language): String = {
-    //OphUrlProperties.url("omatsivut.initsession")
     val realContextPath = getContextPath(contextPath)
     val urlRoot = urlPrefix(lang.toString.toLowerCase())
     urlRoot + realContextPath + "/initsession"
+  }
 
+  def logoutServletPath(contextPath: String)(implicit lang: Language.Language): String = {
+    val realContextPath = getContextPath(contextPath)
+    val urlRoot = urlPrefix(lang.toString.toLowerCase())
+    urlRoot + realContextPath + "/logout"
   }
 
   def loginPath(contextPath: String)(implicit lang: Language.Language): String = {

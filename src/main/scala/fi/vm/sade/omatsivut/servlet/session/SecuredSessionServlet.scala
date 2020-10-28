@@ -53,7 +53,7 @@ trait SecuredSessionServletContainer {
       params.get("logoutRequest")
         .map(_ => {
          logger.info("Got logout request - redirectiong to logout servlet")
-          redirect(initsessionPath(request.getContextPath()))
+          redirect(logoutServletPath(request.getContextPath()))
 
         })
         .orElse(throw new IllegalArgumentException("Not 'logoutRequest' parameter given"))
