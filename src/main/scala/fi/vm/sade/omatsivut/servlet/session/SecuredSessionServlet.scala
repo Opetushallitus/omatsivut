@@ -5,10 +5,11 @@ import fi.vm.sade.omatsivut.auditlog.Login
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.security._
 import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
+import fi.vm.sade.utils.cas.CasClient
 import fi.vm.sade.utils.cas.CasClient.OppijaAttributes
 import fi.vm.sade.utils.slf4j.Logging
+import org.eclipse.jetty.http.HttpStatus
 import org.scalatra.{BadRequest, Cookie, CookieOptions}
-import fi.vm.sade.utils.cas.CasClient
 import scalaz.concurrent.Task
 
 import scala.util.control.NonFatal
@@ -47,6 +48,16 @@ trait SecuredSessionServletContainer {
           }
         }
       }
+    }
+
+    post("/") {
+      params.get("logoutRequest")
+        .map(_ => {
+         logger.info("Got logout request - redirectiong to logout servlet")
+          redirect("/logout")
+
+        })
+        .orElse(throw new IllegalArgumentException("Not 'logoutRequest' parameter given"))
     }
 
     private def initializeSessionAndRedirect(hetu: String, personOid: String, displayName: String): Unit = {

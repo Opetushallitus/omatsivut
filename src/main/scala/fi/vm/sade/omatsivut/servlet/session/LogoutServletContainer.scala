@@ -21,6 +21,7 @@ trait LogoutServletContainer extends OmatsivutPaths {
     post("/") {
       params.get("logoutRequest")
         .map(_ => {
+          logger.info("Got redirect request - logging out from omat sivut")
           sessionService.deleteSession(cookies.get(sessionCookieName).map(UUID.fromString).map(SessionId))
           clearCookie(sessionCookieName)
           redirectToCASOppijaLogout(request, response)
