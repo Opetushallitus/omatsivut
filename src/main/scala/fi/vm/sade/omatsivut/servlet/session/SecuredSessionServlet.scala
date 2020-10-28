@@ -1,5 +1,7 @@
 package fi.vm.sade.omatsivut.servlet.session
 
+import java.util.UUID
+
 import fi.vm.sade.hakemuseditori.auditlog.Audit
 import fi.vm.sade.omatsivut.auditlog.Login
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
@@ -8,7 +10,7 @@ import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
 import fi.vm.sade.utils.cas.CasClient
 import fi.vm.sade.utils.cas.CasClient.OppijaAttributes
 import fi.vm.sade.utils.slf4j.Logging
-import org.scalatra.{BadRequest, Cookie, CookieOptions}
+import org.scalatra.{BadRequest, Cookie, CookieOptions, Ok}
 import scalaz.concurrent.Task
 
 import scala.util.control.NonFatal
@@ -52,9 +54,9 @@ trait SecuredSessionServletContainer {
     post("/") {
       params.get("logoutRequest")
         .map(_ => {
-         logger.info("Got logout request - redirectiong to logout servlet")
-          redirect(logoutServletPath(request.getContextPath()))
-
+          logger.info("Got redirect request - logging out from omat sivut")
+          sessionService.deleteSession(cookies.get(sessionCookieName).map(UUID.fromString).map(SessionId))
+          Ok("Done")
         })
         .orElse(throw new IllegalArgumentException("Not 'logoutRequest' parameter given"))
     }
