@@ -54,8 +54,9 @@ trait SecuredSessionServletContainer {
     post("/") {
       params.get("logoutRequest")
         .map(_ => {
-          logger.info("Got redirect request - logging out from omat sivut")
+          logger.debug("Got redirect request - logging out from omat sivut")
           sessionService.deleteSession(cookies.get(sessionCookieName).map(UUID.fromString).map(SessionId))
+          logger.debug("Session deleted - logged out from omat sivut")
           Ok("Done")
         })
         .orElse(throw new IllegalArgumentException("Not 'logoutRequest' parameter given"))
