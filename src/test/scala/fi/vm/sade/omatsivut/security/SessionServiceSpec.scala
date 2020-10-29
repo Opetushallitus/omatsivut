@@ -4,6 +4,7 @@ import java.util.UUID
 
 import fi.vm.sade.omatsivut.SessionFailure
 import fi.vm.sade.omatsivut.db.SessionRepository
+import fi.vm.sade.omatsivut.fixtures.TestFixture.testCASticket
 import fi.vm.sade.utils.cas.{CasAuthenticatingClient, CasClient, CasParams}
 import org.junit.runner.RunWith
 import org.specs2.matcher.MustThrownExpectations
@@ -47,7 +48,7 @@ class SessionServiceSpec extends Specification with MockitoStubs {
     "storeSession will persist a session in repository" in new SessionServiceWithMocks {
       sessionRepository.get(id) returns Left(SessionFailure.SESSION_NOT_FOUND)
       sessionRepository.store(session) returns id
-      sessionService.storeSession(hetu, oppijaNumero, oppijaNimi) must_== Right((id, session))
+      sessionService.storeSession(testCASticket, hetu, oppijaNumero, oppijaNimi) must_== Right((id, session))
     }
 
     "deleteSession will delete a session from repository" in new SessionServiceWithMocks {
@@ -68,7 +69,7 @@ class SessionServiceSpec extends Specification with MockitoStubs {
     val oppijaNumero = OppijaNumero("1.2.3.4.5.6")
     val oppijaNimi = "John Smith"
     val uid: String = "uid"
-    val session = SessionInfo(hetu, oppijaNumero, oppijaNimi)
+    val session = SessionInfo(testCASticket, hetu, oppijaNumero, oppijaNimi)
     val casClient: CasClient = mock[CasClient]
 
     val sessionRepository: SessionRepository = mock[SessionRepository]

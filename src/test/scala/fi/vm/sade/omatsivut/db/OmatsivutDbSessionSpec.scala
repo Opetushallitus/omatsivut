@@ -3,6 +3,7 @@ package fi.vm.sade.omatsivut.db
 import java.util.UUID
 
 import fi.vm.sade.omatsivut.SessionFailure.SessionFailure
+import fi.vm.sade.omatsivut.fixtures.TestFixture.testCASticket
 import fi.vm.sade.omatsivut.security.{Hetu, OppijaNumero, SessionId, SessionInfo}
 import fi.vm.sade.omatsivut.{ITSetup, OmatsivutDbTools, SessionFailure}
 import org.junit.runner.RunWith
@@ -26,14 +27,14 @@ class OmatsivutDbSessionSpec extends Specification with ITSetup with OmatsivutDb
 
     "find a stored session" in new OneSessionInDatabase {
       val session = singleConnectionOmatsivutDb.get(id)
-      session must beRight(SessionInfo(hetu, oppijaNumero, oppijaNimi))
+      session must beRight(SessionInfo(testCASticket, hetu, oppijaNumero, oppijaNimi))
     }
 
     "not find a stored session if timeout has expired" in new OneSessionInDatabase {
       val sessionBeforeExpiration = singleConnectionOmatsivutDb.get(id)
       setSessionLastAccessTime(id.value.toString, testSessionTimeout + 1)
       val sessionAfterExpiration = singleConnectionOmatsivutDb.get(id)
-      sessionBeforeExpiration must beRight(SessionInfo(hetu, oppijaNumero, oppijaNimi));
+      sessionBeforeExpiration must beRight(SessionInfo(testCASticket, hetu, oppijaNumero, oppijaNimi));
       sessionAfterExpiration must beLeft(SessionFailure.SESSION_EXPIRED)
     }
 
@@ -87,14 +88,14 @@ class OmatsivutDbSessionSpec extends Specification with ITSetup with OmatsivutDb
     val oppijaNimi = "John Smith"
 
     def createSessionAndVerifyItIsThere(): SessionId = {
-      val id: SessionId = singleConnectionOmatsivutDb.store(SessionInfo(hetu, oppijaNumero, oppijaNimi))
+      val id: SessionId = singleConnectionOmatsivutDb.store(SessionInfo(testCASticket, hetu, oppijaNumero, oppijaNimi))
       verifySessionIsInDatabase(id)
       id
     }
 
     def verifySessionIsInDatabase(id: SessionId) = {
       val existingSession = singleConnectionOmatsivutDb.get(id)
-      existingSession must beRight(SessionInfo(hetu, oppijaNumero, oppijaNimi))
+      existingSession must beRight(SessionInfo(testCASticket, hetu, oppijaNumero, oppijaNimi))
     }
 
     def verifySessionIsNotFoundInDatabase(id: SessionId): MatchResult[Either[SessionFailure, SessionInfo]] = {

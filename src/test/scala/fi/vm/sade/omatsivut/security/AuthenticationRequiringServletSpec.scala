@@ -2,11 +2,10 @@ package fi.vm.sade.omatsivut.security
 
 import java.util.UUID
 
-import fi.vm.sade.omatsivut.{PersonOid, ScalatraTestCookiesSupport, ScalatraTestSupport}
-import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.db.SessionRepository
+import fi.vm.sade.omatsivut.fixtures.TestFixture.testCASticket
 import org.junit.runner.RunWith
-import org.scalatra.{Ok, ScalatraServlet}
+import org.scalatra.Ok
 import org.scalatra.test.specs2.MutableScalatraSpec
 import org.specs2.mock.Mockito
 import org.specs2.runner.JUnitRunner
@@ -22,7 +21,7 @@ class AuthenticationRequiringServletSpec extends MutableScalatraSpec with Mockit
   def createTestSession(oppijaNumero: String): Map[String, String] = {
     val hetu = "123456-789A"
     val oppijaName = "John Smith"
-    val sessionData = SessionInfo(Hetu(hetu), OppijaNumero(oppijaNumero), oppijaName)
+    val sessionData = SessionInfo(testCASticket, Hetu(hetu), OppijaNumero(oppijaNumero), oppijaName)
     sessionRepository.get(id) returns Right(sessionData)
     CookieHelper.cookieHeaderWith(sessionCookieName -> id.value.toString)
   }
