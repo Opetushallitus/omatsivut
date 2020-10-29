@@ -9,7 +9,7 @@ import fi.vm.sade.omatsivut.db.SessionRepository
 import fi.vm.sade.omatsivut.security.{Hetu, OppijaNumero, SessionId, SessionInfo}
 import fi.vm.sade.utils.cas.CasClient.ServiceTicket
 import slick.jdbc.PostgresProfile.api._
-import slick.sql.{SqlAction, SqlStreamingAction}
+import slick.sql.SqlStreamingAction
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
@@ -31,7 +31,7 @@ trait SessionRepositoryImpl extends SessionRepository with OmatsivutRepository {
   }
 
   override def deleteByServiceTicket(ticket: ServiceTicket): Unit = {
-    runBlocking(sqlu"""delete from sessions where ticket = ${ticket.value}::uuid""", timeout = Duration(10, TimeUnit.SECONDS))
+    runBlocking(sqlu"""delete from sessions where ticket = ${ticket.value}""", timeout = Duration(10, TimeUnit.SECONDS))
   }
 
   override def deleteExpired(): Int = {
