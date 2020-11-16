@@ -13,7 +13,7 @@
     </organization>
     <properties>
         <valinta-tulos-service.version>5.3.0-SNAPSHOT</valinta-tulos-service.version>
-        <jetty.version>9.4.15.v20190215</jetty.version>
+        <jetty.version>9.4.34.v20201102</jetty.version>
         <postgresql.version>42.2.5</postgresql.version>
         <scalatra.version>2.6.3</scalatra.version>
         <flyway-core.version>3.2.1</flyway-core.version>
