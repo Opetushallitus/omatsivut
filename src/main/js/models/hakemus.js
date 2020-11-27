@@ -74,18 +74,16 @@ export default class Hakemus {
     var self = this
 
     function isPeriodActive(applicationPeriodId) {
-      var period = _(self.haku.applicationPeriods).find(function(period) { return period.id === applicationPeriodId })
-      return period !== undefined ? period.active : self.haku.active
+      return _(self.haku.applicationPeriods)
+        .some(function(period) { return period.id === applicationPeriodId && period.active })
     }
 
     if (hakutoive.addedDuringCurrentSession) {
       return false
-    } else if (!_.isEmpty(hakutoive.kohdekohtainenHakuaika)) {
-      return !hakutoive.kohdekohtainenHakuaika.active
-    } else if (!_.isEmpty(hakuaikaId)) {
+    } else if (hakuaikaId != null) {
       return !isPeriodActive(hakuaikaId)
     } else {
-      return !this.haku.active
+      return !_(hakutoive.hakukohdekohtaisetHakuajat).some(function(period) { return period.active })
     }
   }
 
@@ -228,7 +226,7 @@ export default class Hakemus {
   importHakuajat(hakukohteet) {
     if (hakukohteet != null) {
       for (var i = 0; i < this.hakutoiveet.length && i < hakukohteet.length; i++) {
-        this.hakutoiveet[i].kohdekohtainenHakuaika = hakukohteet[i].kohdekohtainenHakuaika
+        this.hakutoiveet[i].hakukohdekohtaisetHakuajat = hakukohteet[i].hakukohdekohtaisetHakuajat
       }
     }
   }

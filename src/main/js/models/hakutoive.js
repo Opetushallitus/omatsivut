@@ -19,7 +19,7 @@ export default class Hakutoive {
   importJson(json) {
     this.data = json.hakemusData || {};
     this.hakuaikaId = json.hakuaikaId;
-    this.kohdekohtainenHakuaika = json.kohdekohtainenHakuaika;
+    this.hakukohdekohtaisetHakuajat = json.hakukohdekohtaisetHakuajat;
     this.koulutuksenAlkaminen = json.koulutuksenAlkaminen;
   }
 
@@ -94,7 +94,7 @@ export default class Hakutoive {
       if (key.indexOf("$")!==0 && key != "Opetuspiste")
         delete self.data[key]
     })
-    delete this.kohdekohtainenHakuaika
+    delete this.hakukohdekohtaisetHakuajat
   }
 
   isValid() {
