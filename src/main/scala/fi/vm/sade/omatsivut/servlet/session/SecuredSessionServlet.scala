@@ -36,10 +36,16 @@ trait SecuredSessionServletContainer {
           logger.debug(s"attrs response: $attrs")
           attrs match {
             case Right(attrs) => {
-              val hetu = attrs("nationalIdentificationNumber")
-              val personOid = attrs.getOrElse("personOid", "")
-              val displayName = attrs.getOrElse("displayName", "")
-              initializeSessionAndRedirect(ticket, hetu, personOid, displayName)
+              logger.info(s"User logging in: $attrs")
+              if (isUsingValtuudet(attrs)) {
+                logger.info("User is using valtuudet; Will not init session and should redirect.")
+                BadRequest("Placeholder, you are using valtuudet.")
+              } else {
+                val hetu = attrs("nationalIdentificationNumber")
+                val personOid = attrs.getOrElse("personOid", "")
+                val displayName = attrs.getOrElse("displayName", "")
+                initializeSessionAndRedirect(ticket, hetu, personOid, displayName)
+              }
             }
             case Left(t) => {
               logger.warn("Unable to process CAS Oppija login request, hetu cannot be resolved from ticket", t)
@@ -84,6 +90,11 @@ trait SecuredSessionServletContainer {
       val link = omatsivutPath(request.getContextPath) + paramOption("redirect").getOrElse("/index.html")
       logger.debug("Link to forward to, after a session is established: " + link)
       link
+    }
+
+    private def isUsingValtuudet(attributes: OppijaAttributes): Boolean = {
+      (!attributes.getOrElse("impersonatorNationalIdentificationNumber", "").isEmpty
+        || !attributes.getOrElse("impersonatorDisplayName", "").isEmpty)
     }
   }
 
