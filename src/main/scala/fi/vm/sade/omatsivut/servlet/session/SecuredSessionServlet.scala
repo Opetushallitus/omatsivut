@@ -93,8 +93,8 @@ trait SecuredSessionServletContainer {
     }
 
     private def isUsingValtuudet(attributes: OppijaAttributes): Boolean = {
-      (!attributes.getOrElse("impersonatorNationalIdentificationNumber", "").isEmpty
-        || !attributes.getOrElse("impersonatorDisplayName", "").isEmpty)
+      (attributes.getOrElse("impersonatorNationalIdentificationNumber", "").nonEmpty
+        || attributes.getOrElse("impersonatorDisplayName", "").nonEmpty)
     }
   }
 
