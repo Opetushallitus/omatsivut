@@ -1,6 +1,7 @@
 package fi.vm.sade.omatsivut.servlet.session
 
 import fi.vm.sade.hakemuseditori.auditlog.Audit
+import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.omatsivut.auditlog.Login
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.security._
@@ -38,8 +39,8 @@ trait SecuredSessionServletContainer {
             case Right(attrs) => {
               logger.info(s"User logging in: $attrs")
               if (isUsingValtuudet(attrs)) {
-                logger.info("User is using valtuudet; Will not init session and should redirect.")
-                BadRequest("Placeholder, you are using valtuudet.")
+                logger.info(s"User ${attrs.getOrElse("impersonatorDisplayName", "NOT_FOUND")} is using valtuudet; Will not init session and should redirect to ${valtuudetRedirectUri}")
+                redirect(valtuudetRedirectUri)
               } else {
                 val hetu = attrs("nationalIdentificationNumber")
                 val personOid = attrs.getOrElse("personOid", "")
@@ -90,6 +91,10 @@ trait SecuredSessionServletContainer {
       val link = omatsivutPath(request.getContextPath) + paramOption("redirect").getOrElse("/index.html")
       logger.debug("Link to forward to, after a session is established: " + link)
       link
+    }
+
+    private def valtuudetRedirectUri: String = {
+      "https://" + OphUrlProperties.url("host.oppija") + "/oma-opintopolku/"
     }
 
     private def isUsingValtuudet(attributes: OppijaAttributes): Boolean = {
