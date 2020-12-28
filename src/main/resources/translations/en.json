@@ -116,8 +116,8 @@
     "applicationIsInPostProcessing": "Your application is being processed. If you want to make any changes, please try again later.",
 
     "acceptEducation": {
-      "received": "Study place granted",
-      "latestAnswer": "Submit your answer by __aika__, or you will lose the offered study place.",
+      "received": "Admission offered",
+      "latestAnswer": "Submit your answer by __aika__, or you will lose the offer of admission.",
       "onlyOnePossible": {
         "1": "NB! You may accept",
         "2": "only one",
