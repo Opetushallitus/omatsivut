@@ -10,10 +10,10 @@
 
   "label": {
     "acceptedUnfinished": {
-      "text": "You will be offered a study place in this programme if the following conditions are met:",
+      "text": "You will be offered admission to this programme if the following conditions are met:",
       "rules": {
-        "1" : "You are not offered a place in any of your higher preferences shown above and",
-        "2" : "You have not already accepted another study place leading to a higher education degree in Finland in a study programme that begins during the same academic term"
+        "1" : "You are not offered admission in any of your higher preferences shown above and",
+        "2" : "You have not already accepted another offer of admission in a study programme leading to a higher education degree in Finland that begins during the same academic term"
       },
       "link" : "Additional information",
       "href" : "https://studyinfo.fi/wp2/en/higher-education/how-to-apply-for-bachelors-and-masters/joint-application-to-higher-education/admission-results-of-joint-application/"
@@ -46,7 +46,7 @@
     "mobilePhone": "Mobile phone number",
     "streetAddress": "Street address",
     "postalCode": "Postal code",
-    "acceptConditionallyAccepted": "I want to be removed from the waiting list and confirm this study place",
+    "acceptConditionallyAccepted": "I want to be removed from the waiting list and accept this offer of admission bindingly",
     "cannotUndoChanges": "NB: You cannot change your choice later",
     "moreInformation": "More information",
     "resultState": {
@@ -59,13 +59,13 @@
       "Varalla": "Number___varasija___on the waiting list",
       "VarallaPvm": "Number___varasija___on the waiting list Reserve places are filled until __varasijaPvm__.",
       "Peruutettu": "Cancelled",
-      "Perunut": "You have cancelled the study place",
+      "Perunut": "You have cancelled the offer of admission",
       "Peruuntunut": "Cancelled automatically",
       "VarasijaltaHyvaksytty": "Accepted from a waiting list",
-      "VastaanottanutSitovasti": "You have confirmed the study place",
+      "VastaanottanutSitovasti": "You have accepted the offer of admission",
       "Hylatty": "You have not received a study place.",
-      "EhdollisestiVastaanottanut": "You have confirmed the study place and are on a waiting list for a higher preference study place",
-      "EiVastaanotettuMaaraAikana": "You have not confirmed the study place within the set time"
+      "EhdollisestiVastaanottanut": "You have accepted the offer of admission and are on a waiting list for a study programme on a higher preference",
+      "EiVastaanotettuMaaraAikana": "You have not accepted the offer of admission within the given deadline"
     },
     "jonokohtaisetTulostiedot": {
       "valintatapa": "Selection method",
@@ -121,15 +121,15 @@
       "onlyOnePossible": {
         "1": "NB! You may accept",
         "2": "only one",
-        "3": "study place leading to a higher education degree in Finland during one academic term."
+        "3": "offer of admission in a study programme leading to a higher education degree in Finland during one academic term."
       },
-      "accept": "I confirm the granted study place",
-      "acceptToinenAste": "I confirm the granted study place",
-      "conditionalAccept": "I confirm the study place, but remain on a waiting list for a study place with higher preference.",
-      "conditionalAcceptInfo1": "If you are not accepted to a study place you are waiting for, this confirmation remains valid.",
-      "conditionalAcceptInfo2": "If you are accepted to a study place you are waiting for, you do not need to confirm that study place. It will be automatically confirmed.",
-      "reject": "I do not confirm the study place",
-      "confirmReject": "I understand that I am giving up the granted study place and cannot change my mind later.",
+      "accept": "I accept the offer of admission",
+      "acceptToinenAste": "I accept this offer of admission",
+      "conditionalAccept": "I accept this offer of admission, but remain on a waiting list for a study programme on a higher preference.",
+      "conditionalAcceptInfo1": "If you are not accepted to a study programme you are waiting for, this confirmation remains valid.",
+      "conditionalAcceptInfo2": "If you are accepted to a study programme you are waiting for, you do not need to accept that offer of admission. It will be automatically accepted.",
+      "reject": "I do not accept this offer of admission",
+      "confirmReject": "I understand that I am giving up the admission offered and cannot change my mind later.",
       "responseReceived": "Your answer has been sent.",
       "invalidEmail": "Invalid e-mail",
       "emailLabel": "E-mail (a confirmation will be sent to your e-mail)",
@@ -139,10 +139,10 @@
         "subject": "Studyinfo: Your answer has been received",
         "body": "Hello,\n\nWe have received %s your answer:\n%s\n\nDo not reply to this message – the message has been sent automatically.",
         "tila": {
-          "VastaanotaSitovasti": "I confirm the granted study place",
-          "VastaanotaSitovastiToinenAste": "I confirm the granted study place",
-          "Peru": "I do not confirm the study place",
-          "VastaanotaEhdollisesti": "I confirm the study place, but remain on a waiting list for a study place with higher preference"
+          "VastaanotaSitovasti": "I accept this offer of admission",
+          "VastaanotaSitovastiToinenAste": "I accept this offer of admission",
+          "Peru": "I do not accept this offer of admission",
+          "VastaanotaEhdollisesti": "I accept this offer of admission, but remain on a waiting list for a study programme on a higher preference."
         }
       }
     },
