@@ -38,7 +38,7 @@
     "resultsPublishedDate": "Tulokset julkaistaan viimeistään",
     "questionGroupWithTitle": "Lisäkysymykset",
     "questionGroupWithoutTitle": "Muut lisäkysymykset",
-    "resultsCaption": "Valintatilanne",
+    "resultsCaption": "Valintatilanteesi",
     "resultsFinal": "Lopullinen",
     "resultsPending": "Kesken",
     "contactDetails": "Yhteystiedot",
@@ -64,7 +64,7 @@
       "VarasijaltaHyvaksytty": "Hyväksytty varasijalta",
       "VastaanottanutSitovasti": "Opiskelupaikka vastaanotettu",
       "Hylatty": "Et saanut opiskelupaikkaa.",
-      "EhdollisestiVastaanottanut": "Ottanut paikan vastaan ja jonottaa ylempään",
+      "EhdollisestiVastaanottanut": "Opiskelupaikka vastaanotettu ja jonotat opiskelupaikkaa ylemmillä sijoilla olevista hakutoiveistasi",
       "EiVastaanotettuMaaraAikana": "Et ottanut opiskelupaikkaa vastaan määräaikaan mennessä"
     },
     "jonokohtaisetTulostiedot": {
@@ -116,24 +116,24 @@
     "applicationIsInPostProcessing": "Hakemuksesi on vielä käsiteltävänä. Jos haluat muuttaa hakutoiveitasi, yritä myöhemmin uudelleen.",
 
     "acceptEducation": {
-      "received": "Opiskelupaikka myönnetty",
-      "latestAnswer": "Lähetä vastauksesi __aika__ mennessä tai menetät tarjotun opiskelupaikan.",
+      "received": "Sinulle tarjotaan opiskelupaikkaa",
+      "latestAnswer": "Lähetä vastauksesi ennen __aika__ tai menetät tarjotun opiskelupaikan.",
       "onlyOnePossible": {
-        "1": "HUOM! Voit ottaa vastaan samana lukukautena alkavasta koulutuksesta",
+        "1": "HUOM! Voit ottaa vastaan",
         "2": "vain yhden",
-        "3": "korkeakoulututkintoon johtavan opiskelupaikan."
+        "3": "korkeakoulututkintoon johtavan opiskelupaikan samana lukukautena alkavasta koulutuksesta."
       },
-      "accept": "Otan opiskelupaikan vastaan sitovasti",
+      "accept": "Otan tämän opiskelupaikan vastaan sitovasti",
       "acceptToinenAste": "Otan opiskelupaikan vastaan",
-      "conditionalAccept": "Otan opiskelupaikan vastaan mutta jään odottamaan ylemmällä sijalla olevaa opiskelupaikkaa",
-      "conditionalAcceptInfo1": "Jos sinua ei valita varasijalta ylempään hakukohteeseen, tämä opiskelupaikan vastaanotto jää voimaan.",
-      "conditionalAcceptInfo2": "Jos sinut valitaan varasijalta ylempään hakukohteeseen, sinun ei tarvitse erikseen ottaa sitä vastaan, vaan opiskelupaikka vahvistuu sinulle automaattisesti.",
-      "reject": "En ota opiskelupaikkaa vastaan",
-      "confirmReject": "Ymmärrän hylkääväni tarjotun opiskelupaikan ja etten voi muuttaa tätä enää myöhemmin.",
+      "conditionalAccept": "Otan tämän opiskelupaikan vastaan, mutta jään jonottamaan opiskelupaikkaa ylemmillä sijoilla olevista hakutoiveistani.",
+      "conditionalAcceptInfo1": "Jos sinut valitaan varasijalta ylempään hakutoiveeseen, opiskelupaikan vastaanotto siirtyy siihen automaattisesti.",
+      "conditionalAcceptInfo2": "Jos sinua ei valita varasijalta ylempään hakutoiveeseen, tämä opiskelupaikan vastaanotto jää voimaan.",
+      "reject": "En ota tätä opiskelupaikkaa vastaan",
+      "confirmReject": "Ymmärrän hylkääväni tarjotun opiskelupaikan ja etten voi muuttaa vastaustani enää myöhemmin.",
       "responseReceived": "Vastauksesi on vastaanotettu.",
       "invalidEmail": "Virheellinen sähköpostiosoite",
       "emailLabel": "Sähköpostiosoite (saat vahvistuksen sähköpostilla)",
-      "cannotChangeAnswer": "Huom! Vastausta ei voi myöhemmin muuttaa",
+      "cannotChangeAnswer": "Huom! Vastaus on sitova eikä sitä voi myöhemmin muuttaa",
       "email": {
         "dateFormat": "dd.MM.YYYY 'klo' HH:mm",
         "subject": "Opintopolku: Vastauksesi on vastaanotettu",
@@ -142,7 +142,7 @@
           "VastaanotaSitovasti": "Otan opiskelupaikan vastaan sitovasti",
           "VastaanotaSitovastiToinenAste": "Otan opiskelupaikan vastaan",
           "Peru": "En ota opiskelupaikkaa vastaan",
-          "VastaanotaEhdollisesti": "Otan opiskelupaikan vastaan mutta jään odottamaan ylemmällä sijalla olevaa opiskelupaikkaa."
+          "VastaanotaEhdollisesti": "Otan opiskelupaikan vastaan mutta jään jonottamaan opiskelupaikkaa ylemmillä sijoilla olevista hakutoiveistani."
         }
       }
     },
