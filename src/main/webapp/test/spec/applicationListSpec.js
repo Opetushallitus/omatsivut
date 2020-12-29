@@ -479,7 +479,7 @@
 
         it("hakuaikatieto näkyy", function() {
           hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal(hakuaikatieto)
-          hakemusYhteishakuKevat2013WithForeignBaseEducation.resultTableTitle().should.equal("Valintatilanne")
+          hakemusYhteishakuKevat2013WithForeignBaseEducation.resultTableTitle().should.equal("Valintatilanteesi")
         })
 
         it("valintatulokset näytetään", function () {
@@ -509,7 +509,7 @@
 
         it("ilmoitetaan myönnetystä paikasta", function() {
           expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).title()).to.deep.equal(
-            "Opiskelupaikka myönnetty Salon lukio - Lukio"
+            "Sinulle tarjotaan opiskelupaikkaa Salon lukio - Lukio"
           )
         })
 
@@ -541,7 +541,7 @@
 
         it("hakuaikatieto näkyy", function() {
           hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal(hakuaikatieto)
-          hakemusYhteishakuKevat2013WithForeignBaseEducation.resultTableTitle().should.equal("Valintatilanne")
+          hakemusYhteishakuKevat2013WithForeignBaseEducation.resultTableTitle().should.equal("Valintatilanteesi")
         })
 
         it("valintatulokset näytetään", function () {
@@ -559,7 +559,7 @@
 
         it("hakuaikatieto näkyy", function() {
           hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal(hakuaikatieto)
-          hakemusYhteishakuKevat2013WithForeignBaseEducation.resultTableTitle().should.equal("Valintatilanne")
+          hakemusYhteishakuKevat2013WithForeignBaseEducation.resultTableTitle().should.equal("Valintatilanteesi")
         })
 
         it("valintatulokset näytetään", function () {
@@ -577,7 +577,7 @@
 
         it("hakuaikatieto näkyy", function() {
           hakemusYhteishakuKevat2013WithForeignBaseEducation.applicationStatus().should.equal(hakuaikatieto)
-          hakemusYhteishakuKevat2013WithForeignBaseEducation.resultTableTitle().should.equal("Valintatilanne")
+          hakemusYhteishakuKevat2013WithForeignBaseEducation.resultTableTitle().should.equal("Valintatilanteesi")
         })
 
         it("valintatulokset näytetään", function () {
@@ -610,7 +610,7 @@
         before(page.applyValintatulosFixtureAndOpen("hyvaksytty-kesken-julkaistavissa"))
         it("ilmoitetaan myönnetystä paikasta", function() {
           expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).title()).to.deep.equal(
-                "Opiskelupaikka myönnetty Kallion lukio - Lukion ilmaisutaitolinja"
+                "Sinulle tarjotaan opiskelupaikkaa Kallion lukio - Lukion ilmaisutaitolinja"
           )
         })
       })
@@ -629,12 +629,12 @@
           it("tuloslistaus on näkyvissä", function() {
             expect(hakemusErityisopetuksena.valintatulokset()[0].tila).to.equal('Opiskelijavalinta kesken')
             expect(hakemusErityisopetuksena.valintatulokset()[1].tila).to.equal('Hyväksytty')
-            hakemusErityisopetuksena.resultTableTitle().should.equal("Valintatilanne")
+            hakemusErityisopetuksena.resultTableTitle().should.equal("Valintatilanteesi")
           })
 
           it("paikka on vastaanotettavissa", function() {
             expect(hakemusErityisopetuksena.vastaanotto(0).visible()).to.equal(true)
-            expect(hakemusErityisopetuksena.vastaanotto(0).title()).to.equal("Opiskelupaikka myönnetty Kiipulan ammattiopisto, Lahden toimipaikka - Liiketalouden perustutkinto, er, Kevät 2014, valmis")
+            expect(hakemusErityisopetuksena.vastaanotto(0).title()).to.equal("Sinulle tarjotaan opiskelupaikkaa Kiipulan ammattiopisto, Lahden toimipaikka - Liiketalouden perustutkinto, er, Kevät 2014, valmis")
           })
         })
 
@@ -652,14 +652,14 @@
           describe("ennen valintaa", function() {
             it("vastausaika näkyy", function () {
               expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).info()).to.deep.equal([
-                "Lähetä vastauksesi 10. tammikuuta 2030 klo 12.00 (EET) mennessä tai menetät tarjotun opiskelupaikan."
+                "Lähetä vastauksesi ennen 10. tammikuuta 2030 klo 12.00 (EET) tai menetät tarjotun opiskelupaikan."
               ])
             })
 
             it("oikeat vaihtoehdot tulevat näkyviin", function () {
               expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).vaihtoehdot()).to.deep.equal([
                 'Otan opiskelupaikan vastaan',
-                'En ota opiskelupaikkaa vastaan'
+                'En ota tätä opiskelupaikkaa vastaan'
               ])
             })
 
@@ -705,7 +705,7 @@
           describe("ennen vastaanottoa", function() {
             it("vastausaika näkyy", function () {
               expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).info()).to.deep.equal([
-                "Lähetä vastauksesi 11. tammikuuta 2042 klo 12.00 (EET) mennessä tai menetät tarjotun opiskelupaikan."
+                "Lähetä vastauksesi ennen 11. tammikuuta 2042 klo 12.00 (EET) tai menetät tarjotun opiskelupaikan."
               ])
             })
           })
@@ -727,13 +727,13 @@
           it("voi ottaa paikan vastaan", function() {
             expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).vaihtoehdot()).to.deep.equal([
                   'Otan opiskelupaikan vastaan',
-                  'En ota opiskelupaikkaa vastaan'
+                  'En ota tätä opiskelupaikkaa vastaan'
             ])
           })
 
           it("vastausaika näkyy", function() {
             expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).info()).to.deep.equal([
-                  "Lähetä vastauksesi 10. tammikuuta 2030 klo 12.00 (EET) mennessä tai menetät tarjotun opiskelupaikan."
+                  "Lähetä vastauksesi ennen 10. tammikuuta 2030 klo 12.00 (EET) tai menetät tarjotun opiskelupaikan."
             ])
           })
 
@@ -772,24 +772,24 @@
 
           it("voi ottaa myös ehdollisesti vastaan", function() {
             expect(hakemusKorkeakouluJatkoHaku.vastaanotto(0).vaihtoehdot()).to.deep.equal([
-                  'Otan opiskelupaikan vastaan sitovasti',
-                  'Otan opiskelupaikan vastaan mutta jään odottamaan ylemmällä sijalla olevaa opiskelupaikkaa',
-                  'En ota opiskelupaikkaa vastaan'
+                  'Otan tämän opiskelupaikan vastaan sitovasti',
+                  'Otan tämän opiskelupaikan vastaan, mutta jään jonottamaan opiskelupaikkaa ylemmillä sijoilla olevista hakutoiveistani.',
+                  'En ota tätä opiskelupaikkaa vastaan'
             ])
           })
 
           it("vastausaika näkyy", function() {
             expect(hakemusKorkeakouluJatkoHaku.vastaanotto(0).info()).to.deep.equal([
-                  "Lähetä vastauksesi 10. tammikuuta 2030 klo 12.00 (EET) mennessä tai menetät tarjotun opiskelupaikan."
+                  "Lähetä vastauksesi ennen 10. tammikuuta 2030 klo 12.00 (EET) tai menetät tarjotun opiskelupaikan."
             ])
           })
 
           it("varoitus yhden paikan säännöstä näkyy", function() {
             var singleStudyPlaceEnforcement = hakemusKorkeakouluJatkoHaku.vastaanotto(0).singleStudyPlaceEnforcement()
             expect(singleStudyPlaceEnforcement).to.have.length(1)
-            expect(singleStudyPlaceEnforcement[0]).to.have.string("Voit ottaa vastaan samana lukukautena alkavasta koulutuksesta")
+            expect(singleStudyPlaceEnforcement[0]).to.have.string("Voit ottaa vastaan")
             expect(singleStudyPlaceEnforcement[0]).to.have.string("vain yhden")
-            expect(singleStudyPlaceEnforcement[0]).to.have.string("korkeakoulututkintoon johtavan opiskelupaikan.")
+            expect(singleStudyPlaceEnforcement[0]).to.have.string("korkeakoulututkintoon johtavan opiskelupaikan samana lukukautena alkavasta koulutuksesta.")
           })
 
           describe("paikan vastaanottaminen sitovasti", function() {
@@ -811,7 +811,7 @@
 
             it("vastaanottotieto näkyy", function() {
               expect(hakemusKorkeakouluJatkoHaku.valintatulokset()[0].tila).to.equal('1. varasijalla')
-              expect(hakemusKorkeakouluJatkoHaku.valintatulokset()[1].tila).to.equal('Ottanut paikan vastaan ja jonottaa ylempään')
+              expect(hakemusKorkeakouluJatkoHaku.valintatulokset()[1].tila).to.equal('Opiskelupaikka vastaanotettu ja jonotat opiskelupaikkaa ylemmillä sijoilla olevista hakutoiveistasi')
             })
           })
 
@@ -837,11 +837,11 @@
             expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotettavia()).to.equal(2)
             expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).vaihtoehdot()).to.deep.equal([
               'Otan opiskelupaikan vastaan',
-              'En ota opiskelupaikkaa vastaan'
+              'En ota tätä opiskelupaikkaa vastaan'
             ])
             expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(1).vaihtoehdot()).to.deep.equal([
               'Otan opiskelupaikan vastaan',
-              'En ota opiskelupaikkaa vastaan'
+              'En ota tätä opiskelupaikkaa vastaan'
             ])
           })
         })
@@ -887,11 +887,11 @@
             expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotettavia()).to.equal(2)
             expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).vaihtoehdot()).to.deep.equal([
               'Otan opiskelupaikan vastaan',
-              'En ota opiskelupaikkaa vastaan'
+              'En ota tätä opiskelupaikkaa vastaan'
             ])
             expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(1).vaihtoehdot()).to.deep.equal([
               'Otan opiskelupaikan vastaan',
-              'En ota opiskelupaikkaa vastaan'
+              'En ota tätä opiskelupaikkaa vastaan'
             ])
           })
         })
@@ -911,7 +911,7 @@
             it("toinen paikka on myös vastaanotettavissa", function() {
               expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).vaihtoehdot()).to.deep.equal([
                'Otan opiskelupaikan vastaan',
-               'En ota opiskelupaikkaa vastaan'
+               'En ota tätä opiskelupaikkaa vastaan'
               ])
             })
           })
@@ -1048,7 +1048,7 @@
           expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotettavia()).to.equal(1)
           expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).vaihtoehdot()).to.deep.equal([
             'Otan opiskelupaikan vastaan',
-            'En ota opiskelupaikkaa vastaan'
+            'En ota tätä opiskelupaikkaa vastaan'
           ])
         })
       })
@@ -1151,7 +1151,7 @@
           before(hakemusKorkeakouluYhteishakuSyksy2014.vastaanotto(0).send)
 
           it("Oili-linkki tulee näkyviin ja toinen paikka on yhä mahdollista vastaanottaa", function () {
-            expect(hakemusKorkeakouluYhteishakuSyksy2014.vastaanotto(0).title()).to.equal('Opiskelupaikka myönnetty ' +
+            expect(hakemusKorkeakouluYhteishakuSyksy2014.vastaanotto(0).title()).to.equal('Sinulle tarjotaan opiskelupaikkaa ' +
               'Helsingin yliopisto, Matemaattis-luonnontieteellinen tiedekunta - Fysiikka (aineenopettaja), luonnontieteiden kandidaatti ja filosofian maisteri')
             expect(hakemusKorkeakouluYhteishakuSyksy2014.ilmoittautuminen(0).title()).to.equal(
               'Muista tehdä lukuvuosi-ilmoittautuminen korkeakouluun Diakonia-ammattikorkeakoulu, Järvenpään toimipiste - Sosionomi (AMK), monimuotototeutus Tietoa uudelle opiskelijalle')
