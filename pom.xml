@@ -40,6 +40,11 @@
         </dependency>
         <dependency>
             <groupId>fi.vm.sade.java-utils</groupId>
+            <artifactId>java-legacy-cas</artifactId>
+            <version>0.5.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>fi.vm.sade.java-utils</groupId>
             <artifactId>opintopolku-jetty</artifactId>
             <version>0.1.0-SNAPSHOT</version>
         </dependency>
