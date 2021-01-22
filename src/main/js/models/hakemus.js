@@ -16,7 +16,6 @@ export default class Hakemus {
     this.ohjeetUudelleOpiskelijalle = json.hakemus.ohjeetUudelleOpiskelijalle;
     this.hakutoiveet = convertHakutoiveet(json.hakemus.hakutoiveet);
     this.henkilotiedot = convertHenkilotiedot(json.hakemus.answers.henkilotiedot);
-    this.henkiloNimi = parseName(json.hakemus.answers.henkilotiedot);
     this.persistedAnswers = json.hakemus.answers;
     this.additionalQuestions = Question.getQuestions(json.questions, this);
     this.tuloskirje = copy(formatTuloskirje(json.hakemus.tuloskirje));
@@ -74,18 +73,16 @@ export default class Hakemus {
     var self = this
 
     function isPeriodActive(applicationPeriodId) {
-      var period = _(self.haku.applicationPeriods).find(function(period) { return period.id === applicationPeriodId })
-      return period !== undefined ? period.active : self.haku.active
+      return _(self.haku.applicationPeriods)
+        .some(function(period) { return period.id === applicationPeriodId && period.active })
     }
 
     if (hakutoive.addedDuringCurrentSession) {
       return false
-    } else if (!_.isEmpty(hakutoive.kohdekohtainenHakuaika)) {
-      return !hakutoive.kohdekohtainenHakuaika.active
-    } else if (!_.isEmpty(hakuaikaId)) {
+    } else if (hakuaikaId != null) {
       return !isPeriodActive(hakuaikaId)
     } else {
-      return !this.haku.active
+      return !_(hakutoive.hakukohdekohtaisetHakuajat).some(function(period) { return period.active })
     }
   }
 
@@ -228,7 +225,7 @@ export default class Hakemus {
   importHakuajat(hakukohteet) {
     if (hakukohteet != null) {
       for (var i = 0; i < this.hakutoiveet.length && i < hakukohteet.length; i++) {
-        this.hakutoiveet[i].kohdekohtainenHakuaika = hakukohteet[i].kohdekohtainenHakuaika
+        this.hakutoiveet[i].hakukohdekohtaisetHakuajat = hakukohteet[i].hakukohdekohtaisetHakuajat
       }
     }
   }
@@ -383,16 +380,6 @@ function convertHenkilotiedot(json) {
       memo[key] = new Question({id: key}, json[key]);
       return memo
     }, {})
-  }
-}
-
-function parseName(json) {
-  if (!_.isUndefined(json)) {
-    var etunimi = json["Etunimet"];
-    if (!etunimi) {
-      etunimi = json["Kutsumanimi"];
-    }
-    return etunimi + " " + json["Sukunimi"];
   }
 }
 

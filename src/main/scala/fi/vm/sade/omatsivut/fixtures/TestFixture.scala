@@ -81,6 +81,6 @@ object TestFixture {
   lazy val ammattistarttiAhlman: HakutoiveData = JsonFixtureMaps.findByKey[HakutoiveData]("/hakemuseditorimockdata/hakutoiveet.json", "1.2.246.562.14.2014040912353139913320").get
   lazy val hevostalous: HakutoiveData = JsonFixtureMaps.findByKey[HakutoiveData]("/hakemuseditorimockdata/hakutoiveet.json", "1.2.246.562.5.31982630126").get
 
-  val hakemus2_hakuaika = Hakuaika("5474", 1404190831839L, 1922331631839L)
+  val hakemus2_hakuaika = Hakuaika("5474", 1404190831839L, Some(1922331631839L))
   val hakemusLisahaku_hakuaikaDefault = hakemus2_hakuaika
 }

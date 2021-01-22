@@ -21,7 +21,7 @@ export default function () {
       $scope.statusString = function(period) {
         if (period.active)
           return localize("label.applicationPeriodActive")
-        else if (period.end < new Date().getTime())
+        else if (period.end != null && period.end < new Date().getTime())
           return localize("label.applicationPeriodPassed")
         else
           return localize("label.applicationPeriodNotStarted")
