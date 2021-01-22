@@ -4,14 +4,6 @@ import fi.vm.sade.hakemuseditori.tarjonta.domain.{KohteenHakuaika, Hakuaika, Hak
 import fi.vm.sade.utils.json4s.GenericJsonFormats
 import org.json4s._
 
-object JsonProcessor {
-  def serializeWithField[T](obj: T, field: JField) = {
-    val newField = JObject(field :: Nil)
-    implicit val formats: Formats = DefaultFormats ++ List(new HakuaikaSerializer)
-    Extraction.decompose(obj) merge newField
-  }
-}
-
 class HakuSerializer extends CustomSerializer[Haku](format => (
   {
     case obj : JObject =>
@@ -19,7 +11,7 @@ class HakuSerializer extends CustomSerializer[Haku](format => (
   },
   {
     case x: Haku =>
-      JsonProcessor.serializeWithField(x, JField("active", JBool(x.active)))
+      Extraction.decompose(x)(DefaultFormats ++ List(new HakuaikaSerializer))
   }
 ))
 
@@ -29,11 +21,12 @@ class HakuaikaSerializer extends CustomSerializer[Hakuaika](format => (
   },
   {
     case x: Hakuaika =>
-      JObject(
-        JField("id", JString(x.id)) ::
-          JField("start", JInt(BigInt(x.start))) ::
-          JField("end", JInt(BigInt(x.end))) ::
-          JField("active", JBool(x.active)) :: Nil)
+      Merge.merge(
+        JObject(
+          JField("id", JString(x.id)),
+          JField("start", JInt(BigInt(x.start))),
+          JField("active", JBool(x.active))),
+        x.end.fold(JObject())(end => JObject(JField("end", JInt(BigInt(end))))))
   }
 ))
 
@@ -43,6 +36,10 @@ class KohteenHakuaikaSerializer extends CustomSerializer[KohteenHakuaika](format
   },
   {
     case x: KohteenHakuaika =>
-      JsonProcessor.serializeWithField(x, JField("active", JBool(x.active)))
+      Merge.merge(
+        JObject(
+          JField("start", JInt(BigInt(x.start))),
+          JField("active", JBool(x.active))),
+        x.end.fold(JObject())(end => JObject(JField("end", JInt(BigInt(end))))))
   }
 ))

@@ -5,9 +5,7 @@ export default class HakutoiveenVastaanotto {
   constructor() {
     this.restrict = 'E';
     this.bindToController = {
-      applicationOid: '&',
-      haku: '&',
-      hakutoiveet: '&',
+      application: '&',
       callback: '='
     };
     this.template = require('./hakutoiveenVastaanotto.html');
@@ -25,12 +23,6 @@ class HakutoiveenVastaanottoController {
     this.$timeout = $timeout;
     this.restResources = restResources;
     this.selectedHakukohde = null;
-
-    try {
-      this.email = $scope.$parent.$parent.application.henkilotiedot['Sähköposti'].answer
-    } catch (e) {
-      this.email = '';
-    }
   }
 
   formatTimestamp(dt) {
@@ -49,15 +41,20 @@ class HakutoiveenVastaanottoController {
     return !(this.vastaanottoAction && this.vastaanottoAction[hakukohdeOid] && this.vastaanottoAction[hakukohdeOid].length !== 0)
       || (this.selectedHakukohde != hakukohdeOid)
       || this.isVastaanottoKesken()
-      || (this.isRejectSelected(hakukohdeOid) && !this.confirmCancelAction && this.isKkHaku());
+      || (this.isRejectSelected(hakukohdeOid) && !this.confirmCancelAction && !this.application().haku.toisenasteenhaku);
   }
 
   isRejectSelected(hakukohdeOid) {
     return this.vastaanottoAction && this.vastaanottoAction[hakukohdeOid] === 'Peru';
   }
 
-  isKkHaku() {
-    return !this.haku().toisenasteenhaku;
+  isYhdenPaikanSaanto(hakukohdeOid) {
+    for (let hakutoive of this.application().hakutoiveet) {
+      if (hakutoive.data["Koulutus-id"] === hakukohdeOid) {
+        return hakutoive.yhdenPaikanSaanto;
+      }
+    }
+    return false;
   }
 
   flashSiirtohakuNotification() {
@@ -73,13 +70,12 @@ class HakutoiveenVastaanottoController {
     this.ajaxPending = true;
 
     const pathParams = {
-      hakemusOid: this.applicationOid(),
+      hakemusOid: this.application().oid,
       hakukohdeOid: hakutoive.hakukohdeOid
     };
 
     const data = {
       vastaanottoAction: {action: this.vastaanottoAction[hakutoive.hakukohdeOid]},
-      email: this.email,
       hakukohdeNimi: hakutoive.hakukohdeNimi,
       tarjoajaNimi: hakutoive.tarjoajaNimi
     };

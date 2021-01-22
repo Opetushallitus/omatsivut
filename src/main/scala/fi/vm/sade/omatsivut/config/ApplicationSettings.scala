@@ -38,6 +38,10 @@ case class ApplicationSettings(config: Config) extends GroupEmailerSettings(conf
   val oppijaBaseUrlFi = config.getString("oppija.base.url.fi")
   val oppijaBaseUrlSv = config.getString("oppija.base.url.sv")
 
+  val kohdejoukotKorkeakoulu: List[String] = config.getString("omatsivut.kohdejoukot.korkeakoulu").split(",").toList
+  val kohdejoukotToinenAste: List[String] = config.getString("omatsivut.kohdejoukot.toinen-aste").split(",").toList
+  val kohdejoukonTarkenteetSiirtohaku: List[String] = config.getString("omatsivut.kohdejoukon-tarkenteet.siirtohaku").split(",").toList
+
   private def getRemoteApplicationConfig(config: Config) = {
     RemoteApplicationConfig(
       OphUrlProperties.url("url-oppijanumerorekisteri-service"),
