@@ -22,16 +22,5 @@ class LogoutServletSpec extends ScalatraTestSupport with AttributeNames with Sca
         cookieGetValue(response, sessionCookieName) must beNone
       }
     }
-
-    "redirect to koski logout if koski parameter is not given" in {
-      authGetAndReturnSession("logout") { sessionId =>
-        status must_== 302
-        val location = response.headers("Location")(0)
-        // this regex reads as "full URL to CAS-Oppija logout endpoint with full URL of koski as return URL"
-        location must find("""^http://.*/cas-oppija/logout\?service=http(s)?%3A%2F%2F.*%2Fkoski%2Fuser%2Flogout$""")
-        getPersonFromSession(sessionId) must beNone
-        cookieGetValue(response, sessionCookieName) must beNone
-      }
-    }
   }
 }

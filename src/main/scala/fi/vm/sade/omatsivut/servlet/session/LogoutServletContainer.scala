@@ -33,11 +33,7 @@ trait LogoutServletContainer extends OmatsivutPaths {
     }
 
     def redirectToCASOppijaLogout(request: HttpServletRequest, response: RichResponse): Unit = {
-      val koskiParameter = request.getParameter("koski")
-      val returnPath = if (koskiParameter != null && koskiParameter == "true")
-        "/oma-opintopolku"
-      else
-        "/koski/user/logout"
+      val returnPath = "/oma-opintopolku"
       val logoutRedirectUrl = logoutPath(returnPath)
       logger.debug(s"Redirecting to $logoutRedirectUrl for logout")
       redirect(logoutRedirectUrl)(request, response.res)

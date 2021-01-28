@@ -37,7 +37,7 @@ class SecuredSessionServletSpec extends ScalatraTestSupport with AttributeNames 
         get("logout", headers = Map("Cookie" -> s"$sessionCookieName=$sessionId")) {
           response.status must_== 302
           // this regex reads as "full URL to CAS-Oppija logout endpoint with full URL of koski as return URL"
-          response.getHeader("Location") must find("""^http://.*/cas-oppija/logout\?service=http(s)?%3A%2F%2F.*%2Fkoski%2Fuser%2Flogout$""")
+          response.getHeader("Location") must find("""^http://.*/cas-oppija/logout\?service=http(s)?%3A%2F%2F.*%2Foma-opintopolku$""")
         }
       }
     }
@@ -55,7 +55,7 @@ class SecuredSessionServletSpec extends ScalatraTestSupport with AttributeNames 
         get("logout", headers = Map("Cookie" -> s"$sessionCookieName=$sessionId")) {
           response.status must_== 302
           // this regex reads as "full URL to CAS-Oppija logout endpoint with full URL of koski as return URL"
-          response.getHeader("Location") must find("""^http://.*/cas-oppija/logout\?service=http(s)?%3A%2F%2F.*%2Fkoski%2Fuser%2Flogout$""")
+          response.getHeader("Location") must find("""^http://.*/cas-oppija/logout\?service=http(s)?%3A%2F%2F.*%2Foma-opintopolku$""")
         }
       }
     }
@@ -72,7 +72,7 @@ class SecuredSessionServletSpec extends ScalatraTestSupport with AttributeNames 
         get("logout", headers = Map("Cookie" -> s"$sessionCookieName=$sessionId")) {
           response.status must_== 302
           // this regex reads as "full URL to CAS-Oppija logout endpoint with full URL of koski as return URL"
-          response.getHeader("Location") must find("""^http://.*/cas-oppija/logout\?service=http(s)?%3A%2F%2F.*%2Fkoski%2Fuser%2Flogout$""")
+          response.getHeader("Location") must find("""^http://.*/cas-oppija/logout\?service=http(s)?%3A%2F%2F.*%2Foma-opintopolku$""")
         }
       }
     }
