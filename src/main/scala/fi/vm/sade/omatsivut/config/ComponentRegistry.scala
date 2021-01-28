@@ -100,7 +100,7 @@ class ComponentRegistry(val config: AppConfig)
 
   private def configureOppijanTunnistusService: OppijanTunnistusService = config match {
     case _: StubbedExternalDeps => new StubbedOppijanTunnistusService()
-    case _ => new RemoteOppijanTunnistusService(config)
+    case _ => new RemoteOppijanTunnistusService(RemoteOppijanTunnistusService.createCasClient(config))
   }
 
   private def configureKoodistoService: KoodistoService = config match {

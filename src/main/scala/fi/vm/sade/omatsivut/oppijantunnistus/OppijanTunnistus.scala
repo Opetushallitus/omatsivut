@@ -11,7 +11,7 @@ import fi.vm.sade.utils.cas.{CasAuthenticatingClient, CasClient, CasParams}
 import fi.vm.sade.utils.http.{DefaultHttpClient, HttpClient}
 import org.http4s.Method.GET
 import org.http4s.{Request, Uri, client}
-import org.http4s.client.blaze
+import org.http4s.client.{Client, blaze}
 import org.json4s._
 import org.json4s.jackson.JsonMethods
 import org.json4s.jackson.JsonMethods._
@@ -36,28 +36,33 @@ class InvalidTokenException(msg: String) extends RuntimeException(msg)
 
 class ExpiredTokenException(msg: String) extends RuntimeException(msg)
 
-class RemoteOppijanTunnistusService(config: AppConfig) extends OppijanTunnistusService {
-  implicit val formats = DefaultFormats
+object RemoteOppijanTunnistusService {
 
-  private val blazeHttpClient = blaze.defaultClient
-  private val casClient = new CasClient(
-    config.settings.securitySettings.casUrl,
-    blazeHttpClient,
-    AppConfig.callerId
-  )
-  private val casParams = CasParams(
-    OphUrlProperties.url("url-oppijan-tunnistus-service"),
-    "auth/cas",
-    config.settings.securitySettings.casUsername,
-    config.settings.securitySettings.casPassword
-  )
-  private val httpClient = CasAuthenticatingClient(
-    casClient,
-    casParams,
-    blazeHttpClient,
-    AppConfig.callerId,
-    "ring-session"
-  )
+  def createCasClient(config: AppConfig): Client = {
+    val blazeHttpClient = blaze.defaultClient
+    val casClient = new CasClient(
+      config.settings.securitySettings.casUrl,
+      blazeHttpClient,
+      AppConfig.callerId
+    )
+    val casParams = CasParams(
+      OphUrlProperties.url("url-oppijan-tunnistus-service"),
+      "auth/cas",
+      config.settings.securitySettings.casUsername,
+      config.settings.securitySettings.casPassword
+    )
+    CasAuthenticatingClient(
+      casClient,
+      casParams,
+      blazeHttpClient,
+      AppConfig.callerId,
+      "ring-session"
+    )
+  }
+}
+
+class RemoteOppijanTunnistusService(httpClient: Client) extends OppijanTunnistusService {
+  implicit val formats = DefaultFormats
 
   def validateToken(token: String): Try[OppijantunnistusMetadata] = {
     Try(Uri.fromString(OphUrlProperties.url("oppijan-tunnistus.verify", token))
