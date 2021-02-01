@@ -21,9 +21,17 @@ host.oppija={{host_oppija}}
 omatsivut.crypto.aes.key={{omatsivut_crypto_aes_key}}
 omatsivut.crypto.hmac.key={{omatsivut_crypto_hmac_key}}
 
-cas.url=https://{{host_cas}}/cas
+cas.url=https://{{host_virkailija}}/cas
 cas.username={{omatsivut_haku_app_username}}
 cas.password={{omatsivut_haku_app_password}}
+
+cas.virkailija.url=https://{{host_virkailija}}/cas
+cas.virkailija.username={{omatsivut_haku_app_username}}
+cas.virkailija.password={{omatsivut_haku_app_password}}
+
+cas.oppija.url=https://{{host_oppija}}/cas-oppija
+cas.oppija.username={{omatsivut_haku_app_username}} # TODO
+cas.oppija.password={{omatsivut_haku_app_password}} # TODO
 
 omatsivut.oppija-raamit.url={{oppija_raamit_url}}
 omatsivut.piwik.url=https://{{host_oppija}}/wp/wp-content/themes/ophver3/js/piwik.js
@@ -126,6 +134,7 @@ cas.service.ryhmasahkoposti=https://${host.virkailija}/ryhmasahkoposti-service
 cas.service.authentication-service=https\://{{host_virkailija}}/authentication-service
 cas.service.organisaatio-service=https\://{{host_virkailija}}/organisaatio-service
 cas.service.suoritusrekisteri=https://${host.virkailija}/suoritusrekisteri
+cas.service.omatsivut=https://${host.oppija}/omatsivut
 cas.user-search-base=ou\=people
 cas.user-search-filter=(|(mail\={0})(uid\={0}))
 customAttribute.webservice.url.backend=https://{{host_virkailija}}/authentication-service/services/customAttributeService
@@ -165,8 +174,6 @@ recaptcha.caller.id=omatsivut
 
 # VETUMA
 omatsivut.vetuma.url={{omatsivut_vetuma_url}}
-shibboleth.logout=https://{{host_oppija}}{{shibboleth_logout}}
-shibboleth.login=https://{{host_oppija}}{{shibboleth_login}}
 
 # (Ainakin) nämä propertiet valuvat hakemus-apista ja ne täytyy määritellä täällä, jotta resolvautuvat hakemus-apin luokissa
 cas.service.oppijanumerorekisteri-service=https://${host.virkailija}/oppijanumerorekisteri-service

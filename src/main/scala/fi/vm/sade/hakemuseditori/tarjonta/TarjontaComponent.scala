@@ -11,6 +11,7 @@ import fi.vm.sade.hakemuseditori.tarjonta.domain.{Haku, Hakukohde, KohteenHakuai
 import fi.vm.sade.hakemuseditori.tarjonta.kouta.RemoteKoutaComponent
 import fi.vm.sade.hakemuseditori.tarjonta.vanha.{RemoteTarjontaComponent, TarjontaHaku, TarjontaParser}
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
+import fi.vm.sade.utils.cas.CasClient
 import fi.vm.sade.utils.slf4j.Logging
 import org.json4s.JsonAST.JValue
 
@@ -122,8 +123,8 @@ trait TarjontaComponent {
   }
 
   object CachedRemoteTarjontaService extends Logging {
-    def apply(appConfig: AppConfig): TarjontaService = {
-      val service = new UnionTarjontaService(new RemoteTarjontaService(), new RemoteKoutaService(appConfig))
+    def apply(appConfig: AppConfig, casVirkailijaClient: CasClient): TarjontaService = {
+      val service = new UnionTarjontaService(new RemoteTarjontaService(), new RemoteKoutaService(appConfig, casVirkailijaClient))
       val hakuMemo = TTLOptionalMemoize.memoize(service.haku _, "tarjonta haku", 4 * 60 * 60, 128)
       val hakukohdeMemo = TTLOptionalMemoize.memoize(service.hakukohde _, "tarjonta hakukohde", 4 * 60 * 60, 1024)
 

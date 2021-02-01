@@ -43,12 +43,6 @@ trait ApplicationsServletContainer {
 
     def user = Oppija(personOid())
     private val hakemusEditori = newEditor(this)
-    private val securitySettings = appConfig.settings.securitySettings
-    private val blazeHttpClient = blaze.defaultClient
-    private val casClient = new CasClient(securitySettings.casUrl, blazeHttpClient, AppConfig.callerId)
-    private val serviceUrl = appConfig.settings.authenticationServiceConfig.url + "/"
-    private val casParams = CasParams(serviceUrl, securitySettings.casUsername, securitySettings.casPassword)
-    private val httpClient = CasAuthenticatingClient(casClient, casParams, blazeHttpClient, AppConfig.callerId, "JSESSIONID")
     protected val applicationDescription = "Oppijan henkilökohtaisen palvelun REST API, jolla voi hakea ja muokata hakemuksia ja omia tietoja"
 
     before() {

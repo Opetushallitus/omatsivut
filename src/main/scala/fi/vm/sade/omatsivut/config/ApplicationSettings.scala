@@ -74,6 +74,12 @@ class SecuritySettings(c: Config) {
   val casUrl : String = OphUrlProperties.url("cas.url")
   val casUsername : String = c.getString("cas.username")
   val casPassword : String = c.getString("cas.password")
+  val casVirkailijaUrl : String = OphUrlProperties.url("cas.virkailija.url")
+  val casVirkailijaUsername : String = c.getString("cas.virkailija.username")
+  val casVirkailijaPassword : String = c.getString("cas.virkailija.password")
+  val casOppijaUrl : String = OphUrlProperties.url("cas.oppija.url")
+  val casOppijaUsername : String = c.getString("cas.oppija.username")
+  val casOppijaPassword : String = c.getString("cas.oppija.password")
 }
 
 class S3Settings(c: Config) {

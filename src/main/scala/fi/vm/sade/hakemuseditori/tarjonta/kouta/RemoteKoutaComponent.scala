@@ -25,23 +25,17 @@ import scala.util.{Failure, Success}
 trait RemoteKoutaComponent {
   this: OhjausparametritComponent =>
 
-  class RemoteKoutaService(config: AppConfig) extends TarjontaService with Logging {
-    private val blazeHttpClient = blaze.defaultClient
-    private val casClient = new CasClient(
-      config.settings.securitySettings.casUrl,
-      blazeHttpClient,
-      AppConfig.callerId
-    )
+  class RemoteKoutaService(config: AppConfig, casVirkailijaClient: CasClient) extends TarjontaService with Logging {
     private val casParams = CasParams(
       OphUrlProperties.url("kouta-internal.service"),
       "auth/login",
-      config.settings.securitySettings.casUsername,
-      config.settings.securitySettings.casPassword
+      config.settings.securitySettings.casVirkailijaUsername,
+      config.settings.securitySettings.casVirkailijaPassword
     )
     private val httpClient = CasAuthenticatingClient(
-      casClient,
+      casVirkailijaClient,
       casParams,
-      blazeHttpClient,
+      blaze.defaultClient,
       AppConfig.callerId,
       "session"
     )

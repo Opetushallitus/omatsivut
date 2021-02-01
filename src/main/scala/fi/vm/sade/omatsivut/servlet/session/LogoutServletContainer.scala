@@ -3,25 +3,24 @@ package fi.vm.sade.omatsivut.servlet.session
 import java.util.UUID
 
 import fi.vm.sade.hakemuseditori.auditlog.Audit
-import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.omatsivut.auditlog.Logout
 import fi.vm.sade.omatsivut.security.{AttributeNames, CookieHelper, SessionId, SessionService}
 import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
 import javax.servlet.http.HttpServletRequest
 import org.scalatra.servlet.RichResponse
 
-trait LogoutServletContainer {
+trait LogoutServletContainer extends OmatsivutPaths {
 
   class LogoutServlet(implicit val sessionService: SessionService) extends OmatSivutServletBase with AttributeNames {
     get("/*") {
       sessionService.deleteSession(cookies.get(sessionCookieName).map(UUID.fromString).map(SessionId))
       clearCookie(sessionCookieName)
-      redirectToShibbolethLogout(request, response)
+      redirectToCASOppijaLogout(request, response)
     }
 
     def sendLogOut(): Unit = {
       Audit.oppija.log(Logout(request))
-      redirectToShibbolethLogout(request, response)
+      redirectToCASOppijaLogout(request, response)
     }
 
     def clearCookie(name: String): Unit = {
@@ -33,16 +32,11 @@ trait LogoutServletContainer {
       })
     }
 
-    def redirectToShibbolethLogout(request: HttpServletRequest, response: RichResponse): Unit = {
-      val koskiParameter = request.getParameter("koski")
-      val returnUrl = if (koskiParameter != null && koskiParameter == "true")
-        "/oma-opintopolku"
-      else
-        "/koski/user/logout"
-      val logoutRedirectUrl = OphUrlProperties.url("shibboleth.logout", returnUrl)
+    def redirectToCASOppijaLogout(request: HttpServletRequest, response: RichResponse): Unit = {
+      val returnPath = "/oma-opintopolku"
+      val logoutRedirectUrl = logoutPath(returnPath)
       logger.debug(s"Redirecting to $logoutRedirectUrl for logout")
       redirect(logoutRedirectUrl)(request, response.res)
     }
   }
 }
-

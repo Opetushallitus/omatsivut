@@ -1,5 +1,6 @@
 package fi.vm.sade.omatsivut.config
 
+import fi.vm.sade.omatsivut.OphUrlProperties
 import com.github.kagkarlsson.scheduler.Scheduler
 import fi.vm.sade.ataru.{AtaruService, AtaruServiceComponent}
 import fi.vm.sade.groupemailer.{GroupEmailComponent, GroupEmailService}
@@ -17,7 +18,6 @@ import fi.vm.sade.hakemuseditori.tarjonta.{TarjontaComponent, TarjontaService}
 import fi.vm.sade.hakemuseditori.valintatulokset._
 import fi.vm.sade.hakemuseditori.viestintapalvelu.{TuloskirjeComponent, TuloskirjeService}
 import fi.vm.sade.hakemuseditori.{HakemusEditoriComponent, RemoteSendMailServiceWrapper, SendMailServiceWrapper, StubbedSendMailServiceWrapper}
-import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.omatsivut.config.AppConfig._
 import fi.vm.sade.omatsivut.db.impl.OmatsivutDb
 import fi.vm.sade.omatsivut.fixtures.hakemus.ApplicationFixtureImporter
@@ -26,10 +26,13 @@ import fi.vm.sade.omatsivut.localization.OmatSivutTranslations
 import fi.vm.sade.omatsivut.muistilista.MuistilistaServiceComponent
 import fi.vm.sade.omatsivut.oppijantunnistus.{OppijanTunnistusComponent, OppijanTunnistusService, RemoteOppijanTunnistusService, StubbedOppijanTunnistusService}
 import fi.vm.sade.omatsivut.security._
+import fi.vm.sade.omatsivut.security.fake.{FakeCasClient, FakeSecuredSessionServletContainer}
 import fi.vm.sade.omatsivut.servlet._
 import fi.vm.sade.omatsivut.servlet.session.{LogoutServletContainer, SecuredSessionServletContainer, SessionServlet}
 import fi.vm.sade.omatsivut.vastaanotto.VastaanottoComponent
 import fi.vm.sade.utils.captcha.CaptchaServiceComponent
+import fi.vm.sade.utils.cas.CasClient
+import org.http4s.client.blaze
 
 import scala.collection.JavaConverters._
 
@@ -55,6 +58,7 @@ class ComponentRegistry(val config: AppConfig)
           CaptchaServiceComponent with
           KoulutusServletContainer with
           SecuredSessionServletContainer with
+          FakeSecuredSessionServletContainer with
           LogoutServletContainer with
           FixtureServletContainer with
           KoodistoServletContainer with
@@ -89,7 +93,7 @@ class ComponentRegistry(val config: AppConfig)
 
   private def configureTarjontaService: TarjontaService = config match {
     case _: StubbedExternalDeps => new StubbedTarjontaService()
-    case _ => CachedRemoteTarjontaService(config)
+    case _ => CachedRemoteTarjontaService(config, casVirkailijaClient)
   }
 
   private def configureTuloskirjeService: TuloskirjeService = config match {
@@ -120,23 +124,51 @@ class ComponentRegistry(val config: AppConfig)
 
   private def configureAtaruService: AtaruService = config match {
     case _: StubbedExternalDeps => new StubbedAtaruService
-    case _ => new RemoteAtaruService(config)
+    case _ => new RemoteAtaruService(config, casVirkailijaClient)
   }
 
   private def configureOppijanumerorekisteriService: OppijanumerorekisteriService = config match {
     case _: StubbedExternalDeps => new StubbedOppijanumerorekisteriService
-    case _ => new RemoteOppijanumerorekisteriService(config)
+    case _ => new RemoteOppijanumerorekisteriService(config, casVirkailijaClient)
   }
 
   private def configureAuthenticationInfoService: AuthenticationInfoService = config match {
     case _: StubbedExternalDeps => new StubbedAuthenticationInfoService
-    case _ => new RemoteAuthenticationInfoService(config.settings.authenticationServiceConfig, config.settings.securitySettings)
+    case _ => new RemoteAuthenticationInfoService(config.settings.authenticationServiceConfig,
+                                                  casOppijaClient,
+                                                  config.settings.securitySettings)
+  }
+
+  private def configureCASVirkailijaClient: CasClient = config match {
+    case _ => new CasClient(config.settings.securitySettings.casVirkailijaUrl,
+                            blaze.defaultClient,
+                            AppConfig.callerId)
+  }
+
+  private def configureCASOppijaClient: CasClient = config match {
+    case _ => new CasClient(config.settings.securitySettings.casOppijaUrl,
+                            blaze.defaultClient,
+                            AppConfig.callerId)
+  }
+
+  private def configureFakeCasOppijaClient: FakeCasClient = config match {
+    case _ =>
+      new FakeCasClient(config.settings.securitySettings.casOppijaUrl,
+        blaze.defaultClient,
+        AppConfig.callerId,
+        authenticationInfoService
+      )
   }
 
   lazy val springContext = new HakemusSpringContext(OmatSivutSpringContext.createApplicationContext(config))
   if (config.isInstanceOf[IT]) {
     new ApplicationFixtureImporter(springContext).applyFixtures()
   }
+
+  val casVirkailijaClient: CasClient = configureCASVirkailijaClient
+  val casOppijaClient = configureCASOppijaClient
+  val fakeCasOppijaClient = configureFakeCasOppijaClient
+
   val hakumaksuService: HakumaksuServiceWrapper = configureHakumaksuService
   val sendMailService: SendMailServiceWrapper = configureSendMailService
   val koulutusInformaatioService: KoulutusInformaatioService = configureKoulutusInformaatioService
@@ -177,9 +209,18 @@ class ComponentRegistry(val config: AppConfig)
   def newApplicationsServlet = new ApplicationsServlet(config, sessionService)
   def newKoulutusServlet = new KoulutusServlet
   def newValintatulosServlet = new ValintatulosServlet(config, sessionService)
-  def newSecuredSessionServlet = new SecuredSessionServlet(authenticationInfoService,
-                                                           sessionService,
-                                                           config.settings.sessionTimeoutSeconds)
+  def newSecuredSessionServlet = config match {
+    case _: StubbedExternalDeps => new FakeSecuredSessionServlet(config,
+      authenticationInfoService,
+      sessionService,
+      config.settings.sessionTimeoutSeconds,
+      fakeCasOppijaClient)
+    case _ => new SecuredSessionServlet(config,
+      authenticationInfoService,
+      sessionService,
+      config.settings.sessionTimeoutSeconds,
+      casOppijaClient)
+  }
   def newSessionServlet = new SessionServlet()
   def newLogoutServlet = new LogoutServlet()
   def newFixtureServlet = new FixtureServlet(config)

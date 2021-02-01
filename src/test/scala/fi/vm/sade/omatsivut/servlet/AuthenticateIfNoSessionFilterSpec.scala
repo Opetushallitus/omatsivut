@@ -3,13 +3,14 @@ package fi.vm.sade.omatsivut.servlet
 import java.util.UUID
 
 import fi.vm.sade.hakemuseditori.domain.Language
-import fi.vm.sade.omatsivut.{ITSetup, SessionFailure}
+import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.db.SessionRepository
+import fi.vm.sade.omatsivut.fixtures.TestFixture.testCASticket
 import fi.vm.sade.omatsivut.security._
+import fi.vm.sade.omatsivut.{ITSetup, SessionFailure}
 import org.junit.runner.RunWith
-import org.scalatra.{Ok, ScalatraServlet}
 import org.scalatra.test.specs2.MutableScalatraSpec
-import org.specs2.matcher.{AnyMatchers, Matchers, MustThrownExpectations}
+import org.scalatra.{Ok, ScalatraServlet}
 import org.specs2.mock.Mockito
 import org.specs2.runner.JUnitRunner
 import org.specs2.specification.Scope
@@ -40,7 +41,8 @@ class AuthenticateIfNoSessionFilterSpec extends MutableScalatraSpec with Mockito
       get("omatsivut" + originalUrl) {
         status must_== 302
         val location = response.headers("Location")(0)
-        location must find("""/omatsivut/initsession/$""")
+        // this regex reads as "full URL to CAS-Oppija login endpoint with full URL of service as return URL"
+        location must find("""^http://.*/cas-oppija/login\?locale=fi&valtuudet=""" + AppConfig.suomifi_valtuudet_enabled +  """&service=http(s)?%3A%2F%2F.*%2Fomatsivut%2Finitsession$""")
       }
     }
 
@@ -71,7 +73,7 @@ class AuthenticateIfNoSessionFilterSpec extends MutableScalatraSpec with Mockito
     val hetu = Hetu("123456-789A")
     val oppijaNumero = OppijaNumero("1.2.3.4.5.6")
     val oppijaNimi = "John Smith"
-    val testSession = SessionInfo(hetu, oppijaNumero, oppijaNimi)
+    val testSession = SessionInfo(testCASticket, hetu, oppijaNumero, oppijaNimi)
     sessionRepository.get(id) returns Right(testSession)
   }
 }

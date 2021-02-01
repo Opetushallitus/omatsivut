@@ -4,6 +4,7 @@ import java.util.UUID
 import java.util.concurrent.TimeUnit
 
 import fi.vm.sade.omatsivut.db.impl.OmatsivutDb
+import fi.vm.sade.omatsivut.fixtures.TestFixture.testCASticket
 import fi.vm.sade.omatsivut.security.{Hetu, OppijaNumero, SessionId, SessionInfo}
 import org.slf4j.LoggerFactory
 import org.specs2.mutable.Specification
@@ -20,7 +21,7 @@ trait OmatsivutDbTools extends Specification {
   def createTestSession()(implicit personOid: PersonOid): SessionId = {
     val dummyHetu = Hetu("121212-789A")
     val dummyName = "John Smith"
-    singleConnectionOmatsivutDb.store(SessionInfo(dummyHetu, OppijaNumero(personOid.oid), dummyName))
+    singleConnectionOmatsivutDb.store(SessionInfo(testCASticket, dummyHetu, OppijaNumero(personOid.oid), dummyName))
   }
 
   def setSessionLastAccessTime(sessionIdString: String, howManySecondsFromNow: Int): Unit = {
@@ -31,12 +32,20 @@ trait OmatsivutDbTools extends Specification {
     ).transactionally, Duration(20, TimeUnit.SECONDS))
   }
 
+  def setPersonIdToEmptyBySessionId(sessionIdString: String): Unit = {
+    singleConnectionOmatsivutDb.runBlocking(DBIO.seq(
+      sqlu"""update sessions
+                        set oppija_numero = ''
+                        where id = ${sessionIdString}::uuid"""
+    ).transactionally, Duration(20, TimeUnit.SECONDS))
+  }
+
   def getPersonFromSession(sessionId: String): Option[String] = getPersonFromSession(SessionId(UUID.fromString(sessionId)))
 
   def getPersonFromSession(sessionId: SessionId): Option[String] = {
     logger.info(s"sessionId: $sessionId")
     singleConnectionOmatsivutDb.get(sessionId) match {
-      case x@Right(SessionInfo(_, oppijaNumero, _)) =>
+      case x@Right(SessionInfo(_, _, oppijaNumero, _)) =>
         logger.info(s"Found from db: $x")
         Some(oppijaNumero.value)
       case x =>
@@ -48,7 +57,7 @@ trait OmatsivutDbTools extends Specification {
   def getDisplayNameFromSession(sessionIdString: String): Option[String] = {
     val sessionId = SessionId(UUID.fromString(sessionIdString))
     singleConnectionOmatsivutDb.get(sessionId) match {
-      case Right(SessionInfo(_, _, oppijaNimi)) => Some(oppijaNimi)
+      case Right(SessionInfo(_, _, _, oppijaNimi)) => Some(oppijaNimi)
       case _ => None
     }
   }
