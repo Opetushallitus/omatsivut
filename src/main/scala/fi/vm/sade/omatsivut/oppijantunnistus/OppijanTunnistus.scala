@@ -1,12 +1,23 @@
 package fi.vm.sade.omatsivut.oppijantunnistus
 
+import java.util.concurrent.TimeUnit
+
+import fi.vm.sade.ataru.AtaruApplication
 import fi.vm.sade.omatsivut.NonSensitiveHakemusInfo.Oid
 import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.omatsivut.config.AppConfig
+import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
+import fi.vm.sade.utils.cas.{CasAuthenticatingClient, CasClient, CasParams}
 import fi.vm.sade.utils.http.{DefaultHttpClient, HttpClient}
+import org.http4s.Method.GET
+import org.http4s.{Request, Uri, client}
+import org.http4s.client.{Client, blaze}
 import org.json4s._
+import org.json4s.jackson.JsonMethods
 import org.json4s.jackson.JsonMethods._
+import scalaz.concurrent.Task
 
+import scala.concurrent.duration.Duration
 import scala.util.{Failure, Success, Try}
 
 trait OppijanTunnistusComponent {
@@ -25,26 +36,48 @@ class InvalidTokenException(msg: String) extends RuntimeException(msg)
 
 class ExpiredTokenException(msg: String) extends RuntimeException(msg)
 
-class RemoteOppijanTunnistusService(client: HttpClient = DefaultHttpClient) extends OppijanTunnistusService {
+object RemoteOppijanTunnistusService {
+
+  def createCasClient(config: AppConfig): Client = {
+    val blazeHttpClient = blaze.defaultClient
+    val casClient = new CasClient(
+      config.settings.securitySettings.casUrl,
+      blazeHttpClient,
+      AppConfig.callerId
+    )
+    val casParams = CasParams(
+      OphUrlProperties.url("url-oppijan-tunnistus-service"),
+      "auth/cas",
+      config.settings.securitySettings.casUsername,
+      config.settings.securitySettings.casPassword
+    )
+    CasAuthenticatingClient(
+      casClient,
+      casParams,
+      blazeHttpClient,
+      AppConfig.callerId,
+      "ring-session"
+    )
+  }
+}
+
+class RemoteOppijanTunnistusService(httpClient: Client) extends OppijanTunnistusService {
   implicit val formats = DefaultFormats
 
   def validateToken(token: String): Try[OppijantunnistusMetadata] = {
-
-    val request = client.httpGet(OphUrlProperties.url("oppijan-tunnistus.verify", token))(AppConfig.callerId)
-                    .header("Caller-Id", AppConfig.callerId)
-
-    request.responseWithHeaders() match {
-      case (200, _, resultString) =>
-        Try(parse(resultString, useBigDecimalForDouble = false).extract[OppijanTunnistusVerification]) match {
-          case Success(OppijanTunnistusVerification(_, true, Some(metadata))) => Success(metadata)
-          case Success(OppijanTunnistusVerification(false, false, _)) => Failure(new InvalidTokenException("invalid token"))
-          case Success(OppijanTunnistusVerification(true, false, _)) => Failure(new ExpiredTokenException("expired token"))
-          case Success(_) => Failure(new InvalidTokenException("invalid token from oppijan tunnistus, no metadata"))
-          case Failure(e) => Failure(new RuntimeException("invalid response from oppijan tunnistus", e))
+    Try(Uri.fromString(OphUrlProperties.url("oppijan-tunnistus.verify", token))
+      .fold(Task.fail, uri => {
+        httpClient.fetch(Request(method = GET, uri = uri)) {
+          case r if r.status.code == 200 =>
+            r.as[String].map(s => JsonMethods.parse(s).extract[OppijanTunnistusVerification])
+          case r => Task.fail(new RuntimeException(s"Error fetching oppijan-tunnistus. Token=$token, response code=${r.status.code}"))
         }
-      case (code, _, resultString) =>
-        Failure(new RuntimeException(s"Error fetching oppijan-tunnistus. Token=$token, response code=$code, content=$resultString"))
-    }
+      }).attemptRunFor(Duration(10, TimeUnit.SECONDS)).fold(throw _, x => x) match {
+      case OppijanTunnistusVerification(_, true, Some(metadata)) => metadata
+      case OppijanTunnistusVerification(false, false, _) => throw new InvalidTokenException("invalid token")
+      case OppijanTunnistusVerification(true, false, _) => throw new ExpiredTokenException("expired token")
+      case _ => throw new InvalidTokenException("invalid token from oppijan tunnistus, no metadata")
+    })
   }
 
 }
