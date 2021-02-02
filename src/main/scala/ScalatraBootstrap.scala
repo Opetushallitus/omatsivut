@@ -1,14 +1,13 @@
-import java.security.Security
-import java.util
-
 import fi.vm.sade.hakemuseditori.auditlog.Audit
-import javax.servlet.{DispatcherType, ServletContext}
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.config.{AppConfig, ComponentRegistry, OmatSivutSpringContext}
 import fi.vm.sade.omatsivut.servlet._
-import fi.vm.sade.omatsivut.servlet.session.{LoginServlet, SessionServlet}
+import fi.vm.sade.omatsivut.servlet.session.LoginServlet
 import fi.vm.sade.utils.slf4j.Logging
 import org.scalatra._
+
+import java.util
+import javax.servlet.{DispatcherType, ServletContext}
 
 class ScalatraBootstrap extends LifeCycle with Logging {
 
@@ -51,6 +50,7 @@ class ScalatraBootstrap extends LifeCycle with Logging {
     context.mount(componentRegistry.newSecuredSessionServlet, "/initsession")
     context.mount(componentRegistry.newSessionServlet, "/session")
     context.mount(new RaamitServlet(config), "/raamit")
+    context.mount(new ModalServlet(config), "/modal")
     context.mount(new PiwikServlet(config), "/piwik")
     context.mount(new LoginServlet(), "/login")
     context.mount(componentRegistry.newLogoutServlet, "/logout")
