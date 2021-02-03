@@ -8,6 +8,8 @@ import org.joda.time.LocalDate
 import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
 import org.scalatra.json.JacksonJsonSupport
 
+import scala.util.{Failure, Success, Try}
+
 class SessionServlet(implicit val sessionService: SessionService)
   extends OmatSivutServletBase
     with AuthenticationRequiringServlet with AttributeNames with JacksonJsonSupport with JsonFormats{
@@ -28,14 +30,16 @@ class SessionServlet(implicit val sessionService: SessionService)
   }
 
   def parseDateFromHetu(hetu: Option[String]): Option[LocalDate] = {
-    hetu.map(h => {
-      val date = h.substring(0, 6)
-      try {
-        return Option(formatter.parseLocalDate(date))
-      } catch {
-        case _: Throwable => return Option.empty
+    def tryParseDate(h: String): Option[LocalDate] = {
+      Try(formatter.parseLocalDate(h.substring(0, 6))) match {
+        case Success(date) => Some(date)
+        case Failure(exception) => {
+          logger.error(s"Unable to parse $h as date!", exception)
+          None
+        }
       }
-    })
+    }
+    hetu.filter(_.nonEmpty).flatMap(tryParseDate)
   }
 }
 
