@@ -2,7 +2,7 @@ package fi.vm.sade.omatsivut.servlet.session
 
 import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.omatsivut.security.SessionInfoRetriever.getSessionInfo
-import fi.vm.sade.omatsivut.security.{AttributeNames, AuthenticationRequiringServlet, SessionService}
+import fi.vm.sade.omatsivut.security.{AttributeNames, AuthenticationRequiringServlet, SessionInfo, SessionService}
 import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
 import org.joda.time.LocalDate
 import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
@@ -25,16 +25,16 @@ class SessionServlet(implicit val sessionService: SessionService)
 
     User(
       displayName.getOrElse(""),
-      parseDateFromHetu(hetu.map(_.value))
+      parseDateFromHetu(hetu.map(_.value), sessionInfo)
     )
   }
 
-  def parseDateFromHetu(hetu: Option[String]): Option[LocalDate] = {
+  def parseDateFromHetu(hetu: Option[String], session: Option[SessionInfo]): Option[LocalDate] = {
     def tryParseDate(h: String): Option[LocalDate] = {
       Try(formatter.parseLocalDate(h.substring(0, 6))) match {
         case Success(date) => Some(date)
         case Failure(exception) => {
-          logger.error(s"Unable to parse $h as date!", exception)
+          logger.error(s"Unable to parse date from $session!", exception)
           None
         }
       }
