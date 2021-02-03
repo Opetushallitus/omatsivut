@@ -38,7 +38,7 @@ class SessionServlet(implicit val sessionService: SessionService)
         }
       }
     }
-    session.map(_.hetu.value).filter(_.nonEmpty).flatMap(tryParseDate)
+    session.map(_.hetu.value).flatMap(tryParseDate)
   }
 }
 
