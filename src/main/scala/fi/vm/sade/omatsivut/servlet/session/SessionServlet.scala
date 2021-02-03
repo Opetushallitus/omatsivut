@@ -21,15 +21,14 @@ class SessionServlet(implicit val sessionService: SessionService)
     contentType = formats("json")
     val sessionInfo = getSessionInfo(request)
     val displayName = sessionInfo.map(_.oppijaNimi)
-    val hetu = sessionInfo.map(_.hetu)
 
     User(
       displayName.getOrElse(""),
-      parseDateFromHetu(hetu.map(_.value), sessionInfo)
+      parseDateFromSession(sessionInfo)
     )
   }
 
-  def parseDateFromHetu(hetu: Option[String], session: Option[SessionInfo]): Option[LocalDate] = {
+  def parseDateFromSession(session: Option[SessionInfo]): Option[LocalDate] = {
     def tryParseDate(h: String): Option[LocalDate] = {
       Try(formatter.parseLocalDate(h.substring(0, 6))) match {
         case Success(date) => Some(date)
@@ -39,7 +38,7 @@ class SessionServlet(implicit val sessionService: SessionService)
         }
       }
     }
-    hetu.filter(_.nonEmpty).flatMap(tryParseDate)
+    session.map(_.hetu.value).filter(_.nonEmpty).flatMap(tryParseDate)
   }
 }
 
