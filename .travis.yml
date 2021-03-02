@@ -45,7 +45,7 @@ script:
   # This is needed for the maven-dependency-plugin to work to get valinta-tulos-service.war
   - sudo chown -R travis:travis $HOME/.m2
   - nvm use 8 && ./cibuild.bash
-  - export BASE_IMAGE="baseimage-fatjar-openjdk8:master"
+  - export BASE_IMAGE="baseimage-fatjar-openjdk8:ci-125"
   - ./ci-tools/common/pull-image.sh
   - ./ci-tools/build/build-fatjar.sh $ARTIFACT_NAME
 
