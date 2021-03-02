@@ -200,7 +200,7 @@
         <dependency>
             <groupId>fi.vm.sade.haku</groupId>
             <artifactId>hakemus-api</artifactId>
-            <version>15.5-SNAPSHOT</version>
+            <version>15.5.1-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>com.wordnik</groupId>
@@ -498,14 +498,6 @@
     </build>
     <repositories>
         <repository>
-            <id>ScalazBintrayRepo</id>
-            <name>Scalaz Bintray Repo</name>
-            <url>https://dl.bintray.com/scalaz/releases/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-        </repository>
-        <repository>
             <id>oph-sade-artifactory-snapshots</id>
             <url>https://artifactory.opintopolku.fi/artifactory/oph-sade-snapshot-local</url>
             <snapshots>
@@ -521,6 +513,14 @@
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+        <repository>
+            <id>ScalazBintrayRepo</id>
+            <name>Scalaz Bintray Repo</name>
+            <url>https://dl.bintray.com/scalaz/releases/</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
