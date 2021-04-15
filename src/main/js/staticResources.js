@@ -1,5 +1,6 @@
 import Cookies from 'js-cookie';
 import { urls } from './constants';
+import { isTestMode } from './util';
 
 export async function init() {
   const language = getLanguage();
@@ -18,11 +19,12 @@ export async function init() {
 }
 
 export function getLanguage() {
-  let lang = Cookies.get('lang');
-  if (lang) {
-    return lang;
+  if(isTestMode()) {
+    let lang = Cookies.get('lang');
+    if (lang) {
+      return lang;
+    }
   }
-
   return getLanguageFromHost();
 }
 
