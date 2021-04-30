@@ -139,10 +139,10 @@
         "subject": "Opintopolku: Vastauksesi on vastaanotettu",
         "body": "Hei,\n\nOlemme vastaanottaneet %s vastauksesi:\n%s\n\nÄlä vastaa tähän viestiin - viesti on lähetetty automaattisesti.",
         "tila": {
-          "VastaanotaSitovasti": "Otan opiskelupaikan vastaan sitovasti",
+          "VastaanotaSitovasti": "Otan tämän opiskelupaikan vastaan sitovasti",
           "VastaanotaSitovastiToinenAste": "Otan opiskelupaikan vastaan",
-          "Peru": "En ota opiskelupaikkaa vastaan",
-          "VastaanotaEhdollisesti": "Otan opiskelupaikan vastaan, mutta jään jonottamaan opiskelupaikkaa ylemmillä sijoilla olevista hakutoiveistani."
+          "Peru": "En ota tätä opiskelupaikkaa vastaan",
+          "VastaanotaEhdollisesti": "Otan tämän opiskelupaikan vastaan, mutta jään jonottamaan opiskelupaikkaa ylemmillä sijoilla olevista hakutoiveistani."
         }
       }
     },
