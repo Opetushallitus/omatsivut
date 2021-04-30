@@ -123,13 +123,13 @@
         "2": "only one",
         "3": "offer of admission in a study programme leading to a higher education degree in Finland during one academic term."
       },
-      "accept": "I accept the offer of admission",
-      "acceptToinenAste": "I accept this offer of admission",
+      "accept": "I accept this offer of admission",
+      "acceptToinenAste": "I accept the offer of admission",
       "conditionalAccept": "I accept this offer of admission, but remain on a waiting list for a study programme on a higher preference.",
       "conditionalAcceptInfo1": "If you are not accepted to a study programme you are waiting for, this confirmation remains valid.",
       "conditionalAcceptInfo2": "If you are accepted to a study programme you are waiting for, you do not need to accept that offer of admission. It will be automatically accepted.",
       "reject": "I do not accept this offer of admission",
-      "confirmReject": "I understand that I am giving up the admission offered and cannot change my mind later.",
+      "confirmReject": "I understand that I am giving up the offer of admission to this study programme and cannot change my mind later.",
       "responseReceived": "Your answer has been sent.",
       "invalidEmail": "Invalid e-mail",
       "emailLabel": "E-mail (a confirmation will be sent to your e-mail)",
@@ -140,13 +140,13 @@
         "body": "Hello,\n\nWe have received %s your answer:\n%s\n\nDo not reply to this message – the message has been sent automatically.",
         "tila": {
           "VastaanotaSitovasti": "I accept this offer of admission",
-          "VastaanotaSitovastiToinenAste": "I accept this offer of admission",
+          "VastaanotaSitovastiToinenAste": "I accept the offer of admission",
           "Peru": "I do not accept this offer of admission",
           "VastaanotaEhdollisesti": "I accept this offer of admission, but remain on a waiting list for a study programme on a higher preference."
         }
       }
     },
-    "siirtohaku": "HUOM! Ottaessasi vastaan opiskelupaikan siirtohaussa luovut olemassa olevasta opiskeluoikeudestasi."
+    "siirtohaku": "N.B. By accepting an offer of admission in a transfer application, you waive your existing right to study."
   },
 
   "error": {
