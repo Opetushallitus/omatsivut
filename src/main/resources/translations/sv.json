@@ -10,7 +10,7 @@
 
   "label": {
     "acceptedUnfinished": {
-      "text": "Du kommer att bli erbjuden en studieplats i detta ansökningsmål om följande villkor uppfylls:",
+      "text": "Du kan ta emot studieplatsen i detta ansökningsmål om följande villkor uppfylls:",
       "rules": {
         "1" : "Du blir inte godkänd till något av de ansökningsmål som du har prioriterat högre",
         "2" : "Du har inte tagit emot en studieplats som leder till högskoleexamen i någon annan utbildning som börjar under samma termin."
@@ -123,13 +123,13 @@
         "2": "endast en",
         "3": "studieplats som leder till högskoleexamen i utbildning som börjar inom samma termin."
       },
-      "accept": "Jag tar emot den beviljade studieplatsen",
+      "accept": "Jag tar emot den här studieplatsen",
       "acceptToinenAste": "Jag tar emot den beviljade studieplatsen",
-      "conditionalAccept": "Jag tar emot studieplatsen men väntar på en studieplats med högre prioritet",
+      "conditionalAccept": "Jag tar emot den här studieplatsen men väntar på en studieplats med högre prioritet",
       "conditionalAcceptInfo1": "Om du inte blir antagen från reservplats till ett högre ansökningsmål, förblir mottagandet av denna studieplats i kraft.",
       "conditionalAcceptInfo2": "Om du blir antagen från reservplats till ett högre ansökningsmål behöver du inte ta emot den skilt, utan studieplatsen bekräftas automatiskt.",
-      "reject": "Jag tar inte emot studieplatsen",
-      "confirmReject": "Jag förstår att jag ger upp den beviljade studieplatsen och kan inte ändra mig senare.",
+      "reject": "Jag tar inte emot den här studieplatsen",
+      "confirmReject": "Jag förstår att jag ger upp den här beviljade studieplatsen och kan inte ändra mig senare.",
       "responseReceived": "Ditt svar har mottagits.",
       "invalidEmail": "Felaktig e-postadress",
       "emailLabel": "E-postadress (bekräftelse skickas till din e-post)",
@@ -139,14 +139,14 @@
         "subject": "Studieinfo: Ditt svar har mottagits",
         "body": "Hej,\n\nVi har mottagit %s ditt svar:\n%s\n\nSvara inte på detta meddelande - meddelandet har skickats automatiskt.",
         "tila": {
-          "VastaanotaSitovasti": "Jag tar emot den beviljade studieplatsen",
+          "VastaanotaSitovasti": "Jag tar emot den här beviljade studieplatsen",
           "VastaanotaSitovastiToinenAste": "Jag tar emot den beviljade studieplatsen",
-          "Peru": "Jag tar inte emot studieplatsen",
-          "VastaanotaEhdollisesti": "Jag tar emot studieplatsen men väntar på en studieplats med högre prioritet."
+          "Peru": "Jag tar inte emot den här studieplatsen",
+          "VastaanotaEhdollisesti": "Jag tar emot den här studieplatsen men väntar på en studieplats med högre prioritet."
         }
       }
     },
-    "siirtohaku": "HUOM! Ottaessasi vastaan opiskelupaikan siirtohaussa luovut olemassa olevasta opiskeluoikeudestasi."
+    "siirtohaku": "OBS! Om du tar emot studieplatsen i ansökan om överflyttning vid högskolor avslutar du din tidigare studierätt."
   },
 
   "error": {
