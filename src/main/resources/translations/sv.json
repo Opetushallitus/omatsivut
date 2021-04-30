@@ -123,7 +123,7 @@
         "2": "endast en",
         "3": "studieplats som leder till högskoleexamen i utbildning som börjar inom samma termin."
       },
-      "accept": "Jag tar emot den här studieplatsen",
+      "accept": "Jag tar emot den här studieplatsen bindande",
       "acceptToinenAste": "Jag tar emot den beviljade studieplatsen",
       "conditionalAccept": "Jag tar emot den här studieplatsen men väntar på en studieplats med högre prioritet",
       "conditionalAcceptInfo1": "Om du inte blir antagen från reservplats till ett högre ansökningsmål, förblir mottagandet av denna studieplats i kraft.",
@@ -139,7 +139,7 @@
         "subject": "Studieinfo: Ditt svar har mottagits",
         "body": "Hej,\n\nVi har mottagit %s ditt svar:\n%s\n\nSvara inte på detta meddelande - meddelandet har skickats automatiskt.",
         "tila": {
-          "VastaanotaSitovasti": "Jag tar emot den här beviljade studieplatsen",
+          "VastaanotaSitovasti": "Jag tar emot den här studieplatsen bindande",
           "VastaanotaSitovastiToinenAste": "Jag tar emot den beviljade studieplatsen",
           "Peru": "Jag tar inte emot den här studieplatsen",
           "VastaanotaEhdollisesti": "Jag tar emot den här studieplatsen men väntar på en studieplats med högre prioritet."
