@@ -49,7 +49,7 @@ class HakutoiveenVastaanottoController {
     return !(this.vastaanottoAction && this.vastaanottoAction[hakukohdeOid] && this.vastaanottoAction[hakukohdeOid].length !== 0)
       || (this.selectedHakukohde != hakukohdeOid)
       || this.isVastaanottoKesken()
-      || (this.isRejectSelected(hakukohdeOid) && !this.confirmCancelAction && this.isKkHaku());
+      || (this.isRejectSelected(hakukohdeOid) && !this.confirmCancelAction);
   }
 
   isRejectSelected(hakukohdeOid) {
