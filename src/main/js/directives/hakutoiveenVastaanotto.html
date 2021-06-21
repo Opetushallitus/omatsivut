@@ -41,7 +41,7 @@
               {{ localization('message.acceptEducation.reject') }}
             </label>
           </li>
-          <li ng-if="ctrl.vastaanottoAction[hakutoive.hakukohdeOid] === 'Peru' && ctrl.isKkHaku()">
+          <li ng-if="ctrl.vastaanottoAction[hakutoive.hakukohdeOid] === 'Peru'">
             <label>
               <input type="checkbox" name="confirmRejection" ng-model="ctrl.confirmCancelAction"/>
               {{ localization('message.acceptEducation.confirmReject') }}
