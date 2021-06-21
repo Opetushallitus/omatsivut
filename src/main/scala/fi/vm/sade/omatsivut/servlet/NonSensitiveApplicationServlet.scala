@@ -73,10 +73,16 @@ trait NonSensitiveApplicationServletContainer {
 
     private def jwtAuthorize: Try[HakemusJWT] = {
       val bearerMatch = """Bearer (.+)""".r
-      request.getHeader("Authorization") match {
+      val authHeader = request.getHeader("Authorization")
+      authHeader match {
         case bearerMatch(jwtString) => jwt.decode(jwtString)
-          .transform(Success(_), e => Failure(new ForbiddenException(e.getMessage)))
-        case _ => Failure(new UnauthorizedException("Invalid Authorization header"))
+          .transform(Success(_), e => {
+            logger.error(s"Authorization header decoding failed with request header ($authHeader)", e)
+            Failure(new ForbiddenException(e.getMessage))
+          })
+        case _ =>
+          logger.error(s"Authorization header handling failed with request header ($authHeader)")
+          Failure(new UnauthorizedException("Invalid Authorization header"))
       }
     }
 
