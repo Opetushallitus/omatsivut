@@ -34,9 +34,9 @@ näytetään mahdolliset ilmoittautumiset -->
       <fieldset>
         <div class="lasnaolo-ilmoittautuminen">
           <span class="label-highlight"> {{ application.haku.toisenasteenhaku ?
-            localization('lasnaoloilmoittautuminen.title') : localization('lasnaoloilmoittautuminen.title_kk') }}</span>
-          <span> {{ application.henkiloNimi }} </span>
-          <span class="tarjoaja-hakukohde"> {{ tulos.tarjoajaNimi }} {{ tulos.hakukohdeNimi }}
+            localization('lasnaoloilmoittautuminen.title') : localization('lasnaoloilmoittautuminen.title_kk') }}
+          </span>
+          <span class="tarjoaja-hakukohde">{{ tulos.tarjoajaNimi }} {{ tulos.hakukohdeNimi }}
             <p ng-if="ohjeetUudelleOpiskelijalle(tulos.hakukohdeOid)">
               <a class="ohjeet-uudelle-opiskelijalle" ng-href="{{ohjeetUudelleOpiskelijalle(tulos.hakukohdeOid)}}" target="_blank">{{ localization('registration.instructionsForNewStudents') }}</a>
             </p>

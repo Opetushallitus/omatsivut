@@ -24,13 +24,13 @@ trait TarjontaComponent {
 
   val tarjontaService: TarjontaService
 
-  class StubbedTarjontaService extends TarjontaService with JsonFormats with Logging {
+  class StubbedTarjontaService(config: AppConfig) extends TarjontaService with JsonFormats with Logging {
     private val timeOverrides = mutable.Map[String, Long]()
     private val hakukierrospaattyyOverrides = mutable.Map[String, Long]()
     private val priorities = mutable.Set[String]()
 
     private def parseHaku(oid: String, lang: Language.Language) = {
-      JsonFixtureMaps.findByKey[JValue]("/hakemuseditorimockdata/haut.json", oid).flatMap(TarjontaParser.parseHaku).map {h => TarjontaHaku.toHaku(h, lang, None)}
+      JsonFixtureMaps.findByKey[JValue]("/hakemuseditorimockdata/haut.json", oid).flatMap(TarjontaParser.parseHaku).map {h => TarjontaHaku.toHaku(h, lang, None, config)}
     }
 
     override def haku(oid: String, lang: Language.Language) = {
@@ -58,10 +58,10 @@ trait TarjontaComponent {
           case _ => ""
         }
         if(timeOverrides.contains(hakuOid)){
-          hakukohde.copy(kohteenHakuaika = hakukohde.kohteenHakuaika.map { aika =>
+          hakukohde.copy(hakukohdekohtaisetHakuajat = hakukohde.hakukohdekohtaisetHakuajat.map(_.map { aika =>
             val haku : Option[Haku] = parseHaku(hakuOid, Language.fi)
             changeKohteenHakuaika(haku, aika)
-          })
+          }))
         } else {
           hakukohde
         }
@@ -70,7 +70,7 @@ trait TarjontaComponent {
 
     private def changeKohteenHakuaika(haku: Option[Haku], aika: KohteenHakuaika): KohteenHakuaika = {
       haku match {
-        case Some(h) => KohteenHakuaika(changeTimestamp(h, aika.start), changeTimestamp(h, aika.end))
+        case Some(h) => KohteenHakuaika(changeTimestamp(h, aika.start), aika.end.map(changeTimestamp(h, _)))
         case _ => aika
       }
     }
@@ -102,7 +102,7 @@ trait TarjontaComponent {
 
     private def changeHakuajat(haku: Haku) = {
       haku.applicationPeriods.map { aika =>
-        aika.copy(start = changeTimestamp(haku, aika.start), end = changeTimestamp(haku, aika.end))
+        aika.copy(start = changeTimestamp(haku, aika.start), end = aika.end.map(changeTimestamp(haku, _)))
       }
     }
 
@@ -124,7 +124,7 @@ trait TarjontaComponent {
 
   object CachedRemoteTarjontaService extends Logging {
     def apply(appConfig: AppConfig, casVirkailijaClient: CasClient): TarjontaService = {
-      val service = new UnionTarjontaService(new RemoteTarjontaService(), new RemoteKoutaService(appConfig, casVirkailijaClient))
+      val service = new UnionTarjontaService(new RemoteTarjontaService(appConfig), new RemoteKoutaService(appConfig, casVirkailijaClient))
       val hakuMemo = TTLOptionalMemoize.memoize(service.haku _, "tarjonta haku", 4 * 60 * 60, 128)
       val hakukohdeMemo = TTLOptionalMemoize.memoize(service.hakukohde _, "tarjonta hakukohde", 4 * 60 * 60, 1024)
 

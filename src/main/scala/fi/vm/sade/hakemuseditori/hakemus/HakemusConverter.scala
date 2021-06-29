@@ -11,7 +11,7 @@ import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.hakemuseditori.koodisto.KoodistoComponent
 import fi.vm.sade.hakemuseditori.koulutusinformaatio.KoulutusInformaatioComponent
 import fi.vm.sade.hakemuseditori.lomake.domain.Lomake
-import fi.vm.sade.hakemuseditori.tarjonta.domain.{Haku, Hakuaika}
+import fi.vm.sade.hakemuseditori.tarjonta.domain.{Haku, Hakuaika, KohteenHakuaika}
 import fi.vm.sade.hakemuseditori.tarjonta.{TarjontaComponent, TarjontaService}
 import fi.vm.sade.haku.oppija.hakemus.service.EducationRequirementsUtil._
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
@@ -104,11 +104,13 @@ trait HakemusConverterComponent {
         PostProcessing()
       } else {
         val now = new LocalDateTime().toDate.getTime // Use LocalDateTime so that we can use TimeWarp in tests
-        if (Hakuaika.anyApplicationPeriodEnded(haku, hakutoiveet.map(_.kohdekohtainenHakuaika), now)) {
+        if (hakutoiveet.exists(KohteenHakuaika.hakuaikaEnded(haku, _, now))) {
           if (haku.aikataulu.flatMap(_.hakukierrosPaattyy.map(_ < now)).getOrElse(false)) {
             HakukierrosPaattynyt(valintatulos = valintatulos)
           }
-          else if (!haku.active) {
+          else if (hakutoiveet
+            .filter(_.hakemusData.isDefined)
+            .forall(KohteenHakuaika.hakuaikaEnded(haku, _, now))) {
             HakukausiPaattynyt(valintatulos = valintatulos)
           } else {
             Active(valintatulos = valintatulos)
@@ -149,22 +151,17 @@ trait HakemusConverterComponent {
       )
     }
 
-    def anyApplicationPeriodEnded(haku: Haku, application: ImmutableLegacyApplicationWrapper, lomake: Option[Lomake])(implicit lang: Language): Boolean = {
-      val now = new LocalDateTime().toDate.getTime // Use LocalDateTime so that we can use TimeWarp in tests
-      Hakuaika.anyApplicationPeriodEnded(haku, convertHakuToiveet(application, lomake).map(_.kohdekohtainenHakuaika), now)
-    }
-
     private def convertHakuToiveet(application: ImmutableLegacyApplicationWrapper, lomake: Option[Lomake])(implicit lang: Language): List[Hakutoive] = {
       def hakutoiveDataToHakutoive(data: HakutoiveData): Hakutoive = {
         data.isEmpty match {
           case true =>
-            Hakutoive.empty
+            Hakutoive(None, None, None, None, None)
           case _ =>
             val tarjonnanHakukohde = tarjontaService.hakukohde(data("Koulutus-id"))
             val amendedData = amendWithKoulutusInformaatio(lang, data)
 
-            Hakutoive(Some(amendedData), tarjonnanHakukohde.flatMap(_.koulutuksenAlkaminen),
-                      tarjonnanHakukohde.flatMap(_.hakuaikaId), tarjonnanHakukohde.flatMap(_.kohteenHakuaika))
+            Hakutoive(Some(amendedData), tarjonnanHakukohde.map(_.yhdenPaikanSaanto), tarjonnanHakukohde.flatMap(_.koulutuksenAlkaminen),
+                      tarjonnanHakukohde.flatMap(_.hakuaikaId), tarjonnanHakukohde.flatMap(_.hakukohdekohtaisetHakuajat))
         }
       }
       val maxHakutoiveet = if (lomake.nonEmpty) {
