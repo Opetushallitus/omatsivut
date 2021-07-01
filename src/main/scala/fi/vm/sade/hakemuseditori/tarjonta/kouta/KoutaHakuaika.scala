@@ -8,18 +8,21 @@ import fi.vm.sade.hakemuseditori.tarjonta.domain.{Hakuaika, KohteenHakuaika}
 import scala.util.Try
 
 case class KoutaHakuaika(alkaa: String,
-                         paattyy: String) {
+                         paattyy: Option[String]) {
+
+  val defaultPaattymisaika = Try{ 1924952400000L } // 31.12.2030 klo 15:00
+
   def toHakuaika: Try[Hakuaika] = {
     for {
       start <- convertToMillis(alkaa)
-      end <- convertToMillis(paattyy)
+      end <- paattyy.map(p => convertToMillis(p)).getOrElse(defaultPaattymisaika)
     } yield Hakuaika(id = "kouta-hakuaika-id", start, end)
   }
 
   def toKohteenHakuaika: Try[KohteenHakuaika] = {
     for {
       start <- convertToMillis(alkaa)
-      end <- convertToMillis(paattyy)
+      end <- paattyy.map(p => convertToMillis(p)).getOrElse(defaultPaattymisaika)
     } yield KohteenHakuaika(start, end)
   }
 
