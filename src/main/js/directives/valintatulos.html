@@ -21,7 +21,7 @@
                           ng-if="hakutoiveenValintatulosText(hakutoive, valintatulos().hakutoiveet)">
                         {{ hakutoiveenValintatulosText(hakutoive, valintatulos().hakutoiveet) }}
                     </span>
-                    <div class="valintatila__tilan-kuvaus">
+                    <div class="valintatila__tilan-kuvaus" ng-if="showKkValintatilanKuvaus(application)">
                         <span class="valintatila__tilan-kuvaus--item"
                               ng-if="isHyvaksyttyKesken(hakutoive, valintatulos().hakutoiveet)">{{ localization('label.acceptedUnfinished.text') }}</span>
                         <ol class="valintatila__tilan-kuvaus--item"
