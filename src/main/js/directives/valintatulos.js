@@ -49,6 +49,10 @@ export default ["restResources", function(restResources) {
         return false;
       }
 
+      $scope.showKkValintatilanKuvaus = function(application) {
+        return application.haku.korkeakouluhaku;
+      }
+
       $scope.hakutoiveenValintatulosText = function(valintatulos, valintatulokset) {
         var isHyvaksyttyKesken = $scope.isHyvaksyttyKesken(valintatulos, valintatulokset);
         var key = isHyvaksyttyKesken ? "HyvaksyttyKesken" : underscoreToCamelCase(valintatulos.valintatila);
