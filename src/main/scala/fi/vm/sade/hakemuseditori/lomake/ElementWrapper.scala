@@ -6,7 +6,7 @@ import fi.vm.sade.haku.oppija.lomake.domain.elements.custom.gradegrid.GradeGridO
 import fi.vm.sade.haku.oppija.lomake.domain.elements.questions.OptionQuestion
 import fi.vm.sade.hakemuseditori.domain.Language.Language
 import fi.vm.sade.hakemuseditori.hakemus.FlatAnswers.FlatAnswers
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 
 class OptionWrapper(element: ElementWrapper) {
   def value: String = element.element.asInstanceOf[questions.Option].getValue
@@ -17,8 +17,8 @@ trait ElementWrapper {
   def element: Element
   def children: List[ElementWrapper]
   lazy val options: List[OptionWrapper] = element match {
-    case e: OptionQuestion => e.getOptions.toList.map{ option => new OptionWrapper(wrap(option)) }
-    case e: GradeGridOptionQuestion => e.getOptions.toList.map{ option => new OptionWrapper(wrap(option))}
+    case e: OptionQuestion => e.getOptions.asScala.toList.map{ option => new OptionWrapper(wrap(option)) }
+    case e: GradeGridOptionQuestion => e.getOptions.asScala.toList.map{ option => new OptionWrapper(wrap(option))}
   }
   def parent: Option[ElementWrapper]
   def id = element.getId
@@ -118,10 +118,9 @@ object ElementWrapper {
 
 
 class FilteredElementWrapper(val element: Element, val parent: Option[ElementWrapper], answers: FlatAnswers) extends ElementWrapper {
-  import scala.collection.JavaConversions._
 
   override lazy val children = {
-    element.getChildren(answers).toList.map(new FilteredElementWrapper(_, Some(this), answers))
+    element.getChildren(answers.asJava).asScala.toList.map(new FilteredElementWrapper(_, Some(this), answers))
   }
 
   override protected def wrap(element: Element) = {
@@ -130,10 +129,9 @@ class FilteredElementWrapper(val element: Element, val parent: Option[ElementWra
 }
 
 class UnfilteredElementWrapper(val element: Element, val parent: Option[ElementWrapper]) extends ElementWrapper {
-  import scala.collection.JavaConversions._
 
   override lazy val children = {
-    element.getChildren.toList.map(new UnfilteredElementWrapper(_, Some(this)))
+    element.getChildren.asScala.toList.map(new UnfilteredElementWrapper(_, Some(this)))
   }
 
   override protected def wrap(element: Element) = {

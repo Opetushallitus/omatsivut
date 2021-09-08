@@ -22,7 +22,7 @@ object AnswerHelper {
     val allUpdatedAnswers = application.answers.filterKeys(_ != preferencePhaseKey) ++
       updatedAnswersForHakuToiveet(lomake, application, newAnswers, hakutoiveet) ++
       updatedAnswersForOtherPhases(application, newAnswers)
-    applyHiddenValues(lomake, allUpdatedAnswers)
+    applyHiddenValues(lomake, allUpdatedAnswers.toMap)
   }
 
 
@@ -53,7 +53,7 @@ object AnswerHelper {
     answers.map { case (phaseId, phaseAnswers) =>
         (phaseId, phaseAnswers.filterKeys { case answerId =>
             !removedAnswerIds.contains(AnswerId(phaseId, answerId))
-        })
+        }.toMap)
     }
   }
 
@@ -70,7 +70,7 @@ object AnswerHelper {
     allOtherPhaseAnswers.map { case (phase, answers) =>
       val existingAnswers = application.phaseAnswers(phase)
       (phase, existingAnswers ++ answers)
-    }
+    }.toMap
   }
 
   private def updatedAnswersForHakuToiveet(lomake: Lomake, application: ImmutableLegacyApplicationWrapper, newAnswers: Hakemus.Answers, hakutoiveet: List[Hakemus.HakutoiveData]): Answers = {

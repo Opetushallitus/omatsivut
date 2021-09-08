@@ -8,7 +8,7 @@ import fi.vm.sade.hakemuseditori.hakemus.HakemusSpringContext
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.oppija.lomake.domain.ApplicationPeriod
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.Types.ApplicationOptionOid
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 
 trait HakumaksuServiceWrapper {
   def getPaymentRequirementsForApplicationOptions(answers: util.Map[String, String]): ImmutableMap[ApplicationOptionOid, JBoolean]
@@ -22,13 +22,13 @@ class RemoteHakumaksuServiceWrapper(val springContext: HakemusSpringContext) ext
   }
 
   override def processPayment(application: Application, applicationPeriods: List[ApplicationPeriod]): Application = {
-    paymentService.processPayment(application, applicationPeriods)
+    paymentService.processPayment(application, applicationPeriods.asJava)
   }
 }
 
 class StubbedHakumaksuServiceWrapper() extends HakumaksuServiceWrapper {
   override def getPaymentRequirementsForApplicationOptions(answers: util.Map[String, String]): ImmutableMap[ApplicationOptionOid, JBoolean] = {
-    ImmutableMap.copyOf(answers.toMap.collect {
+    ImmutableMap.copyOf(answers.asScala.toMap.collect {
       case (_, "1.2.246.562.20.80094370907") => ApplicationOptionOid.of("1.2.246.562.20.80094370907") -> JBoolean.TRUE
       case (_, "1.2.246.562.20.99933864235") => ApplicationOptionOid.of("1.2.246.562.20.99933864235") -> JBoolean.TRUE
     })

@@ -157,7 +157,7 @@ trait AtaruServiceComponent  {
     def getApplications(personOid: String): List[AtaruApplication] = {
       personOid match {
         case "1.2.246.562.24.14229104473" => {
-          val text = io.Source.fromInputStream(getClass.getResourceAsStream("/hakemuseditorimockdata/applications-ataru.json")).mkString
+          val text = scala.io.Source.fromInputStream(getClass.getResourceAsStream("/hakemuseditorimockdata/applications-ataru.json")).mkString
           val allTestApplications = parse(text, useBigDecimalForDouble = false).extract[Option[List[AtaruApplication]]].getOrElse(List())
           allTestApplications
         }

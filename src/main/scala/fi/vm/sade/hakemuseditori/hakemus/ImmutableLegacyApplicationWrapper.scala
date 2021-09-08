@@ -5,7 +5,7 @@ import java.util.Date
 import fi.vm.sade.haku.oppija.hakemus.domain.util.AttachmentUtil
 import fi.vm.sade.haku.oppija.hakemus.domain.{Application, ApplicationAttachment}
 import fi.vm.sade.hakemuseditori.hakemus.ImmutableLegacyApplicationWrapper.LegacyApplicationAnswers
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 
 /**
  * A thin immutable wrapper for the fi.vm.sade.haku.oppija.hakemus.domain.Application class
@@ -18,7 +18,7 @@ object ImmutableLegacyApplicationWrapper {
 
   def wrap(application: Application) = {
     val answers: LegacyApplicationAnswers = {
-      application.getAnswers.toMap.mapValues { phaseAnswers => phaseAnswers.toMap }
+      application.getAnswers.asScala.toMap.view.mapValues { phaseAnswers => phaseAnswers.asScala.toMap }.toMap
     }
     val oid: String = application.getOid
     val complete: Boolean = {
@@ -29,7 +29,7 @@ object ImmutableLegacyApplicationWrapper {
       application.getApplicationSystemId,
       application.getPersonOid,
       answers,
-      AttachmentUtil.resolveAttachments(application).toList,
+      AttachmentUtil.resolveAttachments(application).asScala.toList,
       Option(application.getReceived),
       Option(application.getUpdated),
       complete,

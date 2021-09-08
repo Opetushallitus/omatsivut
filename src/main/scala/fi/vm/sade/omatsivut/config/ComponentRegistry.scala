@@ -32,7 +32,7 @@ import fi.vm.sade.omatsivut.servlet.session.{LogoutServletContainer, SecuredSess
 import fi.vm.sade.omatsivut.vastaanotto.VastaanottoComponent
 import fi.vm.sade.utils.captcha.CaptchaServiceComponent
 import fi.vm.sade.utils.cas.CasClient
-import org.http4s.client.blaze
+import org.http4s.blaze
 
 import scala.collection.JavaConverters._
 

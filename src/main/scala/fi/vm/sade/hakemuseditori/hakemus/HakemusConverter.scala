@@ -20,7 +20,7 @@ import org.apache.commons.lang3.StringUtils
 import org.joda.time.LocalDateTime
 import org.json4s._
 
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 import scala.util.Try
 
 trait HakemusConverterComponent {
@@ -40,7 +40,7 @@ trait HakemusConverterComponent {
     }
 
     def convertToHakemus(tuloskirje: Option[Tuloskirje], lomake: Option[Lomake], haku: Haku, application: ImmutableLegacyApplicationWrapper, valintatulos: Option[Valintatulos])(implicit lang: Language.Language) : Hakemus = {
-      val koulutusTaustaAnswers: util.Map[String, String] = application.phaseAnswers(educationPhaseKey)
+      val koulutusTaustaAnswers: util.Map[String, String] = application.phaseAnswers(educationPhaseKey).asJava
       val receivedTime =  application.received.map(_.getTime)
       val answers = application.answers
       val hakutoiveet = convertHakuToiveet(application, lomake)

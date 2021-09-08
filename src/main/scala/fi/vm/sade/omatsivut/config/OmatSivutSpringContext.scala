@@ -25,8 +25,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation._
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer
 import org.springframework.core.env.{MapPropertySource, MutablePropertySources}
-
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 
 object OmatSivutSpringContext extends Logging {
   def check {}
@@ -38,7 +37,7 @@ object OmatSivutSpringContext extends Logging {
     customPropertiesHack(appContext, configuration)
     appContext.register(configuration.springConfiguration.getClass)
     val urlConfiguration = new UrlConfiguration()
-    OphProperties.merge(urlConfiguration.overrides, configuration.settings.toProperties)
+    OphProperties.merge(urlConfiguration.overrides, configuration.settings.toProperties.asJava)
     appContext.getBeanFactory.registerSingleton(classOf[UrlConfiguration].getCanonicalName, urlConfiguration)
     appContext.refresh()
     appContext
@@ -48,7 +47,8 @@ object OmatSivutSpringContext extends Logging {
     val configurer: PropertySourcesPlaceholderConfigurer = new PropertySourcesPlaceholderConfigurer()
     val sources: MutablePropertySources = new MutablePropertySources()
 
-    sources.addFirst(new MapPropertySource("omatsivut custom props", mapAsJavaMap(configuration.settings.toProperties)))
+    sources.addFirst(new MapPropertySource("omatsivut custom props", configuration.settings.toProperties
+      .map{case (k,v) => (k, v.asInstanceOf[Object])}.asJava))
     configurer.setPropertySources(sources)
     appContext.addBeanFactoryPostProcessor(configurer)
   }

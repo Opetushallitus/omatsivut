@@ -26,15 +26,13 @@ import fi.vm.sade.utils.Timer._
 import fi.vm.sade.utils.slf4j.Logging
 import javax.servlet.http.HttpServletRequest
 import org.joda.time.LocalDateTime
-
+import scala.jdk.CollectionConverters._
 import scala.util.{Failure, Success, Try}
 
 trait HakemusRepositoryComponent {
   this: LomakeRepositoryComponent with ApplicationValidatorComponent with HakemusConverterComponent
     with SpringContextComponent with TarjontaComponent with OhjausparametritComponent with TuloskirjeComponent
     with ValintatulosServiceComponent with HakumaksuComponent with SendMailComponent =>
-
-  import scala.collection.JavaConversions._
 
   val hakemusRepository = new HakemusFinder
   val applicationRepository = new ApplicationFinder
@@ -48,7 +46,7 @@ trait HakemusRepositoryComponent {
     def updateHakemus(request: HttpServletRequest, lomake: Lomake, haku: Haku, hakemus: HakemusMuutos, user: User)(implicit lang: Language.Language): Try[Hakemus] = {
       val applicationQuery: Application = new Application().setOid(hakemus.oid)
       for {
-        applicationJavaObject <- timed("Application fetch DAO", 1000) {dao.find(applicationQuery).toList.headOption} match {
+        applicationJavaObject <- timed("Application fetch DAO", 1000) {dao.find(applicationQuery).asScala.toList.headOption} match {
           case Some(a) => Success(a)
           case None => Failure(new IllegalArgumentException("Application not found"))
         }
@@ -128,7 +126,7 @@ trait HakemusRepositoryComponent {
       val originalApplication = application.clone()
       application.setUpdated(new Date())
       updatedAnswers.foreach { case (phaseId, phaseAnswers) =>
-        application.setVaiheenVastauksetAndSetPhaseId(phaseId, phaseAnswers)
+        application.setVaiheenVastauksetAndSetPhaseId(phaseId, phaseAnswers.asJava)
       }
       timed("ApplicationService: update preference based data", 1000){
         applicationService.updatePreferenceBasedData(application)
@@ -153,9 +151,9 @@ trait HakemusRepositoryComponent {
     private def updateChangeHistory(application: Application, originalApplication: Application, user: User) {
       val changes = ApplicationDiffUtil.addHistoryBasedOnChangedAnswers(application, originalApplication, user.toString, "Muokkaus " + Audit.oppija.serviceName + " -palvelussa")
 
-      val changedKeys: Set[String] = changes.toList.flatMap(_.toMap.get("field")).toSet
-      val changedPhases: List[String] = application.getAnswers.toMap.toList.filter { case (vaihe, vastaukset) =>
-        vastaukset.toMap.keys.exists(changedKeys.contains)
+      val changedKeys: Set[String] = changes.asScala.toList.flatMap(_.toMap.get("field")).toSet
+      val changedPhases: List[String] = application.getAnswers.asScala.toMap.toList.filter { case (vaihe, vastaukset) =>
+        vastaukset.asScala.toMap.keys.exists(changedKeys.contains)
       }.map(_._1).map("'" + _ + "'")
 
       val noteText = "Hakija päivittänyt " + (if (changedPhases.size == 1) { "vaihetta" } else { "vaiheita" }) + " " + changedPhases.mkString(", ")
@@ -182,7 +180,7 @@ trait HakemusRepositoryComponent {
     }
 
     private def findStoredApplication(query: Application): Iterable[Application] = {
-      timed("Application fetch DAO", 1000)(dao.find(query).toVector)
+      timed("Application fetch DAO", 1000)(dao.find(query).asScala.toVector)
     }
   }
 
@@ -207,7 +205,7 @@ trait HakemusRepositoryComponent {
                                (implicit lang: Language): List[HakemusInfo] = {
       timed("Application fetch", 1000){
         val legacyApplications: List[ImmutableLegacyApplicationWrapper] = timed("Application fetch DAO", 1000){
-          dao.find(query).toList
+          dao.find(query).asScala.toList
         }.map(ImmutableLegacyApplicationWrapper.wrap)
         legacyApplications.filter {
           application => {
@@ -270,7 +268,7 @@ trait HakemusRepositoryComponent {
     }
 
     private def withNoPreferenceSpesificAnswers(hakemus: Hakemus): HakemusLike = {
-      hakemus.toHakemusMuutos.copy(answers = hakemus.answers.filterKeys(!_.equals(HakutoiveetConverter.hakutoiveetPhase)))
+      hakemus.toHakemusMuutos.copy(answers = hakemus.answers.filterKeys(!_.equals(HakutoiveetConverter.hakutoiveetPhase)).toMap)
     }
   }
 }

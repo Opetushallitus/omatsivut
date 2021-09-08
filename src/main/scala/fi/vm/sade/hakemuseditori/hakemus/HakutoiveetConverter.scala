@@ -2,6 +2,7 @@ package fi.vm.sade.hakemuseditori.hakemus
 
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus._
+import scala.jdk.CollectionConverters._
 
 object HakutoiveetConverter {
   val preferenceKeyPrefix: String = "preference"
@@ -30,7 +31,7 @@ object HakutoiveetConverter {
     addedPreferences
       .map(convertEmptyPreferences)
       .sortBy(map => map.get("priority"))
-      .map((m) => m.filterKeys { Set("priority").contains(_) == false})
+      .map((m) => m.filterKeys { Set("priority").contains(_) == false}.toMap)
 
   }
 
@@ -46,14 +47,14 @@ object HakutoiveetConverter {
         hakutoiveetAnswers.filterKeys(_.startsWith((preferenceKeyPrefix + (index + 1))))
       }
     }.toMap[String, String]
-  }
+  }.toMap
 
   def updateAnswers(hakutoiveet: List[HakutoiveData], answers: Answers, previousAnswers: Answers): Map[String, String] = {
     val previousHakutoiveetAnswers = previousAnswers.getOrElse(hakutoiveetPhase, Map())
     val hakutoiveetWithoutOldPreferences = previousHakutoiveetAnswers.filterKeys(s => !s.startsWith(HakutoiveetConverter.preferenceKeyPrefix))
     val updatedHakutoiveet = hakutoiveetWithoutOldPreferences ++ convertToAnswers(hakutoiveet, answers)
     updatedHakutoiveet
-  }
+  }.toMap
 
   def answersContainHakutoive(answers: Map[String, String], hakutoive: HakutoiveData) = {
     (hakutoive.get(opetuspisteId), hakutoive.get(koulutusId)) match {

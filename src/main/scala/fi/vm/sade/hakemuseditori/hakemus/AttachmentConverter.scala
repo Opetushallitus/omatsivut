@@ -3,8 +3,6 @@ package fi.vm.sade.hakemuseditori.hakemus
 import fi.vm.sade.haku.oppija.hakemus.domain.ApplicationAttachment
 import fi.vm.sade.hakemuseditori.domain.{Address, Attachment, Language}
 
-import scala.collection.JavaConversions._
-
 object AttachmentConverter {
   def convertToAttachment(attachment: ApplicationAttachment)(implicit language: Language.Language): Attachment = {
     val address = Option(attachment.getAddress())

@@ -2,7 +2,7 @@ package fi.vm.sade.omatsivut.hakemuspreview
 
 import java.text.SimpleDateFormat
 import java.util.Date
-
+import scala.jdk.CollectionConverters._
 import fi.vm.sade.hakemuseditori.auditlog.{Audit, ShowHakemus}
 import fi.vm.sade.hakemuseditori.domain.Language.Language
 import fi.vm.sade.hakemuseditori.domain.{Address, Attachment, Language}
@@ -35,19 +35,18 @@ trait HakemusPreviewGeneratorComponent {
       applicationRepository.findStoredApplicationByPersonAndOid(personOid, applicationOid).map { application =>
         val applicationSystem = applicationSystemService.getApplicationSystem(application.hakuOid)
         Audit.oppija.log(ShowHakemus(request, application.personOid, application.oid, application.hakuOid))
-        HakemusPreview().generate(application, applicationSystem)
+        HakemusPreview(t).generate(application, applicationSystem)
       }
     }
   }
 }
 
-case class HakemusPreview(implicit translations: Translations, language: Language) extends Logging {
-  import scala.collection.JavaConversions._
+case class HakemusPreview(translations: Translations)(implicit language: Language) extends Logging {
   import scalatags.Text.all._
 
   def generate(application: ImmutableLegacyApplicationWrapper, applicationSystem: ApplicationSystem): String = {
     val form = ElementWrapper.wrapFiltered(applicationSystem.getForm, application.flatAnswers)
-    val addInfos: List[FilteredElementWrapper] = applicationSystem.getAdditionalInformationElements.toList.map { addInfo =>
+    val addInfos: List[FilteredElementWrapper] = applicationSystem.getAdditionalInformationElements.asScala.toList.map { addInfo =>
       ElementWrapper.wrapFiltered(addInfo, application.flatAnswers)
     }
 
@@ -64,13 +63,13 @@ case class HakemusPreview(implicit translations: Translations, language: Languag
             div(`class` := "detail application-id")(label(translations.getTranslation("applicationPreview", "applicationId")), span(formatOid(application.oid)))
           )
             ::
-            form.getElementsOfType[Phase].flatMap(QuestionsPreview().generate(_, application.flatAnswers, true))
+            form.getElementsOfType[Phase].flatMap(QuestionsPreview(translations).generate(_, application.flatAnswers, true))
             :::
-            AdditionalInformationPreview().generate(addInfos, application.flatAnswers)
+            AdditionalInformationPreview(translations).generate(addInfos, application.flatAnswers)
             :::
             List(a(name := "liitteet"))
             :::
-            AttachmentsPreview().generate(application.attachments)
+            AttachmentsPreview(translations).generate(application.attachments)
           ,
           script(`type` := "text/javascript", src := "/omatsivut/piwik/load")
         )
@@ -86,8 +85,7 @@ case class HakemusPreview(implicit translations: Translations, language: Languag
   }
 }
 
-case class QuestionsPreview(implicit translations: Translations, language: Language) extends Logging {
-  import scala.collection.JavaConversions._
+case class QuestionsPreview(translations: Translations)(implicit language: Language) extends Logging {
   import scalatags.Text.all._
 
   def generate(ew: ElementWrapper, answers: FlatAnswers, showEmptyValues: Boolean): List[TypedTag[String]] = {
@@ -287,13 +285,13 @@ case class QuestionsPreview(implicit translations: Translations, language: Langu
   }
 
   def attrs(el: ElementWrapper): List[Modifier] = {
-    el.element.getAttributes.toMap.map { case (key, value) =>
+    el.element.getAttributes.asScala.toMap.map { case (key, value) =>
       key.attr := value
     }.toList
   }
 }
 
-case class AdditionalInformationPreview(implicit translations: Translations, language: Language) extends Logging {
+case class AdditionalInformationPreview(translations: Translations)(implicit language: Language) extends Logging {
   def generate(addInfos: List[FilteredElementWrapper], answers: FlatAnswers): List[TypedTag[String]] = {
     (for(addInfo <- addInfos) yield additionalInformationElementPreview(addInfo, answers)
       ).flatten
@@ -306,13 +304,13 @@ case class AdditionalInformationPreview(implicit translations: Translations, lan
     else {
       List(div(`class` := "theme")(
         hr(),
-        QuestionsPreview().generate(element, answers, true)
+        QuestionsPreview(translations).generate(element, answers, true)
       ))
     }
   }
 }
 
-case class AttachmentsPreview(implicit translations: Translations, language: Language) extends Logging {
+case class AttachmentsPreview(translations: Translations)(implicit language: Language) extends Logging {
   def generate(attachments: List[ApplicationAttachment]): List[TypedTag[String]] = {
     val aoInfos = attachments.map(AttachmentConverter.convertToAttachment(_))
 

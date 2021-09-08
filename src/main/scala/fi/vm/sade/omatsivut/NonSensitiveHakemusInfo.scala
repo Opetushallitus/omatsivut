@@ -84,6 +84,6 @@ object NonSensitiveHakemusInfo {
     answers.foldLeft(Map.empty[String, Map[String, String]]) {
       case (filteredAnswers, (phaseId, phaseAnswers)) =>
         val answers = phaseAnswers.filterKeys(questionId => answerIds.contains(AnswerId(phaseId, questionId)))
-        filteredAnswers + (phaseId -> answers)
+        filteredAnswers + (phaseId -> answers.toMap)
     }
 }

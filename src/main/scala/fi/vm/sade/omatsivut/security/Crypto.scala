@@ -47,11 +47,11 @@ class AuthenticationCipher(val aesKey: String, hmacKey: String) extends AES with
 
   def decrypt(encoded: String): String = {
     val dataIn = Base64.decodeBase64(encoded)
-    val mac = dataIn.slice(0, 32)
+    val mac: Array[Byte] = dataIn.slice(0, 32)
     val initialVector = dataIn.slice(32, 48)
     val cipherBytes = dataIn.slice(48, dataIn.length)
-    val macFromCipher = macHash(Array.concat(initialVector, cipherBytes), macKey)
-    require(mac.deep.equals(macFromCipher.deep), "cipherText was not created by trusted party")
+    val macFromCipher: Array[Byte] = macHash(Array.concat(initialVector, cipherBytes), macKey)
+    require(mac.sameElements(macFromCipher), "cipherText was not created by trusted party")
     new String(decryptAES(cipherBytes, key, initialVector))
   }
 }

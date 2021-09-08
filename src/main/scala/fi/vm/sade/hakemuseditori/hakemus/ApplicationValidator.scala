@@ -20,7 +20,7 @@ import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.utils.slf4j.Logging
 import javax.servlet.http.HttpServletRequest
 
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 
 trait ApplicationValidatorComponent {
   this: SpringContextComponent with HakemusConverterComponent with HakemusRepositoryComponent with TarjontaComponent
@@ -77,7 +77,7 @@ trait ApplicationValidatorComponent {
       }.toMap
 
       if (lomakeRepository.isMaksumuuriKaytossa(applicationSystemOid)) {
-        hakumaksuService.getPaymentRequirementsForApplicationOptions(educationAnswers ++ applicationOptionAnswers).toMap.map {
+        hakumaksuService.getPaymentRequirementsForApplicationOptions((educationAnswers ++ applicationOptionAnswers).asJava).asScala.toMap.map {
           case (key, shouldPay) => key.toString -> Boolean.unbox(shouldPay)
         }
       } else {
@@ -114,7 +114,7 @@ trait ApplicationValidatorComponent {
 
     private def errorsForEditingInactiveHakuToive(updatedApplication: ImmutableLegacyApplicationWrapper, storedApplication: ImmutableLegacyApplicationWrapper, haku: Haku, lomake: Lomake)(implicit lang: Language.Language): List[ValidationError] = {
       val oldHakuToiveet = HakutoiveetConverter.convertFromAnswers(storedApplication.answers, Some(lomake.maxHakutoiveet))
-      val newHakuToiveet = HakutoiveetConverter.convertFromAnswers(updatedApplication.answers.mapValues(_.toMap), Some(lomake.maxHakutoiveet))
+      val newHakuToiveet = HakutoiveetConverter.convertFromAnswers(updatedApplication.answers, Some(lomake.maxHakutoiveet))
       val oldInactiveHakuToiveet: List[String] = tarjontaService.filterHakutoiveOidsByActivity(activity = false, hakutoiveet = oldHakuToiveet, haku = haku)
       val newInactiveHakuToiveet: List[String] = tarjontaService.filterHakutoiveOidsByActivity(activity = false, hakutoiveet = newHakuToiveet, haku = haku)
       val newHakutoiveetWithIndex = newHakuToiveet.zipWithIndex
@@ -165,13 +165,13 @@ trait ApplicationValidatorComponent {
     }
 
     private def convertoToValidationErrors(validationResult: ValidationResult)(implicit lang: Language.Language) : List[ValidationError] = {
-      validationResult.getErrorMessages.map { case (key, translations) =>
+      validationResult.getErrorMessages.asScala.map { case (key, translations) =>
         ValidationError(key, translations.getText(lang.toString))
       }.toList
     }
 
     private def convertToValidationInput(lomake: Lomake, application: ImmutableLegacyApplicationWrapper): ValidationInput = {
-      new ValidationInput(lomake.form, FlatAnswers.flatten(application.answers), application.oid, lomake.oid, ValidationContext.applicant_modify)
+      new ValidationInput(lomake.form, FlatAnswers.flatten(application.answers).asJava, application.oid, lomake.oid, ValidationContext.applicant_modify)
     }
 
     private def validateDuplicateApplicationAnswersForPerson(application: ImmutableLegacyApplicationWrapper, form: Lomake, applicationChanges: HakemusMuutos)(implicit lang: Language.Language): List[ValidationError] = {
@@ -180,7 +180,7 @@ trait ApplicationValidatorComponent {
       // Applications for given person but without the current application
       val applicationsForSystemApplication = allApplicationsByPerson.filter(application => application.hakuOid == applicationChanges.hakuOid && application.oid != updatedApplication.oid)
       val allApplicationAnswers = applicationsForSystemApplication.flatMap(_.answers.get(PHASE_APPLICATION_OPTIONS))
-      val allApplicationAnswerKeys = allApplicationAnswers.flatMap(applicationOptionKeys(_, form.maxHakutoiveet))
+      val allApplicationAnswerKeys: Set[ApplicationOptionKey] = allApplicationAnswers.flatMap(applicationOptionKeys(_, form.maxHakutoiveet)).toSet
       val currentApplicationAnswers = updatedApplication.answers.getOrElse(PHASE_APPLICATION_OPTIONS, Map.empty)
       val currentApplicationAnswerKeys = applicationOptionKeys(currentApplicationAnswers, form.maxHakutoiveet)
       currentApplicationAnswerKeys.toList.flatMap { key =>
