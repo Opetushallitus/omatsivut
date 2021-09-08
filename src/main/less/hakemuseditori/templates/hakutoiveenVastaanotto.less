@@ -1,6 +1,6 @@
 @import "../common.less";
 
-@info-text-color: @primary-green-300;
+@info-text-color: @primary-green-700;
 
 .hakutoiveenVastaanotto {
   border: 1px solid #D8D8D8;
@@ -12,11 +12,11 @@
   }
 
   .vastaanota-btn:not([disabled]) {
-    background: @primary-green-300;
+    background: @primary-green-700;
     color: white;
 
     &:hover {
-      background: @primary-green-700;
+      background: @primary-green-900;
     }
   }
 
@@ -84,6 +84,11 @@
     input {
       margin: 5px 10px 5px 0px;
       vertical-align: bottom;
+    }
+
+    input[type='radio']:checked:after {
+      background-color: @primary-green-700 !important;
+      border: 2px solid @primary-green-700 !important;
     }
   }
 
