@@ -65,11 +65,11 @@ object AppConfig extends Logging {
       .withOverride("omatsivut.db.host", "localhost")
       .withOverride("omatsivut.db.url", "jdbc:postgresql://localhost:" + itPostgresPortChooser.chosenPort + "/omatsivutdb")
 
-    override def onStart: Unit = {
+    override def onStart(): Unit = {
       localPostgresService.start()
     }
 
-    override def onStop: Unit = {
+    override def onStop(): Unit = {
       localPostgresService.stop()
     }
   }
@@ -100,12 +100,12 @@ object AppConfig extends Logging {
       .withOverride("omatsivut.db.host", "localhost")
       .withOverride("omatsivut.db.url", "jdbc:postgresql://localhost:" + itPostgresPortChooser.chosenPort + "/omatsivutdb")
 
-    override def onStart: Unit = {
+    override def onStart(): Unit = {
       embeddedMongoService.start()
       localPostgresService.start()
     }
 
-    override def onStop: Unit = {
+    override def onStop(): Unit = {
       try {
         embeddedMongoService.stop()
       } catch {

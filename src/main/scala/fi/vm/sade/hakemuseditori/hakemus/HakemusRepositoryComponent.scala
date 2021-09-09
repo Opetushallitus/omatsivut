@@ -151,7 +151,7 @@ trait HakemusRepositoryComponent {
     private def updateChangeHistory(application: Application, originalApplication: Application, user: User) {
       val changes = ApplicationDiffUtil.addHistoryBasedOnChangedAnswers(application, originalApplication, user.toString, "Muokkaus " + Audit.oppija.serviceName + " -palvelussa")
 
-      val changedKeys: Set[String] = changes.asScala.toList.flatMap(_.toMap.get("field")).toSet
+      val changedKeys: Set[String] = changes.asScala.toList.flatMap(_.asScala.toMap.get("field")).toSet
       val changedPhases: List[String] = application.getAnswers.asScala.toMap.toList.filter { case (vaihe, vastaukset) =>
         vastaukset.asScala.toMap.keys.exists(changedKeys.contains)
       }.map(_._1).map("'" + _ + "'")

@@ -62,7 +62,7 @@ trait NonSensitiveApplicationServletContainer {
         InternalServerError("error" -> "Internal server error")
     }
 
-    def user = Oppija(getPersonOidFromSession)
+    def user() = Oppija(getPersonOidFromSession)
 
     private def getPersonOidFromSession: String = {
       jwtAuthorize match {

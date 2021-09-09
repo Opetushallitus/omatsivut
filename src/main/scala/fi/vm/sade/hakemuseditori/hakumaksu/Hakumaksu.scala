@@ -31,7 +31,7 @@ class StubbedHakumaksuServiceWrapper() extends HakumaksuServiceWrapper {
     ImmutableMap.copyOf(answers.asScala.toMap.collect {
       case (_, "1.2.246.562.20.80094370907") => ApplicationOptionOid.of("1.2.246.562.20.80094370907") -> JBoolean.TRUE
       case (_, "1.2.246.562.20.99933864235") => ApplicationOptionOid.of("1.2.246.562.20.99933864235") -> JBoolean.TRUE
-    })
+    }.asJava)
   }
 
   override def processPayment(application: Application, applicationPeriods: List[ApplicationPeriod]): Application = {

@@ -41,7 +41,7 @@ trait ApplicationsServletContainer {
     extends OmatSivutServletBase
       with JsonFormats with JacksonJsonSupport with AuthenticationRequiringServlet with HakemusEditoriUserContext {
 
-    def user = Oppija(personOid())
+    def user() = Oppija(personOid())
     private val hakemusEditori = newEditor(this)
     protected val applicationDescription = "Oppijan henkilökohtaisen palvelun REST API, jolla voi hakea ja muokata hakemuksia ja omia tietoja"
 
