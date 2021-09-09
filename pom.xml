@@ -144,8 +144,8 @@
         </dependency>
         <dependency>
             <groupId>com.pauldijou</groupId>
-            <artifactId>jwt-json4s-jackson_2.13</artifactId>
-            <version>3.0.1</version>
+            <artifactId>jwt-json4s-jackson_2.12</artifactId>
+            <version>0.19.0</version>
         </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>
@@ -234,7 +234,7 @@
         </dependency>
         <dependency>
             <groupId>com.typesafe.slick</groupId>
-            <artifactId>slick_2.11</artifactId>
+            <artifactId>slick_2.13</artifactId>
             <version>3.3.3</version>
         </dependency>
         <dependency>
