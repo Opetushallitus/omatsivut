@@ -92,7 +92,7 @@ class ComponentRegistry(val config: AppConfig)
   }
 
   private def configureTarjontaService: TarjontaService = config match {
-    case _: StubbedExternalDeps => new StubbedTarjontaService()
+    case _: StubbedExternalDeps => new StubbedTarjontaService(config)
     case _ => CachedRemoteTarjontaService(config, casVirkailijaClient)
   }
 

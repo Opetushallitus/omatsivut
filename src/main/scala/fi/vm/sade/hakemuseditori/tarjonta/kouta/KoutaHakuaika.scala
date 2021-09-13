@@ -5,24 +5,24 @@ import java.time.format.DateTimeFormatter
 
 import fi.vm.sade.hakemuseditori.tarjonta.domain.{Hakuaika, KohteenHakuaika}
 
-import scala.util.Try
+import scala.util.{Success, Try}
 
 case class KoutaHakuaika(alkaa: String,
                          paattyy: Option[String]) {
 
-  val defaultPaattymisaika = Try{ 1924952400000L } // 31.12.2030 klo 15:00
+  val defaultPaattymisaika = Try{ 1924952400000L }
 
   def toHakuaika: Try[Hakuaika] = {
     for {
       start <- convertToMillis(alkaa)
-      end <- paattyy.map(p => convertToMillis(p)).getOrElse(defaultPaattymisaika)
+      end <- paattyy.fold[Try[Option[Long]]](Success(defaultPaattymisaika.toOption))(convertToMillis(_).map(Some(_)))
     } yield Hakuaika(id = "kouta-hakuaika-id", start, end)
   }
 
   def toKohteenHakuaika: Try[KohteenHakuaika] = {
     for {
       start <- convertToMillis(alkaa)
-      end <- paattyy.map(p => convertToMillis(p)).getOrElse(defaultPaattymisaika)
+      end <- paattyy.fold[Try[Option[Long]]](Success(defaultPaattymisaika.toOption))(convertToMillis(_).map(Some(_)))
     } yield KohteenHakuaika(start, end)
   }
 

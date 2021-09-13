@@ -6,15 +6,16 @@ import fi.vm.sade.hakemuseditori.ohjausparametrit.OhjausparametritComponent
 import fi.vm.sade.hakemuseditori.tarjonta.TarjontaService
 import fi.vm.sade.hakemuseditori.tarjonta.domain.{Haku, Hakukohde}
 import fi.vm.sade.omatsivut.OphUrlProperties
+import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 
 trait RemoteTarjontaComponent {
   this: OhjausparametritComponent =>
 
-  class RemoteTarjontaService() extends TarjontaService with HttpCall {
+  class RemoteTarjontaService(config: AppConfig) extends TarjontaService with HttpCall {
     override def haku(oid: String, lang: Language.Language) : Option[Haku] = {
       withHttpGet("Tarjonta fetch haku", OphUrlProperties.url("tarjonta-service.haku", oid), {_.flatMap(TarjontaParser.parseHaku).map({ tarjontaHaku =>
         val haunAikataulu = ohjausparametritService.haunAikataulu(oid)
-        TarjontaHaku.toHaku(tarjontaHaku, lang, haunAikataulu)
+        TarjontaHaku.toHaku(tarjontaHaku, lang, haunAikataulu, config)
       })}
       )
     }
