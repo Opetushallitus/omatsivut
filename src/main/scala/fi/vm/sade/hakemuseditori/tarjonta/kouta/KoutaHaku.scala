@@ -27,6 +27,10 @@ sealed case class KoutaHaku(hakuajat: List[KoutaHakuaika],
       Erillishaku
     } else if (hakutapaKoodiUri.exists(_.contains("hakutapa_03"))) {
       JatkuvaHaku
+    } else if (hakutapaKoodiUri.exists(_.contains("hakutapa_04"))) {
+      Erillishaku
+    }else if (hakutapaKoodiUri.exists(_.contains("hakutapa_05"))) {
+      Erillishaku
     } else {
       throw new IllegalArgumentException("Unsupported type for haku: " + oid + " - " + hakutapaKoodiUri)
     }
