@@ -28,9 +28,9 @@ before_script:
 env:
   global:
     # AWS_ACCESS_KEY_ID
-    - secure: "VL3kkS5vy26U5aPFjA/8dJ8Y56Cpk7qRWIAGy2HP2nBcNhxpA1ZlpVFk7ubz4rgcbMGE6dFk98fsutfzYsH5hc1yQA9Zud8l8qY4HtqwFAvJWOyjePi4Q1NPv9VKl21y/s3qaJy3MDA566VM6PuKimEqRcb4QRv5iKvdL/13Amk="
+    - secure: "MrD84Bf2Zyn3ijlL3/w1thWdWyVUVrgKDe/fQdq/VKGc/0UMJZs94cxl8Am3F8UQFQGKR1oFC1R53WvfLflcFznNwlj6YzV9Hjlkd/hF336IPU6TT9LgjDqGFa3DbSgHJScx+rqKqJ/ZlFLjHul0Fo+eKVe7Q5biCFBl53k7XZ8="
     # AWS_SECRET_ACCESS_KEY
-    - secure: "BVnN5lz/jskRL1BpCepCV36NTChT66o2/CMOxu8Um08HFepICfu+KWCNGx5Gs4wLWXkBgwq1SlXV4VE2XemQ4N0ONK5R0ibUhZ0Z4oBB4jn26AiTj0at2XrujhTNT8179RsoddrznOImplXlfPDexpr6QzLzsd5YGk8aPNN054w="
+    - secure: "edFMjZ/OUOUhfRgLs9QBKrqtM+4ZuEZxaQdcL9VqKgrEaeZo0ORBlS+e5aujTJUNMa00+P+yo/1hp0zHSGzqVz/NTbpsujKUjDZDZ0d9QULMFvbleJo0nN9Ghm6zwKjMTgiUPt4epd5poB8XHbh/tcUf0USjDoI7isxC1S07nQM="
     # PostgreSQL port
     - PGPORT=5432
 
