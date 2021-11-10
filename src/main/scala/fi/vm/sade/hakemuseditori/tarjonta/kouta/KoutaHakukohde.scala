@@ -11,7 +11,8 @@ sealed case class KoutaHakukohde(alkamiskausiKoodiUri: Option[String],
                                  kaytetaanHaunAlkamiskautta: Option[Boolean],
                                  hakuajat: List[KoutaHakuaika],
                                  oid: String,
-                                 yhdenPaikanSaanto: YhdenPaikanSaanto) {
+                                 yhdenPaikanSaanto: YhdenPaikanSaanto,
+                                 uudenOpiskelijanUrl: Option[String]) {
 }
 
 object KoutaHakukohde {
@@ -22,7 +23,7 @@ object KoutaHakukohde {
     } yield Hakukohde(hakuaikaId = Some("kouta-hakuaika-id"),
       koulutuksenAlkaminen = koulutuksenAlkaminen,
       hakukohdekohtaisetHakuajat = kohteenHakuaika,
-      ohjeetUudelleOpiskelijalle = None, // FIXME
+      ohjeetUudelleOpiskelijalle = koutaHakukohde.uudenOpiskelijanUrl,
       oid = koutaHakukohde.oid,
       yhdenPaikanSaanto = koutaHakukohde.yhdenPaikanSaanto.voimassa)
   }
