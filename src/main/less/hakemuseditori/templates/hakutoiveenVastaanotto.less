@@ -1,6 +1,6 @@
 @import "../common.less";
 
-@info-text-color: #539BB4;
+@info-text-color: @primary-green-700;
 
 .hakutoiveenVastaanotto {
   border: 1px solid #D8D8D8;
@@ -12,11 +12,11 @@
   }
 
   .vastaanota-btn:not([disabled]) {
-    background: #539bb4;
+    background: @primary-green-700;
     color: white;
 
     &:hover {
-      background: #418095;
+      background: @primary-green-900;
     }
   }
 
@@ -85,6 +85,11 @@
       margin: 5px 10px 5px 0px;
       vertical-align: bottom;
     }
+
+    input[type='radio']:checked:after {
+      background-color: @primary-green-700 !important;
+      border: 2px solid @primary-green-700 !important;
+    }
   }
 
   .status-message {
@@ -104,7 +109,7 @@
   position: relative;
   &:before {
     content: "";
-    background: url("../../../webapp/img/hakemuseditori/thumb-up.png") center center no-repeat;
+    background: url("../../../webapp/img/hakemuseditori/thumb-up.svg") center center no-repeat;
     background-size: 42px 42px;
     width: 42px;
     height: 42px;

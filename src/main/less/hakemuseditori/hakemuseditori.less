@@ -39,12 +39,12 @@
 
     &.alert-info {
       border-color: #bce8f1;
-      color: #31708f;
+      color: @primary-green-700;
       background-color: #d9edf7;
     }
 
     &.alert-success {
-      color: #3c763d;
+      color: @primary-green-700;
       background-color: #dff0d8;
       border-color: #d6e9c6;
     }
@@ -83,7 +83,7 @@
   input, textarea {
     &:focus {
       border: 1px solid @input-focus-border !important;
-      box-shadow: rgba(0, 0, 0, 0.0745098) 0px 1px 1px 0px inset, rgba(82, 168, 236, 0.6) 0px 0px 8px 0px !important;
+      box-shadow: rgba(0, 0, 0, 0.0745098) 0px 1px 1px 0px inset, @primary-green-700 0px 0px 8px 0px !important;
       outline: 0;
     }
   }
@@ -101,7 +101,7 @@
   button, a {
     &:focus {
       outline: 1px solid @input-focus-border !important;
-      box-shadow: rgba(0, 0, 0, 0.0745098) 0px 1px 1px 0px inset, rgba(82, 168, 236, 0.6) 0px 0px 8px 0px !important;
+      box-shadow: rgba(0, 0, 0, 0.0745098) 0px 1px 1px 0px inset, @primary-green-700 0px 0px 8px 0px !important;
     }
   }
 
@@ -252,7 +252,7 @@
 
   .icon-info-circled {
     &.verboseHelp {
-      color: @icon-background-blue;
+      color: @primary-green-700;
       cursor: help;
     }
   }
