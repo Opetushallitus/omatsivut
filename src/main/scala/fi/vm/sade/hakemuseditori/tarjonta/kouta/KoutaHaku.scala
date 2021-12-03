@@ -3,7 +3,7 @@ package fi.vm.sade.hakemuseditori.tarjonta.kouta
 import fi.vm.sade.hakemuseditori.domain.Language.Language
 import fi.vm.sade.hakemuseditori.ohjausparametrit.domain.HaunAikataulu
 import fi.vm.sade.hakemuseditori.tarjonta.domain.{Haku, Hakuaika}
-import fi.vm.sade.hakemuseditori.tarjonta.domain.HakuTyyppi.{Erillishaku, JatkuvaHaku, Yhteishaku}
+import fi.vm.sade.hakemuseditori.tarjonta.domain.HakuTyyppi.{Erillishaku, JatkuvaHaku, Lisahaku, Yhteishaku}
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 
 import scala.util.{Failure, Try}
@@ -29,8 +29,10 @@ sealed case class KoutaHaku(hakuajat: List[KoutaHakuaika],
       JatkuvaHaku
     } else if (hakutapaKoodiUri.exists(_.contains("hakutapa_04"))) {
       Erillishaku
-    }else if (hakutapaKoodiUri.exists(_.contains("hakutapa_05"))) {
+    } else if (hakutapaKoodiUri.exists(_.contains("hakutapa_05"))) {
       Erillishaku
+    } else if (hakutapaKoodiUri.exists(_.contains("hakutapa_06"))) {
+      Lisahaku
     } else {
       throw new IllegalArgumentException("Unsupported type for haku: " + oid + " - " + hakutapaKoodiUri)
     }
