@@ -40,11 +40,6 @@ sealed case class KoutaHaku(hakuajat: List[KoutaHakuaika],
 }
 
 object KoutaHaku {
-  object Julkaisutila extends Enumeration {
-    type Julkaisutila = Value
-    val Julkaistu = Value("julkaistu")
-  }
-
   def toHaku(koutaHaku: KoutaHaku,
              lang: Language,
              haunAikataulu: Option[HaunAikataulu],
@@ -83,7 +78,7 @@ object KoutaHaku {
   }
 
   private def isPublished(koutaHaku: KoutaHaku): Boolean = {
-    Julkaisutila.Julkaistu.toString.equals(koutaHaku.tila)
+    "julkaistu".equals(koutaHaku.tila) || "arkistoitu".equals(koutaHaku.tila)
   }
 
   private def isSiirtohaku(koutaHaku: KoutaHaku, config: AppConfig) = {
