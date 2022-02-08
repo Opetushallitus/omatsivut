@@ -1,11 +1,11 @@
 package fi.vm.sade.hakemuseditori.tarjonta.domain
 
-import java.util.Date
-
 import fi.vm.sade.hakemuseditori.hakemus.domain.Hakutoive
 import fi.vm.sade.hakemuseditori.ohjausparametrit.domain.HaunAikataulu
 import fi.vm.sade.haku.oppija.lomake.domain.ApplicationPeriod
-import org.joda.time.{Interval, LocalDateTime}
+import org.joda.time.LocalDateTime
+
+import java.util.Date
 
 case class Haku(oid: String, published: Boolean, name: String, applicationPeriods: List[Hakuaika], tyyppi: String,
                 korkeakouluhaku: Boolean, siirtohaku: Boolean,

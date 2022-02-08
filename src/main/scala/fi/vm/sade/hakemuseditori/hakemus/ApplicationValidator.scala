@@ -7,8 +7,8 @@ import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus._
 import fi.vm.sade.hakemuseditori.hakemus.domain._
 import fi.vm.sade.hakemuseditori.hakumaksu.HakumaksuComponent
 import fi.vm.sade.hakemuseditori.localization.TranslationsComponent
-import fi.vm.sade.hakemuseditori.lomake.{AddedQuestionFinder, LomakeRepositoryComponent}
 import fi.vm.sade.hakemuseditori.lomake.domain.{AnswerId, Lomake}
+import fi.vm.sade.hakemuseditori.lomake.{AddedQuestionFinder, LomakeRepositoryComponent}
 import fi.vm.sade.hakemuseditori.tarjonta.TarjontaComponent
 import fi.vm.sade.hakemuseditori.tarjonta.domain.Haku
 import fi.vm.sade.hakemuseditori.user.User
@@ -16,10 +16,9 @@ import fi.vm.sade.haku.oppija.hakemus.it.dao.ApplicationDAO
 import fi.vm.sade.haku.oppija.lomake.validation.ValidationInput.ValidationContext
 import fi.vm.sade.haku.oppija.lomake.validation.{ElementTreeValidator, ValidationInput, ValidationResult}
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants._
-import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.utils.slf4j.Logging
-import javax.servlet.http.HttpServletRequest
 
+import javax.servlet.http.HttpServletRequest
 import scala.collection.JavaConversions._
 
 trait ApplicationValidatorComponent {
@@ -92,7 +91,7 @@ trait ApplicationValidatorComponent {
         val updatedApplication = update(newHakemus, lomake, storedApplication)
         val validationErrors: List[ValidationError] = validateHakutoiveetAndAnswers(updatedApplication, storedApplication, lomake) ++
           errorsForEditingInactiveHakuToive(updatedApplication, storedApplication, haku, lomake)
-        val questions = AddedQuestionFinder.findQuestions(lomake)(storedApplication, newHakemus, tarjontaService.filterHakutoiveOidsByActivity(activity = true, hakutoiveet = newHakemus.preferences, haku = haku))
+        val questions = AddedQuestionFinder.findQuestions(lomake)(storedApplication, newHakemus, tarjontaService.filterHakutoiveOidsByActivity(activity = true, hakutoiveet = newHakemus.preferences, haku = haku, lang))
         (updatedApplication, validationErrors, questions)
       } ("Error validating application: " + newHakemus.oid)
     }
@@ -115,8 +114,8 @@ trait ApplicationValidatorComponent {
     private def errorsForEditingInactiveHakuToive(updatedApplication: ImmutableLegacyApplicationWrapper, storedApplication: ImmutableLegacyApplicationWrapper, haku: Haku, lomake: Lomake)(implicit lang: Language.Language): List[ValidationError] = {
       val oldHakuToiveet = HakutoiveetConverter.convertFromAnswers(storedApplication.answers, Some(lomake.maxHakutoiveet))
       val newHakuToiveet = HakutoiveetConverter.convertFromAnswers(updatedApplication.answers.mapValues(_.toMap), Some(lomake.maxHakutoiveet))
-      val oldInactiveHakuToiveet: List[String] = tarjontaService.filterHakutoiveOidsByActivity(activity = false, hakutoiveet = oldHakuToiveet, haku = haku)
-      val newInactiveHakuToiveet: List[String] = tarjontaService.filterHakutoiveOidsByActivity(activity = false, hakutoiveet = newHakuToiveet, haku = haku)
+      val oldInactiveHakuToiveet: List[String] = tarjontaService.filterHakutoiveOidsByActivity(activity = false, hakutoiveet = oldHakuToiveet, haku = haku, lang)
+      val newInactiveHakuToiveet: List[String] = tarjontaService.filterHakutoiveOidsByActivity(activity = false, hakutoiveet = newHakuToiveet, haku = haku, lang)
       val newHakutoiveetWithIndex = newHakuToiveet.zipWithIndex
 
       val addedInActiveHakutoiveet = newInactiveHakuToiveet.filter(!oldInactiveHakuToiveet.contains(_))

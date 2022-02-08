@@ -50,7 +50,7 @@ trait TarjontaComponent {
       }
     }
 
-    override def hakukohde(oid: String): Option[Hakukohde] = {
+    override def hakukohde(oid: String, lang: Language.Language): Option[Hakukohde] = {
       val json = JsonFixtureMaps.findByKey[JValue]("/hakemuseditorimockdata/hakukohteet.json", oid)
       json.flatMap(TarjontaParser.parseHakukohde).map { hakukohde =>
         val hakuOid = json match {
@@ -130,7 +130,7 @@ trait TarjontaComponent {
 
       new TarjontaService {
         override def haku(oid: String, lang: Language): Option[Haku] = hakuMemo(oid, lang)
-        override def hakukohde(oid: String): Option[Hakukohde] = hakukohdeMemo(oid)
+        override def hakukohde(oid: String, lang: Language): Option[Hakukohde] = hakukohdeMemo(oid, lang)
       }
     }
   }

@@ -60,7 +60,7 @@ trait AtaruServiceComponent  {
         .map(a => (
           a,
           tarjontaService.haku(a.haku, language),
-          getHakukohteet(a.hakukohteet),
+          getHakukohteet(a.hakukohteet, language),
           tuloskirjeService.getTuloskirjeInfo(request, a.haku, a.oid, Pdf)
         ))
         .collect {
@@ -127,9 +127,9 @@ trait AtaruServiceComponent  {
       }
     }
 
-    private def getHakukohteet(oids: List[String]): Option[List[Hakukohde]] = {
+    private def getHakukohteet(oids: List[String], language: Language): Option[List[Hakukohde]] = {
       def go(oids: List[String], hakukohteet: List[Hakukohde]): Option[List[Hakukohde]] = (oids, hakukohteet) match {
-        case (oid :: rest, hks) => tarjontaService.hakukohde(oid) match {
+        case (oid :: rest, hks) => tarjontaService.hakukohde(oid, language) match {
           case Some(hk) => go(rest, hk :: hks)
           case None => None
         }
