@@ -110,8 +110,6 @@ trait RemoteKoutaComponent {
     }
 
     private def toHakukohde(koutaHakukohde: KoutaHakukohde, lang: Language.Language): Option[Hakukohde] = {
-      logger.info("koutaHakukohde: " + koutaHakukohde)
-      logger.info("lang: " + lang)
       KoutaHakukohde.toHakukohde(koutaHakukohde, lang) match {
         case Success(hakukohde) => Some(hakukohde)
         case Failure(exception) => throw new RuntimeException(s"Failed to convert KoutaHakukohde: oid ${koutaHakukohde.oid}", exception)

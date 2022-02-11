@@ -15,9 +15,6 @@ sealed case class KoutaHakukohde(alkamiskausiKoodiUri: Option[String],
                                  oid: String,
                                  yhdenPaikanSaanto: YhdenPaikanSaanto,
                                  uudenOpiskelijanUrl: Map[String, String]) {
-//  def getLocalizedUudenOpiskelijanUrl(lang: Language): Option[String] = {
-//    uudenOpiskelijanUrl.get(lang.toString).orElse(None)
-//  }
 def getLocalizedUudenOpiskelijanUrl(lang: Language): Option[String] = {
   val desiredLanguage = List(lang.toString, "fi", "sv", "en") find { k => uudenOpiskelijanUrl.get(k).exists(_.nonEmpty) }
   desiredLanguage flatMap { s => uudenOpiskelijanUrl.get(s) }
