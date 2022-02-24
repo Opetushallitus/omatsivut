@@ -183,6 +183,7 @@
   "applicationPreview": {
     "received": "Received",
     "applicationId": "Application number",
+    "oppijanumero": "National learner ID",
     "attachments": "Attachments",
     "attachment": "Attachment",
     "attachmentAddress": "Delivery address",

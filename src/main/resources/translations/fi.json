@@ -183,6 +183,7 @@
   "applicationPreview": {
     "received": "Vastaanotettu",
     "applicationId": "Hakemusnumero",
+    "oppijanumero": "Oppijanumero",
     "attachments": "Liitteet",
     "attachment": "Liite",
     "attachmentAddress": "Toimitusosoite",
