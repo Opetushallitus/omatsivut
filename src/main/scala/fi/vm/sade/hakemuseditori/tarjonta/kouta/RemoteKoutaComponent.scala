@@ -82,9 +82,9 @@ trait RemoteKoutaComponent {
       }
     }
 
-    override def hakukohde(oid: String): Option[Hakukohde] = {
+    override def hakukohde(oid: String, lang: Language.Language): Option[Hakukohde] = {
       fetchKoutaHakukohde(oid)
-        .flatMap { koutaHakukohde => toHakukohde(koutaHakukohde) }
+        .flatMap { koutaHakukohde => toHakukohde(koutaHakukohde, lang) }
     }
 
     private def fetchKoutaHakukohde(oid: String) = {
@@ -109,8 +109,8 @@ trait RemoteKoutaComponent {
       }
     }
 
-    private def toHakukohde(koutaHakukohde: KoutaHakukohde): Option[Hakukohde] = {
-      KoutaHakukohde.toHakukohde(koutaHakukohde) match {
+    private def toHakukohde(koutaHakukohde: KoutaHakukohde, lang: Language.Language): Option[Hakukohde] = {
+      KoutaHakukohde.toHakukohde(koutaHakukohde, lang) match {
         case Success(hakukohde) => Some(hakukohde)
         case Failure(exception) => throw new RuntimeException(s"Failed to convert KoutaHakukohde: oid ${koutaHakukohde.oid}", exception)
       }

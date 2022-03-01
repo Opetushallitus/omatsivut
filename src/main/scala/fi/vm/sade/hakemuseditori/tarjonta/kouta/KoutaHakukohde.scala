@@ -1,5 +1,7 @@
 package fi.vm.sade.hakemuseditori.tarjonta.kouta
 
+import fi.vm.sade.hakemuseditori.domain.Language
+import fi.vm.sade.hakemuseditori.domain.Language.Language
 import fi.vm.sade.hakemuseditori.tarjonta.domain.{Hakukohde, KohteenHakuaika, KoulutuksenAlkaminen}
 import fi.vm.sade.hakemuseditori.tarjonta.vanha.YhdenPaikanSaanto
 
@@ -12,18 +14,24 @@ sealed case class KoutaHakukohde(alkamiskausiKoodiUri: Option[String],
                                  hakuajat: List[KoutaHakuaika],
                                  oid: String,
                                  yhdenPaikanSaanto: YhdenPaikanSaanto,
-                                 uudenOpiskelijanUrl: Option[String]) {
+                                 uudenOpiskelijanUrl: Map[String, String]) {
+def getLocalizedUudenOpiskelijanUrl(lang: Language): Option[String] = {
+  val desiredLanguage = List(lang.toString, "fi", "sv", "en") find { k => uudenOpiskelijanUrl.get(k).exists(_.nonEmpty) }
+  desiredLanguage flatMap { s => uudenOpiskelijanUrl.get(s) }
+}
+
+
 }
 
 object KoutaHakukohde {
-  def toHakukohde(koutaHakukohde: KoutaHakukohde): Try[Hakukohde] = {
+  def toHakukohde(koutaHakukohde: KoutaHakukohde, lang: Language.Language): Try[Hakukohde] = {
     for {
       kohteenHakuaika <- extractKohteenHakuajat(koutaHakukohde)
       koulutuksenAlkaminen <- extractKoulutuksenAlkaminen(koutaHakukohde)
     } yield Hakukohde(hakuaikaId = Some("kouta-hakuaika-id"),
       koulutuksenAlkaminen = koulutuksenAlkaminen,
       hakukohdekohtaisetHakuajat = kohteenHakuaika,
-      ohjeetUudelleOpiskelijalle = koutaHakukohde.uudenOpiskelijanUrl,
+      ohjeetUudelleOpiskelijalle = koutaHakukohde.getLocalizedUudenOpiskelijanUrl(lang),
       oid = koutaHakukohde.oid,
       yhdenPaikanSaanto = koutaHakukohde.yhdenPaikanSaanto.voimassa)
   }

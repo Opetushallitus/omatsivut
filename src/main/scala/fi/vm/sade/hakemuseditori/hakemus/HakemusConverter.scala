@@ -1,7 +1,5 @@
 package fi.vm.sade.hakemuseditori.hakemus
 
-import java.util
-
 import com.google.common.collect.ImmutableSet
 import fi.vm.sade.hakemuseditori.domain.Language
 import fi.vm.sade.hakemuseditori.domain.Language.Language
@@ -11,7 +9,7 @@ import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.hakemuseditori.koodisto.KoodistoComponent
 import fi.vm.sade.hakemuseditori.koulutusinformaatio.KoulutusInformaatioComponent
 import fi.vm.sade.hakemuseditori.lomake.domain.Lomake
-import fi.vm.sade.hakemuseditori.tarjonta.domain.{Haku, Hakuaika, KohteenHakuaika}
+import fi.vm.sade.hakemuseditori.tarjonta.domain.{Haku, KohteenHakuaika}
 import fi.vm.sade.hakemuseditori.tarjonta.{TarjontaComponent, TarjontaService}
 import fi.vm.sade.haku.oppija.hakemus.service.EducationRequirementsUtil._
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
@@ -20,6 +18,7 @@ import org.apache.commons.lang3.StringUtils
 import org.joda.time.LocalDateTime
 import org.json4s._
 
+import java.util
 import scala.collection.JavaConversions._
 import scala.util.Try
 
@@ -66,11 +65,11 @@ trait HakemusConverterComponent {
       val ohjeetUudelleOpiskelijalleMap: Map[String, String] = hakutoiveet
         .filter(hakutoive => {
           val hakukohdeOid: Option[String] = hakutoive.hakemusData.map(_("Koulutus-id"))
-          tarjontaService.getOhjeetUudelleOpiskelijalle(hakukohdeOid).nonEmpty
+          tarjontaService.getOhjeetUudelleOpiskelijalle(hakukohdeOid, lang).nonEmpty
         })
         .map(hakutoive => {
           val hakukohdeOid: Option[String] = hakutoive.hakemusData.map(_("Koulutus-id"))
-          hakukohdeOid.getOrElse("") -> tarjontaService.getOhjeetUudelleOpiskelijalle(hakukohdeOid).getOrElse("")
+          hakukohdeOid.getOrElse("") -> tarjontaService.getOhjeetUudelleOpiskelijalle(hakukohdeOid, lang).getOrElse("")
         }).toMap
 
       Hakemus(
@@ -157,7 +156,7 @@ trait HakemusConverterComponent {
           case true =>
             Hakutoive(None, None, None, None, None)
           case _ =>
-            val tarjonnanHakukohde = tarjontaService.hakukohde(data("Koulutus-id"))
+            val tarjonnanHakukohde = tarjontaService.hakukohde(data("Koulutus-id"), lang)
             val amendedData = amendWithKoulutusInformaatio(lang, data)
 
             Hakutoive(Some(amendedData), tarjonnanHakukohde.map(_.yhdenPaikanSaanto), tarjonnanHakukohde.flatMap(_.koulutuksenAlkaminen),

@@ -9,8 +9,8 @@ class UnionTarjontaService(highPriorityService : TarjontaService,
       .orElse(lowPriorityService.haku(oid, lang))
   }
 
-  override def hakukohde(oid: String): Option[Hakukohde] = {
-    highPriorityService.hakukohde(oid)
-      .orElse(lowPriorityService.hakukohde(oid))
+  override def hakukohde(oid: String, lang: Language): Option[Hakukohde] = {
+    highPriorityService.hakukohde(oid, lang)
+      .orElse(lowPriorityService.hakukohde(oid, lang))
   }
 }
