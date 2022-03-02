@@ -19,8 +19,14 @@
             <h1 ng-if="!application.hasVastaanotettaviaOrIlmoittauduttavia() && !loading">{{ localization("hakutoiveidenMuokkaus.title") }}</h1>
             <h1 ng-if="application.hasVastaanotettaviaOrIlmoittauduttavia()">{{ localization("hakutoiveidenMuokkaus.titleWithVastaanotto") }}</h1>
             <span ng-if="application">
+              <p style="margin: unset">
                 {{ localization("applicationPreview.applicationId") }}
                 {{ application.oid }}
+              </p>
+              <p style="margin: unset">
+                {{ localization("applicationPreview.oppijanumero") }}
+                {{ application.personOid }}
+              </p>
             </span>
         </div>
         <div class="right" ng-class="{invisible: !application}">

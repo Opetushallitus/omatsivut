@@ -183,6 +183,7 @@
   "applicationPreview": {
     "received": "Ansökan har mottagits",
     "applicationId": "Ansökans nummer",
+    "oppijanumero": "Studentnummer",
     "attachments": "Bilagorna",
     "attachment": "Bilaga",
     "attachmentAddress": "Leveransadress",

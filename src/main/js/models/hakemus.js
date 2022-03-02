@@ -7,6 +7,7 @@ const _ = require('underscore');
 export default class Hakemus {
   constructor(json) {
     this.oid = json.hakemus.oid;
+    this.personOid = json.hakemus.personOid;
     this.updated = json.hakemus.updated;
     this.haku = copy(json.hakemus.haku);
     this.state = copy(json.hakemus.state);
