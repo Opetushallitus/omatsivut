@@ -55,11 +55,13 @@ export default ["restResources", function (restResources) {
       };
 
       $scope.schoolStartsInSpring = function () {
-        return $scope.tulos.koulutuksenAlkaminen.kausiUri === 'kausi_k#1'
+        return $scope.tulos.koulutuksenAlkaminen.kausiUri !== null
+          && $scope.tulos.koulutuksenAlkaminen.kausiUri.startsWith('kausi_k');
       };
 
       $scope.schoolStartsInAutumn = function () {
-        return $scope.tulos.koulutuksenAlkaminen.kausiUri === 'kausi_s#1'
+        return $scope.tulos.koulutuksenAlkaminen.kausiUri !== null
+          && $scope.tulos.koulutuksenAlkaminen.kausiUri.startsWith('kausi_s');
       };
 
       function onSuccess() {
