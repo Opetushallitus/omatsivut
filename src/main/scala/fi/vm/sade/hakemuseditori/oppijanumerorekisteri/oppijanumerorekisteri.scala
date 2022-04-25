@@ -22,7 +22,7 @@ import scalaz.concurrent.Task
 
 import scala.concurrent.duration.Duration
 
-case class Henkilo(oid: String, hetu: Option[String])
+case class Henkilo(oid: String, hetu: Option[String], oppijanumero: Option[String])
 
 object Henkilo {
   implicit private val formats = DefaultFormats
@@ -30,7 +30,8 @@ object Henkilo {
     override def read(value: JValue): Henkilo = {
       Henkilo(
         (value \ "oidHenkilo").extract[String],
-        (value \ "hetu").extractOpt[String]
+        (value \ "hetu").extractOpt[String],
+        (value \ "oppijanumero").extractOpt[String]
       )
     }
   }
@@ -54,7 +55,7 @@ trait OppijanumerorekisteriComponent {
 
   class StubbedOppijanumerorekisteriService extends OppijanumerorekisteriService {
     override def henkilo(personOid: String): Henkilo = {
-      Henkilo(personOid, Some("kva kva"))
+      Henkilo(personOid, Some("kva kva"), Some(personOid))
     }
 
     override def fetchAllDuplicateOids(oppijanumero: String): Set[String] = Set(oppijanumero)

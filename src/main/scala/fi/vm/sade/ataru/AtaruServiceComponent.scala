@@ -92,7 +92,8 @@ trait AtaruServiceComponent  {
               requiresAdditionalInfo = false,
               hasForm = true,
               requiredPaymentState = None,
-              notifications = Map()
+              notifications = Map(),
+              oppijanumero = henkilo.oppijanumero.getOrElse(personOid)
             )
             Audit.oppija.log(ShowHakemus(request, hakemus.personOid, hakemus.oid, haku.oid))
             HakemusInfo(

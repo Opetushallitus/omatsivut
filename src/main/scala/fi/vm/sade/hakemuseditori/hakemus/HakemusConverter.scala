@@ -9,6 +9,7 @@ import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.hakemuseditori.koodisto.KoodistoComponent
 import fi.vm.sade.hakemuseditori.koulutusinformaatio.KoulutusInformaatioComponent
 import fi.vm.sade.hakemuseditori.lomake.domain.Lomake
+import fi.vm.sade.hakemuseditori.oppijanumerorekisteri.OppijanumerorekisteriComponent
 import fi.vm.sade.hakemuseditori.tarjonta.domain.{Haku, KohteenHakuaika}
 import fi.vm.sade.hakemuseditori.tarjonta.{TarjontaComponent, TarjontaService}
 import fi.vm.sade.haku.oppija.hakemus.service.EducationRequirementsUtil._
@@ -23,7 +24,7 @@ import scala.collection.JavaConversions._
 import scala.util.Try
 
 trait HakemusConverterComponent {
-  this: KoodistoComponent with TarjontaComponent with KoulutusInformaatioComponent =>
+  this: KoodistoComponent with TarjontaComponent with KoulutusInformaatioComponent with OppijanumerorekisteriComponent =>
 
   val hakemusConverter: HakemusConverter
   val tarjontaService: TarjontaService
@@ -72,6 +73,8 @@ trait HakemusConverterComponent {
           hakukohdeOid.getOrElse("") -> tarjontaService.getOhjeetUudelleOpiskelijalle(hakukohdeOid, lang).getOrElse("")
         }).toMap
 
+      val henkilo = oppijanumerorekisteriService.henkilo(application.personOid)
+
       Hakemus(
         application.oid,
         application.personOid,
@@ -92,7 +95,8 @@ trait HakemusConverterComponent {
         lomake.map(_.requiresAdditionalInfo(application)).getOrElse(false),
         lomake.isDefined,
         application.requiredPaymentState,
-        notifications
+        notifications,
+        henkilo.oppijanumero.getOrElse(application.personOid)
       )
     }
 
