@@ -98,7 +98,9 @@ object AppConfig extends Logging {
       .withOverride("mongodb.oppija.uri", "mongodb://localhost:" + embeddedMongoPortChooser.chosenPort)
       .withOverride("omatsivut.db.port", itPostgresPortChooser.chosenPort.toString)
       .withOverride("omatsivut.db.host", "localhost")
-      .withOverride("omatsivut.db.url", "jdbc:postgresql://localhost:" + itPostgresPortChooser.chosenPort + "/omatsivutdb")
+      .withOverride("omatsivut.db.url", "jdbc:postgresql://localhost:" + itPostgresPortChooser.chosenPort + "/omatsivut")
+      .withOverride("valinta-tulos-service.valintarekisteri.db.user", "oph")
+      .withOverride("valinta-tulos-service.valintarekisteri.db.password", "oph")
 
     override def onStart: Unit = {
       embeddedMongoService.start()

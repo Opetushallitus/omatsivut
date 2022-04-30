@@ -29,12 +29,6 @@ class AppConfigSpec extends Specification with ITSetup with OmatsivutDbTools {
     }
   }
 
-  "Config with dev profile" should {
-    "Start up" in {
-      validateConfig(new AppConfig.Dev())
-    }
-  }
-
   "common.properties.template" should {
     "must exist with that name for deployment process" in {
       "src/main/resources/oph-configuration/common.properties.template" must PathMatchers.beAnExistingPath
