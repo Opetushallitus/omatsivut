@@ -82,5 +82,5 @@ jobs:
           mv -i target/omatsivut*SNAPSHOT-allinone.jar $DOCKER_BUILD_DIR/artifact/${ARTIFACT_NAME}.jar
           cp -vair src/main/resources/oph-configuration $DOCKER_BUILD_DIR/config/
           ./ci-tools/common/pull-image.sh
-          ./ci-tools/build/build-fatjar.sh $ARTIFACT_NAME
-          ./ci-tools/build/upload-image.sh $ARTIFACT_NAME
+          ./ci-tools/github-build/build-fatjar.sh $ARTIFACT_NAME
+          ./ci-tools/github-build/upload-image.sh $ARTIFACT_NAME
