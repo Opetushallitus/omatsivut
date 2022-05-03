@@ -20,7 +20,7 @@ case class DbConfig(url: String,
 class OmatsivutDb(config: DbConfig, override val sessionTimeoutSeconds: Int = 3600) extends OmatsivutRepository
   with SessionRepositoryImpl {
 
-  logger.info(s"Database configuration: ${config.copy(password = Some("***"))}")
+  logger.info(s"Database configuration: ${config.copy(password = config.password)}")
   val flyway = new Flyway()
   flyway.setDataSource(config.url, config.user.orNull, config.password.orNull)
   Timer.timed("Flyway migration") { flyway.migrate() }

@@ -1,0 +1,86 @@
+name: Omatsivut
+
+on:
+  workflow_dispatch:
+  push:
+    paths-ignore:
+      - '**.md'
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Cache local Maven repository
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Set up JDK 8
+        uses: actions/setup-java@v2
+        with:
+          java-version: '8'
+          distribution: 'temurin'
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 8
+
+      - uses: szenius/set-timezone@v1.0
+        with:
+          timezoneLinux: "Europe/Helsinki"
+
+      - name: Build PostgreSQL Docker containers
+        run: |
+          cd postgresql/docker/
+          docker build --tag omatsivut-postgres .
+          docker build --tag valintarekisteri-postgres .
+          cd -
+
+      - name: Build with Maven
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          ./cibuild.bash
+      - uses: actions/cache@v2
+        id: restore-build
+        with:
+          path: |
+            target
+          key: ${{ github.sha }}
+
+  deploy-container:
+    needs: test-and-build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/cache@v2
+        id: restore-build
+        with:
+          path: |
+            target
+          key: ${{ github.sha }}
+
+      - name: Build and deploy Docker container
+        shell: bash
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          export ARTIFACT_NAME=omatsivut
+          git clone https://github.com/Opetushallitus/ci-tools.git
+          source ci-tools/common/setup-tools.sh
+          export BASE_IMAGE="baseimage-fatjar-openjdk8:master"
+          mv -i target/omatsivut*SNAPSHOT-allinone.jar $DOCKER_BUILD_DIR/artifact/${ARTIFACT_NAME}.jar
+          cp -vair src/main/resources/oph-configuration $DOCKER_BUILD_DIR/config/
+          ./ci-tools/common/pull-image.sh
+          ./ci-tools/github-build/build-fatjar.sh $ARTIFACT_NAME
+          ./ci-tools/github-build/upload-image.sh $ARTIFACT_NAME
