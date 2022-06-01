@@ -33,6 +33,15 @@ Asenna NodeJS haluamallasi tavalla. Asenna sen avulla projektin kehitystyökalut
 npm install
 ```
 
+Ensimmäisellä kerralla esimerkiksi testejä ajettaessa buildataan Docker-kontit:
+
+```sh
+cd postgresql/docker/
+docker build --tag omatsivut-postgres .
+docker build --tag valintarekisteri-postgres .
+```
+
+
 ## IDE-buildi
 
 Importoi IDEA:ssa projektin maven projektina.
