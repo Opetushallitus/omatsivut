@@ -125,6 +125,7 @@
       },
       "accept": "Otan tämän opiskelupaikan vastaan sitovasti",
       "acceptToinenAste": "Otan opiskelupaikan vastaan",
+      "acceptToinenAsteCancelOthers": "Otan paikan vastaan ja perun muut vastaanotot",
       "conditionalAccept": "Otan tämän opiskelupaikan vastaan, mutta jään jonottamaan opiskelupaikkaa ylemmillä sijoilla olevista hakutoiveistani.",
       "conditionalAcceptInfo1": "Jos sinut valitaan varasijalta ylempään hakutoiveeseen, opiskelupaikan vastaanotto siirtyy siihen automaattisesti.",
       "conditionalAcceptInfo2": "Jos sinua ei valita varasijalta ylempään hakutoiveeseen, tämä opiskelupaikan vastaanotto jää voimaan.",
