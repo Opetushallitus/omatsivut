@@ -35,14 +35,14 @@
                   <li>{{ localization('message.acceptEducation.conditionalAcceptInfo2') }}</li>
               </ul>
           </li>
-<!--   UUSI START     -->
-        <!--li ng-if="ctrl.application().haku.toisenasteenhaku">
+<!--   START     -->
+        <li ng-if="ctrl.application().haku.toisenasteenhaku">
           <label>
             <input type="radio" name="vastaanotettavaHakutoive" value="VastaanotaSitovastiPeruAlemmat" ng-model="ctrl.vastaanottoAction[hakutoive.hakukohdeOid]" ng-disabled="ctrl.isVastaanottoKesken()" ng-click="ctrl.flashSiirtohakuNotification(); ctrl.selectHakukohde(hakutoive.hakukohdeOid)" />
             {{ localization('message.acceptEducation.acceptToinenAsteCancelOthers') }}
           </label>
-        </li-->
-<!--   UUSI END     -->
+        </li>
+<!--   END     -->
           <li>
             <label>
               <input type="radio" name="vastaanotettavaHakutoive" value="Peru" ng-model="ctrl.vastaanottoAction[hakutoive.hakukohdeOid]" ng-disabled="ctrl.isVastaanottoKesken()" ng-click="ctrl.selectHakukohde(hakutoive.hakukohdeOid)"/>

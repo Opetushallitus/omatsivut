@@ -6,6 +6,7 @@ export const VASTAANOTTOTILA = {
 
 export const VASTAANOTTO_ACTION = {
   VASTAANOTA_SITOVASTI: "VastaanotaSitovasti",
+  VASTAANOTA_SITOVASTI_PERU_ALEMMAT: "VastaanotaSitovastiPeruAlemmat",
   VASTAANOTA_EHDOLLISESTI: "VastaanotaEhdollisesti",
   PERU: "Peru"
 };

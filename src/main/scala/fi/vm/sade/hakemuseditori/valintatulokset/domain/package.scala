@@ -12,12 +12,14 @@ sealed trait VastaanottoAction
 
 case object Peru extends VastaanottoAction
 case object VastaanotaSitovasti extends VastaanottoAction
+case object VastaanotaSitovastiPeruAlemmat extends VastaanottoAction
 case object VastaanotaEhdollisesti extends VastaanottoAction
 
 object VastaanottoAction {
   private val valueMapping = Map(
     "Peru" -> Peru,
     "VastaanotaSitovasti" -> VastaanotaSitovasti,
+    "VastaanotaSitovastiPeruAlemmat" -> VastaanotaSitovastiPeruAlemmat,
     "VastaanotaEhdollisesti" -> VastaanotaEhdollisesti)
   val values: Seq[String] = valueMapping.keysIterator.toList
   def apply(value: String): VastaanottoAction = valueMapping.getOrElse(value, {
