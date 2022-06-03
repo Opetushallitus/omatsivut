@@ -32,6 +32,7 @@ class GetApplicationsSpec extends HakemusApiSpecification with FixturePerson wit
 
     "contain the link to 'information for new students'" in {
       withApplicationsResponse { resp =>
+        logger.info("RESPONSE: " + resp)
         val hakukohdeOid = "1.2.246.562.20.14660127086"
         resp.applications(6).hakemus.ohjeetUudelleOpiskelijalle(hakukohdeOid) must_== // we are going to have map hakukohdeOid -> link to instructions
           "https://www.helsinki.fi/fi/opiskelu/ohjeita-hakemuksen-jattaneille-yhteishaku"
