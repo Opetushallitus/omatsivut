@@ -57,6 +57,14 @@ class HakutoiveenVastaanottoController {
     return false;
   }
 
+  hasAlemmatVastaanotot(hakutoive) {
+    let index = this.application().hakutoiveet.indexOf(hakutoive);
+    return this.application().hakutoiveet.slice(index+1).filter(function(hakutoive) {
+      return (hakutoive.vastaanottotila === "VASTAANOTTANUT_SITOVASTI")
+    }).length > 0;
+  }
+
+
   flashSiirtohakuNotification() {
     this.siirtohakuClass = 'siirtohaku-fade-out';
     this.$timeout(() => this.siirtohakuClass = 'siirtohaku-fade-in', 50)
