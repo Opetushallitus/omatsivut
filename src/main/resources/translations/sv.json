@@ -125,6 +125,7 @@
       },
       "accept": "Jag tar emot den här studieplatsen bindande",
       "acceptToinenAste": "Jag tar emot den beviljade studieplatsen",
+      "acceptToinenAsteCancelOthers": "Jag tar emot studieplatsen och annullerar samtliga platser som jag prioriterat på lägre plats och som jag tidigare har tagit emot",
       "conditionalAccept": "Jag tar emot den här studieplatsen men väntar på en studieplats med högre prioritet",
       "conditionalAcceptInfo1": "Om du inte blir antagen från reservplats till ett högre ansökningsmål, förblir mottagandet av denna studieplats i kraft.",
       "conditionalAcceptInfo2": "Om du blir antagen från reservplats till ett högre ansökningsmål behöver du inte ta emot den skilt, utan studieplatsen bekräftas automatiskt.",
