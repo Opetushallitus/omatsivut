@@ -910,6 +910,7 @@
             it("toinen paikka on myös vastaanotettavissa", function() {
               expect(hakemusYhteishakuKevat2013WithForeignBaseEducation.vastaanotto(0).vaihtoehdot()).to.deep.equal([
                 'Otan opiskelupaikan vastaan',
+                'Otan opiskelupaikan vastaan ja perun samalla alemmat vastaanotetut paikat',
                 'En ota tätä opiskelupaikkaa vastaan'
               ])
             })
