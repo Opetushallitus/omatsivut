@@ -59,7 +59,7 @@ class HakutoiveenVastaanottoController {
 
   hasAlemmatVastaanotot(hakutoive) {
     let index = this.application().hakutoiveet.indexOf(hakutoive);
-    return this.application().hakutoiveet.slice(index+1).filter(function(hakutoive) {
+    return this.application().state.valintatulos.hakutoiveet.slice(index+1).filter(function(hakutoive) {
       return (hakutoive.vastaanottotila === "VASTAANOTTANUT_SITOVASTI")
     }).length > 0;
   }
