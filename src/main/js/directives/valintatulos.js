@@ -50,7 +50,7 @@ export default ["restResources", function(restResources) {
       }
 
       $scope.showKkValintatilanKuvaus = function(application) {
-        return application.haku.korkeakouluhaku;
+        return application.haku.korkeakouluhaku && application.haku.usePriority;
       }
 
       $scope.hakutoiveenValintatulosText = function(valintatulos, valintatulokset) {

@@ -75,7 +75,7 @@ trait RemoteKoutaComponent {
       lang: Language.Language,
       haunAikataulu: Option[HaunAikataulu]) : Option[Haku] = {
 
-      KoutaHaku.toHaku(koutaHaku, lang, haunAikataulu, config) match {
+      KoutaHaku.toHaku(koutaHaku, lang, haunAikataulu, config, ohjausparametritService) match {
         case Success(haku) => Some(haku)
         case Failure(exception) =>
           throw new RuntimeException(s"Failed to convert KoutaHaku: oid ${koutaHaku.oid}", exception)

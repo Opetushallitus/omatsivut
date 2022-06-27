@@ -1,6 +1,7 @@
 package fi.vm.sade.hakemuseditori.tarjonta.kouta
 
 import fi.vm.sade.hakemuseditori.domain.Language.Language
+import fi.vm.sade.hakemuseditori.ohjausparametrit.OhjausparametritService
 import fi.vm.sade.hakemuseditori.ohjausparametrit.domain.HaunAikataulu
 import fi.vm.sade.hakemuseditori.tarjonta.domain.{Haku, Hakuaika}
 import fi.vm.sade.hakemuseditori.tarjonta.domain.HakuTyyppi.{Erillishaku, JatkuvaHaku, Lisahaku, Yhteishaku}
@@ -43,7 +44,8 @@ object KoutaHaku {
   def toHaku(koutaHaku: KoutaHaku,
              lang: Language,
              haunAikataulu: Option[HaunAikataulu],
-             config: AppConfig): Try[Haku] = {
+             config: AppConfig,
+             ohjausparametritService: OhjausparametritService): Try[Haku] = {
     for {
       applicationPeriods <- extractApplicationPeriods(koutaHaku)
     } yield Haku(
@@ -58,7 +60,8 @@ object KoutaHaku {
       siirtohaku = isSiirtohaku(koutaHaku, config),
       toisenasteenhaku = isToisenasteenhaku(koutaHaku, config),
       tyyppi = koutaHaku.getHakutyyppi().toString,
-      usePriority = false) // FIXME
+      usePriority = ohjausparametritService.haunParametrit(koutaHaku.oid).flatMap(_.jarjestetytHakutoiveet).getOrElse(false)
+    )
   }
 
   private def extractApplicationPeriods(koutaHaku: KoutaHaku): Try[List[Hakuaika]] = {
