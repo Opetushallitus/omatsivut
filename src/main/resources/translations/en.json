@@ -123,6 +123,11 @@
         "2": "only one",
         "3": "offer of admission in a study programme leading to a higher education degree in Finland during one academic term."
       },
+      "kkVastaanottoOhje": {
+        "teksti": "Ohjeita paikan vastaanottamiseen ja ilmoittautumiseen:",
+        "linkkiTeksti": "Studyinfo.fi",
+        "linkki": "https://opintopolku.fi/konfo/en/sivu/how-to-accept-an-offer-of-admission-in-joint-application-to-higher-education"
+      },
       "accept": "I accept this offer of admission",
       "acceptToinenAste": "I accept the offer of admission",
       "acceptToinenAsteCancelOthers": "I accept the offer of admission, and simultaneously cancel all offers of admission to study programmes of lower preference on my application.",
