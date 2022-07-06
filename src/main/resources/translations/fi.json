@@ -123,6 +123,11 @@
         "2": "vain yhden",
         "3": "korkeakoulututkintoon johtavan opiskelupaikan samana lukukautena alkavasta koulutuksesta."
       },
+      "kkVastaanottoOhje": {
+        "teksti": "Lue ohjeet paikan vastaanottamisesta ja korkeakouluun ilmoittautumisesta osoitteessa",
+        "linkkiTeksti": "Opintopolku.fi",
+        "linkki": "https://opintopolku.fi/konfo/fi/sivu/paikan-vastaanotto-ja-ilmoittautuminen-korkeakouluun"
+      },
       "accept": "Otan tämän opiskelupaikan vastaan sitovasti",
       "acceptToinenAste": "Otan opiskelupaikan vastaan",
       "acceptToinenAsteCancelOthers": "Otan opiskelupaikan vastaan ja perun samalla alemmat vastaanotetut paikat",

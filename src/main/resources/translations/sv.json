@@ -123,6 +123,11 @@
         "2": "endast en",
         "3": "studieplats som leder till högskoleexamen i utbildning som börjar inom samma termin."
       },
+      "kkVastaanottoOhje": {
+        "teksti": "Se anvisningar för mottagande av studieplats och anmälning till högskolor i",
+        "linkkiTeksti": "Studieinfo.fi",
+        "linkki": "https://opintopolku.fi/konfo/sv/sivu/mottagande-av-studieplats-och-anmalning-till-hogskolor#mottagande-av-studieplats-och-reservplatser-i-den-andra-gemensamma-anskan-pa-varen-och-i-den-gemensamma-anskan-pa-hsten"
+      },
       "accept": "Jag tar emot den här studieplatsen bindande",
       "acceptToinenAste": "Jag tar emot den beviljade studieplatsen",
       "acceptToinenAsteCancelOthers": "Jag tar emot studieplatsen och annullerar samtliga platser som jag prioriterat på lägre plats och som jag tidigare har tagit emot",
