@@ -109,7 +109,7 @@
             </div>
             <div class="hakutoive-grid__valintatapajonon-pisteet hakutoive-grid__valintatapajono-grid-item"
                  ng-if="isJonokohtaisetTulostiedotVisible(hakutoive)">
-                <span class="hakutoive-grid__valintatapajono-grid-text">{{ jonokohtainenTulostieto.pisteet ? jonokohtainenTulostieto.pisteet : "-" }}</span>
+                <span class="hakutoive-grid__valintatapajono-grid-text">{{ jonokohtainenTulostieto.pisteet !== undefined ? jonokohtainenTulostieto.pisteet : "-" }}</span>
             </div>
             <div class="hakutoive-grid__valintatapajonon-alimmat-hyvaksytyt-pisteet hakutoive-grid__valintatapajono-grid-item"
                  ng-if="isJonokohtaisetTulostiedotVisible(hakutoive)">
