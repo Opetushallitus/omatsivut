@@ -178,7 +178,7 @@ trait HakemusConverterComponent {
     private def amendWithKoulutusInformaatio(lang: Language, data: HakutoiveData): HakutoiveData = {
       val koulutusOption = data.get("Koulutus")
       val koulutus = koulutusOption match {
-        case Some(k) if k.trim.equals("") => tarjontaService.hakukohde(data("Koulutus-id"), lang).map(_.nimi)
+        case Some(k) if StringUtils.isBlank(k) => tarjontaService.hakukohde(data("Koulutus-id"), lang).map(_.nimi)
         case default@_ => default
       }
       val opetuspiste = data.get("Opetuspiste").orElse(koulutusInformaatioService.opetuspiste(data("Opetuspiste-id"), lang).map(_.name))
