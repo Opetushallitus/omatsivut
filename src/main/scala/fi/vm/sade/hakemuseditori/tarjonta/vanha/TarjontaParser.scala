@@ -1,5 +1,6 @@
 package fi.vm.sade.hakemuseditori.tarjonta.vanha
 
+import fi.vm.sade.hakemuseditori.domain.Language
 import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.hakemuseditori.tarjonta.domain.{Hakukohde, KohteenHakuaika, KoulutuksenAlkaminen}
 import fi.vm.sade.utils.slf4j.Logging
@@ -16,17 +17,19 @@ object TarjontaParser extends JsonFormats with Logging {
     res
   }
 
-  def parseHakukohde(json: JValue): Option[Hakukohde] = {
+  def parseHakukohde(json: JValue, lang: Language.Language): Option[Hakukohde] = {
     for {
       obj <- (json \ "result").toOption
       oid = (obj \ "oid").extract[String]
+      nimiMap = (obj \ "nimi").extractOpt[Map[String, String]].getOrElse(Map())
+      nimi = nimiMap.get("kieli_" + lang.toString).orElse(nimiMap.get("kieli_fi")).getOrElse("?")
       kaytetaanHakukohdekohtaistaHakuaikaa = (obj \ "kaytetaanHakukohdekohtaistaHakuaikaa").extractOrElse(false)
       hakuaikaId <- if (kaytetaanHakukohdekohtaistaHakuaikaa) { Some(None) } else { (obj \ "hakuaikaId").extractOpt[String].map(Some(_)) }
       ohjeetUudelleOpiskelijalle = (obj \ "ohjeetUudelleOpiskelijalle").extractOpt[String]
       hakuaika <- if (kaytetaanHakukohdekohtaistaHakuaikaa) { createHakuaika((obj \ "hakuaikaAlkuPvm").extractOpt[Long], (obj \ "hakuaikaLoppuPvm").extractOpt[Long]) } else { Some(None) }
       koulutuksenAlkaminen = createKoulutuksenAlkaminen((obj \ "koulutuksenAlkamisvuosi").extractOpt[Long], (obj \ "koulutuksenAlkamiskausiUri").extractOpt[String])
       yhdenPaikanSaanto = (obj \ "yhdenPaikanSaanto" \ "voimassa").extractOrElse(false)
-    } yield Hakukohde(oid, hakuaikaId, koulutuksenAlkaminen, hakuaika, ohjeetUudelleOpiskelijalle, yhdenPaikanSaanto)
+    } yield Hakukohde(oid, nimi, hakuaikaId, koulutuksenAlkaminen, hakuaika, ohjeetUudelleOpiskelijalle, yhdenPaikanSaanto)
   }
 
   private def createHakuaika(hakuaikaAlkuPvm: Option[Long], hakuaikaLoppuPvm: Option[Long]) : Option[Option[List[KohteenHakuaika]]] = {

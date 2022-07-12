@@ -13,12 +13,19 @@ sealed case class KoutaHakukohde(alkamiskausiKoodiUri: Option[String],
                                  kaytetaanHaunAlkamiskautta: Option[Boolean],
                                  hakuajat: List[KoutaHakuaika],
                                  oid: String,
+                                 nimi: Map[String, String],
                                  yhdenPaikanSaanto: YhdenPaikanSaanto,
                                  uudenOpiskelijanUrl: Map[String, String]) {
-def getLocalizedUudenOpiskelijanUrl(lang: Language): Option[String] = {
-  val desiredLanguage = List(lang.toString, "fi", "sv", "en") find { k => uudenOpiskelijanUrl.get(k).exists(_.nonEmpty) }
-  desiredLanguage flatMap { s => uudenOpiskelijanUrl.get(s) }
-}
+
+  def getLocalizedUudenOpiskelijanUrl(lang: Language): Option[String] = {
+    val desiredLanguage = List(lang.toString, "fi", "sv", "en") find { k => uudenOpiskelijanUrl.get(k).exists(_.nonEmpty) }
+    desiredLanguage flatMap { s => uudenOpiskelijanUrl.get(s) }
+  }
+
+  def getLocalizedName(lang: Language): String = {
+    val desiredLanguage = List(lang.toString, "fi", "sv", "en") find { k => nimi.get(k).exists(_.nonEmpty) }
+    desiredLanguage flatMap { s => nimi.get(s) } getOrElse("?")
+  }
 
 
 }
@@ -33,6 +40,7 @@ object KoutaHakukohde {
       hakukohdekohtaisetHakuajat = kohteenHakuaika,
       ohjeetUudelleOpiskelijalle = koutaHakukohde.getLocalizedUudenOpiskelijanUrl(lang),
       oid = koutaHakukohde.oid,
+      nimi = koutaHakukohde.getLocalizedName(lang),
       yhdenPaikanSaanto = koutaHakukohde.yhdenPaikanSaanto.voimassa)
   }
 
