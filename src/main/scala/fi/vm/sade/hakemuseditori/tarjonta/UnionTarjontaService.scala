@@ -4,10 +4,8 @@ import fi.vm.sade.hakemuseditori.tarjonta.domain.{Haku, Hakukohde}
 
 class UnionTarjontaService(tarjontaService: TarjontaService,
                            koutaService : TarjontaService) extends TarjontaService {
-  def isKoutaOid(oid: String): Boolean = {
-    if(oid.length == 35) true
-    else false
-  }
+
+  def isKoutaOid(oid: String): Boolean = oid.length == 35
 
   override def haku(oid: String, lang: Language): Option[Haku] = {
     if(isKoutaOid(oid)) koutaService.haku(oid, lang)
