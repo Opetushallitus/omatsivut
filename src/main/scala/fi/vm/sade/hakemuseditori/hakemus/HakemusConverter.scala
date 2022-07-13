@@ -25,7 +25,7 @@ import scala.collection.JavaConversions._
 import scala.util.Try
 
 trait HakemusConverterComponent {
-  this: KoodistoComponent with TarjontaComponent with KoulutusInformaatioComponent with OppijanumerorekisteriComponent with Logging =>
+  this: KoodistoComponent with TarjontaComponent with KoulutusInformaatioComponent with OppijanumerorekisteriComponent =>
 
   val hakemusConverter: HakemusConverter
   val tarjontaService: TarjontaService
@@ -179,16 +179,11 @@ trait HakemusConverterComponent {
     private def amendWithKoulutusInformaatio(lang: Language, data: HakutoiveData): HakutoiveData = {
       val koulutusOption = data.get("Koulutus")
       val koulutus = koulutusOption match {
-        case Some(k) if StringUtils.isBlank(k) => {
-          val hakukohde = tarjontaService.hakukohde(data("Koulutus-id"), lang)
-          logger.info("Hakukohde: " + hakukohde)
-          hakukohde.map(_.nimi)
-        }
+        case Some(k) if StringUtils.isBlank(k) => tarjontaService.hakukohde(data("Koulutus-id"), lang).map(_.nimi)
+        case None => tarjontaService.hakukohde(data("Koulutus-id"), lang).map(_.nimi)
         case default@_ => default
       }
-      logger.info("Koulutus: " + koulutus)
       val opetuspiste = data.get("Opetuspiste").orElse(koulutusInformaatioService.opetuspiste(data("Opetuspiste-id"), lang).map(_.name))
-
       val amendedData = data ++ koulutus.map("Koulutus" -> _) ++ opetuspiste.map("Opetuspiste" -> _)
       amendedData
     }
