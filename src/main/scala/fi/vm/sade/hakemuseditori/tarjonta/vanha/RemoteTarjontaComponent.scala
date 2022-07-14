@@ -22,7 +22,7 @@ trait RemoteTarjontaComponent {
 
     override def hakukohde(oid: String, lang: Language.Language): Option[Hakukohde] = {
       if (oid != "") {
-        withHttpGet( "Tarjonta fetch hakukohde", OphUrlProperties.url("tarjonta-service.hakukohde", oid), {_.flatMap(TarjontaParser.parseHakukohde)})
+        withHttpGet( "Tarjonta fetch hakukohde", OphUrlProperties.url("tarjonta-service.hakukohde", oid), {_.flatMap(TarjontaParser.parseHakukohde(_, lang))})
       } else {
         None
       }

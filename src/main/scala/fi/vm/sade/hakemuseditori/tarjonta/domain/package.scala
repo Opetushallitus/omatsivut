@@ -24,6 +24,7 @@ case class Hakuaika(id: String, start: Long, end: Option[Long]) {
 }
 
 case class Hakukohde(oid: String,
+                     nimi: String,
                      hakuaikaId: Option[String],
                      koulutuksenAlkaminen: Option[KoulutuksenAlkaminen],
                      hakukohdekohtaisetHakuajat: Option[List[KohteenHakuaika]],

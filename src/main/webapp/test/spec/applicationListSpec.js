@@ -2478,7 +2478,7 @@
         })
 
         it("Valintatulokset näytetään", function() {
-          expect(erillishaku.valintatulokset()[0].hakukohde).to.equal('Kallion lukio Lukion ilmaisutaitolinja') // <- valinta-tulos-servicellä ei ole kannassaan tätä, mutta se haetaan koulutusInformaatio-APIsta
+          expect(erillishaku.valintatulokset()[0].hakukohde).to.equal('Kallion lukio Lukion ilmaisutaitolinja ') // <- valinta-tulos-servicellä ei ole kannassaan tätä, mutta se haetaan koulutusInformaatio-APIsta
           expect(erillishaku.valintatulokset()[0].tila).to.equal('Hyväksytty')
         })
 
@@ -2500,7 +2500,7 @@
         before(page.applyErillishakuFixtureAndOpen(false))
 
         it("Valintatulos näytetään", function() {
-          expect(erillishaku.valintatulokset()[0].hakukohde).to.equal('Kallion lukio Lukion ilmaisutaitolinja') // <- valinta-tulos-servicellä ei ole kannassaan tätä, mutta se haetaan koulutusInformaatio-APIsta
+          expect(erillishaku.valintatulokset()[0].hakukohde).to.equal('Kallion lukio Lukion ilmaisutaitolinja ') // <- valinta-tulos-servicellä ei ole kannassaan tätä, mutta se haetaan koulutusInformaatio-APIsta
           expect(erillishaku.valintatulokset()[0].tila).to.equal('Et saanut opiskelupaikkaa.')
         })
       })

@@ -15,6 +15,7 @@ import fi.vm.sade.hakemuseditori.tarjonta.{TarjontaComponent, TarjontaService}
 import fi.vm.sade.haku.oppija.hakemus.service.EducationRequirementsUtil._
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.Types.MergedAnswers
+import fi.vm.sade.utils.slf4j.Logging
 import org.apache.commons.lang3.StringUtils
 import org.joda.time.LocalDateTime
 import org.json4s._
@@ -176,9 +177,13 @@ trait HakemusConverterComponent {
     }
 
     private def amendWithKoulutusInformaatio(lang: Language, data: HakutoiveData): HakutoiveData = {
-      val koulutus = data.get("Koulutus").orElse(koulutusInformaatioService.koulutus(data("Koulutus-id"), lang).map(_.name))
+      val koulutusOption = data.get("Koulutus")
+      val koulutus = koulutusOption match {
+        case Some(k) if StringUtils.isBlank(k) => tarjontaService.hakukohde(data("Koulutus-id"), lang).map(_.nimi)
+        case None => tarjontaService.hakukohde(data("Koulutus-id"), lang).map(_.nimi)
+        case default@_ => default
+      }
       val opetuspiste = data.get("Opetuspiste").orElse(koulutusInformaatioService.opetuspiste(data("Opetuspiste-id"), lang).map(_.name))
-
       val amendedData = data ++ koulutus.map("Koulutus" -> _) ++ opetuspiste.map("Opetuspiste" -> _)
       amendedData
     }
