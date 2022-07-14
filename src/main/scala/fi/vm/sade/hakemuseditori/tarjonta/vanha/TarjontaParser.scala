@@ -21,7 +21,7 @@ object TarjontaParser extends JsonFormats with Logging {
     for {
       obj <- (json \ "result").toOption
       oid = (obj \ "oid").extract[String]
-      nimiMap = (obj \ "nimi").extractOpt[Map[String, String]].getOrElse(Map())
+      nimiMap = (obj \ "hakukohteenNimet").extractOpt[Map[String, String]].getOrElse(Map())
       nimi = nimiMap.get("kieli_" + lang.toString).orElse(nimiMap.get("kieli_fi")).getOrElse("?")
       kaytetaanHakukohdekohtaistaHakuaikaa = (obj \ "kaytetaanHakukohdekohtaistaHakuaikaa").extractOrElse(false)
       hakuaikaId <- if (kaytetaanHakukohdekohtaistaHakuaikaa) { Some(None) } else { (obj \ "hakuaikaId").extractOpt[String].map(Some(_)) }
