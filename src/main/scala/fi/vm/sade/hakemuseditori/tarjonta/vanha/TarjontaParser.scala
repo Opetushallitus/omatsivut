@@ -21,7 +21,7 @@ object TarjontaParser extends JsonFormats with Logging {
     for {
       obj <- (json \ "result").toOption
       oid = (obj \ "oid").extract[String]
-      nimiMap = (obj \ "nimi").extractOpt[Map[String, String]].getOrElse(Map())
+      nimiMap = (obj \ "hakukohteenNimet").extractOpt[Map[String, String]].getOrElse(Map())
       nimi = nimiMap.get("kieli_" + lang.toString).orElse(nimiMap.get("kieli_fi")).getOrElse("?")
       kaytetaanHakukohdekohtaistaHakuaikaa = (obj \ "kaytetaanHakukohdekohtaistaHakuaikaa").extractOrElse(false)
       hakuaikaId <- if (kaytetaanHakukohdekohtaistaHakuaikaa) { Some(None) } else { (obj \ "hakuaikaId").extractOpt[String].map(Some(_)) }
@@ -29,12 +29,7 @@ object TarjontaParser extends JsonFormats with Logging {
       hakuaika <- if (kaytetaanHakukohdekohtaistaHakuaikaa) { createHakuaika((obj \ "hakuaikaAlkuPvm").extractOpt[Long], (obj \ "hakuaikaLoppuPvm").extractOpt[Long]) } else { Some(None) }
       koulutuksenAlkaminen = createKoulutuksenAlkaminen((obj \ "koulutuksenAlkamisvuosi").extractOpt[Long], (obj \ "koulutuksenAlkamiskausiUri").extractOpt[String])
       yhdenPaikanSaanto = (obj \ "yhdenPaikanSaanto" \ "voimassa").extractOrElse(false)
-    } yield {
-      logger.info("HAKUKOHDE - OBJ: " + obj)
-      logger.info("HAKUKOHDE - NIMIMAP: " + nimiMap)
-      logger.info("HAKUKOHDE - NIMI: " + nimi)
-      Hakukohde(oid, nimi, hakuaikaId, koulutuksenAlkaminen, hakuaika, ohjeetUudelleOpiskelijalle, yhdenPaikanSaanto)
-    }
+    } yield Hakukohde(oid, nimi, hakuaikaId, koulutuksenAlkaminen, hakuaika, ohjeetUudelleOpiskelijalle, yhdenPaikanSaanto)
   }
 
   private def createHakuaika(hakuaikaAlkuPvm: Option[Long], hakuaikaLoppuPvm: Option[Long]) : Option[Option[List[KohteenHakuaika]]] = {

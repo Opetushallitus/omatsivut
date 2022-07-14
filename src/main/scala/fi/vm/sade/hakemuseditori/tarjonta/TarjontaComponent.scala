@@ -52,8 +52,7 @@ trait TarjontaComponent {
 
     override def hakukohde(oid: String, lang: Language.Language): Option[Hakukohde] = {
       val json = JsonFixtureMaps.findByKey[JValue]("/hakemuseditorimockdata/hakukohteet.json", oid)
-      logger.info("HAKUKOHDE - JSON: " + json)
-      json.flatMap(TarjontaParser.parseHakukohde(_, lang)).map { hakukohde =>
+      json.flatMap(TarjontaParser.parseHakukohde(_, lang)).map {hakukohde => hakukohde.copy(nimi = getHakukohdeNimi(json))}.map { hakukohde =>
         val hakuOid = json match {
           case Some(v) => (v \ "result" \ "hakuOid").extract[String]
           case _ => ""
@@ -66,6 +65,13 @@ trait TarjontaComponent {
         } else {
           hakukohde
         }
+      }
+    }
+
+    private def getHakukohdeNimi(json: Option[JValue]): String = {
+      json match {
+        case Some(v) => (v \ "result" \ "hakukohteenNimi").extractOpt[String].getOrElse("?")
+        case _ => "?"
       }
     }
 
