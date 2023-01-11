@@ -51,7 +51,6 @@
 
 .hakutoive__prioriteetti--sticky-container {
   align-items: center;
-  height: 140px;
   display: flex;
 }
 
@@ -78,8 +77,6 @@
 
 .valintatila {
   display: grid;
-  grid-gap: 7px 10px;
-  grid-template-columns: 300px 115px;
 }
 
 .valintatila__header {
@@ -360,6 +357,10 @@
   .hakutoive-grid .hakutoive-grid__valintatapajono-grid-item:nth-last-child(-n+4) {
     margin-bottom: 25px;
   }
+  .valintatila {
+    grid-gap: 7px 10px;
+    grid-template-columns: 300px 115px;
+  }
 
 }
 @container (max-width: 1159px) {
@@ -380,6 +381,7 @@
   .hakutoive-grid__valintatila {
     grid-column: col / span 5;
     grid-row: row 2;
+    margin-top: 40px;
   }
   .valintatila__lisatiedot {
     grid-column: col 3 / span 2;
