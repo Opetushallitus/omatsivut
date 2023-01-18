@@ -1,11 +1,9 @@
 @import "../common.less";
 
 .hakukohteet {
-  display: flex;
-  flex-flow: column nowrap;
+  container-type: inline-size;
   font-size: 14px;
   line-height: 1.4;
-  word-break: break-word;
 }
 
 .hakukohteet__header {
@@ -17,7 +15,6 @@
   display: flex;
   flex-flow: row wrap;
   min-height: 120px;
-  min-width: 860px;
 }
 
 .hakutoive:not(:last-of-type) {
@@ -54,31 +51,13 @@
 
 .hakutoive__prioriteetti--sticky-container {
   align-items: center;
-  height: 140px;
   display: flex;
 }
 
 .hakutoive-grid {
   display: grid;
-  flex-basis: 1040px;
-  flex-grow: 1;
   font-weight: 300;
-  grid-template-columns: auto 150px 150px 415px;
-  padding: 10px 35px;
   width: 100%;
-}
-
-.hakutoive-grid__hakutoive-grid-item {
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: center;
-  min-height: 120px;
-}
-
-.hakutoive-grid__kuvaus {
-  grid-column-start: 1;
-  grid-column-end: span 3;
-  padding-right: 20px;
 }
 
 .hakutoive-grid__kuvaus--tarjoaja-nimi {
@@ -90,14 +69,8 @@
   font-weight: 300;
 }
 
-.hakutoive-grid__valintatila {
-  grid-column-start: 4;
-}
-
 .valintatila {
   display: grid;
-  grid-gap: 7px 10px;
-  grid-template-columns: 300px 115px;
 }
 
 .valintatila__header {
@@ -125,9 +98,6 @@
   color: @primary-green-700;
   cursor: pointer;
   display: flex;
-  grid-column-start: 2;
-  grid-row-end: span 2;
-  grid-row-start: 1;
   text-decoration: none;
   user-select: none;
 }
@@ -249,29 +219,9 @@
   font-weight: 600;
 }
 
-.hakutoive-grid__valintatapajonon-valintatapa {
-  grid-column-start: 1;
-}
-
-.hakutoive-grid__valintatapajonon-pisteet {
-  grid-column-start: 2;
-}
-
-.hakutoive-grid__valintatapajonon-alimmat-hyvaksytyt-pisteet {
-  grid-column-start: 3;
-}
-
-.hakutoive-grid__valintatapajonon-valinnan-tulos {
-  grid-column-start: 4;
-}
-
 .hakutoive-grid .hakutoive-grid__valintatapajono-grid-item:nth-child(-n+6) {
   border-top: 1px solid #8B99A0;
   margin-top: 10px;
-}
-
-.hakutoive-grid .hakutoive-grid__valintatapajono-grid-item:nth-last-child(-n+4) {
-  margin-bottom: 25px;
 }
 
 .lds-ellipsis {
@@ -328,5 +278,118 @@
   }
   100% {
     transform: translate(20px, 0);
+  }
+}
+
+@container (max-width: 500px) {
+
+  .hakukohteet__header {
+     margin-left: 5px;
+  }
+}
+
+@container (min-width: 1160px) {
+  .hakukohteet {
+    display: flex;
+    flex-flow: column nowrap;
+    word-break: break-word;
+  }
+  .hakutoive {
+    min-width: 860px;
+  }
+  .hakutoive__prioriteetti--sticky-container {
+    height: 140px;
+  }
+  .hakutoive-grid {
+    flex-basis: 1040px;
+    flex-grow: 1;
+    grid-template-columns: auto 150px 150px 415px;
+    padding: 10px 35px;
+    width: 100%;
+  }
+  .hakutoive-grid__kuvaus {
+    grid-column-start: 1;
+    grid-column-end: span 3;
+    padding-right: 20px;
+  }
+  .hakutoive-grid__hakutoive-grid-item {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    min-height: 120px;
+  }
+  .hakutoive-grid__valintatila {
+    grid-column-start: 4;
+  }
+  .valintatila__lisatiedot {
+    grid-column-start: 2;
+    grid-row-end: span 2;
+    grid-row-start: 1;
+  }
+  .hakutoive-grid__valintatapajonon-valintatapa {
+    grid-column-start: 1;
+  }
+  .hakutoive-grid__valintatapajonon-pisteet {
+    grid-column-start: 2;
+  }
+  .hakutoive-grid__valintatapajonon-alimmat-hyvaksytyt-pisteet {
+    grid-column-start: 3;
+  }
+  .hakutoive-grid__valintatapajonon-valinnan-tulos {
+    grid-column-start: 4;
+  }
+  .hakutoive-grid .hakutoive-grid__valintatapajono-grid-item:nth-last-child(-n+4) {
+    margin-bottom: 25px;
+  }
+  .valintatila {
+    grid-gap: 7px 10px;
+    grid-template-columns: 300px 115px;
+  }
+
+}
+@container (max-width: 1159px) {
+  .hakutoive__prioriteetti--sticky-container {
+    height: 90px;
+  }
+  .hakutoive-grid {
+    padding: 10px 20px;
+  }
+  .hakutoive-grid__kuvaus {
+    padding-right: 20px;
+    grid-column: col / span 5;
+    grid-row: row;
+  }
+  .hakutoive-grid__hakutoive-grid-item {
+    min-height: 80px;
+  }
+  .hakutoive-grid__valintatila {
+    grid-column: col / span 5;
+    grid-row: row 2;
+    margin-top: 40px;
+  }
+  .valintatila__lisatiedot {
+    grid-column: col 3 / span 2;
+  }
+  .hakutoive-grid__valintatapajonon-valintatapa {
+    grid-column: col 1 / span 1;
+    grid-row: row 3;
+  }
+  .hakutoive-grid__valintatapajonon-pisteet {
+    grid-column: col 2 / span 1;
+    grid-row: row 3;
+    padding-left: 1em;
+  }
+  .hakutoive-grid__valintatapajonon-alimmat-hyvaksytyt-pisteet {
+    grid-column: col 3 / span 1;
+    grid-row: row 3;
+    padding-left: 1em;
+  }
+  .hakutoive-grid__valintatapajonon-valinnan-tulos {
+    grid-column: col 4 / span 2;
+    grid-row: row 3;
+    padding-left: 3em;
+  }
+  .hakutoive-grid .hakutoive-grid__valintatapajono-grid-item:nth-last-child(-n+4) {
+    grid-row: row 4;
   }
 }
