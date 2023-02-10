@@ -216,6 +216,11 @@
     }
   },
 
+  "migri": {
+    "otsikko": "Ano oleskelulupaa (SV)",
+    "linkki-teksti": "Siirry EnterFinland-palveluun (SV)"
+  },
+
   "emailNote": {
       "note": "Minneslista",
       "erikseenHaettavatHakukohteet": "Ansökningsmål med skild ansökan",

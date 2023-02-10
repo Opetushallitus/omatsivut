@@ -75,6 +75,11 @@
         </kela>
     </section>
 
+   <section class="migri" ng-fi="application.migriURL()">
+     <migri migriUrl="application.migriURL()">
+     </migri>
+   </section>
+
     <form name="applicationForm" novalidate>
 
         <section class="application-section application-valintatulos-error" ng-if="!application.resultFetchedSuccessfully()">
