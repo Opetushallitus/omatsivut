@@ -1,18 +1,24 @@
 package fi.vm.sade.omatsivut.servlet
 
 import java.util.UUID
-
 import fi.vm.sade.hakemuseditori.domain.Language
 import fi.vm.sade.omatsivut.security.{AttributeNames, SessionId, SessionService}
 import fi.vm.sade.omatsivut.servlet.session.OmatsivutPaths
 import fi.vm.sade.utils.slf4j.Logging
 import org.scalatra.{BadRequest, ScalatraFilter}
 
+import java.net.URL
+
 class AuthenticateIfNoSessionFilter(val sessionService: SessionService)
   extends ScalatraFilter with OmatsivutPaths with AttributeNames with Logging {
 
   implicit def language: Language.Language = {
     Option(request.getAttribute("lang").asInstanceOf[Language.Language]).getOrElse(Language.fi)
+  }
+
+  implicit def domain: String = {
+    val url: URL = new URL(request.getRequestURL.toString)
+    url.getHost
   }
 
   before() {
