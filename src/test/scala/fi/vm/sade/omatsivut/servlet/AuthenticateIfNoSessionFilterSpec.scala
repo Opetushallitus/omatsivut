@@ -42,7 +42,7 @@ class AuthenticateIfNoSessionFilterSpec extends MutableScalatraSpec with Mockito
         status must_== 302
         val location = response.headers("Location")(0)
         // this regex reads as "full URL to CAS-Oppija login endpoint with full URL of service as return URL"
-        location must find("""^http://.*/cas-oppija/login\?locale=fi&valtuudet=""" + AppConfig.suomifi_valtuudet_enabled +  """&service=http(s)?%3A%2F%2F.*%2Fomatsivut%2Finitsession$""")
+        location must find("""^http://.*:.*/cas-oppija/login\?locale=fi&valtuudet=""" + AppConfig.suomifi_valtuudet_enabled + """&service=localhost%2Fomatsivut%2Finitsession$""")
       }
     }
 
