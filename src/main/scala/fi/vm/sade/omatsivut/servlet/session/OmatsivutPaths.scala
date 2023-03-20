@@ -29,10 +29,18 @@ trait OmatsivutPaths extends Logging {
     protocol + host
   }
 
-  def initsessionPath(contextPath: String)(implicit lang: Language.Language): String = {
+  private def urlPrefixFromDomain(domain: String, lang: String): String = {
+    val host = OphUrlProperties.url("host.haku")
+    val protocol = if (host.startsWith("http")) "" else "https://"
+    protocol + domain
+  }
+
+  def initsessionPath(contextPath: String)(implicit lang: Language.Language, domain: String): String = {
     val realContextPath = getContextPath(contextPath)
-    val urlRoot = urlPrefix(lang.toString.toLowerCase())
-    urlRoot + realContextPath + "/initsession"
+    val urlRoot = urlPrefixFromDomain(domain, lang.toString)
+    val sessionPath = urlRoot + realContextPath + "/initsession"
+    logger.info(s"Domain: $domain | Language: $lang | SessionPath: $sessionPath")
+    sessionPath
   }
 
   def logoutServletPath(contextPath: String)(implicit lang: Language.Language): String = {

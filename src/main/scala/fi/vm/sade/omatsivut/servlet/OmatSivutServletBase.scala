@@ -5,10 +5,17 @@ import fi.vm.sade.hakemuseditori.domain.Language
 import fi.vm.sade.utils.slf4j.Logging
 import org.scalatra._
 
+import java.net.URL
+
 trait OmatSivutServletBase extends ScalatraServlet with Logging {
 
   implicit def language: Language.Language = {
     Option(request.getAttribute("lang").asInstanceOf[Language.Language]).getOrElse(Language.fi)
+  }
+
+  implicit def domain: String = {
+    val url: URL = new URL(request.getRequestURL.toString)
+    url.getHost
   }
 
   def isHttps = {
