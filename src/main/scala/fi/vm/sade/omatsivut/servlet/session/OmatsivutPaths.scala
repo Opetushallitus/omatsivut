@@ -37,7 +37,7 @@ trait OmatsivutPaths extends Logging {
 
   def initsessionPath(contextPath: String)(implicit lang: Language.Language, domain: String): String = {
     val realContextPath = getContextPath(contextPath)
-    val urlRoot = urlPrefixFromDomain(domain, lang.toString)
+    val urlRoot = urlPrefixFromDomain(domain, lang.toString.toLowerCase())
     val sessionPath = urlRoot + realContextPath + "/initsession"
     logger.info(s"Domain: $domain | Language: $lang | SessionPath: $sessionPath")
     sessionPath
@@ -49,9 +49,9 @@ trait OmatsivutPaths extends Logging {
     urlRoot + realContextPath + "/logout"
   }
 
-  def loginPath(contextPath: String)(implicit lang: Language.Language): String = {
+  def loginPath(contextPath: String)(implicit lang: Language.Language, domain: String): String = {
     val realContextPath = getContextPath(contextPath)
-    val urlRoot = urlPrefix(lang.toString.toLowerCase())
+    val urlRoot = urlPrefixFromDomain(domain, lang.toString.toLowerCase())
     val urlCas  = urlPrefix("fi")
     val fullUrl = urlRoot + realContextPath + "/initsession"
     urlCas + "/cas-oppija/login?locale=" + lang + "&valtuudet=" + AppConfig.suomifi_valtuudet_enabled.toString + "&service=" + URLEncoder.encode(fullUrl)
