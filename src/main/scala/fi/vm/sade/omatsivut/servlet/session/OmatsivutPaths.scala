@@ -30,17 +30,16 @@ trait OmatsivutPaths extends Logging {
     protocol + host
   }
 
-  private def urlPrefixFromDomain(domain: String, lang: String): String = {
+  private def urlPrefixFromDomain(domain: String): String = {
     val host = OphUrlProperties.url("host.haku")
     val protocol = if (host.startsWith("http")) "" else "https://"
     protocol + domain
   }
 
-  def initsessionPath(contextPath: String)(implicit lang: Language.Language, domain: String): String = {
+  def initsessionPath(contextPath: String)(implicit domain: String): String = {
     val realContextPath = getContextPath(contextPath)
-    val urlRoot = urlPrefixFromDomain(domain, lang.toString.toLowerCase())
+    val urlRoot = urlPrefixFromDomain(domain)
     val sessionPath = urlRoot + realContextPath + "/initsession"
-    logger.info(s"Domain: $domain | Language: $lang | SessionPath: $sessionPath")
     sessionPath
   }
 
@@ -52,7 +51,7 @@ trait OmatsivutPaths extends Logging {
 
   def loginPath(contextPath: String)(implicit lang: Language.Language, domain: String): String = {
     val realContextPath = getContextPath(contextPath)
-    val urlRoot = urlPrefixFromDomain(domain, lang.toString.toLowerCase())
+    val urlRoot = urlPrefixFromDomain(domain)
     val urlCas  = urlPrefix("fi")
     val fullUrl = urlRoot + realContextPath + "/initsession"
     urlCas + "/cas-oppija/login?locale=" + lang + "&valtuudet=" + AppConfig.suomifi_valtuudet_enabled.toString + "&service=" + URLEncoder.encode(fullUrl, "UTF-8")
