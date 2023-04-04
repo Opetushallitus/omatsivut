@@ -217,9 +217,9 @@
   },
 
   "migri": {
-    "otsikko": "Voit nyt hakea oleskelulupaa.",
-    "ohje-teksti": "<p>Pääset tutustumaan oleskeluluvan hakemisen ohjeisiin ja hakemaan oleskelulupaa täältä:</p><p>Tutustuthan ensin oleskeluluvan hakemisen ohjeisiin: <a href='https://migri.fi/opiskelijan-opas' target='_blank'>Opiskelijan opas</a></p><p>Sinun pitää lisätä oleskelulupaa varten oppijanumerosi. Löydät oppijanumerosi ---</p>",
-    "linkki-teksti": "Siirry tästä oleskeluluvan hakemiseen: <a href='https://migri.fi/opiskelijan-oleskelulupahakemus' target='_blank'>Opiskelijan oleskelulupahakemus</a>"
+    "otsikko": "Voit nyt hakea oleskelulupaa",
+    "ohje-teksti": "<ul>Pääset tutustumaan oleskeluluvan hakemisen ohjeisiin ja hakemaan oleskelulupaa täältä:<li>Tutustuthan ensin oleskeluluvan hakemisen ohjeisiin: <a href='https://migri.fi/opiskelijan-opas' target='_blank'>Opiskelijan opas</a></li><li>Sinun pitää lisätä oleskelulupaa varten oppijanumerosi. <a href='/konfo/fi/sivu/oppijanumero' target='_blank'>Lue lisää oppijanumerosta</a></li></ul>",
+    "linkki-teksti": "<a href='https://migri.fi/opiskelijan-oleskelulupahakemus' target='_blank'>Siirry tästä oleskeluluvan hakemiseen</a>"
   },
 
   "emailNote": {
