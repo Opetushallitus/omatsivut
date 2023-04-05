@@ -147,9 +147,9 @@ export default class Hakemus {
     }).filter(function(k) {return k}).head().value()
   }
 
-  migriURL() {
+  showMigriURL() {
     return _.chain(this.valintatulosHakutoiveet()).map(function(tulos) {
-      return tulos.migriURL
+      return tulos.showMigriURL
     }).filter(function(k) {return k}).head().value()
   }
 
