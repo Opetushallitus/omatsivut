@@ -216,6 +216,12 @@
     }
   },
 
+  "migri": {
+    "otsikko": "You can now apply for a residence permit",
+    "ohje-teksti": "<ul><li>Please first see instructions on how to apply for a residence permit: <a href='https://migri.fi/en/guide-for-students' target='_blank'>Guide for students</a></li><li>In order to apply for the residence permit, you need to attach your national learner ID on the residence permit application. <a href='/konfo/en/sivu/national-learner-id' target='_blank'>Learn more about the national learner ID</a></li></ul>",
+    "linkki-teksti": "<a href='https://migri.fi/en/residence-permit-application-for-studies' target='_blank'>Click here to apply for the residence permit</a>"
+  },
+
   "emailNote": {
       "note": "Shortlist",
       "erikseenHaettavatHakukohteet": "Study options with separate application",

@@ -34,6 +34,7 @@ import Application from './directives/application';
 import HakutoiveenVastaanotto from './directives/hakutoiveenVastaanotto';
 import Ilmoittautuminen from './directives/ilmoittautuminen';
 import Kela from './directives/kela';
+import Migri from './directives/migri';
 import Hakutoiveet from './directives/hakutoiveet';
 import Valintatulos from './directives/valintatulos';
 import Henkilotiedot from './directives/henkilotiedot';
@@ -109,6 +110,7 @@ listApp
   .directive('hakutoiveenVastaanotto', HakutoiveenVastaanotto)
   .directive('ilmoittautuminen', Ilmoittautuminen)
   .directive('kela', Kela)
+  .directive('migri', Migri)
   .directive('hakutoiveet', Hakutoiveet)
   .directive('valintatulos', Valintatulos)
   .directive('henkilotiedot', Henkilotiedot)

@@ -147,6 +147,12 @@ export default class Hakemus {
     }).filter(function(k) {return k}).head().value()
   }
 
+  showMigriURL() {
+    return _.chain(this.valintatulosHakutoiveet()).map(function(tulos) {
+      return tulos.showMigriURL
+    }).filter(function(k) {return k}).head().value()
+  }
+
   oiliUrl() {
     var oiliJwt = this.oiliJwt;
     return _.chain(this.valintatulosHakutoiveet()).map(function(tulos) {
