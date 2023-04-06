@@ -218,7 +218,7 @@
 
   "migri": {
     "otsikko": "Du kan nu ansöka om uppehållstillstånd",
-    "ohje-teksti": "<ul>Härifrån kan du bekanta dig med anvisningarna samt ansöka om uppehållstillstånd:<li>Bekanta dig först med anvisningarna för att ansöka om uppehållstillstånd: <a href='https://migri.fi/sv/guiden-for-studerande' target='_blank'>Guiden för studerande</a></li><li>Du behöver ditt studentnummer för uppehållstillståndet. <a href='/konfo/sv/sivu/studentnummer' target='_blank'>Läs mera om studentnummer</a></li></ul>",
+    "ohje-teksti": "<ul><li>Bekanta dig först med anvisningarna för att ansöka om uppehållstillstånd: <a href='https://migri.fi/sv/guiden-for-studerande' target='_blank'>Guiden för studerande</a></li><li>Du måste lägga in ditt studentnummer på din ansökan om uppehållstillstånd.<a href='/konfo/sv/sivu/studentnummer' target='_blank'>Läs mera om studentnummer</a></li></ul>",
     "linkki-teksti": "<a href='https://migri.fi/sv/ansokan-om-uppehallstillstand-for-studier' target='_blank'>Klicka här för att ansöka om uppehållstillstånd</a>"
   },
 
