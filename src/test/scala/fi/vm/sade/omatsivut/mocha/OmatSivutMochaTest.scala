@@ -1,9 +1,9 @@
 package fi.vm.sade.omatsivut.mocha
 
 import java.util.concurrent.TimeUnit.MINUTES
-
 import fi.vm.sade.omatsivut.SharedJetty
 import fi.vm.sade.omatsivut.config.AppConfig
+import org.junit.Ignore
 import org.junit.runner.RunWith
 import org.specs2.mutable.Specification
 import org.specs2.runner.JUnitRunner
