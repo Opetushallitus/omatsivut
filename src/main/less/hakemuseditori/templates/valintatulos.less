@@ -356,40 +356,34 @@
   }
   .hakutoive-grid__kuvaus {
     padding-right: 20px;
-    grid-column: col / span 5;
-    grid-row: row;
+    grid-column-start: 1;
+    grid-column-end: span 5;
   }
   .hakutoive-grid__hakutoive-grid-item {
     min-height: 80px;
   }
   .hakutoive-grid__valintatila {
-    grid-column: col / span 5;
-    grid-row: row 2;
+    grid-column-start: 1;
+    grid-column-end: span 5;
     margin-top: 40px;
   }
   .valintatila__lisatiedot {
     grid-column: col 3 / span 2;
   }
   .hakutoive-grid__valintatapajonon-valintatapa {
-    grid-column: col 1 / span 1;
-    grid-row: row 3;
+    grid-column-start: 1;
   }
   .hakutoive-grid__valintatapajonon-pisteet {
-    grid-column: col 2 / span 1;
-    grid-row: row 3;
+    grid-column-start: 2;
     padding-left: 1em;
   }
   .hakutoive-grid__valintatapajonon-alimmat-hyvaksytyt-pisteet {
-    grid-column: col 3 / span 1;
-    grid-row: row 3;
+    grid-column-start: 3;
     padding-left: 1em;
   }
   .hakutoive-grid__valintatapajonon-valinnan-tulos {
-    grid-column: col 4 / span 2;
-    grid-row: row 3;
+    grid-column-start: 4;
+    grid-column-end: 6;
     padding-left: 3em;
-  }
-  .hakutoive-grid .hakutoive-grid__valintatapajono-grid-item:nth-last-child(-n+4) {
-    grid-row: row 4;
   }
 }
