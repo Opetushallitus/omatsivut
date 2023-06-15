@@ -60,6 +60,10 @@
   width: 100%;
 }
 
+.hakutoive-wrapper {
+  width: 100%;
+}
+
 .hakutoive-grid__kuvaus--tarjoaja-nimi {
   font-weight: 600;
 }
@@ -219,7 +223,7 @@
   font-weight: 600;
 }
 
-.hakutoive-grid .hakutoive-grid__valintatapajono-grid-item:nth-child(-n+6) {
+.hakutoive-grid .hakutoive-grid__valintatapajono-grid-item:nth-child(-n+4) {
   border-top: 1px solid #8B99A0;
   margin-top: 10px;
 }
@@ -300,11 +304,15 @@
   .hakutoive__prioriteetti--sticky-container {
     height: 140px;
   }
-  .hakutoive-grid {
+
+  .hakutoive-wrapper {
     flex-basis: 1040px;
     flex-grow: 1;
-    grid-template-columns: auto 150px 150px 415px;
     padding: 10px 35px;
+  }
+
+  .hakutoive-grid {
+    grid-template-columns: auto 150px 150px 415px;
     width: 100%;
   }
   .hakutoive-grid__kuvaus {
@@ -351,7 +359,7 @@
   .hakutoive__prioriteetti--sticky-container {
     height: 90px;
   }
-  .hakutoive-grid {
+  .hakutoive-wrapper {
     padding: 10px 20px;
   }
   .hakutoive-grid__kuvaus {
@@ -388,7 +396,6 @@
 
   .hakutoive-grid__valintatapajonon-valinnan-tulos {
     grid-column-start: 4;
-    grid-column-end: 6;
     padding-left: 3em;
   }
 }
