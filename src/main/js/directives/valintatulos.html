@@ -10,6 +10,9 @@
                 {{ $index + 1 }}
             </div>
         </div>
+
+      <div class="hakutoive-wrapper">
+
         <div class="hakutoive-grid">
             <div class="hakutoive-grid__kuvaus hakutoive-grid__hakutoive-grid-item">
                 <span class="hakutoive-grid__kuvaus--tarjoaja-nimi">{{ hakutoive.tarjoajaNimi }}</span>
@@ -78,6 +81,8 @@
                     </div>
                 </div>
             </div>
+          </div>
+          <div class="hakutoive-grid">
             <div class="hakutoive-grid__valintatapajonon-valintatapa hakutoive-grid__valintatapajono-grid-item hakutoive-grid__valintatapajono-header"
                  ng-if="isJonokohtaisetTulostiedotVisible(hakutoive)">
                 <span class="hakutoive-grid__valintatapajono-grid-text">
@@ -134,6 +139,8 @@
                     {{ getVarasijaDisclaimer(jonokohtainenTulostieto) }}
                 </span>
             </div>
+          </div>
+
         </div>
     </div>
 </div>

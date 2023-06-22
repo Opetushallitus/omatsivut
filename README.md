@@ -59,7 +59,7 @@ Tämä luo ./target-kansion alle valinta-tulos-service.war -tiedoston
 
 Aja JettyLauncher-luokka.
 
-- jotta impersonointi/autentikoinnin ohitus onnistuu, anna parametri `-Domatsivut.profile=it`.
+- jotta impersonointi/autentikoinnin ohitus onnistuu, anna parametri `-Domatsivut.profile=it` (JVM parametri, ei CLI parametri).
 - lisäksi `-Xss2M`, ettei stäkki lopu fikstuuridatalla, jossa on erittäin syviä rakenteita
 
 ### Ajo oikealla Jettyllä
@@ -158,11 +158,14 @@ Jos applikaatiota ajetaan "testimoodissa" eli esim. `-Domatsivut.profile=dev`, n
 
 ### Testien ajaminen selaimessa
 
-Palvelin käyntiin (ks yllä) ja sitten [http://localhost:7337/omatsivut/test/runner.html](http://localhost:7337/omatsivut/test/runner.html)
+Palvelin käyntiin (it-profiili ja JettyLauncher, ks yllä) ja sitten [http://localhost:7337/omatsivut/test/runner.html](http://localhost:7337/omatsivut/test/runner.html)
 
 Testien ajaminen onnistuneesti vaatii sitä, että tämän projektin rinnalta hakemistopuusta löytyy [valinta-tulos-service](https://github.com/Opetushallitus/valinta-tulos-service).
 
 Valinta-tulos-service.war muodostuu target:n alle komennolla `mvn clean compile`
+
+Testien ajaminen aikaansaa myös sisäänkirjautumisen, jonka jälkeen sovelluksen voi halutessaan avata lokaalisti osoitteessa [http://localhost:7337/omatsivut](http://localhost:7337/omatsivut),
+ tosin tällöin sovellus on siinä tilassa mihin testit ovat sen jättäneet.
 
 ## Testidata
 
@@ -174,10 +177,10 @@ Testejä kehittäessä fixture-dataa voi omalla päivittää asentamalla "mvn in
 * valinta-tulos-service: [valinta-tulos-service/src/main/resources/fixtures/](https://github.com/Opetushallitus/valinta-tulos-service/tree/master/src/main/resources/fixtures)
 * hakemuseditori: Testit käyttävät myös mokattuja ulkoisten palvelujen rajapintoja. Näiden
 mokkien data löytyy pääsääntöisesti [omatsivut/src/main/resources/hakemuseditorimockdata/](https://github.com/Opetushallitus/omatsivut/tree/master/src/main/resources/hakemuseditorimockdata) kansiosta.
-* haku: [haku/hakemus-api/src/main/resources/mongofixtures](https://github.com/Opetushallitus/haku/tree/master/hakemus-api/src/main/resources/mongofixtures) kansio ladataan testipalvelimen käynnistyessä. Kyseisessä
-datassa on hakemusten personOid kentät muutettu vastaamaan testien käyttämää
-henkilöä. Fixtuurien lisäämistä varten löytyy scripti [haku/testfixtures](https://github.com/Opetushallitus/haku/tree/master/testfixtures)
-kansiosta. Koulutusdata joka sijaitsee kansiossa [haku/hakemus-api/src/main/resources/mockdata](https://github.com/Opetushallitus/haku/tree/master/hakemus-api/src/main/resources/mockdata).
+  * haku: [haku/hakemus-api/src/main/resources/mongofixtures](https://github.com/Opetushallitus/haku/tree/master/hakemus-api/src/main/resources/mongofixtures) kansio ladataan testipalvelimen käynnistyessä. Kyseisessä
+  datassa on hakemusten personOid kentät muutettu vastaamaan testien käyttämää
+  henkilöä. Fixtuurien lisäämistä varten löytyy scripti [haku/testfixtures](https://github.com/Opetushallitus/haku/tree/master/testfixtures)
+  kansiosta. Koulutusdata joka sijaitsee kansiossa [haku/hakemus-api/src/main/resources/mockdata](https://github.com/Opetushallitus/haku/tree/master/hakemus-api/src/main/resources/mockdata).
 
 ## Sovellusprofiilit
 

@@ -389,17 +389,38 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.19.1</version>
-                <configuration>
-                    <includes>
-                        <exclude>**/*Spec.java</exclude>
-                        <exclude>**/*Test.java</exclude>
-                    </includes>
-                    <argLine>-Xms512M -Xmx2G -Xss2m</argLine>
-                    <systemProperties>
-
-                    </systemProperties>
-                </configuration>
+                <version>3.1.2</version>
+                <executions>
+                    <execution>
+                        <id>default-test</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <includes>
+                                <exclude>**/*Spec.java</exclude>
+                                <exclude>**/*Test.java</exclude>
+                            </includes>
+                            <excludes>
+                                <exclude>**/OmatSivutMochaTest.java</exclude>
+                            </excludes>
+                            <argLine>-Xms512M -Xmx2G -Xss2m</argLine>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>default-prepare-package</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <includes>
+                            </includes>
+                            <argLine>-Xms512M -Xmx2G -Xss2m</argLine>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

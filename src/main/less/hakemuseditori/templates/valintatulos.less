@@ -60,6 +60,10 @@
   width: 100%;
 }
 
+.hakutoive-wrapper {
+  width: 100%;
+}
+
 .hakutoive-grid__kuvaus--tarjoaja-nimi {
   font-weight: 600;
 }
@@ -219,7 +223,7 @@
   font-weight: 600;
 }
 
-.hakutoive-grid .hakutoive-grid__valintatapajono-grid-item:nth-child(-n+6) {
+.hakutoive-grid .hakutoive-grid__valintatapajono-grid-item:nth-child(-n+4) {
   border-top: 1px solid #8B99A0;
   margin-top: 10px;
 }
@@ -300,11 +304,15 @@
   .hakutoive__prioriteetti--sticky-container {
     height: 140px;
   }
-  .hakutoive-grid {
+
+  .hakutoive-wrapper {
     flex-basis: 1040px;
     flex-grow: 1;
-    grid-template-columns: auto 150px 150px 415px;
     padding: 10px 35px;
+  }
+
+  .hakutoive-grid {
+    grid-template-columns: auto 150px 150px 415px;
     width: 100%;
   }
   .hakutoive-grid__kuvaus {
@@ -351,45 +359,43 @@
   .hakutoive__prioriteetti--sticky-container {
     height: 90px;
   }
-  .hakutoive-grid {
+  .hakutoive-wrapper {
     padding: 10px 20px;
   }
   .hakutoive-grid__kuvaus {
     padding-right: 20px;
-    grid-column: col / span 5;
-    grid-row: row;
+    grid-column-start: 1;
+    grid-column-end: span 5;
   }
   .hakutoive-grid__hakutoive-grid-item {
     min-height: 80px;
   }
   .hakutoive-grid__valintatila {
-    grid-column: col / span 5;
-    grid-row: row 2;
+    grid-column-start: 1;
+    grid-column-end: span 5;
     margin-top: 40px;
   }
   .valintatila__lisatiedot {
     grid-column: col 3 / span 2;
   }
   .hakutoive-grid__valintatapajonon-valintatapa {
-    grid-column: col 1 / span 1;
-    grid-row: row 3;
+    grid-column-start: 1;
   }
   .hakutoive-grid__valintatapajonon-pisteet {
-    grid-column: col 2 / span 1;
-    grid-row: row 3;
+    grid-column-start: 2;
     padding-left: 1em;
   }
   .hakutoive-grid__valintatapajonon-alimmat-hyvaksytyt-pisteet {
-    grid-column: col 3 / span 1;
-    grid-row: row 3;
+    grid-column-start: 3;
     padding-left: 1em;
   }
-  .hakutoive-grid__valintatapajonon-valinnan-tulos {
-    grid-column: col 4 / span 2;
-    grid-row: row 3;
-    padding-left: 3em;
+
+  .hakutoive-grid .hakutoive-grid__valintatapajono-grid-item {
+    padding-right: 10px;
   }
-  .hakutoive-grid .hakutoive-grid__valintatapajono-grid-item:nth-last-child(-n+4) {
-    grid-row: row 4;
+
+  .hakutoive-grid__valintatapajonon-valinnan-tulos {
+    grid-column-start: 4;
+    padding-left: 3em;
   }
 }

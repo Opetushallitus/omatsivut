@@ -147,9 +147,13 @@ object AppConfig extends Logging {
   }
 
   class EmbeddedMongoService extends LocalService {
+
     private var mongo: Option[MongoServer] = None
 
     override def start() {
+      // tämän ansiosta embedded mongo toimii lokaalista arm-maceissa
+      if(System.getProperty("os.arch") == "aarch64") System.setProperty("os.arch", "i686_64")
+
       mongo = EmbeddedMongo.start(embeddedMongoPortChooser)
     }
 
