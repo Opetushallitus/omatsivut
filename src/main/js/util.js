@@ -51,13 +51,13 @@ export function withoutAngularFields(obj) {
     return obj
 }
 
-export function getBearerToken() {
+export function getBearerToken($cookies) {
   return $cookies.get(BEARER_TOKEN_KEY);
 }
-export function setBearerToken(token) {
+export function setBearerToken($cookies, token) {
   $cookies.put(BEARER_TOKEN_KEY, token, {domain: window.baseUrl, samesite: 'strict'});
 }
-export function removeBearerToken() {
+export function removeBearerToken($cookies) {
   $cookies.remove(BEARER_TOKEN_KEY);
 }
 
