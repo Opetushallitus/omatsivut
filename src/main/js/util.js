@@ -52,13 +52,13 @@ export function withoutAngularFields(obj) {
 }
 
 export function getBearerToken() {
-  return window.sessionStorage.getItem(BEARER_TOKEN_KEY)
+  return $cookies.get(BEARER_TOKEN_KEY);
 }
 export function setBearerToken(token) {
-  window.sessionStorage.setItem(BEARER_TOKEN_KEY, token)
+  $cookies.put(BEARER_TOKEN_KEY, token, {domain: window.baseUrl, samesite: 'strict'});
 }
 export function removeBearerToken() {
-  window.sessionStorage.removeItem(BEARER_TOKEN_KEY)
+  $cookies.remove(BEARER_TOKEN_KEY);
 }
 
 export function isTestMode() {
