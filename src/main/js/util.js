@@ -55,7 +55,7 @@ export function getBearerToken($cookies) {
   return $cookies.get(BEARER_TOKEN_KEY);
 }
 export function setBearerToken($cookies, token) {
-  $cookies.put(BEARER_TOKEN_KEY, token, {domain: window.baseUrl, samesite: 'strict'});
+  $cookies.put(BEARER_TOKEN_KEY, token, {domain: window.baseUrl, secure: true, samesite: 'strict'});
 }
 export function removeBearerToken($cookies) {
   $cookies.remove(BEARER_TOKEN_KEY);
