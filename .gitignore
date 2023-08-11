@@ -16,6 +16,7 @@ tmp/*
 
 # python specific
 *.pyc
+.python-version
 
 # xcode/iphone specific
 build/*

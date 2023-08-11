@@ -2,7 +2,7 @@ import { getLanguage } from '../staticResources';
 import { getBearerToken, removeBearerToken } from '../util';
 import Hakemus from '../models/hakemus';
 
-export default ['$scope', '$location', '$http', function($scope, $location, $http) {
+export default ['$scope', '$location', '$http', '$cookies', function($scope, $location, $http, $cookies) {
 
   const decodedUrl = decodeURIComponent($location.url());
   const matches = decodedUrl.match(/token\/(.+)/);
@@ -18,13 +18,13 @@ export default ['$scope', '$location', '$http', function($scope, $location, $htt
   loadApplication();
 
   $scope.logout = function() {
-    removeBearerToken();
+    removeBearerToken($cookies);
     $scope.application = null;
     $scope.loggedOut = true;
   };
 
    function loadApplication() {
-    if (token || getBearerToken()) {
+    if (token || getBearerToken($cookies)) {
       $scope.loading = true;
       $location.hash('/').replace();
       const suffix = token ? 'token/' + token : 'session';

@@ -51,18 +51,15 @@ export function withoutAngularFields(obj) {
     return obj
 }
 
-export function getBearerToken() {
-  return window.sessionStorage.getItem(BEARER_TOKEN_KEY)
-}
-export function setBearerToken(token) {
-  window.sessionStorage.setItem(BEARER_TOKEN_KEY, token)
-}
-export function removeBearerToken() {
-  window.sessionStorage.removeItem(BEARER_TOKEN_KEY)
-}
-
 export function isTestMode() {
   return window.parent.location.href.indexOf("runner.html") > 0;
 }
-
-
+export function getBearerToken($cookies) {
+  return $cookies.get(BEARER_TOKEN_KEY);
+}
+export function setBearerToken($cookies, token) {
+  $cookies.put(BEARER_TOKEN_KEY, token, {domain: window.baseUrl, secure: !isTestMode(), samesite: 'strict'});
+}
+export function removeBearerToken($cookies) {
+  $cookies.remove(BEARER_TOKEN_KEY);
+}
