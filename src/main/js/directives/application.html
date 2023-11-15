@@ -76,7 +76,8 @@
     </section>
 
    <section class="migri" ng-if="application.showMigriURL()">
-     <migri migri="application.showMigriURL()">
+     <migri migri="application.showMigriURL()"
+            token="{{application.migriJwt}}">
      </migri>
    </section>
 

@@ -19,6 +19,7 @@ host.virkailija={{host_virkailija}}
 host.oppija={{host_oppija}}
 
 omatsivut.crypto.aes.key={{omatsivut_crypto_aes_key}}
+omatsivut.migri.crypto.hmac.key={{omatsivut_crypto_hmac_key}}
 omatsivut.crypto.hmac.key={{omatsivut_crypto_hmac_key}}
 
 cas.url=https://{{host_virkailija}}/cas

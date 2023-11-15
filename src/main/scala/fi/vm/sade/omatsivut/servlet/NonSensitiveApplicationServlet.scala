@@ -14,7 +14,7 @@ import fi.vm.sade.hakemuseditori.viestintapalvelu.{AccessibleHtml, Pdf}
 import fi.vm.sade.omatsivut.NonSensitiveHakemusInfo.answerIds
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.oppijantunnistus.{ExpiredTokenException, InvalidTokenException, OppijanTunnistusComponent}
-import fi.vm.sade.omatsivut.security.{HakemusJWT, JsonWebToken}
+import fi.vm.sade.omatsivut.security.{HakemusJWT, JsonWebToken, MigriJsonWebToken}
 import fi.vm.sade.omatsivut.vastaanotto.{Vastaanotto, VastaanottoComponent}
 import fi.vm.sade.omatsivut.{NonSensitiveHakemus, NonSensitiveHakemusInfo, NonSensitiveHakemusInfoSerializer, NonSensitiveHakemusSerializer}
 import org.json4s._
@@ -29,7 +29,7 @@ sealed trait InsecureResponse {
 }
 
 case class InsecureHakemus(jsonWebToken: String, response: NonSensitiveHakemus) extends InsecureResponse
-case class InsecureHakemusInfo(jsonWebToken: String, response: NonSensitiveHakemusInfo, oiliJwt: String = null) extends InsecureResponse
+case class InsecureHakemusInfo(jsonWebToken: String, response: NonSensitiveHakemusInfo, oiliJwt: String = null, migriJwt: String = null) extends InsecureResponse
 
 trait NonSensitiveApplicationServletContainer {
   this: HakemusRepositoryComponent with
@@ -44,6 +44,7 @@ trait NonSensitiveApplicationServletContainer {
     protected val applicationDescription = "Oppijan henkilökohtaisen palvelun REST API, jolla voi muokata hakemusta heikosti tunnistautuneena"
     private val hakemusEditori = newEditor(this)
     private val jwt = new JsonWebToken(appConfig.settings.hmacKey)
+    private val migriJwt = new MigriJsonWebToken(appConfig.settings.hmacKeyMigri)
 
     class UnauthorizedException(msg: String) extends RuntimeException(msg)
     class ForbiddenException(msg: String) extends RuntimeException(msg)
@@ -152,10 +153,12 @@ trait NonSensitiveApplicationServletContainer {
         token <- jwtAuthorize
         hakemus <- fetchHakemus(token.oid, Some(token.personOid))
       } yield {
+        val personOid = oppijanumerorekisteriService.henkilo(token.personOid).oid
         Ok(InsecureHakemusInfo(
           jwt.encode(token),
           new NonSensitiveHakemusInfo(hakemus, token.answersFromThisSession),
-          oiliJwt = jwt.createOiliJwt(oppijanumerorekisteriService.henkilo(token.personOid).oid)
+          oiliJwt = jwt.createOiliJwt(personOid),
+          migriJwt = migriJwt.createMigriJWT(personOid)
         ))
       }).get
     }
@@ -184,13 +187,14 @@ trait NonSensitiveApplicationServletContainer {
     get("/applications/application/token/:token") {
       (for {
         metadata <- oppijanTunnistusService.validateToken(params("token"))
-        hakemus <- fetchHakemus(metadata.hakemusOid, metadata.personOid)
+        hakemus: HakemusInfo <- fetchHakemus(metadata.hakemusOid, metadata.personOid)
       } yield {
+        val personOid = oppijanumerorekisteriService.henkilo(hakemus.hakemus.personOid).oid
         Ok(InsecureHakemusInfo(
           jwt.encode(HakemusJWT(metadata.hakemusOid, Set(), hakemus.hakemus.personOid)),
           new NonSensitiveHakemusInfo(hakemus, Set()),
-          oiliJwt = jwt.createOiliJwt(
-              oppijanumerorekisteriService.henkilo(hakemus.hakemus.personOid).oid)
+          oiliJwt = jwt.createOiliJwt(personOid),
+          migriJwt = migriJwt.createMigriJWT(personOid)
         ))
       }).get
     }

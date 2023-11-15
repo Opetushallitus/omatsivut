@@ -33,6 +33,7 @@ export default ['$scope', '$location', '$http', '$cookies', function($scope, $lo
           $scope.loading = false;
           $scope.application = new Hakemus(response.data);
           $scope.application.oiliJwt = response.oiliJwt;
+          $scope.application.migriJwt = response.migriJwt;
           $scope.application.token = token;
           $scope.application.isHakutoiveidenMuokkaus = true;
           const henkilotiedot = response.data.hakemus.answers.henkilotiedot;

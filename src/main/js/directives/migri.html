@@ -3,5 +3,13 @@
         <strong>{{ localization('migri.otsikko') }}</strong>
     </header>
     <div ng-bind-html="localization('migri.ohje-teksti')"></div>
-    <div class="linkki" ng-bind-html="localization('migri.linkki-teksti')"></div>
+    <div class="linkki">
+      <a class="linkki" href="{{parsedUrl}}" target="_blank">{{localization('migri.linkki-teksti')}}</a>
+      <p ng-click="constructUrl()">
+        {{justSomeToken}} {{migriToken}}
+      </p>
+      <p ng-click="constructUrl()">
+        {{parsedUrl}}
+      </p>
+    </div>
 </div>

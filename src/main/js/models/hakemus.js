@@ -27,6 +27,7 @@ export default class Hakemus {
       postOffice: json.hakemus.postOffice
     };
     this.oiliJwt = null;
+    this.migriJwt = "abcdefg";
     this.hakemusSource = json.hakemusSource;
     this.previewUrl = json.previewUrl;
   }
@@ -149,8 +150,14 @@ export default class Hakemus {
 
   showMigriURL() {
     return _.chain(this.valintatulosHakutoiveet()).map(function(tulos) {
+      console.log("Show migri url?", tulos)
       return tulos.showMigriURL
     }).filter(function(k) {return k}).head().value()
+  }
+
+  getMigriUrl(base) {
+    console.log("Getting migri url for base " + base + ". Token: " + this.migriJwt)
+    return base + this.migriJwt;
   }
 
   oiliUrl() {

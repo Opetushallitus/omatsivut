@@ -11,6 +11,21 @@ import scala.util.{Failure, Success, Try}
 case class HakemusJWT(oid: Oid, answersFromThisSession: Set[AnswerId], personOid: Oid)
 case class OiliJWT(hakijaOid: Oid, expires: Long)
 
+case class MigriJWT(hakijaOid: Oid, expires: Long)
+
+class MigriJsonWebToken(val secret: String) {
+  implicit val jsonFormats = formats(NoTypeHints)
+
+  if (secret.getBytes.size * 8 < 256) throw new RuntimeException("(MIGRI) HMAC secret has to be at least 256 bits")
+
+  val algo = JwtAlgorithm.HS256
+
+  def createMigriJWT(hakijaOid: String): String = {
+    val migriJwt = MigriJWT(hakijaOid, System.currentTimeMillis + (3600 * 2 * 1000)) //two hours expiry time
+    JwtJson4s.encode(write(migriJwt), secret, algo)
+  }
+}
+
 class JsonWebToken(val secret: String) {
   implicit val jsonFormats = formats(NoTypeHints)
 
