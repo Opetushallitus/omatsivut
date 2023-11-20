@@ -25,6 +25,7 @@ export default ["restResources", function (restResources) {
         $scope.applications = _.map(data.applications, function(json) {
           var application = new Hakemus(json);
           application.isHakutoiveidenMuokkaus = false;
+          application.migriJwt = data.migriJwt
           return application;
         });
         if($scope.applications.length > 0) {
