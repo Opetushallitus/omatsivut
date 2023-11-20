@@ -33,7 +33,7 @@ case class ApplicationSettings(config: Config) extends GroupEmailerSettings(conf
 
   val aesKey : String = config.getString("omatsivut.crypto.aes.key")
   val hmacKey : String = config.getString("omatsivut.crypto.hmac.key")
-  val hmacKeyMigri : String = config.getString("omatsivut.crypto.hmac.key") //Todo actually use a different secret for migri
+  val hmacKeyMigri : String = config.getString("omatsivut.migri.crypto.hmac.key")
 
   val oppijaBaseUrlEn = config.getString("oppija.base.url.en")
   val oppijaBaseUrlFi = config.getString("oppija.base.url.fi")
