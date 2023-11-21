@@ -150,14 +150,8 @@ export default class Hakemus {
 
   showMigriURL() {
     return _.chain(this.valintatulosHakutoiveet()).map(function(tulos) {
-      console.log("Show migri url?", tulos)
       return tulos.showMigriURL
     }).filter(function(k) {return k}).head().value()
-  }
-
-  getMigriUrl(base) {
-    console.log("Getting migri url for base " + base + ". Token: " + this.migriJwt)
-    return base + this.migriJwt;
   }
 
   oiliUrl() {
