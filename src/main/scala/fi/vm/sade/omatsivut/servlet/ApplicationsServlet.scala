@@ -69,7 +69,6 @@ trait ApplicationsServletContainer {
       }
     }
 
-    //Todo, tarvitaanko migritokenia tällä puolella lainkaan?
     get("/") {
       val oid = personOid()
       hakemusEditori.fetchByPersonOid(request, oid, Fetch) match {
