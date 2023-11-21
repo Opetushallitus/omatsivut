@@ -2,7 +2,6 @@ package fi.vm.sade.ataru
 
 import java.time.Instant
 import java.util.concurrent.TimeUnit
-
 import fi.vm.sade.hakemuseditori.auditlog.{Audit, ShowHakemus}
 import fi.vm.sade.hakemuseditori.domain.Language.Language
 import fi.vm.sade.hakemuseditori.hakemus.{HakemusInfo, ValintatulosFetchStrategy}
@@ -12,11 +11,12 @@ import fi.vm.sade.hakemuseditori.oppijanumerorekisteri.OppijanumerorekisteriComp
 import fi.vm.sade.hakemuseditori.tarjonta.TarjontaComponent
 import fi.vm.sade.hakemuseditori.tarjonta.domain.{Haku, Hakukohde, KohteenHakuaika}
 import fi.vm.sade.hakemuseditori.valintatulokset.ValintatulosServiceComponent
-import fi.vm.sade.hakemuseditori.viestintapalvelu.{Pdf, TuloskirjeComponent}
+import fi.vm.sade.hakemuseditori.viestintapalvelu.{AccessibleHtml, Pdf, TuloskirjeComponent}
 import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.utils.cas.{CasAuthenticatingClient, CasClient, CasParams}
+
 import javax.servlet.http.HttpServletRequest
 import org.http4s.{Request, Uri}
 import org.http4s.Method.GET
@@ -61,7 +61,7 @@ trait AtaruServiceComponent  {
           a,
           tarjontaService.haku(a.haku, language),
           getHakukohteet(a.hakukohteet, language),
-          tuloskirjeService.getTuloskirjeInfo(request, a.haku, a.oid, Pdf)
+          tuloskirjeService.getTuloskirjeInfo(request, a.haku, a.oid, AccessibleHtml)
         ))
         .collect {
           case (a, Some(haku), Some(hakukohteet), tuloskirje) =>
