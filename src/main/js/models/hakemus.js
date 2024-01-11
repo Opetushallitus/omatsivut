@@ -28,6 +28,7 @@ export default class Hakemus {
     };
     this.oiliJwt = null;
     this.migriJwt = null;
+    this.migriUrl = null;
     this.hakemusSource = json.hakemusSource;
     this.previewUrl = json.previewUrl;
   }

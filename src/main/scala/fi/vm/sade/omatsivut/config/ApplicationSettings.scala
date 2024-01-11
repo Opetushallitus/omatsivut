@@ -28,6 +28,8 @@ case class ApplicationSettings(config: Config) extends GroupEmailerSettings(conf
     leakDetectionThresholdMillis = getLong(config, "omatsivut.db.leakDetectionThresholdMillis")
   )
 
+  val migriUrl = config.getString("omatsivut.migri.url")
+
   val sessionTimeoutSeconds = getInt(config, "omatsivut.sessionTimeoutSeconds")
   val sessionCleanupCronString = getString(config, "omatsivut.sessionCleanupCronString")
 

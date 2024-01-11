@@ -26,6 +26,7 @@ export default ["restResources", function (restResources) {
           var application = new Hakemus(json);
           application.isHakutoiveidenMuokkaus = false;
           application.migriJwt = data.migriJwt
+          application.migriUrl = data.migriUrl
           return application;
         });
         if($scope.applications.length > 0) {

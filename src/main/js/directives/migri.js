@@ -5,13 +5,14 @@ export default function () {
     restrict: 'E',
     scope: {
       migri: '&migri',
-      token: '@token'
+      token: '@token',
+      url: '@url'
     },
     template: require('./migri.html'),
     link: function (scope, element, attrs) {
       scope.localization = localize;
       scope.tokenParam = scope.token ? "?token=" + scope.token : ""
-      scope.parsedUrl = scope.localization('migri.linkki-pohja') + scope.tokenParam;
+      scope.parsedUrl = scope.url + scope.tokenParam;
     }
   }
 }

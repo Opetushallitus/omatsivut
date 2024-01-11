@@ -28,8 +28,17 @@ sealed trait InsecureResponse {
   def jsonWebToken: String
 }
 
-case class InsecureHakemus(jsonWebToken: String, response: NonSensitiveHakemus) extends InsecureResponse
-case class InsecureHakemusInfo(jsonWebToken: String, response: NonSensitiveHakemusInfo, oiliJwt: String = null, migriJwt: String = null) extends InsecureResponse
+case class InsecureHakemus(
+  jsonWebToken: String,
+  response: NonSensitiveHakemus
+) extends InsecureResponse
+case class InsecureHakemusInfo(
+  jsonWebToken: String,
+  response: NonSensitiveHakemusInfo,
+  oiliJwt: String = null,
+  migriJwt: String = null,
+  migriUrl: String = null
+) extends InsecureResponse
 
 trait NonSensitiveApplicationServletContainer {
   this: HakemusRepositoryComponent with
@@ -45,6 +54,7 @@ trait NonSensitiveApplicationServletContainer {
     private val hakemusEditori = newEditor(this)
     private val jwt = new JsonWebToken(appConfig.settings.hmacKey)
     private val migriJwt = new MigriJsonWebToken(appConfig.settings.hmacKeyMigri)
+    private val migriUrl = appConfig.settings.migriUrl
 
     class UnauthorizedException(msg: String) extends RuntimeException(msg)
     class ForbiddenException(msg: String) extends RuntimeException(msg)
@@ -158,7 +168,8 @@ trait NonSensitiveApplicationServletContainer {
           jwt.encode(token),
           new NonSensitiveHakemusInfo(hakemus, token.answersFromThisSession),
           oiliJwt = jwt.createOiliJwt(personOid),
-          migriJwt = migriJwt.createMigriJWT(personOid)
+          migriJwt = migriJwt.createMigriJWT(personOid),
+          migriUrl = migriUrl
         ))
       }).get
     }
@@ -194,7 +205,8 @@ trait NonSensitiveApplicationServletContainer {
           jwt.encode(HakemusJWT(metadata.hakemusOid, Set(), hakemus.hakemus.personOid)),
           new NonSensitiveHakemusInfo(hakemus, Set()),
           oiliJwt = jwt.createOiliJwt(personOid),
-          migriJwt = migriJwt.createMigriJWT(personOid)
+          migriJwt = migriJwt.createMigriJWT(personOid),
+          migriUrl = migriUrl
         ))
       }).get
     }

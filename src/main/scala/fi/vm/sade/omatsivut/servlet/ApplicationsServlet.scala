@@ -73,10 +73,20 @@ trait ApplicationsServletContainer {
       val oid = personOid()
       hakemusEditori.fetchByPersonOid(request, oid, Fetch) match {
         case FullSuccess(hakemukset) =>
-          Map("allApplicationsFetched" -> true, "applications" -> hakemukset, "migriJwt" -> migriJwt.createMigriJWT(oid))
+          Map(
+            "allApplicationsFetched" -> true,
+            "applications" -> hakemukset,
+            "migriJwt" -> migriJwt.createMigriJWT(oid),
+            "migriUrl" -> appConfig.settings.migriUrl
+          )
         case PartialSuccess(hakemukset, exceptions) =>
           exceptions.foreach(logger.warn(s"Failed to fetch all applications for oid $oid",_))
-          Map("allApplicationsFetched" -> false, "applications" -> hakemukset, "migriJwt" -> migriJwt.createMigriJWT(oid))
+          Map(
+            "allApplicationsFetched" -> false,
+            "applications" -> hakemukset,
+            "migriJwt" -> migriJwt.createMigriJWT(oid),
+            "migriUrl" -> appConfig.settings.migriUrl
+          )
         case FullFailure(exceptions) =>
           exceptions.foreach(logger.error(s"Failed to fetch applications for oid $oid", _))
           throw exceptions.head
