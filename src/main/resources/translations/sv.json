@@ -218,7 +218,7 @@
 
   "migri": {
     "otsikko": "Du kan nu ansöka om uppehållstillstånd",
-    "ohje-teksti": "<ul><li>Bekanta dig först med anvisningarna för att ansöka om uppehållstillstånd: <a href='https://migri.fi/sv/guiden-for-studerande' target='_blank'>Guiden för studerande</a></li><li>Du måste lägga in ditt studentnummer på din ansökan om uppehållstillstånd. Via den här länken förmedlas ditt studerandenummer automatiskt till din ansökan om uppehållstillstånd. <a href='/konfo/sv/sivu/studentnummer' target='_blank'>Läs mera om studentnummer</a></li></ul>",
+    "ohje-teksti": "<ul><li>Bekanta dig först med anvisningarna för att ansöka om uppehållstillstånd: <a href='https://migri.fi/sv/guiden-for-studerande' target='_blank'>Guiden för studerande</a></li><li>Du måste lägga in ditt studentnummer på din ansökan om uppehållstillstånd. <a href='/konfo/sv/sivu/studentnummer' target='_blank'>Läs mera om studentnummer</a></li><li>Via den här länken förmedlas ditt studerandenummer automatiskt till din ansökan om uppehållstillstånd.</li></ul>",
     "linkki-teksti": "Klicka här för att ansöka om uppehållstillstånd",
     "linkki-pohja": "https://enterfinland.fi/eServices/chooseapplicationtype"
   },
