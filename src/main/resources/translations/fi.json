@@ -218,7 +218,7 @@
 
   "migri": {
     "otsikko": "Voit nyt hakea oleskelulupaa",
-    "ohje-teksti": "<ul><li>Tutustuthan ensin oleskeluluvan hakuohjeisiin: <a href='https://migri.fi/opiskelijan-opas' target='_blank'>Opiskelijan opas</a></li><li>Sinun pitää lisätä oleskelulupahakemuksellesi oppijanumerosi. <a href='/konfo/fi/sivu/oppijanumero' target='_blank'>Lue lisää oppijanumerosta</a></li></ul>",
+    "ohje-teksti": "<ul><li>Tutustuthan ensin oleskeluluvan hakuohjeisiin: <a href='https://migri.fi/opiskelijan-opas' target='_blank'>Opiskelijan opas</a></li><li>Sinun pitää lisätä oleskelulupahakemuksellesi oppijanumerosi. Oppijanumerosi välittyy tämän linkin kautta automaattisesti oleskelulupahakemukselle. <a href='/konfo/fi/sivu/oppijanumero' target='_blank'>Lue lisää oppijanumerosta</a></li></ul>",
     "linkki-teksti": "Siirry tästä oleskeluluvan hakemiseen",
     "linkki-pohja": "https://enterfinland.fi/eServices/chooseapplicationtype"
   },
