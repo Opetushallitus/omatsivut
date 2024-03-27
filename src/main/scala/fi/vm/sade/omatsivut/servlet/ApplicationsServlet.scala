@@ -14,7 +14,7 @@ import fi.vm.sade.hakemuseditori.viestintapalvelu.{AccessibleHtml, Pdf}
 import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.hakemuspreview.HakemusPreviewGeneratorComponent
-import fi.vm.sade.omatsivut.security.{AuthenticationRequiringServlet, SessionService}
+import fi.vm.sade.omatsivut.security.{AuthenticationRequiringServlet, JsonWebToken, MigriJsonWebToken, SessionService}
 import fi.vm.sade.omatsivut.vastaanotto.{Vastaanotto, VastaanottoComponent}
 import fi.vm.sade.utils.cas.{CasAuthenticatingClient, CasClient, CasParams}
 import org.http4s.client.blaze
@@ -40,6 +40,8 @@ trait ApplicationsServletContainer {
   class ApplicationsServlet(val appConfig: AppConfig, val sessionService: SessionService)
     extends OmatSivutServletBase
       with JsonFormats with JacksonJsonSupport with AuthenticationRequiringServlet with HakemusEditoriUserContext {
+
+    private val migriJwt = new MigriJsonWebToken(appConfig.settings.hmacKeyMigri)
 
     def user = Oppija(personOid())
     private val hakemusEditori = newEditor(this)
@@ -71,10 +73,20 @@ trait ApplicationsServletContainer {
       val oid = personOid()
       hakemusEditori.fetchByPersonOid(request, oid, Fetch) match {
         case FullSuccess(hakemukset) =>
-          Map("allApplicationsFetched" -> true, "applications" -> hakemukset)
+          Map(
+            "allApplicationsFetched" -> true,
+            "applications" -> hakemukset,
+            "migriJwt" -> migriJwt.createMigriJWT(oid),
+            "migriUrl" -> appConfig.settings.migriUrl
+          )
         case PartialSuccess(hakemukset, exceptions) =>
           exceptions.foreach(logger.warn(s"Failed to fetch all applications for oid $oid",_))
-          Map("allApplicationsFetched" -> false, "applications" -> hakemukset)
+          Map(
+            "allApplicationsFetched" -> false,
+            "applications" -> hakemukset,
+            "migriJwt" -> migriJwt.createMigriJWT(oid),
+            "migriUrl" -> appConfig.settings.migriUrl
+          )
         case FullFailure(exceptions) =>
           exceptions.foreach(logger.error(s"Failed to fetch applications for oid $oid", _))
           throw exceptions.head

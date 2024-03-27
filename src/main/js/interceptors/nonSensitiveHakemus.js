@@ -28,6 +28,8 @@ export default ['$cookies', function HakemusInterceptor($cookies) {
       if (shouldAuthenticate(response.config) && response.data && response.data.jsonWebToken) {
         setBearerToken($cookies, response.data.jsonWebToken);
         response.oiliJwt = response.data.oiliJwt;
+        response.migriJwt = response.data.migriJwt;
+        response.migriUrl = response.data.migriUrl;
         response.data = response.data.response
       }
       return response

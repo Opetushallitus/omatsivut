@@ -19,6 +19,7 @@ host.virkailija={{host_virkailija}}
 host.oppija={{host_oppija}}
 
 omatsivut.crypto.aes.key={{omatsivut_crypto_aes_key}}
+omatsivut.migri.crypto.hmac.key={{omatsivut_migri_crypto_hmac_key}}
 omatsivut.crypto.hmac.key={{omatsivut_crypto_hmac_key}}
 
 cas.url=https://{{host_virkailija}}/cas
@@ -193,3 +194,5 @@ oppija.base.url.sv={{oppija_base_url_sv}}
 omatsivut.kohdejoukot.korkeakoulu={{omatsivut_kohdejoukot_korkeakoulu | default('haunkohdejoukko_12')}}
 omatsivut.kohdejoukot.toinen-aste={{omatsivut_kohdejoukot_toinenaste | default('haunkohdejoukko_11,haunkohdejoukko_17,haunkohdejoukko_20,haunkohdejoukko_23,haunkohdejoukko_24')}}
 omatsivut.kohdejoukon-tarkenteet.siirtohaku={{omatsivut_kohdejoukontarkenteet_siirtohaku | default('haunkohdejoukontarkenne_1')}}
+
+omatsivut.migri.url={{omatsivut_migri_url}}

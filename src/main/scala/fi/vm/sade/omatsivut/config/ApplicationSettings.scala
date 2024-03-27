@@ -28,11 +28,14 @@ case class ApplicationSettings(config: Config) extends GroupEmailerSettings(conf
     leakDetectionThresholdMillis = getLong(config, "omatsivut.db.leakDetectionThresholdMillis")
   )
 
+  val migriUrl = config.getString("omatsivut.migri.url")
+
   val sessionTimeoutSeconds = getInt(config, "omatsivut.sessionTimeoutSeconds")
   val sessionCleanupCronString = getString(config, "omatsivut.sessionCleanupCronString")
 
   val aesKey : String = config.getString("omatsivut.crypto.aes.key")
   val hmacKey : String = config.getString("omatsivut.crypto.hmac.key")
+  val hmacKeyMigri : String = config.getString("omatsivut.migri.crypto.hmac.key")
 
   val oppijaBaseUrlEn = config.getString("oppija.base.url.en")
   val oppijaBaseUrlFi = config.getString("oppija.base.url.fi")

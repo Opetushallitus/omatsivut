@@ -27,6 +27,8 @@ export default class Hakemus {
       postOffice: json.hakemus.postOffice
     };
     this.oiliJwt = null;
+    this.migriJwt = null;
+    this.migriUrl = null;
     this.hakemusSource = json.hakemusSource;
     this.previewUrl = json.previewUrl;
   }
