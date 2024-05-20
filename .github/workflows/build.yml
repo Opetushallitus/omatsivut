@@ -66,6 +66,6 @@ jobs:
       application: omatsivut
       base-image: baseimage-fatjar-openjdk8:master
       configfolder: src/main/resources/oph-configuration
-      jarfile: omatsivut*SNAPSHOT-allinone.jar
-    secrets: 
+      jarfile: omatsivut*SNAPSHOT-allinone
+    secrets:
       AWS_UTILITY_ROLE_ARN: ${{ secrets.AWS_OPH_UTILITY_ROLE_ARN }}
