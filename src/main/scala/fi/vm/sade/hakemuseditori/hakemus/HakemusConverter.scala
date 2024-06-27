@@ -5,6 +5,8 @@ import fi.vm.sade.hakemuseditori.domain.Language
 import fi.vm.sade.hakemuseditori.domain.Language.Language
 import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus._
 import fi.vm.sade.hakemuseditori.hakemus.domain._
+import fi.vm.sade.hakemuseditori.hakemus.hakuapp.EducationRequirementsUtil.answersFulfillBaseEducationRequirements
+import fi.vm.sade.hakemuseditori.hakemus.hakuapp.Types.MergedAnswers
 import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.hakemuseditori.koodisto.KoodistoComponent
 import fi.vm.sade.hakemuseditori.koulutusinformaatio.KoulutusInformaatioComponent
@@ -12,9 +14,6 @@ import fi.vm.sade.hakemuseditori.lomake.domain.Lomake
 import fi.vm.sade.hakemuseditori.oppijanumerorekisteri.OppijanumerorekisteriComponent
 import fi.vm.sade.hakemuseditori.tarjonta.domain.{Haku, KohteenHakuaika}
 import fi.vm.sade.hakemuseditori.tarjonta.{TarjontaComponent, TarjontaService}
-import fi.vm.sade.haku.oppija.hakemus.service.EducationRequirementsUtil._
-import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
-import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.Types.MergedAnswers
 import fi.vm.sade.utils.slf4j.Logging
 import org.apache.commons.lang3.StringUtils
 import org.joda.time.LocalDateTime
@@ -31,9 +30,9 @@ trait HakemusConverterComponent {
   val tarjontaService: TarjontaService
 
   class HakemusConverter extends JsonFormats {
-    val educationPhaseKey = OppijaConstants.PHASE_EDUCATION
-    val baseEducationKey = OppijaConstants.ELEMENT_ID_BASE_EDUCATION
-    val preferencePhaseKey = OppijaConstants.PHASE_APPLICATION_OPTIONS
+    val educationPhaseKey = "koulutustausta" // OppijaConstants.PHASE_EDUCATION
+    val baseEducationKey = "POHJAKOULUTUS" // OppijaConstants.ELEMENT_ID_BASE_EDUCATION
+    val preferencePhaseKey = "hakutoiveet" // OppijaConstants.PHASE_APPLICATION_OPTIONS
     val requiredBaseEducationsKey = "Koulutus-requiredBaseEducations"
 
     def convertToHakemus(tuloskirje: Option[Tuloskirje], lomake: Option[Lomake], haku: Haku, application: ImmutableLegacyApplicationWrapper)(implicit lang: Language.Language) : Hakemus = {
@@ -58,7 +57,7 @@ trait HakemusConverterComponent {
       }
 
       val notifications = hakutoiveet.filter(p => p.hakemusData.isDefined).map(hakutoive => {
-        val oid = hakutoive.hakemusData.get(OppijaConstants.PREFERENCE_FRAGMENT_OPTION_ID)
+        val oid = hakutoive.hakemusData.get("Koulutus-id")
         oid -> Map(
           "baseEducationConflict" -> hasBaseEducationConflict(hakutoive)
         )

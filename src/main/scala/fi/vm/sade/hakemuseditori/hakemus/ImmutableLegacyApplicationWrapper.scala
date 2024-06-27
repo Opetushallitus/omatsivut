@@ -1,10 +1,9 @@
 package fi.vm.sade.hakemuseditori.hakemus
 
 import java.util.Date
-
-import fi.vm.sade.haku.oppija.hakemus.domain.util.AttachmentUtil
-import fi.vm.sade.haku.oppija.hakemus.domain.{Application, ApplicationAttachment}
 import fi.vm.sade.hakemuseditori.hakemus.ImmutableLegacyApplicationWrapper.LegacyApplicationAnswers
+import fi.vm.sade.hakemuseditori.hakemus.hakuapp.{Application, ApplicationAttachment, AttachmentUtil}
+
 import scala.collection.JavaConversions._
 
 /**

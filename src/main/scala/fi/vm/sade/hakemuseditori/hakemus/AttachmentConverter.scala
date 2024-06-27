@@ -1,7 +1,8 @@
 package fi.vm.sade.hakemuseditori.hakemus
 
-import fi.vm.sade.haku.oppija.hakemus.domain.ApplicationAttachment
+
 import fi.vm.sade.hakemuseditori.domain.{Address, Attachment, Language}
+import fi.vm.sade.hakemuseditori.hakemus.hakuapp.ApplicationAttachment
 
 import scala.collection.JavaConversions._
 

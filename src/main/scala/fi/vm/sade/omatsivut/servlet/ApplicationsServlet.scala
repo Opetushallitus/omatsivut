@@ -94,23 +94,14 @@ trait ApplicationsServletContainer {
     }
 
     put("/:oid") {
-      val content: String = request.body
-      val updated = Serialization.read[HakemusMuutos](content)
-      hakemusEditori.updateHakemus(request, updated) match {
-        case Success(body) => ActionResult(200, body, Map.empty)
-        case Failure(e: ForbiddenException) => ActionResult(403, "error" -> "Forbidden", Map.empty)
-        case Failure(e: ValidationException) => ActionResult(400, e.validationErrors, Map.empty)
-        case Failure(e) => InternalServerError("error" -> "Internal service unavailable")
-      }
+      // hakemuksen muokkaus ei enää onnistu omien sivujen kautta
+      ActionResult(403, "error" -> "Forbidden", Map.empty)
     }
 
 
     post("/validate/:oid") {
-      val muutos = Serialization.read[HakemusMuutos](request.body)
-      hakemusEditori.validateHakemus(request, muutos) match {
-        case Some(hakemusInfo) => hakemusInfo
-        case _ => InternalServerError("error" -> "Internal service unavailable")
-      }
+      // hakemuksen muokkaus ei enää onnistu omien sivujen kautta
+      ActionResult(403, "error" -> "Forbidden", Map.empty)
     }
 
     get("/preview/:oid") {

@@ -141,33 +141,6 @@ trait HakemusEditoriComponent extends ApplicationValidatorComponent
       lang.flatMap(Language.parse).getOrElse(Language.fi)
     }
 
-    def validateHakemus(request: HttpServletRequest, muutos: HakemusMuutos): Option[HakemusInfo] = {
-      val lomakeOpt = lomakeRepository.lomakeByOid(muutos.hakuOid)
-      val hakuOpt = tarjontaService.haku(muutos.hakuOid, language)
-      (lomakeOpt, hakuOpt) match {
-        case (Some(lomake), Some(haku)) => {
-          Some(applicationValidator.validateAndFindQuestions(request, lomake, muutos, haku, user()))
-        }
-        case _ => None
-      }
-    }
-
-    def updateHakemus(request: HttpServletRequest, updated: HakemusMuutos): Try[Hakemus] = {
-      (for {lomake <- lomakeRepository.lomakeByOid(updated.hakuOid)
-            haku <- tarjontaService.haku(lomake.oid, language)} yield {
-        val errors = applicationValidator.validate(lomake, updated, haku)
-        if (errors.isEmpty) {
-          hakemusUpdater.updateHakemus(request, lomake, haku, updated, user()) match {
-            case Success(saved) => Success(saved)
-            case Failure(e) =>
-              logger.warn("Application update rejected for application " + lomake.oid, e)
-              Failure(new ForbiddenException())
-          }
-        } else {
-          Failure(new ValidationException(errors))
-        }
-      }).getOrElse(Failure(new RuntimeException("Internal service unavailable")))
-    }
   }
 }
 

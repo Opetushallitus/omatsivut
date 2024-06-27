@@ -1,6 +1,5 @@
 package fi.vm.sade.hakemuseditori.lomake
 
-import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 import fi.vm.sade.hakemuseditori.domain.Language
 import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus._
 import fi.vm.sade.hakemuseditori.hakemus.domain._
@@ -8,7 +7,7 @@ import fi.vm.sade.hakemuseditori.hakemus.{AnswerHelper, FlatAnswers, Hakutoiveet
 import fi.vm.sade.hakemuseditori.lomake.domain.{Lomake, QuestionGroup, QuestionLeafNode, QuestionNode}
 
 object AddedQuestionFinder {
-  val preferencePhaseKey = OppijaConstants.PHASE_APPLICATION_OPTIONS
+  val preferencePhaseKey = "hakutoiveet" // OppijaConstants.PHASE_APPLICATION_OPTIONS
 
   def findAddedQuestions(lomake: Lomake, newAnswers: Answers, oldAnswers: Answers)(implicit lang: Language.Language): Set[QuestionLeafNode] = {
     val form = lomake.form

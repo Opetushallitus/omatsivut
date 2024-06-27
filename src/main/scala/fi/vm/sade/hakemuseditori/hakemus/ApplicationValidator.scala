@@ -28,19 +28,10 @@ trait ApplicationValidatorComponent {
   def newApplicationValidator: ApplicationValidator
 
   class ApplicationValidator extends Logging {
-    private val dao: ApplicationDAO = springContext.applicationDAO
     private val validator: ElementTreeValidator = springContext.validator
 
     def validate(lomake: Lomake, hakemusMuutos: HakemusMuutos, haku: Haku)(implicit lang: Language.Language): List[ValidationError] = {
-      val storedApplication = applicationRepository.findStoredApplicationByOid(hakemusMuutos.oid).getOrElse(throw new RuntimeException(s"Application ${hakemusMuutos.oid} not found"))
-
-      val updatedApplication = update(hakemusMuutos, lomake, storedApplication)
-      val duplicateSelectionsInApplications = validateDuplicateApplicationAnswersForPerson(storedApplication, lomake, hakemusMuutos)
-      val validationErrors = validateHakutoiveetAndAnswers(updatedApplication, storedApplication, lomake)
-      val unknownAnswersErrors = errorsForUnknownAnswers(lomake, hakemusMuutos)
-      val inactiveErrors = errorsForEditingInactiveHakuToive(updatedApplication, storedApplication, haku, lomake)
-      val result = duplicateSelectionsInApplications ++ validationErrors ++ unknownAnswersErrors ++ inactiveErrors
-      result.distinct
+      List.empty
     }
 
     def validateAndFindQuestions(request: HttpServletRequest, lomake: Lomake, hakemusMuutos: HakemusMuutos, haku: Haku, user: User)(implicit lang: Language.Language): HakemusInfo = {

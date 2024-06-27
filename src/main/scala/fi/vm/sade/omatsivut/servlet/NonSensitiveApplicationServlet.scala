@@ -147,15 +147,8 @@ trait NonSensitiveApplicationServletContainer {
     }
 
     put("/applications/:oid") {
-      (for {
-        token <- jwtAuthorize
-        update <- Try(Serialization.read[HakemusMuutos](request.body))
-        newAnswers <- Success(newAnswersFromTheSession(update, token))
-        updatedHakemus <- hakemusEditori.updateHakemus(request, NonSensitiveHakemusInfo.sanitizeHakemusMuutos(update, newAnswers))
-      } yield {
-        Ok(InsecureHakemus(jwt.encode(HakemusJWT(token.oid, newAnswers, token.personOid)),
-          new NonSensitiveHakemus(updatedHakemus, newAnswers)))
-      }).get
+      // hakemuksen muokkaus ei enää onnistu omien sivujen kautta
+      Failure(new ForbiddenException("Forbidden"))
     }
 
     get("/applications/application/session") {
@@ -212,15 +205,8 @@ trait NonSensitiveApplicationServletContainer {
     }
 
     post("/applications/validate/:oid") {
-      (for {
-        token <- jwtAuthorize
-        update <- Try(Serialization.read[HakemusMuutos](request.body))
-        validatedHakemus <- hakemusEditori.validateHakemus(request, update)
-          .fold[Try[HakemusInfo]](Failure(new RuntimeException))(Success(_))
-      } yield {
-        Ok(InsecureHakemusInfo(jwt.encode(token),
-          new NonSensitiveHakemusInfo(validatedHakemus, newAnswersFromTheSession(update, token))))
-      }).get
+      // hakemuksen muokkaus ei enää onnistu omien sivujen kautta
+      Failure(new ForbiddenException("Forbidden"))
     }
   }
 

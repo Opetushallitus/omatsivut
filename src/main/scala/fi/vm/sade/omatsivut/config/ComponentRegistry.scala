@@ -20,7 +20,7 @@ import fi.vm.sade.hakemuseditori.viestintapalvelu.{TuloskirjeComponent, Tuloskir
 import fi.vm.sade.hakemuseditori.{HakemusEditoriComponent, RemoteSendMailServiceWrapper, SendMailServiceWrapper, StubbedSendMailServiceWrapper}
 import fi.vm.sade.omatsivut.config.AppConfig._
 import fi.vm.sade.omatsivut.db.impl.OmatsivutDb
-import fi.vm.sade.omatsivut.fixtures.hakemus.ApplicationFixtureImporter
+//import fi.vm.sade.omatsivut.fixtures.hakemus.ApplicationFixtureImporter
 import fi.vm.sade.omatsivut.hakemuspreview.HakemusPreviewGeneratorComponent
 import fi.vm.sade.omatsivut.localization.OmatSivutTranslations
 import fi.vm.sade.omatsivut.muistilista.MuistilistaServiceComponent
@@ -161,9 +161,9 @@ class ComponentRegistry(val config: AppConfig)
   }
 
   lazy val springContext = new HakemusSpringContext(OmatSivutSpringContext.createApplicationContext(config))
-  if (config.isInstanceOf[IT]) {
-    new ApplicationFixtureImporter(springContext).applyFixtures()
-  }
+//  if (config.isInstanceOf[IT]) {
+//    new ApplicationFixtureImporter(springContext).applyFixtures()
+//  }
 
   val casVirkailijaClient: CasClient = configureCASVirkailijaClient
   val casOppijaClient = configureCASOppijaClient

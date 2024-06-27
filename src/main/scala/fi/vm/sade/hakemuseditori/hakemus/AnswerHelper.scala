@@ -1,6 +1,5 @@
 package fi.vm.sade.hakemuseditori.hakemus
 
-import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 import fi.vm.sade.hakemuseditori.domain.Language
 import fi.vm.sade.hakemuseditori.hakemus.ImmutableLegacyApplicationWrapper.LegacyApplicationAnswers
 import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus._
@@ -9,7 +8,7 @@ import fi.vm.sade.hakemuseditori.lomake.domain.{AnswerId, Lomake, QuestionId}
 import fi.vm.sade.hakemuseditori.lomake.{AddedQuestionFinder, ElementWrapper, FormQuestionFinder}
 
 object AnswerHelper {
-  val preferencePhaseKey = OppijaConstants.PHASE_APPLICATION_OPTIONS
+  val preferencePhaseKey = "hakutoiveet" // OppijaConstants.PHASE_APPLICATION_OPTIONS
 
   def getUpdatedAnswersForApplication(lomake: Lomake, application: ImmutableLegacyApplicationWrapper, hakemus: HakemusLike)(implicit lang: Language.Language): LegacyApplicationAnswers = {
     val allAnswers = getAllUpdatedAnswersForApplication(lomake, application, hakemus.answers, hakemus.preferences)
