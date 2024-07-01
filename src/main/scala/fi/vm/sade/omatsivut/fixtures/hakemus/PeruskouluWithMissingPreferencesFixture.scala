@@ -3,8 +3,9 @@ package fi.vm.sade.omatsivut.fixtures.hakemus
 import fi.vm.sade.haku.oppija.hakemus.it.dao.ApplicationDAO
 import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus._
+import fi.vm.sade.hakemuseditori.hakemus.hakuapp.Application
 
-protected class PeruskouluWithMissingPreferencesFixture(dao: ApplicationDAO) extends HakemusWithDifferentAnswersFixture(TestFixture.hakemusPeruskouluWithMissingPreferences)(dao) {
+protected class PeruskouluWithMissingPreferencesFixture(dao: ApplicationDAO) extends HakemusWithDifferentAnswersFixture(TestFixture.hakemusPeruskouluWithMissingPreferences) {
   def apply {
     val answers: Answers = Map(
       "koulutustausta" ->
@@ -65,6 +66,6 @@ protected class PeruskouluWithMissingPreferencesFixture(dao: ApplicationDAO) ext
           "PK_KO_VAL1" -> "0",
           "PK_KO_VAL2" -> "0",
           "perusopetuksen_kieli" -> "FI"))
-    replaceAnswers(answers)
+    replaceAnswers(new Application(), answers)
   }
 }

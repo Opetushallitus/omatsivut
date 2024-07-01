@@ -4,13 +4,9 @@ import fi.vm.sade.ataru.AtaruServiceComponent
 import fi.vm.sade.hakemuseditori.domain.Language
 import fi.vm.sade.hakemuseditori.hakemus._
 import fi.vm.sade.hakemuseditori.hakemus.domain.{Hakemus, HakemusMuutos, ValidationError}
-import fi.vm.sade.hakemuseditori.hakumaksu.{HakumaksuComponent, StubbedHakumaksuServiceWrapper}
 import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.hakemuseditori.koodisto.{KoodistoComponent, PostOffice, StubbedKoodistoService}
-import fi.vm.sade.hakemuseditori.koulutusinformaatio.domain.Opetuspiste
-import fi.vm.sade.hakemuseditori.koulutusinformaatio.KoulutusInformaatioComponent
 import fi.vm.sade.hakemuseditori.localization.{Translations, TranslationsComponent}
-import fi.vm.sade.hakemuseditori.lomake.LomakeRepositoryComponent
 import fi.vm.sade.hakemuseditori.ohjausparametrit.OhjausparametritComponent
 import fi.vm.sade.hakemuseditori.oppijanumerorekisteri.OppijanumerorekisteriComponent
 import fi.vm.sade.hakemuseditori.tarjonta.TarjontaComponent
@@ -32,25 +28,20 @@ case class FullSuccess(hakemukset: List[HakemusInfo]) extends HakemusResult
 case class PartialSuccess(hakemukset: List[HakemusInfo], exceptions: List[Throwable]) extends HakemusResult
 case class FullFailure(exceptions: List[Throwable]) extends HakemusResult
 
-trait HakemusEditoriComponent extends ApplicationValidatorComponent
-  with AtaruServiceComponent
+trait HakemusEditoriComponent extends AtaruServiceComponent
   with OppijanumerorekisteriComponent
   with RemoteTarjontaComponent
   with RemoteKoutaComponent
   with TarjontaComponent
   with OhjausparametritComponent
-  with LomakeRepositoryComponent
   with HakemusRepositoryComponent
   with ValintatulosServiceComponent
-  with KoulutusInformaatioComponent
   with Logging
   with TuloskirjeComponent
   with TranslationsComponent
   with SpringContextComponent
   with HakemusConverterComponent
-  with KoodistoComponent
-  with HakumaksuComponent
-  with SendMailComponent {
+  with KoodistoComponent {
 
   def newEditor(userContext: HakemusEditoriUserContext): HakemusEditori = {
     new HakemusEditori {
@@ -60,7 +51,6 @@ trait HakemusEditoriComponent extends ApplicationValidatorComponent
   }
 
   trait HakemusEditori {
-    private val applicationValidator: ApplicationValidator = newApplicationValidator
     implicit def language: Language.Language
     def user(): User
 
@@ -127,12 +117,6 @@ trait HakemusEditoriComponent extends ApplicationValidatorComponent
       result
     }
 
-    def opetuspisteet(asId: String, query: String, lang: Option[String]): Option[List[Opetuspiste]] = koulutusInformaatioService.opetuspisteet(asId, query, parseLang(lang))
-
-    def koulutukset(asId: String, opetuspisteId: String, baseEducation: Option[String], vocational: String, lang: Option[String]) = {
-      koulutusInformaatioService.koulutukset(asId, opetuspisteId, baseEducation, vocational, parseLang(lang))
-    }
-
     def postitoimipaikka(postalCode: String): Option[PostOffice] = {
       koodistoService.postOffice(postalCode, language)
     }
@@ -157,11 +141,9 @@ class ValidationException(errors: List[ValidationError]) extends RuntimeExceptio
 abstract class StandaloneHakemusEditoriComponent(
                                          val translations: Translations
                                          ) extends HakemusEditoriComponent {
-  lazy val lomakeRepository = new RemoteLomakeRepository
   override lazy val hakemusConverter: HakemusConverter = new HakemusConverter
   override val valintatulosService: ValintatulosService = new NoOpValintatulosService
 
-  override def newApplicationValidator = new ApplicationValidator
 }
 
 class StubbedHakemusEditoriContext(appContext: ApplicationContext,
@@ -175,9 +157,6 @@ class StubbedHakemusEditoriContext(appContext: ApplicationContext,
   override lazy val tuloskirjeService = new StubbedTuloskirjeService
   override lazy val koodistoService = new StubbedKoodistoService
   override lazy val ohjausparametritService = new StubbedOhjausparametritService
-  override lazy val koulutusInformaatioService = new StubbedKoulutusInformaatioService
-  override lazy val hakumaksuService = new StubbedHakumaksuServiceWrapper
-  override lazy val sendMailService = new StubbedSendMailServiceWrapper
 }
 
 case class HakemusEditoriRemoteUrls(

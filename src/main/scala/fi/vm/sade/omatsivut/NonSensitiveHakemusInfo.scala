@@ -73,9 +73,7 @@ object NonSensitiveHakemusInfo {
     AnswerId(PHASE_PERSONAL, ELEMENT_ID_NICKNAME),
     AnswerId(PHASE_PERSONAL, ELEMENT_ID_LAST_NAME)
   )
-  def sanitizeHakemusMuutos(hakemusMuutos: HakemusMuutos, nonSensitiveAnswers: Set[AnswerId]) = {
-    hakemusMuutos.copy(answers = NonSensitiveHakemusInfo.filterAnswers(hakemusMuutos.answers, nonSensitiveAnswers ++ NonSensitiveHakemusInfo.nonSensitiveAnswers))
-  }
+
   def answerIds(answers: Answers): Set[AnswerId] =
     answers.foldLeft(Set.empty[AnswerId]) {
       case (ids, (phaseId, phaseAnswers)) => ids ++ phaseAnswers.keys.map(AnswerId(phaseId, _))

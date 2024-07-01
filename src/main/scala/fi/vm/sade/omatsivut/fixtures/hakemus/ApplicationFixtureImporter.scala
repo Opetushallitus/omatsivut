@@ -7,23 +7,24 @@ import fi.vm.sade.haku.testfixtures.MongoFixtureImporter
 class ApplicationFixtureImporter(context: HakemusSpringContext) {
 
   def applyFixtures(fixtureName: String = "", selector: String = "**/*.json") {
-    if (!selector.endsWith("*.json")) {
-      MongoFixtureImporter.clearFixtures(context.mongoTemplate, context.applicationDAO, "application")
-    }
-    MongoFixtureImporter.importJsonFixtures(context.mongoTemplate, context.applicationDAO, selector)
+    // TODO mockaa
+//    if (!selector.endsWith("*.json")) {
+//      MongoFixtureImporter.clearFixtures(context.mongoTemplate, context.applicationDAO, "application")
+//    }
+//    MongoFixtureImporter.importJsonFixtures(context.mongoTemplate, context.applicationDAO, selector)
     applyOverrides(fixtureName)
   }
 
   def applyOverrides(fixtureName: String = "") {
     fixtureName match {
-      case "peruskoulu" => new PeruskouluFixture(context.applicationDAO).apply
-      case "peruskouluWithMissingPreferences" => new PeruskouluWithMissingPreferencesFixture(context.applicationDAO).apply
-      case "passiveApplication" => new ApplicationStateFixture(context.applicationDAO).setState(Application.State.PASSIVE)
-      case "incompleteApplication" => new ApplicationStateFixture(context.applicationDAO).setState(Application.State.INCOMPLETE)
-      case "submittedApplication" => new ApplicationStateFixture(context.applicationDAO).setState(Application.State.SUBMITTED)
-      case "kymppiluokka" => new KymppiluokkaFixture(context.applicationDAO).apply
-      case "postProcessingFailed" => new ApplicationStateFixture(context.applicationDAO).setPostProcessingState(Application.PostProcessingState.FAILED)
-      case "postProcessingDone" => new ApplicationStateFixture(context.applicationDAO).setPostProcessingState(Application.PostProcessingState.DONE)
+      case "peruskoulu" => new PeruskouluFixture().apply
+      //case "peruskouluWithMissingPreferences" => new PeruskouluWithMissingPreferencesFixture(context.applicationDAO).apply
+      //case "passiveApplication" => new ApplicationStateFixture(context.applicationDAO).setState(Application.State.PASSIVE)
+      //case "incompleteApplication" => new ApplicationStateFixture(context.applicationDAO).setState(Application.State.INCOMPLETE)
+      //case "submittedApplication" => new ApplicationStateFixture(context.applicationDAO).setState(Application.State.SUBMITTED)
+      case "kymppiluokka" => new KymppiluokkaFixture().apply
+      //case "postProcessingFailed" => new ApplicationStateFixture(context.applicationDAO).setPostProcessingState(Application.PostProcessingState.FAILED)
+      //case "postProcessingDone" => new ApplicationStateFixture(context.applicationDAO).setPostProcessingState(Application.PostProcessingState.DONE)
       case _ =>
     }
   }

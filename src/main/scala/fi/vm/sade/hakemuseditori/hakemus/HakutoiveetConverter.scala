@@ -1,81 +1,20 @@
 package fi.vm.sade.hakemuseditori.hakemus
 
-import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus._
 
 object HakutoiveetConverter {
-  val preferenceKeyPrefix: String = "preference"
-  val hakutoiveetPhase: String = OppijaConstants.PHASE_APPLICATION_OPTIONS
-  val koulutusId: String = "Koulutus-id"
+  val hakutoiveetPhase: String = "hakutoiveet" // OppijaConstants.PHASE_APPLICATION_OPTIONS
   val opetuspisteId: String = "Opetuspiste-id"
 
-  def generateEmptyPreference(index: Int) = {
-    Map("priority" -> s"$index", koulutusId -> "", opetuspisteId -> "")
-  }
-
-  def convertFromAnswers(answers: Answers, maxHakutoiveet: Option[Int]): List[HakutoiveData] = {
-    val existingPreferences = groupPreferences(answers.getOrElse(hakutoiveetPhase , Map()))
+  def convertFromAnswers(answers: Answers): List[HakutoiveData] = {
+    groupPreferences(answers.getOrElse(hakutoiveetPhase , Map()))
       .toList
       .map(shortenNames)
-
-    val addedPreferences = maxHakutoiveet match {
-      case Some(i) =>
-        (1 to i map { index =>
-          val currentMap = existingPreferences.find(map => map.getOrElse("priority", "") equals s"$index")
-          if (currentMap.isEmpty) generateEmptyPreference(index) else currentMap.get
-        }).toList
-      case _ => existingPreferences
-    }
-
-    addedPreferences
-      .map(convertEmptyPreferences)
-      .sortBy(map => map.get("priority"))
-      .map((m) => m.filterKeys { Set("priority").contains(_) == false})
-
   }
 
-  def convertToAnswers(hakutoiveet: List[HakutoiveData], answers: Answers): Map[String, String] = {
-    val hakutoiveetAnswers = answers.getOrElse(hakutoiveetPhase, Map())
-    hakutoiveetAnswers.filterKeys(s => !s.startsWith(HakutoiveetConverter.preferenceKeyPrefix)) ++
-    hakutoiveet.zipWithIndex.flatMap {
-      case (hakutoive, index) => {
-        Map((longKey(koulutusId, index), ""), (longKey(opetuspisteId, index), "")) ++
-        hakutoive.map {
-          case (key, value) => (longKey(key, index), value)
-        } ++
-        hakutoiveetAnswers.filterKeys(_.startsWith((preferenceKeyPrefix + (index + 1))))
-      }
-    }.toMap[String, String]
-  }
-
-  def updateAnswers(hakutoiveet: List[HakutoiveData], answers: Answers, previousAnswers: Answers): Map[String, String] = {
-    val previousHakutoiveetAnswers = previousAnswers.getOrElse(hakutoiveetPhase, Map())
-    val hakutoiveetWithoutOldPreferences = previousHakutoiveetAnswers.filterKeys(s => !s.startsWith(HakutoiveetConverter.preferenceKeyPrefix))
-    val updatedHakutoiveet = hakutoiveetWithoutOldPreferences ++ convertToAnswers(hakutoiveet, answers)
-    updatedHakutoiveet
-  }
-
-  def answersContainHakutoive(answers: Map[String, String], hakutoive: HakutoiveData) = {
-    (hakutoive.get(opetuspisteId), hakutoive.get(koulutusId)) match {
-      case (Some(opetusPiste), Some(koulutus)) =>
-        val flatAnswers = answers.toList.map {
-          case (key, value) => (shortenKey(key), value)
-        }
-        flatAnswers.contains((opetuspisteId, opetusPiste)) && flatAnswers.contains(koulutusId, koulutus)
-      case _ => false
-    }
-  }
-
-  def describe(hakutoive: HakutoiveData) = {
-    hakutoive.getOrElse("Opetuspiste", "") + " - " + hakutoive.getOrElse("Koulutus", "")
-  }
 
   private def shortenKey(key: String): String = {
     key.substring(key.indexOf(getDelimiter(key)) + 1)
-  }
-
-  private def longKey(key: String, index: Int): String = {
-    preferenceKeyPrefix + (index + 1) + getDelimiter(key) + key
   }
 
   private def getDelimiter(s: String) = if(s.contains("_")) "_" else "-"
@@ -95,11 +34,4 @@ object HakutoiveetConverter {
     })
   }
 
-  private def convertEmptyPreferences(answers: Map[String, String]) = {
-    if (answers.getOrElse("Koulutus-id", "").length() == 0) {
-      Map("priority" -> answers.getOrElse("priority", ""))
-    } else {
-      answers
-    }
-  }
 }

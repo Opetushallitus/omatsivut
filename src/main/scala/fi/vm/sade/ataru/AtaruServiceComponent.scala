@@ -6,7 +6,6 @@ import fi.vm.sade.hakemuseditori.auditlog.{Audit, ShowHakemus}
 import fi.vm.sade.hakemuseditori.domain.Language.Language
 import fi.vm.sade.hakemuseditori.hakemus.{HakemusInfo, ValintatulosFetchStrategy}
 import fi.vm.sade.hakemuseditori.hakemus.domain.{Active, EducationBackground, HakemuksenTila, Hakemus, HakukausiPaattynyt, HakukierrosPaattynyt, Hakutoive}
-import fi.vm.sade.hakemuseditori.lomake.LomakeRepositoryComponent
 import fi.vm.sade.hakemuseditori.oppijanumerorekisteri.OppijanumerorekisteriComponent
 import fi.vm.sade.hakemuseditori.tarjonta.TarjontaComponent
 import fi.vm.sade.hakemuseditori.tarjonta.domain.{Haku, Hakukohde, KohteenHakuaika}
@@ -38,8 +37,7 @@ case class AtaruApplication(oid: String,
                             submitted: String)
 
 trait AtaruServiceComponent  {
-  this: LomakeRepositoryComponent
-    with TarjontaComponent
+  this: TarjontaComponent
     with OppijanumerorekisteriComponent
     with ValintatulosServiceComponent
     with TuloskirjeComponent =>

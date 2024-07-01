@@ -1,11 +1,13 @@
 package fi.vm.sade.omatsivut.fixtures.hakemus
 
-import fi.vm.sade.haku.oppija.hakemus.it.dao.ApplicationDAO
 import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus._
+import fi.vm.sade.hakemuseditori.hakemus.hakuapp.Application
 
-protected class PeruskouluFixture(dao: ApplicationDAO) extends HakemusWithDifferentAnswersFixture(TestFixture.hakemusYhteishakuKevat2014WithForeignBaseEducationId)(dao) {
+protected class PeruskouluFixture extends HakemusWithDifferentAnswersFixture(TestFixture.hakemusYhteishakuKevat2014WithForeignBaseEducationId) {
   def apply {
+    // TODO hakemuksen datat: 1.2.246.562.11.00000441368.json
+    // vastauksiin tämä
     val answers: Answers = Map(
       "koulutustausta" ->
         Map("POHJAKOULUTUS" -> "1", "PK_PAATTOTODISTUSVUOSI" -> "2012", "KOULUTUSPAIKKA_AMMATILLISEEN_TUTKINTOON" -> "false"),
@@ -65,6 +67,6 @@ protected class PeruskouluFixture(dao: ApplicationDAO) extends HakemusWithDiffer
           "PK_KO_VAL1" -> "0",
           "PK_KO_VAL2" -> "0",
           "perusopetuksen_kieli" -> "FI"))
-    replaceAnswers(answers)
+    replaceAnswers(new Application(), answers)
   }
 }

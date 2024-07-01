@@ -1,23 +1,11 @@
 package fi.vm.sade.omatsivut.fixtures.hakemus
 
-import fi.vm.sade.haku.oppija.hakemus.domain.Application
-import fi.vm.sade.haku.oppija.hakemus.it.dao.ApplicationDAO
 import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus.Answers
+import fi.vm.sade.hakemuseditori.hakemus.hakuapp.Application
 
-protected class HakemusWithDifferentAnswersFixture(hakemusOid: String)(val dao: ApplicationDAO) {
-  def replaceAnswers(answers: Answers) {
-    val application: Application = dao.find(new Application().setOid(hakemusOid)).get(0)
-    replaceAnswers(application, answers)
-    dao.update(new Application().setOid(application.getOid), application)
-  }
+protected class HakemusWithDifferentAnswersFixture(hakemusOid: String) {
 
-  def addAnswers(answers: Answers) {
-    val application: Application = dao.find(new Application().setOid(hakemusOid)).get(0)
-    addAnswers(application, answers)
-    dao.update(new Application().setOid(application.getOid), application)
-  }
-
-  private def addAnswers(application: Application, answers: Answers) {
+  def addAnswers(application: Application, answers: Answers) {
     import scala.collection.JavaConverters._
     answers.foreach { case (phaseId, phaseAnswers) =>
       val oldPhaseAnswers = application.getPhaseAnswers(phaseId).asScala
@@ -27,7 +15,7 @@ protected class HakemusWithDifferentAnswersFixture(hakemusOid: String)(val dao: 
     val i=2
   }
 
-  private def replaceAnswers(application: Application, answers: Answers) {
+  def replaceAnswers(application: Application, answers: Answers) {
     import scala.collection.JavaConverters._
     answers.foreach { case (phaseId, phaseAnswers) =>
       application.setVaiheenVastauksetAndSetPhaseId(phaseId, phaseAnswers.asJava)

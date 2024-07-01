@@ -1,0 +1,275 @@
+{
+  "_id": {
+    "$oid": "539df6e2e4b0c7f0a1c3d47c"
+  },
+  "type": "Application",
+  "applicationSystemId": "1.2.246.562.5.2014022711042555034240",
+  "answers": {
+    "henkilotiedot": {
+      "huoltajannimi": "",
+      "kansalaisuus": "FIN",
+      "asuinmaa": "FIN",
+      "matkapuhelinnumero1": "",
+      "Sukunimi": "Aho",
+      "huoltajansahkoposti": "",
+      "Postinumero": "02010",
+      "lahiosoite": "Joku osoite jossain",
+      "turvakielto": "false",
+      "Sähköposti": "joojoo@dev.null",
+      "Kutsumanimi": "Minna",
+      "Etunimet": "Minna wa",
+      "onkoSinullaSuomalainenHetu": "true",
+      "aidinkieli": "FI",
+      "huoltajanpuhelinnumero": "",
+      "syntymaaika": "01.01.1901",
+      "kotikunta": "152"
+    },
+    "lisatiedot": {
+      "lupaJulkaisu": "true",
+      "asiointikieli": "suomi"
+    },
+    "hakutoiveet": {
+      "preference2-Opetuspiste": "Ammatti-instituutti Iisakki",
+      "preference2-Koulutus-id-athlete": "false",
+      "preference1-Opetuspiste": "Amiedu, Valimotie 8",
+      "preference3-Koulutus-educationDegree": "22",
+      "preference3-Koulutus-id-athlete": "false",
+      "preference2-Koulutus-id-kaksoistutkinto": "false",
+      "preference3-Koulutus-id-kaksoistutkinto": "false",
+      "preference2-Koulutus-id-aoIdentifier": "019",
+      "preference2-Koulutus": "Kymppiluokka",
+      "preference3-Opetuspiste-id": "1.2.246.562.10.49832689993",
+      "539158b8e4b0b56e67d2c74b": "En tiedä mihin muualle hakisin",
+      "preference3-Koulutus-id-lang": "FI",
+      "preference2-Opetuspiste-id": "1.2.246.562.10.72066389551",
+      "preference3-Opetuspiste": "Turun Kristillinen opisto",
+      "preference1-Koulutus-educationDegree": "32",
+      "preference1-Opetuspiste-id-parents": "1.2.246.562.10.87157719573,1.2.246.562.10.28646781493,1.2.246.562.10.23429950928,1.2.246.562.10.00000000001",
+      "preference2-Koulutus-id-vocational": "true",
+      "preference2-Koulutus-id-sora": "false",
+      "preference1-Koulutus-id": "1.2.246.562.14.2014040212501070122979",
+      "preference3-Koulutus-id": "1.2.246.562.14.2014032812530780195965",
+      "preference1-Opetuspiste-id": "1.2.246.562.10.87157719573",
+      "preference3-Koulutus-id-sora": "false",
+      "preference2-Koulutus-educationDegree": "22",
+      "preference1-Koulutus-id-sora": "false",
+      "preference2-Opetuspiste-id-parents": "1.2.246.562.10.72066389551,1.2.246.562.10.29176843356,1.2.246.562.10.83391443328,1.2.246.562.10.00000000001",
+      "preference2-Koulutus-id-lang": "FI",
+      "preference1-Koulutus": "Maahanmuuttajien ammatilliseen peruskoulutukseen valmistava koulutus",
+      "preference1-Koulutus-id-kaksoistutkinto": "false",
+      "preference3-Koulutus-id-educationcode": "koulutus_020075",
+      "preference1-Koulutus-id-aoIdentifier": "030",
+      "preference1-Koulutus-id-educationcode": "koulutus_039998",
+      "preference3-Koulutus": "Kymppiluokka",
+      "preference3-Koulutus-id-aoIdentifier": "019",
+      "preference3-Opetuspiste-id-parents": "1.2.246.562.10.49832689993,1.2.246.562.10.99018323263,1.2.246.562.10.00000000001",
+      "preference2-Koulutus-id": "1.2.246.562.14.2014032610154661183054",
+      "preference1-Koulutus-id-lang": "FI",
+      "preference1-Koulutus-id-vocational": "true",
+      "preference3-Koulutus-id-vocational": "true",
+      "preference2-Koulutus-id-educationcode": "koulutus_020075",
+      "5391592ce4b0b56e67d2c74c": "option_0",
+      "preference1-Koulutus-id-athlete": "false"
+    },
+    "koulutustausta": {
+      "PK_PAATTOTODISTUSVUOSI": "2014",
+      "muukoulutus": "",
+      "POHJAKOULUTUS": "1",
+      "perusopetuksen_kieli": "FI"
+    },
+    "osaaminen": {
+      "539159b0e4b0b56e67d2c74d": "8"
+    }
+  },
+  "additionalInfo": {
+    "huuhaa": "wtf3",
+    "huuhaa2": "wtf3"
+  },
+  "oid": "1.2.246.562.11.00000877107",
+  "state": "ACTIVE",
+  "studentIdentificationDone": true,
+  "personOid": "1.2.246.562.24.14229104472",
+  "lastAutomatedProcessingTime": 1403770088960,
+  "received": 1402861282376,
+  "updated": 1404462770557,
+  "fullName": "aho minna wa",
+  "searchNames": [
+    "noteeraus",
+    "pohja",
+    "minna",
+    "wa",
+    "aho"
+  ],
+  "meta": {
+    "sessionId": "anonymousUser"
+  },
+  "overriddenAnswers": {
+    "sukupuoli": "1",
+    "turvakielto": "(null)",
+    "Kutsumanimi": "Noteeraus",
+    "Etunimet": "Noteeraus",
+    "Sukunimi": "Pohja",
+    "onkoSinullaSuomalainenHetu": "(null)",
+    "kotikunta": "018",
+    "Henkilotunnus": "010100A939RY"
+  },
+  "notes": [
+    {
+      "type": "ApplicationNote",
+      "noteText": "Päivitetty vaihetta 'hakutoiveet'",
+      "added": 1404462769004,
+      "user": "1.2.246.562.24.00000000001"
+    },
+    {
+      "type": "ApplicationNote",
+      "noteText": "Hakemus vastaanotettu",
+      "added": 1402861282376,
+      "user": "anonymousUser"
+    }
+  ],
+  "history": [
+    {
+      "type": "Change",
+      "modified": 1404462770557,
+      "modifier": "1.2.246.562.24.00000000001",
+      "reason": "update",
+      "changes": [
+        {
+          "field": "preference3-Koulutus-id",
+          "old value": "",
+          "new value": "1.2.246.562.14.2014032812530780195965"
+        },
+        {
+          "field": "preference2-Opetuspiste",
+          "old value": "",
+          "new value": "Ammatti-instituutti Iisakki"
+        },
+        {
+          "field": "preference3-Koulutus-id-sora",
+          "old value": "",
+          "new value": "false"
+        },
+        {
+          "field": "preference2-Koulutus-id-athlete",
+          "old value": "",
+          "new value": "false"
+        },
+        {
+          "field": "preference2-Koulutus-educationDegree",
+          "old value": "",
+          "new value": "22"
+        },
+        {
+          "field": "preference3-Koulutus-id-athlete",
+          "old value": "",
+          "new value": "false"
+        },
+        {
+          "field": "preference3-Koulutus-educationDegree",
+          "old value": "",
+          "new value": "22"
+        },
+        {
+          "field": "preference2-Koulutus-id-lang",
+          "old value": "",
+          "new value": "FI"
+        },
+        {
+          "field": "preference2-Koulutus-id-kaksoistutkinto",
+          "old value": "",
+          "new value": "false"
+        },
+        {
+          "field": "preference3-Koulutus-id-kaksoistutkinto",
+          "old value": "",
+          "new value": "false"
+        },
+        {
+          "field": "preference3-Koulutus-id-educationcode",
+          "old value": "",
+          "new value": "koulutus_020075"
+        },
+        {
+          "field": "preference2-Koulutus-id-aoIdentifier",
+          "old value": "",
+          "new value": "019"
+        },
+        {
+          "field": "preference3-Opetuspiste-id",
+          "old value": "",
+          "new value": "1.2.246.562.10.49832689993"
+        },
+        {
+          "field": "preference3-Koulutus-id-aoIdentifier",
+          "old value": "",
+          "new value": "019"
+        },
+        {
+          "field": "preference3-Koulutus-id-lang",
+          "old value": "",
+          "new value": "FI"
+        },
+        {
+          "field": "preference2-Opetuspiste-id",
+          "old value": "",
+          "new value": "1.2.246.562.10.72066389551"
+        },
+        {
+          "field": "preference2-Koulutus-id",
+          "old value": "",
+          "new value": "1.2.246.562.14.2014032610154661183054"
+        },
+        {
+          "field": "preference3-Opetuspiste",
+          "old value": "",
+          "new value": "Turun Kristillinen opisto"
+        },
+        {
+          "field": "preference3-Koulutus-id-vocational",
+          "old value": "",
+          "new value": "true"
+        },
+        {
+          "field": "preference2-Koulutus-id-educationcode",
+          "old value": "",
+          "new value": "koulutus_020075"
+        },
+        {
+          "field": "preference2-Koulutus-id-vocational",
+          "old value": "",
+          "new value": "true"
+        },
+        {
+          "field": "preference2-Koulutus-id-sora",
+          "old value": "",
+          "new value": "false"
+        },
+        {
+          "field": "preference2-Koulutus",
+          "new value": "Kymppiluokka"
+        },
+        {
+          "field": "5391592ce4b0b56e67d2c74c",
+          "new value": "option_0"
+        },
+        {
+          "field": "539158b8e4b0b56e67d2c74b",
+          "new value": "En tiedä mihin muualle hakisin"
+        },
+        {
+          "field": "preference2-Opetuspiste-id-parents",
+          "new value": "1.2.246.562.10.72066389551,1.2.246.562.10.29176843356,1.2.246.562.10.83391443328,1.2.246.562.10.00000000001"
+        },
+        {
+          "field": "preference3-Koulutus",
+          "new value": "Kymppiluokka"
+        },
+        {
+          "field": "preference3-Opetuspiste-id-parents",
+          "new value": "1.2.246.562.10.49832689993,1.2.246.562.10.99018323263,1.2.246.562.10.00000000001"
+        }
+      ]
+    }
+  ],
+  "version": 1
+}

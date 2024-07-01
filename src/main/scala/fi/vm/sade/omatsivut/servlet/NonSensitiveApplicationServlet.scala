@@ -50,7 +50,6 @@ trait NonSensitiveApplicationServletContainer {
 
   class NonSensitiveApplicationServlet(val appConfig: AppConfig) extends OmatSivutServletBase with JsonFormats with JacksonJsonSupport with HakemusEditori with HakemusEditoriUserContext {
     override implicit val jsonFormats = JsonFormats.jsonFormats ++ List(new NonSensitiveHakemusSerializer, new NonSensitiveHakemusInfoSerializer)
-    protected val applicationDescription = "Oppijan henkilökohtaisen palvelun REST API, jolla voi muokata hakemusta heikosti tunnistautuneena"
     private val hakemusEditori = newEditor(this)
     private val jwt = new JsonWebToken(appConfig.settings.hmacKey)
     private val migriJwt = new MigriJsonWebToken(appConfig.settings.hmacKeyMigri)
@@ -95,11 +94,6 @@ trait NonSensitiveApplicationServletContainer {
           logger.error(s"Authorization header handling failed with request header ($authHeader)")
           Failure(new UnauthorizedException("Invalid Authorization header"))
       }
-    }
-
-    private def newAnswersFromTheSession(update: HakemusMuutos, hakemusJWT: HakemusJWT): Set[AnswerId] = {
-      val nonPersistedAnswers = answerIds(update.answers)
-      hakemusJWT.answersFromThisSession ++ nonPersistedAnswers
     }
 
     private def fetchHakemus(hakemusOid: String, personOid: Option[String]): Try[HakemusInfo] = {

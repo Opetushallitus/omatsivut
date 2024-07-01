@@ -1,5 +1,7 @@
 package fi.vm.sade.hakemuseditori.hakemus.hakuapp;
 
+import com.google.common.base.Predicates;
+import com.google.common.collect.Maps;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -42,6 +44,8 @@ public class Application implements Serializable {
 
     private static final long serialVersionUID = -7491168801255850954L;
 
+    public static final String VAIHE_ID = "phaseId";
+
     @JsonProperty(value = "_id")
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL, using = ObjectIdSerializer.class)
     @JsonDeserialize(using = ObjectIdDeserializer.class)
@@ -50,6 +54,8 @@ public class Application implements Serializable {
     private String oid;
     private Application.State state;
     private String applicationSystemId;
+
+    private String phaseId;
     private String personOid;
     private Date received;
     private Date updated;
@@ -154,6 +160,22 @@ public class Application implements Serializable {
             answers.put(key, value);
         }
         return answers;
+    }
+
+    public Map<String, String> getPhaseAnswers(final String phaseId) {
+        Map<String, String> phaseAnswers = this.answers.get(phaseId);
+        if (phaseAnswers != null && !phaseAnswers.isEmpty()) {
+            return Collections.unmodifiableMap(phaseAnswers);
+        }
+        return new HashMap<String, String>();
+    }
+
+    public final Application setVaiheenVastauksetAndSetPhaseId(final String phaseId, Map<String, String> answers) {
+        this.phaseId = answers.get(VAIHE_ID);
+        Map<String, String> answersWithoutPhaseId = new HashMap<String, String>(
+            Maps.filterKeys(answers, Predicates.not(Predicates.equalTo(VAIHE_ID))));
+        this.answers.put(phaseId, answersWithoutPhaseId);
+        return this;
     }
 
     @Override

@@ -1,0 +1,201 @@
+{
+  "_id": {
+    "$oid": "53aac60e0cf211e2d6a29f43"
+  },
+  "type": "Application",
+  "applicationSystemId": "1.2.246.562.5.2013080813081926341927",
+  "answers": {
+    "henkilotiedot": {
+      "kansalaisuus": "FIN",
+      "asuinmaa": "FIN",
+      "matkapuhelinnumero1": "01023456789",
+      "matkapuhelinnumero2": "01023454321",
+      "matkapuhelinnumero3": "0987654321",
+      "Sukunimi": "Testaaja",
+      "Postinumero": "00100",
+      "lahiosoite": "foobartie 1",
+      "sukupuoli": "1",
+      "turvakielto": "false",
+      "Sähköposti": "",
+      "Kutsumanimi": "Teemu",
+      "Etunimet": "Teemu",
+      "kotikunta": "091",
+      "onkoSinullaSuomalainenHetu": "true",
+      "aidinkieli": "FI",
+      "syntymaaika": "01.01.1901"
+    },
+    "lisatiedot": {
+      "asiointikieli": "suomi"
+    },
+    "hakutoiveet": {
+      "preference4-Koulutus-id-aoIdentifier": "",
+      "preference4-Koulutus-id-educationcode": "",
+      "preference1-Opetuspiste": "Kallion lukio",
+      "preference4-Opetuspiste-id": "",
+      "preference3-Koulutus-id-athlete": "",
+      "preference5-Opetuspiste-id": "",
+      "preference4-Koulutus-id-athlete": "",
+      "preference2-Koulutus-id-aoIdentifier": "000",
+      "preference2-Koulutus": "Lukio",
+      "preference3-Opetuspiste-id": "",
+      "preference1-Koulutus-educationDegree": "",
+      "preference5-Koulutus-educationDegree": "",
+      "preference5-discretionary": "",
+      "preference2-Koulutus-id-sora": "false",
+      "preference4-Koulutus-id-vocational": "",
+      "preference3-Koulutus-id": "",
+      "preference5-Koulutus-id-lang": "",
+      "preference1-Opetuspiste-id": "1.2.246.562.10.591352080610",
+      "preference2-Koulutus-educationDegree": "",
+      "preference1-Koulutus-id-sora": "false",
+      "preference5-Koulutus-id-sora": "",
+      "preference1-Koulutus-id-aoIdentifier": "803",
+      "preference1-Koulutus-id-educationcode": "koulutus_301101",
+      "preference2-discretionary-follow-up": "todistustenpuuttuminen",
+      "preference5-Koulutus-id-athlete": "",
+      "preference3-discretionary-follow-up": "",
+      "preference2-discretionary": "true",
+      "preference2-Koulutus-id": "1.2.246.562.5.16303028779",
+      "preference3-discretionary": "",
+      "preference3-Koulutus-id-vocational": "",
+      "preference1-Koulutus-id-vocational": "false",
+      "preference4-Koulutus-educationDegree": "",
+      "preference4-Koulutus-id-kaksoistutkinto": "",
+      "preference1-Koulutus-id-athlete": "false",
+      "preference5-Koulutus-id-kaksoistutkinto": "",
+      "preference5-discretionary-follow-up": "",
+      "preference5-Koulutus-id": "",
+      "preference2-Opetuspiste": "Salon lukio",
+      "preference2-Koulutus-id-athlete": "false",
+      "preference4-discretionary": "",
+      "preference3-Koulutus-educationDegree": "",
+      "preference2-Koulutus-id-kaksoistutkinto": "false",
+      "preference5-Opetuspiste": "",
+      "preference5-Koulutus-id-educationcode": "",
+      "preference3-Koulutus-id-kaksoistutkinto": "",
+      "preference1-discretionary": "true",
+      "preference4-Koulutus-id-sora": "",
+      "preference5-Koulutus-id-vocational": "",
+      "preference3-Koulutus-id-lang": "",
+      "preference1-discretionary-follow-up": "todistustenpuuttuminen",
+      "preference2-Opetuspiste-id": "1.2.246.562.10.455978782510",
+      "preference3-Opetuspiste": "",
+      "preference4-Koulutus-id-lang": "",
+      "preference1-Opetuspiste-id-parents": "1.2.246.562.10.591352080610,1.2.246.562.10.69408568777,1.2.246.562.10.346830761110,1.2.246.562.10.00000000001",
+      "preference4-Koulutus": "",
+      "preference2-Koulutus-id-vocational": "false",
+      "preference1-Koulutus-id": "1.2.246.562.5.72607738902",
+      "preference3-Koulutus-id-sora": "",
+      "preference2-Opetuspiste-id-parents": "1.2.246.562.10.455978782510,1.2.246.562.10.67667811417,1.2.246.562.10.98501788818,1.2.246.562.10.00000000001",
+      "preference4-Koulutus-id": "",
+      "preference4-discretionary-follow-up": "",
+      "preference2-Koulutus-id-lang": "FI",
+      "preference4-Opetuspiste": "",
+      "preference1-Koulutus": "Lukion ilmaisutaitolinja",
+      "preference3-Koulutus-id-educationcode": "",
+      "preference1-Koulutus-id-kaksoistutkinto": "false",
+      "preference3-Koulutus": "",
+      "preference3-Koulutus-id-aoIdentifier": "",
+      "preference5-Koulutus-id-aoIdentifier": "",
+      "preference3-Opetuspiste-id-parents": "",
+      "preference1-Koulutus-id-lang": "FI",
+      "preference2-Koulutus-id-educationcode": "koulutus_301101"
+    },
+    "koulutustausta": {
+      "POHJAKOULUTUS": "0"
+    },
+    "osaaminen": {}
+  },
+  "oid": "1.2.246.562.11.00000441368",
+  "state": "ACTIVE",
+  "studentIdentificationDone": false,
+  "personOid": "1.2.246.562.24.14229104472",
+  "lastAutomatedProcessingTime": 1403700755165,
+  "received": 1403700750534,
+  "updated": 1406209304608,
+  "fullName": "testaaja teemu",
+  "searchNames": [
+    "testaaja",
+    "teemu"
+  ],
+  "meta": {
+    "sessionId": "anonymousUser"
+  },
+  "overriddenAnswers": {
+    "sukupuoli": "1",
+    "turvakielto": "(null)",
+    "Kutsumanimi": "Teemu",
+    "Etunimet": "Teemu",
+    "Sukunimi": "Testaaja",
+    "onkoSinullaSuomalainenHetu": "(null)",
+    "kotikunta": "091",
+    "Henkilotunnus": "010100A939R"
+  },
+  "notes": [
+    {
+      "type": "ApplicationNote",
+      "noteText": "Hakemus vastaanotettu",
+      "added": 1403700750534,
+      "user": "anonymousUser"
+    }
+  ],
+  "attachmentRequests": [
+    {
+      "id": "7faa0310-adbf-463d-a985-99a1c5984543",
+      "preferenceAoId": "1.2.246.562.5.16303028779",
+      "processingStatus": "NOT_CHECKED",
+      "applicationAttachment": {
+        "name": {
+          "translations": {
+            "fi": "Perustelut harkinnanvaraiselle haulle",
+            "sv": "Motivering för ansökan enligt prövning",
+            "en": "[en] Harkinnanvaraisuus, syy:"
+          }
+        },
+        "description": {
+          "translations": {
+            "fi": "Todistus ulkomailla suoritetusta koulutuksesta/erotodistus",
+            "sv": "Betyg över utbildning som avlagts utomlands/skiljebetyg",
+            "en": "[en] Todistusten puuttuminen"
+          }
+        },
+        "address": {
+          "recipient": "Salon Lukio Lukio",
+          "streetAddress": "Kaherinkatu 2",
+          "postalCode": "24130",
+          "postOffice": "SALO"
+        }
+      },
+      "receptionStatus": "NOT_RECEIVED"
+    },
+    {
+      "id": "0ed787cc-e7a5-497a-bebf-87def36e2f21",
+      "preferenceAoId": "1.2.246.562.5.72607738902",
+      "processingStatus": "NOT_CHECKED",
+      "applicationAttachment": {
+        "name": {
+          "translations": {
+            "fi": "Perustelut harkinnanvaraiselle haulle",
+            "sv": "Motivering för ansökan enligt prövning",
+            "en": "[en] Harkinnanvaraisuus, syy:"
+          }
+        },
+        "description": {
+          "translations": {
+            "fi": "Todistus ulkomailla suoritetusta koulutuksesta/erotodistus",
+            "sv": "Betyg över utbildning som avlagts utomlands/skiljebetyg",
+            "en": "[en] Todistusten puuttuminen"
+          }
+        },
+        "address": {
+          "recipient": "Kallion lukio Lukion ilmaisutaitolinja",
+          "streetAddress": "PL 3805",
+          "postalCode": "00099",
+          "postOffice": "HELSINGIN KAUPUNKI"
+        },
+        "emailAddress": "sahkoposti@osoite.dev"
+      },
+      "receptionStatus": "NOT_RECEIVED"
+    }
+  ]
+}

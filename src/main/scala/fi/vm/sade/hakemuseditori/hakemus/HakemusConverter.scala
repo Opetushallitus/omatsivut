@@ -1,20 +1,14 @@
 package fi.vm.sade.hakemuseditori.hakemus
 
-import com.google.common.collect.ImmutableSet
 import fi.vm.sade.hakemuseditori.domain.Language
 import fi.vm.sade.hakemuseditori.domain.Language.Language
 import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus._
 import fi.vm.sade.hakemuseditori.hakemus.domain._
-import fi.vm.sade.hakemuseditori.hakemus.hakuapp.EducationRequirementsUtil.answersFulfillBaseEducationRequirements
-import fi.vm.sade.hakemuseditori.hakemus.hakuapp.Types.MergedAnswers
 import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.hakemuseditori.koodisto.KoodistoComponent
-import fi.vm.sade.hakemuseditori.koulutusinformaatio.KoulutusInformaatioComponent
-import fi.vm.sade.hakemuseditori.lomake.domain.Lomake
 import fi.vm.sade.hakemuseditori.oppijanumerorekisteri.OppijanumerorekisteriComponent
 import fi.vm.sade.hakemuseditori.tarjonta.domain.{Haku, KohteenHakuaika}
 import fi.vm.sade.hakemuseditori.tarjonta.{TarjontaComponent, TarjontaService}
-import fi.vm.sade.utils.slf4j.Logging
 import org.apache.commons.lang3.StringUtils
 import org.joda.time.LocalDateTime
 import org.json4s._
@@ -24,7 +18,7 @@ import scala.collection.JavaConversions._
 import scala.util.Try
 
 trait HakemusConverterComponent {
-  this: KoodistoComponent with TarjontaComponent with KoulutusInformaatioComponent with OppijanumerorekisteriComponent =>
+  this: KoodistoComponent with TarjontaComponent with OppijanumerorekisteriComponent =>
 
   val hakemusConverter: HakemusConverter
   val tarjontaService: TarjontaService
@@ -35,33 +29,15 @@ trait HakemusConverterComponent {
     val preferencePhaseKey = "hakutoiveet" // OppijaConstants.PHASE_APPLICATION_OPTIONS
     val requiredBaseEducationsKey = "Koulutus-requiredBaseEducations"
 
-    def convertToHakemus(tuloskirje: Option[Tuloskirje], lomake: Option[Lomake], haku: Haku, application: ImmutableLegacyApplicationWrapper)(implicit lang: Language.Language) : Hakemus = {
-      convertToHakemus(tuloskirje, lomake, haku, application, None)
+    def convertToHakemus(tuloskirje: Option[Tuloskirje], haku: Haku, application: ImmutableLegacyApplicationWrapper)(implicit lang: Language.Language) : Hakemus = {
+      convertToHakemus(tuloskirje, haku, application, None)
     }
 
-    def convertToHakemus(tuloskirje: Option[Tuloskirje], lomake: Option[Lomake], haku: Haku, application: ImmutableLegacyApplicationWrapper, valintatulos: Option[Valintatulos])(implicit lang: Language.Language) : Hakemus = {
+    def convertToHakemus(tuloskirje: Option[Tuloskirje], haku: Haku, application: ImmutableLegacyApplicationWrapper, valintatulos: Option[Valintatulos])(implicit lang: Language.Language) : Hakemus = {
       val koulutusTaustaAnswers: util.Map[String, String] = application.phaseAnswers(educationPhaseKey)
       val receivedTime =  application.received.map(_.getTime)
       val answers = application.answers
-      val hakutoiveet = convertHakuToiveet(application, lomake)
-
-      def hasBaseEducationConflict(hakutoive: Hakutoive) = {
-        haku.checkBaseEducationConflict match {
-          case false => false
-          case true => hakutoive.hakemusData.get.get(requiredBaseEducationsKey) match {
-            case Some(requirements) if !requirements.isEmpty =>
-              !answersFulfillBaseEducationRequirements(MergedAnswers.of(koulutusTaustaAnswers), ImmutableSet.copyOf(requirements.split(",")))
-            case _ => false
-          }
-        }
-      }
-
-      val notifications = hakutoiveet.filter(p => p.hakemusData.isDefined).map(hakutoive => {
-        val oid = hakutoive.hakemusData.get("Koulutus-id")
-        oid -> Map(
-          "baseEducationConflict" -> hasBaseEducationConflict(hakutoive)
-        )
-      }).toMap
+      val hakutoiveet = convertHakuToiveet(application)
 
       val ohjeetUudelleOpiskelijalleMap: Map[String, String] = hakutoiveet
         .filter(hakutoive => {
@@ -92,10 +68,10 @@ trait HakemusConverterComponent {
           .flatMap(koodistoService.postOfficeTranslations)
           .flatMap((translations: Map[String,String]) => translations.get(lang.toString)),
         application.sähköposti,
-        lomake.map(_.requiresAdditionalInfo(application)).getOrElse(false),
-        lomake.isDefined,
+        false,
+        false,
         application.requiredPaymentState,
-        notifications,
+        Map.empty,
         henkilo.oppijanumero.getOrElse(application.personOid)
       )
     }
@@ -154,7 +130,7 @@ trait HakemusConverterComponent {
       )
     }
 
-    private def convertHakuToiveet(application: ImmutableLegacyApplicationWrapper, lomake: Option[Lomake])(implicit lang: Language): List[Hakutoive] = {
+    private def convertHakuToiveet(application: ImmutableLegacyApplicationWrapper)(implicit lang: Language): List[Hakutoive] = {
       def hakutoiveDataToHakutoive(data: HakutoiveData): Hakutoive = {
         data.isEmpty match {
           case true =>
@@ -167,22 +143,18 @@ trait HakemusConverterComponent {
                       tarjonnanHakukohde.flatMap(_.hakuaikaId), tarjonnanHakukohde.flatMap(_.hakukohdekohtaisetHakuajat))
         }
       }
-      val maxHakutoiveet = if (lomake.nonEmpty) {
-        Some(lomake.get.maxHakutoiveet)
-      } else {
-        None
-      }
-      HakutoiveetConverter.convertFromAnswers(application.answers, maxHakutoiveet).map(hakutoiveDataToHakutoive)
+      HakutoiveetConverter.convertFromAnswers(application.answers).map(hakutoiveDataToHakutoive)
     }
 
     private def amendWithKoulutusInformaatio(lang: Language, data: HakutoiveData): HakutoiveData = {
+      // TODO onko tämä tarpeen?
       val koulutusOption = data.get("Koulutus")
       val koulutus = koulutusOption match {
         case Some(k) if StringUtils.isBlank(k) => tarjontaService.hakukohde(data("Koulutus-id"), lang).map(_.nimi)
         case None => tarjontaService.hakukohde(data("Koulutus-id"), lang).map(_.nimi)
         case default@_ => default
       }
-      val opetuspiste = data.get("Opetuspiste").orElse(koulutusInformaatioService.opetuspiste(data("Opetuspiste-id"), lang).map(_.name))
+      val opetuspiste = data.get("Opetuspiste").orElse(None)
       val amendedData = data ++ koulutus.map("Koulutus" -> _) ++ opetuspiste.map("Opetuspiste" -> _)
       amendedData
     }

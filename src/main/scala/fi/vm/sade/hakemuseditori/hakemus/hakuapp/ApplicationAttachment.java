@@ -1,6 +1,5 @@
 package fi.vm.sade.hakemuseditori.hakemus.hakuapp;
 
-import fi.vm.sade.haku.oppija.hakemus.domain.Address;
 import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;

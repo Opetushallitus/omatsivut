@@ -2,36 +2,23 @@ package fi.vm.sade.omatsivut.servlet
 
 import fi.vm.sade.groupemailer.GroupEmailComponent
 import fi.vm.sade.hakemuseditori._
-import fi.vm.sade.hakemuseditori.auditlog.Audit
-import fi.vm.sade.hakemuseditori.hakemus.domain.HakemusMuutos
-import fi.vm.sade.hakemuseditori.hakemus.{ApplicationValidatorComponent, Fetch, HakemusInfo, HakemusRepositoryComponent, SpringContextComponent}
+import fi.vm.sade.hakemuseditori.hakemus.{Fetch, HakemusRepositoryComponent, SpringContextComponent}
 import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.hakemuseditori.localization.TranslationsComponent
-import fi.vm.sade.hakemuseditori.lomake.LomakeRepositoryComponent
 import fi.vm.sade.hakemuseditori.user.Oppija
 import fi.vm.sade.hakemuseditori.valintatulokset.ValintatulosServiceComponent
 import fi.vm.sade.hakemuseditori.viestintapalvelu.{AccessibleHtml, Pdf}
-import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
-import fi.vm.sade.omatsivut.hakemuspreview.HakemusPreviewGeneratorComponent
-import fi.vm.sade.omatsivut.security.{AuthenticationRequiringServlet, JsonWebToken, MigriJsonWebToken, SessionService}
+import fi.vm.sade.omatsivut.security.{AuthenticationRequiringServlet, MigriJsonWebToken, SessionService}
 import fi.vm.sade.omatsivut.vastaanotto.{Vastaanotto, VastaanottoComponent}
-import fi.vm.sade.utils.cas.{CasAuthenticatingClient, CasClient, CasParams}
-import org.http4s.client.blaze
-import org.json4s.DefaultFormats
 import org.json4s.jackson.Serialization
 import org.scalatra._
 import org.scalatra.json._
 
-import scala.util.{Failure, Success}
-
 trait ApplicationsServletContainer {
   this: HakemusEditoriComponent with
-        LomakeRepositoryComponent with
         HakemusRepositoryComponent with
         ValintatulosServiceComponent with
-        ApplicationValidatorComponent with
-        HakemusPreviewGeneratorComponent with
         SpringContextComponent with
         GroupEmailComponent with
         VastaanottoComponent with
@@ -45,7 +32,6 @@ trait ApplicationsServletContainer {
 
     def user = Oppija(personOid())
     private val hakemusEditori = newEditor(this)
-    protected val applicationDescription = "Oppijan henkilökohtaisen palvelun REST API, jolla voi hakea ja muokata hakemuksia ja omia tietoja"
 
     before() {
       contentType = formats("json")
@@ -105,14 +91,10 @@ trait ApplicationsServletContainer {
     }
 
     get("/preview/:oid") {
-      newHakemusPreviewGenerator(language).generatePreview(request, personOid(), params("oid")) match {
-        case Some(previewHtml) =>
-          contentType = formats("html")
-          Ok(previewHtml)
-        case None =>
-          NotFound("error" -> "Not found")
-      }
+      // vanhojen hakemusten esikatselu ei enää onnistu omien sivujen kautta
+      ActionResult(403, "error" -> "Forbidden", Map.empty)
     }
+
     post("/vastaanota/:hakemusOid/hakukohde/:hakukohdeOid") {
       val hakemusOid = params("hakemusOid")
       val hakukohdeOid = params("hakukohdeOid")

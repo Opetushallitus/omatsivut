@@ -4,7 +4,7 @@ class ApplicationDao {
 
   def findByPersonOid(personOid: String): List[Application] = {
     // TODO implement
-    List(new Application())
+    List(new Application().setState(Application.State.INCOMPLETE))
   }
 
   def findByOid(oid: String): Option[Application] = {

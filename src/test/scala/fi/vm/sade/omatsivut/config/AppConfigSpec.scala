@@ -1,8 +1,7 @@
 package fi.vm.sade.omatsivut.config
 
-import fi.vm.sade.omatsivut.{ITSetup, OmatsivutDbTools, config}
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
-import fi.vm.sade.utils.config.ConfigTemplateProcessor
+import fi.vm.sade.omatsivut.{ITSetup, OmatsivutDbTools}
 import org.junit.runner.RunWith
 import org.specs2.matcher.PathMatchers
 import org.specs2.mutable.Specification
@@ -37,10 +36,7 @@ class AppConfigSpec extends Specification with ITSetup with OmatsivutDbTools {
 
   def validateConfig(config: AppConfig) = {
     val componentRegistry = new ComponentRegistry(config)
-    componentRegistry.springContext.applicationDAO
-    componentRegistry.springContext.applicationSystemService
     componentRegistry.springContext.mongoTemplate
-    componentRegistry.springContext.validator
     success
   }
 }

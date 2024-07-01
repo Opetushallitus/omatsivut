@@ -1,13 +1,11 @@
 package fi.vm.sade.omatsivut.hakemus
 
 import java.util.Date
-
 import fi.vm.sade.hakemuseditori.hakemus.{ApplicationsResponse, HakemusInfo}
 import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus.Answers
 import fi.vm.sade.hakemuseditori.hakemus.domain.{Active, HakemuksenTila, Hakemus, Hakutoive}
+import fi.vm.sade.hakemuseditori.hakemus.hakuapp.{Application, ApplicationDao}
 import fi.vm.sade.hakemuseditori.json.JsonFormats
-import fi.vm.sade.haku.oppija.hakemus.domain.Application
-import fi.vm.sade.haku.oppija.hakemus.it.dao.ApplicationDAO
 import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.omatsivut.fixtures.hakemus.ApplicationFixtureImporter
 import fi.vm.sade.omatsivut.{PersonOid, ScalatraTestSupport}
@@ -21,7 +19,7 @@ import org.json4s.reflect.TypeInfo
 trait HakemusApiSpecification extends ScalatraTestSupport with Logging {
   implicit val jsonFormats: Formats = JsonFormats.jsonFormats ++ List(new HakemuksenTilaSerializer)
 
-  private lazy val dao: ApplicationDAO = springContext.applicationDAO
+  private lazy val dao: ApplicationDao = new ApplicationDao()
 
   lazy val fixtureImporter: ApplicationFixtureImporter = new ApplicationFixtureImporter(springContext)
 
@@ -54,6 +52,7 @@ trait HakemusApiSpecification extends ScalatraTestSupport with Logging {
   }
 
   def saveHakemus[T](hakemus: Hakemus)(f: => T)(implicit personOid: PersonOid): T = {
+    // TODO assertoi poikkeus
     authPut("secure/applications/" + hakemus.oid, Serialization.write(hakemus.toHakemusMuutos)) {
       f
     }
@@ -81,34 +80,11 @@ trait HakemusApiSpecification extends ScalatraTestSupport with Logging {
     }
   }
 
-
-  def modifyHakemus[T](oid: String)(modification: (Hakemus => Hakemus))(f: Hakemus => T)(implicit personOid: PersonOid): T = {
-    withHakemusWithEmptyAnswers(oid) { hakemus =>
-      val modified = modification(hakemus.hakemus)
-      saveHakemus(modified) {
-        f(modified)
-      }
-    }
-  }
-
-  def answerExtraQuestion(phaseId: String, questionId: String, answer: String)(hakemus: Hakemus) = {
-    val answerToExtraQuestion: Answers = Map(phaseId -> (hakemus.answers.getOrElse(phaseId, Map.empty) + (questionId -> answer)))
-    hakemus.copy(answers = hakemus.answers ++ answerToExtraQuestion)
-  }
-
-  def removeHakutoive(hakemus: Hakemus) = {
-    hakemus.copy(hakutoiveet = hakemus.hakutoiveet.slice(0, 2))
-  }
-
-  def addHakutoive(hakutoive: Hakutoive)(hakemus: Hakemus) = {
-    val emptyIndex = hakemus.hakutoiveet.indexWhere(_.hakemusData.isEmpty)
-    hakemus.copy(hakutoiveet = hakemus.hakutoiveet.patch(emptyIndex, List(hakutoive), 1))
-  }
-
   def withSavedApplication[T](hakemus: Hakemus)(f: Application => T): T = withSavedApplication(hakemus.oid)(f)
 
   def withSavedApplication[T](hakemusOid: String)(f: Application => T): T = {
-    val application = dao.find(new Application().setOid(hakemusOid)).get(0)
+    // TODO mockaa
+    val application = dao.findByOid(hakemusOid).get
     f(application)
   }
   def hasSameHakuToiveet(hakemus1: Hakemus, hakemus2: Hakemus) = {

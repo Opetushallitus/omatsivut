@@ -3,8 +3,9 @@ package fi.vm.sade.omatsivut.fixtures.hakemus
 import fi.vm.sade.haku.oppija.hakemus.it.dao.ApplicationDAO
 import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus._
+import fi.vm.sade.hakemuseditori.hakemus.hakuapp.Application
 
-protected class KymppiluokkaFixture(dao: ApplicationDAO) extends HakemusWithDifferentAnswersFixture(TestFixture.hakemusYhteishakuKevat2014WithForeignBaseEducationId)(dao) {
+protected class KymppiluokkaFixture extends HakemusWithDifferentAnswersFixture(TestFixture.hakemusYhteishakuKevat2014WithForeignBaseEducationId) {
   def apply {
   val answers: Answers = Map(
     "koulutustausta" ->
@@ -110,6 +111,6 @@ protected class KymppiluokkaFixture(dao: ApplicationDAO) extends HakemusWithDiff
       "PK_A12_VAL1" -> "Ei arvosanaa",
       "PK_TE_VAL1" -> "Ei arvosanaa",
       "PK_TE_VAL2" -> "Ei arvosanaa"))
-    replaceAnswers(answers)
+    replaceAnswers(new Application(), answers)
   }
 }
