@@ -85,6 +85,6 @@ object TestFixture {
   val hakemus2_hakuaika = Hakuaika("5474", 1404190831839L, Some(1922331631839L))
   val hakemusLisahaku_hakuaikaDefault = hakemus2_hakuaika
 
-  lazy val hakemusYhteishakuKevat2014WithForeignBaseEducation: Application = JsonFixtureMaps.findByKey[Application]("/hakemuseditorimockdata/applications-hakuapp.json", hakemusYhteishakuKevat2014WithForeignBaseEducationId).get
-  lazy val hakemusNivelKesa2013WithPeruskouluBaseEducation: Application = JsonFixtureMaps.findByKey[Application]("/hakemuseditorimockdata/applications-hakuapp.json", hakemusNivelKesa2013WithPeruskouluBaseEducationId).get
+  lazy val hakemusYhteishakuKevat2014WithForeignBaseEducation: Application = JsonFixtureMaps.findByKey[Application]("/hakemuseditorimockdata/applicationsbyoid-hakuapp.json", hakemusYhteishakuKevat2014WithForeignBaseEducationId).get
+  lazy val hakemusNivelKesa2013WithPeruskouluBaseEducation: Application = JsonFixtureMaps.findByKey[Application]("/hakemuseditorimockdata/applicationsbyoid-hakuapp.json", hakemusNivelKesa2013WithPeruskouluBaseEducationId).get
 }
