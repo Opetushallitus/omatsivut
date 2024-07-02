@@ -2,11 +2,12 @@ package fi.vm.sade.omatsivut.fixtures.hakemus
 
 import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus._
-import fi.vm.sade.hakemuseditori.hakemus.hakuapp.Application
+import fi.vm.sade.hakemuseditori.hakemus.hakuapp.domain.Application
+import fi.vm.sade.omatsivut.fixtures.TestFixture.hakemusYhteishakuKevat2014WithForeignBaseEducation
 
 protected class PeruskouluFixture extends HakemusWithDifferentAnswersFixture(TestFixture.hakemusYhteishakuKevat2014WithForeignBaseEducationId) {
   def apply {
-    // TODO hakemuksen datat: 1.2.246.562.11.00000441368.json
+    val application = hakemusYhteishakuKevat2014WithForeignBaseEducation
     // vastauksiin tämä
     val answers: Answers = Map(
       "koulutustausta" ->
@@ -67,6 +68,6 @@ protected class PeruskouluFixture extends HakemusWithDifferentAnswersFixture(Tes
           "PK_KO_VAL1" -> "0",
           "PK_KO_VAL2" -> "0",
           "perusopetuksen_kieli" -> "FI"))
-    replaceAnswers(new Application(), answers)
+    replaceAnswers(application, answers)
   }
 }

@@ -3,10 +3,12 @@ package fi.vm.sade.omatsivut.fixtures.hakemus
 import fi.vm.sade.hakemuseditori.hakemus.HakemusSpringContext
 import fi.vm.sade.haku.oppija.hakemus.domain.Application
 import fi.vm.sade.haku.testfixtures.MongoFixtureImporter
+import fi.vm.sade.omatsivut.fixtures.TestFixture.{hakemusNivelKesa2013WithPeruskouluBaseEducation, hakemusYhteishakuKevat2014WithForeignBaseEducation}
 
 class ApplicationFixtureImporter(context: HakemusSpringContext) {
 
   def applyFixtures(fixtureName: String = "", selector: String = "**/*.json") {
+    List(hakemusYhteishakuKevat2014WithForeignBaseEducation,hakemusNivelKesa2013WithPeruskouluBaseEducation)
     // TODO mockaa
 //    if (!selector.endsWith("*.json")) {
 //      MongoFixtureImporter.clearFixtures(context.mongoTemplate, context.applicationDAO, "application")

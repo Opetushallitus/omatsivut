@@ -1,9 +1,8 @@
 package fi.vm.sade.omatsivut.fixtures.hakemus
 
-import fi.vm.sade.haku.oppija.hakemus.it.dao.ApplicationDAO
 import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus._
-import fi.vm.sade.hakemuseditori.hakemus.hakuapp.Application
+import fi.vm.sade.omatsivut.fixtures.TestFixture.hakemusNivelKesa2013WithPeruskouluBaseEducation
 
 protected class KymppiluokkaFixture extends HakemusWithDifferentAnswersFixture(TestFixture.hakemusYhteishakuKevat2014WithForeignBaseEducationId) {
   def apply {
@@ -111,6 +110,6 @@ protected class KymppiluokkaFixture extends HakemusWithDifferentAnswersFixture(T
       "PK_A12_VAL1" -> "Ei arvosanaa",
       "PK_TE_VAL1" -> "Ei arvosanaa",
       "PK_TE_VAL2" -> "Ei arvosanaa"))
-    replaceAnswers(new Application(), answers)
+    replaceAnswers(hakemusNivelKesa2013WithPeruskouluBaseEducation, answers)
   }
 }

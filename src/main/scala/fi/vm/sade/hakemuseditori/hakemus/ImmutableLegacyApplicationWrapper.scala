@@ -2,20 +2,24 @@ package fi.vm.sade.hakemuseditori.hakemus
 
 import java.util.Date
 import fi.vm.sade.hakemuseditori.hakemus.ImmutableLegacyApplicationWrapper.LegacyApplicationAnswers
-import fi.vm.sade.hakemuseditori.hakemus.hakuapp.{Application, ApplicationAttachment, AttachmentUtil}
+import fi.vm.sade.hakemuseditori.hakemus.hakuapp.domain.{Application, ApplicationAttachment, AttachmentUtil}
+import fi.vm.sade.utils.slf4j.Logging
 
 import scala.collection.JavaConversions._
 
 /**
  * A thin immutable wrapper for the fi.vm.sade.haku.oppija.hakemus.domain.Application class
  */
-object ImmutableLegacyApplicationWrapper {
+object ImmutableLegacyApplicationWrapper extends Logging {
   /**
    *  Answer map from legacy Application objects, containing answers and hakutoiveet
    */
   type LegacyApplicationAnswers = Map[String, Map[String, String]]
 
   def wrap(application: Application) = {
+    logger.info("wrapataan")
+    logger.info(application.getOid)
+    logger.info(application.getAnswers.size().toString)
     val answers: LegacyApplicationAnswers = {
       application.getAnswers.toMap.mapValues { phaseAnswers => phaseAnswers.toMap }
     }
@@ -32,7 +36,7 @@ object ImmutableLegacyApplicationWrapper {
       Option(application.getReceived),
       Option(application.getUpdated),
       complete,
-      application.getState.toString,
+      Application.State.SUBMITTED.toString, // TODO fix
       isPostProcessing(application),
       Option(application.getRequiredPaymentState).map(_.toString)
     )

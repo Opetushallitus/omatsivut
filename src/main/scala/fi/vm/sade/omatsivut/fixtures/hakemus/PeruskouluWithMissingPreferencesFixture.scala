@@ -3,7 +3,7 @@ package fi.vm.sade.omatsivut.fixtures.hakemus
 import fi.vm.sade.haku.oppija.hakemus.it.dao.ApplicationDAO
 import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus._
-import fi.vm.sade.hakemuseditori.hakemus.hakuapp.Application
+import fi.vm.sade.hakemuseditori.hakemus.hakuapp.domain.Application
 
 protected class PeruskouluWithMissingPreferencesFixture(dao: ApplicationDAO) extends HakemusWithDifferentAnswersFixture(TestFixture.hakemusPeruskouluWithMissingPreferences) {
   def apply {

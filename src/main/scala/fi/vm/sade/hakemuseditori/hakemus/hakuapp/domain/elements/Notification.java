@@ -1,4 +1,4 @@
-package fi.vm.sade.hakemuseditori.hakemus.hakuapp;
+package fi.vm.sade.hakemuseditori.hakemus.hakuapp.domain.elements;
 
 public class Notification extends Titled {
 

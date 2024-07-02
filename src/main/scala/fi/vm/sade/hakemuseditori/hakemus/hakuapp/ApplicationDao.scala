@@ -1,5 +1,7 @@
 package fi.vm.sade.hakemuseditori.hakemus.hakuapp
 
+import fi.vm.sade.hakemuseditori.hakemus.hakuapp.domain.Application
+
 class ApplicationDao {
 
   def findByPersonOid(personOid: String): List[Application] = {

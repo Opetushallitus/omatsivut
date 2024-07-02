@@ -1,5 +1,8 @@
-package fi.vm.sade.hakemuseditori.hakemus.hakuapp;
+package fi.vm.sade.hakemuseditori.hakemus.hakuapp.domain.elements;
 
+
+import fi.vm.sade.hakemuseditori.hakemus.hakuapp.domain.elements.Element;
+import fi.vm.sade.hakemuseditori.hakemus.hakuapp.domain.elements.I18nText;
 
 public abstract class Titled extends Element {
 

@@ -17,6 +17,7 @@ import fi.vm.sade.hakemuseditori.valintatulokset.{NoOpValintatulosService, Valin
 import fi.vm.sade.hakemuseditori.viestintapalvelu.{AccessibleHtml, Pdf, TuloskirjeComponent, TuloskirjeKind}
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.utils.slf4j.Logging
+
 import javax.servlet.http.HttpServletRequest
 import org.json4s.jackson.Serialization
 import org.springframework.context.ApplicationContext
@@ -152,6 +153,7 @@ class StubbedHakemusEditoriContext(appContext: ApplicationContext,
   extends StandaloneHakemusEditoriComponent(translations) {
   override lazy val springContext = new HakemusSpringContext(appContext)
   override lazy val ataruService = new StubbedAtaruService
+  override lazy val hakemusRepository: HakemusFinder = new StubbedHakemusFinder
   override lazy val oppijanumerorekisteriService = new StubbedOppijanumerorekisteriService
   override lazy val tarjontaService = new StubbedTarjontaService(config)
   override lazy val tuloskirjeService = new StubbedTuloskirjeService

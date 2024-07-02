@@ -1,7 +1,7 @@
 package fi.vm.sade.omatsivut.fixtures.hakemus
 
 import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus.Answers
-import fi.vm.sade.hakemuseditori.hakemus.hakuapp.Application
+import fi.vm.sade.hakemuseditori.hakemus.hakuapp.domain.Application
 
 protected class HakemusWithDifferentAnswersFixture(hakemusOid: String) {
 

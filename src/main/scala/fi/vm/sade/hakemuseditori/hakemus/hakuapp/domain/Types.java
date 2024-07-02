@@ -1,4 +1,6 @@
-package fi.vm.sade.hakemuseditori.hakemus.hakuapp;
+package fi.vm.sade.hakemuseditori.hakemus.hakuapp.domain;
+
+import fi.vm.sade.hakemuseditori.hakemus.hakuapp.domain.Application;
 
 import java.util.Map;
 

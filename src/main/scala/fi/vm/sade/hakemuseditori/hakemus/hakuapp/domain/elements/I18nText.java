@@ -1,4 +1,4 @@
-package fi.vm.sade.hakemuseditori.hakemus.hakuapp;
+package fi.vm.sade.hakemuseditori.hakemus.hakuapp.domain.elements;
 
 import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang3.StringUtils;

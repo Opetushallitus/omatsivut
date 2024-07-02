@@ -1,4 +1,4 @@
-package fi.vm.sade.hakemuseditori.hakemus.hakuapp;
+package fi.vm.sade.hakemuseditori.hakemus.hakuapp.domain.elements;
 
 import com.google.common.base.Objects;
 

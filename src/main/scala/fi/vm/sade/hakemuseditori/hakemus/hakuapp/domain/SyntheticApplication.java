@@ -1,4 +1,4 @@
-package fi.vm.sade.hakemuseditori.hakemus.hakuapp;
+package fi.vm.sade.hakemuseditori.hakemus.hakuapp.domain;
 
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.codehaus.jackson.annotate.JsonCreator;

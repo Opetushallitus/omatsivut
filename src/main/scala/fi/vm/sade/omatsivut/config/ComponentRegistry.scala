@@ -102,6 +102,11 @@ class ComponentRegistry(val config: AppConfig)
     case _ => new RemoteAtaruService(config, casVirkailijaClient)
   }
 
+  private def configureHakemusRepository: HakemusFinder = config match {
+    case _: StubbedExternalDeps => new StubbedHakemusFinder
+    case _ => new RealHakemusFinder
+  }
+
   private def configureOppijanumerorekisteriService: OppijanumerorekisteriService = config match {
     case _: StubbedExternalDeps => new StubbedOppijanumerorekisteriService
     case _ => new RemoteOppijanumerorekisteriService(config, casVirkailijaClient)
@@ -154,6 +159,7 @@ class ComponentRegistry(val config: AppConfig)
   val captchaService: CaptchaService = new RemoteCaptchaService(config.settings.captchaSettings)
   val oppijanTunnistusService = configureOppijanTunnistusService
   val ataruService: AtaruService = configureAtaruService
+  val hakemusRepository: HakemusFinder = configureHakemusRepository
   val oppijanumerorekisteriService: OppijanumerorekisteriService = configureOppijanumerorekisteriService
   val omatsivutDb = new OmatsivutDb(config.settings.omatsivutDbConfig,
     config.settings.sessionTimeoutSeconds.getOrElse(3600))

@@ -3,13 +3,19 @@ package fi.vm.sade.hakemuseditori.hakemus
 import fi.vm.sade.hakemuseditori.auditlog._
 import fi.vm.sade.hakemuseditori.domain.Language
 import fi.vm.sade.hakemuseditori.domain.Language.Language
+import fi.vm.sade.hakemuseditori.fixtures.JsonFixtureMaps
 import fi.vm.sade.hakemuseditori.hakemus.hakuapp.ApplicationDao
+import fi.vm.sade.hakemuseditori.hakemus.hakuapp.domain.Application
 import fi.vm.sade.hakemuseditori.ohjausparametrit.OhjausparametritComponent
 import fi.vm.sade.hakemuseditori.tarjonta.domain.Haku
 import fi.vm.sade.hakemuseditori.tarjonta.{TarjontaComponent, TarjontaService}
 import fi.vm.sade.hakemuseditori.valintatulokset.ValintatulosServiceComponent
 import fi.vm.sade.hakemuseditori.viestintapalvelu.{Pdf, TuloskirjeComponent}
+import fi.vm.sade.omatsivut.fixtures.TestFixture.{hakemusNivelKesa2013WithPeruskouluBaseEducation, hakemusYhteishakuKevat2014WithForeignBaseEducation}
 import fi.vm.sade.utils.Timer._
+import fi.vm.sade.utils.slf4j.Logging
+import org.json4s.DefaultFormats
+import org.json4s.jackson.JsonMethods.parse
 
 import javax.servlet.http.HttpServletRequest
 import scala.util.{Failure, Success, Try}
@@ -20,19 +26,23 @@ trait HakemusRepositoryComponent {
     with ValintatulosServiceComponent =>
 
   val tarjontaService: TarjontaService
-  val hakemusRepository = new HakemusFinder
+  val hakemusRepository: HakemusFinder
 
-  private val dao = new ApplicationDao()
+  val dao = new ApplicationDao()
 
 
-  class HakemusFinder {
+  trait HakemusFinder {
+
+    def findByPersonOid(personOid: String): List[Application]
+
+    def findByOid(oid: String): Option[Application]
 
     def fetchHakemukset(request: HttpServletRequest,
                         personOid: String,
                         valintatulosFetchStrategy: ValintatulosFetchStrategy)
                        (implicit lang: Language.Language): List[HakemusInfo] = {
       val legacyApplications: List[ImmutableLegacyApplicationWrapper] = timed("Application fetch DAO", 1000) {
-        dao.findByPersonOid(personOid)
+        findByPersonOid(personOid)
       }.map(ImmutableLegacyApplicationWrapper.wrap)
       fetchHakemukset(request, legacyApplications, valintatulosFetchStrategy)
     }
@@ -42,7 +52,7 @@ trait HakemusRepositoryComponent {
                    valintatulosFetchStrategy: ValintatulosFetchStrategy)
                   (implicit lang: Language): Option[HakemusInfo] = {
       val legacyApplications: List[ImmutableLegacyApplicationWrapper] = timed("Application fetch DAO", 1000) {
-        dao.findByOid(hakemusOid).toList
+        findByOid(hakemusOid).toList
       }.map(ImmutableLegacyApplicationWrapper.wrap)
       fetchHakemukset(request, legacyApplications, valintatulosFetchStrategy).headOption
     }
@@ -96,5 +106,35 @@ trait HakemusRepositoryComponent {
       }
     }
 
+  }
+
+  class RealHakemusFinder extends HakemusFinder {
+
+    def findByPersonOid(personOid: String): List[Application] = {
+      dao.findByPersonOid(personOid)
+    }
+
+    def findByOid(oid: String): Option[Application] = {
+      dao.findByOid(oid)
+    }
+  }
+
+  class StubbedHakemusFinder extends HakemusFinder with Logging {
+    implicit private val formats = DefaultFormats
+    def findByPersonOid(personOid: String): List[Application] = {
+      logger.info("findByPersonOid")
+      val text = io.Source.fromInputStream(getClass.getResourceAsStream("/hakemuseditorimockdata/applications-hakuapp.json")).mkString
+      val mockApplications = parse(text, useBigDecimalForDouble = false).extract[Option[List[Application]]].getOrElse(List())
+      mockApplications
+    }
+
+    def findByOid(oid: String): Option[Application] = {
+      logger.info("findByOid " + oid)
+      val text = io.Source.fromInputStream(getClass.getResourceAsStream("/hakemuseditorimockdata/applications-hakuapp.json")).mkString
+      val mockApplications = parse(text, useBigDecimalForDouble = false).extract[Option[List[Application]]].getOrElse(List())
+      logger.info("hakemuksia: " + mockApplications.size)
+      val application = mockApplications.find(a => a.getOid.equals(oid))
+      application
+    }
   }
 }

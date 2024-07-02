@@ -1,4 +1,4 @@
-package fi.vm.sade.hakemuseditori.hakemus.hakuapp;
+package fi.vm.sade.hakemuseditori.hakemus.hakuapp.domain;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.Maps;
@@ -15,8 +15,8 @@ import java.io.Serializable;
 import java.util.*;
 
 
-@JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
-@JsonIgnoreProperties({ "type", "personOidChecked", "studentOidChecked" })
+//@JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
+//@JsonIgnoreProperties({ "type", "personOidChecked", "studentOidChecked" })
 public class Application implements Serializable {
 
     private static final String[] EXCLUDED_FIELDS = new String[]{"id"};
@@ -46,9 +46,9 @@ public class Application implements Serializable {
 
     public static final String VAIHE_ID = "phaseId";
 
-    @JsonProperty(value = "_id")
-    @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL, using = ObjectIdSerializer.class)
-    @JsonDeserialize(using = ObjectIdDeserializer.class)
+    //@JsonProperty(value = "_id")
+    //@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL, using = ObjectIdSerializer.class)
+    //@JsonDeserialize(using = ObjectIdDeserializer.class)
     private org.bson.types.ObjectId id; //NOSONAR Json-sarjallistajan käyttämä.
 
     private String oid;

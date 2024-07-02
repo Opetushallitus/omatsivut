@@ -1,10 +1,9 @@
 package fi.vm.sade.omatsivut.hakemus
 
-import java.util.Date
+import fi.vm.sade.hakemuseditori.fixtures.JsonFixtureMaps
+import fi.vm.sade.hakemuseditori.hakemus.domain.{Active, HakemuksenTila, Hakemus}
+import fi.vm.sade.hakemuseditori.hakemus.hakuapp.domain.Application
 import fi.vm.sade.hakemuseditori.hakemus.{ApplicationsResponse, HakemusInfo}
-import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus.Answers
-import fi.vm.sade.hakemuseditori.hakemus.domain.{Active, HakemuksenTila, Hakemus, Hakutoive}
-import fi.vm.sade.hakemuseditori.hakemus.hakuapp.{Application, ApplicationDao}
 import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.omatsivut.fixtures.hakemus.ApplicationFixtureImporter
@@ -16,10 +15,10 @@ import org.json4s._
 import org.json4s.jackson.Serialization
 import org.json4s.reflect.TypeInfo
 
+import java.util.Date
+
 trait HakemusApiSpecification extends ScalatraTestSupport with Logging {
   implicit val jsonFormats: Formats = JsonFormats.jsonFormats ++ List(new HakemuksenTilaSerializer)
-
-  private lazy val dao: ApplicationDao = new ApplicationDao()
 
   lazy val fixtureImporter: ApplicationFixtureImporter = new ApplicationFixtureImporter(springContext)
 
@@ -83,8 +82,7 @@ trait HakemusApiSpecification extends ScalatraTestSupport with Logging {
   def withSavedApplication[T](hakemus: Hakemus)(f: Application => T): T = withSavedApplication(hakemus.oid)(f)
 
   def withSavedApplication[T](hakemusOid: String)(f: Application => T): T = {
-    // TODO mockaa
-    val application = dao.findByOid(hakemusOid).get
+    val application = JsonFixtureMaps.findByKey[Application]("/hakemuseditorimockdata/applications-hakuapp.json", hakemusOid).get
     f(application)
   }
   def hasSameHakuToiveet(hakemus1: Hakemus, hakemus2: Hakemus) = {

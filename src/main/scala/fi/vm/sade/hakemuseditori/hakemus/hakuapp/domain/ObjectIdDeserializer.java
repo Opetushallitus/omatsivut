@@ -1,4 +1,4 @@
-package fi.vm.sade.hakemuseditori.hakemus.hakuapp;
+package fi.vm.sade.hakemuseditori.hakemus.hakuapp.domain;
 
 import org.bson.types.ObjectId;
 import org.codehaus.jackson.JsonNode;

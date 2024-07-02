@@ -1,6 +1,6 @@
 package fi.vm.sade.hakemuseditori.lomake.domain
 
-import fi.vm.sade.hakemuseditori.hakemus.hakuapp.Notification.NotificationType
+import fi.vm.sade.hakemuseditori.hakemus.hakuapp.domain.elements.Notification.NotificationType
 
 object QuestionNode {
   def flatten(qs: List[QuestionNode]): List[QuestionLeafNode] = {

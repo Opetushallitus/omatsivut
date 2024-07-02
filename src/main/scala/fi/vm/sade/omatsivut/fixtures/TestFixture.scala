@@ -2,6 +2,7 @@ package fi.vm.sade.omatsivut.fixtures
 
 import fi.vm.sade.hakemuseditori.fixtures.JsonFixtureMaps
 import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus._
+import fi.vm.sade.hakemuseditori.hakemus.hakuapp.domain.Application
 import fi.vm.sade.hakemuseditori.tarjonta.domain.Hakuaika
 import fi.vm.sade.omatsivut.security.{Kieli, OnrHenkilo}
 
@@ -83,4 +84,7 @@ object TestFixture {
 
   val hakemus2_hakuaika = Hakuaika("5474", 1404190831839L, Some(1922331631839L))
   val hakemusLisahaku_hakuaikaDefault = hakemus2_hakuaika
+
+  lazy val hakemusYhteishakuKevat2014WithForeignBaseEducation: Application = JsonFixtureMaps.findByKey[Application]("/hakemuseditorimockdata/applications-hakuapp.json", hakemusYhteishakuKevat2014WithForeignBaseEducationId).get
+  lazy val hakemusNivelKesa2013WithPeruskouluBaseEducation: Application = JsonFixtureMaps.findByKey[Application]("/hakemuseditorimockdata/applications-hakuapp.json", hakemusNivelKesa2013WithPeruskouluBaseEducationId).get
 }

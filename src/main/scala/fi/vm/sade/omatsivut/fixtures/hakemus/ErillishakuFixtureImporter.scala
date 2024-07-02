@@ -1,8 +1,8 @@
 package fi.vm.sade.omatsivut.fixtures.hakemus
 
 import fi.vm.sade.hakemuseditori.hakemus.HakemusSpringContext
-import fi.vm.sade.hakemuseditori.hakemus.hakuapp.SyntheticApplication
-import fi.vm.sade.hakemuseditori.hakemus.hakuapp.SyntheticApplication.Hakemus
+import fi.vm.sade.hakemuseditori.hakemus.hakuapp.domain.SyntheticApplication.Hakemus
+import fi.vm.sade.hakemuseditori.hakemus.hakuapp.domain.SyntheticApplication
 import fi.vm.sade.haku.testfixtures.MongoFixtureImporter
 import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig

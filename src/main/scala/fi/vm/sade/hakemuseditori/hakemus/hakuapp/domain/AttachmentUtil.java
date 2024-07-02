@@ -1,4 +1,8 @@
-package fi.vm.sade.hakemuseditori.hakemus.hakuapp;
+package fi.vm.sade.hakemuseditori.hakemus.hakuapp.domain;
+
+import fi.vm.sade.hakemuseditori.hakemus.hakuapp.domain.Application;
+import fi.vm.sade.hakemuseditori.hakemus.hakuapp.domain.ApplicationAttachment;
+import fi.vm.sade.hakemuseditori.hakemus.hakuapp.domain.ApplicationAttachmentRequest;
 
 import java.util.ArrayList;
 import java.util.List;
