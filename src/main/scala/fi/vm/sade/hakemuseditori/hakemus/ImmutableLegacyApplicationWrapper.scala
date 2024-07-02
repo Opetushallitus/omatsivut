@@ -36,15 +36,8 @@ object ImmutableLegacyApplicationWrapper extends Logging {
       Option(application.getReceived),
       Option(application.getUpdated),
       complete,
-      Application.State.SUBMITTED.toString, // TODO fix
-      isPostProcessing(application),
-      Option(application.getRequiredPaymentState).map(_.toString)
+      Application.State.SUBMITTED.toString // TODO fix
     )
-  }
-
-  private def isPostProcessing(application: Application): Boolean = {
-    val state = application.getRedoPostProcess
-    !(state == Application.PostProcessingState.DONE || state == null)
   }
 
 }
@@ -58,9 +51,7 @@ case class ImmutableLegacyApplicationWrapper(
                                               received: Option[Date],
                                               updated: Option[Date],
                                               complete: Boolean,
-                                              state: String,
-                                              isPostProcessing: Boolean,
-                                              requiredPaymentState: Option[String]) {
+                                              state: String) {
   def phaseAnswers(phase: String): Map[String, String] = answers.getOrElse(phase, Map.empty)
   lazy val flatAnswers = FlatAnswers.flatten(answers)
 

@@ -70,7 +70,7 @@ trait HakemusConverterComponent {
         application.sähköposti,
         false,
         false,
-        application.requiredPaymentState,
+        None,
         Map.empty,
         henkilo.oppijanumero.getOrElse(application.personOid)
       )
@@ -78,31 +78,26 @@ trait HakemusConverterComponent {
 
     def tila(haku: Haku, application: ImmutableLegacyApplicationWrapper, hakutoiveet: List[Hakutoive], origValintatulos: Option[Valintatulos])(implicit lang: Language.Language): HakemuksenTila = {
       val valintatulos = insertHakutoiveNimiToValintatulosIfNotPresent(origValintatulos, hakutoiveet)
-
-      if (application.isPostProcessing) {
-        PostProcessing()
-      } else {
-        val now = new LocalDateTime().toDate.getTime // Use LocalDateTime so that we can use TimeWarp in tests
-        if (hakutoiveet.exists(KohteenHakuaika.hakuaikaEnded(haku, _, now))) {
-          if (haku.aikataulu.flatMap(_.hakukierrosPaattyy.map(_ < now)).getOrElse(false)) {
-            HakukierrosPaattynyt(valintatulos = valintatulos)
-          }
-          else if (hakutoiveet
-            .filter(_.hakemusData.isDefined)
-            .forall(KohteenHakuaika.hakuaikaEnded(haku, _, now))) {
-            HakukausiPaattynyt(valintatulos = valintatulos)
-          } else {
-            Active(valintatulos = valintatulos)
-          }
+      val now = new LocalDateTime().toDate.getTime // Use LocalDateTime so that we can use TimeWarp in tests
+      if (hakutoiveet.exists(KohteenHakuaika.hakuaikaEnded(haku, _, now))) {
+        if (haku.aikataulu.flatMap(_.hakukierrosPaattyy.map(_ < now)).getOrElse(false)) {
+          HakukierrosPaattynyt(valintatulos = valintatulos)
+        }
+        else if (hakutoiveet
+          .filter(_.hakemusData.isDefined)
+          .forall(KohteenHakuaika.hakuaikaEnded(haku, _, now))) {
+          HakukausiPaattynyt(valintatulos = valintatulos)
         } else {
-          application.state match {
-            case "ACTIVE" => if(valintatulosHasSomeResults(valintatulos)) HakukausiPaattynyt(valintatulos = valintatulos) else Active()
-            case "PASSIVE" => Passive()
-            case "INCOMPLETE" => Incomplete()
-            case "SUBMITTED" => Submitted()
-            case x => {
-              throw new RuntimeException("Unexpected state for application " + application.oid + ": " + x)
-            }
+          Active(valintatulos = valintatulos)
+        }
+      } else {
+        application.state match {
+          case "ACTIVE" => if (valintatulosHasSomeResults(valintatulos)) HakukausiPaattynyt(valintatulos = valintatulos) else Active()
+          case "PASSIVE" => Passive()
+          case "INCOMPLETE" => Incomplete()
+          case "SUBMITTED" => Submitted()
+          case x => {
+            throw new RuntimeException("Unexpected state for application " + application.oid + ": " + x)
           }
         }
       }

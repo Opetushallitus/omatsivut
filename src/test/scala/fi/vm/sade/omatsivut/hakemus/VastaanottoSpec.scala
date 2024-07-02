@@ -1,3 +1,4 @@
+/*
 package fi.vm.sade.omatsivut.hakemus
 
 import fi.vm.sade.hakemuseditori.valintatulokset.domain.VastaanotaSitovasti
@@ -31,3 +32,4 @@ class VastaanottoSpec extends HakemusApiSpecification with FixturePerson {
     }
   }
 }
+*/

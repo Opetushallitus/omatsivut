@@ -50,13 +50,6 @@ trait HakemusApiSpecification extends ScalatraTestSupport with Logging {
 
   }
 
-  def saveHakemus[T](hakemus: Hakemus)(f: => T)(implicit personOid: PersonOid): T = {
-    // TODO assertoi poikkeus
-    authPut("secure/applications/" + hakemus.oid, Serialization.write(hakemus.toHakemusMuutos)) {
-      f
-    }
-  }
-
   def setupFixture(fixtureName: String) = {
     new ApplicationFixtureImporter(springContext).applyFixtures(fixtureName)
   }

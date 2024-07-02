@@ -124,14 +124,16 @@ trait HakemusRepositoryComponent {
     def findByPersonOid(personOid: String): List[Application] = {
       logger.info("findByPersonOid")
       val text = io.Source.fromInputStream(getClass.getResourceAsStream("/hakemuseditorimockdata/applications-hakuapp.json")).mkString
-      val mockApplications = parse(text, useBigDecimalForDouble = false).extract[Option[List[Application]]].getOrElse(List())
+      val parsed = parse(text, useBigDecimalForDouble = false)
+      val mockApplications = parse(text, useBigDecimalForDouble = false).extract[List[Application]]
       mockApplications
     }
 
     def findByOid(oid: String): Option[Application] = {
       logger.info("findByOid " + oid)
       val text = io.Source.fromInputStream(getClass.getResourceAsStream("/hakemuseditorimockdata/applications-hakuapp.json")).mkString
-      val mockApplications = parse(text, useBigDecimalForDouble = false).extract[Option[List[Application]]].getOrElse(List())
+      val parsed = parse(text, useBigDecimalForDouble = false)
+      val mockApplications = parse(text, useBigDecimalForDouble = false).extract[List[Application]]
       logger.info("hakemuksia: " + mockApplications.size)
       val application = mockApplications.find(a => a.getOid.equals(oid))
       application

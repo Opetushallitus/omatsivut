@@ -3,7 +3,7 @@ package fi.vm.sade.hakemuseditori
 import fi.vm.sade.ataru.AtaruServiceComponent
 import fi.vm.sade.hakemuseditori.domain.Language
 import fi.vm.sade.hakemuseditori.hakemus._
-import fi.vm.sade.hakemuseditori.hakemus.domain.{Hakemus, HakemusMuutos, ValidationError}
+import fi.vm.sade.hakemuseditori.hakemus.domain.{Hakemus, ValidationError}
 import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.hakemuseditori.koodisto.{KoodistoComponent, PostOffice, StubbedKoodistoService}
 import fi.vm.sade.hakemuseditori.localization.{Translations, TranslationsComponent}

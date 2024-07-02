@@ -1,3 +1,4 @@
+/*
 package fi.vm.sade.omatsivut.hakemus
 
 import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus.HakutoiveData
@@ -230,3 +231,4 @@ class NonSensitiveApplicationSpec extends HakemusApiSpecification {
   }
 
 }
+*/

@@ -6,10 +6,6 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.codehaus.jackson.map.annotate.JsonDeserialize;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import java.io.Serializable;
 import java.util.*;
@@ -28,19 +24,6 @@ public class Application implements Serializable {
     public enum PostProcessingState {
         NOMAIL, FULL, DONE, FAILED
     }
-
-    public enum PaymentState {
-        NOTIFIED, // Successfully notified payment system
-        OK, // Payment done according to payment system
-        NOT_OK // Payment system indicated that payment will not be made
-    }
-
-    private PaymentState requiredPaymentState;
-
-    public boolean paymentIsOk() {
-        return requiredPaymentState == null || requiredPaymentState == PaymentState.OK;
-    }
-
 
     private static final long serialVersionUID = -7491168801255850954L;
 
@@ -65,21 +48,6 @@ public class Application implements Serializable {
     private Map<String, String> meta = new HashMap<String, String>(); // TODO remove
     private List<ApplicationAttachmentRequest> attachmentRequests = new ArrayList<ApplicationAttachmentRequest>();
 
-
-    @JsonIgnore
-    public boolean isActive() {
-        return state != null && state.equals(Application.State.ACTIVE);
-    }
-
-    @JsonIgnore
-    public boolean isIncomplete() {
-        return state != null && state.equals(Application.State.INCOMPLETE);
-    }
-
-    @JsonIgnore
-    public boolean isSubmitted() {
-        return state != null && state.equals(Application.State.SUBMITTED);
-    }
 
     public Map<String, Map<String, String>> getAnswers() {
         return answers;
@@ -149,9 +117,6 @@ public class Application implements Serializable {
         return attachmentRequests;
     }
 
-    public Application.PaymentState getRequiredPaymentState() {
-        return requiredPaymentState;
-    }
 
     private Map<String, String> addMetaToAnswers(Map<String, String> answers) {
         for (Map.Entry<String, String> entry : meta.entrySet()) {
