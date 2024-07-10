@@ -4,7 +4,6 @@ import fi.vm.sade.hakemuseditori.hakemus.HakemusInfo
 import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus.Answers
 import fi.vm.sade.hakemuseditori.hakemus.domain._
 import fi.vm.sade.hakemuseditori.lomake.domain.{AnswerId, QuestionGroup, QuestionNode}
-import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants._
 import org.json4s.JsonAST.JObject
 import org.json4s.{CustomSerializer, Extraction}
 
@@ -70,8 +69,8 @@ object NonSensitiveHakemusInfo {
   type Oid = String
 
   val nonSensitiveAnswers = Set(
-    AnswerId(PHASE_PERSONAL, ELEMENT_ID_NICKNAME),
-    AnswerId(PHASE_PERSONAL, ELEMENT_ID_LAST_NAME)
+    AnswerId("henkilotiedot", "Kutsumanimi"), //ELEMENT_ID_NICKNAME
+    AnswerId("henkilotiedot", "Sukunimi") //ELEMENT_ID_LAST_NAME
   )
 
   def answerIds(answers: Answers): Set[AnswerId] =

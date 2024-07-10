@@ -2,10 +2,7 @@ package fi.vm.sade.hakemuseditori.tarjonta.domain
 
 import fi.vm.sade.hakemuseditori.hakemus.domain.Hakutoive
 import fi.vm.sade.hakemuseditori.ohjausparametrit.domain.HaunAikataulu
-import fi.vm.sade.haku.oppija.lomake.domain.ApplicationPeriod
 import org.joda.time.LocalDateTime
-
-import java.util.Date
 
 case class Haku(oid: String, published: Boolean, name: String, applicationPeriods: List[Hakuaika], tyyppi: String,
                 korkeakouluhaku: Boolean, siirtohaku: Boolean,
@@ -18,9 +15,7 @@ case class Hakuaika(id: String, start: Long, end: Option[Long]) {
   def ended(now: Long): Boolean = end.exists(_ <= now)
   def active(now: Long): Boolean = start <= now && !ended(now)
   def active: Boolean = active(LocalDateTime.now().toDate.getTime)
-  def toApplicationPeriod: ApplicationPeriod = {
-    new ApplicationPeriod(new Date(start), end.map(new Date(_)).orNull)
-  }
+
 }
 
 case class Hakukohde(oid: String,

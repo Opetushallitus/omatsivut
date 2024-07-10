@@ -1,13 +1,11 @@
 package fi.vm.sade.omatsivut.fixtures.hakemus
 
 import fi.vm.sade.hakemuseditori.hakemus.HakemusSpringContext
-import fi.vm.sade.hakemuseditori.hakemus.hakuapp.domain.SyntheticApplication.Hakemus
 import fi.vm.sade.hakemuseditori.hakemus.hakuapp.domain.SyntheticApplication
-import fi.vm.sade.haku.testfixtures.MongoFixtureImporter
-import fi.vm.sade.haku.virkailija.lomakkeenhallinta.util.OppijaConstants
+import fi.vm.sade.hakemuseditori.hakemus.hakuapp.domain.SyntheticApplication.Hakemus
+import fi.vm.sade.hakemuseditori.valintatulokset.RemoteValintatulosService
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.fixtures.TestFixture
-import fi.vm.sade.hakemuseditori.valintatulokset.RemoteValintatulosService
 
 class ErillishakuFixtureImporter(appConfig: AppConfig, springContext: HakemusSpringContext) {
   def applyFixtures(hyvaksytty: Boolean) {
@@ -18,8 +16,8 @@ class ErillishakuFixtureImporter(appConfig: AppConfig, springContext: HakemusSpr
       TestFixture.personOid,
       "Erillis",
       "Hakija",
-      OppijaConstants.SUKUPUOLI_MIES,
-      OppijaConstants.EDUCATION_LANGUAGE_FI,
+      "1", //OppijaConstants.SUKUPUOLI_MIES
+      "FI",
       "010100A939R",
       "foobar@example.com",
       "9.1.1995",

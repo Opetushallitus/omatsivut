@@ -1,8 +1,6 @@
 package fi.vm.sade.omatsivut.fixtures.hakemus
 
 import fi.vm.sade.hakemuseditori.hakemus.HakemusSpringContext
-import fi.vm.sade.haku.oppija.hakemus.domain.Application
-import fi.vm.sade.haku.testfixtures.MongoFixtureImporter
 import fi.vm.sade.omatsivut.fixtures.TestFixture.{hakemusNivelKesa2013WithPeruskouluBaseEducation, hakemusYhteishakuKevat2014WithForeignBaseEducation}
 
 class ApplicationFixtureImporter(context: HakemusSpringContext) {
@@ -20,7 +18,6 @@ class ApplicationFixtureImporter(context: HakemusSpringContext) {
   def applyOverrides(fixtureName: String = "") {
     fixtureName match {
       case "peruskoulu" => new PeruskouluFixture().apply
-      //case "peruskouluWithMissingPreferences" => new PeruskouluWithMissingPreferencesFixture(context.applicationDAO).apply
       //case "passiveApplication" => new ApplicationStateFixture(context.applicationDAO).setState(Application.State.PASSIVE)
       //case "incompleteApplication" => new ApplicationStateFixture(context.applicationDAO).setState(Application.State.INCOMPLETE)
       //case "submittedApplication" => new ApplicationStateFixture(context.applicationDAO).setState(Application.State.SUBMITTED)

@@ -1,7 +1,6 @@
 package fi.vm.sade.hakemuseditori.localization
 
 import fi.vm.sade.hakemuseditori.domain.Language.Language
-import fi.vm.sade.haku.oppija.lomake.domain.I18nText
 import org.json4s._
 
 trait Translations {
