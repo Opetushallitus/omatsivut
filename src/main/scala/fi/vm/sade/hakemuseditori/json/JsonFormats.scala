@@ -8,7 +8,7 @@ import org.json4s.ext.EnumNameSerializer
 
 object JsonFormats {
   val jsonFormats: Formats = GenericJsonFormats.genericFormats ++ List(
-    new QuestionNodeSerializer,
+    new ApplicationSerializer,
     new HakuSerializer,
     new KohteenHakuaikaSerializer,
     new EnumNameSerializer(Language),

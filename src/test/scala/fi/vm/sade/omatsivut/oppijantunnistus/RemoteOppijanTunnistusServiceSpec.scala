@@ -2,23 +2,17 @@ package fi.vm.sade.omatsivut.oppijantunnistus
 
 import fi.vm.sade.groupemailer.Json4sHttp4s
 import fi.vm.sade.omatsivut.OphUrlProperties
-import fi.vm.sade.omatsivut.config.AppConfig
-import fi.vm.sade.utils.http.{HttpClient, HttpRequest}
-import org.http4s.{EmptyBody, Request, Response, Service, Status, Uri}
-import org.http4s.client.{Client, DisposableResponse, blaze}
+import org.http4s.client.{Client, DisposableResponse}
+import org.http4s.{Request, Response, Service, Status}
+import org.json4s.DefaultFormats
 import org.json4s.JsonDSL._
-import org.json4s.jackson.JsonMethods._
 import org.junit.runner.RunWith
-import org.mockito.{ArgumentMatchers, Matchers}
 import org.scalatra.test.specs2.MutableScalatraSpec
 import org.specs2.mock.Mockito
 import org.specs2.runner.JUnitRunner
+import scalaz.concurrent.Task
 
 import scala.util.{Success, Try}
-import org.http4s.Method.GET
-import org.json4s.DefaultFormats
-import org.scalatra.{Created, Ok}
-import scalaz.concurrent.Task
 
 @RunWith(classOf[JUnitRunner])
 class RemoteOppijanTunnistusServiceSpec extends MutableScalatraSpec with Mockito {

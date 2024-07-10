@@ -14,10 +14,13 @@ import fi.vm.sade.hakemuseditori.viestintapalvelu.{Pdf, TuloskirjeComponent}
 import fi.vm.sade.omatsivut.fixtures.TestFixture.{hakemusNivelKesa2013WithPeruskouluBaseEducation, hakemusYhteishakuKevat2014WithForeignBaseEducation}
 import fi.vm.sade.utils.Timer._
 import fi.vm.sade.utils.slf4j.Logging
-import org.json4s.DefaultFormats
+import org.json4s.ext.JavaTypesSerializers
+import org.json4s.{DefaultFormats, FieldSerializer, Formats}
 import org.json4s.jackson.JsonMethods.parse
+import org.json4s.jackson.Serialization
 
 import javax.servlet.http.HttpServletRequest
+import scala.io.Source
 import scala.util.{Failure, Success, Try}
 
 trait HakemusRepositoryComponent {
@@ -122,19 +125,15 @@ trait HakemusRepositoryComponent {
   class StubbedHakemusFinder extends HakemusFinder with Logging {
     implicit private val formats = DefaultFormats
     def findByPersonOid(personOid: String): List[Application] = {
-      logger.info("findByPersonOid")
       val text = io.Source.fromInputStream(getClass.getResourceAsStream("/hakemuseditorimockdata/applications-hakuapp.json")).mkString
-      val parsed = parse(text, useBigDecimalForDouble = false)
+      //val parsed = parse(text, useBigDecimalForDouble = false)
       val mockApplications = parse(text, useBigDecimalForDouble = false).extract[List[Application]]
       mockApplications
     }
 
     def findByOid(oid: String): Option[Application] = {
-      logger.info("findByOid " + oid)
       val text = io.Source.fromInputStream(getClass.getResourceAsStream("/hakemuseditorimockdata/applications-hakuapp.json")).mkString
-      val parsed = parse(text, useBigDecimalForDouble = false)
       val mockApplications = parse(text, useBigDecimalForDouble = false).extract[List[Application]]
-      logger.info("hakemuksia: " + mockApplications.size)
       val application = mockApplications.find(a => a.getOid.equals(oid))
       application
     }

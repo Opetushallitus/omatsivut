@@ -14,14 +14,13 @@ class GetApplicationsSpec extends HakemusApiSpecification with FixturePerson wit
   sequential
 
   "GET /applications" should {
-    /*
     "return person's applications" in {
       withApplicationsResponse { resp =>
         resp.allApplicationsFetched must_== true
         resp.applications.map(_.hakemus.oid) must contain(hakemusNivelKesa2013WithPeruskouluBaseEducationId)
         resp.applications.map(_.hakemus.oid) must contain(hakemusYhteishakuKevat2014WithForeignBaseEducationId)
       }
-    }*/
+    }
 
     "return person's applications from ataru" in {
       withApplicationsResponse { resp =>
@@ -31,11 +30,11 @@ class GetApplicationsSpec extends HakemusApiSpecification with FixturePerson wit
       }(PersonOid(personOidWithAtaru))
     }
 
-//    "tell for basic application that no additional info is required" in {
-//      withHakemusWithEmptyAnswers(hakemusNivelKesa2013WithPeruskouluBaseEducationId) { hakemusInfo =>
-//        hakemusInfo.hakemus.requiresAdditionalInfo must_== false
-//      }
-//    }
+    "tell for basic application that no additional info is required" in {
+      withHakemusWithEmptyAnswers(hakemusNivelKesa2013WithPeruskouluBaseEducationId) { hakemusInfo =>
+        hakemusInfo.hakemus.requiresAdditionalInfo must_== false
+      }
+    }
 //
 //    "tell for dance education application that additional info is required" in {
 //      withHakemusWithEmptyAnswers(TestFixture.hakemusWithGradeGridAndDancePreference) { hakemusInfo =>
@@ -49,11 +48,11 @@ class GetApplicationsSpec extends HakemusApiSpecification with FixturePerson wit
 //      }
 //    }
 //
-//    "use application system's application period when application type is not 'LISÄHAKU'" in {
-//      withHakemusWithEmptyAnswers(hakemusYhteishakuKevat2014WithForeignBaseEducationId) { hakemusInfo =>
-//        hakemusInfo.hakemus.haku.applicationPeriods.head must_== TestFixture.hakemus2_hakuaika
-//      }
-//    }
+    "use application system's application period when application type is not 'LISÄHAKU'" in {
+      withHakemusWithEmptyAnswers(hakemusYhteishakuKevat2014WithForeignBaseEducationId) { hakemusInfo =>
+        hakemusInfo.hakemus.haku.applicationPeriods.head must_== TestFixture.hakemus2_hakuaika
+      }
+    }
 //    "provide additional application period for application with athlete questions" in {
 //      withHakemusWithEmptyAnswers(hakemusWithAtheleteQuestions) { hakemusInfo =>
 //        val aika = hakemusInfo.hakemus.hakutoiveet.head.hakukohdekohtaisetHakuajat.get.head

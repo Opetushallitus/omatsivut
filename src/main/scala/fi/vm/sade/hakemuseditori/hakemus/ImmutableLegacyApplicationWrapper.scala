@@ -2,7 +2,7 @@ package fi.vm.sade.hakemuseditori.hakemus
 
 import java.util.Date
 import fi.vm.sade.hakemuseditori.hakemus.ImmutableLegacyApplicationWrapper.LegacyApplicationAnswers
-import fi.vm.sade.hakemuseditori.hakemus.hakuapp.domain.{Application, ApplicationAttachment, AttachmentUtil}
+import fi.vm.sade.hakemuseditori.hakemus.hakuapp.domain.{Application}
 import fi.vm.sade.utils.slf4j.Logging
 
 import scala.collection.JavaConversions._
@@ -32,11 +32,10 @@ object ImmutableLegacyApplicationWrapper extends Logging {
       application.getApplicationSystemId,
       application.getPersonOid,
       answers,
-      AttachmentUtil.resolveAttachments(application).toList,
       Option(application.getReceived),
       Option(application.getUpdated),
       complete,
-      Application.State.SUBMITTED.toString // TODO fix
+      Application.State.SUBMITTED.toString // TODO fix voiko olla kovakoodattu vai tarvitaanko päättely
     )
   }
 
@@ -47,7 +46,6 @@ case class ImmutableLegacyApplicationWrapper(
                                               hakuOid: String,
                                               personOid: String,
                                               answers: LegacyApplicationAnswers,
-                                              attachments: List[ApplicationAttachment],
                                               received: Option[Date],
                                               updated: Option[Date],
                                               complete: Boolean,

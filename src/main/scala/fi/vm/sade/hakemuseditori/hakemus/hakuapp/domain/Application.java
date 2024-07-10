@@ -5,49 +5,39 @@ import com.google.common.collect.Maps;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.codehaus.jackson.annotate.JsonIgnore;
 
 import java.io.Serializable;
 import java.util.*;
 
 
-//@JsonSerialize(include = JsonSerialize.Inclusion.NON_EMPTY)
-//@JsonIgnoreProperties({ "type", "personOidChecked", "studentOidChecked" })
 public class Application implements Serializable {
 
+    public Application() {}
+
+    public Application(
+        String oid,
+        String applicationSystemId,
+        String personOid) {
+        this.oid = oid;
+        this.applicationSystemId = applicationSystemId;
+        this.personOid = personOid;
+    }
     private static final String[] EXCLUDED_FIELDS = new String[]{"id"};
 
     public enum State {
         ACTIVE, PASSIVE, INCOMPLETE, SUBMITTED, DRAFT
     }
-
-    public enum PostProcessingState {
-        NOMAIL, FULL, DONE, FAILED
-    }
-
-    private static final long serialVersionUID = -7491168801255850954L;
-
     public static final String VAIHE_ID = "phaseId";
-
-    //@JsonProperty(value = "_id")
-    //@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL, using = ObjectIdSerializer.class)
-    //@JsonDeserialize(using = ObjectIdDeserializer.class)
-    private org.bson.types.ObjectId id; //NOSONAR Json-sarjallistajan käyttämä.
 
     private String oid;
     private Application.State state;
-    private String applicationSystemId;
+    private String applicationSystemId; // hakuOid
 
-    private String phaseId;
+    private String phaseId; // käytetään testifixtureissa, ei välttämättä tarpeen
     private String personOid;
     private Date received;
     private Date updated;
-    private Application.PostProcessingState redoPostProcess;
     private Map<String, Map<String, String>> answers = new HashMap<String, Map<String, String>>();
-
-    private Map<String, String> meta = new HashMap<String, String>(); // TODO remove
-    private List<ApplicationAttachmentRequest> attachmentRequests = new ArrayList<ApplicationAttachmentRequest>();
-
 
     public Map<String, Map<String, String>> getAnswers() {
         return answers;
@@ -73,16 +63,6 @@ public class Application implements Serializable {
         return applicationSystemId;
     }
 
-    @JsonIgnore
-    public Map<String, String> getVastauksetMerged() {
-        Map<String, String> answers = new HashMap<String, String>(200);
-        for (Map<String, String> phaseAnswers : this.answers.values()) {
-            answers.putAll(phaseAnswers);
-        }
-        answers = addMetaToAnswers(answers);
-        return Collections.unmodifiableMap(answers);
-    }
-
     public String getPersonOid() {
         return personOid;
     }
@@ -103,29 +83,12 @@ public class Application implements Serializable {
         return received;
     }
 
-    public PostProcessingState getRedoPostProcess() {
-        return redoPostProcess;
-    }
     public Application setUpdated(Date updated) {
         this.updated = updated; return this;
     }
 
     public Date getUpdated() { return updated; }
 
-
-    public List<ApplicationAttachmentRequest> getAttachmentRequests() {
-        return attachmentRequests;
-    }
-
-
-    private Map<String, String> addMetaToAnswers(Map<String, String> answers) {
-        for (Map.Entry<String, String> entry : meta.entrySet()) {
-            String key = "_meta_" + entry.getKey();
-            String value = entry.getValue();
-            answers.put(key, value);
-        }
-        return answers;
-    }
 
     public Map<String, String> getPhaseAnswers(final String phaseId) {
         Map<String, String> phaseAnswers = this.answers.get(phaseId);
@@ -135,6 +98,7 @@ public class Application implements Serializable {
         return new HashMap<String, String>();
     }
 
+    // käytetään testifixtureissa
     public final Application setVaiheenVastauksetAndSetPhaseId(final String phaseId, Map<String, String> answers) {
         this.phaseId = answers.get(VAIHE_ID);
         Map<String, String> answersWithoutPhaseId = new HashMap<String, String>(

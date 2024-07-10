@@ -4,7 +4,7 @@ import fi.vm.sade.hakemuseditori.fixtures.JsonFixtureMaps
 import fi.vm.sade.hakemuseditori.hakemus.domain.{Active, HakemuksenTila, Hakemus}
 import fi.vm.sade.hakemuseditori.hakemus.hakuapp.domain.Application
 import fi.vm.sade.hakemuseditori.hakemus.{ApplicationsResponse, HakemusInfo}
-import fi.vm.sade.hakemuseditori.json.JsonFormats
+import fi.vm.sade.hakemuseditori.json.{ApplicationSerializer, JsonFormats}
 import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.omatsivut.fixtures.hakemus.ApplicationFixtureImporter
 import fi.vm.sade.omatsivut.{PersonOid, ScalatraTestSupport}
