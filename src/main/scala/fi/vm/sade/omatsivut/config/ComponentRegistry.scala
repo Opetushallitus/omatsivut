@@ -6,7 +6,6 @@ import fi.vm.sade.ataru.{AtaruService, AtaruServiceComponent}
 import fi.vm.sade.groupemailer.{GroupEmailComponent, GroupEmailService}
 import fi.vm.sade.hakemuseditori.domain.Language.Language
 import fi.vm.sade.hakemuseditori.hakemus._
-import fi.vm.sade.hakemuseditori.koodisto.{KoodistoComponent, KoodistoService, RemoteKoodistoService, StubbedKoodistoService}
 import fi.vm.sade.hakemuseditori.localization.TranslationsComponent
 import fi.vm.sade.hakemuseditori.ohjausparametrit.{OhjausparametritComponent, OhjausparametritService}
 import fi.vm.sade.hakemuseditori.oppijanumerorekisteri.{OppijanumerorekisteriComponent, OppijanumerorekisteriService}
@@ -55,7 +54,6 @@ class ComponentRegistry(val config: AppConfig)
           RemoteTarjontaComponent with
           TarjontaComponent with
           TuloskirjeComponent with
-          KoodistoComponent with
           OppijanTunnistusComponent with
           TuloskirjeetServletContainer with
           ValintatulosServletContainer with
@@ -90,11 +88,6 @@ class ComponentRegistry(val config: AppConfig)
   private def configureOppijanTunnistusService: OppijanTunnistusService = config match {
     case _: StubbedExternalDeps => new StubbedOppijanTunnistusService()
     case _ => new RemoteOppijanTunnistusService(RemoteOppijanTunnistusService.createCasClient(config))
-  }
-
-  private def configureKoodistoService: KoodistoService = config match {
-    case _: StubbedExternalDeps => new StubbedKoodistoService
-    case _ => new RemoteKoodistoService(springContext, AppConfig.callerId)
   }
 
   private def configureAtaruService: AtaruService = config match {
@@ -154,7 +147,6 @@ class ComponentRegistry(val config: AppConfig)
   val hakemusConverter: HakemusConverter = new HakemusConverter
   val tarjontaService: TarjontaService = configureTarjontaService
   val tuloskirjeService: TuloskirjeService = configureTuloskirjeService
-  val koodistoService: KoodistoService = configureKoodistoService
   val groupEmailService: GroupEmailService = configureGroupEmailService
   val captchaService: CaptchaService = new RemoteCaptchaService(config.settings.captchaSettings)
   val oppijanTunnistusService = configureOppijanTunnistusService

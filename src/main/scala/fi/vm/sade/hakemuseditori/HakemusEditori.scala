@@ -5,7 +5,6 @@ import fi.vm.sade.hakemuseditori.domain.Language
 import fi.vm.sade.hakemuseditori.hakemus._
 import fi.vm.sade.hakemuseditori.hakemus.domain.{Hakemus, ValidationError}
 import fi.vm.sade.hakemuseditori.json.JsonFormats
-import fi.vm.sade.hakemuseditori.koodisto.{KoodistoComponent, PostOffice, StubbedKoodistoService}
 import fi.vm.sade.hakemuseditori.localization.{Translations, TranslationsComponent}
 import fi.vm.sade.hakemuseditori.ohjausparametrit.OhjausparametritComponent
 import fi.vm.sade.hakemuseditori.oppijanumerorekisteri.OppijanumerorekisteriComponent
@@ -41,8 +40,7 @@ trait HakemusEditoriComponent extends AtaruServiceComponent
   with TuloskirjeComponent
   with TranslationsComponent
   with SpringContextComponent
-  with HakemusConverterComponent
-  with KoodistoComponent {
+  with HakemusConverterComponent {
 
   def newEditor(userContext: HakemusEditoriUserContext): HakemusEditori = {
     new HakemusEditori {
@@ -118,9 +116,6 @@ trait HakemusEditoriComponent extends AtaruServiceComponent
       result
     }
 
-    def postitoimipaikka(postalCode: String): Option[PostOffice] = {
-      koodistoService.postOffice(postalCode, language)
-    }
 
     private def parseLang(lang: Option[String]): Language.Value = {
       lang.flatMap(Language.parse).getOrElse(Language.fi)
@@ -157,7 +152,6 @@ class StubbedHakemusEditoriContext(appContext: ApplicationContext,
   override lazy val oppijanumerorekisteriService = new StubbedOppijanumerorekisteriService
   override lazy val tarjontaService = new StubbedTarjontaService(config)
   override lazy val tuloskirjeService = new StubbedTuloskirjeService
-  override lazy val koodistoService = new StubbedKoodistoService
   override lazy val ohjausparametritService = new StubbedOhjausparametritService
 }
 

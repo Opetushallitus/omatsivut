@@ -2,13 +2,11 @@ package fi.vm.sade.omatsivut.servlet
 
 import fi.vm.sade.hakemuseditori.HakemusEditoriComponent
 import fi.vm.sade.hakemuseditori.json.JsonFormats
-import fi.vm.sade.hakemuseditori.koodisto.KoodistoService
+import org.scalatra.NotFound
 import org.scalatra.json.JacksonJsonSupport
 
 trait KoodistoServletContainer {
   this: HakemusEditoriComponent =>
-
-  val koodistoService: KoodistoService
 
   class KoodistoServlet extends OmatSivutServletBase with JacksonJsonSupport with JsonFormats {
     before() {
@@ -16,7 +14,7 @@ trait KoodistoServletContainer {
     }
 
     get("/postitoimipaikka/:postalCode") {
-      checkNotFound(koodistoService.postOffice(params("postalCode"), language))
+      NotFound("error" -> "Not found") // ei pitäisi enää tarvita tätä
     }
   }
 }

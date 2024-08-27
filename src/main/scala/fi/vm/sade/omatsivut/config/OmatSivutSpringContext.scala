@@ -63,7 +63,7 @@ object OmatSivutSpringContext extends Logging {
     "fi.vm.sade.haku.virkailija",
     "fi.vm.sade.haku.oppija.common.koulutusinformaatio.impl"
   ))
-  @Import(Array(classOf[OmatSivutMongoConfiguration], classOf[OmatSivutCacheConfiguration]))
+  @Import(Array(classOf[OmatSivutMongoConfiguration]))
   class Dev extends OmatSivutConfiguration {
     val profile = "dev"
 
@@ -92,7 +92,7 @@ object OmatSivutSpringContext extends Logging {
     "fi.vm.sade.haku.oppija.hakemus.it.dao",
     "fi.vm.sade.haku.oppija.hakemus.converter",
     "fi.vm.sade.haku.oppija.hakemus.service",
-    "fi.vm.sade.haku.oppija.common.koulutusinformaatio",
+    "fi.vm.sade.haku.oppija.common.koulutubsinformaatio",
     "fi.vm.sade.haku.virkailija.koulutusinformaatio",
     "fi.vm.sade.haku.virkailija.lomakkeenhallinta.i18n",
     "fi.vm.sade.haku.virkailija.viestintapalvelu",
@@ -100,13 +100,12 @@ object OmatSivutSpringContext extends Logging {
     "fi.vm.sade.haku.virkailija.lomakkeenhallinta.ohjausparametrit",
     "fi.vm.sade.haku.virkailija.lomakkeenhallinta.tarjonta.impl",
     "fi.vm.sade.haku.oppija.common.suoritusrekisteri.impl",
-    "fi.vm.sade.haku.virkailija.authentication.impl",
-    "fi.vm.sade.haku.virkailija.lomakkeenhallinta.koodisto.impl"
+    "fi.vm.sade.haku.virkailija.authentication.impl"
 
   ),
   excludeFilters = Array(new ComponentScan.Filter(`type` = FilterType.ASSIGNABLE_TYPE, value = Array[Class[_]](classOf[Session])))
   )
-  @Import(Array(classOf[OmatSivutMongoConfiguration], classOf[OmatSivutCacheConfiguration]))
+  @Import(Array(classOf[OmatSivutMongoConfiguration]))
   class Default extends OmatSivutConfiguration {
     val profile = "default"
 
@@ -133,9 +132,6 @@ object OmatSivutSpringContext extends Logging {
 
       override def getHakijaFromValintarekisteri(asOid: String, application: String): HakijaDTO = unsupportedIntegrationException
     }
-
-    @Bean def koodistoClient(@Value("${host.virkailija}") hostVirkailija: String): KoodistoClient =
-      new CachingKoodistoClient(s"https://$hostVirkailija").setCallerId(AppConfig.callerId)
 
     def unsupportedIntegrationException: Nothing = {
       throw new scala.UnsupportedOperationException("This integration is unsupported and should not be called in omatsivut")

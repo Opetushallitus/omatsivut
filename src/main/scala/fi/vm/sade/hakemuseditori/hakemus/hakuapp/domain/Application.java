@@ -16,9 +16,28 @@ public class Application implements Serializable {
 
     public Application(
         String oid,
+        String state,
+        String applicationSystemId,
+        String personOid,
+        Date received,
+        Date updated,
+        Map<String, Map<String, String>> answers) {
+        this.oid = oid;
+        this.state = State.valueOf(state);
+        this.applicationSystemId = applicationSystemId;
+        this.personOid = personOid;
+        this.received = received;
+        this.updated = updated;
+        this.answers = answers;
+    }
+
+    public Application(
+        String oid,
+        String state,
         String applicationSystemId,
         String personOid) {
         this.oid = oid;
+        this.state = State.valueOf(state);
         this.applicationSystemId = applicationSystemId;
         this.personOid = personOid;
     }

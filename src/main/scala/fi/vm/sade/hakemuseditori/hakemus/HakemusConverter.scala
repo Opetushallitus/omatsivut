@@ -5,7 +5,6 @@ import fi.vm.sade.hakemuseditori.domain.Language.Language
 import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus._
 import fi.vm.sade.hakemuseditori.hakemus.domain._
 import fi.vm.sade.hakemuseditori.json.JsonFormats
-import fi.vm.sade.hakemuseditori.koodisto.KoodistoComponent
 import fi.vm.sade.hakemuseditori.oppijanumerorekisteri.OppijanumerorekisteriComponent
 import fi.vm.sade.hakemuseditori.tarjonta.domain.{Haku, KohteenHakuaika}
 import fi.vm.sade.hakemuseditori.tarjonta.{TarjontaComponent, TarjontaService}
@@ -18,7 +17,7 @@ import scala.collection.JavaConversions._
 import scala.util.Try
 
 trait HakemusConverterComponent {
-  this: KoodistoComponent with TarjontaComponent with OppijanumerorekisteriComponent =>
+  this: TarjontaComponent with OppijanumerorekisteriComponent =>
 
   val hakemusConverter: HakemusConverter
   val tarjontaService: TarjontaService
@@ -63,10 +62,7 @@ trait HakemusConverterComponent {
         haku,
         EducationBackground(koulutusTaustaAnswers.get(baseEducationKey), !Try {koulutusTaustaAnswers.get("ammatillinenTutkintoSuoritettu").toBoolean}.getOrElse(false)),
         answers,
-        answers.get("henkilotiedot")
-          .flatMap(_.get("Postinumero"))
-          .flatMap(koodistoService.postOfficeTranslations)
-          .flatMap((translations: Map[String,String]) => translations.get(lang.toString)),
+        None,
         application.sähköposti,
         false,
         false,

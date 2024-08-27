@@ -3,7 +3,6 @@ package fi.vm.sade.hakemuseditori.hakemus
 import fi.vm.sade.hakemuseditori.auditlog._
 import fi.vm.sade.hakemuseditori.domain.Language
 import fi.vm.sade.hakemuseditori.domain.Language.Language
-import fi.vm.sade.hakemuseditori.fixtures.JsonFixtureMaps
 import fi.vm.sade.hakemuseditori.hakemus.hakuapp.ApplicationDao
 import fi.vm.sade.hakemuseditori.hakemus.hakuapp.domain.Application
 import fi.vm.sade.hakemuseditori.ohjausparametrit.OhjausparametritComponent
@@ -11,16 +10,13 @@ import fi.vm.sade.hakemuseditori.tarjonta.domain.Haku
 import fi.vm.sade.hakemuseditori.tarjonta.{TarjontaComponent, TarjontaService}
 import fi.vm.sade.hakemuseditori.valintatulokset.ValintatulosServiceComponent
 import fi.vm.sade.hakemuseditori.viestintapalvelu.{Pdf, TuloskirjeComponent}
-import fi.vm.sade.omatsivut.fixtures.TestFixture.{hakemusNivelKesa2013WithPeruskouluBaseEducation, hakemusYhteishakuKevat2014WithForeignBaseEducation}
 import fi.vm.sade.utils.Timer._
 import fi.vm.sade.utils.slf4j.Logging
-import org.json4s.ext.JavaTypesSerializers
-import org.json4s.{DefaultFormats, FieldSerializer, Formats}
+import org.json4s.DefaultFormats
 import org.json4s.jackson.JsonMethods.parse
-import org.json4s.jackson.Serialization
+import org.json4s.jackson.Serialization.{read}
 
 import javax.servlet.http.HttpServletRequest
-import scala.io.Source
 import scala.util.{Failure, Success, Try}
 
 trait HakemusRepositoryComponent {
@@ -126,7 +122,7 @@ trait HakemusRepositoryComponent {
     implicit private val formats = DefaultFormats
     def findByPersonOid(personOid: String): List[Application] = {
       val text = io.Source.fromInputStream(getClass.getResourceAsStream("/hakemuseditorimockdata/applications-hakuapp.json")).mkString
-      //val parsed = parse(text, useBigDecimalForDouble = false)
+      val parsed = parse(text, useBigDecimalForDouble = false)
       val mockApplications = parse(text, useBigDecimalForDouble = false).extract[List[Application]]
       mockApplications
     }
