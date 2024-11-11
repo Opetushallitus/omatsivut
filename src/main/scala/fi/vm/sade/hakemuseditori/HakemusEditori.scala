@@ -66,7 +66,8 @@ trait HakemusEditoriComponent extends ApplicationValidatorComponent
 
     def fetchTuloskirje(request: HttpServletRequest, personOid: String, hakuOid: String, tuloskirjeKind: TuloskirjeKind): Option[Array[Byte]] = {
       val hakemukset = fetchByPersonOid(request, personOid, DontFetch) match {
-        case FullSuccess(hs) => hs.find(_.hakemus.haku.oid == hakuOid)
+        case FullSuccess(hs) => hs.find(
+          (h: HakemusInfo) => h.hakemus.haku.isDefined && h.hakemus.haku.get.oid == hakuOid)
         case PartialSuccess(_, ts) => throw ts.head
         case FullFailure(ts) => throw ts.head
       }
