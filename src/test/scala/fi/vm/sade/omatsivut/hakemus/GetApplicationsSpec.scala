@@ -50,7 +50,7 @@ class GetApplicationsSpec extends HakemusApiSpecification with FixturePerson wit
 
     "use application system's application period when application type is not 'LISÄHAKU'" in {
       withHakemusWithEmptyAnswers(hakemusYhteishakuKevat2014WithForeignBaseEducationId) { hakemusInfo =>
-        hakemusInfo.hakemus.haku.applicationPeriods.head must_== TestFixture.hakemus2_hakuaika
+        hakemusInfo.hakemus.haku.get.applicationPeriods.head must_== TestFixture.hakemus2_hakuaika
       }
     }
     "provide additional application period for application with athlete questions" in {
