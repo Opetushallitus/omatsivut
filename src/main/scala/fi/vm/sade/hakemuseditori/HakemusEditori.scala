@@ -143,8 +143,8 @@ trait HakemusEditoriComponent extends ApplicationValidatorComponent
     }
 
     def validateHakemus(request: HttpServletRequest, muutos: HakemusMuutos): Option[HakemusInfo] = {
-      val lomakeOpt = lomakeRepository.lomakeByOid(muutos.hakuOid)
-      val hakuOpt = tarjontaService.haku(muutos.hakuOid, language)
+      val lomakeOpt = muutos.hakuOid.flatMap(lomakeRepository.lomakeByOid)
+      val hakuOpt = muutos.hakuOid.flatMap(tarjontaService.haku(_, language))
       (lomakeOpt, hakuOpt) match {
         case (Some(lomake), Some(haku)) => {
           Some(applicationValidator.validateAndFindQuestions(request, lomake, muutos, haku, user()))
@@ -154,7 +154,7 @@ trait HakemusEditoriComponent extends ApplicationValidatorComponent
     }
 
     def updateHakemus(request: HttpServletRequest, updated: HakemusMuutos): Try[Hakemus] = {
-      (for {lomake <- lomakeRepository.lomakeByOid(updated.hakuOid)
+      (for {lomake <- updated.hakuOid.flatMap(lomakeRepository.lomakeByOid)
             haku <- tarjontaService.haku(lomake.oid, language)} yield {
         val errors = applicationValidator.validate(lomake, updated, haku)
         if (errors.isEmpty) {
