@@ -190,7 +190,10 @@ trait AtaruServiceComponent  {
   // feels a bit strange to have the testing code mixed with the production code,
   // but I am only following the pattern used in the rest of this application
   class StubbedAtaruService extends AtaruServiceCommons {
-    implicit private val formats = DefaultFormats
+    implicit private val formats = DefaultFormats +
+      FieldSerializer[AtaruApplication](
+        renameTo("formName", "form_name"), renameFrom("form_name", "formName")
+      )
 
     def getApplications(personOid: String): List[AtaruApplication] = {
       personOid match {
