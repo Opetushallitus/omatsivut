@@ -66,8 +66,7 @@ trait HakemusEditoriComponent extends ApplicationValidatorComponent
 
     def fetchTuloskirje(request: HttpServletRequest, personOid: String, hakuOid: String, tuloskirjeKind: TuloskirjeKind): Option[Array[Byte]] = {
       val hakemukset = fetchByPersonOid(request, personOid, DontFetch) match {
-        case FullSuccess(hs) => hs.find(
-          (h: HakemusInfo) => h.hakemus.haku.isDefined && h.hakemus.haku.get.oid == hakuOid)
+        case FullSuccess(hs) => hs.find((h: HakemusInfo) => h.hakemus.haku.isDefined && h.hakemus.haku.get.oid == hakuOid)
         case PartialSuccess(_, ts) => throw ts.head
         case FullFailure(ts) => throw ts.head
       }
@@ -143,8 +142,8 @@ trait HakemusEditoriComponent extends ApplicationValidatorComponent
     }
 
     def validateHakemus(request: HttpServletRequest, muutos: HakemusMuutos): Option[HakemusInfo] = {
-      val lomakeOpt = muutos.hakuOid.flatMap(lomakeRepository.lomakeByOid)
-      val hakuOpt = muutos.hakuOid.flatMap(tarjontaService.haku(_, language))
+      val lomakeOpt = lomakeRepository.lomakeByOid(muutos.hakuOid)
+      val hakuOpt = tarjontaService.haku(muutos.hakuOid, language)
       (lomakeOpt, hakuOpt) match {
         case (Some(lomake), Some(haku)) => {
           Some(applicationValidator.validateAndFindQuestions(request, lomake, muutos, haku, user()))
@@ -154,7 +153,7 @@ trait HakemusEditoriComponent extends ApplicationValidatorComponent
     }
 
     def updateHakemus(request: HttpServletRequest, updated: HakemusMuutos): Try[Hakemus] = {
-      (for {lomake <- updated.hakuOid.flatMap(lomakeRepository.lomakeByOid)
+      (for {lomake <- lomakeRepository.lomakeByOid(updated.hakuOid)
             haku <- tarjontaService.haku(lomake.oid, language)} yield {
         val errors = applicationValidator.validate(lomake, updated, haku)
         if (errors.isEmpty) {
