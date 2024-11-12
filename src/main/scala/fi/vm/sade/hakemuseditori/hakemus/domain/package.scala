@@ -51,7 +51,7 @@ case class Hakemus(oid: String,
                    formName: Option[String]) extends HakemusLike {
   def preferences: List[HakutoiveData] = hakutoiveet.map(_.hakemusData.getOrElse(Map.empty))
 
-  def toHakemusMuutos: HakemusMuutos = HakemusMuutos(oid, haku.map(_.oid), hakutoiveet.map(_.hakemusData.getOrElse(Map.empty)), answers)
+  def toHakemusMuutos: HakemusMuutos = HakemusMuutos(oid, haku.map(_.oid).getOrElse(""), hakutoiveet.map(_.hakemusData.getOrElse(Map.empty)), answers)
 
   def withoutKelaUrl: Hakemus = copy(state = state.withoutKelaUrl)
 
@@ -70,7 +70,7 @@ case class Hakutoive(hakemusData: Option[HakutoiveData],
                      hakuaikaId: Option[String],
                      hakukohdekohtaisetHakuajat: Option[List[KohteenHakuaika]])
 
-case class HakemusMuutos(oid: String, hakuOid: Option[String], hakutoiveet: List[HakutoiveData] = Nil, answers: Answers) extends HakemusLike {
+case class HakemusMuutos(oid: String, hakuOid: String, hakutoiveet: List[HakutoiveData] = Nil, answers: Answers) extends HakemusLike {
   def preferences: List[HakutoiveData] = hakutoiveet
 }
 

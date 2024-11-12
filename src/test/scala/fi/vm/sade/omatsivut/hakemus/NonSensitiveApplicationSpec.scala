@@ -120,7 +120,7 @@ class NonSensitiveApplicationSpec extends HakemusApiSpecification {
       val answersInJWT: Set[AnswerId] = Set(AnswerId("hakutoiveet", "54773037e4b0c2bb60201414"))
       val updatedEmail = "updated@email.com"
       put("insecure/applications/" + hakemusOid,
-        body = Serialization.write(HakemusMuutos(hakemusOid, Some("1.2.246.562.29.95390561488"), hakutoiveData, Map("henkilotiedot" -> Map("Sähköposti" -> updatedEmail)))),
+        body = Serialization.write(HakemusMuutos(hakemusOid, "1.2.246.562.29.95390561488", hakutoiveData, Map("henkilotiedot" -> Map("Sähköposti" -> updatedEmail)))),
         headers = jwtAuthHeader(answersInJWT)) {
         withSavedApplication(hakemusOid){h =>
           h.getEmail() must not be updatedEmail
@@ -138,7 +138,7 @@ class NonSensitiveApplicationSpec extends HakemusApiSpecification {
         AnswerId("hakutoiveet", "54774050e4b0c2bb60201431"))
       "in validate result" in {
         post("insecure/applications/validate/" + hakemusOid,
-          body = Serialization.write(HakemusMuutos(hakemusOid, Some("1.2.246.562.29.95390561488"), hakutoiveData, answersInPost)),
+          body = Serialization.write(HakemusMuutos(hakemusOid, "1.2.246.562.29.95390561488", hakutoiveData, answersInPost)),
           headers = jwtAuthHeader(answersInJWT)) {
           val hakemusInfo = Serialization.read[InsecureHakemusInfo](body).response.hakemusInfo
           NonSensitiveHakemusInfo.answerIds(hakemusInfo.hakemus.answers) must beEqualTo(
@@ -148,7 +148,7 @@ class NonSensitiveApplicationSpec extends HakemusApiSpecification {
       }
       "in PUT result" in {
         put("insecure/applications/" + hakemusOid,
-          body = Serialization.write(HakemusMuutos(hakemusOid, Some("1.2.246.562.29.95390561488"), hakutoiveData, answersInPost)),
+          body = Serialization.write(HakemusMuutos(hakemusOid, "1.2.246.562.29.95390561488", hakutoiveData, answersInPost)),
           headers = jwtAuthHeader(answersInJWT)) {
           val hakemus = Serialization.read[InsecureHakemus](body).response.hakemus
           NonSensitiveHakemusInfo.answerIds(hakemus.answers) must beEqualTo(
@@ -160,7 +160,7 @@ class NonSensitiveApplicationSpec extends HakemusApiSpecification {
     "has answers given during session after reload" in {
       val answersInJWT: Set[AnswerId] = Set()
       put("insecure/applications/" + hakemusOid,
-        body = Serialization.write(HakemusMuutos(hakemusOid, Some("1.2.246.562.29.95390561488"), List(hakutoiveData.head), Hakemus.emptyAnswers)),
+        body = Serialization.write(HakemusMuutos(hakemusOid, "1.2.246.562.29.95390561488", List(hakutoiveData.head), Hakemus.emptyAnswers)),
         headers = jwtAuthHeader(answersInJWT)) {
         status must beEqualTo(200)
 
@@ -171,7 +171,7 @@ class NonSensitiveApplicationSpec extends HakemusApiSpecification {
             "54774088e4b0c2bb60201432-option_0" -> "",
             "54774088e4b0c2bb60201432-option_1" -> ""))
         put("insecure/applications/" + hakemusOid,
-          body = Serialization.write(HakemusMuutos(hakemusOid, Some("1.2.246.562.29.95390561488"), hakutoiveData, Hakemus.emptyAnswers ++ answersInPut)),
+          body = Serialization.write(HakemusMuutos(hakemusOid, "1.2.246.562.29.95390561488", hakutoiveData, Hakemus.emptyAnswers ++ answersInPut)),
           headers = jwtAuthHeader(answersInJWT)) {
           status must beEqualTo(200)
           val answersInJWT = jwt.decode(Serialization.read[InsecureHakemus](body).jsonWebToken).get.answersFromThisSession
@@ -196,11 +196,11 @@ class NonSensitiveApplicationSpec extends HakemusApiSpecification {
     "has only questions for hakutoive that has been removed and then added back" in {
       val answersInJWT: Set[AnswerId] = Set()
       put("insecure/applications/" + hakemusOid,
-        body = Serialization.write(HakemusMuutos(hakemusOid, Some("1.2.246.562.29.95390561488"), List(hakutoiveData.head), Hakemus.emptyAnswers)),
+        body = Serialization.write(HakemusMuutos(hakemusOid, "1.2.246.562.29.95390561488", List(hakutoiveData.head), Hakemus.emptyAnswers)),
         headers = jwtAuthHeader(answersInJWT)) {
         status must beEqualTo(200)
         post("insecure/applications/validate/" + hakemusOid,
-          body = Serialization.write(HakemusMuutos(hakemusOid, Some("1.2.246.562.29.95390561488"), hakutoiveData, Hakemus.emptyAnswers)),
+          body = Serialization.write(HakemusMuutos(hakemusOid, "1.2.246.562.29.95390561488", hakutoiveData, Hakemus.emptyAnswers)),
           headers = jwtAuthHeader(answersInJWT)) {
           val hakemusInfo = Serialization.read[InsecureHakemusInfo](body).response.hakemusInfo
           val hakutoive1QuestionIds = hakemusInfo.questions.flatMap(_.flatten.flatMap(_.answerIds)).toSet
@@ -210,11 +210,11 @@ class NonSensitiveApplicationSpec extends HakemusApiSpecification {
           fixtureImporter.applyFixtures()
 
           put("insecure/applications/" + hakemusOid,
-            body = Serialization.write(HakemusMuutos(hakemusOid, Some("1.2.246.562.29.95390561488"), List(hakutoiveData.tail.head), Hakemus.emptyAnswers)),
+            body = Serialization.write(HakemusMuutos(hakemusOid, "1.2.246.562.29.95390561488", List(hakutoiveData.tail.head), Hakemus.emptyAnswers)),
             headers = jwtAuthHeader(answersInJWT)) {
             status must beEqualTo(200)
             post("insecure/applications/validate/" + hakemusOid,
-              body = Serialization.write(HakemusMuutos(hakemusOid, Some("1.2.246.562.29.95390561488"), hakutoiveData, Hakemus.emptyAnswers)),
+              body = Serialization.write(HakemusMuutos(hakemusOid, "1.2.246.562.29.95390561488", hakutoiveData, Hakemus.emptyAnswers)),
               headers = jwtAuthHeader(answersInJWT)) {
               val hakemusInfo = Serialization.read[InsecureHakemusInfo](body).response.hakemusInfo
               val hakutoive2QuestionIds = hakemusInfo.questions.flatMap(_.flatten.flatMap(_.answerIds)).toSet
