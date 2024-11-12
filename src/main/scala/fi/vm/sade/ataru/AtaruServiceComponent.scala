@@ -1,5 +1,7 @@
 package fi.vm.sade.ataru
 
+import com.fasterxml.jackson.annotation.JsonProperty
+
 import java.time.Instant
 import java.util.concurrent.TimeUnit
 import fi.vm.sade.hakemuseditori.auditlog.{Audit, ShowHakemus}
@@ -36,7 +38,7 @@ case class AtaruApplication(oid: String,
                             haku: String,
                             hakukohteet: List[String],
                             submitted: String,
-                            formName: Map[String, String])
+                            @JsonProperty("form_name") formName: Map[String, String])
 
 trait AtaruServiceComponent  {
   this: LomakeRepositoryComponent
