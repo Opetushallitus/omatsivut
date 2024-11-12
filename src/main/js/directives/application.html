@@ -1,8 +1,9 @@
 <div role="presentation" class="hakemuseditori">
     <section class="application-header">
-        <h2>{{application.haku.name }}</h2>
+        <h2 ng-if="application.haku">{{application.haku.name }}</h2>
+        <h2 ng-if="!application.haku">{{application.formName }}</h2>
 
-        <application-periods haku="application.haku"></application-periods>
+        <application-periods ng-if="application.haku" haku="application.haku"></application-periods>
 
         <div class="timestamp-row" ng-show="application.haku.jarjestelmanHakulomake || application.hakemusSource === 'Ataru'">
             <i ng-if="application.previewUrl" aria-hidden="true" class="icon-doc-text"></i>
@@ -33,7 +34,7 @@
         </div>
     </section>
 
-    <section class="application-status" role="presentation">
+    <section ng-if="application.haku" class="application-status" role="presentation">
         <div class="application-status-item" ng-if="application.state.id != 'HAKUKIERROSPAATTYNYT' && !application.allResultsAvailable() && application.vastaanotettavatHakutoiveet().length == 0">
             {{ localization('label.applicationPeriodEnded') }}
             <span ng-if="application.haku.aikataulu.julkistus">
