@@ -22,6 +22,7 @@ import scalaz.concurrent.Task
 
 @RunWith(classOf[JUnitRunner])
 class RemoteOppijanTunnistusServiceSpec extends MutableScalatraSpec with Mockito {
+  implicit val appConfig = new AppConfig.IT
   implicit val formats = DefaultFormats
 
   val testToken: String = "testToken"
