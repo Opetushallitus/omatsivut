@@ -1,7 +1,5 @@
 package fi.vm.sade.ataru
 
-import com.fasterxml.jackson.annotation.JsonProperty
-
 import java.time.Instant
 import java.util.concurrent.TimeUnit
 import fi.vm.sade.hakemuseditori.auditlog.{Audit, ShowHakemus}
@@ -24,7 +22,8 @@ import org.http4s.{Request, Uri}
 import org.http4s.Method.GET
 import org.http4s.client.blaze
 import org.joda.time.LocalDateTime
-import org.json4s.DefaultFormats
+import org.json4s.FieldSerializer.{renameFrom, renameTo}
+import org.json4s.{DefaultFormats, FieldSerializer}
 import org.json4s.jackson.JsonMethods
 import org.json4s.jackson.JsonMethods.parse
 import scalaz.concurrent.Task
@@ -38,7 +37,7 @@ case class AtaruApplication(oid: String,
                             haku: String,
                             hakukohteet: List[String],
                             submitted: String,
-                            @JsonProperty("form_name") formName: Map[String, String])
+                            formName: Map[String, String])
 
 trait AtaruServiceComponent  {
   this: LomakeRepositoryComponent
@@ -220,7 +219,10 @@ trait AtaruServiceComponent  {
       "ring-session"
     )
 
-    implicit private val formats = DefaultFormats
+    implicit private val formats = DefaultFormats +
+      FieldSerializer[AtaruApplication](
+        renameTo("formName", "form_name"), renameFrom("form_name", "formName")
+      )
 
     def getApplications(personOid: String): List[AtaruApplication] = {
       Uri.fromString(OphUrlProperties.url("ataru-service.applications", personOid))
