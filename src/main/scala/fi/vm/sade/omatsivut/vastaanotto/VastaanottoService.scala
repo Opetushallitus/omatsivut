@@ -25,7 +25,7 @@ trait VastaanottoComponent {
   class VastaanottoService()(implicit language: Language) extends JsonFormats {
 
     def vastaanota(request: HttpServletRequest, hakemusOid: String, hakukohdeOid: String, henkiloOid: String, vastaanotto: Vastaanotto, hakemus: HakemusInfo): ActionResult = {
-      val hakuOid: String = hakemus.hakemus.haku.oid
+      val hakuOid: String = hakemus.hakemus.haku.get.oid
       val email: Option[String] = hakemus.hakemus.email
       val henkiloOidHakemukselta = hakemus.hakemus.personOid
       if (!henkiloOid.equals(henkiloOidHakemukselta)) {
