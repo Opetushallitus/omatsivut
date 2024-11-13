@@ -34,7 +34,7 @@ import scala.util.Try
 case class AtaruApplication(oid: String,
                             secret: String,
                             email: String,
-                            haku: String,
+                            haku: Option[String],
                             hakukohteet: List[String],
                             submitted: String,
                             formName: Map[String, String])
@@ -61,14 +61,14 @@ trait AtaruServiceComponent  {
       getApplications(personOid)
         .map(a => (
           a,
-          tarjontaService.haku(a.haku, language),
+          a.haku.flatMap(tarjontaService.haku(_, language)),
           getHakukohteet(a.hakukohteet, language),
-          tuloskirjeService.getTuloskirjeInfo(request, a.haku, a.oid, AccessibleHtml)
+          a.haku.flatMap(tuloskirjeService.getTuloskirjeInfo(request, _, a.oid, AccessibleHtml))
         ))
         .collect {
           case (a, Some(haku), Some(hakukohteet), tuloskirje) =>
-            val valintatulos = Try(if (valintatulosFetchStrategy.ataru(haku, henkilo, a)) {
-              valintatulosService.getValintatulos(a.oid, a.haku)
+            val valintatulos = Try(if (a.haku.isDefined && valintatulosFetchStrategy.ataru(haku, henkilo, a)) {
+              valintatulosService.getValintatulos(a.oid, a.haku.get)
             } else {
               None
             })
