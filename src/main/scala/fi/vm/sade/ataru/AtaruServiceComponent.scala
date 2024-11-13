@@ -192,7 +192,7 @@ trait AtaruServiceComponent  {
   class StubbedAtaruService extends AtaruServiceCommons {
     implicit private val formats = DefaultFormats +
       FieldSerializer[AtaruApplication](
-        renameTo("formName", "form_name"), renameFrom("form_name", "formName")
+        renameTo("formName", "form-name"), renameFrom("form-name", "formName")
       )
 
     def getApplications(personOid: String): List[AtaruApplication] = {
@@ -224,7 +224,7 @@ trait AtaruServiceComponent  {
 
     implicit private val formats = DefaultFormats +
       FieldSerializer[AtaruApplication](
-        renameTo("formName", "form_name"), renameFrom("form_name", "formName")
+        renameTo("formName", "form-name"), renameFrom("form-name", "formName")
       )
 
     def getApplications(personOid: String): List[AtaruApplication] = {
