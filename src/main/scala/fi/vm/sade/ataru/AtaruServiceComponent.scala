@@ -108,7 +108,7 @@ trait AtaruServiceComponent  {
               hakemusSource = "Ataru",
               previewUrl = Some(OphUrlProperties.url("ataru.applications.modify", a.secret))
             )
-          case (a, None, None, tuloskirje) =>
+          case (a, None, _, tuloskirje) =>
             val hakemus = Hakemus(
               oid = a.oid,
               personOid = personOid,
