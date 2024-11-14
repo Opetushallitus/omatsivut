@@ -37,7 +37,7 @@ case class AtaruApplication(oid: String,
                             haku: Option[String],
                             hakukohteet: List[String],
                             submitted: String,
-                            formName: Map[String, String])
+                            formName: Option[Map[String, String]])
 
 trait AtaruServiceComponent  {
   this: LomakeRepositoryComponent
@@ -57,6 +57,12 @@ trait AtaruServiceComponent  {
                          language: Language): List[HakemusInfo] = {
       val now = new LocalDateTime().toDate.getTime
       val henkilo = oppijanumerorekisteriService.henkilo(personOid)
+
+      def translate(name: Map[String,String]): Option[String] =
+        List(language.toString, "fi", "en", "sv")
+          .map(name.get)
+          .find(_.isDefined)
+          .flatten
 
       getApplications(personOid)
         .map(a => (
@@ -96,7 +102,7 @@ trait AtaruServiceComponent  {
               requiredPaymentState = None,
               notifications = Map(),
               oppijanumero = henkilo.oppijanumero.getOrElse(personOid),
-              formName = None
+              formName = translate(a.formName.getOrElse(Map()))
             )
             Audit.oppija.log(ShowHakemus(request, hakemus.personOid, hakemus.oid, haku.oid))
             HakemusInfo(
@@ -125,7 +131,7 @@ trait AtaruServiceComponent  {
               email = Some(a.email),
               requiresAdditionalInfo = false,
               hasForm = true,
-              formName = a.formName.get(language.toString),
+              formName = translate(a.formName.getOrElse(Map())),
               requiredPaymentState = None,
               notifications = Map(),
               oppijanumero = henkilo.oppijanumero.getOrElse(personOid)

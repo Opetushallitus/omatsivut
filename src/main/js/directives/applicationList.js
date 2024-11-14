@@ -27,6 +27,7 @@ export default ["restResources", function (restResources) {
           application.isHakutoiveidenMuokkaus = false;
           application.migriJwt = data.migriJwt
           application.migriUrl = data.migriUrl
+          application.hasHaku = !_.isEmpty(application.haku)
           return application;
         });
         if($scope.applications.length > 0) {
