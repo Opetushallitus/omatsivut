@@ -32,6 +32,7 @@ export default class Hakemus {
     this.hakemusSource = json.hakemusSource;
     this.previewUrl = json.previewUrl;
     this.formName = json.hakemus.formName;
+    this.hasHaku = !_.isEmpty(json.hakemus.haku);
   }
 
   removePreference(index) {
