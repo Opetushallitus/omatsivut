@@ -73,7 +73,7 @@ trait AtaruServiceComponent  {
         ))
         .collect {
           case (a, Some(haku), Some(hakukohteet), tuloskirje) =>
-            val valintatulos = Try(if (a.haku.isDefined && valintatulosFetchStrategy.ataru(haku, henkilo, a)) {
+            val valintatulos = Try(if (valintatulosFetchStrategy.ataru(haku, henkilo, a)) {
               valintatulosService.getValintatulos(a.oid, a.haku.get)
             } else {
               None
