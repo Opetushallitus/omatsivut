@@ -61,26 +61,13 @@ trait HakemusApiSpecification extends ScalatraTestSupport with Logging {
     }
   }
 
-  def setHakukierrosPaattyy(hakuOid: String, daysFromNow: Long)(implicit personOid: PersonOid) = {
-      put("util/fixtures/haku/" + hakuOid + "/overrideHakuKierrosPaattyy/" + (new Date().getTime + daysFromNow*24*60*60*1000), Iterable.empty) { }
-  }
-
-  def resetHakukierrosPaattyy(applicationId: String)(implicit personOid: PersonOid) = {
-    withApplicationsResponse { resp =>
-      val hakuOid = resp.applications.find(_.hakemus.oid == applicationId).map(_.hakemus.haku.oid).get
-      put("util/fixtures/haku/" + hakuOid + "/resetHakuPaattyy") {}
-    }
-  }
-
   def withSavedApplication[T](hakemus: Hakemus)(f: Application => T): T = withSavedApplication(hakemus.oid)(f)
 
   def withSavedApplication[T](hakemusOid: String)(f: Application => T): T = {
     val application = JsonFixtureMaps.findByKey[Application]("/hakemuseditorimockdata/applications-hakuapp.json", hakemusOid).get
     f(application)
   }
-  def hasSameHakuToiveet(hakemus1: Hakemus, hakemus2: Hakemus) = {
-    hakemus1.hakutoiveet.equals(hakemus2.hakutoiveet)
-  }
+
 }
 
 class HakemuksenTilaSerializer extends Serializer[HakemuksenTila] {

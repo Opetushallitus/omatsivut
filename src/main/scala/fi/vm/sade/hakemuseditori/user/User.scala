@@ -14,11 +14,3 @@ case class Oppija(val oid: String) extends User {
     }
   }
 }
-
-case class Virkailija(val oid: String) extends User {
-  override def toString = "virkailija " + oid
-
-  override def checkAccessToUserData(personOid: String): Unit = {
-
-  }
-}

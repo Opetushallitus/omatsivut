@@ -1,6 +1,5 @@
 package fi.vm.sade.hakemuseditori.lomake.domain
 
-import fi.vm.sade.hakemuseditori.hakemus.hakuapp.domain.elements.Notification.NotificationType
 
 object QuestionNode {
   def flatten(qs: List[QuestionNode]): List[QuestionLeafNode] = {
@@ -82,8 +81,6 @@ trait MultiValued extends WithOptions {
 }
 
 case class Label(id: QuestionId, title: String) extends TextNode
-
-case class Notification(id: QuestionId, title: String, notificationType: NotificationType) extends TextNode
 
 case class Text(id: QuestionId, title: String, help: String, verboseHelp: String, required: Boolean, maxlength: Int, questionType: String = "Text") extends Question
 

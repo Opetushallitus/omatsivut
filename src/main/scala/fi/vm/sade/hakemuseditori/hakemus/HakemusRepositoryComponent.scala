@@ -19,6 +19,9 @@ import org.json4s.jackson.Serialization.{read}
 import javax.servlet.http.HttpServletRequest
 import scala.util.{Failure, Success, Try}
 
+/**
+ * Vanhan haku-appin hakemukset
+ */
 trait HakemusRepositoryComponent {
   this: HakemusConverterComponent
     with SpringContextComponent with TarjontaComponent with OhjausparametritComponent with TuloskirjeComponent
@@ -121,14 +124,14 @@ trait HakemusRepositoryComponent {
   class StubbedHakemusFinder extends HakemusFinder with Logging {
     implicit private val formats = DefaultFormats
     def findByPersonOid(personOid: String): List[Application] = {
-      val text = io.Source.fromInputStream(getClass.getResourceAsStream("/hakemuseditorimockdata/applications-hakuapp.json")).mkString
+      val text = scala.io.Source.fromInputStream(getClass.getResourceAsStream("/hakemuseditorimockdata/applications-hakuapp.json")).mkString
       val parsed = parse(text, useBigDecimalForDouble = false)
       val mockApplications = parse(text, useBigDecimalForDouble = false).extract[List[Application]]
       mockApplications
     }
 
     def findByOid(oid: String): Option[Application] = {
-      val text = io.Source.fromInputStream(getClass.getResourceAsStream("/hakemuseditorimockdata/applications-hakuapp.json")).mkString
+      val text = scala.io.Source.fromInputStream(getClass.getResourceAsStream("/hakemuseditorimockdata/applications-hakuapp.json")).mkString
       val mockApplications = parse(text, useBigDecimalForDouble = false).extract[List[Application]]
       val application = mockApplications.find(a => a.getOid.equals(oid))
       application

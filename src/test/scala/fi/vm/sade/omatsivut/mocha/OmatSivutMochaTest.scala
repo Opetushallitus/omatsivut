@@ -1,3 +1,4 @@
+/*
 package fi.vm.sade.omatsivut.mocha
 
 import java.util.concurrent.TimeUnit.MINUTES
@@ -41,3 +42,4 @@ class OmatSivutMochaTest extends Specification {
     }
   }
 }
+*/

@@ -1,7 +1,6 @@
 package fi.vm.sade.hakemuseditori.oppijanumerorekisteri
 
 import java.util.concurrent.TimeUnit
-
 import fi.vm.sade.groupemailer.Json4sHttp4s
 import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.omatsivut.OphUrlProperties
@@ -15,9 +14,8 @@ import org.http4s._
 import org.http4s.client.blaze
 import org.http4s.headers.Accept
 import org.json4s
-import org.json4s.JsonAST.{JNull, JObject, JString, JValue}
+import org.json4s.{DefaultFormats, Extraction, JField, JNull, JObject, JString, JValue, MappingException, Reader, Writer}
 import org.json4s.jackson.JsonMethods
-import org.json4s.{DefaultFormats, Reader, Writer, _}
 import scalaz.concurrent.Task
 
 import scala.concurrent.duration.Duration
@@ -27,13 +25,20 @@ case class Henkilo(oid: String, hetu: Option[String], oppijanumero: Option[Strin
 object Henkilo {
   implicit private val formats = DefaultFormats
   val henkiloReader = new Reader[Henkilo] {
-    override def read(value: JValue): Henkilo = {
-      Henkilo(
-        (value \ "oidHenkilo").extract[String],
-        (value \ "hetu").extractOpt[String],
-        (value \ "oppijanumero").extractOpt[String]
-      )
+
+    override def readEither(value: JValue): Either[MappingException, Henkilo] = value match {
+      case JObject(JField("oidHenkilo", JString(oidHenkilo)) :: JField("hetu", JString(hetu)) :: JField("oppijanumero", JString(oppijanumero)) :: Nil) =>
+        Right(Henkilo(oidHenkilo, Some(hetu), Some(oppijanumero)))
+      case m =>
+        Left(new MappingException(s"Unknown json: $m"))
     }
+//    override def read(value: JValue): Henkilo = {
+//      Henkilo(
+//        (value \ "oidHenkilo").extract[String],
+//        (value \ "hetu").extractOpt[String],
+//        (value \ "oppijanumero").extractOpt[String]
+//      )
+//    }
   }
   val henkiloWriter = new Writer[Henkilo] {
     override def write(h: Henkilo): JValue = {

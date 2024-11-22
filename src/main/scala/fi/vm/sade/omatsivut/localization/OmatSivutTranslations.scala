@@ -16,7 +16,7 @@ object OmatSivutTranslations extends Translations with JsonFormats {
 
   private def loadTranslation(lang: String) = {
     val fileName: String = "/translations/" + lang + ".json"
-    val text = io.Source.fromInputStream(getClass.getResourceAsStream(fileName)).mkString
+    val text = scala.io.Source.fromInputStream(getClass.getResourceAsStream(fileName)).mkString
     parse(text, useBigDecimalForDouble = false)
   }
 

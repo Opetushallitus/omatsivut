@@ -5,20 +5,10 @@ import fi.vm.sade.utils.slf4j.Logging
 
 object Audit {
   val oppija: OppijaAuditLogger = new OppijaAuditLogger
-  val virkailija: VirkailijaAuditLogger = new VirkailijaAuditLogger
-  val api: ApiAuditLogger = new ApiAuditLogger
 }
 
 class OppijaAuditLogger(applicationType: ApplicationType) extends AuditLogger(applicationType) {
   def this() = this(ApplicationType.OPPIJA)
-}
-
-class VirkailijaAuditLogger(applicationType: ApplicationType) extends AuditLogger(applicationType) {
-  def this() = this(ApplicationType.VIRKAILIJA)
-}
-
-class ApiAuditLogger(applicationType: ApplicationType) extends AuditLogger(applicationType) {
-  def this() = this(ApplicationType.BACKEND)
 }
 
 class AuditLogger(val omatSivutLogger: OmatSivutLogger, val serviceName: String, val applicationType: ApplicationType) extends Logging {

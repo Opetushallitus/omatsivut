@@ -13,8 +13,6 @@ class ApplicationSerializer extends CustomSerializer[Application](ser = format =
     JField("applicationSystemId", JString(applicationSystemId)) ::
     JField("personOid", JString(personOid)) ::
     JField("state", JString(state)) ::
-    JField("received", JInt(receivedMillis)) ::
-    JField("updated", JInt(updatedMillis)) ::
     JField("answers", JObject(answers)) :: Nil
   ) =>
     val answersMap: java.util.Map[String, java.util.Map[String, String]] = answers.map {
@@ -23,7 +21,7 @@ class ApplicationSerializer extends CustomSerializer[Application](ser = format =
           case JField(answerKey, JString(answerValue)) => answerKey -> answerValue
         }.toMap.asJava
     }.toMap.asJava
-    new Application(oid, state, applicationSystemId, personOid, new Date(receivedMillis.toLong), new Date(updatedMillis.toLong), answersMap)
+    new Application(oid, state, applicationSystemId, personOid, answersMap)
 }, {
   case application: Application =>
     val answers = application.getAnswers.asScala.map {
@@ -37,8 +35,6 @@ class ApplicationSerializer extends CustomSerializer[Application](ser = format =
       JField("applicationSystemId", JString(application.getApplicationSystemId())),
       JField("personOid", JString(application.getPersonOid())),
       JField("state", JString(application.getState.toString())),
-      JField("received", JInt(application.getReceived.getTime)),
-      JField("updated", JInt(application.getUpdated.getTime)),
       JField("answers", JObject(answers))
     )
 }

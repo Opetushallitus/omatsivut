@@ -1,12 +1,13 @@
 package fi.vm.sade.hakemuseditori.hakemus.hakuapp.domain.elements;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.CompareToBuilder;
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonProperty;
 import org.jsoup.Jsoup;
 
+import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,7 +17,6 @@ import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.google.api.client.repackaged.com.google.common.base.Strings.isNullOrEmpty;
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.unmodifiableMap;
@@ -86,6 +86,11 @@ public class I18nText implements Serializable {
                 .append(orderByLanguages.applyAsInt(o1.getKey()),
                     orderByLanguages.applyAsInt(o2.getKey())).build()
         ).map(e -> e.getValue()).findFirst().orElse("");
+    }
+
+    // kopioitu com.google.api.client.repackaged.com.google.common.base.Strings.isNullOrEmpty;
+    public static boolean isNullOrEmpty(@Nullable String string) {
+        return string == null || string.length() == 0;
     }
 
     private ToIntFunction<String> orderBySpecificLanguage(String language) {

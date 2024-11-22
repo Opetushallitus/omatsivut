@@ -52,5 +52,4 @@ log4j.logger.javax.sql=ERROR
 # cas session + singlelogout tracing
 log4j.logger.org.jasig.cas.client.session=INFO
 
-#Disable haku auditlogger (by dependency)
-log4j.logger.fi.vm.sade.haku = OFF
+
