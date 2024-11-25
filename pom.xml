@@ -43,11 +43,6 @@
         </dependency>
         <dependency>
             <groupId>fi.vm.sade.java-utils</groupId>
-            <artifactId>java-legacy-cas</artifactId>
-            <version>0.5.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>fi.vm.sade.java-utils</groupId>
             <artifactId>opintopolku-jetty</artifactId>
             <version>0.1.0-SNAPSHOT</version>
         </dependency>
@@ -163,16 +158,6 @@
         </dependency>
         <dependency>
             <groupId>fi.vm.sade</groupId>
-            <artifactId>scala-utils_2.11</artifactId>
-            <version>1.3.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>fi.vm.sade</groupId>
-            <artifactId>scala-mongo_2.11</artifactId>
-            <version>1.1.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>fi.vm.sade</groupId>
             <artifactId>scala-tcp_2.11</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
@@ -262,9 +247,9 @@
             <version>15.0</version>
         </dependency>
         <dependency>
-            <groupId>de.flapdoodle.embed</groupId>
-            <artifactId>de.flapdoodle.embed.mongo</artifactId>
-            <version>2.2.0</version>
+            <groupId>de.svenkubiak</groupId>
+            <artifactId>embedded-mongodb</artifactId>
+            <version>5.1.1</version>
         </dependency>
         <dependency>
             <groupId>org.mongodb</groupId>

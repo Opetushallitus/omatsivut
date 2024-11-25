@@ -2,10 +2,10 @@ package fi.vm.sade.omatsivut.config
 
 import com.typesafe.config.Config
 import fi.vm.sade.omatsivut.OphUrlProperties
+import fi.vm.sade.omatsivut.util.{EmbeddedMongo, MongoServer}
 import fi.vm.sade.utils.config.{ApplicationSettingsLoader, ConfigTemplateProcessor}
-import fi.vm.sade.utils.mongo.{EmbeddedMongo, MongoServer}
 import fi.vm.sade.utils.slf4j.Logging
-import fi.vm.sade.utils.tcp.{PortFromSystemPropertyOrFindFree}
+import fi.vm.sade.utils.tcp.PortFromSystemPropertyOrFindFree
 
 object AppConfig extends Logging {
 
