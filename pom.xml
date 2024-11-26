@@ -146,6 +146,18 @@
             <version>${postgresql.version}</version>
         </dependency>
         <dependency>
+            <groupId>fi.vm.sade.java-utils</groupId>
+            <artifactId>java-cas</artifactId>
+            <version>1.2.2-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <!-- Jos tämän päivittää >=4.5.8, niin osa KeywordSpec-testeistä alkaa feilata.
+                 Scalatran params() ei jostain syystä osaa uudemmilla versioilla lukea ääkkösiä oikein URL:stä -->
+            <version>4.5.7</version>
+        </dependency>
+        <dependency>
             <groupId>fi.vm.sade</groupId>
             <artifactId>scala-cas_2.11</artifactId>
             <version>2.2.3-SNAPSHOT</version>

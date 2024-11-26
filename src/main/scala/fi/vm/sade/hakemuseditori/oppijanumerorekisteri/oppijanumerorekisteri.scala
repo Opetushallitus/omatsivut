@@ -1,54 +1,23 @@
 package fi.vm.sade.hakemuseditori.oppijanumerorekisteri
 
 import java.util.concurrent.TimeUnit
-import fi.vm.sade.groupemailer.Json4sHttp4s
 import fi.vm.sade.hakemuseditori.json.JsonFormats
+import fi.vm.sade.javautils.nio.cas.{CasClient, CasClientBuilder, CasConfig}
 import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
-import fi.vm.sade.utils.cas.{CasAuthenticatingClient, CasClient, CasParams}
 import fi.vm.sade.utils.slf4j.Logging
-import org.http4s.MediaType.`application/json`
-import org.http4s.Method.GET
+import org.asynchttpclient.RequestBuilder
 import org.http4s._
-import org.http4s.client.blaze
-import org.http4s.headers.Accept
 import org.json4s
-import org.json4s.{DefaultFormats, Extraction, JField, JNull, JObject, JString, JValue, MappingException, Reader, Writer}
-import org.json4s.jackson.JsonMethods
-import scalaz.concurrent.Task
+import org.json4s.{DefaultFormats, Extraction}
+import scala.concurrent.{Await, Future}
+import scala.concurrent.ExecutionContext.Implicits.global
+import org.json4s.jackson.JsonMethods._
 
 import scala.concurrent.duration.Duration
 
 case class Henkilo(oid: String, hetu: Option[String], oppijanumero: Option[String])
-
-object Henkilo {
-  implicit private val formats = DefaultFormats
-  val henkiloReader = new Reader[Henkilo] {
-
-//    override def readEither(value: JValue): Either[MappingException, Henkilo] = value match {
-//      case JObject(JField("oidHenkilo", JString(oidHenkilo)) :: JField("hetu", JString(hetu)) :: JField("oppijanumero", JString(oppijanumero)) :: Nil) =>
-//        Right(Henkilo(oidHenkilo, Some(hetu), Some(oppijanumero)))
-//      case m =>
-//        Left(new MappingException(s"Unknown json: $m"))
-//    }
-    override def read(value: JValue): Henkilo = {
-      Henkilo(
-        (value \ "oidHenkilo").extract[String],
-        (value \ "hetu").extractOpt[String],
-        (value \ "oppijanumero").extractOpt[String]
-      )
-    }
-  }
-  val henkiloWriter = new Writer[Henkilo] {
-    override def write(h: Henkilo): JValue = {
-      JObject(
-        "oidHenkilo" -> JString(h.oid.toString),
-        "hetu" -> h.hetu.map(JString).getOrElse(JNull)
-      )
-    }
-  }
-}
 
 trait OppijanumerorekisteriService {
   def henkilo(personOid: String): Henkilo
@@ -66,73 +35,66 @@ trait OppijanumerorekisteriComponent {
     override def fetchAllDuplicateOids(oppijanumero: String): Set[String] = Set(oppijanumero)
   }
 
-  class RemoteOppijanumerorekisteriService(config: AppConfig, casVirkailijaClient: CasClient) extends OppijanumerorekisteriService with JsonFormats with Logging {
-    private val casParams = CasParams(
-      OphUrlProperties.url("url-oppijanumerorekisteri-service"),
+  class RemoteOppijanumerorekisteriService(config: AppConfig) extends OppijanumerorekisteriService with JsonFormats with Logging {
+
+    val casConfig: CasConfig = new CasConfig.CasConfigBuilder(
       config.settings.securitySettings.casVirkailijaUsername,
-      config.settings.securitySettings.casVirkailijaPassword
-    )
-    private val httpClient = CasAuthenticatingClient(
-      casVirkailijaClient,
-      casParams,
-      blaze.defaultClient,
+      config.settings.securitySettings.casVirkailijaPassword,
+      OphUrlProperties.url("cas.url"),
+      OphUrlProperties.url("url-oppijanumerorekisteri-service"),
       AppConfig.callerId,
-      "JSESSIONID"
-    )
+      AppConfig.callerId,
+    "/j_spring_cas_security_check")
+    .setJsessionName("JSESSIONID").build
+
+    val casClient: CasClient = CasClientBuilder.build(casConfig)
     private val callerIdHeader = Header("Caller-Id", AppConfig.callerId)
     implicit private val formats = DefaultFormats
-    implicit private val henkiloReader = Henkilo.henkiloReader
 
     override def henkilo(personOid: String): Henkilo = {
-      Uri.fromString(OphUrlProperties.url("oppijanumerorekisteri-service.henkiloByOid", personOid))
-        .fold(Task.fail, uri => {
-          httpClient.fetch(Request(method = GET, uri = uri)) {
-            case r if r.status.code == 200 => r.as[String].map(s => JsonMethods.parse(s).as[Henkilo])
-            case r => Task.fail(new RuntimeException(s"Failed to get henkilö for $personOid: ${r.toString()}"))
-          }
-        }).attemptRunFor(Duration(10, TimeUnit.SECONDS)).fold(throw _, x => x)
+      val oppijanumerorekisteriUrl = OphUrlProperties.url("oppijanumerorekisteri-service.henkiloByOid", personOid)
+
+      val request = new RequestBuilder().setMethod("GET").setUrl(oppijanumerorekisteriUrl).build
+      val future = Future {
+        casClient.executeBlocking(request)
+      }
+      val result = future.map {
+        case r if r.getStatusCode == 200 =>
+          parse(r.getResponseBodyAsStream()).extract[Henkilo]
+        case r =>
+          throw new RuntimeException(new RuntimeException(s"Failed to get henkilö for $personOid: ${r.toString()}"))
+      }
+      Await.result(result, Duration(10, TimeUnit.SECONDS))
     }
 
     private def uriFromString(url: String): Uri = {
       Uri.fromString(url).toOption.get
-    }
-    private def runHttp[ResultType](request: Request)(decoder: (Int, String, Request) => ResultType): Task[ResultType] = {
-      httpClient.fetch(request)(r => r.as[String].map(body => decoder(r.status.code, body, request)))
     }
 
     override def fetchAllDuplicateOids(oppijanumero: String): Set[String] = {
       logger.debug(s"Fetching duplicate oids for oppijanumero $oppijanumero")
       val timeout = Duration(30, TimeUnit.SECONDS)
 
+      val url = OphUrlProperties.url("oppijanumerorekisteri-service.duplicatesByPersonOids")
       val body: json4s.JValue = Extraction.decompose(Map("henkiloOids" -> List(oppijanumero)))
-      val duplicateHenkilosRequest = Request(
-        method = Method.POST,
-        uri = uriFromString(OphUrlProperties.url("oppijanumerorekisteri-service.duplicatesByPersonOids")),
-        headers = Headers(callerIdHeader, `Accept`(`application/json`))
-      ).withBody(body)(Json4sHttp4s.json4sEncoderOf)
-
-      val henkiloviitteet: Seq[Henkiloviite] = httpClient.fetch(duplicateHenkilosRequest)((r: Response) =>
-        if (r.status == Status.Ok) {
-          r.as[String].map(parseHenkiloviiteResponse(_, oppijanumero))
-        } else {
-          logger.error("Failed to fetch henkiloviite data for user oid {}, response was {}, {}", oppijanumero, r.status, r.body)
-          Task.now(Nil)
-        }).runFor(timeout)
+      val bodyString = compact(render(body))
+      val request = new RequestBuilder().setMethod("POST").setUrl(url).setBody(bodyString).build
+      val future = Future {
+        casClient.executeBlocking(request)
+      }
+      val result = future.map {
+        case r if r.getStatusCode == 200 =>
+          parse(r.getResponseBodyAsStream()).extract[Seq[Henkiloviite]]
+        case r =>
+          logger.error(s"Failed to fetch henkiloviite data for user oid $oppijanumero, response was ${r.getStatusCode}, ${r.getResponseBody}")
+          throw new RuntimeException(s"Failed to fetch henkiloviite data for user oid $oppijanumero: $r")
+      }
+      val henkiloviitteet = Await.result(result, timeout)
       val allHenkiloOids: Set[String] = henkiloviitteet.flatMap(viite => Set(viite.henkiloOid, viite.masterOid)).++(Seq(oppijanumero)).toSet
       if (allHenkiloOids.size > 1) {
         logger.info(s"Got ${allHenkiloOids.size} in total for oppijanumero $oppijanumero : $allHenkiloOids")
       }
       allHenkiloOids
-    }
-
-    private def parseHenkiloviiteResponse(responseBody: String, oppijanumero: String): Seq[Henkiloviite] = {
-      try {
-        JsonMethods.parse(responseBody).extract[Seq[Henkiloviite]]
-      } catch {
-        case e: Exception =>
-          logger.error(s"Problem when parsing Henkiloviite list for $oppijanumero from response '$responseBody'", e)
-          throw e
-      }
     }
   }
 }

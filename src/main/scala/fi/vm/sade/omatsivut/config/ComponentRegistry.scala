@@ -100,7 +100,7 @@ class ComponentRegistry(val config: AppConfig)
 
   private def configureOppijanumerorekisteriService: OppijanumerorekisteriService = config match {
     case _: StubbedExternalDeps => new StubbedOppijanumerorekisteriService
-    case _ => new RemoteOppijanumerorekisteriService(config, casVirkailijaClient)
+    case _ => new RemoteOppijanumerorekisteriService(config)
   }
 
   private def configureAuthenticationInfoService: AuthenticationInfoService = config match {
