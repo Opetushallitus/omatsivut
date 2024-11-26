@@ -13,6 +13,9 @@
     </organization>
     <properties>
 
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+
         <valinta-tulos-service.version>7.0.1-SNAPSHOT</valinta-tulos-service.version>
         <tarjonta-api.version>2016-07-SNAPSHOT</tarjonta-api.version>
         <jetty.version>9.4.15.v20190215</jetty.version>
