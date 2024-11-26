@@ -8,7 +8,7 @@ import fi.vm.sade.omatsivut.security._
 import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
 import fi.vm.sade.utils.cas.{CasClient, CasLogout}
 import fi.vm.sade.utils.cas.CasClient.{OppijaAttributes, ServiceTicket}
-import fi.vm.sade.utils.slf4j.Logging
+import fi.vm.sade.omatsivut.util.Logging
 import org.scalatra.{BadRequest, Cookie, CookieOptions}
 import scalaz.concurrent.Task
 

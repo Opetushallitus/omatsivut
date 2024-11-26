@@ -8,8 +8,7 @@ import fi.vm.sade.hakemuseditori.json.{ApplicationSerializer, JsonFormats}
 import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.omatsivut.fixtures.hakemus.ApplicationFixtureImporter
 import fi.vm.sade.omatsivut.{PersonOid, ScalatraTestSupport}
-import fi.vm.sade.utils.json4s.GenericJsonFormats
-import fi.vm.sade.utils.slf4j.Logging
+import fi.vm.sade.omatsivut.util.{GenericJsonFormats, Logging}
 import org.json4s.JsonAST.JObject
 import org.json4s._
 import org.json4s.jackson.Serialization

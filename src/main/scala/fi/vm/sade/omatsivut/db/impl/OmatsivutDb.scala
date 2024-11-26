@@ -1,7 +1,7 @@
 package fi.vm.sade.omatsivut.db.impl
 
 import com.zaxxer.hikari.{HikariConfig, HikariDataSource}
-import fi.vm.sade.utils.Timer
+import fi.vm.sade.omatsivut.util.Timer
 import org.apache.commons.lang3.builder.ToStringBuilder
 import org.flywaydb.core.Flyway
 import slick.jdbc.PostgresProfile.api._

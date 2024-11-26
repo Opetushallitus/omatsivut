@@ -3,7 +3,6 @@ package fi.vm.sade.omatsivut.config
 import fi.vm.sade.omatsivut.OphUrlProperties
 import com.github.kagkarlsson.scheduler.Scheduler
 import fi.vm.sade.ataru.{AtaruService, AtaruServiceComponent}
-import fi.vm.sade.groupemailer.{GroupEmailComponent, GroupEmailService}
 import fi.vm.sade.hakemuseditori.domain.Language.Language
 import fi.vm.sade.hakemuseditori.hakemus._
 import fi.vm.sade.hakemuseditori.localization.TranslationsComponent
@@ -32,7 +31,6 @@ import scala.collection.JavaConverters._
 class ComponentRegistry(val config: AppConfig)
   extends SpringContextComponent with
           TranslationsComponent with
-          GroupEmailComponent with
           OhjausparametritComponent with
           HakemusRepositoryComponent with
           ValintatulosServiceComponent with
@@ -60,11 +58,6 @@ class ComponentRegistry(val config: AppConfig)
   private def configureOhjausparametritService: OhjausparametritService = config match {
     case _: StubbedExternalDeps => new StubbedOhjausparametritService()
     case _ => CachedRemoteOhjausparametritService(OphUrlProperties.url("ohjausparametrit-service.kaikki"))
-  }
-
-  private def configureGroupEmailService: GroupEmailService = config match {
-    case x: StubbedExternalDeps => new FakeGroupEmailService
-    case _ => new RemoteGroupEmailService(config.settings, AppConfig.callerId)
   }
 
   private def configureValintatulosService: ValintatulosService = config match {
@@ -145,7 +138,6 @@ class ComponentRegistry(val config: AppConfig)
   val hakemusConverter: HakemusConverter = new HakemusConverter
   val tarjontaService: TarjontaService = configureTarjontaService
   val tuloskirjeService: TuloskirjeService = configureTuloskirjeService
-  val groupEmailService: GroupEmailService = configureGroupEmailService
   val oppijanTunnistusService = configureOppijanTunnistusService
   val ataruService: AtaruService = configureAtaruService
   val hakemusRepository: HakemusFinder = configureHakemusRepository

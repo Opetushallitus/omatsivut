@@ -4,7 +4,7 @@ import java.net.URLEncoder
 import fi.vm.sade.hakemuseditori.domain.Language
 import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.omatsivut.config.AppConfig
-import fi.vm.sade.utils.slf4j.Logging
+import fi.vm.sade.omatsivut.util.Logging
 
 import java.nio.charset.Charset
 

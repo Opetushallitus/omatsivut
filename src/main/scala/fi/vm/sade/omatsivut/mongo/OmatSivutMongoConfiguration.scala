@@ -2,7 +2,7 @@ package fi.vm.sade.omatsivut.mongo
 
 import com.mongodb.ConnectionString
 import com.mongodb.client.{MongoClient, MongoClients}
-import fi.vm.sade.utils.slf4j.Logging
+import fi.vm.sade.omatsivut.util.Logging
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.{Bean, Configuration}
 import org.springframework.data.mongodb.core.MongoTemplate

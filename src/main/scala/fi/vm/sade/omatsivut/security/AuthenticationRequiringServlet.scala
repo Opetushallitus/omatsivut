@@ -4,7 +4,7 @@ import java.util.UUID
 
 import fi.vm.sade.omatsivut.security.SessionInfoRetriever._
 import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
-import fi.vm.sade.utils.slf4j.Logging
+import fi.vm.sade.omatsivut.util.Logging
 import org.json4s.JsonDSL._
 import org.json4s.jackson.JsonMethods._
 import org.scalatra.{BadRequest, NotFound, Unauthorized}

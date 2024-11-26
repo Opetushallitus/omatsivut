@@ -2,9 +2,8 @@ package fi.vm.sade.hakemuseditori.http
 
 import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.omatsivut.config.AppConfig
-import fi.vm.sade.utils.Timer._
-import fi.vm.sade.utils.http.DefaultHttpClient
-import fi.vm.sade.utils.slf4j.Logging
+import fi.vm.sade.omatsivut.util.{DefaultHttpClient, Logging}
+import fi.vm.sade.omatsivut.util.Timer.timed
 import org.json4s.JsonAST.JValue
 import org.json4s.jackson.JsonMethods._
 

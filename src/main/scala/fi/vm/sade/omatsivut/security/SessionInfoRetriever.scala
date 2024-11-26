@@ -3,7 +3,7 @@ package fi.vm.sade.omatsivut.security
 import java.util.UUID
 
 import javax.servlet.http.{Cookie, HttpServletRequest}
-import fi.vm.sade.utils.slf4j.Logging
+import fi.vm.sade.omatsivut.util.Logging
 
 object SessionInfoRetriever extends Logging with AttributeNames {
   def getSessionId(request: HttpServletRequest): Option[String] = {

@@ -15,7 +15,7 @@ import fi.vm.sade.hakemuseditori.user.User
 import fi.vm.sade.hakemuseditori.valintatulokset.{NoOpValintatulosService, ValintatulosService, ValintatulosServiceComponent}
 import fi.vm.sade.hakemuseditori.viestintapalvelu.{AccessibleHtml, Pdf, TuloskirjeComponent, TuloskirjeKind}
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
-import fi.vm.sade.utils.slf4j.Logging
+import fi.vm.sade.omatsivut.util.Logging
 
 import javax.servlet.http.HttpServletRequest
 import org.json4s.jackson.Serialization

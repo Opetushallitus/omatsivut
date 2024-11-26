@@ -3,7 +3,7 @@ package fi.vm.sade.hakemuseditori.hakemus
 import java.util.Date
 import fi.vm.sade.hakemuseditori.hakemus.ImmutableLegacyApplicationWrapper.LegacyApplicationAnswers
 import fi.vm.sade.hakemuseditori.hakemus.hakuapp.domain.{Application}
-import fi.vm.sade.utils.slf4j.Logging
+import fi.vm.sade.omatsivut.util.Logging
 
 import scala.collection.JavaConversions._
 

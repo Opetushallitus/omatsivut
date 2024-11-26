@@ -8,7 +8,6 @@ import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.utils.cas.{CasAuthenticatingClient, CasClient, CasParams}
-import fi.vm.sade.utils.http.{DefaultHttpClient, HttpClient}
 import org.http4s.Method.GET
 import org.http4s.{Request, Uri, client}
 import org.http4s.client.{Client, blaze}
@@ -67,7 +66,7 @@ class RemoteOppijanTunnistusService(httpClient: Client) extends OppijanTunnistus
   def validateToken(token: String): Try[OppijantunnistusMetadata] = {
     Try(Uri.fromString(OphUrlProperties.url("oppijan-tunnistus.verify", token))
       .fold(Task.fail, uri => {
-        httpClient.fetch(Request(method = GET, uri = uri)) {
+        blaze.defaultClient.fetch(Request(method = GET, uri = uri)) {
           case r if r.status.code == 200 =>
             r.as[String].map(s => JsonMethods.parse(s).extract[OppijanTunnistusVerification])
           case r => Task.fail(new RuntimeException(s"Error fetching oppijan-tunnistus. Token=$token, response code=${r.status.code}"))

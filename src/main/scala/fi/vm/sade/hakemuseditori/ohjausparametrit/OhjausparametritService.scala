@@ -1,12 +1,11 @@
 package fi.vm.sade.hakemuseditori.ohjausparametrit
 
 import fi.vm.sade.hakemuseditori.fixtures.JsonFixtureMaps
-import fi.vm.sade.utils.http.DefaultHttpClient
 import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.hakemuseditori.memoize.TTLOptionalMemoize
 import fi.vm.sade.hakemuseditori.ohjausparametrit.domain.{HaunAikataulu, HaunParametrit, TulostenJulkistus}
 import fi.vm.sade.omatsivut.config.AppConfig
-import fi.vm.sade.utils.slf4j.Logging
+import fi.vm.sade.omatsivut.util.{DefaultHttpClient, Logging}
 import org.json4s.JsonAST.JValue
 
 

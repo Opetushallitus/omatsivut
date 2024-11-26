@@ -5,7 +5,7 @@ import java.time.Instant
 import com.github.kagkarlsson.scheduler.task.{DeadExecutionHandler, Execution, ExecutionComplete, ExecutionContext, ExecutionOperations, TaskInstance, VoidExecutionHandler}
 import com.github.kagkarlsson.scheduler.task.helper.{RecurringTask, Tasks}
 import com.github.kagkarlsson.scheduler.task.schedule.{CronSchedule, Schedule}
-import fi.vm.sade.utils.slf4j.Logging
+import fi.vm.sade.omatsivut.util.Logging
 
 object SessionCleaner extends Logging {
 

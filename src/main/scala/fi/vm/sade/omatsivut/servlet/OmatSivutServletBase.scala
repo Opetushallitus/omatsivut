@@ -2,7 +2,7 @@ package fi.vm.sade.omatsivut.servlet
 
 import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.hakemuseditori.domain.Language
-import fi.vm.sade.utils.slf4j.Logging
+import fi.vm.sade.omatsivut.util.Logging
 import org.scalatra._
 
 import java.net.URL

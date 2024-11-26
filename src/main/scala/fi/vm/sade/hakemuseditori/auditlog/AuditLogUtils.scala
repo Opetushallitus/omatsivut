@@ -4,7 +4,7 @@ import java.net.InetAddress
 
 import fi.vm.sade.auditlog.User
 import javax.servlet.http.HttpServletRequest
-import fi.vm.sade.utils.slf4j.Logging
+import fi.vm.sade.omatsivut.util.Logging
 import org.ietf.jgss.Oid
 
 import fi.vm.sade.javautils.http.HttpServletRequestUtils.getRemoteAddress

@@ -4,7 +4,7 @@ import javax.servlet.http.{Cookie, HttpServletRequest, HttpServletResponse}
 
 import fi.vm.sade.hakemuseditori.domain.Language
 import fi.vm.sade.hakemuseditori.domain.Language.Language
-import fi.vm.sade.utils.slf4j.Logging
+import fi.vm.sade.omatsivut.util.Logging
 
 class LanguageFilter(val whitelistedServletPaths: Seq[String] = Nil) extends ScalatraFilterWithWhitelist with Logging {
   val cookieName = "lang"

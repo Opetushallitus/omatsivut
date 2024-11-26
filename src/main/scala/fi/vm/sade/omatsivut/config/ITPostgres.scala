@@ -1,9 +1,7 @@
 package fi.vm.sade.omatsivut.config
 
 import fi.vm.sade.omatsivut.config.TempDbUtils.tryTimes
-
-import fi.vm.sade.utils.slf4j.Logging
-import fi.vm.sade.utils.tcp.PortChooser
+import fi.vm.sade.omatsivut.util.{Logging, PortChooser}
 
 import scala.sys.process.stringToProcess
 

@@ -10,11 +10,11 @@ import fi.vm.sade.hakemuseditori.tarjonta.domain.Haku
 import fi.vm.sade.hakemuseditori.tarjonta.{TarjontaComponent, TarjontaService}
 import fi.vm.sade.hakemuseditori.valintatulokset.ValintatulosServiceComponent
 import fi.vm.sade.hakemuseditori.viestintapalvelu.{Pdf, TuloskirjeComponent}
-import fi.vm.sade.utils.Timer._
-import fi.vm.sade.utils.slf4j.Logging
+import fi.vm.sade.omatsivut.util.Logging
+import fi.vm.sade.omatsivut.util.Timer.timed
 import org.json4s.DefaultFormats
 import org.json4s.jackson.JsonMethods.parse
-import org.json4s.jackson.Serialization.{read}
+import org.json4s.jackson.Serialization.read
 
 import javax.servlet.http.HttpServletRequest
 import scala.util.{Failure, Success, Try}

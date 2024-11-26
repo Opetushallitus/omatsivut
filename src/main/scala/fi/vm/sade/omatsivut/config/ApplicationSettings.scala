@@ -1,11 +1,13 @@
 package fi.vm.sade.omatsivut.config
 
 import com.typesafe.config.Config
-import fi.vm.sade.groupemailer.GroupEmailerSettings
 import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.omatsivut.db.impl.{DbConfig, OmatsivutDb}
+import fi.vm.sade.omatsivut.util.Logging
 
-case class ApplicationSettings(config: Config) extends GroupEmailerSettings(config) {
+import java.io.File
+
+case class ApplicationSettings(config: Config) extends fi.vm.sade.omatsivut.util.ApplicationSettings(config) {
 
   val securitySettings = new SecuritySettings(config)
   val s3Settings = new S3Settings(config)
@@ -71,7 +73,7 @@ case class ApplicationSettings(config: Config) extends GroupEmailerSettings(conf
 
 }
 
-object ApplicationSettingsParser extends fi.vm.sade.utils.config.ApplicationSettingsParser[ApplicationSettings] {
+object ApplicationSettingsParser extends fi.vm.sade.omatsivut.util.ApplicationSettingsParser[ApplicationSettings] {
   override def parse(config: Config) = ApplicationSettings(config)
 }
 

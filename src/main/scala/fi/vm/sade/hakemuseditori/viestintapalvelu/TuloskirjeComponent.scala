@@ -1,7 +1,6 @@
 package fi.vm.sade.hakemuseditori.viestintapalvelu
 
 import java.io.{File, FileInputStream, IOException}
-
 import com.amazonaws.{AmazonClientException, AmazonServiceException}
 import com.amazonaws.services.s3.AmazonS3ClientBuilder
 import com.amazonaws.services.s3.model.{AmazonS3Exception, ObjectMetadata, S3Object}
@@ -9,7 +8,8 @@ import fi.vm.sade.hakemuseditori.auditlog.{Audit, FetchTuloskirje}
 import fi.vm.sade.hakemuseditori.hakemus.domain.Tuloskirje
 import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
-import fi.vm.sade.utils.slf4j.Logging
+import fi.vm.sade.omatsivut.util.Logging
+
 import javax.servlet.http.HttpServletRequest
 import org.apache.commons.io.IOUtils
 

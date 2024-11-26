@@ -4,7 +4,7 @@ import java.sql.Timestamp
 import java.util.ConcurrentModificationException
 import java.util.concurrent.TimeUnit
 
-import fi.vm.sade.utils.slf4j.Logging
+import fi.vm.sade.omatsivut.util.Logging
 import javax.sql.DataSource
 import org.postgresql.util.PSQLException
 import org.springframework.util.ReflectionUtils

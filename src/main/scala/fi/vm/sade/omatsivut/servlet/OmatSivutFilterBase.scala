@@ -1,6 +1,6 @@
 package fi.vm.sade.omatsivut.servlet
 
-import fi.vm.sade.utils.slf4j.Logging
+import fi.vm.sade.omatsivut.util.Logging
 import org.scalatra.ScalatraFilter
 
 trait OmatSivutFilterBase extends ScalatraFilter with Logging {

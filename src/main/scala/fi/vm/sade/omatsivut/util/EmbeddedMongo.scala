@@ -6,8 +6,6 @@ import de.flapdoodle.embed.mongo.MongodStarter
 import de.flapdoodle.embed.process.config.ImmutableRuntimeConfig
 import de.flapdoodle.embed.process.config.io.ProcessOutput
 import de.flapdoodle.embed.process.runtime.Network
-import fi.vm.sade.utils.slf4j.Logging
-import fi.vm.sade.utils.tcp.{PortChecker, PortChooser}
 
 object EmbeddedMongo extends Logging {
 

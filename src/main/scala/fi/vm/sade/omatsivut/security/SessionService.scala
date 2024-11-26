@@ -3,7 +3,7 @@ package fi.vm.sade.omatsivut.security
 import fi.vm.sade.omatsivut.SessionFailure
 import fi.vm.sade.omatsivut.db.SessionRepository
 import fi.vm.sade.utils.cas.CasClient.ServiceTicket
-import fi.vm.sade.utils.slf4j.Logging
+import fi.vm.sade.omatsivut.util.Logging
 
 import scala.util.{Failure, Success, Try}
 

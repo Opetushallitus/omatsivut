@@ -11,8 +11,8 @@ import fi.vm.sade.hakemuseditori.tarjonta.domain.{Haku, Hakukohde, KohteenHakuai
 import fi.vm.sade.hakemuseditori.tarjonta.kouta.RemoteKoutaComponent
 import fi.vm.sade.hakemuseditori.tarjonta.vanha.{RemoteTarjontaComponent, TarjontaHaku, TarjontaParser}
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
+import fi.vm.sade.omatsivut.util.Logging
 import fi.vm.sade.utils.cas.CasClient
-import fi.vm.sade.utils.slf4j.Logging
 import org.json4s.JsonAST.JValue
 
 import scala.collection.mutable

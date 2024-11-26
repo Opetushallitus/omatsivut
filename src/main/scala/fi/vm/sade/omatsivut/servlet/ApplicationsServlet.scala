@@ -1,6 +1,5 @@
 package fi.vm.sade.omatsivut.servlet
 
-import fi.vm.sade.groupemailer.GroupEmailComponent
 import fi.vm.sade.hakemuseditori._
 import fi.vm.sade.hakemuseditori.hakemus.{Fetch, HakemusRepositoryComponent, SpringContextComponent}
 import fi.vm.sade.hakemuseditori.json.JsonFormats
@@ -20,7 +19,6 @@ trait ApplicationsServletContainer {
         HakemusRepositoryComponent with
         ValintatulosServiceComponent with
         SpringContextComponent with
-        GroupEmailComponent with
         VastaanottoComponent with
         TranslationsComponent =>
 

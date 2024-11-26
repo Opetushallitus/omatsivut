@@ -2,7 +2,7 @@ package fi.vm.sade.hakemuseditori.json
 
 import fi.vm.sade.hakemuseditori.domain.Language
 import fi.vm.sade.hakemuseditori.valintatulokset.domain.VastaanottoActionSerializer
-import fi.vm.sade.utils.json4s.GenericJsonFormats
+import fi.vm.sade.omatsivut.util.GenericJsonFormats
 import org.json4s._
 import org.json4s.ext.EnumNameSerializer
 

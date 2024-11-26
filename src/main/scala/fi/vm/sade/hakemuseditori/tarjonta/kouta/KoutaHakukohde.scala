@@ -4,7 +4,7 @@ import fi.vm.sade.hakemuseditori.domain.Language
 import fi.vm.sade.hakemuseditori.domain.Language.Language
 import fi.vm.sade.hakemuseditori.tarjonta.domain.{Hakukohde, KohteenHakuaika, KoulutuksenAlkaminen}
 import fi.vm.sade.hakemuseditori.tarjonta.vanha.YhdenPaikanSaanto
-import fi.vm.sade.utils.slf4j.Logging
+import fi.vm.sade.omatsivut.util.Logging
 
 import scala.util.{Failure, Success, Try}
 

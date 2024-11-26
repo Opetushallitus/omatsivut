@@ -3,7 +3,7 @@ package fi.vm.sade.omatsivut
 import java.io.{File, FilenameFilter}
 
 import fi.vm.sade.omatsivut.config.{AppConfig, ComponentRegistry}
-import fi.vm.sade.utils.slf4j.Logging
+import fi.vm.sade.omatsivut.util.Logging
 import org.apache.commons.io.FileUtils
 
 object SharedAppConfig {

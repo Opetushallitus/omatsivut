@@ -4,7 +4,7 @@ import java.util.UUID
 import fi.vm.sade.hakemuseditori.domain.Language
 import fi.vm.sade.omatsivut.security.{AttributeNames, SessionId, SessionService}
 import fi.vm.sade.omatsivut.servlet.session.OmatsivutPaths
-import fi.vm.sade.utils.slf4j.Logging
+import fi.vm.sade.omatsivut.util.Logging
 import org.scalatra.{BadRequest, ScalatraFilter}
 
 import java.net.URL

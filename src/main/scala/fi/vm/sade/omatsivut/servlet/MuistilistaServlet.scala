@@ -2,7 +2,7 @@ package fi.vm.sade.omatsivut.servlet
 
 import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
-import fi.vm.sade.utils.slf4j.Logging
+import fi.vm.sade.omatsivut.util.Logging
 import org.scalatra.json.JacksonJsonSupport
 
 trait MuistilistaServletContainer {

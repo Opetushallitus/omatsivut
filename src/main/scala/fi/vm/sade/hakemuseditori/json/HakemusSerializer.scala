@@ -1,7 +1,7 @@
 package fi.vm.sade.hakemuseditori.json
 
 import fi.vm.sade.hakemuseditori.hakemus.domain.Hakemus
-import fi.vm.sade.utils.json4s.GenericJsonFormats
+import fi.vm.sade.omatsivut.util.GenericJsonFormats
 import org.json4s._
 
 class HakemusSerializer extends Serializer[Hakemus] {

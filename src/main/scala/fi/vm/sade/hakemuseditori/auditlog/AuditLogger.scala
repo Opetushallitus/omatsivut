@@ -1,7 +1,7 @@
 package fi.vm.sade.hakemuseditori.auditlog
 
 import fi.vm.sade.auditlog.{ApplicationType, Logger, Audit => AuditClass}
-import fi.vm.sade.utils.slf4j.Logging
+import fi.vm.sade.omatsivut.util.Logging
 
 object Audit {
   val oppija: OppijaAuditLogger = new OppijaAuditLogger

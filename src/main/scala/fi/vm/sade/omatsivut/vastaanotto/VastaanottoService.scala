@@ -4,7 +4,6 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import javax.servlet.http.HttpServletRequest
 
-import fi.vm.sade.groupemailer.{EmailData, EmailMessage, EmailRecipient, GroupEmailComponent}
 import fi.vm.sade.hakemuseditori.HakemusEditoriComponent
 import fi.vm.sade.hakemuseditori.auditlog.{Audit, SaveVastaanotto}
 import fi.vm.sade.hakemuseditori.domain.Language.Language
@@ -17,8 +16,7 @@ import scala.util.{Failure, Success, Try}
 
 trait VastaanottoComponent {
   this: HakemusRepositoryComponent with
-    HakemusEditoriComponent with
-    GroupEmailComponent =>
+    HakemusEditoriComponent =>
 
   def vastaanottoService(implicit language: Language): VastaanottoService
 
@@ -74,9 +72,10 @@ trait VastaanottoComponent {
           .format(dateAndTime, aoInfoRow)
           .replace("\n", "\n<br>")
 
-        val emailMessage = EmailMessage("omatsivut", subject, body, html = true)
-        val recipients = List(EmailRecipient(email))
-        groupEmailService.sendMailWithoutTemplate(EmailData(emailMessage, recipients))
+        // TODO uusi viestinvälitys korvaamaan
+        //val emailMessage = EmailMessage("omatsivut", subject, body, html = true)
+        // val recipients = List(EmailRecipient(email))
+        // groupEmailService.sendMailWithoutTemplate(EmailData(emailMessage, recipients))
       } catch {
         case e: Exception => logger.error(
           s"""Vastaanottosähköpostin lähetys epäonnistui: hakuOid / hakukohdeNimi / tarjoajaNimi / email :

@@ -4,7 +4,7 @@ import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.omatsivut.config.{AppConfig, RemoteApplicationConfig, SecuritySettings}
 import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.utils.cas.{CasAuthenticatingClient, CasClient, CasParams}
-import fi.vm.sade.utils.slf4j.Logging
+import fi.vm.sade.omatsivut.util.Logging
 import org.http4s._
 import org.http4s.client.blaze
 import org.json4s._
