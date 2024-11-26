@@ -4,11 +4,9 @@ import com.typesafe.config.Config
 import fi.vm.sade.groupemailer.GroupEmailerSettings
 import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.omatsivut.db.impl.{DbConfig, OmatsivutDb}
-import fi.vm.sade.utils.captcha.CaptchaServiceSettings
 
 case class ApplicationSettings(config: Config) extends GroupEmailerSettings(config) {
 
-  val captchaSettings = new CaptchaServiceSettings(config)
   val securitySettings = new SecuritySettings(config)
   val s3Settings = new S3Settings(config)
 
@@ -27,7 +25,7 @@ case class ApplicationSettings(config: Config) extends GroupEmailerSettings(conf
     initializationFailTimeout = getLong(config, "omatsivut.db.initializationFailFast"),
     leakDetectionThresholdMillis = getLong(config, "omatsivut.db.leakDetectionThresholdMillis")
   )
-
+  
   val migriUrl = config.getString("omatsivut.migri.url")
 
   val sessionTimeoutSeconds = getInt(config, "omatsivut.sessionTimeoutSeconds")

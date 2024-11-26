@@ -24,7 +24,6 @@ import fi.vm.sade.omatsivut.security.fake.{FakeCasClient, FakeSecuredSessionServ
 import fi.vm.sade.omatsivut.servlet._
 import fi.vm.sade.omatsivut.servlet.session.{LogoutServletContainer, SecuredSessionServletContainer, SessionServlet}
 import fi.vm.sade.omatsivut.vastaanotto.VastaanottoComponent
-import fi.vm.sade.utils.captcha.CaptchaServiceComponent
 import fi.vm.sade.utils.cas.CasClient
 import org.http4s.client.blaze
 
@@ -44,7 +43,6 @@ class ComponentRegistry(val config: AppConfig)
           VastaanottoComponent with
           ApplicationsServletContainer with
           MuistilistaServletContainer with
-          CaptchaServiceComponent with
           KoulutusServletContainer with
           SecuredSessionServletContainer with
           FakeSecuredSessionServletContainer with
@@ -148,7 +146,6 @@ class ComponentRegistry(val config: AppConfig)
   val tarjontaService: TarjontaService = configureTarjontaService
   val tuloskirjeService: TuloskirjeService = configureTuloskirjeService
   val groupEmailService: GroupEmailService = configureGroupEmailService
-  val captchaService: CaptchaService = new RemoteCaptchaService(config.settings.captchaSettings)
   val oppijanTunnistusService = configureOppijanTunnistusService
   val ataruService: AtaruService = configureAtaruService
   val hakemusRepository: HakemusFinder = configureHakemusRepository

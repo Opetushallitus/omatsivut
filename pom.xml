@@ -21,15 +21,6 @@
         <flyway-core.version>3.2.1</flyway-core.version>
         <plugin.scala-maven-plugin.version>4.9.2</plugin.scala-maven-plugin.version>
     </properties>
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>fi.vm.sade.generic</groupId>
-                <artifactId>generic-common</artifactId>
-                <version>9.6-SNAPSHOT</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
     <dependencies>
         <dependency>
             <groupId>fi.vm.sade</groupId>
@@ -160,11 +151,6 @@
             <groupId>fi.vm.sade</groupId>
             <artifactId>scala-tcp_2.11</artifactId>
             <version>1.0.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>fi.vm.sade</groupId>
-            <artifactId>scala-captcha_2.11</artifactId>
-            <version>1.4.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>fi.vm.sade</groupId>
