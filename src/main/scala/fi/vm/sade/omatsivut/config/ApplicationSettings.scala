@@ -25,7 +25,7 @@ case class ApplicationSettings(config: Config) extends GroupEmailerSettings(conf
     initializationFailTimeout = getLong(config, "omatsivut.db.initializationFailFast"),
     leakDetectionThresholdMillis = getLong(config, "omatsivut.db.leakDetectionThresholdMillis")
   )
-  
+
   val migriUrl = config.getString("omatsivut.migri.url")
 
   val sessionTimeoutSeconds = getInt(config, "omatsivut.sessionTimeoutSeconds")

@@ -1,8 +1,9 @@
 package fi.vm.sade.omatsivut
 
+import fi.vm.sade.omatsivut.util.OphProperties
+
 import java.nio.file.Paths
 
-import fi.vm.sade.scalaproperties.OphProperties
 
 object OphUrlProperties extends OphProperties("/omatsivut-oph.properties") {
 //  debugMode()
