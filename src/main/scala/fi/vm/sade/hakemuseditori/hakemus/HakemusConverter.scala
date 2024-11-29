@@ -85,7 +85,7 @@ trait HakemusConverterComponent {
         tuloskirje,
         ohjeetUudelleOpiskelijalleMap,
         hakutoiveet,
-        haku,
+        Some(haku),
         EducationBackground(koulutusTaustaAnswers.get(baseEducationKey), !Try {koulutusTaustaAnswers.get("ammatillinenTutkintoSuoritettu").toBoolean}.getOrElse(false)),
         answers,
         answers.get("henkilotiedot")
@@ -97,7 +97,8 @@ trait HakemusConverterComponent {
         lomake.isDefined,
         application.requiredPaymentState,
         notifications,
-        henkilo.oppijanumero.getOrElse(application.personOid)
+        henkilo.oppijanumero.getOrElse(application.personOid),
+        None
       )
     }
 

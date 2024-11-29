@@ -10,6 +10,12 @@
       "1.2.246.562.20.14660127086",
       "1.2.246.562.20.19202370003"
     ],
-    "submitted": "2000-01-02T00:00:00.000Z"
+    "submitted": "2000-01-02T00:00:00.000Z",
+    "form-name":
+    {
+      "fi": "Lomakkeen nimi FI",
+      "sv": "Lomakkeen nimi SV",
+      "en": "Lomakkeen nimi EN"
+    }
   }
 ]

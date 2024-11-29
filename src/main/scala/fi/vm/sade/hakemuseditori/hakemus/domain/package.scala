@@ -38,7 +38,7 @@ case class Hakemus(oid: String,
                    tuloskirje: Option[Tuloskirje] = None,
                    ohjeetUudelleOpiskelijalle: Map[String, String], // hakukohdeOid -> linkki
                    hakutoiveet: List[Hakutoive] = Nil,
-                   haku: Haku,
+                   haku: Option[Haku],
                    educationBackground: EducationBackground,
                    answers: Answers,
                    postOffice: Option[String],
@@ -47,10 +47,11 @@ case class Hakemus(oid: String,
                    hasForm: Boolean,
                    requiredPaymentState: Option[String],
                    notifications: Map[String, Map[String, Boolean]],
-                   oppijanumero: String) extends HakemusLike {
-  def preferences = hakutoiveet.map(_.hakemusData.getOrElse(Map.empty))
+                   oppijanumero: String,
+                   formName: Option[String]) extends HakemusLike {
+  def preferences: List[HakutoiveData] = hakutoiveet.map(_.hakemusData.getOrElse(Map.empty))
 
-  def toHakemusMuutos = HakemusMuutos(oid, haku.oid, hakutoiveet.map(_.hakemusData.getOrElse(Map.empty)), answers)
+  def toHakemusMuutos: HakemusMuutos = HakemusMuutos(oid, haku.map(_.oid).getOrElse(""), hakutoiveet.map(_.hakemusData.getOrElse(Map.empty)), answers)
 
   def withoutKelaUrl: Hakemus = copy(state = state.withoutKelaUrl)
 
@@ -70,7 +71,7 @@ case class Hakutoive(hakemusData: Option[HakutoiveData],
                      hakukohdekohtaisetHakuajat: Option[List[KohteenHakuaika]])
 
 case class HakemusMuutos(oid: String, hakuOid: String, hakutoiveet: List[HakutoiveData] = Nil, answers: Answers) extends HakemusLike {
-  def preferences = hakutoiveet
+  def preferences: List[HakutoiveData] = hakutoiveet
 }
 
 trait HakemusLike {
