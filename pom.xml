@@ -21,6 +21,8 @@
         <jetty.version>9.4.15.v20190215</jetty.version>
         <postgresql.version>42.2.5</postgresql.version>
         <scalatra.version>2.6.3</scalatra.version>
+        <json4s.version>3.5.0</json4s.version>
+        <jackson.version>2.12.2</jackson.version>
         <flyway-core.version>3.2.1</flyway-core.version>
         <plugin.scala-maven-plugin.version>4.9.2</plugin.scala-maven-plugin.version>
     </properties>
@@ -58,9 +60,13 @@
         <dependency>
             <groupId>org.json4s</groupId>
             <artifactId>json4s-jackson_2.11</artifactId>
-            <version>3.5.0</version>
+            <version>${json4s.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.json4s</groupId>
+            <artifactId>json4s-ext_2.11</artifactId>
+            <version>${json4s.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.scalatra</groupId>
             <artifactId>scalatra-specs2_2.11</artifactId>
@@ -179,16 +185,21 @@
             <version>0.1.0-SNAPSHOT</version>
 <!--            <version>1.0.0-SNAPSHOT</version>-->
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.fasterxml.jackson.core</groupId>-->
+<!--            <artifactId>jackson-core</artifactId>-->
+<!--            <version>${jackson.version}</version>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-yaml</artifactId>
-            <version>2.12.2</version>
+            <version>${jackson.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.json4s</groupId>
-            <artifactId>json4s-ext_2.11</artifactId>
-            <version>3.7.0-M11</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.fasterxml.jackson.core</groupId>-->
+<!--            <artifactId>jackson-databind</artifactId>-->
+<!--            <version>${jackson.version}</version>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>fi.vm.sade</groupId>
             <artifactId>scala-cas_2.11</artifactId>
@@ -223,6 +234,11 @@
             <groupId>com.typesafe.slick</groupId>
             <artifactId>slick_2.11</artifactId>
             <version>3.3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>2.10.10</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>

@@ -7,7 +7,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.jsoup.Jsoup;
 
-import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -89,7 +88,7 @@ public class I18nText implements Serializable {
     }
 
     // kopioitu com.google.api.client.repackaged.com.google.common.base.Strings.isNullOrEmpty;
-    public static boolean isNullOrEmpty(@Nullable String string) {
+    public static boolean isNullOrEmpty(String string) {
         return string == null || string.length() == 0;
     }
 

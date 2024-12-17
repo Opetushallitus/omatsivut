@@ -11,6 +11,7 @@ import org.asynchttpclient.RequestBuilder
 import org.http4s._
 import org.json4s
 import org.json4s.{DefaultFormats, Extraction}
+
 import scala.concurrent.{Await, Future}
 import scala.concurrent.ExecutionContext.Implicits.global
 import org.json4s.jackson.JsonMethods._
@@ -48,7 +49,7 @@ trait OppijanumerorekisteriComponent {
     .setJsessionName("JSESSIONID").build
 
     val casClient: CasClient = CasClientBuilder.build(casConfig)
-    private val callerIdHeader = Header("Caller-Id", AppConfig.callerId)
+
     implicit private val formats = DefaultFormats
 
     override def henkilo(personOid: String): Henkilo = {
