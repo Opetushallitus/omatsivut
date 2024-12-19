@@ -64,7 +64,7 @@ jobs:
     uses: Opetushallitus/.github/.github/workflows/push-scan-java-ecr.yml@main
     with:
       application: omatsivut
-      base-image: baseimage-fatjar-openjdk8:master
+      base-image: baseimage-fatjar-openjdk11:master
       configfolder: src/main/resources/oph-configuration
       jarfile: omatsivut*SNAPSHOT-allinone
     secrets:
