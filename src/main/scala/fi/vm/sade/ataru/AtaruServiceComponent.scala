@@ -10,24 +10,24 @@ import fi.vm.sade.hakemuseditori.oppijanumerorekisteri.OppijanumerorekisteriComp
 import fi.vm.sade.hakemuseditori.tarjonta.TarjontaComponent
 import fi.vm.sade.hakemuseditori.tarjonta.domain.{Haku, Hakukohde, KohteenHakuaika}
 import fi.vm.sade.hakemuseditori.valintatulokset.ValintatulosServiceComponent
-import fi.vm.sade.hakemuseditori.viestintapalvelu.{AccessibleHtml, Pdf, TuloskirjeComponent}
+import fi.vm.sade.hakemuseditori.viestintapalvelu.{AccessibleHtml, TuloskirjeComponent}
+import fi.vm.sade.javautils.nio.cas.{CasClient, CasClientBuilder, CasConfig}
+import fi.vm.sade.omatsivut.OmatsivutServer.logger
 import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
-import fi.vm.sade.utils.cas.{CasAuthenticatingClient, CasClient, CasParams}
+import org.asynchttpclient.RequestBuilder
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import javax.servlet.http.HttpServletRequest
-import org.http4s.{Request, Uri}
-import org.http4s.Method.GET
-import org.http4s.client.blaze
 import org.joda.time.LocalDateTime
 import org.json4s.DefaultFormats
-import org.json4s.jackson.JsonMethods
 import org.json4s.jackson.JsonMethods.parse
-import scalaz.concurrent.Task
 
+import scala.compat.java8.FutureConverters.toScala
+import scala.concurrent.{Await, Future}
 import scala.concurrent.duration.Duration
-import scala.util.Try
+import scala.util.{Failure, Success, Try}
 
 case class AtaruApplication(oid: String,
                             secret: String,
@@ -166,31 +166,40 @@ trait AtaruServiceComponent  {
     }
   }
 
-  class RemoteAtaruService(config: AppConfig, casVirkailijaClient: CasClient) extends AtaruServiceCommons {
-    private val casParams = CasParams(
-      OphUrlProperties.url("url-ataru-service"),
-      "auth/cas",
+  class RemoteAtaruService(config: AppConfig) extends AtaruServiceCommons {
+    private val casConfig: CasConfig = new CasConfig.CasConfigBuilder(
       config.settings.securitySettings.casVirkailijaUsername,
-      config.settings.securitySettings.casVirkailijaPassword
-    )
-    private val httpClient = CasAuthenticatingClient(
-      casVirkailijaClient,
-      casParams,
-      blaze.defaultClient,
+      config.settings.securitySettings.casVirkailijaPassword,
+      OphUrlProperties.url("cas.url"),
+      OphUrlProperties.url("url-ataru-service"),
       AppConfig.callerId,
-      "ring-session"
-    )
+      AppConfig.callerId,
+      "auth/cas")
+      .setJsessionName("ring-session").build
+
+    private val casClient: CasClient = CasClientBuilder.build(casConfig)
 
     implicit private val formats = DefaultFormats
 
     def getApplications(personOid: String): List[AtaruApplication] = {
-      Uri.fromString(OphUrlProperties.url("ataru-service.applications", personOid))
-        .fold(Task.fail, uri => {
-          httpClient.fetch(Request(method = GET, uri = uri)) {
-            case r if r.status.code == 200 => r.as[String].map(s => JsonMethods.parse(s).extract[List[AtaruApplication]])
-            case r => Task.fail(new RuntimeException(s"Failed to get applications for $personOid: ${r.toString()}"))
-          }
-        }).attemptRunFor(Duration(10, TimeUnit.SECONDS)).fold(throw _, x => x)
+      val req = new RequestBuilder()
+        .setMethod("GET")
+        .setUrl(OphUrlProperties.url("ataru-service.applications", personOid))
+        .build()
+
+      val result = toScala(casClient.execute(req)).flatMap {
+        case r if r.getStatusCode == 200 =>
+          Future.successful(parse(r.getResponseBodyAsStream()).extract[List[AtaruApplication]])
+        case r =>
+          Future.failed(new RuntimeException(s"Failed to get applications for $personOid: ${r.toString}"))
+      }
+
+      Try(Await.result(result, Duration(10, TimeUnit.SECONDS))) match {
+        case Success(applications) => applications
+        case Failure(ex) =>
+          logger.error(s"Error fetching applications for $personOid", ex)
+          throw ex
+      }
     }
   }
 }

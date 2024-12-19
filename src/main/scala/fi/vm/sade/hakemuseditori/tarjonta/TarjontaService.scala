@@ -8,6 +8,12 @@ trait TarjontaService {
   def hakukohde(oid: String, lang: Language.Language) : Option[Hakukohde]
 
   def getOhjeetUudelleOpiskelijalle(hakukohdeOid: Option[String], lang: Language.Language): Option[String] = {
-    None
+    for {
+      oid <- hakukohdeOid
+      tarjonnanHakukohde <- hakukohde(oid, lang)
+      linkki <- tarjonnanHakukohde.ohjeetUudelleOpiskelijalle
+    } yield {
+      linkki
+    }
   }
 }

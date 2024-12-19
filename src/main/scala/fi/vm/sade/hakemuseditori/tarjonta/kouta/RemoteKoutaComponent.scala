@@ -1,72 +1,74 @@
 package fi.vm.sade.hakemuseditori.tarjonta.kouta
 
 import java.util.concurrent.TimeUnit
-
 import fi.vm.sade.hakemuseditori.domain.Language
 import fi.vm.sade.hakemuseditori.ohjausparametrit.OhjausparametritComponent
 import fi.vm.sade.hakemuseditori.ohjausparametrit.domain.HaunAikataulu
 import fi.vm.sade.hakemuseditori.tarjonta.TarjontaService
 import fi.vm.sade.hakemuseditori.tarjonta.domain.{Haku, Hakukohde}
+import fi.vm.sade.javautils.nio.cas.{CasClient, CasClientBuilder, CasConfig}
 import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
-import fi.vm.sade.utils.cas.{CasAuthenticatingClient, CasClient, CasParams}
 import fi.vm.sade.omatsivut.util.Logging
-import org.http4s.{Request, Response, Uri}
+import org.asynchttpclient.{RequestBuilder, Response}
+import org.http4s.{Request, Uri}
 import org.http4s.Method.GET
-import org.http4s.client.blaze
+
+import scala.concurrent.ExecutionContext.Implicits.global
 import org.json4s.DefaultFormats
 import org.json4s.jackson.JsonMethods
 import scalaz.concurrent.Task
 
+import scala.compat.java8.FutureConverters.toScala
+import scala.concurrent.{Await, Future}
 import scala.concurrent.duration.Duration
 import scala.util.{Failure, Success}
 
 trait RemoteKoutaComponent {
   this: OhjausparametritComponent =>
 
-  class RemoteKoutaService(config: AppConfig, casVirkailijaClient: CasClient) extends TarjontaService with Logging {
-    private val casParams = CasParams(
-      OphUrlProperties.url("kouta-internal.service"),
-      "auth/login",
+  class RemoteKoutaService(config: AppConfig) extends TarjontaService with Logging {
+    private val casConfig: CasConfig = new CasConfig.CasConfigBuilder(
       config.settings.securitySettings.casVirkailijaUsername,
-      config.settings.securitySettings.casVirkailijaPassword
-    )
-    private val httpClient = CasAuthenticatingClient(
-      casVirkailijaClient,
-      casParams,
-      blaze.defaultClient,
+      config.settings.securitySettings.casVirkailijaPassword,
+      OphUrlProperties.url("cas.url"),
+      OphUrlProperties.url("kouta-internal.service"),
       AppConfig.callerId,
-      "session"
-    )
+      AppConfig.callerId,
+      "/auth/login")
+      .setJsessionName("session").build
+
+    private val casClient: CasClient = CasClientBuilder.build(casConfig)
 
     implicit private val formats = DefaultFormats
 
     override def haku(oid: String, lang: Language.Language) : Option[Haku] = {
       val haunAikataulu = ohjausparametritService.haunAikataulu(oid)
-      fetchKoutaHaku(oid)
-        .flatMap { koutaHaku: KoutaHaku => toHaku(koutaHaku, lang, haunAikataulu) }
+      fetchKoutaHaku(oid) match {
+        case Right(o) => o.flatMap { koutaHaku: KoutaHaku => toHaku(koutaHaku, lang, haunAikataulu) }
+        case Left(e) => throw new RuntimeException(e)
+      }
     }
 
-    private def fetchKoutaHaku(oid: String) = {
-      Uri.fromString(OphUrlProperties.url("kouta-internal.haku", oid))
-        .fold(Task.fail, uri => {
-          logger.info(s"Get haku $oid from Kouta: uri $uri")
-          httpClient.fetch(Request(method = GET, uri = uri)) { r => handleHakuResponse(r) }
-        })
-        .unsafePerformSyncAttemptFor(Duration(10, TimeUnit.SECONDS))
-        .fold(throw _, x => x)
-    }
-
-    private def handleHakuResponse(response: Response) = {
-      response match {
-        case r if r.status.code == 200 =>
-          r.as[String]
-            .map(s => Some(JsonMethods.parse(s).extract[KoutaHaku]))
-        case r if r.status.code == 404 =>
-          Task.now(None)
-        case r =>
-          Task.fail(new RuntimeException(s"Failed to get haku: ${r.toString()}"))
+    private def fetchKoutaHaku(oid: String): Either[Throwable,Option[KoutaHaku]] = {
+      val request = new RequestBuilder()
+        .setMethod("GET")
+        .setUrl(OphUrlProperties.url("kouta-internal.haku", oid))
+        .build()
+      logger.info(s"Get haku $oid from Kouta: uri ${request.getUri}")
+      val result = toScala(casClient.execute(request)).map {
+          case r if r.getStatusCode == 200 =>
+            Right(Some(JsonMethods.parse(r.getResponseBodyAsStream()).extract[KoutaHaku]))
+          case r if r.getStatusCode == 404 =>
+            Right(None)
+          case r =>
+            Left(new RuntimeException(s"Failed to get haku: ${r.toString()}"))
+      } // TODO retry?
+      try {
+        Await.result(result, Duration(10, TimeUnit.SECONDS))
+      } catch {
+        case e: Throwable => Left(e)
       }
     }
 
@@ -83,29 +85,29 @@ trait RemoteKoutaComponent {
     }
 
     override def hakukohde(oid: String, lang: Language.Language): Option[Hakukohde] = {
-      fetchKoutaHakukohde(oid)
-        .flatMap { koutaHakukohde => toHakukohde(koutaHakukohde, lang) }
+      fetchKoutaHakukohde(oid) match {
+        case Right(o) => o.flatMap { koutaHakukohde => toHakukohde(koutaHakukohde, lang) }
+        case Left(e) => throw new RuntimeException(e)
+      }
     }
 
     private def fetchKoutaHakukohde(oid: String) = {
-      Uri.fromString(OphUrlProperties.url("kouta-internal.hakukohde", oid))
-        .fold(Task.fail, uri => {
-          logger.info(s"Get hakukohde $oid from Kouta: uri $uri")
-          httpClient.fetch(Request(method = GET, uri = uri)) { r => handleHakukohdeResponse(r) }
-        })
-        .unsafePerformSyncAttemptFor(Duration(10, TimeUnit.SECONDS))
-        .fold(throw _, x => x)
-    }
-
-    private def handleHakukohdeResponse(response: Response): Task[Option[KoutaHakukohde]] = {
-      response match {
-        case r if r.status.code == 200 =>
-          r.as[String]
-            .map( s => Some(JsonMethods.parse(s).extract[KoutaHakukohde]) )
-        case r if r.status.code == 404 =>
-          Task.now(None)
+      val request = new RequestBuilder()
+        .setMethod("GET")
+        .setUrl(OphUrlProperties.url("kouta-internal.hakukohde", oid))
+        .build()
+      val result = toScala(casClient.execute(request)).map {
+        case r if r.getStatusCode == 200 =>
+          Right(Some(JsonMethods.parse(r.getResponseBodyAsStream()).extract[KoutaHakukohde]))
+        case r if r.getStatusCode == 404 =>
+          Right(None)
         case r =>
-          Task.fail(new RuntimeException(s"Failed to get hakukohde: ${r.toString()}"))
+          Left(new RuntimeException(s"Failed to get hakukohde: ${r.toString()}"))
+      } // TODO retry?
+      try {
+        Await.result(result, Duration(10, TimeUnit.SECONDS))
+      } catch {
+        case e: Throwable => Left(e)
       }
     }
 

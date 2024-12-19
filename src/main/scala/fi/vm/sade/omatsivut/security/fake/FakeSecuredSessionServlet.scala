@@ -6,12 +6,17 @@ import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.security.{AttributeNames, AuthenticationFailedException, AuthenticationInfoService, Hetu, OppijaNumero, SessionService}
 import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
 import fi.vm.sade.omatsivut.servlet.session.OmatsivutPaths
-import fi.vm.sade.utils.cas.CasClient
-import fi.vm.sade.utils.cas.CasClient.{OppijaAttributes, ServiceTicket}
 import fi.vm.sade.omatsivut.util.Logging
 import org.scalatra.{BadRequest, Cookie, CookieOptions}
 import scalaz.concurrent.Task
 
+import java.util
+import java.util.concurrent.CompletableFuture
+import scala.collection.JavaConverters.mapAsScalaMapConverter
+import scala.compat.java8.FutureConverters.CompletionStageOps
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+import scala.util.{Failure, Success}
 import scala.util.control.NonFatal
 
 trait FakeSecuredSessionServletContainer {
@@ -25,32 +30,30 @@ trait FakeSecuredSessionServletContainer {
     get("/") {
       logger.debug("initsession CAS request received")
       val hetu: String = request.getHeader("hetu")
-      val ticket: Option[CasClient.ServiceTicket] = Option(request.getParameter("ticket"))
+      val ticket: Option[String] = Option(request.getParameter("ticket"))
       ticket match {
         case None => BadRequest("No ticket found from CAS request" + clientAddress);
         case Some(ticket) => {
           logger.debug("GOT TICKET FROM CAS")
-          val attrs: Either[Throwable, OppijaAttributes] = fakeCasOppijaClient.validateServiceTicket(initsessionPath(request.getContextPath))(ticket, fakeCasOppijaClient.decodeOppijaAttributes(hetu)).handleWith {
-            case NonFatal(t) => Task.fail(new AuthenticationFailedException(s"Failed to validate service ticket $ticket", t))
-          }.attemptRunFor(10000).toEither
-          attrs match {
-            case Right(attrs) => {
+          val javaFuture: CompletableFuture[util.HashMap[String, String]] =
+            fakeCasOppijaClient.validateServiceTicketWithOppijaAttributes(initsessionPath(request.getContextPath()), hetu) // vippaskonsti
+          val scalaFuture: Future[util.HashMap[String, String]] = javaFuture.toScala
+          scalaFuture.map(_.asScala.toMap).onComplete  {
+            case Failure(exception) =>
+              logger.warn("Unable to process CAS Oppija login request, hetu cannot be resolved from ticket", exception)
+              BadRequest(exception.getMessage)
+            case Success(attrs) =>
               val hetu = attrs("nationalIdentificationNumber")
               val personOid = attrs.getOrElse("personOid", "")
               val displayName = attrs.getOrElse("displayName", "")
               logger.debug("ATTRIBUTES:")
               initializeSessionAndRedirect(ticket, hetu, personOid, displayName)
-            }
-            case Left(t) => {
-              logger.warn("Unable to process CAS Oppija login request, hetu cannot be resolved from ticket", t)
-              BadRequest(t.getMessage)
-            }
           }
         }
       }
     }
 
-    private def initializeSessionAndRedirect(ticket: ServiceTicket, hetu: String, personOid: String, displayName: String): Unit = {
+    private def initializeSessionAndRedirect(ticket: String, hetu: String, personOid: String, displayName: String): Unit = {
       val newSession = sessionService.storeSession(ticket, Hetu(hetu), OppijaNumero(personOid), displayName)
       newSession match {
         case Right((sessionId, _)) =>

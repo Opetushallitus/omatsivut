@@ -1,21 +1,18 @@
 package fi.vm.sade.omatsivut.oppijantunnistus
 
 import java.util.concurrent.TimeUnit
-
-import fi.vm.sade.ataru.AtaruApplication
+import fi.vm.sade.javautils.nio.cas.{CasClient, CasClientBuilder, CasConfig}
 import fi.vm.sade.omatsivut.NonSensitiveHakemusInfo.Oid
 import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
-import fi.vm.sade.utils.cas.{CasAuthenticatingClient, CasClient, CasParams}
-import org.http4s.Method.GET
-import org.http4s.{Request, Uri, client}
-import org.http4s.client.{Client, blaze}
+import org.asynchttpclient.RequestBuilder
 import org.json4s._
 import org.json4s.jackson.JsonMethods
-import org.json4s.jackson.JsonMethods._
-import scalaz.concurrent.Task
 
+import scala.compat.java8.FutureConverters.toScala
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.{Await, Future}
 import scala.concurrent.duration.Duration
 import scala.util.{Failure, Success, Try}
 
@@ -37,41 +34,36 @@ class ExpiredTokenException(msg: String) extends RuntimeException(msg)
 
 object RemoteOppijanTunnistusService {
 
-  def createCasClient(config: AppConfig): Client = {
-    val blazeHttpClient = blaze.defaultClient
-    val casClient = new CasClient(
+  def createCasClient(config: AppConfig): CasClient = {
+    CasClientBuilder.build(
+    new CasConfig.CasConfigBuilder(
+      config.settings.securitySettings.casVirkailijaUsername,
+      config.settings.securitySettings.casVirkailijaPassword,
       config.settings.securitySettings.casUrl,
-      blazeHttpClient,
-      AppConfig.callerId
-    )
-    val casParams = CasParams(
       OphUrlProperties.url("url-oppijan-tunnistus-service"),
-      "auth/cas",
-      config.settings.securitySettings.casUsername,
-      config.settings.securitySettings.casPassword
-    )
-    CasAuthenticatingClient(
-      casClient,
-      casParams,
-      blazeHttpClient,
       AppConfig.callerId,
-      "ring-session"
-    )
+      AppConfig.callerId,
+      "/auth/cas")
+      .setJsessionName("ring-session").build())
   }
 }
 
-class RemoteOppijanTunnistusService(httpClient: Client) extends OppijanTunnistusService {
+class RemoteOppijanTunnistusService(casClient: CasClient) extends OppijanTunnistusService {
   implicit val formats = DefaultFormats
 
   def validateToken(token: String): Try[OppijantunnistusMetadata] = {
-    Try(Uri.fromString(OphUrlProperties.url("oppijan-tunnistus.verify", token))
-      .fold(Task.fail, uri => {
-        blaze.defaultClient.fetch(Request(method = GET, uri = uri)) {
-          case r if r.status.code == 200 =>
-            r.as[String].map(s => JsonMethods.parse(s).extract[OppijanTunnistusVerification])
-          case r => Task.fail(new RuntimeException(s"Error fetching oppijan-tunnistus. Token=$token, response code=${r.status.code}"))
-        }
-      }).attemptRunFor(Duration(10, TimeUnit.SECONDS)).fold(throw _, x => x) match {
+    val request = new RequestBuilder()
+      .setMethod("GET")
+      .setUrl(OphUrlProperties.url("oppijan-tunnistus.verify", token))
+      .build()
+    val future = toScala(casClient.execute(request))
+    val result = future.map {
+      case r if r.getStatusCode == 200 =>
+        JsonMethods.parse(r.getResponseBodyAsStream()).extract[OppijanTunnistusVerification]
+      case r => new RuntimeException(s"Error fetching oppijan-tunnistus. Token=$token, response code=${r.getStatusCode}")
+    } // TODO retry .attemptRunFor(Duration(10, TimeUnit.SECONDS)
+    val completedResult = Await.result(result, Duration(10, TimeUnit.SECONDS))
+    Try(completedResult match {
       case OppijanTunnistusVerification(_, true, Some(metadata)) => metadata
       case OppijanTunnistusVerification(false, false, _) => throw new InvalidTokenException("invalid token")
       case OppijanTunnistusVerification(true, false, _) => throw new ExpiredTokenException("expired token")

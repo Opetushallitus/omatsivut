@@ -1,36 +1,39 @@
 package fi.vm.sade.omatsivut.security.fake
 
+import fi.vm.sade.javautils.nio.cas.CasClient
 import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.omatsivut.security.AuthenticationInfoService
-import fi.vm.sade.utils.cas.CasClient.{OppijaAttributes, ServiceTicket, SessionCookie, Username}
-import fi.vm.sade.utils.cas.{CasClient, CasParams}
-import org.http4s._
-import org.http4s.client._
-import org.http4s.dsl._
-import org.scalatra.NotFound
-import scalaz.concurrent.Task
+import org.asynchttpclient
 
-class FakeCasClient(casBaseUrl: String, client: Client, callerId: String, authenticationInfoService: AuthenticationInfoService) extends CasClient(casBaseUrl, client, callerId) {
-  override def validateServiceTicket[R](service: String)(serviceTicket: ServiceTicket, responseHandler: Response => Task[R]): Task[R] =
-    responseHandler(Ok("Tämä olis OK-ticketvalidointivastaus").unsafePerformSync)
+import java.util
+import java.util.concurrent.CompletableFuture
+import scala.collection.JavaConverters.mapAsJavaMapConverter
 
-  override def fetchCasSession(params: CasParams, sessionCookieName: String): Task[SessionCookie] = {
-    Task.now("keksi")
-  }
+class FakeCasClient(authenticationInfoService: AuthenticationInfoService) extends CasClient {
 
-  def decodeOppijaAttributes(hetu: String): Response => Task[OppijaAttributes] = response => Task.now {
-    val oidPerson = authenticationInfoService.getOnrHenkilo(hetu)
-    oidPerson match {
+  override def validateServiceTicketWithOppijaAttributes(service: String, ticket: String): CompletableFuture[util.HashMap[String, String]] = {
+    val oidPerson = authenticationInfoService.getOnrHenkilo(ticket) // vippaskonsti
+    val result: util.HashMap[String, String] = oidPerson match {
       case Some(x) =>
-        Map("nationalIdentificationNumber" -> oidPerson.get.hetu,
+        new util.HashMap(Map(
+          "nationalIdentificationNumber" -> oidPerson.get.hetu,
           "personOid" -> oidPerson.get.oidHenkilo,
-          "displayName" -> (oidPerson.get.kutsumanimi + " " + oidPerson.get.sukunimi))
+          "displayName" -> (oidPerson.get.kutsumanimi + " " + oidPerson.get.sukunimi)
+        ).asJava)
       case None =>
-        Map("nationalIdentificationNumber" -> TestFixture.testHetu,
+        new util.HashMap(Map(
+          "nationalIdentificationNumber" -> TestFixture.testHetu,
           "personOid" -> TestFixture.personOid,
-          "displayName" -> TestFixture.displayName)
+          "displayName" -> TestFixture.displayName
+        ).asJava)
     }
+
+    CompletableFuture.completedFuture(result)
   }
 
-  override def decodeVirkailijaUsername: Response => Task[Username] = response => Task.now("frank-virkailija")
+  override def execute(request: asynchttpclient.Request): CompletableFuture[asynchttpclient.Response] = ???
+
+  override def executeAndRetryWithCleanSessionOnStatusCodes(request: asynchttpclient.Request, set: util.Set[Integer]): CompletableFuture[asynchttpclient.Response] = ???
+
+  override def validateServiceTicketWithVirkailijaUsername(s: String, s1: String): CompletableFuture[String] = ???
 }

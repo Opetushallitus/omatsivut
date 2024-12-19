@@ -13,6 +13,7 @@ import fi.vm.sade.hakemuseditori.tarjonta.{TarjontaComponent, TarjontaService}
 import fi.vm.sade.hakemuseditori.valintatulokset._
 import fi.vm.sade.hakemuseditori.viestintapalvelu.{TuloskirjeComponent, TuloskirjeService}
 import fi.vm.sade.hakemuseditori.HakemusEditoriComponent
+import fi.vm.sade.javautils.nio.cas.{CasClient, CasClientBuilder, CasConfig}
 import fi.vm.sade.omatsivut.config.AppConfig._
 import fi.vm.sade.omatsivut.db.impl.OmatsivutDb
 //import fi.vm.sade.omatsivut.fixtures.hakemus.ApplicationFixtureImporter
@@ -23,7 +24,6 @@ import fi.vm.sade.omatsivut.security.fake.{FakeCasClient, FakeSecuredSessionServ
 import fi.vm.sade.omatsivut.servlet._
 import fi.vm.sade.omatsivut.servlet.session.{LogoutServletContainer, SecuredSessionServletContainer, SessionServlet}
 import fi.vm.sade.omatsivut.vastaanotto.VastaanottoComponent
-import fi.vm.sade.utils.cas.CasClient
 import org.http4s.client.blaze
 
 import scala.collection.JavaConverters._
@@ -67,7 +67,7 @@ class ComponentRegistry(val config: AppConfig)
 
   private def configureTarjontaService: TarjontaService = config match {
     case _: StubbedExternalDeps => new StubbedTarjontaService(config)
-    case _ => CachedRemoteTarjontaService(config, casVirkailijaClient)
+    case _ => CachedRemoteTarjontaService(config)
   }
 
   private def configureTuloskirjeService: TuloskirjeService = config match {
@@ -83,7 +83,7 @@ class ComponentRegistry(val config: AppConfig)
 
   private def configureAtaruService: AtaruService = config match {
     case _: StubbedExternalDeps => new StubbedAtaruService
-    case _ => new RemoteAtaruService(config, casVirkailijaClient)
+    case _ => new RemoteAtaruService(config)
   }
 
   private def configureHakemusRepository: HakemusFinder = config match {
@@ -103,25 +103,22 @@ class ComponentRegistry(val config: AppConfig)
                                                   config.settings.securitySettings)
   }
 
-  private def configureCASVirkailijaClient: CasClient = config match {
-    case _ => new CasClient(config.settings.securitySettings.casVirkailijaUrl,
-                            blaze.defaultClient,
-                            AppConfig.callerId)
-  }
 
   private def configureCASOppijaClient: CasClient = config match {
-    case _ => new CasClient(config.settings.securitySettings.casOppijaUrl,
-                            blaze.defaultClient,
-                            AppConfig.callerId)
+    case _ => CasClientBuilder.build(
+      new CasConfig.CasConfigBuilder(
+        config.settings.securitySettings.casVirkailijaUsername,
+        config.settings.securitySettings.casVirkailijaPassword,
+        config.settings.securitySettings.casOppijaUrl,
+        OphUrlProperties.url("url-oppijan-tunnistus-service"),
+        AppConfig.callerId,
+        AppConfig.callerId,
+        "/auth/cas")
+        .setJsessionName("ring-session").build())
   }
 
   private def configureFakeCasOppijaClient: FakeCasClient = config match {
-    case _ =>
-      new FakeCasClient(config.settings.securitySettings.casOppijaUrl,
-        blaze.defaultClient,
-        AppConfig.callerId,
-        authenticationInfoService
-      )
+    case _ => new FakeCasClient(authenticationInfoService)
   }
 
   lazy val springContext = new HakemusSpringContext(OmatSivutSpringContext.createApplicationContext(config))
@@ -129,7 +126,6 @@ class ComponentRegistry(val config: AppConfig)
 //    new ApplicationFixtureImporter(springContext).applyFixtures()
 //  }
 
-  val casVirkailijaClient: CasClient = configureCASVirkailijaClient
   val casOppijaClient = configureCASOppijaClient
   val fakeCasOppijaClient = configureFakeCasOppijaClient
 
