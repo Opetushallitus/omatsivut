@@ -13,8 +13,8 @@
     </organization>
     <properties>
 
-<!--        <maven.compiler.source>11.0</maven.compiler.source>
-        <maven.compiler.target>11.0</maven.compiler.target>-->
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
 
         <valinta-tulos-service.version>7.0.1-SNAPSHOT</valinta-tulos-service.version>
         <tarjonta-api.version>2016-07-SNAPSHOT</tarjonta-api.version>
