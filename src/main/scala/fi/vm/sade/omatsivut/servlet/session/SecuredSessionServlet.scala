@@ -27,13 +27,14 @@ trait SecuredSessionServletContainer {
                               val casOppijaClient: CasClient)
     extends OmatSivutServletBase with AttributeNames with OmatsivutPaths with Logging {
     get("/") {
-      logger.debug("initsession CAS request received")
+      logger.info("initsession CAS request received")
 
       val ticket: Option[String] = Option(request.getParameter("ticket"))
+      logger.info(s"Ticket: $ticket")
       ticket match {
         case None => BadRequest("No ticket found from CAS request" + clientAddress);
         case Some(ticket) => {
-          callValidateServiceTicketWithOppijaAttributes("service1", "ticket1").onComplete {
+          callValidateServiceTicketWithOppijaAttributes(ticket).onComplete {
             case Failure(exception) =>
               new AuthenticationFailedException(s"Failed to validate service ticket $ticket", exception)
               // TODO toteuta retryt, vanha: .attemptRunFor(10000).toEither
@@ -68,7 +69,7 @@ trait SecuredSessionServletContainer {
       }
     }
 
-    private def callValidateServiceTicketWithOppijaAttributes(service: String, ticket: String): Future[Map[String, String]] = {
+    private def callValidateServiceTicketWithOppijaAttributes(ticket: String): Future[Map[String, String]] = {
       logger.info(s"validating service ticket $ticket from cas oppija with url: ${initsessionPath(request.getContextPath())}")
       val javaFuture: CompletableFuture[JHashMap[String, String]] =
         casOppijaClient.validateServiceTicketWithOppijaAttributes(initsessionPath(request.getContextPath()), ticket)
