@@ -25,9 +25,9 @@ object JettyLauncher {
 
 class JettyLauncher(profile: Option[String] = None) {
   private val javaVersion: String = System.getProperty("java.version")
-  if (!javaVersion.startsWith("1.8")) {
+  if (!javaVersion.startsWith("11")) {
     System.err.println(s"""------------------------------
-                          |EXITING: Run omatsivut with Java 1.8, java.version was $javaVersion
+                          |EXITING: Run omatsivut with Java 11, java.version was $javaVersion
                           |------------------------------""".stripMargin)
     System.exit(1)
   }

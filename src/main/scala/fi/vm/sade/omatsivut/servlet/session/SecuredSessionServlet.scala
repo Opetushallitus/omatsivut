@@ -46,6 +46,7 @@ trait SecuredSessionServletContainer {
                 val hetu = attrs("nationalIdentificationNumber")
                 val personOid = attrs.getOrElse("personOid", "")
                 val displayName = attrs.getOrElse("displayName", "")
+                logger.info(s"attributes: $hetu $personOid $displayName")
                 initializeSessionAndRedirect(ticket, hetu, personOid, displayName)
               }
             }
@@ -68,18 +69,20 @@ trait SecuredSessionServletContainer {
     }
 
     private def callValidateServiceTicketWithOppijaAttributes(service: String, ticket: String): Future[Map[String, String]] = {
+      logger.info(s"validating service ticket $ticket from cas oppija with url: ${initsessionPath(request.getContextPath())}")
       val javaFuture: CompletableFuture[JHashMap[String, String]] =
         casOppijaClient.validateServiceTicketWithOppijaAttributes(initsessionPath(request.getContextPath()), ticket)
       val scalaFuture: Future[JHashMap[String, String]] = javaFuture.toScala
       scalaFuture.map(_.asScala.toMap)
     }
     private def initializeSessionAndRedirect(ticket: String, hetu: String, personOid: String, displayName: String): Unit = {
+      logger.info(s"Initializing session")
       val newSession = sessionService.storeSession(ticket, Hetu(hetu), OppijaNumero(personOid), displayName)
       newSession match {
         case Right((sessionId, _)) =>
           val cookieOptions = CookieOptions(domain = "", secure = isHttps, path = "/", maxAge = sessionTimeout.getOrElse(3600), httpOnly = true)
           val sessionCookie: Cookie = Cookie(sessionCookieName, sessionId.value.toString)(cookieOptions)
-          logger.debug(s"Created new session with id $sessionId , adding session cookie $sessionCookie with options $cookieOptions to response")
+          logger.info(s"Created new session with id $sessionId , adding session cookie $sessionCookie with options $cookieOptions to response")
           response.addCookie(sessionCookie)
           Audit.oppija.log(Login(request))
           redirect(redirectUri)
