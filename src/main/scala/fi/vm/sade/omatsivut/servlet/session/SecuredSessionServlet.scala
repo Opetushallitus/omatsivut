@@ -9,13 +9,14 @@ import fi.vm.sade.omatsivut.security._
 import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
 import fi.vm.sade.omatsivut.util.{Logging, OptionConverter}
 import org.scalatra.{BadRequest, Cookie, CookieOptions}
-import scala.concurrent.ExecutionContext.Implicits.global
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import java.util.concurrent.CompletableFuture
 import java.util.{HashMap => JHashMap}
 import scala.compat.java8.FutureConverters._
 import scala.collection.JavaConverters._
 import scala.concurrent._
+import scala.util.control.NonFatal
 import scala.util.{Failure, Success}
 
 trait SecuredSessionServletContainer {
@@ -34,25 +35,25 @@ trait SecuredSessionServletContainer {
       ticket match {
         case None => BadRequest("No ticket found from CAS request" + clientAddress);
         case Some(ticket) => {
-          try {
-            val attrs = callValidateServiceTicketWithOppijaAttributes(ticket)
-            logger.info(s"User logging in: $attrs")
-            if (isUsingValtuudet(attrs)) {
-              logger.info(s"User ${attrs.getOrElse("impersonatorDisplayName", "NOT_FOUND")} is using valtuudet; Will not init session and should redirect to ${valtuudetRedirectUri}")
-              redirect(valtuudetRedirectUri)
-            } else {
-              logger.info(s"Parsing user attributes")
-              val hetu = attrs("nationalIdentificationNumber")
-              val personOid = attrs.getOrElse("personOid", "")
-              val displayName = attrs.getOrElse("displayName", "")
-              logger.info(s"attributes: $hetu $personOid $displayName")
-              initializeSessionAndRedirect(ticket, hetu, personOid, displayName)
+          val attrs: Either[Throwable, Map[String, String]] = callValidateServiceTicketWithOppijaAttributes(ticket)
+          logger.info(s"attrs response: $attrs")
+          attrs match {
+            case Right(attrs) => {
+              logger.info(s"User logging in: $attrs")
+              if (isUsingValtuudet(attrs)) {
+                logger.info(s"User ${attrs.getOrElse("impersonatorDisplayName", "NOT_FOUND")} is using valtuudet; Will not init session and should redirect to ${valtuudetRedirectUri}")
+                redirect(valtuudetRedirectUri)
+              } else {
+                val hetu = attrs("nationalIdentificationNumber")
+                val personOid = attrs.getOrElse("personOid", "")
+                val displayName = attrs.getOrElse("displayName", "")
+                initializeSessionAndRedirect(ticket, hetu, personOid, displayName)
+              }
             }
-          }
-          catch {
-            case t: Throwable =>
-              logger.error(s"Failed to validate service ticket $ticket, exception: $t")
-              new AuthenticationFailedException(s"Failed to validate service ticket $ticket", t)
+            case Left(t) => {
+              logger.warn("Unable to process CAS Oppija login request, hetu cannot be resolved from ticket", t)
+              BadRequest(t.getMessage)
+            }
           }
         }
       }
@@ -72,16 +73,24 @@ trait SecuredSessionServletContainer {
       }
     }
 
-    private def callValidateServiceTicketWithOppijaAttributes(ticket: String): Map[String, String] = {
+    private def callValidateServiceTicketWithOppijaAttributes(ticket: String): Either[Throwable, Map[String, String]] = {
       logger.info(s"validating service ticket $ticket from cas oppija with url: ${initsessionPath(request.getContextPath())}")
-      val javaHashMap = casOppijaClient.validateServiceTicketWithOppijaAttributesBlocking(initsessionPath(request.getContextPath()), ticket)
-
-      javaHashMap.asScala.toMap
-      //      val javaFuture: CompletableFuture[JHashMap[String, String]] =
-//        casOppijaClient.validateServiceTicketWithOppijaAttributes(initsessionPath(request.getContextPath()), ticket)
-//      val scalaFuture: Future[JHashMap[String, String]] = javaFuture.toScala
-//      scalaFuture.map(_.asScala.toMap)
+      try {
+        val javaHashMap = casOppijaClient.validateServiceTicketWithOppijaAttributesBlocking(initsessionPath(request.getContextPath()), ticket)
+        logger.info(s"got attributes: $javaHashMap")
+        Right(javaHashMap.asScala.toMap)
+        //      val javaFuture: CompletableFuture[JHashMap[String, String]] =
+        //        casOppijaClient.validateServiceTicketWithOppijaAttributes(initsessionPath(request.getContextPath()), ticket)
+        //      val scalaFuture: Future[JHashMap[String, String]] = javaFuture.toScala
+        //      scalaFuture.map(_.asScala.toMap)
+      } catch {
+      case t: Throwable =>
+        logger.error(s"Failed to validate service ticket $ticket, exception: $t")
+        Left(t)
+      }
     }
+
+
     private def initializeSessionAndRedirect(ticket: String, hetu: String, personOid: String, displayName: String): Unit = {
       logger.info(s"Initializing session")
       val newSession = sessionService.storeSession(ticket, Hetu(hetu), OppijaNumero(personOid), displayName)
