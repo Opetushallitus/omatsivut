@@ -51,7 +51,7 @@ trait SecuredSessionServletContainer {
           }
           catch {
             case t: Throwable =>
-              logger.error(s"Failed to validate service ticket $ticket")
+              logger.error(s"Failed to validate service ticket $ticket, exception: $t")
               new AuthenticationFailedException(s"Failed to validate service ticket $ticket", t)
           }
         }
@@ -75,6 +75,7 @@ trait SecuredSessionServletContainer {
     private def callValidateServiceTicketWithOppijaAttributes(ticket: String): Map[String, String] = {
       logger.info(s"validating service ticket $ticket from cas oppija with url: ${initsessionPath(request.getContextPath())}")
       val javaHashMap = casOppijaClient.validateServiceTicketWithOppijaAttributesBlocking(initsessionPath(request.getContextPath()), ticket)
+
       javaHashMap.asScala.toMap
       //      val javaFuture: CompletableFuture[JHashMap[String, String]] =
 //        casOppijaClient.validateServiceTicketWithOppijaAttributes(initsessionPath(request.getContextPath()), ticket)
