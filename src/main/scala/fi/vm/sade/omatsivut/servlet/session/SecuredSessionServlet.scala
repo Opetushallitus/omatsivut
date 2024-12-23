@@ -36,14 +36,16 @@ trait SecuredSessionServletContainer {
         case Some(ticket) => {
           callValidateServiceTicketWithOppijaAttributes(ticket).onComplete {
             case Failure(exception) =>
+              logger.error("Failed to validate service ticket")
               new AuthenticationFailedException(s"Failed to validate service ticket $ticket", exception)
               // TODO toteuta retryt, vanha: .attemptRunFor(10000).toEither
             case Success(attrs) =>
-              logger.debug(s"attrs response: $attrs")
+              logger.info(s"User logging in: $attrs")
               if (isUsingValtuudet(attrs)) {
                 logger.info(s"User ${attrs.getOrElse("impersonatorDisplayName", "NOT_FOUND")} is using valtuudet; Will not init session and should redirect to ${valtuudetRedirectUri}")
                 redirect(valtuudetRedirectUri)
               } else {
+                logger.info(s"Parsing user attributes")
                 val hetu = attrs("nationalIdentificationNumber")
                 val personOid = attrs.getOrElse("personOid", "")
                 val displayName = attrs.getOrElse("displayName", "")
