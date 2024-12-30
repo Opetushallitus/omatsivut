@@ -15,9 +15,10 @@ import fi.vm.sade.hakemuseditori.viestintapalvelu.{TuloskirjeComponent, Tuloskir
 import fi.vm.sade.hakemuseditori.HakemusEditoriComponent
 import fi.vm.sade.omatsivut.config.AppConfig._
 import fi.vm.sade.omatsivut.db.impl.OmatsivutDb
-import cats.effect.{IO}
+import cats.effect.IO
 import cats.effect.unsafe.IORuntime
-import fi.vm.sade.omatsivut.cas.{CasClient}
+import fi.vm.sade.omatsivut.cas.CasClient
+import fi.vm.sade.omatsivut.util.BlazeHttpClient
 import org.http4s.blaze.client._
 import org.http4s.client._
 
@@ -111,14 +112,14 @@ class ComponentRegistry(val config: AppConfig)
   private def configureCASOppijaClient: CasClient = config match {
     case _ =>
       // TODO ehkä fiksumpi http clientin konffaus kunhan saa ensin toimimaan...
-      val client: Client[IO] = BlazeClientBuilder[IO](global).resource.use(client => IO.pure(client)).unsafeRunSync()(IORuntime.global)
+      val client: Client[IO] = BlazeHttpClient.createHttpClient
       new CasClient(config.settings.securitySettings.casOppijaUrl, client, AppConfig.callerId)
   }
 
       private def configureFakeCasOppijaClient: FakeCasClient = config match {
         case _ =>
           // TODO ehkä fiksumpi http clientin konffaus kunhan saa ensin toimimaan...
-          val client: Client[IO] = BlazeClientBuilder[IO](global).resource.use(client => IO.pure(client)).unsafeRunSync()(IORuntime.global)
+          val client: Client[IO] = BlazeHttpClient.createHttpClient
           new FakeCasClient(config.settings.securitySettings.casOppijaUrl,
             client,
             AppConfig.callerId,

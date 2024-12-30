@@ -50,7 +50,6 @@ class StubbedAuthenticationInfoService() extends AuthenticationInfoService {
 class RemoteAuthenticationInfoService(val remoteAppConfig: RemoteApplicationConfig, val casOppijaClient: CasClient, val securitySettings: SecuritySettings) extends AuthenticationInfoService with Logging {
   private val serviceUrl = remoteAppConfig.url + "/"
   private val casParams = CasParams(serviceUrl, securitySettings.casVirkailijaUsername, securitySettings.casVirkailijaPassword)
-  val runtime: IORuntime = IORuntime.global
   private def buildHttpClient: Resource[IO, Client[IO]] =
     BlazeClientBuilder[IO](global).resource
 
@@ -89,6 +88,6 @@ class RemoteAuthenticationInfoService(val remoteAppConfig: RemoteApplicationConf
             }
         }
       }
-    }.unsafeRunSync()(runtime)
+    }.unsafeRunSync()(IORuntime.global)
   }
 }
