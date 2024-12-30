@@ -37,6 +37,7 @@ class CasClient(casBaseUrl: Uri, client: Client[IO], callerId: String) extends L
   def this(casServer: String, client: Client[IO], callerId: String) = this(Uri.fromString(casServer).right.get, client, callerId)
 
   def validateServiceTicketWithOppijaAttributes(service: String)(serviceTicket: ServiceTicket): IO[OppijaAttributes] = {
+    logger.info(s"validateServiceTicketWithOppijaAttributes")
     validateServiceTicket[OppijaAttributes](casBaseUrl, client, service, decodeOppijaAttributes)(serviceTicket)
   }
 
@@ -163,6 +164,7 @@ class CasClient(casBaseUrl: Uri, client: Client[IO], callerId: String) extends L
    * Decode CAS Oppija's service ticket validation response to various oppija attributes.
    */
   def decodeOppijaAttributes: Response[IO] => IO[OppijaAttributes] = { response =>
+    logger.info("decodeOppijaAttributes")
     decodeCASResponse[OppijaAttributes](response, "oppija attributes", oppijaServiceTicketDecoder)
   }
 

@@ -1,5 +1,6 @@
 package fi.vm.sade.omatsivut.config
 
+import cats.effect.unsafe.IORuntime
 import fi.vm.sade.omatsivut.OphUrlProperties
 import com.github.kagkarlsson.scheduler.Scheduler
 import fi.vm.sade.ataru.{AtaruService, AtaruServiceComponent}
@@ -15,14 +16,12 @@ import fi.vm.sade.hakemuseditori.viestintapalvelu.{TuloskirjeComponent, Tuloskir
 import fi.vm.sade.hakemuseditori.HakemusEditoriComponent
 import fi.vm.sade.omatsivut.config.AppConfig._
 import fi.vm.sade.omatsivut.db.impl.OmatsivutDb
-import cats.effect.IO
-import cats.effect.unsafe.IORuntime
+import cats.effect.{IO, Resource}
 import fi.vm.sade.omatsivut.cas.CasClient
 import fi.vm.sade.omatsivut.util.BlazeHttpClient
-import org.http4s.blaze.client._
-import org.http4s.client._
+import fi.vm.sade.omatsivut.util.BlazeHttpClient.createHttpClient
+import org.http4s.client.Client
 
-import scala.concurrent.ExecutionContext.global
 //import fi.vm.sade.omatsivut.fixtures.hakemus.ApplicationFixtureImporter
 import fi.vm.sade.omatsivut.localization.OmatSivutTranslations
 import fi.vm.sade.omatsivut.oppijantunnistus.{OppijanTunnistusComponent, OppijanTunnistusService, RemoteOppijanTunnistusService, StubbedOppijanTunnistusService}
@@ -109,35 +108,35 @@ class ComponentRegistry(val config: AppConfig)
                                                   config.settings.securitySettings)
   }
 
-  private def configureCASOppijaClient: CasClient = config match {
-    case _ =>
-      // TODO ehkä fiksumpi http clientin konffaus kunhan saa ensin toimimaan...
-      val client: Client[IO] = BlazeHttpClient.createHttpClient
-      new CasClient(config.settings.securitySettings.casOppijaUrl, client, AppConfig.callerId)
+  private def configureCASOppijaClient: Resource[IO, CasClient] = {
+    for {
+      client <- BlazeHttpClient.createHttpClient
+      casClient <- Resource.eval(
+        IO(new CasClient(config.settings.securitySettings.casOppijaUrl, client, AppConfig.callerId))
+      )
+    } yield casClient
   }
 
-      private def configureFakeCasOppijaClient: FakeCasClient = config match {
-        case _ =>
-          // TODO ehkä fiksumpi http clientin konffaus kunhan saa ensin toimimaan...
-          val client: Client[IO] = BlazeHttpClient.createHttpClient
-          new FakeCasClient(config.settings.securitySettings.casOppijaUrl,
-            client,
-            AppConfig.callerId,
-            authenticationInfoService
-          )
-      }
-//  private def configureFakeCasOppijaClient: FakeCasClient = config match {
-//    case _ => new FakeCasClient(authenticationInfoService)
-//  }
+  private def configureFakeCasOppijaClient: FakeCasClient = config match {
+    case _ =>
+      // TODO ehkä fiksumpi http clientin konffaus kunhan saa ensin toimimaan...
+      val client: Client[IO] = createHttpClient.use(client => IO.pure(client)).unsafeRunSync()(IORuntime.global)
+      new FakeCasClient(config.settings.securitySettings.casOppijaUrl,
+        client,
+        AppConfig.callerId,
+        authenticationInfoService
+      )
+  }
 
   lazy val springContext = new HakemusSpringContext(OmatSivutSpringContext.createApplicationContext(config))
 //  if (config.isInstanceOf[IT]) {
 //    new ApplicationFixtureImporter(springContext).applyFixtures()
 //  }
 
-  val casOppijaClient = configureCASOppijaClient
+  lazy val casOppijaClientResource: Resource[IO, CasClient] = configureCASOppijaClient
+  lazy val casOppijaClient: CasClient =
+    casOppijaClientResource.use(client => IO(client)).unsafeRunSync()(IORuntime.global)
   val fakeCasOppijaClient = configureFakeCasOppijaClient
-
   val ohjausparametritService: OhjausparametritService = configureOhjausparametritService
   val valintatulosService: ValintatulosService = configureValintatulosService
   val hakemusConverter: HakemusConverter = new HakemusConverter
