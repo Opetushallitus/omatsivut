@@ -79,7 +79,12 @@ trait OppijanumerorekisteriComponent {
       val url = OphUrlProperties.url("oppijanumerorekisteri-service.duplicatesByPersonOids")
       val body: json4s.JValue = Extraction.decompose(Map("henkiloOids" -> List(oppijanumero)))
       val bodyString = compact(render(body))
-      val request = new RequestBuilder().setMethod("POST").setUrl(url).setBody(bodyString).build
+      val request = new RequestBuilder()
+        .setMethod("POST")
+        .setUrl(url)
+        .addHeader("Content-type", "application/json")
+        .addHeader("Accept", "application/json")
+        .setBody(bodyString).build
       val future = Future {
         casClient.executeBlocking(request)
       }

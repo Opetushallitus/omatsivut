@@ -13,18 +13,19 @@
     </organization>
     <properties>
 
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
 
         <valinta-tulos-service.version>7.0.1-SNAPSHOT</valinta-tulos-service.version>
         <tarjonta-api.version>2016-07-SNAPSHOT</tarjonta-api.version>
-        <scala.version>2.11.12</scala.version>
-        <jetty.version>9.4.15.v20190215</jetty.version>
+        <scala.version>2.12.20</scala.version>
+        <jetty.version>9.4.56.v20240826</jetty.version>
         <postgresql.version>42.2.5</postgresql.version>
-        <scalatra.version>2.6.3</scalatra.version>
-        <json4s.version>3.5.0</json4s.version>
-        <jackson.version>2.12.2</jackson.version>
-        <specs2.version>4.10.6</specs2.version>
+        <scalatra.version>3.0.0-M4</scalatra.version>
+        <json4s.version>4.1.0-M8</json4s.version>
+        <http4s.version>0.23.4</http4s.version>
+        <jackson.version>2.18.2</jackson.version>
+        <specs2.version>4.20.9</specs2.version>
         <flyway-core.version>3.2.1</flyway-core.version>
         <plugin.scala-maven-plugin.version>4.9.2</plugin.scala-maven-plugin.version>
     </properties>
@@ -37,12 +38,12 @@
         <dependency>
             <groupId>fi.vm.sade.java-utils</groupId>
             <artifactId>java-http</artifactId>
-            <version>0.2.0-SNAPSHOT</version>
+            <version>0.6.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>fi.vm.sade.java-utils</groupId>
             <artifactId>opintopolku-jetty</artifactId>
-            <version>0.1.0-SNAPSHOT</version>
+            <version>0.3.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.scala-lang</groupId>
@@ -51,52 +52,52 @@
         </dependency>
         <dependency>
             <groupId>org.scala-lang.modules</groupId>
-            <artifactId>scala-java8-compat_2.11</artifactId>
+            <artifactId>scala-java8-compat_2.12</artifactId>
             <version>1.0.2</version>
         </dependency>
 
         <dependency>
             <groupId>org.scalatra</groupId>
-            <artifactId>scalatra_2.11</artifactId>
+            <artifactId>scalatra_2.12</artifactId>
             <version>${scalatra.version}</version>
         </dependency>
         <dependency>
             <groupId>org.scalatra</groupId>
-            <artifactId>scalatra-json_2.11</artifactId>
+            <artifactId>scalatra-json_2.12</artifactId>
             <version>${scalatra.version}</version>
         </dependency>
         <dependency>
             <groupId>org.json4s</groupId>
-            <artifactId>json4s-jackson_2.11</artifactId>
+            <artifactId>json4s-jackson_2.12</artifactId>
             <version>${json4s.version}</version>
         </dependency>
         <dependency>
             <groupId>org.json4s</groupId>
-            <artifactId>json4s-ext_2.11</artifactId>
+            <artifactId>json4s-ext_2.12</artifactId>
             <version>${json4s.version}</version>
         </dependency>
         <dependency>
             <groupId>org.scalatra</groupId>
-            <artifactId>scalatra-specs2_2.11</artifactId>
+            <artifactId>scalatra-specs2_2.12</artifactId>
             <version>${scalatra.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.specs2</groupId>
-            <artifactId>specs2-core_2.11</artifactId>
+            <artifactId>specs2-core_2.12</artifactId>
             <version>${specs2.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.specs2</groupId>
-            <artifactId>specs2-junit_2.11</artifactId>
+            <artifactId>specs2-junit_2.12</artifactId>
             <version>${specs2.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.scalaz</groupId>
-            <artifactId>scalaz-core_2.11</artifactId>
-            <version>7.2.17</version>
+            <artifactId>scalaz-core_2.12</artifactId>
+            <version>7.3.8</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -130,9 +131,9 @@
             <version>${jetty.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.scalatags</groupId>
-            <artifactId>scalatags_2.11</artifactId>
-            <version>0.3.9</version>
+            <groupId>com.lihaoyi</groupId>
+            <artifactId>scalatags_2.12</artifactId>
+            <version>0.13.1</version>
         </dependency>
         <dependency>
             <groupId>commons-codec</groupId>
@@ -150,9 +151,9 @@
             <version>1.7.2</version>
         </dependency>
         <dependency>
-            <groupId>com.pauldijou</groupId>
-            <artifactId>jwt-json4s-jackson_2.11</artifactId>
-            <version>0.12.1</version>
+            <groupId>com.github.jwt-scala</groupId>
+            <artifactId>jwt-json4s-jackson_2.12</artifactId>
+            <version>10.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>
@@ -174,8 +175,8 @@
         <!-- scala-utils-riippuvuuden poiston myötä lisätty -->
         <dependency>
             <groupId>org.scalatra.scalate</groupId>
-            <artifactId>scalate-core_2.11</artifactId>
-            <version>1.9.6</version>
+            <artifactId>scalate-core_2.12</artifactId>
+            <version>1.10.1</version>
         </dependency>
         <dependency>
             <groupId>com.hubspot.jinjava</groupId>
@@ -184,14 +185,13 @@
         </dependency>
         <dependency>
             <groupId>org.scalaj</groupId>
-            <artifactId>scalaj-http_2.11</artifactId>
+            <artifactId>scalaj-http_2.12</artifactId>
             <version>2.4.2</version>
         </dependency>
         <dependency>
             <groupId>fi.vm.sade.java-utils</groupId>
             <artifactId>java-properties</artifactId>
-            <version>0.1.0-SNAPSHOT</version>
-<!--            <version>1.0.0-SNAPSHOT</version>-->
+            <version>1.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -213,11 +213,43 @@
 <!--            <artifactId>jackson-databind</artifactId>-->
 <!--            <version>${jackson.version}</version>-->
 <!--        </dependency>-->
+        <!-- scala-cas-depsut-->
+        <dependency>
+            <groupId>org.scala-lang.modules</groupId>
+            <artifactId>scala-xml_2.12</artifactId>
+            <version>2.0.1</version>
+        </dependency>
         <dependency>
             <groupId>org.http4s</groupId>
-            <artifactId>http4s-blaze-client_2.11</artifactId>
-            <version>0.16.6a</version>
+            <artifactId>http4s-client_2.12</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.scala-lang</groupId>
+                    <artifactId>scala-library</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
+            <version>${http4s.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.http4s</groupId>
+            <artifactId>http4s-dsl_2.12</artifactId>
+            <version>${http4s.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.http4s</groupId>
+            <artifactId>http4s-blaze-client_2.12</artifactId>
+            <version>${http4s.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.32</version>
+        </dependency>
+        <!-- scala-cas-depsut end-->
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-access</artifactId>
@@ -240,8 +272,8 @@
         </dependency>
         <dependency>
             <groupId>com.typesafe.slick</groupId>
-            <artifactId>slick_2.11</artifactId>
-            <version>3.3.0</version>
+            <artifactId>slick_2.12</artifactId>
+            <version>3.4.1</version>
         </dependency>
         <dependency>
             <groupId>joda-time</groupId>
@@ -372,7 +404,7 @@
                         <configuration>
                             <rules>
                                 <requireJavaVersion>
-                                    <version>11</version>
+                                    <version>17</version>
                                 </requireJavaVersion>
                                 <!-- dependencyConvergence/ -->
                             </rules>

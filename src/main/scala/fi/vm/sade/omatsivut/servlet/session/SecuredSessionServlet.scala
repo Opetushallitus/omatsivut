@@ -1,23 +1,22 @@
 package fi.vm.sade.omatsivut.servlet.session
 
 import fi.vm.sade.hakemuseditori.auditlog.Audit
-import fi.vm.sade.javautils.nio.cas.{CasClient, CasLogout}
+import fi.vm.sade.javautils.nio.cas.CasLogout
 import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.omatsivut.auditlog.Login
+import fi.vm.sade.omatsivut.cas.CasClient
+import fi.vm.sade.omatsivut.cas.CasClient.OppijaAttributes
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.security._
 import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
 import fi.vm.sade.omatsivut.util.{Logging, OptionConverter}
 import org.scalatra.{BadRequest, Cookie, CookieOptions}
+import cats.effect.IO
+import cats.effect.unsafe.implicits.global
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import java.util.concurrent.CompletableFuture
-import java.util.{HashMap => JHashMap}
-import scala.compat.java8.FutureConverters._
-import scala.collection.JavaConverters._
-import scala.concurrent._
-import scala.util.control.NonFatal
-import scala.util.{Failure, Success}
+import java.util.concurrent.{TimeUnit}
+import scala.concurrent.duration.Duration
+
 
 trait SecuredSessionServletContainer {
 
@@ -35,9 +34,9 @@ trait SecuredSessionServletContainer {
       ticket match {
         case None => BadRequest("No ticket found from CAS request" + clientAddress);
         case Some(ticket) => {
-          val attrs: Either[Throwable, Map[String, String]] = callValidateServiceTicketWithOppijaAttributes(ticket)
-          logger.info(s"attrs response: $attrs")
-          attrs match {
+          val result: IO[Either[Throwable, OppijaAttributes]] = casOppijaClient.validateServiceTicketWithOppijaAttributes(request.getContextPath())(ticket)
+            .timeout(Duration(10, TimeUnit.SECONDS)).attempt
+          result.unsafeRunSync() match {
             case Right(attrs) => {
               logger.info(s"User logging in: $attrs")
               if (isUsingValtuudet(attrs)) {
@@ -73,23 +72,6 @@ trait SecuredSessionServletContainer {
       }
     }
 
-    private def callValidateServiceTicketWithOppijaAttributes(ticket: String): Either[Throwable, Map[String, String]] = {
-      logger.info(s"validating service ticket $ticket from cas oppija with url: ${initsessionPath(request.getContextPath())}")
-      try {
-        val javaHashMap = casOppijaClient.validateServiceTicketWithOppijaAttributesBlocking(initsessionPath(request.getContextPath()), ticket)
-        logger.info(s"got attributes: $javaHashMap")
-        Right(javaHashMap.asScala.toMap)
-        //      val javaFuture: CompletableFuture[JHashMap[String, String]] =
-        //        casOppijaClient.validateServiceTicketWithOppijaAttributes(initsessionPath(request.getContextPath()), ticket)
-        //      val scalaFuture: Future[JHashMap[String, String]] = javaFuture.toScala
-        //      scalaFuture.map(_.asScala.toMap)
-      } catch {
-      case t: Throwable =>
-        logger.error(s"Failed to validate service ticket $ticket, exception: $t")
-        Left(t)
-      }
-    }
-
 
     private def initializeSessionAndRedirect(ticket: String, hetu: String, personOid: String, displayName: String): Unit = {
       logger.info(s"Initializing session")
@@ -120,7 +102,7 @@ trait SecuredSessionServletContainer {
       "https://" + OphUrlProperties.url("host.oppija") + "/oma-opintopolku/"
     }
 
-    private def isUsingValtuudet(attributes: Map[String, String]): Boolean = {
+    private def isUsingValtuudet(attributes: OppijaAttributes): Boolean = {
       (attributes.getOrElse("impersonatorNationalIdentificationNumber", "").nonEmpty
         || attributes.getOrElse("impersonatorDisplayName", "").nonEmpty)
     }

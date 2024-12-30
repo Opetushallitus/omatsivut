@@ -11,17 +11,14 @@ import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.util.Logging
-import org.asynchttpclient.{RequestBuilder, Response}
-import org.http4s.{Request, Uri}
-import org.http4s.Method.GET
+import org.asynchttpclient.{RequestBuilder}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import org.json4s.DefaultFormats
 import org.json4s.jackson.JsonMethods
-import scalaz.concurrent.Task
 
 import scala.compat.java8.FutureConverters.toScala
-import scala.concurrent.{Await, Future}
+import scala.concurrent.{Await}
 import scala.concurrent.duration.Duration
 import scala.util.{Failure, Success}
 

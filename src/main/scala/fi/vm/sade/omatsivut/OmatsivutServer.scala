@@ -17,7 +17,8 @@ object OmatsivutServer {
       Integer.valueOf(System.getProperty("omatsivut.port", "8080")),
       5,
       10,
-      Duration.ofMinutes(1)
+      Duration.ofMinutes(1),
+      Duration.ofMinutes(1) // TODO mikäs arvo tähän
     )
   }
 }

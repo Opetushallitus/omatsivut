@@ -1,20 +1,24 @@
 package fi.vm.sade.omatsivut.security
 
-import fi.vm.sade.javautils.nio.cas.CasClient
+
+import cats.conversions.all.autoConvertProfunctorVariance
+import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.OphUrlProperties
+import fi.vm.sade.omatsivut.cas.{CasAuthenticatingClient, CasClient, CasParams}
 import fi.vm.sade.omatsivut.config.{RemoteApplicationConfig, SecuritySettings}
 import fi.vm.sade.omatsivut.fixtures.TestFixture
 import fi.vm.sade.omatsivut.util.Logging
-import org.asynchttpclient.RequestBuilder
+import cats.effect._
+import cats.effect.unsafe.IORuntime
+import org.http4s._
+import org.http4s.blaze.client.BlazeClientBuilder
+import org.http4s.client._
 import org.json4s._
-
-import scala.concurrent.ExecutionContext.Implicits.global
 import org.json4s.jackson.JsonMethods._
+import org.typelevel.ci.CIStringSyntax
 
-import java.util.concurrent.TimeUnit
-import scala.compat.java8.FutureConverters.toScala
-import scala.concurrent.Await
-import scala.concurrent.duration.Duration
+import scala.concurrent.ExecutionContext.global
+
 
 trait AuthenticationInfoService {
   def getOnrHenkilo(hetu: String): Option[OnrHenkilo]
@@ -44,24 +48,47 @@ class StubbedAuthenticationInfoService() extends AuthenticationInfoService {
 }
 
 class RemoteAuthenticationInfoService(val remoteAppConfig: RemoteApplicationConfig, val casOppijaClient: CasClient, val securitySettings: SecuritySettings) extends AuthenticationInfoService with Logging {
+  private val serviceUrl = remoteAppConfig.url + "/"
+  private val casParams = CasParams(serviceUrl, securitySettings.casVirkailijaUsername, securitySettings.casVirkailijaPassword)
+  val runtime: IORuntime = IORuntime.global
+  private def buildHttpClient: Resource[IO, Client[IO]] =
+    BlazeClientBuilder[IO](global).resource
 
   override def getOnrHenkilo(hetu: String) : Option[OnrHenkilo] = {
-    val req = new RequestBuilder()
-      .setMethod("GET")
-      .setUrl(OphUrlProperties.url("oppijanumerorekisteri-service.henkiloByHetu", hetu))
-      .build()
-    val result = toScala(casOppijaClient.execute(req)).map {
-      case r if r.getStatusCode() == 200  =>
-        val json = parse(r.getResponseBody(), useBigDecimalForDouble = false)
-        implicit val formats = DefaultFormats
-        val henkilo = json.extract[OnrHenkilo]
-        Option(henkilo)
-      case r if r.getStatusCode() == 404  =>
-        None
-      case r =>
-        logger.error(s"Error fetching person ONR info. Response code=${r.getStatusCode()}, content=${r.getResponseBody()}")
-        None
-    }
-    Await.result(result, Duration(1, TimeUnit.MINUTES))
+    implicit val formats: Formats = DefaultFormats
+    val uri = Uri.unsafeFromString(OphUrlProperties.url("oppijanumerorekisteri-service.henkiloByHetu", hetu))
+    val request = Request[IO](
+      method = Method.GET,
+      uri = uri
+    ).withHeaders(
+      Header.Raw(ci"Caller-Id", AppConfig.callerId),
+    )
+
+    buildHttpClient.use { baseClient =>
+      val httpClient = CasAuthenticatingClient(
+        casClient = casOppijaClient,
+        casParams = casParams,
+        serviceClient = baseClient,
+        clientCallerId = AppConfig.callerId
+      )
+
+      httpClient.run(request).use { response =>
+        response.status.code match {
+          case 200 =>
+            response.as[String].map { responseBody =>
+              val json = parse(responseBody, useBigDecimalForDouble = false)
+              Some(json.extract[OnrHenkilo])
+            }
+          case 404 =>
+            IO.pure(None)
+          case statusCode =>
+            response.as[String].flatMap { responseBody =>
+              IO {
+                logger.error(s"Error fetching person ONR info. Response code=$statusCode, content=$responseBody")
+              }.as(None)
+            }
+        }
+      }
+    }.unsafeRunSync()(runtime)
   }
 }
