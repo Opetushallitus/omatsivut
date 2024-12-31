@@ -68,6 +68,7 @@ trait HakemusRepositoryComponent {
           }
         }.flatMap(application => {
           val hakuOption = application.hakuOid match {
+            case null => None
             case "" => None
             case hakuOid => timed("LomakeRepository get lomake", 1000) {
               tarjontaService.haku(hakuOid, lang).filter(_.published).filter(_.hakukierrosvoimassa)

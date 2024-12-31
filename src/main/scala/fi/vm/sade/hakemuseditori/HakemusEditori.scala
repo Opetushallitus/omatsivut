@@ -65,7 +65,7 @@ trait HakemusEditoriComponent extends AtaruServiceComponent
     def fetchByPersonOid(request: HttpServletRequest,
                          personOid: String,
                          valintatulosFetchStrategy: ValintatulosFetchStrategy): HakemusResult = {
-      logger.debug(s"Fetching hakemus by person oid $personOid")
+      logger.info(s"Fetching hakemus list by person oid $personOid")
       val ataruHakemukset = Try(ataruService.findApplications(request, personOid, valintatulosFetchStrategy, language))
       val hakuAppHakemukset = oppijanumerorekisteriService.fetchAllDuplicateOids(personOid).toList
         .map(oid => Try(hakemusRepository.fetchHakemukset(request, oid, valintatulosFetchStrategy)))
@@ -83,6 +83,8 @@ trait HakemusEditoriComponent extends AtaruServiceComponent
                           personOid: String,
                           hakemusOid: String,
                           valintatulosFetchStrategy: ValintatulosFetchStrategy): Option[HakemusInfo] = {
+      logger.info(s"fetchByHakemusOid hakemus-oidilla $hakemusOid")
+      // TODO käännä toisinpäin, haetaan ensin atarusta ja sitten vasta haku-appista
       val optFromHakemusRepository = hakemusRepository.getHakemus(request, hakemusOid, valintatulosFetchStrategy)
       if (optFromHakemusRepository.isEmpty) {
         logger.info("fetchByHakemusOid(): Hakemus repository returned no application for given hakemusOid {}. Searching from ataru.", hakemusOid)
