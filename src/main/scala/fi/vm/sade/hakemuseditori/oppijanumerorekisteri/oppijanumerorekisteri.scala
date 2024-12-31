@@ -62,7 +62,12 @@ trait OppijanumerorekisteriComponent {
       val result = future.map {
         case r if r.getStatusCode == 200 =>
           logger.info(s"oppijanumerorekisteri response ${r.getResponseBody}")
-          parse(r.getResponseBodyAsStream()).extract[Henkilo]
+          // parsitaan relevantit kentät
+          val parsedJson = parse(r.getResponseBodyAsStream())
+          val oid = (parsedJson \ "oidHenkilo").extract[String]
+          val hetu = (parsedJson \ "hetu").extractOpt[String]
+          val oppijanumero = (parsedJson \ "oppijanumero").extractOpt[String]
+          Henkilo(oid, hetu, oppijanumero)
         case r =>
           throw new RuntimeException(new RuntimeException(s"Failed to get henkilö for $personOid: ${r.toString()}"))
       }
