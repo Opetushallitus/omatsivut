@@ -6,12 +6,14 @@ class ApplicationDao {
 
   def findByPersonOid(personOid: String): List[Application] = {
     // TODO implement
-    List(new Application().setState(Application.State.INCOMPLETE))
+    List.empty
+//    List(new Application().setState(Application.State.INCOMPLETE))
   }
 
   def findByOid(oid: String): Option[Application] = {
     // TODO implement
-    Some(new Application())
+    None
+//    Some(new Application())
   }
 
 }
