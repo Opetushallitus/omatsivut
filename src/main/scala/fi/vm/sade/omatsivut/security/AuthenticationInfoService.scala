@@ -54,6 +54,7 @@ class RemoteAuthenticationInfoService(val remoteAppConfig: RemoteApplicationConf
     BlazeClientBuilder[IO](global).resource
 
   override def getOnrHenkilo(hetu: String) : Option[OnrHenkilo] = {
+    logger.info(s"fetching henkilo from ONR")
     implicit val formats: Formats = DefaultFormats
     val uri = Uri.unsafeFromString(OphUrlProperties.url("oppijanumerorekisteri-service.henkiloByHetu", hetu))
     val request = Request[IO](

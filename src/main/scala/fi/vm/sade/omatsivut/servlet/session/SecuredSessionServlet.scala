@@ -39,7 +39,7 @@ trait SecuredSessionServletContainer {
         case Some(ticket) =>
           val result: IO[Either[Throwable, OppijaAttributes]] =
             casOppijaClient
-              .validateServiceTicketWithOppijaAttributes(request.getContextPath())(ticket)
+              .validateServiceTicketWithOppijaAttributes(initsessionPath(request.getContextPath()))(ticket)
               .timeout(Duration(10, TimeUnit.SECONDS))
               .attempt
           logger.info(s"got result $result")
@@ -50,6 +50,7 @@ trait SecuredSessionServletContainer {
                 logger.info(s"User ${attrs.getOrElse("impersonatorDisplayName", "NOT_FOUND")} is using valtuudet; Will not init session and should redirect to ${valtuudetRedirectUri}")
                 redirect(valtuudetRedirectUri)
               } else {
+                logger.info(s"Parsing attributes")
                 val hetu = attrs("nationalIdentificationNumber")
                 val personOid = attrs.getOrElse("personOid", "")
                 val displayName = attrs.getOrElse("displayName", "")
