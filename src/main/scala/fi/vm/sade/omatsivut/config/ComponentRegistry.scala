@@ -19,8 +19,10 @@ import fi.vm.sade.omatsivut.db.impl.OmatsivutDb
 import cats.effect.{IO, Resource}
 import fi.vm.sade.omatsivut.cas.CasClient
 import fi.vm.sade.omatsivut.util.BlazeHttpClient
-import fi.vm.sade.omatsivut.util.BlazeHttpClient.createHttpClient
+import org.http4s.blaze.client.BlazeClientBuilder
 import org.http4s.client.Client
+
+import scala.concurrent.ExecutionContext.global
 
 //import fi.vm.sade.omatsivut.fixtures.hakemus.ApplicationFixtureImporter
 import fi.vm.sade.omatsivut.localization.OmatSivutTranslations
@@ -108,19 +110,13 @@ class ComponentRegistry(val config: AppConfig)
                                                   config.settings.securitySettings)
   }
 
-  private def configureCASOppijaClient: Resource[IO, CasClient] = {
-    for {
-      client <- BlazeHttpClient.createHttpClient
-      casClient <- Resource.eval(
-        IO(new CasClient(config.settings.securitySettings.casOppijaUrl, client, AppConfig.callerId))
-      )
-    } yield casClient
+  private def configureCASOppijaClient: CasClient = {
+    new CasClient(config.settings.securitySettings.casOppijaUrl, persistentHttpClient, AppConfig.callerId)
   }
 
   private def configureFakeCasOppijaClient: FakeCasClient = config match {
     case _ =>
-      // TODO ehkä fiksumpi http clientin konffaus kunhan saa ensin toimimaan...
-      val client: Client[IO] = createHttpClient.use(client => IO.pure(client)).unsafeRunSync()(IORuntime.global)
+      val client: Client[IO] = BlazeHttpClient.getClient
       new FakeCasClient(config.settings.securitySettings.casOppijaUrl,
         client,
         AppConfig.callerId,
@@ -132,10 +128,8 @@ class ComponentRegistry(val config: AppConfig)
 //  if (config.isInstanceOf[IT]) {
 //    new ApplicationFixtureImporter(springContext).applyFixtures()
 //  }
-
-  lazy val casOppijaClientResource: Resource[IO, CasClient] = configureCASOppijaClient
-  lazy val casOppijaClient: CasClient =
-    casOppijaClientResource.use(client => IO(client)).unsafeRunSync()(IORuntime.global)
+  lazy val persistentHttpClient: Client[IO] = BlazeClientBuilder[IO](global).resource.allocated.unsafeRunSync()(cats.effect.unsafe.implicits.global)._1
+  lazy val casOppijaClient: CasClient = configureCASOppijaClient
   val fakeCasOppijaClient = configureFakeCasOppijaClient
   val ohjausparametritService: OhjausparametritService = configureOhjausparametritService
   val valintatulosService: ValintatulosService = configureValintatulosService

@@ -8,19 +8,15 @@ import scala.concurrent.ExecutionContext.global
 
 object BlazeHttpClient {
 
+  lazy val httpClientResource: Resource[IO, Client[IO]] = BlazeHttpClient.createHttpClient
+
+  def getClient: Client[IO] = httpClientResource.use(IO.pure).unsafeRunSync()(cats.effect.unsafe.implicits.global)
+
   /**
    * Creates a reusable Resource for an HTTP client.
    */
   def createHttpClient: Resource[IO, Client[IO]] =
     BlazeClientBuilder[IO](global).resource
 
-  /**
-   * Runs an operation using a managed HTTP client.
-   *
-   * @param useClient A function that takes a `Client[IO]` and returns an `IO[A]`.
-   * @tparam A The result type of the operation.
-   */
-  def withHttpClient[A](useClient: Client[IO] => IO[A]): IO[A] =
-    createHttpClient.use(useClient)
 }
 

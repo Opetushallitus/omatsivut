@@ -10,9 +10,10 @@ import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.security._
 import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
 import fi.vm.sade.omatsivut.util.{BlazeHttpClient, Logging, OptionConverter}
-import org.scalatra.{BadRequest, Cookie, CookieOptions}
-import cats.effect.IO
+import org.scalatra.{BadRequest, Cookie, CookieOptions, Ok}
+import cats.effect.{IO, Resource}
 import cats.effect.unsafe.implicits.global
+import org.http4s.client.Client
 
 import java.util.concurrent.TimeUnit
 import scala.concurrent.duration.Duration
@@ -26,39 +27,39 @@ trait SecuredSessionServletContainer {
                               val sessionTimeout: Option[Int] = None,
                               val casOppijaClient: CasClient)
     extends OmatSivutServletBase with AttributeNames with OmatsivutPaths with Logging {
+
     get("/") {
       logger.info("initsession CAS request received")
-
       val ticket: Option[String] = Option(request.getParameter("ticket"))
       logger.info(s"Ticket: $ticket")
       ticket match {
-        case None => BadRequest("No ticket found from CAS request" + clientAddress);
+        case None =>
+          BadRequest("No ticket found from CAS request" + clientAddress)
+
         case Some(ticket) =>
-          BlazeHttpClient.withHttpClient { client =>
-            val result: IO[Either[Throwable, OppijaAttributes]] =
-              casOppijaClient
-                .validateServiceTicketWithOppijaAttributes(request.getContextPath())(ticket)
-                .timeout(Duration(10, TimeUnit.SECONDS))
-                .attempt
+          val result: IO[Either[Throwable, OppijaAttributes]] =
+            casOppijaClient
+              .validateServiceTicketWithOppijaAttributes(request.getContextPath())(ticket)
+              .timeout(Duration(10, TimeUnit.SECONDS))
+              .attempt
+          logger.info(s"got result $result")
+          result.unsafeRunSync() match { // Execute IO synchronously, required for servlets
+            case Right(attrs) =>
+              logger.info(s"User logging in: $attrs")
+              if (isUsingValtuudet(attrs)) {
+                logger.info(s"User ${attrs.getOrElse("impersonatorDisplayName", "NOT_FOUND")} is using valtuudet; Will not init session and should redirect to ${valtuudetRedirectUri}")
+                redirect(valtuudetRedirectUri)
+              } else {
+                val hetu = attrs("nationalIdentificationNumber")
+                val personOid = attrs.getOrElse("personOid", "")
+                val displayName = attrs.getOrElse("displayName", "")
+                initializeSessionAndRedirect(ticket, hetu, personOid, displayName)
+              }
 
-            result.flatMap {
-              case Right(attrs) =>
-                logger.info(s"User logging in: $attrs")
-                if (isUsingValtuudet(attrs)) {
-                  logger.info(s"User ${attrs.getOrElse("impersonatorDisplayName", "NOT_FOUND")} is using valtuudet; Will not init session and should redirect to ${valtuudetRedirectUri}")
-                  IO.pure(redirect(valtuudetRedirectUri))
-                } else {
-                  val hetu = attrs("nationalIdentificationNumber")
-                  val personOid = attrs.getOrElse("personOid", "")
-                  val displayName = attrs.getOrElse("displayName", "")
-                  IO.pure(initializeSessionAndRedirect(ticket, hetu, personOid, displayName))
-                }
-
-              case Left(t) =>
-                logger.warn("Unable to process CAS Oppija login request, hetu cannot be resolved from ticket", t)
-                IO.pure(BadRequest(t.getMessage))
-            }
-          }.unsafeRunSync()
+            case Left(error) =>
+              logger.warn("Unable to process CAS Oppija login request, hetu cannot be resolved from ticket", error)
+              BadRequest(error.getMessage)
+          }
       }
     }
 
