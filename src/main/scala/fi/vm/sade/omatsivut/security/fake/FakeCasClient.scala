@@ -25,7 +25,6 @@ class FakeCasClient(casBaseUrl: String, client: Client[IO], callerId: String, au
     }
   }
 
-  override def decodeVirkailijaUsername: Response[IO] => IO[Username] = response => IO.pure("frank-virkailija")
   override def fetchCasSession(params: CasParams, sessionCookieName: String): IO[SessionCookie] = {
     IO.pure("keksi")
   }

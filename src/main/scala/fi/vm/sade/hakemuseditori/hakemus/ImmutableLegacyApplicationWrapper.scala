@@ -18,8 +18,8 @@ object ImmutableLegacyApplicationWrapper extends Logging {
 
   def wrap(application: Application) = {
     logger.info("wrapataan")
-    logger.info(application.getOid)
-    logger.info(application.getAnswers.size().toString)
+    logger.info(s"application oid: ${application.getOid}")
+    logger.info(s"application answers: ${application.getAnswers.size()}")
     val answers: LegacyApplicationAnswers = {
       application.getAnswers.toMap.mapValues { phaseAnswers => phaseAnswers.toMap }
     }

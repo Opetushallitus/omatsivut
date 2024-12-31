@@ -37,16 +37,7 @@ class CasClient(casBaseUrl: Uri, client: Client[IO], callerId: String) extends L
   def this(casServer: String, client: Client[IO], callerId: String) = this(Uri.fromString(casServer).right.get, client, callerId)
 
   def validateServiceTicketWithOppijaAttributes(service: String)(serviceTicket: ServiceTicket): IO[OppijaAttributes] = {
-    logger.info(s"validateServiceTicketWithOppijaAttributes")
     validateServiceTicket[OppijaAttributes](casBaseUrl, client, service, decodeOppijaAttributes)(serviceTicket)
-  }
-
-  def validateServiceTicketWithVirkailijaUsername(service: String)(serviceTicket: ServiceTicket): IO[Username] = {
-    validateServiceTicket[Username](casBaseUrl, client, service, decodeVirkailijaUsername)(serviceTicket)
-  }
-
-  def validateServiceTicket[R](service: String)(serviceTicket: ServiceTicket, responseHandler: Response[IO] => IO[R]): IO[R] = {
-    validateServiceTicket[R](casBaseUrl, client, service, responseHandler)(serviceTicket)
   }
 
   private def validateServiceTicket[R](casBaseUrl: Uri, client: Client[IO], service: String, responseHandler: Response[IO] => IO[R])(serviceTicket: ServiceTicket): IO[R] = {
@@ -58,10 +49,6 @@ class CasClient(casBaseUrl: Uri, client: Client[IO], callerId: String) extends L
     FetchHelper.fetch[R](client, callerId, request, responseHandler)
   }
 
-  def authenticateVirkailija(user: CasUser): IO[Boolean] = {
-    TicketGrantingTicketClient.getTicketGrantingTicket(casBaseUrl, client, user, callerId)
-      .map(_tgtUrl => true) // Authentication succeeded if we received a tgtUrl
-  }
 
   /**
    *  Establishes session with the requested service by
@@ -134,21 +121,6 @@ class CasClient(casBaseUrl: Uri, client: Client[IO], callerId: String) extends L
         }
       }
 
-  private val virkailijaServiceTicketDecoder: EntityDecoder[IO, Username] =
-    textOrXmlDecoder
-      .map(s => Utility.trim(scala.xml.XML.loadString(s)))
-      .flatMapR[Username] { serviceResponse => {
-        val user = (serviceResponse \ "authenticationSuccess" \ "user")
-        user.length match {
-          case 1 => DecodeResult.successT(user.text)
-          case _ =>
-            DecodeResult.failureT(InvalidMessageBodyFailure(
-              s"Virkailija Service Ticket validation response decoding failed: response body is of wrong form ($serviceResponse)"
-            ))
-        }
-      }
-      }
-
   private def casFailure[R](debugLabel: String, resp: Response[IO]): EitherT[IO, DecodeFailure, R] = {
     textOrXmlDecoder
       .decode(resp, strict = false)
@@ -164,16 +136,9 @@ class CasClient(casBaseUrl: Uri, client: Client[IO], callerId: String) extends L
    * Decode CAS Oppija's service ticket validation response to various oppija attributes.
    */
   def decodeOppijaAttributes: Response[IO] => IO[OppijaAttributes] = { response =>
-    logger.info("decodeOppijaAttributes")
     decodeCASResponse[OppijaAttributes](response, "oppija attributes", oppijaServiceTicketDecoder)
   }
 
-  /**
-   * Decode CAS Virkailija's service ticket validation response to username.
-   */
-  def decodeVirkailijaUsername: Response[IO] => IO[Username] = { response =>
-    decodeCASResponse[Username](response, "username", virkailijaServiceTicketDecoder)
-  }
 
   private def decodeCASResponse[R](response: Response[IO], debugLabel: String, decoder: EntityDecoder[IO, R]): IO[R] = {
     val decodeResult = if (response.status.isSuccess) {

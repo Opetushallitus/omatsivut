@@ -21,7 +21,8 @@ import org.asynchttpclient.RequestBuilder
 import scala.concurrent.ExecutionContext.Implicits.global
 import javax.servlet.http.HttpServletRequest
 import org.joda.time.LocalDateTime
-import org.json4s.DefaultFormats
+import org.json4s.FieldSerializer.{renameFrom, renameTo}
+import org.json4s.{DefaultFormats, FieldSerializer}
 import org.json4s.jackson.JsonMethods.parse
 
 import scala.compat.java8.FutureConverters.toScala
@@ -32,9 +33,10 @@ import scala.util.{Failure, Success, Try}
 case class AtaruApplication(oid: String,
                             secret: String,
                             email: String,
-                            haku: String,
+                            haku: Option[String],
                             hakukohteet: List[String],
-                            submitted: String)
+                            submitted: String,
+                            formName: Option[Map[String, String]])
 
 trait AtaruServiceComponent  {
   this: TarjontaComponent
@@ -54,22 +56,28 @@ trait AtaruServiceComponent  {
       val now = new LocalDateTime().toDate.getTime
       val henkilo = oppijanumerorekisteriService.henkilo(personOid)
 
+      def translate(name: Map[String,String]): Option[String] =
+        List(language.toString, "fi", "en", "sv")
+          .map(name.get)
+          .find(_.isDefined)
+          .flatten
+
       getApplications(personOid)
         .map(a => (
           a,
-          tarjontaService.haku(a.haku, language),
+          a.haku.flatMap(tarjontaService.haku(_, language)),
           getHakukohteet(a.hakukohteet, language),
-          tuloskirjeService.getTuloskirjeInfo(request, a.haku, a.oid, AccessibleHtml)
+          a.haku.flatMap(tuloskirjeService.getTuloskirjeInfo(request, _, a.oid, AccessibleHtml))
         ))
         .collect {
           case (a, Some(haku), Some(hakukohteet), tuloskirje) =>
             val valintatulos = Try(if (valintatulosFetchStrategy.ataru(haku, henkilo, a)) {
-              valintatulosService.getValintatulos(a.oid, a.haku)
+              valintatulosService.getValintatulos(a.oid, a.haku.get)
             } else {
               None
             })
             val ohjeetUudelleOpiskelijalleMap: Map[String, String] = hakukohteet
-              .filter(h => !h.ohjeetUudelleOpiskelijalle.isEmpty)
+              .filter(h => h.ohjeetUudelleOpiskelijalle.isDefined)
               .map(h => h.oid -> h.ohjeetUudelleOpiskelijalle.get)
               .toMap
             val hakutoiveet = hakukohteet.map(toHakutoive)
@@ -78,11 +86,11 @@ trait AtaruServiceComponent  {
               personOid = personOid,
               received = Option.apply(Instant.parse(a.submitted).toEpochMilli),
               updated = None,
-              state = state(now, haku, hakukohteet, a, valintatulos.getOrElse(None)),
+              state = state(now, Some(haku), hakukohteet, a, valintatulos.getOrElse(None)),
               tuloskirje = tuloskirje,
               ohjeetUudelleOpiskelijalle = ohjeetUudelleOpiskelijalleMap,
               hakutoiveet = hakutoiveet,
-              haku = haku,
+              haku = Some(haku),
               educationBackground = EducationBackground("base_education", false),
               answers = Map(),
               postOffice = None,
@@ -91,7 +99,8 @@ trait AtaruServiceComponent  {
               hasForm = true,
               requiredPaymentState = None,
               notifications = Map(),
-              oppijanumero = henkilo.oppijanumero.getOrElse(personOid)
+              oppijanumero = henkilo.oppijanumero.getOrElse(personOid),
+              formName = translate(a.formName.getOrElse(Map()))
             )
             Audit.oppija.log(ShowHakemus(request, hakemus.personOid, hakemus.oid, haku.oid))
             HakemusInfo(
@@ -103,18 +112,50 @@ trait AtaruServiceComponent  {
               hakemusSource = "Ataru",
               previewUrl = Some(OphUrlProperties.url("ataru.applications.modify", a.secret))
             )
+          case (a, None, _, tuloskirje) =>
+            val hakemus = Hakemus(
+              oid = a.oid,
+              personOid = personOid,
+              received = Option.apply(Instant.parse(a.submitted).toEpochMilli),
+              updated = None,
+              state = state(now, None, List.empty, a, None),
+              tuloskirje = tuloskirje,
+              ohjeetUudelleOpiskelijalle = Map(),
+              hakutoiveet = List.empty,
+              haku = None,
+              educationBackground = EducationBackground("base_education", false),
+              answers = Map(),
+              postOffice = None,
+              email = Some(a.email),
+              requiresAdditionalInfo = false,
+              hasForm = true,
+              formName = translate(a.formName.getOrElse(Map())),
+              requiredPaymentState = None,
+              notifications = Map(),
+              oppijanumero = henkilo.oppijanumero.getOrElse(personOid)
+            )
+            Audit.oppija.log(ShowHakemus(request, hakemus.personOid, hakemus.oid, ""))
+            HakemusInfo(
+              hakemus = hakemus,
+              errors = List(),
+              questions = List(),
+              tulosOk = true,
+              paymentInfo = None,
+              hakemusSource = "Ataru",
+              previewUrl = Some(OphUrlProperties.url("ataru.applications.modify", a.secret))
+            )
         }
     }
 
     private def state(now: Long,
-                      haku: Haku,
+                      haku: Option[Haku],
                       hakukohteet: List[Hakukohde],
                       application: AtaruApplication,
                       valintatulos: Option[Hakemus.Valintatulos]): HakemuksenTila = {
-      if (hakukohteet.exists(KohteenHakuaika.hakuaikaEnded(haku, _, now))) {
-        if (haku.aikataulu.exists(_.hakukierrosPaattyy.exists(_ < now))) {
+      if (haku.isDefined && hakukohteet.exists(KohteenHakuaika.hakuaikaEnded(haku.get, _, now))) {
+        if (haku.get.aikataulu.exists(_.hakukierrosPaattyy.exists(_ < now))) {
           HakukierrosPaattynyt(valintatulos = valintatulos)
-        } else if (hakukohteet.forall(KohteenHakuaika.hakuaikaEnded(haku, _, now))) {
+        } else if (hakukohteet.forall(KohteenHakuaika.hakuaikaEnded(haku.get, _, now))) {
           HakukausiPaattynyt(valintatulos = valintatulos)
         } else {
           Active(valintatulos = valintatulos)
@@ -152,7 +193,10 @@ trait AtaruServiceComponent  {
   // feels a bit strange to have the testing code mixed with the production code,
   // but I am only following the pattern used in the rest of this application
   class StubbedAtaruService extends AtaruServiceCommons {
-    implicit private val formats = DefaultFormats
+    implicit private val formats = DefaultFormats +
+      FieldSerializer[AtaruApplication](
+        renameTo("formName", "form-name"), renameFrom("form-name", "formName")
+      )
 
     def getApplications(personOid: String): List[AtaruApplication] = {
       personOid match {
@@ -179,7 +223,10 @@ trait AtaruServiceComponent  {
 
     private val casClient: CasClient = CasClientBuilder.build(casConfig)
 
-    implicit private val formats = DefaultFormats
+    implicit private val formats = DefaultFormats +
+      FieldSerializer[AtaruApplication](
+        renameTo("formName", "form-name"), renameFrom("form-name", "formName")
+      )
 
     def getApplications(personOid: String): List[AtaruApplication] = {
       val req = new RequestBuilder()

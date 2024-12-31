@@ -38,7 +38,7 @@ case class Hakemus(oid: String,
                    tuloskirje: Option[Tuloskirje] = None,
                    ohjeetUudelleOpiskelijalle: Map[String, String], // hakukohdeOid -> linkki
                    hakutoiveet: List[Hakutoive] = Nil,
-                   haku: Haku,
+                   haku: Option[Haku],
                    educationBackground: EducationBackground,
                    answers: Answers,
                    postOffice: Option[String],
@@ -47,8 +47,9 @@ case class Hakemus(oid: String,
                    hasForm: Boolean,
                    requiredPaymentState: Option[String],
                    notifications: Map[String, Map[String, Boolean]],
-                   oppijanumero: String) extends HakemusLike {
-  def preferences = hakutoiveet.map(_.hakemusData.getOrElse(Map.empty))
+                   oppijanumero: String,
+                   formName: Option[String]) extends HakemusLike {
+  def preferences: List[HakutoiveData] = hakutoiveet.map(_.hakemusData.getOrElse(Map.empty))
 
   def withoutKelaUrl: Hakemus = copy(state = state.withoutKelaUrl)
 

@@ -14,7 +14,6 @@ import fi.vm.sade.omatsivut.util.Logging
 import fi.vm.sade.omatsivut.util.Timer.timed
 import org.json4s.DefaultFormats
 import org.json4s.jackson.JsonMethods.parse
-import org.json4s.jackson.Serialization.read
 
 import javax.servlet.http.HttpServletRequest
 import scala.util.{Failure, Success, Try}

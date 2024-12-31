@@ -55,7 +55,7 @@ trait HakemusApiSpecification extends ScalatraTestSupport with Logging {
 
   def setApplicationStart(applicationId: String, daysFromNow: Long)(implicit personOid: PersonOid) = {
     withApplicationsResponse { resp =>
-      val hakuOid = resp.applications.find(_.hakemus.oid == applicationId).map(_.hakemus.haku.oid).get
+      val hakuOid = resp.applications.find(_.hakemus.oid == applicationId).map(_.hakemus.haku.get.oid).get
       put("util/fixtures/haku/" + hakuOid + "/overrideStart/" + (new Date().getTime + daysFromNow*24*60*60*1000), Iterable.empty) { }
     }
   }

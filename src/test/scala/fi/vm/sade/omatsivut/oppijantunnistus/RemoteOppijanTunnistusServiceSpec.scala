@@ -17,7 +17,7 @@
 //@RunWith(classOf[JUnitRunner])
 //class RemoteOppijanTunnistusServiceSpec extends MutableScalatraSpec with Mockito {
 //  implicit val formats = DefaultFormats
-//
+//  implicit val appConfig = new AppConfig.IT
 //  val testToken: String = "testToken"
 //  val url: String = OphUrlProperties.url("oppijan-tunnistus.verify", testToken)
 //  val expectedHakemusOid: String = "expectedHakemusOid"

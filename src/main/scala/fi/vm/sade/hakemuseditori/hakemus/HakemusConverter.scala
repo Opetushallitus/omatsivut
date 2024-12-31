@@ -59,7 +59,7 @@ trait HakemusConverterComponent {
         tuloskirje,
         ohjeetUudelleOpiskelijalleMap,
         hakutoiveet,
-        haku,
+        Some(haku),
         EducationBackground(koulutusTaustaAnswers.get(baseEducationKey), !Try {koulutusTaustaAnswers.get("ammatillinenTutkintoSuoritettu").toBoolean}.getOrElse(false)),
         answers,
         None,
@@ -68,7 +68,8 @@ trait HakemusConverterComponent {
         false,
         None,
         Map.empty,
-        henkilo.oppijanumero.getOrElse(application.personOid)
+        henkilo.oppijanumero.getOrElse(application.personOid),
+        None
       )
     }
 

@@ -42,7 +42,6 @@ trait SecuredSessionServletContainer {
               .validateServiceTicketWithOppijaAttributes(initsessionPath(request.getContextPath()))(ticket)
               .timeout(Duration(10, TimeUnit.SECONDS))
               .attempt
-          logger.info(s"got result $result")
           result.unsafeRunSync() match { // Execute IO synchronously, required for servlets
             case Right(attrs) =>
               logger.info(s"User logging in: $attrs")
@@ -50,7 +49,7 @@ trait SecuredSessionServletContainer {
                 logger.info(s"User ${attrs.getOrElse("impersonatorDisplayName", "NOT_FOUND")} is using valtuudet; Will not init session and should redirect to ${valtuudetRedirectUri}")
                 redirect(valtuudetRedirectUri)
               } else {
-                logger.info(s"Parsing attributes")
+                logger.info(s"Parsing user attributes")
                 val hetu = attrs("nationalIdentificationNumber")
                 val personOid = attrs.getOrElse("personOid", "")
                 val displayName = attrs.getOrElse("displayName", "")
