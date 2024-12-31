@@ -219,7 +219,7 @@ trait AtaruServiceComponent  {
       AppConfig.callerId,
       AppConfig.callerId,
       "auth/cas")
-      .setJsessionName("ring-session").build
+      .setJsessionName("JSESSIONID").build
 
     private val casClient: CasClient = CasClientBuilder.build(casConfig)
 

@@ -61,7 +61,6 @@ trait OppijanumerorekisteriComponent {
       }
       val result = future.map {
         case r if r.getStatusCode == 200 =>
-          logger.info(s"oppijanumerorekisteri response ${r.getResponseBody}")
           // parsitaan relevantit kentät
           val parsedJson = parse(r.getResponseBodyAsStream())
           val oid = (parsedJson \ "oidHenkilo").extract[String]
