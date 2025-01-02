@@ -29,7 +29,7 @@ trait RemoteKoutaComponent {
     private val casConfig: CasConfig = new CasConfig.CasConfigBuilder(
       config.settings.securitySettings.casVirkailijaUsername,
       config.settings.securitySettings.casVirkailijaPassword,
-      OphUrlProperties.url("cas.url"),
+      OphUrlProperties.url("cas.virkailija.url"),
       OphUrlProperties.url("kouta-internal.service"),
       AppConfig.callerId,
       AppConfig.callerId,

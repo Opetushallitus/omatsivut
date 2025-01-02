@@ -214,12 +214,12 @@ trait AtaruServiceComponent  {
     private val casConfig: CasConfig = new CasConfig.CasConfigBuilder(
       config.settings.securitySettings.casVirkailijaUsername,
       config.settings.securitySettings.casVirkailijaPassword,
-      OphUrlProperties.url("cas.url"),
+      OphUrlProperties.url("cas.virkailija.url"),
       OphUrlProperties.url("url-ataru-service"),
       AppConfig.callerId,
       AppConfig.callerId,
       "auth/cas")
-      .setJsessionName("JSESSIONID").build
+      .setJsessionName("ring-session").build
 
     private val casClient: CasClient = CasClientBuilder.build(casConfig)
 

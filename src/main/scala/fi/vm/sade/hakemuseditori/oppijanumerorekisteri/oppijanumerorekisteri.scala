@@ -41,7 +41,7 @@ trait OppijanumerorekisteriComponent {
     val casConfig: CasConfig = new CasConfig.CasConfigBuilder(
       config.settings.securitySettings.casVirkailijaUsername,
       config.settings.securitySettings.casVirkailijaPassword,
-      OphUrlProperties.url("cas.url"),
+      OphUrlProperties.url("cas.virkailija.url"),
       OphUrlProperties.url("url-oppijanumerorekisteri-service"),
       AppConfig.callerId,
       AppConfig.callerId,
