@@ -29,8 +29,7 @@ trait HakemusRepositoryComponent {
   val tarjontaService: TarjontaService
   val hakemusRepository: HakemusFinder
 
-  val dao = new ApplicationDao()
-
+  val dao = new ApplicationDao(springContext.mongoTemplate)
 
   trait HakemusFinder {
 

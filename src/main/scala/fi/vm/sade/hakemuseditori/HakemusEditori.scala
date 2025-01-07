@@ -65,7 +65,6 @@ trait HakemusEditoriComponent extends AtaruServiceComponent
     def fetchByPersonOid(request: HttpServletRequest,
                          personOid: String,
                          valintatulosFetchStrategy: ValintatulosFetchStrategy): HakemusResult = {
-      logger.info(s"Fetching hakemus list by person oid $personOid")
       val ataruHakemukset = Try(ataruService.findApplications(request, personOid, valintatulosFetchStrategy, language))
       val hakuAppHakemukset = oppijanumerorekisteriService.fetchAllDuplicateOids(personOid).toList
         .map(oid => Try(hakemusRepository.fetchHakemukset(request, oid, valintatulosFetchStrategy)))
@@ -83,36 +82,33 @@ trait HakemusEditoriComponent extends AtaruServiceComponent
                           personOid: String,
                           hakemusOid: String,
                           valintatulosFetchStrategy: ValintatulosFetchStrategy): Option[HakemusInfo] = {
-      logger.info(s"fetchByHakemusOid hakemus-oidilla $hakemusOid")
-      // TODO käännä toisinpäin, haetaan ensin atarusta ja sitten vasta haku-appista
-      val optFromHakemusRepository = hakemusRepository.getHakemus(request, hakemusOid, valintatulosFetchStrategy)
-      if (optFromHakemusRepository.isEmpty) {
-        logger.info("fetchByHakemusOid(): Hakemus repository returned no application for given hakemusOid {}. Searching from ataru.", hakemusOid)
+      val ataruApplications = ataruService.findApplications(request, personOid, valintatulosFetchStrategy, language)
+      val matchingAtaruApplication = ataruApplications.find(_.hakemus.oid == hakemusOid)
+      if (ataruApplications.isEmpty) {
+        logger.warn(s"fetchByHakemusOid(): Ataru returned no applications for given personOid $personOid, searching from haku-app.")
+      } else if (matchingAtaruApplication.isEmpty) {
+        logger.warn(s"fetchByHakemusOid(): Ataru returned applications for personOid $personOid but " +
+          s"their hakemusOids ${ataruApplications.map(_.hakemus.oid).mkString(",")} did not match the given hakemusOid $hakemusOid")
       }
-
-      val matchingFromHakemusRepository = optFromHakemusRepository.filter { hakemus =>
-        val personOidFromHakemus = hakemus.hakemus.personOid
-        val oidsMatch = personOidFromHakemus == personOid
-        if (!oidsMatch) {
-          logger.warn("fetchByHakemusOid(): Hakemus repository returned an application for hakemusOid {} but its personOid {}" +
-            "did not match the given personOid parameter {}. Searching from ataru.", hakemusOid, personOidFromHakemus, personOid)
+      val result = matchingAtaruApplication.orElse {
+        // jos ei löydy atarusta, haetaan haku-appista
+        val optFromHakemusRepository = hakemusRepository.getHakemus(request, hakemusOid, valintatulosFetchStrategy)
+        if (optFromHakemusRepository.isEmpty) {
+          logger.info("fetchByHakemusOid(): Hakemus repository returned no application for given hakemusOid {}. Searching from ataru.", hakemusOid)
         }
-        oidsMatch
-      }
-
-      val result: Option[HakemusInfo] = matchingFromHakemusRepository.orElse {
-        val ataruApplications = ataruService.findApplications(request, personOid, valintatulosFetchStrategy, language)
-        val matchingAtaruApplication = ataruApplications.find(_.hakemus.oid == hakemusOid)
-        if (ataruApplications.isEmpty) {
-          logger.warn("fetchByHakemusOid(): Ataru returned no applications for given personOid {}", personOid)
-        } else if (matchingAtaruApplication.isEmpty) {
-          logger.warn(s"fetchByHakemusOid(): Ataru returned applications for personOid $personOid but " +
-            s"their hakemusOids ${ataruApplications.map(_.hakemus.oid).mkString(",")} did not match the given hakemusOid $hakemusOid")
+        val matchingFromHakemusRepository = optFromHakemusRepository.filter { hakemus =>
+          val personOidFromHakemus = hakemus.hakemus.personOid
+          val oidsMatch = personOidFromHakemus == personOid
+          if (!oidsMatch) {
+            logger.warn("fetchByHakemusOid(): Hakemus repository returned an application for hakemusOid {} but its personOid {}" +
+              "did not match the given personOid parameter {}. Searching from ataru.", hakemusOid, personOidFromHakemus, personOid)
+          }
+          oidsMatch
         }
-        matchingAtaruApplication
+        matchingFromHakemusRepository
       }
       if (result.isEmpty){
-          logger.warn(s"fetchByHakemusOid(): neither hakemus repository nor ataru returned a " +
+          logger.warn(s"fetchByHakemusOid(): neither ataru nor hakemus repository returned a " +
             s"matching application for personOid $personOid, hakemusOid $hakemusOid")
       }
       result
