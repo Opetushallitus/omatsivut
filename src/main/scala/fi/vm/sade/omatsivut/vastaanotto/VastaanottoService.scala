@@ -1,16 +1,23 @@
 package fi.vm.sade.omatsivut.vastaanotto
 
+import fi.oph.viestinvalitys.vastaanotto.model.ViestinvalitysBuilder
+
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import javax.servlet.http.HttpServletRequest
-
+import fi.oph.viestinvalitys.{ClientBuilder, ViestinvalitysClientException}
+import fi.oph.viestinvalitys.vastaanotto.resource.LuoViestiResponse
 import fi.vm.sade.hakemuseditori.HakemusEditoriComponent
 import fi.vm.sade.hakemuseditori.auditlog.{Audit, SaveVastaanotto}
 import fi.vm.sade.hakemuseditori.domain.Language.Language
 import fi.vm.sade.hakemuseditori.hakemus.{HakemusInfo, HakemusRepositoryComponent}
 import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.hakemuseditori.valintatulokset.domain.{VastaanotaSitovasti, VastaanottoAction}
+import fi.vm.sade.omatsivut.OphUrlProperties
+import fi.vm.sade.omatsivut.config.AppConfig
+import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import org.scalatra.{ActionResult, Forbidden, InternalServerError, Ok}
+import java.util.Optional
 
 import scala.util.{Failure, Success, Try}
 
@@ -20,8 +27,16 @@ trait VastaanottoComponent {
 
   def vastaanottoService(implicit language: Language): VastaanottoService
 
-  class VastaanottoService()(implicit language: Language) extends JsonFormats {
+  class VastaanottoService(config: AppConfig)(implicit language: Language) extends JsonFormats {
 
+    lazy val viestinvalitysClient =
+      ClientBuilder.viestinvalitysClientBuilder()
+        .withEndpoint(OphUrlProperties.url("viestinvalityspalvelu.url"))
+        .withUsername(config.settings.securitySettings.casVirkailijaUsername)
+        .withPassword(config.settings.securitySettings.casVirkailijaPassword)
+        .withCasEndpoint(OphUrlProperties.url("cas.virkailija.url"))
+        .withCallerId(AppConfig.callerId)
+        .build()
     def vastaanota(request: HttpServletRequest, hakemusOid: String, hakukohdeOid: String, henkiloOid: String, vastaanotto: Vastaanotto, hakemus: HakemusInfo): ActionResult = {
       val hakuOid: String = hakemus.hakemus.haku.map(_.oid).getOrElse("")
       val email: Option[String] = hakemus.hakemus.email
@@ -72,14 +87,26 @@ trait VastaanottoComponent {
           .format(dateAndTime, aoInfoRow)
           .replace("\n", "\n<br>")
 
-        // TODO uusi viestinvälitys korvaamaan
-        //val emailMessage = EmailMessage("omatsivut", subject, body, html = true)
-        // val recipients = List(EmailRecipient(email))
-        // groupEmailService.sendMailWithoutTemplate(EmailData(emailMessage, recipients))
+      viestinvalitysClient.luoViesti(
+      ViestinvalitysBuilder.viestiBuilder()
+        .withOtsikko(subject)
+        .withHtmlSisalto(body)
+        .withKielet(language.toString)
+        .withVastaanottajat(ViestinvalitysBuilder.vastaanottajatBuilder()
+          .withVastaanottaja(Optional.empty(), email)
+          .build())
+        .withKayttooikeusRajoitukset(ViestinvalitysBuilder.kayttooikeusrajoituksetBuilder()
+             .withKayttooikeus("APP_HAKEMUS_CRUD", "1.2.246.562.10.240484683010")
+             .build())
+        .withLahettavaPalvelu("omatsivut")
+        .withNormaaliPrioriteetti()
+        .withLahettaja(Optional.empty(), "noreply@opintopolku.fi")
+        .withSailytysAika(365)
+        .build())
       } catch {
         case e: Exception => logger.error(
           s"""Vastaanottosähköpostin lähetys epäonnistui: hakuOid / hakukohdeNimi / tarjoajaNimi / email :
-            $hakuOid / ${vastaanotto.hakukohdeNimi} / ${vastaanotto.tarjoajaNimi} / $email""".stripMargin)
+            $hakuOid / ${vastaanotto.hakukohdeNimi} / ${vastaanotto.tarjoajaNimi} / $email""".stripMargin, e.getMessage)
       }
     }
   }

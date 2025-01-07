@@ -158,7 +158,7 @@ class ComponentRegistry(val config: AppConfig)
 
   val scheduler: Scheduler = configureScheduler()
 
-  def vastaanottoService(implicit language: Language): VastaanottoService = new VastaanottoService()
+  def vastaanottoService(implicit language: Language): VastaanottoService = new VastaanottoService(config)
   def newApplicationsServlet = new ApplicationsServlet(config, sessionService)
   def newKoulutusServlet = new KoulutusServlet
   def newValintatulosServlet = new ValintatulosServlet(config, sessionService)

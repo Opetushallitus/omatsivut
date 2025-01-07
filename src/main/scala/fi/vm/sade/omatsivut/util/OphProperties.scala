@@ -1,55 +1,48 @@
 package fi.vm.sade.omatsivut.util
 
-import java.util
 
 import scala.collection.Map
+import scala.jdk.CollectionConverters._
 
 /**
+ * Kopioitu scala-util reposta ja tuunattu uudempaan scala-versioon,
+ * voisi korvata myöhemmin jollain standardi properties-toteutuksella
  * Extends OphProperties with scala types
  */
 class OphProperties(files: String*) extends fi.vm.sade.properties.OphProperties(files:_*) {
-  private val excludeCCFields = List("$outer")
-  private def caseClassToMap(cc: Product) = {
-    val declaredFields = cc.getClass.getDeclaredFields.toList.filter( f => !excludeCCFields.contains(f.getName))
-    (Map[AnyRef, AnyRef]() /: declaredFields) {(a, f) =>
-      f.setAccessible(true)
-      a + (f.getName -> f.get(cc))
-    }
+
+  private def toJavaMap(map: Map[AnyRef, AnyRef]): java.util.Map[AnyRef, AnyRef] = {
+    map.map {
+      case (k, Some(v: AnyRef)) => k -> v
+      case (k, None)            => k -> null
+      case (k, v: AnyRef)       => k -> v
+      case (k, v)               => k -> v
+    }.asJava
   }
 
-  private def removeOption(map: Map[AnyRef, AnyRef]) = {
-    for( (k,v) <- map if v != None)
-      yield (k, v match {
-        case Some(option:AnyRef) => option
-        case _ => v
-      } )
-  }
+  private def toJavaList(seq: Seq[AnyRef]): java.util.List[AnyRef] = seq.asJava
 
-  private def toJavaMap(map: Map[AnyRef, AnyRef]) = {
-    val dest = new util.LinkedHashMap[AnyRef, AnyRef](map.size)
-    val option: Map[AnyRef, AnyRef] = removeOption(map)
-    option.foreach{ case (k,v) => dest.put(k,convertToJava(v))}
-    dest
-  }
-
-  private def toJavaList(seq: Seq[AnyRef]) = {
-    val dest = new util.ArrayList[AnyRef](seq.size)
-    seq.foreach{ case (u) => dest.add(convertToJava(u))}
-    dest
-  }
-
-  private def convertToJava(o:AnyRef): AnyRef = o match {
-    case seq: Seq[AnyRef] =>
-      toJavaList(seq.asInstanceOf[Seq[AnyRef]])
-    case map: Map[AnyRef, AnyRef] =>
-      toJavaMap(map.asInstanceOf[Map[AnyRef, AnyRef]])
+  private def convertToJava(o: AnyRef): AnyRef = o match {
+    case seq: Seq[_] =>
+      toJavaList(seq.map(_.asInstanceOf[AnyRef]))
+    case map: Map[_, _] =>
+      toJavaMap(map.map { case (k, v) => k.asInstanceOf[AnyRef] -> v.asInstanceOf[AnyRef] })
     case cc: Product =>
       toJavaMap(caseClassToMap(cc))
-    case _ =>
-      o
+    case other =>
+      other
   }
 
-  override def convertParams(params: AnyRef*): Array[AnyRef] = {
-    params.map(convertToJava).toArray
+  private def caseClassToMap(cc: Product): Map[AnyRef, AnyRef] = {
+    cc.getClass.getDeclaredFields
+      .filterNot(_.getName.contains("$outer")) // Exclude synthetic fields
+      .map { field =>
+        field.setAccessible(true)
+        field.getName -> field.get(cc)
+      }
+      .toMap
   }
+
+  override def convertParams(params: AnyRef*): Array[AnyRef] =
+    params.map(convertToJava).toArray
 }
