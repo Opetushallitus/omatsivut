@@ -5,7 +5,6 @@ import fi.vm.sade.hakemuseditori.ohjausparametrit.domain.HaunAikataulu
 import fi.vm.sade.hakemuseditori.tarjonta.domain.Haku
 import fi.vm.sade.hakemuseditori.tarjonta.domain.HakuTyyppi.{Erillishaku, JatkuvaHaku, Lisahaku, Yhteishaku}
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
-import fi.vm.sade.tarjonta.shared.types.TarjontaTila
 
 sealed case class TarjontaHaku(oid: String, hakuaikas: List[TarjontaHakuaika], hakutapaUri: String, hakutyyppiUri: String,
                                kohdejoukkoUri: String, kohdejoukonTarkenne: Option[String], usePriority: Boolean,

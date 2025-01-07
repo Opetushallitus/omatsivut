@@ -16,11 +16,11 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
 
-        <valinta-tulos-service.version>7.0.1-SNAPSHOT</valinta-tulos-service.version>
+        <valinta-tulos-service.version>8.1.0-SNAPSHOT</valinta-tulos-service.version>
         <tarjonta-api.version>2016-07-SNAPSHOT</tarjonta-api.version>
         <scala.version>2.12.20</scala.version>
         <jetty.version>9.4.56.v20240826</jetty.version>
-        <postgresql.version>42.2.5</postgresql.version>
+        <postgresql.version>42.7.4</postgresql.version>
         <scalatra.version>3.0.0-M4</scalatra.version>
         <json4s.version>4.1.0-M8</json4s.version>
         <http4s.version>0.23.4</http4s.version>
@@ -342,37 +342,6 @@
             <version>${valinta-tulos-service.version}</version>
             <scope>test</scope>
             <type>war</type>
-        </dependency>
-        <dependency>
-            <groupId>fi.vm.sade.tarjonta</groupId>
-            <artifactId>tarjonta-api</artifactId>
-            <version>${tarjonta-api.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.cxf</groupId>
-                    <artifactId>cxf-bundle</artifactId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>cxf-rt-frontend-jaxrs</artifactId>
-                    <groupId>org.apache.cxf</groupId>
-                </exclusion>
-                <exclusion>
-                    <groupId>javax.ws.rs</groupId>
-                    <artifactId>jsr311-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.fasterxml.jackson.core</groupId>
-                    <artifactId>jackson-core</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.fasterxml.jackson.jaxrs</groupId>
-                    <artifactId>jackson-jaxrs-base</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.fasterxml.jackson.jaxrs</groupId>
-                    <artifactId>jackson-jaxrs-json-provider</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
     </dependencies>
     <build>
