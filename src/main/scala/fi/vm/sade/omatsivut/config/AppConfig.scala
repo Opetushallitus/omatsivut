@@ -1,8 +1,9 @@
 package fi.vm.sade.omatsivut.config
 
 import com.typesafe.config.Config
+import de.svenkubiak.embeddedmongodb.EmbeddedMongoDB
 import fi.vm.sade.omatsivut.OphUrlProperties
-import fi.vm.sade.omatsivut.util.{ApplicationSettingsLoader, ConfigTemplateProcessor, EmbeddedMongo, Logging, MongoServer, PortFromSystemPropertyOrFindFree}
+import fi.vm.sade.omatsivut.util.{ApplicationSettingsLoader, ConfigTemplateProcessor, EmbeddedMongo, Logging, PortFromSystemPropertyOrFindFree}
 
 object AppConfig extends Logging {
 
@@ -145,7 +146,7 @@ object AppConfig extends Logging {
 
   class EmbeddedMongoService extends LocalService {
 
-    private var mongo: Option[MongoServer] = None
+    private var mongo: Option[EmbeddedMongoDB] = None
 
     override def start() {
       // tämän ansiosta embedded mongo toimii lokaalista arm-maceissa

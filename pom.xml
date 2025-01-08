@@ -101,6 +101,12 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.specs2</groupId>
+            <artifactId>specs2-mock_2.12</artifactId>
+            <version>${specs2.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.scalaz</groupId>
             <artifactId>scalaz-core_2.12</artifactId>
             <version>7.3.8</version>
