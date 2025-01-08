@@ -413,9 +413,6 @@
                 <artifactId>scala-maven-plugin</artifactId>
                 <version>${plugin.scala-maven-plugin.version}</version>
                 <configuration>
-                    <args>
-                        <arg>-target:jvm-1.8</arg>
-                    </args>
                     <recompileMode>incremental</recompileMode>
                 </configuration>
                 <executions>

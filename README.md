@@ -2,27 +2,29 @@
 
 Oppijan henkilökohtainen palvelu
 
+## Alkuvuoden 2025 tilanne
+
+Palvelun lokaali ajaminen ei toistaiseksi toimi tai ole kunnolla koestettu, joten tämä kuvaus voi olla vanhentunut siltä osin.
+
 ## Teknologiat
 
-- Scala 2.11 (servereillä JRE8)
+- Scala 2.12 (servereillä JRE17)
 - Frontissa AngularJS, webpack, npm
-- Testeissä Specs2, mocha, phantomjs. Kaikille toiminnoille automaattiset testit.
+- Testeissä Specs2, ~~mocha~~, phantomjs.
 
 ### JDK
 
-- Käytetään kehityksessä ja sovelluksen ajamiseen JDK8:a, mutta scala-maven-pluginin target version on yhä 1.7
-   - odotetaan scala 2.12:sta ja spring 4 upgradea ennen target version vaihtoa
+- Käytetään kehityksessä ja sovelluksen ajamiseen JDK 17:a, mutta scala-maven-pluginin target version on yhä 1.8
 - JCE (Java Cryptography Extension)
    - Ilman laajennosta tulee virhe: "java.security.InvalidKeyException: Illegal key size"
    - Lataa Oraclen sivuilta ja kopioi tiedostot `$JAVA_HOME/jre/lib/security`
 
     http://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html
-- Java-versio vähintään 1.8 update 40 (aiemmilla tarvitaan flägi `-XX:-EliminateAutoBox`)
 
 Lisää JAVA_HOME ympäristömuuttujat polkuun:
 
 ```sh
-export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
+export JAVA_HOME=$(/usr/libexec/java_home -v 17.0)
 ```
 
 ## Tarvittavat build-työkalut
@@ -152,7 +154,7 @@ Fronttikoodit paketoidaan webpackilla bundle.js tiedostoksi.
 
 ## Impersonointi / autentikoinnin ohitus
 
-Jos applikaatiota ajetaan "testimoodissa" eli esim. `-Domatsivut.profile=dev`, niin autentikointi on mahdollista ohittaa - vetuman sijaan näytetään "Vetuma Simulator"-näkymä, jossa voi syöttää haluamansa henkilötunnuksen.
+Jos applikaatiota ajetaan "testimoodissa" eli esim. `-Domatsivut.profile=dev`, niin autentikointi on mahdollista ohittaa syöttämällä haluamansa henkilötunnuksen.
 
 ## mocha-phantomjs -testit
 
