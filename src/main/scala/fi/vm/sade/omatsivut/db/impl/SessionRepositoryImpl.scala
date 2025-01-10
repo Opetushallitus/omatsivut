@@ -2,9 +2,9 @@ package fi.vm.sade.omatsivut.db.impl
 
 import java.util.UUID
 import java.util.concurrent.TimeUnit
-
 import fi.vm.sade.omatsivut.SessionFailure
 import fi.vm.sade.omatsivut.SessionFailure.SessionFailure
+import fi.vm.sade.omatsivut.cas.CasClient.ServiceTicket
 import fi.vm.sade.omatsivut.db.SessionRepository
 import fi.vm.sade.omatsivut.security.{Hetu, OppijaNumero, SessionId, SessionInfo}
 import slick.jdbc.PostgresProfile.api._
@@ -29,7 +29,7 @@ trait SessionRepositoryImpl extends SessionRepository with OmatsivutRepository {
     runBlocking(sqlu"""delete from sessions where id = ${id.value.toString}::uuid""", timeout = Duration(10, TimeUnit.SECONDS))
   }
 
-  override def deleteByServiceTicket(ticket: String): Unit = {
+  override def deleteByServiceTicket(ticket: ServiceTicket): Unit = {
     runBlocking(sqlu"""delete from sessions where ticket = ${ticket.value}""", timeout = Duration(10, TimeUnit.SECONDS))
   }
 

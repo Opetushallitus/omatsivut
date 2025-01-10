@@ -57,7 +57,6 @@ trait ApplicationsServletContainer {
       val oid = personOid()
       hakemusEditori.fetchByPersonOid(request, oid, Fetch) match {
         case FullSuccess(hakemukset) =>
-          logger.info("ApplicationsServlet get FullSuccess")
           Map(
             "allApplicationsFetched" -> true,
             "applications" -> hakemukset,
@@ -65,7 +64,6 @@ trait ApplicationsServletContainer {
             "migriUrl" -> appConfig.settings.migriUrl
           )
         case PartialSuccess(hakemukset, exceptions) =>
-          logger.info("ApplicationsServlet get PartialSuccess")
           exceptions.foreach(logger.warn(s"Failed to fetch all applications for oid $oid",_))
           Map(
             "allApplicationsFetched" -> false,
@@ -74,7 +72,6 @@ trait ApplicationsServletContainer {
             "migriUrl" -> appConfig.settings.migriUrl
           )
         case FullFailure(exceptions) =>
-          logger.info("ApplicationsServlet get FullFailure")
           exceptions.foreach(logger.error(s"Failed to fetch applications for oid $oid", _))
           throw exceptions.head
       }

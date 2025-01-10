@@ -28,6 +28,8 @@ trait VastaanottoComponent {
   def vastaanottoService(implicit language: Language): VastaanottoService
 
   class VastaanottoService(config: AppConfig)(implicit language: Language) extends JsonFormats {
+    val OPH_PAAKAYTTAJA = "APP_VIESTINVALITYS_OPH_PAAKAYTTAJA"
+    val OPH_ORGANISAATIO_OID = "1.2.246.562.10.00000000001"
 
     lazy val viestinvalitysClient =
       ClientBuilder.viestinvalitysClientBuilder()
@@ -96,7 +98,7 @@ trait VastaanottoComponent {
           .withVastaanottaja(Optional.empty(), email)
           .build())
         .withKayttooikeusRajoitukset(ViestinvalitysBuilder.kayttooikeusrajoituksetBuilder()
-             .withKayttooikeus("APP_HAKEMUS_CRUD", "1.2.246.562.10.240484683010")
+             .withKayttooikeus(OPH_PAAKAYTTAJA, OPH_ORGANISAATIO_OID)
              .build())
         .withLahettavaPalvelu("omatsivut")
         .withNormaaliPrioriteetti()
