@@ -396,7 +396,9 @@ function convertHenkilotiedot(json) {
 }
 
 function convertHakutoiveet(hakutoiveet) {
-  return _(hakutoiveet).map(function(hakutoive) { return new Hakutoive(hakutoive) })
+  return _.map(hakutoiveet, function(hakutoive) {
+    return new Hakutoive(hakutoive);
+  });
 }
 
 function updatePreferenceQuestionIds(manipulationF) {
