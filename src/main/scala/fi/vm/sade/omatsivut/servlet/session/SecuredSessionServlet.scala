@@ -29,9 +29,8 @@ trait SecuredSessionServletContainer {
     extends OmatSivutServletBase with AttributeNames with OmatsivutPaths with Logging {
 
     get("/") {
-      logger.info("initsession CAS request received")
+      logger.debug("initsession CAS request received")
       val ticket: Option[String] = Option(request.getParameter("ticket"))
-      logger.info(s"Ticket: $ticket")
       ticket match {
         case None =>
           BadRequest("No ticket found from CAS request" + clientAddress)
@@ -44,12 +43,10 @@ trait SecuredSessionServletContainer {
               .attempt
           result.unsafeRunSync() match { // Execute IO synchronously, required for servlets
             case Right(attrs) =>
-              logger.info(s"User logging in: $attrs")
               if (isUsingValtuudet(attrs)) {
                 logger.info(s"User ${attrs.getOrElse("impersonatorDisplayName", "NOT_FOUND")} is using valtuudet; Will not init session and should redirect to ${valtuudetRedirectUri}")
                 redirect(valtuudetRedirectUri)
               } else {
-                logger.info(s"Parsing user attributes")
                 val hetu = attrs("nationalIdentificationNumber")
                 val personOid = attrs.getOrElse("personOid", "")
                 val displayName = attrs.getOrElse("displayName", "")
@@ -79,13 +76,12 @@ trait SecuredSessionServletContainer {
 
 
     private def initializeSessionAndRedirect(ticket: String, hetu: String, personOid: String, displayName: String): Unit = {
-      logger.info(s"Initializing session")
       val newSession = sessionService.storeSession(ticket, Hetu(hetu), OppijaNumero(personOid), displayName)
       newSession match {
         case Right((sessionId, _)) =>
           val cookieOptions = CookieOptions(domain = "", secure = isHttps, path = "/", maxAge = sessionTimeout.getOrElse(3600), httpOnly = true)
           val sessionCookie: Cookie = Cookie(sessionCookieName, sessionId.value.toString)(cookieOptions)
-          logger.info(s"Created new session with id $sessionId , adding session cookie $sessionCookie with options $cookieOptions to response")
+          logger.debug(s"Created new session with id $sessionId , adding session cookie $sessionCookie with options $cookieOptions to response")
           response.addCookie(sessionCookie)
           Audit.oppija.log(Login(request))
           redirect(redirectUri)

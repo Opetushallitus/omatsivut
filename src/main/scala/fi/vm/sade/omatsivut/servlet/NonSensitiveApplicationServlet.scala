@@ -79,6 +79,7 @@ trait NonSensitiveApplicationServletContainer {
     }
 
     private def jwtAuthorize: Try[HakemusJWT] = {
+      logger.info(s"tunnistaudutaan jwt:llä")
       val bearerMatch = """Bearer (.+)""".r
       val authHeader = request.getHeader("Authorization")
       authHeader match {
@@ -94,6 +95,7 @@ trait NonSensitiveApplicationServletContainer {
     }
 
     private def fetchHakemus(hakemusOid: String, personOid: Option[String]): Try[HakemusInfo] = {
+      logger.info(s"haetaan legacy-hakemus hakemus-oidilla $hakemusOid")
       personOid.map(hakemusEditori.fetchByHakemusOid(request, _, hakemusOid, FetchIfNoHetuOrToinenAste))
         .getOrElse(hakemusRepository.getHakemus(request, hakemusOid, FetchIfNoHetuOrToinenAste))
         .fold[Try[HakemusInfo]](Failure(new NoSuchElementException(s"Hakemus $hakemusOid not found")))(h => Success(h.withoutKelaUrl))
@@ -104,6 +106,7 @@ trait NonSensitiveApplicationServletContainer {
     }
 
     get("/applications/tuloskirje/:hakuOid") {
+      logger.info(s"haetaan tuloskirje haulle ${params("hakuOid")}")
       val hakuOid = params("hakuOid")
       (for {
         token <- jwtAuthorize
@@ -128,6 +131,7 @@ trait NonSensitiveApplicationServletContainer {
     }
 
     post("/ilmoittaudu") {
+      logger.info(s"ilmoittautuminen hakemukselle ${params("hakemusOid")}")
       val ilmoittautuminen = parsedBody.extract[Ilmoittautuminen]
       val hakuOid = params("hakuOid")
       val hakemusOid = params("hakemusOid")
@@ -138,11 +142,13 @@ trait NonSensitiveApplicationServletContainer {
     }
 
     put("/applications/:oid") {
+      logger.warn("PUT /applications/:oid is deprecated: hakemuksen muokkaus omatsivut-palvelussa ei enää ole käytössä")
       // hakemuksen muokkaus ei enää onnistu omien sivujen kautta
       Failure(new ForbiddenException("Forbidden"))
     }
 
     get("/applications/application/session") {
+      logger.info(s"haetaan hakemus tunnistautuneena jwt:llä")
       (for {
         token <- jwtAuthorize
         hakemus <- fetchHakemus(token.oid, Some(token.personOid))
@@ -159,6 +165,7 @@ trait NonSensitiveApplicationServletContainer {
     }
 
     post("/applications/vastaanota/:hakemusOid/hakukohde/:hakukohdeOid") {
+      logger.info(s"paikan vastaanotto tunnistautunena jwt:llä hakemukselle ${params("hakemusOid")}")
       val hakemusOid = params("hakemusOid")
       val hakukohdeOid = params("hakukohdeOid")
       val henkiloOid = getPersonOidFromSession
@@ -180,6 +187,7 @@ trait NonSensitiveApplicationServletContainer {
     }
 
     get("/applications/application/token/:token") {
+      logger.info(s"haetaan hakemus tokenilla ${params("token")}")
       (for {
         metadata <- oppijanTunnistusService.validateToken(params("token"))
         hakemus: HakemusInfo <- fetchHakemus(metadata.hakemusOid, metadata.personOid)
@@ -196,6 +204,7 @@ trait NonSensitiveApplicationServletContainer {
     }
 
     post("/applications/validate/:oid") {
+      logger.warn("POST /applications/validate/:oid is deprecated: hakemuksen muokkaus omatsivut-palvelussa ei enää ole käytössä")
       // hakemuksen muokkaus ei enää onnistu omien sivujen kautta
       Failure(new ForbiddenException("Forbidden"))
     }
