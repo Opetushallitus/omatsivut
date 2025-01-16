@@ -79,7 +79,6 @@ trait NonSensitiveApplicationServletContainer {
     }
 
     private def jwtAuthorize: Try[HakemusJWT] = {
-      logger.info(s"tunnistaudutaan jwt:llä")
       val bearerMatch = """Bearer (.+)""".r
       val authHeader = request.getHeader("Authorization")
       authHeader match {
@@ -95,7 +94,6 @@ trait NonSensitiveApplicationServletContainer {
     }
 
     private def fetchHakemus(hakemusOid: String, personOid: Option[String]): Try[HakemusInfo] = {
-      logger.info(s"haetaan legacy-hakemus hakemus-oidilla $hakemusOid")
       personOid.map(hakemusEditori.fetchByHakemusOid(request, _, hakemusOid, FetchIfNoHetuOrToinenAste))
         .getOrElse(hakemusRepository.getHakemus(request, hakemusOid, FetchIfNoHetuOrToinenAste))
         .fold[Try[HakemusInfo]](Failure(new NoSuchElementException(s"Hakemus $hakemusOid not found")))(h => Success(h.withoutKelaUrl))

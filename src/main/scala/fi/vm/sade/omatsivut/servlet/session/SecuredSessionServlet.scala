@@ -9,11 +9,10 @@ import fi.vm.sade.omatsivut.cas.CasClient.OppijaAttributes
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.security._
 import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
-import fi.vm.sade.omatsivut.util.{BlazeHttpClient, Logging, OptionConverter}
-import org.scalatra.{BadRequest, Cookie, CookieOptions, Ok}
-import cats.effect.{IO, Resource}
+import fi.vm.sade.omatsivut.util.{Logging, OptionConverter}
+import org.scalatra.{BadRequest, Cookie, CookieOptions}
+import cats.effect.{IO}
 import cats.effect.unsafe.implicits.global
-import org.http4s.client.Client
 
 import java.util.concurrent.TimeUnit
 import scala.concurrent.duration.Duration

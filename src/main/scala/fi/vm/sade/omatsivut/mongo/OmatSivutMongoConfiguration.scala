@@ -19,7 +19,6 @@ import org.springframework.data.mongodb.core.MongoTemplate
     case _ =>
   }
 
-  // TODO lisää converter?
   @Bean def mongoClient(@Value("${mongodb.url}") mongoUri: String): MongoClient = {
     logger.info("Creating MongoClient for server(s): " + sanitizeMongoUrl(mongoUri))
     val connectionString: ConnectionString = new ConnectionString(mongoUri)

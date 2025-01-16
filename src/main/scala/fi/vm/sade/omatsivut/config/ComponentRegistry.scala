@@ -48,12 +48,10 @@ class ComponentRegistry(val config: AppConfig)
           VastaanottoComponent with
           ApplicationsServletContainer with
           MuistilistaServletContainer with
-          KoulutusServletContainer with
           SecuredSessionServletContainer with
           FakeSecuredSessionServletContainer with
           LogoutServletContainer with
           FixtureServletContainer with
-          KoodistoServletContainer with
           RemoteTarjontaComponent with
           TarjontaComponent with
           TuloskirjeComponent with
@@ -160,7 +158,6 @@ class ComponentRegistry(val config: AppConfig)
 
   def vastaanottoService(implicit language: Language): VastaanottoService = new VastaanottoService(config)
   def newApplicationsServlet = new ApplicationsServlet(config, sessionService)
-  def newKoulutusServlet = new KoulutusServlet
   def newValintatulosServlet = new ValintatulosServlet(config, sessionService)
   def newSecuredSessionServlet = config match {
     case _: StubbedExternalDeps => new FakeSecuredSessionServlet(config,
@@ -177,7 +174,6 @@ class ComponentRegistry(val config: AppConfig)
   def newSessionServlet = new SessionServlet()
   def newLogoutServlet = new LogoutServlet()
   def newFixtureServlet = new FixtureServlet(config)
-  def newKoodistoServlet = new KoodistoServlet
   def newMuistilistaServlet = new MuistilistaServlet(config)
   def newNonSensitiveApplicationServlet = new NonSensitiveApplicationServlet(config)
   def newTuloskirjeetServlet = new TuloskirjeetServlet(config)

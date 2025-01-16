@@ -45,8 +45,6 @@ class ScalatraBootstrap extends LifeCycle with Logging {
     context.mount(componentRegistry.newNonSensitiveApplicationServlet, "/insecure")
     context.mount(new TranslationServlet, "/translations")
     context.mount(componentRegistry.newMuistilistaServlet, "/muistilista")
-    context.mount(componentRegistry.newKoodistoServlet, "/koodisto")
-    context.mount(componentRegistry.newKoulutusServlet, "/koulutusinformaatio")
     context.mount(componentRegistry.newSecuredSessionServlet, "/initsession")
     context.mount(componentRegistry.newSessionServlet, "/session")
     context.mount(new RaamitServlet(config), "/raamit")

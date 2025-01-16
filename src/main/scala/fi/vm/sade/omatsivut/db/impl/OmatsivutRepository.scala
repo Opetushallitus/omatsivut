@@ -24,7 +24,7 @@ trait OmatsivutRepository extends Logging {
 
   val db: Database
   val dataSource: DataSource
-  def runBlocking[R](operations: DBIO[R], timeout: Duration = Duration(10, TimeUnit.MINUTES)): R = {  // TODO put these 3–4 different default timeouts behind common, configurable value
+  def runBlocking[R](operations: DBIO[R], timeout: Duration = Duration(10, TimeUnit.MINUTES)): R = {
     if (logSqlOfSomeQueries) {
       logger.error("This should not happen in production.")
       operations.getClass.getDeclaredFields.foreach { f =>
@@ -40,7 +40,7 @@ trait OmatsivutRepository extends Logging {
       timeout + Duration(1, TimeUnit.SECONDS)
     )
   }
-  def runBlockingTransactionally[R](operations: DBIO[R], timeout: Duration = Duration(20, TimeUnit.SECONDS)): Either[Throwable, R] = { //  // TODO put these 3–4 different default timeouts behind common, configurable value
+  def runBlockingTransactionally[R](operations: DBIO[R], timeout: Duration = Duration(20, TimeUnit.SECONDS)): Either[Throwable, R] = {
     val SERIALIZATION_VIOLATION = "40001"
     try {
       Right(runBlocking(operations.transactionally.withTransactionIsolation(Serializable), timeout))

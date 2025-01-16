@@ -3,23 +3,19 @@ package fi.vm.sade.hakemuseditori
 import fi.vm.sade.ataru.AtaruServiceComponent
 import fi.vm.sade.hakemuseditori.domain.Language
 import fi.vm.sade.hakemuseditori.hakemus._
-import fi.vm.sade.hakemuseditori.hakemus.domain.{Hakemus, ValidationError}
-import fi.vm.sade.hakemuseditori.json.JsonFormats
-import fi.vm.sade.hakemuseditori.localization.{Translations, TranslationsComponent}
+import fi.vm.sade.hakemuseditori.hakemus.domain.{ValidationError}
+import fi.vm.sade.hakemuseditori.localization.{TranslationsComponent}
 import fi.vm.sade.hakemuseditori.ohjausparametrit.OhjausparametritComponent
 import fi.vm.sade.hakemuseditori.oppijanumerorekisteri.OppijanumerorekisteriComponent
 import fi.vm.sade.hakemuseditori.tarjonta.TarjontaComponent
 import fi.vm.sade.hakemuseditori.tarjonta.kouta.RemoteKoutaComponent
 import fi.vm.sade.hakemuseditori.tarjonta.vanha.RemoteTarjontaComponent
 import fi.vm.sade.hakemuseditori.user.User
-import fi.vm.sade.hakemuseditori.valintatulokset.{NoOpValintatulosService, ValintatulosService, ValintatulosServiceComponent}
-import fi.vm.sade.hakemuseditori.viestintapalvelu.{AccessibleHtml, Pdf, TuloskirjeComponent, TuloskirjeKind}
-import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
+import fi.vm.sade.hakemuseditori.valintatulokset.{ValintatulosServiceComponent}
+import fi.vm.sade.hakemuseditori.viestintapalvelu.{TuloskirjeComponent, TuloskirjeKind}
 import fi.vm.sade.omatsivut.util.Logging
 
 import javax.servlet.http.HttpServletRequest
-import org.json4s.jackson.Serialization
-import org.springframework.context.ApplicationContext
 
 import scala.util.{Failure, Success, Try}
 
@@ -85,23 +81,23 @@ trait HakemusEditoriComponent extends AtaruServiceComponent
       val ataruApplications = ataruService.findApplications(request, personOid, valintatulosFetchStrategy, language)
       val matchingAtaruApplication = ataruApplications.find(_.hakemus.oid == hakemusOid)
       if (ataruApplications.isEmpty) {
-        logger.warn(s"fetchByHakemusOid(): Ataru returned no applications for given personOid $personOid, searching from haku-app.")
+        logger.info(s"fetchByHakemusOid(): Ataru returned no applications for given personOid $personOid, searching from haku-app.")
       } else if (matchingAtaruApplication.isEmpty) {
-        logger.warn(s"fetchByHakemusOid(): Ataru returned applications for personOid $personOid but " +
+        logger.info(s"fetchByHakemusOid(): Ataru returned applications for personOid $personOid but " +
           s"their hakemusOids ${ataruApplications.map(_.hakemus.oid).mkString(",")} did not match the given hakemusOid $hakemusOid")
       }
       val result = matchingAtaruApplication.orElse {
         // jos ei löydy atarusta, haetaan haku-appista
         val optFromHakemusRepository = hakemusRepository.getHakemus(request, hakemusOid, valintatulosFetchStrategy)
         if (optFromHakemusRepository.isEmpty) {
-          logger.info("fetchByHakemusOid(): Hakemus repository returned no application for given hakemusOid {}. Searching from ataru.", hakemusOid)
+          logger.info(s"fetchByHakemusOid(): Haku-app returned no applications for given hakemusOid $hakemusOid.")
         }
         val matchingFromHakemusRepository = optFromHakemusRepository.filter { hakemus =>
           val personOidFromHakemus = hakemus.hakemus.personOid
           val oidsMatch = personOidFromHakemus == personOid
           if (!oidsMatch) {
-            logger.warn("fetchByHakemusOid(): Hakemus repository returned an application for hakemusOid {} but its personOid {}" +
-              "did not match the given personOid parameter {}. Searching from ataru.", hakemusOid, personOidFromHakemus, personOid)
+            logger.warn(s"fetchByHakemusOid(): Haku-app returned an application for hakemusOid $hakemusOid but its personOid $personOidFromHakemus" +
+              s"did not match the given personOid parameter $personOid")
           }
           oidsMatch
         }
@@ -112,11 +108,6 @@ trait HakemusEditoriComponent extends AtaruServiceComponent
             s"matching application for personOid $personOid, hakemusOid $hakemusOid")
       }
       result
-    }
-
-
-    private def parseLang(lang: Option[String]): Language.Value = {
-      lang.flatMap(Language.parse).getOrElse(Language.fi)
     }
 
   }
@@ -132,47 +123,6 @@ class ValidationException(errors: List[ValidationError]) extends RuntimeExceptio
   val validationErrors = errors
 }
 
-abstract class StandaloneHakemusEditoriComponent(
-                                         val translations: Translations
-                                         ) extends HakemusEditoriComponent {
-  override lazy val hakemusConverter: HakemusConverter = new HakemusConverter
-  override val valintatulosService: ValintatulosService = new NoOpValintatulosService
 
-}
 
-class StubbedHakemusEditoriContext(appContext: ApplicationContext,
-                                   translations: Translations,
-                                   config: AppConfig)
-  extends StandaloneHakemusEditoriComponent(translations) {
-  override lazy val springContext = new HakemusSpringContext(appContext)
-  override lazy val ataruService = new StubbedAtaruService
-  override lazy val hakemusRepository: HakemusFinder = new StubbedHakemusFinder
-  override lazy val oppijanumerorekisteriService = new StubbedOppijanumerorekisteriService
-  override lazy val tarjontaService = new StubbedTarjontaService(config)
-  override lazy val tuloskirjeService = new StubbedTuloskirjeService
-  override lazy val ohjausparametritService = new StubbedOhjausparametritService
-}
 
-case class HakemusEditoriRemoteUrls(
-                                     tarjontaUrl: String,
-                                     koodistoUrl: String,
-                                     ohjausparametritUrl: String,
-                                     koulutusinformaatioAoUrl: String,
-                                     koulutusinformaationBIUrl: String,
-                                     koulutusinformaatioLopUrl: String
-                                     )
-
-object Json extends JsonFormats {
-  def toJson(o: AnyRef): String = {
-    Serialization.write(o)
-  }
-
-  def fromJson[A](s: String): A = {
-    Serialization.read(s)
-  }
-
-  def fromJson[A](s: String, klass: Class[A]): A = {
-    val manifest = Manifest.classType(klass)
-    Serialization.read(s)(jsonFormats, manifest)
-  }
-}

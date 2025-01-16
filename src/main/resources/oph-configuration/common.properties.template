@@ -31,8 +31,8 @@ cas.virkailija.username={{omatsivut_haku_app_username}}
 cas.virkailija.password={{omatsivut_haku_app_password}}
 
 cas.oppija.url=https://{{host_oppija}}/cas-oppija
-cas.oppija.username={{omatsivut_haku_app_username}} # TODO
-cas.oppija.password={{omatsivut_haku_app_password}} # TODO
+cas.oppija.username={{omatsivut_haku_app_username}}
+cas.oppija.password={{omatsivut_haku_app_password}}
 
 omatsivut.oppija-raamit.url={{oppija_raamit_url}}
 omatsivut.piwik.url=https://{{host_oppija}}/wp/wp-content/themes/ophver3/js/piwik.js
