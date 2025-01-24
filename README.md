@@ -14,7 +14,7 @@ Palvelun lokaali ajaminen ei toistaiseksi toimi tai ole kunnolla koestettu, jote
 
 ### JDK
 
-- Käytetään kehityksessä ja sovelluksen ajamiseen JDK 17:a, mutta scala-maven-pluginin target version on yhä 1.8
+- Käytetään kehityksessä ja sovelluksen ajamiseen JDK 17:a
 - JCE (Java Cryptography Extension)
    - Ilman laajennosta tulee virhe: "java.security.InvalidKeyException: Illegal key size"
    - Lataa Oraclen sivuilta ja kopioi tiedostot `$JAVA_HOME/jre/lib/security`
