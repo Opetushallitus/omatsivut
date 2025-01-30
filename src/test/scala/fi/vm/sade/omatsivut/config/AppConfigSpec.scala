@@ -36,7 +36,6 @@ class AppConfigSpec extends Specification with ITSetup with OmatsivutDbTools {
 
   def validateConfig(config: AppConfig) = {
     val componentRegistry = new ComponentRegistry(config)
-    componentRegistry.springContext.mongoTemplate
     success
   }
 }

@@ -1,7 +1,6 @@
 package fi.vm.sade.omatsivut.config
 
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
-import fi.vm.sade.omatsivut.mongo.OmatSivutMongoConfiguration
 import fi.vm.sade.omatsivut.util.Logging
 import org.springframework.context.annotation._
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer
@@ -32,7 +31,6 @@ object OmatSivutSpringContext extends Logging {
   }
 
   @Configuration
-  @Import(Array(classOf[OmatSivutMongoConfiguration]))
   class Dev extends OmatSivutConfiguration {
     val profile = "dev"
 
@@ -46,7 +44,6 @@ object OmatSivutSpringContext extends Logging {
   @ComponentScan(basePackages = Array(
     "fi.vm.sade.security"
   ))
-  @Import(Array(classOf[OmatSivutMongoConfiguration]))
   class Default extends OmatSivutConfiguration {
     val profile = "default"
 

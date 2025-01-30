@@ -18,7 +18,7 @@ object OmatsivutServer {
       5,
       10,
       Duration.ofMinutes(1),
-      Duration.ofMinutes(1) // TODO mikäs arvo tähän
+      Duration.ofMinutes(2)
     )
   }
 }

@@ -36,12 +36,9 @@ import fi.vm.sade.omatsivut.vastaanotto.VastaanottoComponent
 import scala.collection.JavaConverters._
 
 class ComponentRegistry(val config: AppConfig)
-  extends SpringContextComponent with
-          TranslationsComponent with
+  extends TranslationsComponent with
           OhjausparametritComponent with
-          HakemusRepositoryComponent with
           ValintatulosServiceComponent with
-          HakemusConverterComponent with
           HakemusEditoriComponent with
           AtaruServiceComponent with
           OppijanumerorekisteriComponent with
@@ -51,7 +48,6 @@ class ComponentRegistry(val config: AppConfig)
           SecuredSessionServletContainer with
           FakeSecuredSessionServletContainer with
           LogoutServletContainer with
-          FixtureServletContainer with
           RemoteTarjontaComponent with
           TarjontaComponent with
           TuloskirjeComponent with
@@ -91,11 +87,6 @@ class ComponentRegistry(val config: AppConfig)
     case _ => new RemoteAtaruService(config)
   }
 
-  private def configureHakemusRepository: HakemusFinder = config match {
-    case _: StubbedExternalDeps => new StubbedHakemusFinder
-    case _ => new RealHakemusFinder
-  }
-
   private def configureOppijanumerorekisteriService: OppijanumerorekisteriService = config match {
     case _: StubbedExternalDeps => new StubbedOppijanumerorekisteriService
     case _ => new RemoteOppijanumerorekisteriService(config)
@@ -121,8 +112,6 @@ class ComponentRegistry(val config: AppConfig)
         authenticationInfoService
       )
   }
-
-  lazy val springContext = new HakemusSpringContext(OmatSivutSpringContext.createApplicationContext(config))
 //  if (config.isInstanceOf[IT]) {
 //    new ApplicationFixtureImporter(springContext).applyFixtures()
 //  }
@@ -131,12 +120,10 @@ class ComponentRegistry(val config: AppConfig)
   val fakeCasOppijaClient = configureFakeCasOppijaClient
   val ohjausparametritService: OhjausparametritService = configureOhjausparametritService
   val valintatulosService: ValintatulosService = configureValintatulosService
-  val hakemusConverter: HakemusConverter = new HakemusConverter
   val tarjontaService: TarjontaService = configureTarjontaService
   val tuloskirjeService: TuloskirjeService = configureTuloskirjeService
   val oppijanTunnistusService = configureOppijanTunnistusService
   val ataruService: AtaruService = configureAtaruService
-  val hakemusRepository: HakemusFinder = configureHakemusRepository
   val oppijanumerorekisteriService: OppijanumerorekisteriService = configureOppijanumerorekisteriService
   val omatsivutDb = new OmatsivutDb(config.settings.omatsivutDbConfig,
     config.settings.sessionTimeoutSeconds.getOrElse(3600))
@@ -173,7 +160,6 @@ class ComponentRegistry(val config: AppConfig)
   }
   def newSessionServlet = new SessionServlet()
   def newLogoutServlet = new LogoutServlet()
-  def newFixtureServlet = new FixtureServlet(config)
   def newMuistilistaServlet = new MuistilistaServlet(config)
   def newNonSensitiveApplicationServlet = new NonSensitiveApplicationServlet(config)
   def newTuloskirjeetServlet = new TuloskirjeetServlet(config)

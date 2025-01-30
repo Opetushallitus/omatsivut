@@ -10,7 +10,7 @@ import fi.oph.viestinvalitys.vastaanotto.resource.LuoViestiResponse
 import fi.vm.sade.hakemuseditori.HakemusEditoriComponent
 import fi.vm.sade.hakemuseditori.auditlog.{Audit, SaveVastaanotto}
 import fi.vm.sade.hakemuseditori.domain.Language.Language
-import fi.vm.sade.hakemuseditori.hakemus.{HakemusInfo, HakemusRepositoryComponent}
+import fi.vm.sade.hakemuseditori.hakemus.{HakemusInfo}
 import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.hakemuseditori.valintatulokset.domain.{VastaanotaSitovasti, VastaanottoAction}
 import fi.vm.sade.omatsivut.OphUrlProperties
@@ -22,8 +22,7 @@ import java.util.Optional
 import scala.util.{Failure, Success, Try}
 
 trait VastaanottoComponent {
-  this: HakemusRepositoryComponent with
-    HakemusEditoriComponent =>
+  this: HakemusEditoriComponent =>
 
   def vastaanottoService(implicit language: Language): VastaanottoService
 

@@ -1,7 +1,6 @@
 package fi.vm.sade.omatsivut.hakemus
 
 import fi.vm.sade.omatsivut.{PersonOid, TimeWarp}
-import fi.vm.sade.omatsivut.fixtures.TestFixture._
 import org.junit.runner.RunWith
 import org.specs2.runner.JUnitRunner
 
@@ -13,14 +12,6 @@ class GetApplicationsSpec extends HakemusApiSpecification with FixturePerson wit
   sequential
 
   "GET /applications" should {
-//    TODO fix fai delete?
-//    "return person's applications" in {
-//      withApplicationsResponse { resp =>
-//        resp.allApplicationsFetched must_== true
-//        resp.applications.map(_.hakemus.oid) must contain(hakemusNivelKesa2013WithPeruskouluBaseEducationId)
-//        resp.applications.map(_.hakemus.oid) must contain(hakemusYhteishakuKevat2014WithForeignBaseEducationId)
-//      }
-//    }
 
     "return person's applications from ataru" in {
       withApplicationsResponse { resp =>

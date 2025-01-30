@@ -2,7 +2,7 @@ package fi.vm.sade.omatsivut.servlet
 
 import fi.vm.sade.hakemuseditori._
 import fi.vm.sade.hakemuseditori.auditlog.{Audit, SaveIlmoittautuminen}
-import fi.vm.sade.hakemuseditori.hakemus.{FetchIfNoHetuOrToinenAste, HakemusInfo, HakemusRepositoryComponent}
+import fi.vm.sade.hakemuseditori.hakemus.{FetchIfNoHetuOrToinenAste, HakemusInfo}
 import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.hakemuseditori.oppijanumerorekisteri.OppijanumerorekisteriComponent
 import fi.vm.sade.hakemuseditori.tarjonta.TarjontaComponent
@@ -38,8 +38,7 @@ case class InsecureHakemusInfo(
 ) extends InsecureResponse
 
 trait NonSensitiveApplicationServletContainer {
-  this: HakemusRepositoryComponent with
-    HakemusEditoriComponent with
+  this: HakemusEditoriComponent with
     VastaanottoComponent with
     OppijanTunnistusComponent with
     OppijanumerorekisteriComponent with
@@ -95,8 +94,7 @@ trait NonSensitiveApplicationServletContainer {
 
     private def fetchHakemus(hakemusOid: String, personOid: Option[String]): Try[HakemusInfo] = {
       personOid.map(hakemusEditori.fetchByHakemusOid(request, _, hakemusOid, FetchIfNoHetuOrToinenAste))
-        .getOrElse(hakemusRepository.getHakemus(request, hakemusOid, FetchIfNoHetuOrToinenAste))
-        .fold[Try[HakemusInfo]](Failure(new NoSuchElementException(s"Hakemus $hakemusOid not found")))(h => Success(h.withoutKelaUrl))
+        .get.fold[Try[HakemusInfo]](Failure(new NoSuchElementException(s"Hakemus $hakemusOid not found")))(h => Success(h.withoutKelaUrl))
     }
 
     before() {

@@ -1,7 +1,7 @@
 package fi.vm.sade.omatsivut.servlet
 
 import fi.vm.sade.hakemuseditori._
-import fi.vm.sade.hakemuseditori.hakemus.{Fetch, HakemusRepositoryComponent, SpringContextComponent}
+import fi.vm.sade.hakemuseditori.hakemus.{Fetch}
 import fi.vm.sade.hakemuseditori.json.JsonFormats
 import fi.vm.sade.hakemuseditori.localization.TranslationsComponent
 import fi.vm.sade.hakemuseditori.user.Oppija
@@ -16,9 +16,7 @@ import org.scalatra.json._
 
 trait ApplicationsServletContainer {
   this: HakemusEditoriComponent with
-        HakemusRepositoryComponent with
         ValintatulosServiceComponent with
-        SpringContextComponent with
         VastaanottoComponent with
         TranslationsComponent =>
 
@@ -59,14 +57,6 @@ trait ApplicationsServletContainer {
         case FullSuccess(hakemukset) =>
           Map(
             "allApplicationsFetched" -> true,
-            "applications" -> hakemukset,
-            "migriJwt" -> migriJwt.createMigriJWT(oid),
-            "migriUrl" -> appConfig.settings.migriUrl
-          )
-        case PartialSuccess(hakemukset, exceptions) =>
-          exceptions.foreach(logger.warn(s"Failed to fetch all applications for oid $oid",_))
-          Map(
-            "allApplicationsFetched" -> false,
             "applications" -> hakemukset,
             "migriJwt" -> migriJwt.createMigriJWT(oid),
             "migriUrl" -> appConfig.settings.migriUrl

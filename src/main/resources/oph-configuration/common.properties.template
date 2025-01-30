@@ -106,10 +106,6 @@ haku.app.password.to.viestintapalvelu={{haku_app_password_to_viestintapalvelu}}
 hakuperusteet.url.fi=https\://{{host_haku}}/hakuperusteet
 hakuperusteet.url.sv=https\://{{host_haku_sv}}/hakuperusteet
 hakuperusteet.url.en=https\://{{host_haku_en}}/hakuperusteet
-mongo.db.name=hakulomake
-mongo.db.maxpoolsize=100
-mongodb.oppija.uri=mongodb://{{mongodb_hakemus_auth}}@{{mongodb_hakemus_host}}:{{mongodb_hakemus_port}}
-mongodb.url=${mongodb.oppija.uri}/${mongo.db.name}?maxpoolsize=${mongo.db.maxpoolsize}
 onlyBackgroundValidation=
 scheduler.run={{haku_scheduler_run}}
 scheduler.delay={{haku_scheduler_delay}}

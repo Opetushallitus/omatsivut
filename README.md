@@ -87,9 +87,7 @@ Tässä yhdet esimerkkitweakkaukset.
 > #omatsivut.db.url=jdbc:postgresql://omatsivut.db.testiopintopolku.fi:5432/omatsivut
 > omatsivut.db.url=jdbc:postgresql://localhost:25440/omatsivut  # huom, localhost:25440 on ssh-putkitettu omatsivut.db.testiopintopolku.fi:5432:hen
 99c102
-< mongodb.oppija.uri=mongodb://tunnus:salasana@mongocluster-1.testiopintopolku.fi,mongocluster-2.testiopintopolku.fi,mongocluster-3.testiopintopolku.fi:27017
 ---
-> mongodb.oppija.uri=mongodb://tunnus:salasana@localhost:47018 # huom, localhost:47018 on ssh-putkitettu mongo-clusterin masteriin
 
 ```
 
@@ -171,18 +169,9 @@ Testien ajaminen aikaansaa myös sisäänkirjautumisen, jonka jälkeen sovelluks
 
 ## Testidata
 
-Testien ajaminen käynnistää embedded Mongo instanssin hakulomake-kannasta.
-
-Fixture-data ladataan toisista projekteista maven-riippuvuuden kautta.
-Testejä kehittäessä fixture-dataa voi omalla päivittää asentamalla "mvn install"-komennolla uusia versioita projekteista.
-
-* valinta-tulos-service: [valinta-tulos-service/src/main/resources/fixtures/](https://github.com/Opetushallitus/valinta-tulos-service/tree/master/src/main/resources/fixtures)
-* hakemuseditori: Testit käyttävät myös mokattuja ulkoisten palvelujen rajapintoja. Näiden
-mokkien data löytyy pääsääntöisesti [omatsivut/src/main/resources/hakemuseditorimockdata/](https://github.com/Opetushallitus/omatsivut/tree/master/src/main/resources/hakemuseditorimockdata) kansiosta.
-  * haku: [haku/hakemus-api/src/main/resources/mongofixtures](https://github.com/Opetushallitus/haku/tree/master/hakemus-api/src/main/resources/mongofixtures) kansio ladataan testipalvelimen käynnistyessä. Kyseisessä
-  datassa on hakemusten personOid kentät muutettu vastaamaan testien käyttämää
-  henkilöä. Fixtuurien lisäämistä varten löytyy scripti [haku/testfixtures](https://github.com/Opetushallitus/haku/tree/master/testfixtures)
-  kansiosta. Koulutusdata joka sijaitsee kansiossa [haku/hakemus-api/src/main/resources/mockdata](https://github.com/Opetushallitus/haku/tree/master/hakemus-api/src/main/resources/mockdata).
+Aikaisempi testidata perustui haku-appin ja valinta-tulos-servicen repositorioista ladattuihin fixtureihin.
+Koska vanhan hakemuspalvelun hakemukset eivät enää ole käytössä ja datamalli on vanhentunut,
+nämä data-alustukset on poistettu ja resursointisyistä korvaavia end-to-end-testejä ei ole toteutettu.
 
 ## Sovellusprofiilit
 
@@ -193,20 +182,13 @@ Profiili määrittää lähinnä, mistä propertyt haetaan, mutta sen avulla my�
 
 Tämä on kätevin profiili kehityskäyttöön, ja ainoa profiili, jolla esimerkiksi mocha-testit voidaan onnistuneesti ajaa.
 It-profiililla käytetään:
-- embedded mongo-kantaa, joka käynnistetään serverin käynnistyksen yhteydessä porttiin 28018.
 - paikallista postgres-kantaa, toistaiseksi session tallentamisen takia, joka myöskin käynnistetään serverin käynnistyksen
 yhteydessä
 
 
 ### dev-profiili
 
-Tällä profiililla käytetään paikallista mongo-kantaa ja mockattuja ulkoisia järjestelmiä (pois lukien valinta-tulos-service).
-
-Paikallisen mongon käynnistys:
-
-```sh
-mongod --fork --config /usr/local/etc/mongod.conf
-```
+Tällä profiililla käytetään mockattuja ulkoisia järjestelmiä (pois lukien valinta-tulos-service).
 
 ### templated-profiili
 

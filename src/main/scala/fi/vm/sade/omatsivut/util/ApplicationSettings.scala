@@ -33,16 +33,7 @@ abstract class ApplicationSettings(config: Config) {
     parser.parse(config.withValue(keyValuePair._1, ConfigValueFactory.fromAnyRef(keyValuePair._2)))
   }
 
-  def withoutPath[T <: ApplicationSettings](path: String)(implicit  parser: ApplicationSettingsParser[T]): T = {
-    parser.parse(config.withoutPath(path))
-  }
 
-  protected def getMongoConfig(config: Config) = {
-    MongoConfig(
-      config.getString("uri"),
-      config.getString("dbname")
-    )
-  }
 
   def getStringWithDefault(path: String, default: String) = {
     try {
@@ -59,7 +50,6 @@ trait ApplicationSettingsParser[T <: ApplicationSettings] {
 
 }
 
-case class MongoConfig(url: String, dbname: String)
 
 case class Environment(val name: String) {
   def isLuokka = name == "ophitest"

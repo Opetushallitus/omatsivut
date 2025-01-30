@@ -1,12 +1,9 @@
 package fi.vm.sade.omatsivut.hakemus
 
-import fi.vm.sade.hakemuseditori.fixtures.JsonFixtureMaps
 import fi.vm.sade.hakemuseditori.hakemus.domain.{Active, HakemuksenTila, Hakemus}
-import fi.vm.sade.hakemuseditori.hakemus.hakuapp.domain.Application
 import fi.vm.sade.hakemuseditori.hakemus.{ApplicationsResponse, HakemusInfo}
-import fi.vm.sade.hakemuseditori.json.{ApplicationSerializer, JsonFormats}
+import fi.vm.sade.hakemuseditori.json.{JsonFormats}
 import fi.vm.sade.omatsivut.fixtures.TestFixture
-import fi.vm.sade.omatsivut.fixtures.hakemus.ApplicationFixtureImporter
 import fi.vm.sade.omatsivut.{PersonOid, ScalatraTestSupport}
 import fi.vm.sade.omatsivut.util.{GenericJsonFormats, Logging}
 import org.json4s.JsonAST.JObject
@@ -19,7 +16,6 @@ import java.util.Date
 trait HakemusApiSpecification extends ScalatraTestSupport with Logging {
   implicit val jsonFormats: Formats = JsonFormats.jsonFormats ++ List(new HakemuksenTilaSerializer)
 
-  lazy val fixtureImporter: ApplicationFixtureImporter = new ApplicationFixtureImporter(springContext)
 
   val henkilotiedot: String = "henkilotiedot"
   val hakutoiveet: String = "hakutoiveet"
@@ -49,10 +45,6 @@ trait HakemusApiSpecification extends ScalatraTestSupport with Logging {
 
   }
 
-  def setupFixture(fixtureName: String) = {
-    new ApplicationFixtureImporter(springContext).applyFixtures(fixtureName)
-  }
-
   def setApplicationStart(applicationId: String, daysFromNow: Long)(implicit personOid: PersonOid) = {
     withApplicationsResponse { resp =>
       val hakuOid = resp.applications.find(_.hakemus.oid == applicationId).map(_.hakemus.haku.get.oid).get
@@ -60,12 +52,6 @@ trait HakemusApiSpecification extends ScalatraTestSupport with Logging {
     }
   }
 
-  def withSavedApplication[T](hakemus: Hakemus)(f: Application => T): T = withSavedApplication(hakemus.oid)(f)
-
-  def withSavedApplication[T](hakemusOid: String)(f: Application => T): T = {
-    val application = JsonFixtureMaps.findByKey[Application]("/hakemuseditorimockdata/applications-hakuapp.json", hakemusOid).get
-    f(application)
-  }
 
 }
 

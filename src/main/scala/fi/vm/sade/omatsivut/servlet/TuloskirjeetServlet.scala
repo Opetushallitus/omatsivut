@@ -1,29 +1,20 @@
 package fi.vm.sade.omatsivut.servlet
 
-import java.lang.RuntimeException
-
 import fi.vm.sade.hakemuseditori._
-import fi.vm.sade.hakemuseditori.hakemus.{FetchIfNoHetuOrToinenAste, HakemusInfo, HakemusRepositoryComponent}
 import fi.vm.sade.hakemuseditori.user.Oppija
 import fi.vm.sade.hakemuseditori.viestintapalvelu.{AccessibleHtml, Pdf, TuloskirjeComponent}
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.oppijantunnistus.{ExpiredTokenException, InvalidTokenException, OppijanTunnistusComponent, OppijantunnistusMetadata}
-import javax.servlet.http.HttpServletRequest
-import org.apache.commons.lang3.StringUtils
 import org.scalatra._
 
-import scala.util.{Failure, Success, Try}
+import scala.util.{Try}
 
 trait TuloskirjeetServletContainer {
-  this: HakemusRepositoryComponent with
-    HakemusEditoriComponent with
-    HakemusRepositoryComponent with
+  this: HakemusEditoriComponent with
     TuloskirjeComponent with
     OppijanTunnistusComponent =>
 
   class TuloskirjeetServlet(val appConfig: AppConfig) extends OmatSivutServletBase with HakemusEditoriUserContext {
-    protected val applicationDescription = "REST API tuloskirjeille"
-    private val hakemusEditori = newEditor(this)
 
     def user(): Oppija = throw new RuntimeException("No user available")
 

@@ -14,12 +14,12 @@ object ConfigTemplateProcessor {
       new ClassPathUrlHandler(getClass.getClassLoader))
     val attributesURL = new File(attributesFile).toURI.toURL
 
-    val templatedData = JinjaTemplateProcessor.processJinjaWithYamlAttributes(templateURL, attributesURL) + "\nmongodb.ensureIndex=false" // <- to make work with embedded mongo
+    val templatedData = JinjaTemplateProcessor.processJinjaWithYamlAttributes(templateURL, attributesURL)
     parseTemplatedData(templatedData)
   }
 
   def createSettings[T <: ApplicationSettings](template: URL, attributes: URL)(implicit applicationSettingsParser: ApplicationSettingsParser[T]): T = {
-    val templatedData: String = JinjaTemplateProcessor.processJinjaWithYamlAttributes(template, attributes) + "\nmongodb.ensureIndex=false" // <- to make work with embedded mongo
+    val templatedData: String = JinjaTemplateProcessor.processJinjaWithYamlAttributes(template, attributes)
     parseTemplatedData(templatedData)
   }
 

@@ -1,6 +1,5 @@
 package fi.vm.sade.omatsivut
 
-import fi.vm.sade.hakemuseditori.hakemus.HakemusSpringContext
 import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.security.fake.FakeAuthentication
 import fi.vm.sade.omatsivut.security.{CookieHelper, SessionId}
@@ -9,11 +8,9 @@ import org.specs2.mutable.Specification
 
 trait ScalatraTestSupport extends Specification with HttpComponentsClient with OmatsivutDbTools with ITSetup {
 
-  protected lazy val springContext: HakemusSpringContext = SharedAppConfig.componentRegistry.springContext
 
   step {
     SharedJetty.start
-    springContext
   }
 
   def baseUrl: String = "http://localhost:" + AppConfig.embeddedJettyPortChooser.chosenPort + "/omatsivut"

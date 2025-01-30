@@ -1,9 +1,8 @@
 package fi.vm.sade.omatsivut.config
 
 import com.typesafe.config.Config
-import de.svenkubiak.embeddedmongodb.EmbeddedMongoDB
 import fi.vm.sade.omatsivut.OphUrlProperties
-import fi.vm.sade.omatsivut.util.{ApplicationSettingsLoader, ConfigTemplateProcessor, EmbeddedMongo, Logging, PortFromSystemPropertyOrFindFree}
+import fi.vm.sade.omatsivut.util.{ApplicationSettingsLoader, ConfigTemplateProcessor, Logging, PortFromSystemPropertyOrFindFree}
 
 object AppConfig extends Logging {
 
@@ -12,7 +11,6 @@ object AppConfig extends Logging {
   val suomifi_valtuudet_enabled = false
 
   private implicit val settingsParser = ApplicationSettingsParser
-  val embeddedMongoPortChooser = new PortFromSystemPropertyOrFindFree("omatsivut.embeddedmongo.port")
 
   val itPostgresPortChooser = new PortFromSystemPropertyOrFindFree("omatsivut.it.postgres.port")
 
@@ -58,7 +56,6 @@ object AppConfig extends Logging {
     def springConfiguration = new OmatSivutSpringContext.Dev()
 
     override lazy val settings = ConfigTemplateProcessor.createSettings("common", templateAttributesFile)
-      .withOverride("mongodb.oppija.uri", "mongodb://localhost:" + embeddedMongoPortChooser.chosenPort)
       .withOverride("omatsivut.db.port", itPostgresPortChooser.chosenPort.toString)
       .withOverride("omatsivut.db.host", "localhost")
       .withOverride("omatsivut.db.url", "jdbc:postgresql://localhost:" + itPostgresPortChooser.chosenPort + "/omatsivutdb")
@@ -87,13 +84,10 @@ object AppConfig extends Logging {
     OphUrlProperties.addOverride("cas.oppija.logout", "/cas-oppija/logout?service=$1")
 
 
-    val embeddedMongoService = new EmbeddedMongoService
     val localPostgresService = new LocalPostgresService
 
     override lazy val settings = ConfigTemplateProcessor.createSettings("common", templateAttributesFile)
       .withOverride("omatsivut.valinta-tulos-service.url", "http://localhost:"+ embeddedJettyPortChooser.chosenPort + "/valinta-tulos-service")
-      .withOverride("mongo.db.name", "hakulomake")
-      .withOverride("mongodb.oppija.uri", "mongodb://localhost:" + embeddedMongoPortChooser.chosenPort)
       .withOverride("omatsivut.db.port", itPostgresPortChooser.chosenPort.toString)
       .withOverride("omatsivut.db.host", "localhost")
       .withOverride("omatsivut.db.url", "jdbc:postgresql://localhost:" + itPostgresPortChooser.chosenPort + "/omatsivut")
@@ -101,16 +95,10 @@ object AppConfig extends Logging {
       .withOverride("valinta-tulos-service.valintarekisteri.db.password", "oph")
 
     override def onStart: Unit = {
-      embeddedMongoService.start()
       localPostgresService.start()
     }
 
     override def onStop: Unit = {
-      try {
-        embeddedMongoService.stop()
-      } catch {
-        case e: Throwable => logger.info("Failed to stop embedded mongo ", e)
-      }
       localPostgresService.stop()
     }
 
@@ -142,23 +130,6 @@ object AppConfig extends Logging {
   trait LocalService {
     def start() {}
     def stop() {}
-  }
-
-  class EmbeddedMongoService extends LocalService {
-
-    private var mongo: Option[EmbeddedMongoDB] = None
-
-    override def start() {
-      // tämän ansiosta embedded mongo toimii lokaalista arm-maceissa
-      if(System.getProperty("os.arch") == "aarch64") System.setProperty("os.arch", "i686_64")
-
-      mongo = EmbeddedMongo.start(embeddedMongoPortChooser)
-    }
-
-    override def stop() {
-      mongo.foreach(_.stop)
-      mongo = None
-    }
   }
 
   class LocalPostgresService extends LocalService {
