@@ -142,10 +142,12 @@ class CasClient(casBaseUrl: Uri, client: Client[IO], callerId: String) extends L
 
   private def decodeCASResponse[R](response: Response[IO], debugLabel: String, decoder: EntityDecoder[IO, R]): IO[R] = {
     val decodeResult = if (response.status.isSuccess) {
+      logger.info(s"CAS ticket validation ok, decoding attributes from CAS response")
       decoder
         .decode(response, strict = false)
         .leftMap(decodeFailure => new CasClientException(s"Decoding $debugLabel failed: " + decodeFailure.message))
     } else {
+      logger.error(s"CAS ticket validation failed")
       casFailure(debugLabel, response)
     }
     decodeResult.rethrowT

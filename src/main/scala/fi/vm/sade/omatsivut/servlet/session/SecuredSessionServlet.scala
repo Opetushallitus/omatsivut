@@ -11,11 +11,14 @@ import fi.vm.sade.omatsivut.security._
 import fi.vm.sade.omatsivut.servlet.OmatSivutServletBase
 import fi.vm.sade.omatsivut.util.{Logging, OptionConverter}
 import org.scalatra.{BadRequest, Cookie, CookieOptions}
-import cats.effect.{IO}
+import cats.effect.IO
+import cats.syntax.all._
+
+import scala.util.control.NonFatal
 import cats.effect.unsafe.implicits.global
 
 import java.util.concurrent.TimeUnit
-import scala.concurrent.duration.Duration
+import scala.concurrent.duration.{Duration, DurationInt, FiniteDuration}
 
 
 trait SecuredSessionServletContainer {
@@ -36,11 +39,18 @@ trait SecuredSessionServletContainer {
 
         case Some(ticket) =>
           val result: IO[Either[Throwable, OppijaAttributes]] =
-            casOppijaClient
-              .validateServiceTicketWithOppijaAttributes(initsessionPath(request.getContextPath()))(ticket)
-              .timeout(Duration(10, TimeUnit.SECONDS))
+            retryWithBackoff(
+              casOppijaClient
+                .validateServiceTicketWithOppijaAttributes(initsessionPath(request.getContextPath()))(ticket),
+              maxRetries = 3, // Number of retries
+              delay = 500.millis // Initial retry delay
+            )
+              .timeout(10.seconds) // Ensures execution doesn't exceed 10s
               .attempt
-          result.unsafeRunSync() match { // Execute IO synchronously, required for servlets
+
+          val finalResult: Either[Throwable, OppijaAttributes] = result.unsafeRunSync()
+
+          finalResult match {
             case Right(attrs) =>
               if (isUsingValtuudet(attrs)) {
                 logger.info(s"User ${attrs.getOrElse("impersonatorDisplayName", "NOT_FOUND")} is using valtuudet; Will not init session and should redirect to ${valtuudetRedirectUri}")
@@ -53,7 +63,7 @@ trait SecuredSessionServletContainer {
               }
 
             case Left(error) =>
-              logger.warn("Unable to process CAS Oppija login request, hetu cannot be resolved from ticket", error)
+              logger.warn("Unable to process CAS Oppija login request", error)
               BadRequest(error.getMessage)
           }
       }
@@ -73,6 +83,14 @@ trait SecuredSessionServletContainer {
       }
     }
 
+    private def retryWithBackoff[A](io: IO[A], maxRetries: Int, delay: FiniteDuration): IO[A] = {
+      io.handleErrorWith {
+        case NonFatal(e) if maxRetries > 0 =>
+          logger.warn(s"Request failed, retrying in $delay... (${maxRetries - 1} retries left)", e)
+          IO.sleep(delay) *> retryWithBackoff(io, maxRetries - 1, delay * 2)
+        case otherError => IO.raiseError(otherError)
+      }
+    }
 
     private def initializeSessionAndRedirect(ticket: String, hetu: String, personOid: String, displayName: String): Unit = {
       val newSession = sessionService.storeSession(ticket, Hetu(hetu), OppijaNumero(personOid), displayName)
