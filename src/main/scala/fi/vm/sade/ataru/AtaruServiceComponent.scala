@@ -25,9 +25,10 @@ import org.json4s.FieldSerializer.{renameFrom, renameTo}
 import org.json4s.{DefaultFormats, FieldSerializer}
 import org.json4s.jackson.JsonMethods.parse
 
+import java.lang.Thread.sleep
 import scala.compat.java8.FutureConverters.toScala
 import scala.concurrent.{Await, Future}
-import scala.concurrent.duration.Duration
+import scala.concurrent.duration.{Duration, DurationInt, FiniteDuration}
 import scala.util.{Failure, Success, Try}
 
 case class AtaruApplication(oid: String,
@@ -234,18 +235,32 @@ trait AtaruServiceComponent  {
         .setUrl(OphUrlProperties.url("ataru-service.applications", personOid))
         .build()
 
-      val result = toScala(casClient.execute(req)).flatMap {
-        case r if r.getStatusCode == 200 =>
-          Future.successful(parse(r.getResponseBodyAsStream()).extract[List[AtaruApplication]])
-        case r =>
-          Future.failed(new RuntimeException(s"Failed to get applications for $personOid: ${r.toString}"))
+      def attemptFetch(retriesLeft: Int, delay: FiniteDuration, timeout: FiniteDuration): Try[List[AtaruApplication]] = {
+        val result = Try {
+          val futureResponse = toScala(casClient.execute(req)).flatMap {
+            case r if r.getStatusCode == 200 =>
+              Future.successful(parse(r.getResponseBodyAsStream()).extract[List[AtaruApplication]])
+            case r =>
+              Future.failed(new RuntimeException(s"Failed to get applications for $personOid: ${r.toString}"))
+          }
+          Await.result(futureResponse, timeout)
+        }
+
+        result match {
+          case Success(applications) => Success(applications)
+          case Failure(ex) if retriesLeft > 0 =>
+            logger.warn(s"Request failed, retrying in $delay... (${retriesLeft - 1} retries left, timeout $timeout)", ex)
+            sleep(delay.toMillis) // Blocking wait before retry
+            attemptFetch(retriesLeft - 1, delay * 2, timeout + 5.seconds) // Increase timeout for next retry
+          case Failure(ex) =>
+            logger.error(s"Error fetching applications for $personOid after retries", ex)
+            Failure(ex)
+        }
       }
 
-      Try(Await.result(result, Duration(10, TimeUnit.SECONDS))) match {
+      attemptFetch(retriesLeft = 3, delay = 1.second, timeout = 10.seconds) match {
         case Success(applications) => applications
-        case Failure(ex) =>
-          logger.error(s"Error fetching applications for $personOid", ex)
-          throw ex
+        case Failure(ex)           => throw ex
       }
     }
   }
