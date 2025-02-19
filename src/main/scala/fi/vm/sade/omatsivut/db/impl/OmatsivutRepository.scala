@@ -1,6 +1,5 @@
 package fi.vm.sade.omatsivut.db.impl
 
-import java.sql.Timestamp
 import java.util.ConcurrentModificationException
 import java.util.concurrent.TimeUnit
 

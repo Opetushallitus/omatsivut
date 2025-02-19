@@ -2,10 +2,7 @@ package fi.vm.sade.omatsivut.config
 
 import com.typesafe.config.Config
 import fi.vm.sade.omatsivut.OphUrlProperties
-import fi.vm.sade.omatsivut.db.impl.{DbConfig, OmatsivutDb}
-import fi.vm.sade.omatsivut.util.Logging
-
-import java.io.File
+import fi.vm.sade.omatsivut.db.impl.DbConfig
 
 case class ApplicationSettings(config: Config) extends fi.vm.sade.omatsivut.util.ApplicationSettings(config) {
 
@@ -37,9 +34,6 @@ case class ApplicationSettings(config: Config) extends fi.vm.sade.omatsivut.util
   val hmacKey : String = config.getString("omatsivut.crypto.hmac.key")
   val hmacKeyMigri : String = config.getString("omatsivut.migri.crypto.hmac.key")
 
-  val oppijaBaseUrlEn = config.getString("oppija.base.url.en")
-  val oppijaBaseUrlFi = config.getString("oppija.base.url.fi")
-  val oppijaBaseUrlSv = config.getString("oppija.base.url.sv")
 
   val kohdejoukotKorkeakoulu: List[String] = config.getString("omatsivut.kohdejoukot.korkeakoulu").split(",").toList
   val kohdejoukotToinenAste: List[String] = config.getString("omatsivut.kohdejoukot.toinen-aste").split(",").toList

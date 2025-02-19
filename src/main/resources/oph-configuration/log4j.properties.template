@@ -19,6 +19,8 @@ log4j.appender.FILE.MaxBackupIndex=100
 # Audit logging
 log4j.additivity.fi.vm.sade.auditlog.Audit=false
 log4j.logger.fi.vm.sade.auditlog.Audit=INFO, AUDIT
+log4j.additivity.fi.vm.sade.hakemuseditori.auditlog.OmatSivutLogger=false
+log4j.logger.fi.vm.sade.hakemuseditori.auditlog.OmatSivutLogger=INFO, AUDIT
 log4j.appender.AUDIT=org.apache.log4j.RollingFileAppender
 log4j.appender.AUDIT.File=logs/auditlog_omatsivut.log
 log4j.appender.AUDIT.Append=true

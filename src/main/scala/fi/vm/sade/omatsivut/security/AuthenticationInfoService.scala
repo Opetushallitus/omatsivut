@@ -1,7 +1,6 @@
 package fi.vm.sade.omatsivut.security
 
 
-import cats.conversions.all.autoConvertProfunctorVariance
 import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.omatsivut.cas.{CasAuthenticatingClient, CasClient, CasParams}

@@ -3,15 +3,15 @@ package fi.vm.sade.hakemuseditori
 import fi.vm.sade.ataru.AtaruServiceComponent
 import fi.vm.sade.hakemuseditori.domain.Language
 import fi.vm.sade.hakemuseditori.hakemus._
-import fi.vm.sade.hakemuseditori.hakemus.domain.{ValidationError}
-import fi.vm.sade.hakemuseditori.localization.{TranslationsComponent}
+import fi.vm.sade.hakemuseditori.hakemus.domain.ValidationError
+import fi.vm.sade.hakemuseditori.localization.TranslationsComponent
 import fi.vm.sade.hakemuseditori.ohjausparametrit.OhjausparametritComponent
 import fi.vm.sade.hakemuseditori.oppijanumerorekisteri.OppijanumerorekisteriComponent
 import fi.vm.sade.hakemuseditori.tarjonta.TarjontaComponent
 import fi.vm.sade.hakemuseditori.tarjonta.kouta.RemoteKoutaComponent
 import fi.vm.sade.hakemuseditori.tarjonta.vanha.RemoteTarjontaComponent
 import fi.vm.sade.hakemuseditori.user.User
-import fi.vm.sade.hakemuseditori.valintatulokset.{ValintatulosServiceComponent}
+import fi.vm.sade.hakemuseditori.valintatulokset.ValintatulosServiceComponent
 import fi.vm.sade.hakemuseditori.viestintapalvelu.{TuloskirjeComponent, TuloskirjeKind}
 import fi.vm.sade.omatsivut.util.Logging
 

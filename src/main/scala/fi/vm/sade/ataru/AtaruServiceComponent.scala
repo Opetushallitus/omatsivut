@@ -1,7 +1,6 @@
 package fi.vm.sade.ataru
 
 import java.time.Instant
-import java.util.concurrent.TimeUnit
 import fi.vm.sade.hakemuseditori.auditlog.{Audit, ShowHakemus}
 import fi.vm.sade.hakemuseditori.domain.Language.Language
 import fi.vm.sade.hakemuseditori.hakemus.{HakemusInfo, ValintatulosFetchStrategy}

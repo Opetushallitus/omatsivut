@@ -10,7 +10,6 @@ import fi.vm.sade.hakemuseditori.ohjausparametrit.domain.HaunAikataulu
 import fi.vm.sade.hakemuseditori.tarjonta.domain.{Haku, Hakukohde, KohteenHakuaika}
 import fi.vm.sade.hakemuseditori.tarjonta.kouta.RemoteKoutaComponent
 import fi.vm.sade.hakemuseditori.tarjonta.vanha.{RemoteTarjontaComponent, TarjontaHaku, TarjontaParser}
-import fi.vm.sade.javautils.nio.cas.CasClient
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.util.Logging
 import org.json4s.JsonAST.JValue

@@ -1,11 +1,9 @@
 package fi.vm.sade.omatsivut.config
 
-import cats.effect.unsafe.IORuntime
 import fi.vm.sade.omatsivut.OphUrlProperties
 import com.github.kagkarlsson.scheduler.Scheduler
 import fi.vm.sade.ataru.{AtaruService, AtaruServiceComponent}
 import fi.vm.sade.hakemuseditori.domain.Language.Language
-import fi.vm.sade.hakemuseditori.hakemus._
 import fi.vm.sade.hakemuseditori.localization.TranslationsComponent
 import fi.vm.sade.hakemuseditori.ohjausparametrit.{OhjausparametritComponent, OhjausparametritService}
 import fi.vm.sade.hakemuseditori.oppijanumerorekisteri.{OppijanumerorekisteriComponent, OppijanumerorekisteriService}
@@ -16,7 +14,7 @@ import fi.vm.sade.hakemuseditori.viestintapalvelu.{TuloskirjeComponent, Tuloskir
 import fi.vm.sade.hakemuseditori.HakemusEditoriComponent
 import fi.vm.sade.omatsivut.config.AppConfig._
 import fi.vm.sade.omatsivut.db.impl.OmatsivutDb
-import cats.effect.{IO, Resource}
+import cats.effect.IO
 import fi.vm.sade.omatsivut.cas.CasClient
 import fi.vm.sade.omatsivut.util.BlazeHttpClient
 import org.http4s.blaze.client.BlazeClientBuilder
@@ -24,7 +22,6 @@ import org.http4s.client.Client
 
 import scala.concurrent.ExecutionContext.global
 
-//import fi.vm.sade.omatsivut.fixtures.hakemus.ApplicationFixtureImporter
 import fi.vm.sade.omatsivut.localization.OmatSivutTranslations
 import fi.vm.sade.omatsivut.oppijantunnistus.{OppijanTunnistusComponent, OppijanTunnistusService, RemoteOppijanTunnistusService, StubbedOppijanTunnistusService}
 import fi.vm.sade.omatsivut.security._
