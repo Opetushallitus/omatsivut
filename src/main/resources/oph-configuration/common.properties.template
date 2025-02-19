@@ -192,3 +192,5 @@ omatsivut.kohdejoukot.toinen-aste={{omatsivut_kohdejoukot_toinenaste | default('
 omatsivut.kohdejoukon-tarkenteet.siirtohaku={{omatsivut_kohdejoukontarkenteet_siirtohaku | default('haunkohdejoukontarkenne_1')}}
 
 omatsivut.migri.url={{omatsivut_migri_url}}
+
+viestinvalityspalvelu.osoite={{viestinvalityspalvelu_url}}
