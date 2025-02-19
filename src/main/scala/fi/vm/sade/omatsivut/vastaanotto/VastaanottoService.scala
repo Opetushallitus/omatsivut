@@ -104,9 +104,7 @@ trait VastaanottoComponent {
         .withSailytysAika(365)
         .build())
       } catch {
-        case e: Exception => logger.error(
-          s"""Vastaanottosähköpostin lähetys epäonnistui: hakuOid / hakukohdeNimi / tarjoajaNimi / email :
-            $hakuOid / ${vastaanotto.hakukohdeNimi} / ${vastaanotto.tarjoajaNimi} / $email""".stripMargin, e.getMessage)
+        case e: Exception => logger.error("Vastaanottosähköpostin lähetys epäonnistui: hakuOid / hakukohdeNimi / tarjoajaNimi / email : {} / {} / {} / {}", hakuOid, vastaanotto.hakukohdeNimi, vastaanotto.tarjoajaNimi, email, e)
       }
     }
   }
