@@ -56,8 +56,8 @@ trait SecuredSessionServletContainer {
               } else {
                 val hetu = attrs("nationalIdentificationNumber")
                 val personOid = attrs.getOrElse("personOid", "")
-                val displayName = attrs.getOrElse("displayName", "")
-                initializeSessionAndRedirect(ticket, hetu, personOid, displayName)
+                val displayName = if(isUsingEidas(attrs)) attrs.getOrElse("firstName", "") + " " + attrs.getOrElse("familyName", "") else attrs.getOrElse("displayName", "")
+                initializeSessionAndRedirect(ticket, hetu, personOid, displayName.trim)
               }
 
             case Left(error) =>
@@ -113,6 +113,10 @@ trait SecuredSessionServletContainer {
     private def isUsingValtuudet(attributes: OppijaAttributes): Boolean = {
       (attributes.getOrElse("impersonatorNationalIdentificationNumber", "").nonEmpty
         || attributes.getOrElse("impersonatorDisplayName", "").nonEmpty)
+    }
+
+    private def isUsingEidas(attributes: OppijaAttributes): Boolean = {
+      attributes.getOrElse("personIdentifier", "").nonEmpty
     }
   }
 
