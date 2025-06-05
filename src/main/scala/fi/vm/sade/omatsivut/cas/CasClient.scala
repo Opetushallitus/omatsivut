@@ -107,8 +107,21 @@ class CasClient(casBaseUrl: Uri, client: Client[IO], callerId: String) extends L
         Try {
           val attributes: NodeSeq = (serviceResponse \ "authenticationSuccess" \ "attributes")
 
-          List("mail", "clientName", "displayName", "givenName", "personOid", "personName", "firstName", "nationalIdentificationNumber",
-            "impersonatorNationalIdentificationNumber", "impersonatorDisplayName")
+          List(
+            "mail",
+            "clientName",
+            "displayName",
+            "givenName",
+            "personOid",
+            "personName",
+            "firstName",
+            "nationalIdentificationNumber",
+            "impersonatorNationalIdentificationNumber",
+            "impersonatorDisplayName",
+            "personIdentifier",
+            "dateOfBirth",
+            "familyName"
+          )
             .map(key => (key, (attributes \ key).text))
             .toMap
         } match {
