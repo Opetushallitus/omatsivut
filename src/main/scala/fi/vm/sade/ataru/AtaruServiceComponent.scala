@@ -29,6 +29,7 @@ import scala.compat.java8.FutureConverters.toScala
 import scala.concurrent.{Await, Future}
 import scala.concurrent.duration.{Duration, DurationInt, FiniteDuration}
 import scala.util.{Failure, Success, Try}
+import fi.vm.sade.omatsivut.util.SharedAsyncHttpClient
 
 case class AtaruApplication(oid: String,
                             secret: String,
@@ -221,7 +222,7 @@ trait AtaruServiceComponent  {
       "/auth/cas")
       .setJsessionName("ring-session").build
 
-    private val casClient: CasClient = CasClientBuilder.build(casConfig)
+    private val casClient: CasClient = CasClientBuilder.buildFromConfigAndHttpClient(casConfig, SharedAsyncHttpClient.instance)
 
     implicit private val formats = DefaultFormats +
       FieldSerializer[AtaruApplication](

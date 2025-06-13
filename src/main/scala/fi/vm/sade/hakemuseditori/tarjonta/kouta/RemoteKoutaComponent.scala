@@ -10,7 +10,7 @@ import fi.vm.sade.javautils.nio.cas.{CasClient, CasClientBuilder, CasConfig}
 import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
-import fi.vm.sade.omatsivut.util.Logging
+import fi.vm.sade.omatsivut.util.{Logging, SharedAsyncHttpClient}
 import org.asynchttpclient.RequestBuilder
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -36,7 +36,7 @@ trait RemoteKoutaComponent {
       "/auth/login")
       .setJsessionName("session").build
 
-    private val casClient: CasClient = CasClientBuilder.build(casConfig)
+    private val casClient: CasClient = CasClientBuilder.buildFromConfigAndHttpClient(casConfig, SharedAsyncHttpClient.instance)
 
     implicit private val formats = DefaultFormats
 
