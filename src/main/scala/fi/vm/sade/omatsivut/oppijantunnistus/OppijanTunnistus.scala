@@ -6,6 +6,7 @@ import fi.vm.sade.omatsivut.NonSensitiveHakemusInfo.Oid
 import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
+import fi.vm.sade.omatsivut.util.SharedAsyncHttpClient
 import org.asynchttpclient.RequestBuilder
 import org.json4s._
 import org.json4s.jackson.JsonMethods
@@ -35,7 +36,7 @@ class ExpiredTokenException(msg: String) extends RuntimeException(msg)
 object RemoteOppijanTunnistusService {
 
   def createCasClient(config: AppConfig): CasClient = {
-    CasClientBuilder.build(
+    CasClientBuilder.buildFromConfigAndHttpClient(
     new CasConfig.CasConfigBuilder(
       config.settings.securitySettings.casVirkailijaUsername,
       config.settings.securitySettings.casVirkailijaPassword,
@@ -44,7 +45,9 @@ object RemoteOppijanTunnistusService {
       AppConfig.callerId,
       AppConfig.callerId,
       "/auth/cas")
-      .setJsessionName("ring-session").build())
+      .setJsessionName("ring-session")
+      .build(),
+      SharedAsyncHttpClient.instance)
   }
 }
 
