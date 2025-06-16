@@ -16,11 +16,9 @@ import fi.vm.sade.omatsivut.config.AppConfig._
 import fi.vm.sade.omatsivut.db.impl.OmatsivutDb
 import cats.effect.IO
 import fi.vm.sade.omatsivut.cas.CasClient
-import fi.vm.sade.omatsivut.util.BlazeHttpClient
+import fi.vm.sade.omatsivut.util.{BlazeHttpClient, ThreadPools}
 import org.http4s.blaze.client.BlazeClientBuilder
 import org.http4s.client.Client
-
-import scala.concurrent.ExecutionContext.global
 
 import fi.vm.sade.omatsivut.localization.OmatSivutTranslations
 import fi.vm.sade.omatsivut.oppijantunnistus.{OppijanTunnistusComponent, OppijanTunnistusService, RemoteOppijanTunnistusService, StubbedOppijanTunnistusService}
@@ -112,7 +110,7 @@ class ComponentRegistry(val config: AppConfig)
 //  if (config.isInstanceOf[IT]) {
 //    new ApplicationFixtureImporter(springContext).applyFixtures()
 //  }
-  lazy val persistentHttpClient: Client[IO] = BlazeClientBuilder[IO](global).resource.allocated.unsafeRunSync()(cats.effect.unsafe.implicits.global)._1
+  lazy val persistentHttpClient: Client[IO] = BlazeClientBuilder[IO](ThreadPools.httpExecutionContext).resource.allocated.unsafeRunSync()(ThreadPools.ioRuntime)._1
   lazy val casOppijaClient: CasClient = configureCASOppijaClient
   val fakeCasOppijaClient = configureFakeCasOppijaClient
   val ohjausparametritService: OhjausparametritService = configureOhjausparametritService

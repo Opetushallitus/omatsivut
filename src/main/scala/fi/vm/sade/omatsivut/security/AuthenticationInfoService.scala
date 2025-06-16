@@ -6,7 +6,7 @@ import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.omatsivut.cas.{CasAuthenticatingClient, CasClient, CasParams}
 import fi.vm.sade.omatsivut.config.{RemoteApplicationConfig, SecuritySettings}
 import fi.vm.sade.omatsivut.fixtures.TestFixture
-import fi.vm.sade.omatsivut.util.Logging
+import fi.vm.sade.omatsivut.util.{Logging, ThreadPools}
 import cats.effect._
 import cats.effect.unsafe.IORuntime
 import org.http4s._
@@ -15,8 +15,6 @@ import org.http4s.client._
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
 import org.typelevel.ci.CIStringSyntax
-
-import scala.concurrent.ExecutionContext.global
 
 
 trait AuthenticationInfoService {
@@ -49,8 +47,11 @@ class StubbedAuthenticationInfoService() extends AuthenticationInfoService {
 class RemoteAuthenticationInfoService(val remoteAppConfig: RemoteApplicationConfig, val casOppijaClient: CasClient, val securitySettings: SecuritySettings) extends AuthenticationInfoService with Logging {
   private val serviceUrl = remoteAppConfig.url + "/"
   private val casParams = CasParams(serviceUrl, securitySettings.casVirkailijaUsername, securitySettings.casVirkailijaPassword)
+
   private def buildHttpClient: Resource[IO, Client[IO]] =
-    BlazeClientBuilder[IO](global).resource
+    BlazeClientBuilder[IO](ThreadPools.httpExecutionContext).resource
+
+  private implicit val customIORuntime: IORuntime = ThreadPools.ioRuntime
 
   override def getOnrHenkilo(hetu: String) : Option[OnrHenkilo] = {
     logger.info(s"fetching henkilo from ONR")
@@ -88,6 +89,6 @@ class RemoteAuthenticationInfoService(val remoteAppConfig: RemoteApplicationConf
             }
         }
       }
-    }.unsafeRunSync()(IORuntime.global)
+    }.unsafeRunSync()(customIORuntime)
   }
 }

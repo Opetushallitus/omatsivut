@@ -12,13 +12,12 @@ import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import fi.vm.sade.omatsivut.util.{Logging, SharedAsyncHttpClient}
 import org.asynchttpclient.RequestBuilder
-
-import scala.concurrent.ExecutionContext.Implicits.global
+import fi.vm.sade.omatsivut.util.ThreadPools.httpExecutionContext
 import org.json4s.DefaultFormats
 import org.json4s.jackson.JsonMethods
 
 import scala.compat.java8.FutureConverters.toScala
-import scala.concurrent.Await
+import scala.concurrent.{Await, ExecutionContext}
 import scala.concurrent.duration.Duration
 import scala.util.{Failure, Success}
 
@@ -26,6 +25,7 @@ trait RemoteKoutaComponent {
   this: OhjausparametritComponent =>
 
   class RemoteKoutaService(config: AppConfig) extends TarjontaService with Logging {
+    implicit val ec: ExecutionContext = httpExecutionContext
     private val casConfig: CasConfig = new CasConfig.CasConfigBuilder(
       config.settings.securitySettings.casVirkailijaUsername,
       config.settings.securitySettings.casVirkailijaPassword,

@@ -16,8 +16,8 @@ import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
 import org.asynchttpclient.RequestBuilder
+import fi.vm.sade.omatsivut.util.ThreadPools.httpExecutionContext
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import javax.servlet.http.HttpServletRequest
 import org.joda.time.LocalDateTime
 import org.json4s.FieldSerializer.{renameFrom, renameTo}
@@ -26,7 +26,7 @@ import org.json4s.jackson.JsonMethods.parse
 
 import java.lang.Thread.sleep
 import scala.compat.java8.FutureConverters.toScala
-import scala.concurrent.{Await, Future}
+import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.concurrent.duration.{Duration, DurationInt, FiniteDuration}
 import scala.util.{Failure, Success, Try}
 import fi.vm.sade.omatsivut.util.SharedAsyncHttpClient
@@ -212,6 +212,7 @@ trait AtaruServiceComponent  {
   }
 
   class RemoteAtaruService(config: AppConfig) extends AtaruServiceCommons {
+    implicit val executionContext: ExecutionContext = httpExecutionContext
     private val casConfig: CasConfig = new CasConfig.CasConfigBuilder(
       config.settings.securitySettings.casVirkailijaUsername,
       config.settings.securitySettings.casVirkailijaPassword,

@@ -1,5 +1,7 @@
 package fi.vm.sade.omatsivut.util
 
+import cats.effect.unsafe.IORuntime
+
 import java.util.concurrent.{ArrayBlockingQueue, ThreadFactory, ThreadPoolExecutor, TimeUnit}
 import scala.concurrent.{ExecutionContext, ExecutionContextExecutor}
 
@@ -31,4 +33,12 @@ object ThreadPools {
   val httpThreads: Int = 250
   val httpPool: ThreadPoolExecutor = NamedThreadPoolExecutor("http4s-blaze-client", httpThreads, httpThreads, 1000)
   val httpExecutionContext: ExecutionContextExecutor = ExecutionContext.fromExecutor(httpPool)
+
+  implicit val ioRuntime: IORuntime = IORuntime(
+    compute = httpExecutionContext,
+    blocking = httpExecutionContext,
+    scheduler = IORuntime.global.scheduler,
+    shutdown = () => httpPool.shutdown(),
+    config = cats.effect.unsafe.IORuntimeConfig()
+  )
 }

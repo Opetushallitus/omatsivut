@@ -9,12 +9,14 @@ import fi.vm.sade.omatsivut.db.SessionRepository
 import fi.vm.sade.omatsivut.security.{Hetu, OppijaNumero, SessionId, SessionInfo}
 import slick.jdbc.PostgresProfile.api._
 import slick.sql.SqlStreamingAction
+import fi.vm.sade.omatsivut.util.ThreadPools.httpExecutionContext
 
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.ExecutionContext
 import scala.concurrent.duration.Duration
 
 trait SessionRepositoryImpl extends SessionRepository with OmatsivutRepository {
 
+  implicit val executionContext: ExecutionContext = httpExecutionContext
   override def store(session: SessionInfo): SessionId = session match {
     case SessionInfo(ticket, Hetu(hetu), OppijaNumero(oppijaNumero), oppijaNimi) =>
       val id = UUID.randomUUID()

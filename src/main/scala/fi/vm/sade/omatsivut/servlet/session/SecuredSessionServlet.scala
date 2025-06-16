@@ -13,7 +13,7 @@ import fi.vm.sade.omatsivut.util.{Logging, OptionConverter}
 import org.scalatra.{BadRequest, Cookie, CookieOptions}
 import cats.effect.IO
 
-import cats.effect.unsafe.implicits.global
+import fi.vm.sade.omatsivut.util.ThreadPools.ioRuntime
 import fi.vm.sade.omatsivut.util.RetryUtil.retryWithBackoff
 
 import scala.concurrent.duration.{DurationInt}
@@ -46,7 +46,7 @@ trait SecuredSessionServletContainer {
               .timeout(10.seconds) // Ensures execution doesn't exceed 10s
               .attempt
 
-          val finalResult: Either[Throwable, OppijaAttributes] = result.unsafeRunSync()
+          val finalResult: Either[Throwable, OppijaAttributes] = result.unsafeRunSync()(ioRuntime)
 
           finalResult match {
             case Right(attrs) =>

@@ -12,8 +12,8 @@ import org.http4s._
 import org.json4s
 import org.json4s.{DefaultFormats, Extraction}
 
-import scala.concurrent.{Await, Future}
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.{Await, ExecutionContext, Future}
+import fi.vm.sade.omatsivut.util.ThreadPools.httpExecutionContext
 import org.json4s.jackson.JsonMethods._
 
 import scala.concurrent.duration.Duration
@@ -51,6 +51,7 @@ trait OppijanumerorekisteriComponent {
     val casClient: CasClient = CasClientBuilder.buildFromConfigAndHttpClient(casConfig, SharedAsyncHttpClient.instance)
 
     implicit private val formats = DefaultFormats
+    implicit val ec: ExecutionContext = httpExecutionContext
 
     override def henkilo(personOid: String): Henkilo = {
       val oppijanumerorekisteriUrl = OphUrlProperties.url("oppijanumerorekisteri-service.henkiloByOid", personOid)
