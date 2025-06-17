@@ -102,7 +102,6 @@ trait NonSensitiveApplicationServletContainer {
     }
 
     get("/applications/tuloskirje/:hakuOid") {
-      logger.info(s"haetaan tuloskirje haulle ${params("hakuOid")}")
       val hakuOid = params("hakuOid")
       (for {
         token <- jwtAuthorize
@@ -144,7 +143,6 @@ trait NonSensitiveApplicationServletContainer {
     }
 
     get("/applications/application/session") {
-      logger.info(s"haetaan hakemus tunnistautuneena jwt:llä")
       (for {
         token <- jwtAuthorize
         hakemus <- fetchHakemus(token.oid, Some(token.personOid))
@@ -183,7 +181,6 @@ trait NonSensitiveApplicationServletContainer {
     }
 
     get("/applications/application/token/:token") {
-      logger.info(s"haetaan hakemus tokenilla ${params("token")}")
       (for {
         metadata <- oppijanTunnistusService.validateToken(params("token"))
         hakemus: HakemusInfo <- fetchHakemus(metadata.hakemusOid, metadata.personOid)

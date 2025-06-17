@@ -53,7 +53,6 @@ trait RemoteKoutaComponent {
         .setMethod("GET")
         .setUrl(OphUrlProperties.url("kouta-internal.haku", oid))
         .build()
-      logger.info(s"Get haku $oid from Kouta: uri ${request.getUri}")
       val result = toScala(casClient.execute(request)).map {
           case r if r.getStatusCode == 200 =>
             Right(Some(JsonMethods.parse(r.getResponseBodyAsStream()).extract[KoutaHaku]))
@@ -61,7 +60,7 @@ trait RemoteKoutaComponent {
             Right(None)
           case r =>
             Left(new RuntimeException(s"Failed to get haku: ${r.toString()}"))
-      } // TODO retry?
+      }
       try {
         Await.result(result, Duration(10, TimeUnit.SECONDS))
       } catch {
