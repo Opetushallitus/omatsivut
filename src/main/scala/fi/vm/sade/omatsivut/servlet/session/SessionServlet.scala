@@ -33,7 +33,7 @@ class SessionServlet(implicit val sessionService: SessionService)
       Try(formatter.parseLocalDate(h.substring(0, 6))) match {
         case Success(date) => Some(date)
         case Failure(exception) => {
-          logger.error(s"Unable to parse date from $session!", exception)
+          logger.warn(s"Unable to parse date from $session!", exception)
           None
         }
       }
