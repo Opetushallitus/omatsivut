@@ -2,6 +2,8 @@ package fi.vm.sade.omatsivut.util
 
 import scalaj.http.{Http, HttpOptions}
 
+import scala.concurrent.ExecutionContext
+
 trait HttpClient {
   def httpGet(url: String)(clientCallerId: String): HttpRequest
   def httpGet(url: String, options: HttpOptions.HttpOption*)(clientCallerId: String): HttpRequest
@@ -12,6 +14,8 @@ trait HttpClient {
 }
 
 object DefaultHttpClient extends HttpClient {
+  implicit val executionContext: ExecutionContext = ThreadPools.httpExecutionContext
+
   val defaultOptions: Seq[HttpOptions.HttpOption] = Seq(HttpOptions.connTimeout(10000), HttpOptions.readTimeout(60000))
 
   def httpGet(url: String)(clientCallerId: String): HttpRequest = {

@@ -37,9 +37,9 @@ export default ['$scope', '$location', '$http', '$cookies', function($scope, $lo
           $scope.application.migriUrl = response.migriUrl;
           $scope.application.token = token;
           $scope.application.isHakutoiveidenMuokkaus = true;
-          const henkilotiedot = response.data.hakemus.answers.henkilotiedot;
+          const henkilotiedot = response.data.hakemus.answers.henkilotiedot || {};
           $scope.user = {
-            name: henkilotiedot.Kutsumanimi + ' ' + henkilotiedot.Sukunimi
+            name: (henkilotiedot.Kutsumanimi || '') + ' ' + (henkilotiedot.Sukunimi || '')
           }
         },
         function (response) {

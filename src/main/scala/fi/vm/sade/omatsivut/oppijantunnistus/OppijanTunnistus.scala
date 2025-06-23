@@ -6,13 +6,15 @@ import fi.vm.sade.omatsivut.NonSensitiveHakemusInfo.Oid
 import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
+import fi.vm.sade.omatsivut.util.SharedAsyncHttpClient
+import fi.vm.sade.omatsivut.util.ThreadPools.httpExecutionContext
+import scala.concurrent.ExecutionContext
 import org.asynchttpclient.RequestBuilder
 import org.json4s._
 import org.json4s.jackson.JsonMethods
 
 import scala.compat.java8.FutureConverters.toScala
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.{Await, Future}
+import scala.concurrent.{Await}
 import scala.concurrent.duration.Duration
 import scala.util.{Failure, Success, Try}
 
@@ -35,7 +37,7 @@ class ExpiredTokenException(msg: String) extends RuntimeException(msg)
 object RemoteOppijanTunnistusService {
 
   def createCasClient(config: AppConfig): CasClient = {
-    CasClientBuilder.build(
+    CasClientBuilder.buildFromConfigAndHttpClient(
     new CasConfig.CasConfigBuilder(
       config.settings.securitySettings.casVirkailijaUsername,
       config.settings.securitySettings.casVirkailijaPassword,
@@ -44,13 +46,15 @@ object RemoteOppijanTunnistusService {
       AppConfig.callerId,
       AppConfig.callerId,
       "/auth/cas")
-      .setJsessionName("ring-session").build())
+      .setJsessionName("ring-session")
+      .build(),
+      SharedAsyncHttpClient.instance)
   }
 }
 
 class RemoteOppijanTunnistusService(casClient: CasClient) extends OppijanTunnistusService {
   implicit val formats = DefaultFormats
-
+  implicit val executionContext: ExecutionContext = httpExecutionContext
   def validateToken(token: String): Try[OppijantunnistusMetadata] = {
     val request = new RequestBuilder()
       .setMethod("GET")

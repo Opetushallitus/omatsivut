@@ -10,15 +10,14 @@ import fi.vm.sade.javautils.nio.cas.{CasClient, CasClientBuilder, CasConfig}
 import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
-import fi.vm.sade.omatsivut.util.Logging
+import fi.vm.sade.omatsivut.util.{Logging, SharedAsyncHttpClient}
 import org.asynchttpclient.RequestBuilder
-
-import scala.concurrent.ExecutionContext.Implicits.global
+import fi.vm.sade.omatsivut.util.ThreadPools.httpExecutionContext
 import org.json4s.DefaultFormats
 import org.json4s.jackson.JsonMethods
 
 import scala.compat.java8.FutureConverters.toScala
-import scala.concurrent.Await
+import scala.concurrent.{Await, ExecutionContext}
 import scala.concurrent.duration.Duration
 import scala.util.{Failure, Success}
 
@@ -26,6 +25,7 @@ trait RemoteKoutaComponent {
   this: OhjausparametritComponent =>
 
   class RemoteKoutaService(config: AppConfig) extends TarjontaService with Logging {
+    implicit val ec: ExecutionContext = httpExecutionContext
     private val casConfig: CasConfig = new CasConfig.CasConfigBuilder(
       config.settings.securitySettings.casVirkailijaUsername,
       config.settings.securitySettings.casVirkailijaPassword,
@@ -36,7 +36,7 @@ trait RemoteKoutaComponent {
       "/auth/login")
       .setJsessionName("session").build
 
-    private val casClient: CasClient = CasClientBuilder.build(casConfig)
+    private val casClient: CasClient = CasClientBuilder.buildFromConfigAndHttpClient(casConfig, SharedAsyncHttpClient.instance)
 
     implicit private val formats = DefaultFormats
 
@@ -53,7 +53,6 @@ trait RemoteKoutaComponent {
         .setMethod("GET")
         .setUrl(OphUrlProperties.url("kouta-internal.haku", oid))
         .build()
-      logger.info(s"Get haku $oid from Kouta: uri ${request.getUri}")
       val result = toScala(casClient.execute(request)).map {
           case r if r.getStatusCode == 200 =>
             Right(Some(JsonMethods.parse(r.getResponseBodyAsStream()).extract[KoutaHaku]))
@@ -61,7 +60,7 @@ trait RemoteKoutaComponent {
             Right(None)
           case r =>
             Left(new RuntimeException(s"Failed to get haku: ${r.toString()}"))
-      } // TODO retry?
+      }
       try {
         Await.result(result, Duration(10, TimeUnit.SECONDS))
       } catch {
