@@ -30,7 +30,7 @@ object NamedThreadPoolExecutor {
 }
 
 object ThreadPools {
-  val httpThreads: Int = 250
+  val httpThreads: Int = 100
   val httpPool: ThreadPoolExecutor = NamedThreadPoolExecutor("http4s-blaze-client", httpThreads, httpThreads, 1000)
   val httpExecutionContext: ExecutionContextExecutor = ExecutionContext.fromExecutor(httpPool)
 

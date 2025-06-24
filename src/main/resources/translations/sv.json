@@ -147,6 +147,7 @@
         "tila": {
           "VastaanotaSitovasti": "Jag tar emot den här studieplatsen bindande",
           "VastaanotaSitovastiToinenAste": "Jag tar emot den beviljade studieplatsen",
+          "VastaanotaSitovastiPeruAlemmat":"Jag tar emot studieplatsen och annullerar samtliga platser som jag prioriterat på lägre plats och som jag tidigare har tagit emot",
           "Peru": "Jag tar inte emot den här studieplatsen",
           "VastaanotaEhdollisesti": "Jag tar emot den här studieplatsen men väntar på en studieplats med högre prioritet."
         }
