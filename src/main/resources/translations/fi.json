@@ -147,6 +147,7 @@
         "tila": {
           "VastaanotaSitovasti": "Otan tämän opiskelupaikan vastaan sitovasti",
           "VastaanotaSitovastiToinenAste": "Otan opiskelupaikan vastaan",
+          "VastaanotaSitovastiPeruAlemmat": "Otan opiskelupaikan vastaan ja perun samalla alemmat vastaanotetut paikat",
           "Peru": "En ota tätä opiskelupaikkaa vastaan",
           "VastaanotaEhdollisesti": "Otan tämän opiskelupaikan vastaan, mutta jään jonottamaan opiskelupaikkaa ylemmillä sijoilla olevista hakutoiveistani."
         }
