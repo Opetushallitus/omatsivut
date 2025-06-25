@@ -21,6 +21,8 @@ export default ["$injector", "$q", function RestErrorInterceptor($injector, $q) 
           } else {
             console.log("Error came from logging endpoint, won't try to log it to avoid a loop")
           }
+        } else if (error.status === 404 && error.data && error.data.includes("no personOid was present")) {
+            console.log("Won't log if personOid is not present")
         } else {
           var errorData = error.data !== undefined ? JSON.stringify(error.data) : '';
           var statusCode = error.status !== undefined ? error.status : '-1';

@@ -35,7 +35,12 @@ object SessionInfoRetriever extends Logging with AttributeNames {
       sessionService.getSession(sessionId) match {
         case Right(sessionInfo) => Some(sessionInfo)
         case Left(t) =>
-          logger.error(s"Error reading session id=$sessionIdFromCookie ($t)")
+          t match {
+            case _: AuthenticationFailedException =>
+              logger.warn(s"Authentication failed for session id=$sessionIdFromCookie (${t.getMessage})")
+            case _ =>
+              logger.error(s"Error reading session id=$sessionIdFromCookie ($t)")
+          }
           None
       }
     })
