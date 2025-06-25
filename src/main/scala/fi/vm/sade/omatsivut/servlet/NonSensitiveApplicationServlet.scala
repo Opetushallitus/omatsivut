@@ -87,8 +87,13 @@ trait NonSensitiveApplicationServletContainer {
             Failure(new ForbiddenException(e.getMessage))
           })
         case _ =>
-          logger.error(s"Authorization header handling failed with request header ($authHeader)")
-          Failure(new UnauthorizedException("Invalid Authorization header"))
+          if (authHeader == null || authHeader.isEmpty) {
+            logger.warn("Authorization header is missing")
+            Failure(new UnauthorizedException("Authorization header is missing"))
+          } else {
+            logger.error(s"Authorization header handling failed with request header ($authHeader)")
+            Failure(new UnauthorizedException("Invalid Authorization header"))
+          }
       }
     }
 
