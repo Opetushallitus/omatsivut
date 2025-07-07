@@ -15,9 +15,10 @@ import fi.vm.sade.hakemuseditori.valintatulokset.domain.{VastaanotaSitovasti, Va
 import fi.vm.sade.omatsivut.OphUrlProperties
 import fi.vm.sade.omatsivut.config.AppConfig
 import fi.vm.sade.omatsivut.config.AppConfig.AppConfig
+import fi.vm.sade.omatsivut.util.SharedAsyncHttpClient
 import org.scalatra.{ActionResult, Forbidden, InternalServerError, Ok}
-import java.util.Optional
 
+import java.util.Optional
 import scala.util.{Failure, Success, Try}
 
 trait VastaanottoComponent {
@@ -36,7 +37,7 @@ trait VastaanottoComponent {
         .withPassword(config.settings.securitySettings.casVirkailijaPassword)
         .withCasEndpoint(OphUrlProperties.url("cas.virkailija.url"))
         .withCallerId(AppConfig.callerId)
-        .build()
+        .buildWithHttpClient(SharedAsyncHttpClient.instance)
     def vastaanota(request: HttpServletRequest, hakemusOid: String, hakukohdeOid: String, henkiloOid: String, vastaanotto: Vastaanotto, hakemus: HakemusInfo): ActionResult = {
       val hakuOid: String = hakemus.hakemus.haku.map(_.oid).getOrElse("")
       val email: Option[String] = hakemus.hakemus.email

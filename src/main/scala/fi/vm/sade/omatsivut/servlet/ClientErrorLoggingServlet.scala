@@ -17,7 +17,12 @@ class ClientErrorLoggingServlet(val appConfig: AppConfig) extends ScalatraServle
     }
     try {
       val stringToLog = parsedBody.extract[Map[String, Any]].map {case (k, v) => k + ": " + v}.mkString(" | ")
-      frontLogger.error("Error from frontend - " + stringToLog)
+      if (stringToLog.contains("statusCode: 401") || stringToLog.contains("statusCode: 403")) {
+        // http 401 ja 403 eivät ole varsinaisia virheitä
+        frontLogger.warn("Error from frontend - " + stringToLog)
+      } else {
+        frontLogger.error("Error from frontend - " + stringToLog)
+      }
       Ok()
     } catch {
       case t: Throwable =>
