@@ -43,19 +43,6 @@ class FailingRemoteValintatulosService() extends RemoteValintatulosService {
 class RemoteValintatulosService extends ValintatulosService with JsonFormats with Logging {
   import org.json4s.jackson.JsonMethods._
 
-  def applyFixture(fixture: String) {
-    applyFixtureWithQuery( Map("fixturename"->fixture))
-  }
-
-  def applyFixtureWithQuery(query: Map[String,AnyRef]) {
-    val url = OphUrlProperties.url("valinta-tulos-service.fixtures.apply", query)
-    DefaultHttpClient.httpPut(url)(AppConfig.callerId).responseWithHeaders match {
-      case (200, _, resultString) =>
-        logger.info("Using valinta-tulos-service fixture: " + query)
-      case (errorCode, _, resultString) =>
-        logger.error("Response code " + errorCode + " applying fixtures at " + url)
-    }
-  }
 
 
   override def getValintatulos(hakemusOid: String, hakuOid: String): Option[Valintatulos] = {

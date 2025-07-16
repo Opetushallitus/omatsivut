@@ -45,14 +45,6 @@ class JettyLauncher(profile: Option[String] = None) {
   }
   handlers.addHandler(omatsivut)
 
-  val valintatulosservice: WebAppContext = {
-    System.setProperty("valintatulos.profile", "it-externalHakemus")
-    val context = new WebAppContext()
-    context.setContextPath("/valinta-tulos-service")
-    context.setWar("target/valinta-tulos-service.war")
-    context
-  }
-  handlers.addHandler(valintatulosservice)
 
   server.setHandler(handlers)
 
