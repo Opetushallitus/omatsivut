@@ -16,7 +16,6 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
 
-        <valinta-tulos-service.version>8.1.0-SNAPSHOT</valinta-tulos-service.version>
         <tarjonta-api.version>2016-07-SNAPSHOT</tarjonta-api.version>
         <scala.version>2.12.20</scala.version>
         <jetty.version>9.4.56.v20240826</jetty.version>
@@ -323,13 +322,6 @@
             <artifactId>aws-java-sdk-s3</artifactId>
             <version>1.11.257</version>
         </dependency>
-        <dependency>
-            <groupId>fi.vm.sade</groupId>
-            <artifactId>valinta-tulos-service</artifactId>
-            <version>${valinta-tulos-service.version}</version>
-            <scope>test</scope>
-            <type>war</type>
-        </dependency>
     </dependencies>
     <build>
         <resources>
@@ -367,27 +359,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>get-vts-var</id>
-                        <phase>process-test-resources</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <artifactItems>
-                        <artifactItem>
-                            <groupId>fi.vm.sade</groupId>
-                            <artifactId>valinta-tulos-service</artifactId>
-                            <version>${valinta-tulos-service.version}</version>
-                            <type>war</type>
-                            <outputDirectory>./target</outputDirectory>
-                            <destFileName>valinta-tulos-service.war</destFileName>
-                        </artifactItem>
-                    </artifactItems>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>net.alchim31.maven</groupId>
