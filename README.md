@@ -57,8 +57,6 @@ npm install
 mvn clean install
 ```
 
-Tämä luo ./target-kansion alle valinta-tulos-service.war -tiedoston
-
 Aja JettyLauncher-luokka.
 
 - jotta impersonointi/autentikoinnin ohitus onnistuu, anna parametri `-Domatsivut.profile=it` (JVM parametri, ei CLI parametri).
@@ -156,13 +154,12 @@ Jos applikaatiota ajetaan "testimoodissa" eli esim. `-Domatsivut.profile=dev`, n
 
 ## mocha-phantomjs -testit
 
+Aikaisempi testidata perustui pitkälti käytöstä poistuneisiin toiminnallisuuksiin, jotka on korvattu uudella hakemuspalvelulla (ataru).
+Haku-app-riippuvuuden poiston yhteydessä resursointisyistä korvaavia end-to-end-testejä ei ole toteutettu.
+
 ### Testien ajaminen selaimessa
 
 Palvelin käyntiin (it-profiili ja JettyLauncher, ks yllä) ja sitten [http://localhost:7337/omatsivut/test/runner.html](http://localhost:7337/omatsivut/test/runner.html)
-
-Testien ajaminen onnistuneesti vaatii sitä, että tämän projektin rinnalta hakemistopuusta löytyy [valinta-tulos-service](https://github.com/Opetushallitus/valinta-tulos-service).
-
-Valinta-tulos-service.war muodostuu target:n alle komennolla `mvn clean compile`
 
 Testien ajaminen aikaansaa myös sisäänkirjautumisen, jonka jälkeen sovelluksen voi halutessaan avata lokaalisti osoitteessa [http://localhost:7337/omatsivut](http://localhost:7337/omatsivut),
  tosin tällöin sovellus on siinä tilassa mihin testit ovat sen jättäneet.
