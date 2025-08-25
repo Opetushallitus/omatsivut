@@ -320,7 +320,7 @@
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-s3</artifactId>
-            <version>1.11.257</version>
+            <version>1.12.410</version>
         </dependency>
     </dependencies>
     <build>
@@ -445,12 +445,10 @@
                                 </filter>
                             </filters>
                             <transformers>
-                                <transformer
-                                    implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
                                     <resource>reference.conf</resource>
                                 </transformer>
-                                <transformer
-                                    implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <manifestEntries>
                                         <Main-Class>fi.vm.sade.omatsivut.OmatsivutServer</Main-Class>
                                     </manifestEntries>
@@ -600,11 +598,11 @@
                         <executions>
                             <execution>
                                 <id>scala-compile-first</id>
-                                <phase />
+                                <phase/>
                             </execution>
                             <execution>
                                 <id>scala-test-compile</id>
-                                <phase />
+                                <phase/>
                             </execution>
                         </executions>
                     </plugin>
@@ -614,7 +612,7 @@
                         <version>2.4.3</version>
                         <executions>
                             <execution>
-                                <phase />
+                                <phase/>
                             </execution>
                         </executions>
                     </plugin>
@@ -624,7 +622,7 @@
                         <executions>
                             <execution>
                                 <id>get-vts-var</id>
-                                <phase />
+                                <phase/>
                             </execution>
                         </executions>
                     </plugin>
