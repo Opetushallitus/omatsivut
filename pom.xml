@@ -172,9 +172,9 @@
             <version>${postgresql.version}</version>
         </dependency>
         <dependency>
-            <groupId>fi.vm.sade.java-utils</groupId>
+            <groupId>opiskelijavalinnat-utils</groupId>
             <artifactId>java-cas</artifactId>
-            <version>1.2.3-SNAPSHOT</version>
+            <version>1.2.4-SNAPSHOT</version>
         </dependency>
         <!-- ei tule enää java-cas mukana 1.2.2 lähtien -->
         <dependency>
