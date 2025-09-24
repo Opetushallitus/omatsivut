@@ -1,9 +1,6 @@
 package fi.vm.sade.hakemuseditori.viestintapalvelu
 
 import java.io.{File, FileInputStream, IOException}
-import com.amazonaws.{AmazonClientException, AmazonServiceException}
-import com.amazonaws.services.s3.AmazonS3ClientBuilder
-import com.amazonaws.services.s3.model.{AmazonS3Exception, ObjectMetadata, S3Object}
 import fi.vm.sade.hakemuseditori.auditlog.{Audit, FetchTuloskirje}
 import fi.vm.sade.hakemuseditori.hakemus.domain.Tuloskirje
 import fi.vm.sade.hakemuseditori.json.JsonFormats
@@ -12,7 +9,17 @@ import fi.vm.sade.omatsivut.util.Logging
 
 import javax.servlet.http.HttpServletRequest
 import org.apache.commons.io.IOUtils
+import software.amazon.awssdk.awscore.exception.AwsServiceException
+import software.amazon.awssdk.core.exception.SdkClientException
+import software.amazon.awssdk.core.sync.ResponseTransformer
+import software.amazon.awssdk.http.HttpStatusCode
+import software.amazon.awssdk.regions.Region
+import software.amazon.awssdk.services.s3.S3Client
+import software.amazon.awssdk.services.s3.model.{GetBucketAclRequest, GetObjectRequest, GetObjectResponse, HeadObjectRequest, HeadObjectResponse, S3Exception, S3Object}
+import software.amazon.awssdk.utils.Validate
 
+import java.time.temporal.ChronoField
+import scala.collection.JavaConverters._
 import scala.util.{Failure, Success, Try}
 
 trait TuloskirjeComponent {
@@ -71,24 +78,43 @@ trait TuloskirjeComponent {
 
   class S3TulosKirjeService(appConfig: AppConfig) extends TuloskirjeService with JsonFormats with Logging {
     private val s3Settings = appConfig.settings.s3Settings
-    private val s3client = AmazonS3ClientBuilder.standard
-      .withRegion(s3Settings.region)
+    private val s3client = S3Client.builder()
+      .region(Region.of(s3Settings.region))
       .build()
 
+    def doesBucketExist(bucketName: String, s3Client: S3Client): Boolean = try {
+      Validate.notEmpty(bucketName, "The bucket name must not be null or an empty string.", "")
+      val getBucketAclRequest: GetBucketAclRequest = GetBucketAclRequest.builder().bucket(bucketName).build()
+      s3client.getBucketAcl(getBucketAclRequest)
+      true
+    } catch {
+      case ase: AwsServiceException =>
+
+        // A redirect error or an AccessDenied exception means the bucket exists but it's not in this region
+        // or we don't have permissions to it.
+        if ((ase.statusCode == HttpStatusCode.MOVED_PERMANENTLY) || "AccessDenied" == ase.awsErrorDetails.errorCode) return true
+        if (ase.statusCode == HttpStatusCode.NOT_FOUND) return false
+        throw ase
+    }
+
     override def fetchTuloskirje(request: HttpServletRequest, hakuOid: String, hakemusOid: String, tuloskirjeKind: TuloskirjeKind) : Option[Array[Byte]] = {
-      if (!s3client.doesBucketExistV2(s3Settings.bucket)) {
+      if (!doesBucketExist(s3Settings.bucket, s3client)) {
         logger.error("Defined bucket {} does not exist.", s3Settings.bucket)
         return None
       }
       val fileSuffix = getFileSuffix(tuloskirjeKind)
       val filename = s"$hakuOid/$hakemusOid.$fileSuffix"
-      Try(s3client.getObject(s3Settings.bucket, filename)) match {
+      val getObjectRequest: GetObjectRequest = GetObjectRequest.builder()
+        .bucket(s3Settings.bucket)
+        .key(filename)
+        .build()
+      Try(s3client.getObject(getObjectRequest, ResponseTransformer.toBytes[GetObjectResponse]())) match {
         case Success(s3Object) =>
-          val content = getContent(s3Object)
+          val content = Some(s3Object.asByteArray())
           Audit.oppija.log(FetchTuloskirje(request, hakuOid, hakemusOid))
           content
-        case Failure(e: AmazonS3Exception) =>
-          if (!"NoSuchKey".equals(e.getErrorCode)) {
+        case Failure(e: S3Exception) =>
+          if (!"NoSuchKey".equals(e.awsErrorDetails().errorCode())) {
             logExceptions(e, filename)
           }
           None
@@ -98,27 +124,24 @@ trait TuloskirjeComponent {
       }
     }
 
-    private def getContent(obj: S3Object): Option[Array[Byte]] = {
-      Try(IOUtils.toByteArray(obj.getObjectContent)) match {
-        case Success(byteArray) => Some(byteArray)
-        case Failure(e) => throw e
-      }
-    }
-
     override def getTuloskirjeInfo(request: HttpServletRequest, hakuOid: String, hakemusOid: String, tuloskirjeKind: TuloskirjeKind) : Option[Tuloskirje] = {
-      getObjectMetadata(hakuOid, hakemusOid, tuloskirjeKind) match {
-        case Some(metadata) => Some(Tuloskirje(hakuOid, metadata.getLastModified.getTime))
+      getHeadObjectResponse(hakuOid, hakemusOid, tuloskirjeKind) match {
+        case Some(headObjectResponse) => Some(Tuloskirje(hakuOid, headObjectResponse.lastModified().getLong(ChronoField.MILLI_OF_SECOND)))
         case None => None
       }
     }
 
-    private def getObjectMetadata(hakuOid: String, hakemusOid: String, tuloskirjeKind: TuloskirjeKind) : Option[ObjectMetadata] = {
+    private def getHeadObjectResponse(hakuOid: String, hakemusOid: String, tuloskirjeKind: TuloskirjeKind) : Option[HeadObjectResponse] = {
       val fileSuffix = getFileSuffix(tuloskirjeKind)
       val filename = s"$hakuOid/$hakemusOid.$fileSuffix"
-      Try(s3client.getObjectMetadata(s3Settings.bucket, filename)) match {
-        case Success(metadata) =>
-          Some(metadata)
-        case Failure(e: AmazonS3Exception) if e.getStatusCode == 404 =>
+      val headObjectRequest: HeadObjectRequest = HeadObjectRequest.builder()
+        .bucket(s3Settings.bucket)
+        .key(filename)
+        .build()
+      Try(s3client.headObject(headObjectRequest)) match {
+        case Success(headObjectResponse) =>
+          Some(headObjectResponse)
+        case Failure(e: S3Exception) if e.statusCode() == 404 =>
           None
         case Failure(e) =>
           logExceptions(e, filename)
@@ -128,9 +151,9 @@ trait TuloskirjeComponent {
 
     private def logExceptions(t: Throwable, filename: String) : Unit = {
       t match {
-        case e: AmazonServiceException => logger.error(s"""Got error from Amazon s3 when trying to get $filename. HTTP status code ${e.getStatusCode}, AWS Error Code ${e.getErrorCode},
-           error message ${e.getErrorMessage}, error type ${e.getErrorType}, request ID ${e.getRequestId}""", e)
-        case e: AmazonClientException => logger.error(s"""Unable to retrieve file content or metadata from Amazon s3 for $filename. Got error message ${e.getMessage}""", e)
+        case e: AwsServiceException => logger.error(s"""Got error from Amazon s3 when trying to get $filename. HTTP status code ${e.statusCode()}, AWS Error Code ${e.awsErrorDetails().errorCode()},
+           error message ${e.getMessage}, error type ${e.awsErrorDetails().errorCode()}, request ID ${e.requestId()}""", e)
+        case e: SdkClientException => logger.error(s"""Unable to retrieve file content or metadata from Amazon s3 for $filename. Got error message ${e.getMessage}""", e)
         case e: IOException => logger.error("Could not read content from file {}.", filename, "", e)
         case e => logger.error("Got unexpected exception when retrieving file content or metadata from Amazon s3 for file {}.", filename, "", e)
       }
