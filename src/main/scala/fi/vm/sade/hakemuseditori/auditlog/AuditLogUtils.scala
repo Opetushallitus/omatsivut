@@ -33,8 +33,8 @@ class AuditLogUtils extends Logging {
 
   private def parseHarmlessUrlsFromSystemProperty: Seq[String] = {
     val property: String = System.getProperty("fi.vm.sade.javautils.http.HttpServletRequestUtils.HARMLESS_URLS")
-    if (StringUtils.isBlank(property)) {
-      Seq()
+    if (StringUtils.isEmpty(property)) {
+      return Seq()
     }
     property.split(",")
   }
@@ -42,8 +42,8 @@ class AuditLogUtils extends Logging {
   private def getRemoteAddress(httpServletRequest: HttpServletRequest): String = getRemoteAddress(httpServletRequest.getHeader("X-Real-IP"), httpServletRequest.getHeader("X-Forwarded-For"), httpServletRequest.getRemoteAddr, httpServletRequest.getRequestURI)
 
   private def getRemoteAddress(xRealIp: String, xForwardedFor: String, remoteAddr: String, requestURI: String): String = {
-    if (StringUtils.isNotBlank(xRealIp)) return xRealIp
-    if (StringUtils.isNotBlank(xForwardedFor)) {
+    if (StringUtils.isNotEmpty(xRealIp)) return xRealIp
+    if (StringUtils.isNotEmpty(xForwardedFor)) {
       if (xForwardedFor.contains(",")) logger.error("Could not find X-Real-IP header, but X-Forwarded-For contains multiple values: {}, " + "this can cause problems", xForwardedFor)
       return xForwardedFor
     }
