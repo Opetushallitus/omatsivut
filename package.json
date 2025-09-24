@@ -9,13 +9,13 @@
     "tests": "webpack --config config/webpack.tests.config.js"
   },
   "dependencies": {
-    "angular": "1.7.5",
+    "angular": "1.7.9",
     "angular-animate": "1.7.5",
     "angular-cookies": "1.7.5",
     "angular-resource": "1.7.5",
     "angular-sanitize": "1.7.5",
     "angular-ui-bootstrap": "2.5.6",
-    "underscore": "1.9.0",
+    "underscore": "1.12.1",
     "babel-polyfill": "6.26.0",
     "baconjs": "0.7.95",
     "js-cookie": "2.2.0",
