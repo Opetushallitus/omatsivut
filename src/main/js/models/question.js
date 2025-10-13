@@ -12,7 +12,7 @@ const questionDefaults = {
 
 function params(obj) {
   var questionParameters = _.extend({}, questionDefaults, obj)
-  _(questionParameters).each(function(val, key) {
+  _.each(questionParameters,function(val, key) {
     if (val == null)
       if(key == "title") {
         questionParameters.title = "?"
@@ -47,7 +47,7 @@ export default class Question {
     return convertToItems(jsonQuestions, new QuestionGroup())
 
     function convertToItems(questions, results) {
-      _(questions).each(function (questionNode) {
+      _.each(questions,function (questionNode) {
         if (questionNode.questions != null) {
           results.questionNodes.push(convertToItems(questionNode.questions, new QuestionGroup(questionNode.title)))
         } else {
@@ -67,7 +67,7 @@ export default class Question {
 
 function initialValue(question, application) {
   function defaultValue() {
-    var defaultOption = _(question.options).find(function(option) { return option.default })
+    var defaultOption = _.find(question.options, function(option) { return option.default })
     return defaultOption == null ? "" : defaultOption.value
   }
   function getOldValue(questionId) {
@@ -85,7 +85,7 @@ function initialValue(question, application) {
   var oldAnswer = getOldValue(question.id.questionId)
   if (question.options != null) {
     if (question.questionType == "Checkbox") {
-      return _(question.options).chain().map(function(option) {
+      return _.chain(question.options).map(function(option) {
         oldAnswer = getOldValue(option.value)
         return [option.value, oldAnswer == null ? false : Boolean(oldAnswer)]
       }).object().value()

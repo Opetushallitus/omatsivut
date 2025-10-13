@@ -24,7 +24,7 @@ export function flattenTree(rootNode, childrenAttribute) {
       if (node[childrenAttribute] == null)
         list.push(node)
       else
-        _(node[childrenAttribute]).each(function (subnode) {
+        _.each(node[childrenAttribute], function (subnode) {
           flatten(subnode, list)
         })
     }
@@ -40,9 +40,9 @@ export function underscoreToCamelCase(str) {
 
 export function withoutAngularFields(obj) {
   if (_.isArray(obj)) {
-    return _(obj).map(withoutAngularFields)
+    return _.map(obj, withoutAngularFields)
   } else if (_.isObject(obj)) {
-    return _(obj).reduce(function (memo, val, key) {
+    return _.reduce(obj, function (memo, val, key) {
       if (key.indexOf("$$") < 0)
         memo[key] = withoutAngularFields(val)
       return memo

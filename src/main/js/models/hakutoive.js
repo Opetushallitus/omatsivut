@@ -134,7 +134,7 @@ export default class Hakutoive {
   static hasHakutoiveErrors(errorsJson) {
     var errorMap = mapArray(errorsJson, "key", "message");
     var self = this
-    return _(errorMap).any(function(val, key) {
+    return _.any(errorMap, function(val, key) {
       return self.isHakutoiveError(key) && val.length > 0
     })
   }
