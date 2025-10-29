@@ -37,7 +37,7 @@ export default ["restResources", "applicationValidator", "settings", "debounce",
       }
 
       function getHakutoiveet() {
-        return _($scope.application.hakutoiveet).map(function(hakutoive) {
+        return _.map($scope.application.hakutoiveet, function(hakutoive) {
           return {
             "Koulutus": hakutoive.data["Koulutus"],
             "Koulutus-id": hakutoive.data["Koulutus-id"],
@@ -48,8 +48,8 @@ export default ["restResources", "applicationValidator", "settings", "debounce",
       }
 
       function getAnswers() {
-        var answersToAdditionalQuestions = _(Question.questionMap($scope.application.additionalQuestions)).map(function(item, key) { return item.answer })
-        var otherAnswers = _($scope.application.henkilotiedot).map(function(item) { return item.answer })
+        var answersToAdditionalQuestions = _.map(Question.questionMap($scope.application.additionalQuestions), function(item, key) { return item.answer })
+        var otherAnswers = _.map($scope.application.henkilotiedot, function(item) { return item.answer })
         return answersToAdditionalQuestions.concat(otherAnswers)
       }
 
@@ -130,7 +130,7 @@ export default ["restResources", "applicationValidator", "settings", "debounce",
           if (updateQuestions) {// frontside validation does not include questions -> don't update
             $scope.application.importQuestions(data.questions)
           } else {
-            errors = _(data.errors).filter(function (error) { return Hakutoive.isHakutoiveError(error.key) })
+            errors = _.filter(data.errors, function (error) { return Hakutoive.isHakutoiveError(error.key) })
           }
           if (data.response != null && data.response.hakemus != null) {
             $scope.application.importHakuajat(data.response.hakemus.hakutoiveet)
@@ -215,7 +215,7 @@ export default ["restResources", "applicationValidator", "settings", "debounce",
         unhandledMessages = hideErrorIfAlreadyShowsKoulutusError(unhandledMessages)
 
         if (unhandledMessages.length > 0) {
-          _(unhandledMessages).each(function(item) {
+          _.each(unhandledMessages, function(item) {
             console.log("Validaatiovirhettä ei käsitelty:", item.questionId, item.errors)
           })
 
@@ -223,9 +223,9 @@ export default ["restResources", "applicationValidator", "settings", "debounce",
         }
 
         function hideErrorIfAlreadyShowsKoulutusError(messages) {
-          return _(messages).filter(function(message) {
+          return _.filter(messages, function(message) {
             var index = Hakutoive.parseHakutoiveIndex(message.questionId)
-            var relatedErrorShown = _(errors).any(function(error) {
+            var relatedErrorShown = _.any(errors, function(error) {
               return Hakutoive.isHakutoiveError(error.key) && Hakutoive.parseHakutoiveIndex(error.key) == index
             })
             return !relatedErrorShown

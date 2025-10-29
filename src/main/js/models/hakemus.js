@@ -79,8 +79,8 @@ export default class Hakemus {
     var self = this
 
     function isPeriodActive(applicationPeriodId) {
-      return _(self.haku.applicationPeriods)
-        .some(function(period) { return period.id === applicationPeriodId && period.active })
+      return _.some(self.haku.applicationPeriods,
+        function(period) { return period.id === applicationPeriodId && period.active })
     }
 
     if (hakutoive.addedDuringCurrentSession) {
@@ -88,7 +88,7 @@ export default class Hakemus {
     } else if (hakuaikaId != null) {
       return !isPeriodActive(hakuaikaId)
     } else {
-      return !_(hakutoive.hakukohdekohtaisetHakuajat).some(function(period) { return period.active })
+      return !_.some(hakutoive.hakukohdekohtaisetHakuajat, function(period) { return period.active })
     }
   }
 
@@ -105,7 +105,7 @@ export default class Hakemus {
   }
 
   hasSomeNonKeskenResults() {
-    return this.hasSomeResults() && _(this.valintatulosHakutoiveet()).some(function(hakutoive) { return hakutoive.valintatila != "KESKEN" })
+    return this.hasSomeResults() && _.some(this.valintatulosHakutoiveet(), function(hakutoive) { return hakutoive.valintatila != "KESKEN" })
   }
 
   valintatulosHakutoiveet() {
@@ -113,7 +113,7 @@ export default class Hakemus {
   }
 
   applicationPeriodsInactive() {
-    return _(this.haku.applicationPeriods).every(function(period) { return !period.active })
+    return _.every(this.haku.applicationPeriods, function(period) { return !period.active })
   }
 
   editHakutoiveetEnabled() {
@@ -129,13 +129,13 @@ export default class Hakemus {
   }
 
   vastaanotettavatHakutoiveet() {
-    return _(this.valintatulosHakutoiveet()).filter(function(hakutoive) {
+    return _.filter(this.valintatulosHakutoiveet(), function(hakutoive) {
       return (hakutoive.vastaanotettavuustila === "VASTAANOTETTAVISSA_SITOVASTI" || hakutoive.vastaanotettavuustila === "VASTAANOTETTAVISSA_EHDOLLISESTI") && hakutoive.vastaanottotila == "KESKEN"
     })
   }
 
   ilmoittautumisLinkit() {
-    return _(this.valintatulosHakutoiveet()).filter(function(tulos) {
+    return _.filter(this.valintatulosHakutoiveet(), function(tulos) {
       return tulos.ilmoittautumistila != null &&
         (tulos.ilmoittautumistila.ilmoittauduttavissa || ilmoittautunut(tulos.ilmoittautumistila.ilmoittautumistila))
     });
@@ -169,8 +169,8 @@ export default class Hakemus {
     if (!_.isArray(resultStates))
       resultStates = [resultStates]
 
-    return _(this.valintatulosHakutoiveet()).any(function(hakutoive) {
-      return _(resultStates).contains(hakutoive.valintatila)}
+    return _.any(this.valintatulosHakutoiveet(), function(hakutoive) {
+      return _.contains(resultStates, hakutoive.valintatila)}
     )
   }
 
@@ -180,21 +180,21 @@ export default class Hakemus {
     return {
       oid: self.oid,
       hakuOid: self.haku.oid,
-      hakutoiveet: _(this.hakutoiveet).map(function(hakutoive) { return hakutoive.toJson() }),
+      hakutoiveet: _.map(this.hakutoiveet, function(hakutoive) { return hakutoive.toJson() }),
       answers: removeFalseBooleans(getAnswers())
     }
 
     function getAnswers() {
-      var contactDetails = _(self.henkilotiedot).reduce(function(answers, question, id) {
+      var contactDetails = _.reduce(self.henkilotiedot, function(answers, question, id) {
         answers.henkilotiedot[id] = question.answer
         return answers
       }, { henkilotiedot: {}})
 
-      var additionalQuestionAnswers = _(Question.questionMap(self.additionalQuestions)).reduce(function(answers, questionNode) {
+      var additionalQuestionAnswers = _.reduce(Question.questionMap(self.additionalQuestions), function(answers, questionNode) {
         answers[questionNode.id.phaseId] = answers[questionNode.id.phaseId] || {}
         var answer = questionNode.answer
         if (_.isObject(answer)) {
-          _(answer).each(function(val, key) {
+          _.each(answer, function(val, key) {
             answers[questionNode.id.phaseId][key] = val
           })
         } else {
@@ -253,15 +253,15 @@ export default class Hakemus {
 
   validatePreferences() {
     return (this.hakutoiveet.length > 0 && this.hakutoiveet[0].hasData()) &&
-      _(this.hakutoiveet).every(function(hakutoive) {
+      _.every(this.hakutoiveet, function(hakutoive) {
         return hakutoive.isValid()
-      }) && !_(this.hakutoiveet.slice(0, this.lastIndexWithData() + 1)).any(function(hakutoive) {
+      }) && !_.any(this.hakutoiveet.slice(0, this.lastIndexWithData() + 1), function(hakutoive) {
         return !hakutoive.hasData()
       })
   }
 
   getChangedPreferences() {
-    return _(this.hakutoiveet).chain()
+    return _.chain(this.hakutoiveet)
       .map(function(hakutoive, index) { return hakutoive.isModified ? index : null })
       .without(null)
       .value()
@@ -306,7 +306,7 @@ export default class Hakemus {
     if (equalQuestions) {
       this.additionalQuestions = (function mergeErrors(old, questions) {
         var oldQuestions = Question.questionMap(old);
-        _(oldQuestions).each(function(oldQuestion, id) {
+        _.each(oldQuestions, function(oldQuestion, id) {
           if (questions[id] != null)
             oldQuestion.errors = questions[id].errors;
         });
@@ -316,7 +316,7 @@ export default class Hakemus {
     } else {
       this.additionalQuestions = (function mergeOldAnswers(old, questions) {
         var oldQuestions = Question.questionMap(old);
-        _(Question.questionMap(questions)).each(function(newQuestion, id) {
+        _.each(Question.questionMap(questions), function(newQuestion, id) {
           if (oldQuestions[id] != null)
             newQuestion.answer = oldQuestions[id].answer;
         });
@@ -335,7 +335,7 @@ export default class Hakemus {
 
     clearErrors()
 
-    _(errorMap).each(function(errorList, key) {
+    _.each(errorMap, function(errorList, key) {
       if (!updateErrors(key, errorList))
         unhandled.push({questionId: key, errors: errorList})
     })
@@ -343,11 +343,11 @@ export default class Hakemus {
     return unhandled
 
     function clearErrors() {
-      _(hakutoiveMap).each(function(item) {
+      _.each(hakutoiveMap, function(item) {
         item.setErrors()
       });
       if (!skipQuestions) {
-        _(questionMap).each(function(item) {
+        _.each(questionMap, function(item) {
           try {
             item.setErrors()
           } catch (e) {
@@ -388,7 +388,7 @@ function formatTuloskirje(tuloskirje) {
 function convertHenkilotiedot(json) {
   if (!_.isUndefined(json)) {
     var fields = ["Sähköposti", "matkapuhelinnumero1", "asuinmaa", "lahiosoite", "Postinumero"];
-    return _(fields).reduce(function (memo, key) {
+    return _.reduce(fields, function (memo, key) {
       memo[key] = new Question({id: key}, json[key]);
       return memo
     }, {})
@@ -405,11 +405,11 @@ function updatePreferenceQuestionIds(manipulationF) {
   var newIndexes = (function getNewIndexes() {
     var arr = _.range(1, this.hakutoiveet.length+1)
     manipulationF(arr)
-    var indexes = _(arr).map(function(val, index) { return [val, index+1] })
+    var indexes = _.map(arr, function(val, index) { return [val, index+1] })
     return _.object(indexes)
   }).call(this)
 
-  _(Question.questionMap(this.additionalQuestions)).each(function(question, id) {
+  _.each(Question.questionMap(this.additionalQuestions), function(question, id) {
     var questionIdParts = /^(preference)(\d+)([-_].+)/.exec(id)
     if (questionIdParts != null) {
       var newId = questionIdParts[1] + newIndexes[questionIdParts[2]] + questionIdParts[3]
