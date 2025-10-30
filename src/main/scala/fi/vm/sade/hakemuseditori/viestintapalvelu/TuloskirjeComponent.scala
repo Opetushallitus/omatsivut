@@ -139,8 +139,10 @@ trait TuloskirjeComponent {
         .key(filename)
         .build()
       Try(s3client.headObject(headObjectRequest)) match {
-        case Success(headObjectResponse) =>
+        case Success(headObjectResponse) => {
+          logger.info(s"Tuloskirjeen (HakuOid: $hakuOid | HakemusOid: $hakemusOid | TuloskirjeKind: $tuloskirjeKind) metadata:\n\r${headObjectResponse.toString}")
           Some(headObjectResponse)
+        }
         case Failure(e: S3Exception) if e.statusCode() == 404 =>
           None
         case Failure(e) =>
