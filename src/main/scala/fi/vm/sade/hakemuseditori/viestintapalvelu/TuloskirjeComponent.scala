@@ -18,8 +18,6 @@ import software.amazon.awssdk.services.s3.S3Client
 import software.amazon.awssdk.services.s3.model.{GetBucketAclRequest, GetObjectRequest, GetObjectResponse, HeadObjectRequest, HeadObjectResponse, S3Exception, S3Object}
 import software.amazon.awssdk.utils.Validate
 
-import java.time.temporal.ChronoField
-import scala.collection.JavaConverters._
 import scala.util.{Failure, Success, Try}
 
 trait TuloskirjeComponent {
@@ -126,7 +124,7 @@ trait TuloskirjeComponent {
 
     override def getTuloskirjeInfo(request: HttpServletRequest, hakuOid: String, hakemusOid: String, tuloskirjeKind: TuloskirjeKind) : Option[Tuloskirje] = {
       getHeadObjectResponse(hakuOid, hakemusOid, tuloskirjeKind) match {
-        case Some(headObjectResponse) => Some(Tuloskirje(hakuOid, headObjectResponse.lastModified().getLong(ChronoField.MILLI_OF_SECOND)))
+        case Some(headObjectResponse) => Some(Tuloskirje(hakuOid, headObjectResponse.lastModified().toEpochMilli))
         case None => None
       }
     }
