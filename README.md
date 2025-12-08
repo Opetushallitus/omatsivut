@@ -9,7 +9,7 @@ Palvelun lokaali ajaminen ei toistaiseksi toimi tai ole kunnolla koestettu, jote
 ## Teknologiat
 
 - Scala 2.12 (servereillä JRE17)
-- Frontissa AngularJS, webpack, npm
+- Frontissa AngularJS, webpack, pnpm
 - Testeissä Specs2, ~~mocha~~, phantomjs.
 
 ### JDK
@@ -29,10 +29,11 @@ export JAVA_HOME=$(/usr/libexec/java_home -v 17.0)
 
 ## Tarvittavat build-työkalut
 
-Asenna NodeJS haluamallasi tavalla. Asenna sen avulla projektin kehitystyökalut komennolla:
+Asenna NodeJS haluamallasi tavalla (ks. `.nvmrc`, v18). Käytä pnpm:ää (9.15.5) corepackin kautta ja asenna projektin kehitystyökalut komennolla:
 
 ```sh
-npm install
+corepack enable
+pnpm install --frozen-lockfile
 ```
 
 Ensimmäisellä kerralla esimerkiksi testejä ajettaessa buildataan Docker-kontit:
@@ -53,7 +54,7 @@ Jos testeistä tulee IDE:llä yllättäviä `StackOverflow`-exceptioneita, anna 
 ### Käynnistä sovellus IDEAsta
 
 ```sh
-npm install
+pnpm install --frozen-lockfile
 mvn clean install
 ```
 
@@ -110,7 +111,7 @@ Myös IE9:llä pitää paikallisessa ympäristössä CORS:n takia käyttää ski
 Näin ajat testit komentoriviltä.
 
 ```sh
-npm install
+pnpm install --frozen-lockfile
 mvn test
 ```
 
@@ -128,19 +129,19 @@ mvn package
 Kehitystä varten oleva buildi (ei minimointia):
 
 ```sh
-npm run dev
+pnpm run dev
 ```
 
 Jatkuva fronttikäännös käyntiin näin (ei minimointia):
 
 ```sh
-npm run watch
+pnpm run watch
 ```
 
 Tuotantoa vastaava buildi
 
 ```sh
-npm run build
+pnpm run build
 ```
 
 Fronttikoodit sijaitsevat `src/main` kansion alla hieman sekalaisessa järjestyksessä.
